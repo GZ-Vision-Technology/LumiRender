@@ -1,0 +1,6 @@
+
+file(GLOB_RECURSE HEADER_FILES *.h*)
+file(GLOB_RECURSE SOURCE_FILES *.c*)
+
+
+add_library(luminous-ext SHARED ${HEADER_FILES} ${SOURCE_FILES})
