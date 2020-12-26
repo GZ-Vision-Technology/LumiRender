@@ -1,0 +1,6 @@
+[submodule "LumiRender/thirdparty/spdlog"]
+	path = LumiRender/thirdparty/spdlog
+	url = https://github.com/gabime/spdlog.git
+[submodule "LumiRender/thirdparty/cxxopts"]
+	path = LumiRender/thirdparty/cxxopts
+	url = https://github.com/jarro2783/cxxopts.git
