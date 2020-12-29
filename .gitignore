@@ -1,0 +1,6 @@
+LumiRender/cmake-build-debug
+LumiRender/cmake-build-relwithdebinfo
+LumiRender/cmake-build-minsizerel
+LumiRender/cmake-build-release
+build
+xcode
