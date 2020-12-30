@@ -8,6 +8,14 @@ set(CMAKE_CXX_STANDARD 17)
 
 include(CheckLanguage)
 
+function(luminous_render_add_application name)
+    cmake_parse_arguments(APP "" "" "SOURCES" ${ARGN})
+    add_executable(${name} ${APP_SOURCES})
+    target_compile_features(${name} PRIVATE c_std_11 cxx_std_17)
+    target_link_libraries(${name} PRIVATE luminous-all)
+    set_target_properties(${name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/")
+endfunction()
+
 add_subdirectory(thirdparty/spdlog)
 add_library(spdlog_config INTERFACE)
 target_link_libraries(spdlog_config INTERFACE spdlog::spdlog)
