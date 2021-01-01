@@ -80,6 +80,61 @@ namespace luminous::render {
             return make_float2(1 - su0, u.x * su0);
         }
 
+        /**
+         * 均匀采样一个圆锥，默认圆锥的中心轴为(0,0,1)，圆锥顶点为坐标原点
+         * 可以认为圆锥采样是sphere，hemisphere采样的一般化
+         * 当圆锥采样的θmax为π/2时，圆锥采样为hemisphere采样
+         * 当圆锥采样的θmax为π时，圆锥采样为sphere采样
+         *
+         * p(θ) = sinθ/(1 - cosθmax)
+         *
+         * 积分计算得到累积分布函数
+         * P(θ) = (cosθ - 1)/(cosθmax - 1)
+         * P(φ) = φ/2π
+         *
+         * a,b为[0,1]的均匀分布随机数
+         * cosθ = (1 - a) + a * cosθmax
+         * φ = 2πb
+         *
+         * sinθ = sqrt(1 - cosθ * cosθ)
+         *
+         * x = sinθcosφ
+         * y = sinθsinφ
+         * z = cosθ
+         */
+        inline float2 uniform_sample_cone(const float2 &u, float cos_theta_max) {
+            float cos_theta = (1 - u.x) + u.x * cos_theta_max;
+            float sin_theta = sqrt(1 - cos_theta * cos_theta);
+            float phi = constant::_2Pi * u.y;
+            return make_float3(cos(phi) * sin_theta, sin(phi) * sin_theta, cos_theta);
+        }
+
+        inline float cosine_hemisphere_pdf(float cos_theta) {
+            return cos_theta * constant::invPi;
+        }
+
+        inline float uniform_sphere_pdf() {
+            return constant::inv4Pi;
+        }
+
+        inline float uniform_hemisphere_pdf() {
+            return constant::inv2Pi;
+        }
+
+        inline float balance_heuristic(int nf,
+                                         float f_pdf,
+                                         int ng,
+                                         float g_pdf) {
+            return (nf * f_pdf) / (nf * f_pdf + ng * g_pdf);
+        }
+
+        inline float power_heuristic(int nf,
+                                     float f_pdf,
+                                     int ng,
+                                     float g_pdf) {
+            float f = nf * f_pdf, g = ng * g_pdf;
+            return (f * f) / (f * f + g * g);
+        }
 
     }
 }
