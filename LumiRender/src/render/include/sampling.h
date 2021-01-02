@@ -136,5 +136,15 @@ namespace luminous::render {
             return (f * f) / (f * f + g * g);
         }
 
+        inline float mis_weight(int nf,
+                                float f_pdf,
+                                int ng,
+                                float g_pdf) {
+            return balance_heuristic(nf, f_pdf, ng, g_pdf);
+        }
+
+        inline float mis_weight(float f_pdf, float g_pdf) {
+            return mis_weight(1, f_pdf, 1, g_pdf);
+        }
     }
 }
