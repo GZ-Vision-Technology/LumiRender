@@ -4,8 +4,8 @@ project(LumiRender)
 # 项目信息
 set(APP_NAME LumiRender CACHE STRING INTERNAL)
 
-set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_CXX_STANDARD 11)
 include(CheckLanguage)
 
 function(luminous_render_add_application name)
@@ -29,5 +29,5 @@ add_library(assimp_config INTERFACE)
 target_link_libraries(assimp_config INTERFACE assimp::assimp)
 
 set(CMAKE_DEBUG_POSTFIX "")
-
+set(CMAKE_CXX_STANDARD 17)
 add_subdirectory(src)
