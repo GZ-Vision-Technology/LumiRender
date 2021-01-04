@@ -1,0 +1,1 @@
+luminous_render_add_application(test-math SOURCES math_test.cpp)

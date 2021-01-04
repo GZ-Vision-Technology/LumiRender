@@ -14,7 +14,16 @@ target_link_libraries(luminous-all INTERFACE
         luminous-ext
         luminous-util)
 
-
+find_package(CUDAToolkit)
+if (CUDAToolkit_FOUND)
+    set(LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT ON)
+else ()
+    set(LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT OFF)
+    message(not find cuda !!)
+endif ()
 
 add_subdirectory(core)
 add_subdirectory(util)
+add_subdirectory(ext)
+add_subdirectory(backends)
+#add_subdirectory(tests)

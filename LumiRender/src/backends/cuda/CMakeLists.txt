@@ -3,9 +3,9 @@ file(GLOB_RECURSE HEADER_FILES *.h*)
 file(GLOB_RECURSE SOURCE_FILES *.c*)
 
 
-add_library(luminous-ext SHARED ${HEADER_FILES} ${SOURCE_FILES})
+add_library(luminous-backends-cuda SHARED ${HEADER_FILES} ${SOURCE_FILES})
 
-set_target_properties(luminous-ext PROPERTIES
+set_target_properties(luminous-backends-cuda PROPERTIES
         PUBLIC_HEADER "${HEADER_FILES}"
         LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
