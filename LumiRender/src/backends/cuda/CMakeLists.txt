@@ -1,6 +1,11 @@
 
 file(GLOB SOURCE_FILES *.h *.c*)
 luminous_render_add_backend(cuda SOURCES ${SOURCE_FILES})
+target_include_directories(luminous-backend-cuda PRIVATE ${CUDA_INCLUDE_DIRS})
+target_link_libraries(luminous-backend-cuda PRIVATE CUDA::nvrtc CUDA::cuda_driver)
+
+
+find_package(CUDAToolkit REQUIRED)
 
 set_target_properties(luminous-backend-cuda PROPERTIES
         PUBLIC_HEADER "${HEADER_FILES}"
