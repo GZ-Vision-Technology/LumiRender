@@ -435,7 +435,7 @@ MAKE_VECTOR_BINARY_FUNC(max)
                                  m[0].w, m[1].w, m[2].w, m[3].w);
         }
 
-         [[nodiscard]] constexpr auto inverse(float3x3 m) noexcept {// from GLM
+         [[nodiscard]] auto inverse(float3x3 m) noexcept {// from GLM
             auto one_over_determinant = 1.0f / (m[0].x * (m[1].y * m[2].z - m[2].y * m[1].z) - m[1].x * (m[0].y * m[2].z - m[2].y * m[0].z) + m[2].x * (m[0].y * m[1].z - m[1].y * m[0].z));
             return make_float3x3(
                     (m[1].y * m[2].z - m[2].y * m[1].z) * one_over_determinant,
@@ -630,6 +630,26 @@ MAKE_VECTOR_BINARY_FUNC(max)
                 return q1 * std::cos(thetap) + qperp * std::sin(thetap);
             }
         }
+
+        template<typename T>
+        float bits_to_float(const T &v) {
+            union {
+                T a;
+                float f;
+            } u;
+            u.a = v;
+            return u.f;
+        };
+
+        template<typename T>
+        int bits_to_int(const T &v) {
+            union {
+                T a;
+                int b;
+            } u;
+            u.a = v;
+            return u.b;
+        };
 
     } // math
 

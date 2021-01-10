@@ -4,3 +4,12 @@
 
 
 #pragma once
+
+#include "buffer.h"
+
+namespace luminous::backend {
+    class Acceleration {
+    public:
+        virtual void intersect_closet() const = 0;
+    };
+}

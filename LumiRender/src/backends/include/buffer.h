@@ -29,8 +29,9 @@ namespace luminous::backend {
         template<typename T>
         [[nodiscard]] auto view(size_t offset = 0u, size_t size = npos) noexcept;
 
-        virtual void upload(Dispatcher &dispatcher, size_t offset, size_t size, const void *host_data) = 0;
-        virtual void download(Dispatcher &dispatcher, size_t offset, size_t size, void *host_buffer) = 0;
+        virtual void upload(size_t offset, size_t size, const void *host_data) = 0;
+        virtual void download(size_t offset, size_t size, void *host_buffer) = 0;
+        virtual void clear_cache() = 0;
     };
 
 
@@ -44,9 +45,6 @@ namespace luminous::backend {
         std::shared_ptr<Buffer> _buffer;
         size_t _offset{0u};
         size_t _size{0u};
-
-        void _copy_from(Dispatcher &dispatcher, const void *host_data) const { _buffer->upload(dispatcher, byte_offset(), byte_size(), host_data); }
-        void _copy_to(Dispatcher &dispatcher, void *host_buffer) const { _buffer->download(dispatcher, byte_offset(), byte_size(), host_buffer); }
 
     public:
         BufferView() noexcept = default;
@@ -64,33 +62,7 @@ namespace luminous::backend {
         [[nodiscard]] size_t byte_offset() const noexcept { return _offset * sizeof(T); }
         [[nodiscard]] size_t byte_size() const noexcept { return _size * sizeof(T); }
 
-        [[nodiscard]] auto copy_from(const void *data) { return [self = *this, data](Dispatcher &d) { self._copy_from(d, data); }; }
-        [[nodiscard]] auto copy_to(void *data) const { return [self = *this, data](Dispatcher &d) { self._copy_to(d, data); }; }
-
         void clear_cache() const noexcept { _buffer->clear_cache(); }
-
-        [[nodiscard]] auto modify(std::function<void(T *)> modify) {
-            return [modify = std::move(modify), self = *this](Dispatcher &dispatch) {
-                self._buffer->with_cache(dispatch, [&modify](void *raw_data) {
-                    modify(reinterpret_cast<T *>(raw_data));
-                }, self.byte_offset(), self.byte_size());
-            };
-        }
-
-        // For dsl
-        template<typename Index>
-        [[nodiscard]] auto operator[](Index &&index) const noexcept {
-            LUMINOUS_EXCEPTION_IF(empty(), "Indexing into empty buffer.");
-            using namespace luisa::compute::dsl;
-            auto v = Variable::make_buffer_argument(type_desc<T>, _buffer);
-            if (_offset == 0u) {
-                auto i = Expr{std::forward<Index>(index)};
-                return Expr<T>{Variable::make_temporary(type_desc<T>, std::make_unique<BinaryExpr>(BinaryOp::ACCESS, v, i.variable()))};
-            } else {
-                auto i = Expr{std::forward<Index>(index)} + static_cast<uint32_t>(_offset);
-                return Expr<T>{Variable::make_temporary(type_desc<T>, std::make_unique<BinaryExpr>(BinaryOp::ACCESS, v, i.variable()))};
-            }
-        }
 
     };
 
