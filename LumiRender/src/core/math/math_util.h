@@ -405,6 +405,11 @@ MAKE_VECTOR_BINARY_FUNC(max)
         }
 
         template<uint N>
+        [[nodiscard]] constexpr auto length_squared(Vector<float, N> u) noexcept {
+            return dot(u, u);
+        }
+
+        template<uint N>
         [[nodiscard]] constexpr auto normalize(Vector<float, N> u) noexcept {
             return u * (1.0f / length(u));
         }
@@ -412,6 +417,11 @@ MAKE_VECTOR_BINARY_FUNC(max)
         template<uint N>
         [[nodiscard]] constexpr auto distance(Vector<float, N> u, Vector<float, N> v) noexcept {
             return length(u - v);
+        }
+
+        template<uint N>
+        [[nodiscard]] constexpr auto distance_squared(Vector<float, N> u, Vector<float, N> v) noexcept {
+            return length_squared(u - v);
         }
 
         [[nodiscard]] constexpr auto cross(float3 u, float3 v) noexcept {
@@ -540,7 +550,7 @@ MAKE_VECTOR_BINARY_FUNC(max)
             return rotation(make_float3(0, 0, 1), theta, radian);
         }
 
-        constexpr float4x4 scaling(const float3 s) noexcept {
+        constexpr float4x4 scaling(const float3 &s) noexcept {
             return make_float4x4(
                     s.x, 0.0f, 0.0f, 0.0f,
                     0.0f, s.y, 0.0f, 0.0f,
@@ -632,25 +642,44 @@ MAKE_VECTOR_BINARY_FUNC(max)
         }
 
         template<typename T>
-        float bits_to_float(const T &v) {
-            union {
-                T a;
-                float f;
-            } u;
-            u.a = v;
-            return u.f;
+        auto bits_to_float(const T &v) {
+            static_assert(sizeof(T) == sizeof(float) || sizeof(T) == sizeof(double));
+            if constexpr (sizeof(T) == sizeof(float)) {
+                union {
+                    T a;
+                    float f;
+                } u;
+                u.a = v;
+                return u.f;
+            } else if constexpr (sizeof(T) == sizeof(double)) {
+                union {
+                    T a;
+                    double f;
+                } u;
+                u.a = v;
+                return u.f;
+            }
         };
 
         template<typename T>
-        int bits_to_int(const T &v) {
-            union {
-                T a;
-                int b;
-            } u;
-            u.a = v;
-            return u.b;
+        auto bits_to_int(const T &v) {
+            static_assert(sizeof(T) == sizeof(int) || sizeof(T) == sizeof(int64_t));
+            if constexpr (sizeof(T) == sizeof(int)) {
+                union {
+                    T a;
+                    int b;
+                } u;
+                u.a = v;
+                return u.b;
+            } else if constexpr (sizeof(T) == sizeof(int64_t)) {
+                union {
+                    T a;
+                    int64_t b;
+                } u;
+                u.a = v;
+                return u.b;
+            }
         };
 
     } // math
-
 } // luminous

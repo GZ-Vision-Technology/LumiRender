@@ -11,7 +11,7 @@
 
 #include <core/concepts.h>
 #include <core/platform.h>
-#include "math/ray.h"
+#include "math/sampling.h"
 
 namespace luminous {
 

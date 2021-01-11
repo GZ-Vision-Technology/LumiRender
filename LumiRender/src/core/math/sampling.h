@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <core/math/math_util.h>
+#include "math_util.h"
 
 namespace luminous::render {
     inline namespace sampling {
@@ -102,7 +102,7 @@ namespace luminous::render {
          * y = sinθsinφ
          * z = cosθ
          */
-        inline float2 uniform_sample_cone(const float2 &u, float cos_theta_max) {
+        inline float3 uniform_sample_cone(const float2 &u, float cos_theta_max) {
             float cos_theta = (1 - u.x) + u.x * cos_theta_max;
             float sin_theta = sqrt(1 - cos_theta * cos_theta);
             float phi = constant::_2Pi * u.y;

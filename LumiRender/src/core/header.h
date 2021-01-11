@@ -18,4 +18,6 @@
 
 #define HAVE_POSIX_MEMALIGN
 
+#define CPU_GPU __host__ __device__
+
 using nloJson = nlohmann::json ;
