@@ -27,13 +27,13 @@ namespace luminous::render {
          * r = √(a)
          * θ = 2πb
          */
-        inline float2 uniform_sample_disk(const float2 &u) {
+        inline float2 uniform_sample_disk(const float2 u) {
             auto r = sqrt(u.x);
             auto theta = constant::_2Pi * u.y;
             return make_float2(r * cos(theta), r * sin(theta));
         }
 
-        inline float3 cosine_sample_hemisphere(const float2 &u) {
+        inline float3 cosine_sample_hemisphere(const float2 u) {
             auto d = uniform_sample_disk(u);
             auto z = sqrt(max(0.0f, 1.0f - d.x * d.x - d.y * d.y));
             return make_float3(d.x, d.y, z);
@@ -75,7 +75,7 @@ namespace luminous::render {
          * @param  u 均匀二维随机变量
          * @return   三角形内部uv坐标
          */
-        inline float2 uniform_sample_triangle(const float2 &u) {
+        inline float2 uniform_sample_triangle(const float2 u) {
             auto su0 = sqrt(u.x);
             return make_float2(1 - su0, u.x * su0);
         }
@@ -102,7 +102,7 @@ namespace luminous::render {
          * y = sinθsinφ
          * z = cosθ
          */
-        inline float3 uniform_sample_cone(const float2 &u, float cos_theta_max) {
+        inline float3 uniform_sample_cone(const float2 u, float cos_theta_max) {
             float cos_theta = (1 - u.x) + u.x * cos_theta_max;
             float sin_theta = sqrt(1 - cos_theta * cos_theta);
             float phi = constant::_2Pi * u.y;

@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "backends/cuda/jitify/jitify.hpp"
+#include "gpu/cuda/jitify/jitify.hpp"
 using namespace std;
 
 //void test() {
@@ -41,6 +41,6 @@ using namespace std;
 using namespace std;
 
 int main() {
-    cout << sizeof(double) << endl;
-    cout << sizeof(long long ) << endl;
+    int *p;
+    cudaMalloc((void**)&p, 9);
 }

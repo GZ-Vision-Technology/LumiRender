@@ -5,4 +5,4 @@
 
 #pragma once
 
-#include "backends/include/acceleration.h"
+#include "gpu/include/acceleration.h"
