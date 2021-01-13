@@ -3,3 +3,8 @@
 //
 
 #include "cuda_acceleration.h"
+#include "jitify/jitify.hpp"
+void func() {
+    int *p;
+//    cudaMalloc((void**)&p, 9);
+}
