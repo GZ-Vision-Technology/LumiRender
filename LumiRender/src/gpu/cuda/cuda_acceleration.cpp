@@ -6,5 +6,5 @@
 #include "jitify/jitify.hpp"
 void func() {
     int *p;
-//    cudaMalloc((void**)&p, 9);
+    cudaMalloc((void**)&p, 9);
 }
