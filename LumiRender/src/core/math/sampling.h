@@ -113,6 +113,13 @@ namespace luminous::render {
             return cos_theta * constant::invPi;
         }
 
+        inline float3 uniform_sample_sphere(float2 u) {
+            float z = 1 - 2 * u[0];
+            float r = std::sqrt(std::max((float)0, (float)1 - z * z));
+            float phi = 2 * Pi * u[1];
+            return make_float3(r * std::cos(phi), r * std::sin(phi), z);
+        }
+
         inline float uniform_sphere_pdf() {
             return constant::inv4Pi;
         }
