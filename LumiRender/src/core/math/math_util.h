@@ -376,7 +376,7 @@ MAKE_VECTOR_BINARY_FUNC(max)
         }
 
         template <typename T, typename U, typename V>
-        inline T clamp(T val, U low, V high) {
+        inline T clamp(T val, U low, V high) noexcept {
             if (val < low)
                 return low;
             else if (val > high)
@@ -384,6 +384,39 @@ MAKE_VECTOR_BINARY_FUNC(max)
             else
                 return val;
         }
+
+#if defined(_GNU_SOURCE)
+        inline void sincos(float theta, float *sin, float *cos) {
+            ::sincosf(theta, sin, cos);
+        }
+
+#else
+        inline void sincos(float theta, float *_sin, float *_cos) {
+            *_sin = sinf(theta);
+            *_cos = cosf(theta);
+        }
+
+#endif
+
+        inline float safe_sqrt(float x) noexcept {
+            return sqrt(max(x, 0.f));
+        }
+
+        inline float safe_acos(float x) noexcept {
+            return acos(clamp(x, -1.f, 1.f));
+        }
+
+        inline float safe_asin(float x) noexcept {
+            return asin(clamp(x, -1.f, 1.f));
+        }
+
+        inline bool is_power_of_two(uint32_t i) noexcept { return (i & (i-1)) == 0; }
+
+        inline bool is_power_of_two(int32_t i) noexcept { return i > 0 && (i & (i-1)) == 0; }
+
+        inline bool is_power_of_two(uint64_t i) noexcept { return (i & (i-1)) == 0; }
+
+        inline bool is_power_of_two(int64_t i) noexcept { return i > 0 && (i & (i-1)) == 0; }
 
         // Vector Functions
         template<uint N>

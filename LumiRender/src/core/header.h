@@ -18,6 +18,7 @@
 
 #define HAVE_POSIX_MEMALIGN
 
-#define CPU_GPU __host__ __device__
-
-using nloJson = nlohmann::json ;
+#define XPU __host__ __device__
+#define GPU __device__
+#define CPU __host__
+using DataWrap = nlohmann::json ;
