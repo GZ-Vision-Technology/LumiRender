@@ -3,7 +3,11 @@
 //
 
 #include <iostream>
+//#include "cuda.h"
 #include "gpu/cuda/jitify/jitify.hpp"
+//#include "core/math/math_util.h"
+#include "core/math/ray_hit.h"
+
 using namespace std;
 
 //void test() {
@@ -42,5 +46,5 @@ using namespace std;
 
 int main() {
     int *p;
-    cudaMalloc((void**)&p, 9);
+//    cudaMalloc((void**)&p, 9);
 }

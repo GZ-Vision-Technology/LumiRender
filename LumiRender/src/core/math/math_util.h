@@ -25,6 +25,8 @@ inline namespace math {
         constexpr auto sqrtOf2 = 1.41421356237309504880168872420969808f;
         constexpr auto invSqrtOf2 = 0.707106781186547524400844362104849039f;
 
+        constexpr auto float_infinity = std::numeric_limits<float>::infinity();
+
         constexpr auto primeNumberCount = 1000u;
 
         constexpr uint primeNumbers [[maybe_unused]][primeNumberCount] = {
@@ -348,8 +350,10 @@ MAKE_VECTOR_UNARY_FUNC(degrees)
 
 MAKE_VECTOR_BINARY_FUNC(atan2)
 MAKE_VECTOR_BINARY_FUNC(pow)
-MAKE_VECTOR_BINARY_FUNC(min)
-MAKE_VECTOR_BINARY_FUNC(max)
+// todo:暂时注释掉与宏重名的函数，之后有需要用再定义
+//MAKE_VECTOR_BINARY_FUNC(min)
+//MAKE_VECTOR_BINARY_FUNC(max)
+
 
 #undef MAKE_VECTOR_BINARY_FUNC
 
