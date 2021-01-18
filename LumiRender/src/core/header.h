@@ -19,16 +19,4 @@
 #define HAVE_POSIX_MEMALIGN
 
 
-#define XPU
-#define GPU
-#define CPU
-
-#if defined(__CUDACC__)
-    #define XPU __host__ __device__
-    #define GPU __device__
-    #define CPU __host__
-#endif
-
-#define F_INLINE __forceinline
-
 using DataWrap = nlohmann::json ;
