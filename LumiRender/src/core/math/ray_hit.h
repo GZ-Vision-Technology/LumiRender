@@ -21,7 +21,7 @@ namespace luminous {
             float direction_z;
             float t_max;
 
-            Ray(const float3 origin, const float3 direction,
+            XPU Ray(const float3 origin, const float3 direction,
                     float t_max = math::constant::float_infinity,
                     float t_min = 0) noexcept:
             t_min(t_min),
@@ -43,7 +43,7 @@ namespace luminous {
             }
         };
 
-        inline float3 offset_ray_origin(const float3 &p_in, const float3 &n_in) noexcept {
+        XPU inline float3 offset_ray_origin(const float3 &p_in, const float3 &n_in) noexcept {
 
             constexpr auto origin = 1.0f / 32.0f;
             constexpr auto float_scale = 1.0f / 65536.0f;

@@ -662,7 +662,7 @@ MAKE_VECTOR_BINARY_FUNC(pow)
             return transpose(ret);
         }
 
-        [[nodiscard]] static float4 quaternion_slerp(const float4 &q1, const float4 &q2, float t) {
+        XPU [[nodiscard]] static float4 quaternion_slerp(const float4 &q1, const float4 &q2, float t) {
             float cosTheta = dot(q1, q2);
             if (cosTheta > 0.9995f) {
                 // 如果旋转角度特别小，当做直线处理
@@ -679,7 +679,7 @@ MAKE_VECTOR_BINARY_FUNC(pow)
         }
 
         template<typename T>
-        auto bits_to_float(const T &v) {
+        XPU auto bits_to_float(const T &v) {
             static_assert(sizeof(T) == sizeof(float) || sizeof(T) == sizeof(double));
             if constexpr (sizeof(T) == sizeof(float)) {
                 union {
@@ -699,7 +699,7 @@ MAKE_VECTOR_BINARY_FUNC(pow)
         };
 
         template<typename T>
-        auto bits_to_int(const T &v) {
+        XPU auto bits_to_int(const T &v) {
             static_assert(sizeof(T) == sizeof(int) || sizeof(T) == sizeof(int64_t));
             if constexpr (sizeof(T) == sizeof(int)) {
                 union {
