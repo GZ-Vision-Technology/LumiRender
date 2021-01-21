@@ -14,7 +14,7 @@
 // limitations under the License.                                           //
 // ======================================================================== //
 
-#include "owl/Context.h"
+#include "Context.h"
 #include <mutex>
 
 namespace owl {

@@ -17,9 +17,9 @@
 #pragma once
 
 #include "owl/owl.h"
-#include "owl/common.h"
-#include "owl/DeviceMemory.h"
-#include "owl/helper/optix.h"
+#include "common.h"
+#include "DeviceMemory.h"
+#include "helper/optix.h"
 
 namespace owl {
 

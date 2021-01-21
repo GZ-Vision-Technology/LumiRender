@@ -16,11 +16,38 @@
 
 set(CUDA_USE_STATIC_CUDA_RUNTIME ON)
 
-include_directories(${PROJECT_SOURCE_DIR}/owl/include)
+set(owl_dir ${CMAKE_CURRENT_SOURCE_DIR})
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${owl_dir}/cmake/")
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(OWL_CXX_FLAGS "")
+if (NOT WIN32)
+    set (CMAKE_CXX_FLAGS "--std=c++11")
+    set (CUDA_PROPAGATE_HOST_FLAGS ON)
+endif()
+if (WIN32)
+    # Nate: 11/3/20: I get "fatal error C1041: cannot open program database"
+    # on windows from multiple targets writing to the same .pdb file simultaneously.
+    # This flag doesn't seem to fix it.
+    # set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "/FS")
+endif()
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+include(configure_cuda)
+include(configure_optix)
+include(configure_owl)
+include(configure_build_type)
+include(configure_tbb)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-cuda_include_directories(${PROJECT_SOURCE_DIR}/owl/include)
+cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 
 
 add_definitions(${OWL_CXX_FLAGS})
@@ -35,9 +62,11 @@ set(CUDA_NVCC_FLAGS --compiler-options -fPIC)
 endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/)
-include_directories(${PROJECT_SOURCE_DIR}/owl/include)
+include_directories(${PROJECT_SOURCE_DIR}/include)
 
-cuda_include_directories(${PROJECT_SOURCE_DIR}/owl/include)
+message(${PROJECT_SOURCE_DIR})
+
+cuda_include_directories(${PROJECT_SOURCE_DIR}/include)
 
 set(OWL_SOURCES
 

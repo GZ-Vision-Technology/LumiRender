@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "owl/helper/cuda.h"
+#include "helper/cuda.h"
 
 #ifdef _WIN32
 #pragma warning( push )

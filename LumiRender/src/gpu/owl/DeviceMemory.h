@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "owl/helper/cuda.h"
+#include "helper/cuda.h"
 
 namespace owl {
 
