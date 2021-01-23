@@ -20,6 +20,8 @@
 // std
 #include <mutex>
 
+#include <functional>
+
 #ifdef OWL_DISABLE_TBB
 # undef OWL_HAVE_TBB
 #endif
@@ -33,6 +35,33 @@
 
 namespace owl {
   namespace common {
+
+      class AtomicFloat {
+      private:
+          std::atomic<float> val;
+
+      public:
+          using Float = float;
+          explicit AtomicFloat(Float v = 0) : val(v) {}
+
+          AtomicFloat(const AtomicFloat &rhs) : val((float)rhs.val) {}
+
+          void add(Float v) {
+              auto current = val.load();
+              while (!val.compare_exchange_weak(current, current + v)) {
+              }
+          }
+
+          [[nodiscard]] float value() const { return val.load(); }
+
+          explicit operator float() const { return value(); }
+
+          void set(Float v) { val = v; }
+      };
+
+      void parallel_for(int count, const std::function<void(uint32_t, uint32_t)> &func, size_t chunkSize = 1);
+
+      [[nodiscard]] size_t num_work_threads();
 
     template<typename INDEX_T, typename TASK_T>
     inline void serial_for(INDEX_T nTasks, TASK_T&& taskFunction)
@@ -68,6 +97,9 @@ namespace owl {
     template<typename INDEX_T, typename TASK_T>
     inline void parallel_for(INDEX_T nTasks, TASK_T&& taskFunction, size_t blockSize=1)
     { serial_for(nTasks,taskFunction); }
+
+    void parallel_for_(int count, const std::function<void(uint32_t, uint32_t)> &func, size_t chunkSize = 1);
+
 #endif
   
     // template<typename TASK_T>
