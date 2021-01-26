@@ -100,7 +100,7 @@ namespace owl {
 
             inline __both__ vec_t() {}
 
-            inline __both__ vec_t(const T &v) : v(v) {}
+            inline __both__ vec_t(const T &v) : x(v) {}
 
             /*! assignment operator */
             inline __both__ vec_t<T, 1> &operator=(const vec_t<T, 1> &other) {
@@ -110,7 +110,7 @@ namespace owl {
 
             /*! construct 2-vector from 2-vector of another type */
             template<typename OT>
-            inline __both__ explicit vec_t(const vec_t<OT, 1> &o) : v(o.v) {}
+            inline __both__ explicit vec_t(const vec_t<OT, 1> &o) : x(o.v) {}
 
             inline __both__ T &operator[](size_t dim) {
                 assert(dim == 0);
@@ -124,10 +124,7 @@ namespace owl {
                 // return (&x)[dim];
             }
 
-            union {
-                T v;
-                T x; //!< just to allow all vec types to use x,y,z,w,...
-            };
+            T x;
         };
 
         // ------------------------------------------------------------------
@@ -176,17 +173,7 @@ namespace owl {
 
             inline __both__ const T &operator[](size_t dim) const { return (&x)[dim]; }
 
-            union {
-                struct {
-                    T x, y;
-                };
-                struct {
-                    T s, t;
-                };
-                struct {
-                    T u, v;
-                };
-            };
+            T x, y;
         };
 
         // ------------------------------------------------------------------
@@ -255,17 +242,7 @@ namespace owl {
                 return vec_t<T, 3>(lambda(v.x), lambda(v.y), lambda(v.z));
             }
 
-            union {
-                struct {
-                    T x, y, z;
-                };
-                struct {
-                    T r, s, t;
-                };
-                struct {
-                    T u, v, w;
-                };
-            };
+            T x, y, z;
         };
 
         // ------------------------------------------------------------------
