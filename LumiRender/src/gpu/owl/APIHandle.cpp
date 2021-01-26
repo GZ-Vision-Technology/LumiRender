@@ -19,22 +19,20 @@
 
 namespace owl {
 
-  APIHandle::APIHandle(Object::SP object, APIContext *context)
-  {
-    assert(object);
-    assert(context);
-    this->object  = object;
-    this->context = std::dynamic_pointer_cast<APIContext>
-      (context->shared_from_this());
-    assert(this->object);
-    assert(this->context);
-  }
+    APIHandle::APIHandle(Object::SP object, APIContext *context) {
+        assert(object);
+        assert(context);
+        this->object = object;
+        this->context = std::dynamic_pointer_cast<APIContext>
+                (context->shared_from_this());
+        assert(this->object);
+        assert(this->context);
+    }
 
-  APIHandle::~APIHandle()
-  {
-    context->forget(this);
-    object  = nullptr;
-    context = nullptr;
-  }
+    APIHandle::~APIHandle() {
+        context->forget(this);
+        object = nullptr;
+        context = nullptr;
+    }
 
 } // ::owl  

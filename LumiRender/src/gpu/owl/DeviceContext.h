@@ -23,140 +23,150 @@
 
 namespace owl {
 
-  /*! tracks which ID regions in the SBT have already been used -
-    newly created groups allocate ranges of IDs in the SBT (to allow
-    its geometries to be in successive SBT regions), and this struct
-    keeps track of whats already used, and what is available */
-  struct RangeAllocator {
-    int alloc(size_t size);
-    void release(size_t begin, size_t size);
-    size_t maxAllocedID = 0;
-  private:
-    struct FreedRange {
-      size_t begin;
-      size_t size;
+    /*! tracks which ID regions in the SBT have already been used -
+      newly created groups allocate ranges of IDs in the SBT (to allow
+      its geometries to be in successive SBT regions), and this struct
+      keeps track of whats already used, and what is available */
+    struct RangeAllocator {
+        int alloc(size_t size);
+
+        void release(size_t begin, size_t size);
+
+        size_t maxAllocedID = 0;
+    private:
+        struct FreedRange {
+            size_t begin;
+            size_t size;
+        };
+        std::vector<FreedRange> freedRanges;
     };
-    std::vector<FreedRange> freedRanges;
-  };
 
-  /*! helper clas to handle device-side shader binding table
-      creation */
-  struct SBT {
-    size_t rayGenRecordCount   = 0;
-    size_t rayGenRecordSize    = 0;
-    DeviceMemory rayGenRecordsBuffer;
+    /*! helper clas to handle device-side shader binding table
+        creation */
+    struct SBT {
+        size_t rayGenRecordCount = 0;
+        size_t rayGenRecordSize = 0;
+        DeviceMemory rayGenRecordsBuffer;
 
-    size_t hitGroupRecordSize  = 0;
-    size_t hitGroupRecordCount = 0;
-    DeviceMemory hitGroupRecordsBuffer;
+        size_t hitGroupRecordSize = 0;
+        size_t hitGroupRecordCount = 0;
+        DeviceMemory hitGroupRecordsBuffer;
 
-    size_t missProgRecordSize  = 0;
-    size_t missProgRecordCount = 0;
-    DeviceMemory missProgRecordsBuffer;
-    
-    DeviceMemory launchParamsBuffer;
-  };
+        size_t missProgRecordSize = 0;
+        size_t missProgRecordCount = 0;
+        DeviceMemory missProgRecordsBuffer;
 
-  /*! what will eventually containt the whole owl context across all gpus */
-  struct Context;
+        DeviceMemory launchParamsBuffer;
+    };
 
-  /*! optix and cuda context for a single, specific GPU */
-  struct DeviceContext : public std::enable_shared_from_this<DeviceContext>  {
-    typedef std::shared_ptr<DeviceContext> SP;
+    /*! what will eventually containt the whole owl context across all gpus */
+    struct Context;
 
-    /*! create a new device context with given context object, using
-        given GPU "cudaID", and serving the rols at the "owlID"th GPU
-        in that context */
-    DeviceContext(Context *parent,
-                  int owlID,
-                  int cudaID);
-    ~DeviceContext();
-    
-    /*! helper function - return cuda name of this device */
-    std::string getDeviceName() const;
-      
-    /*! helper function - return cuda device ID of this device */
-    int getCudaDeviceID() const;
+    /*! optix and cuda context for a single, specific GPU */
+    struct DeviceContext : public std::enable_shared_from_this<DeviceContext> {
+        typedef std::shared_ptr<DeviceContext> SP;
 
-    /*! return the optix default stream for this device. launch params
-        may use their own stream */
-    CUstream getStream() const { return stream; }
+        /*! create a new device context with given context object, using
+            given GPU "cudaID", and serving the rols at the "owlID"th GPU
+            in that context */
+        DeviceContext(Context *parent,
+                      int owlID,
+                      int cudaID);
 
-    /*! configures the optixPipeline link options and compile options,
-        based on what values (motion blur on/off, multi-level
-        instnacing, etc) are set in the context */
-    void configurePipelineOptions();
-      
-    void buildPrograms();
-    void buildMissPrograms();
-    void buildRayGenPrograms();
-    void buildHitGroupPrograms();
+        ~DeviceContext();
 
-    void destroyPrograms();
-    void destroyMissPrograms();
-    void destroyRayGenPrograms();
-    void destroyHitGroupPrograms();
+        /*! helper function - return cuda name of this device */
+        std::string getDeviceName() const;
 
-    void destroyPipeline();
-    void buildPipeline();
+        /*! helper function - return cuda device ID of this device */
+        int getCudaDeviceID() const;
 
-    /*! collects all compiled programs during 'buildPrograms', such
-        that all active progs can then be passed to optix durign
-        pipeline creation */
-    std::vector<OptixProgramGroup> allActivePrograms;
+        /*! return the optix default stream for this device. launch params
+            may use their own stream */
+        CUstream getStream() const { return stream; }
 
-    OptixDeviceContext optixContext = nullptr;
-    CUcontext          cudaContext  = nullptr;
-    CUstream           stream       = nullptr;
+        /*! configures the optixPipeline link options and compile options,
+            based on what values (motion blur on/off, multi-level
+            instnacing, etc) are set in the context */
+        void configurePipelineOptions();
 
-    OptixPipelineCompileOptions pipelineCompileOptions = {};
-    OptixPipelineLinkOptions    pipelineLinkOptions    = {};
-    OptixModuleCompileOptions   moduleCompileOptions   = {};
-    OptixPipeline               pipeline               = nullptr;
-    SBT                         sbt                    = {};
+        void buildPrograms();
 
-    /*! the owl context that this device is in */
-    Context *const parent;
+        void buildMissPrograms();
 
-    /*! linear ID (0,1,2,...) of how *we* number devices (i.e.,
-      'first' device is always device 0, no matter if it runs on
-      another physical/cuda device) */
-    const int      ID;
+        void buildRayGenPrograms();
 
-    /* the cuda device ID that this logical device runs on */
-    const int      cudaDeviceID;
-  };
+        void buildHitGroupPrograms();
 
-  /*! creates the N device contexts with the given device IDs. If list
-      of device is nullptr, and number requested devices is > 1, then
-      the first N devices will get used; invalid device IDs in the
-      list will automatically get dropped */
-  std::vector<DeviceContext::SP> createDeviceContexts(Context *parent,
-                                                      int32_t *requestedDeviceIDs,
-                                                      int      numRequestedDevices);
+        void destroyPrograms();
 
-  /*! helper class that will set the active cuda device (to the device
-      associated with a given Context::DeviceData) for the duration fo
-      the lifetime of this class, and resets it to whatever it was
-      after class dies */
-  struct SetActiveGPU {
-    inline SetActiveGPU(const DeviceContext::SP &device)
-    {
-      CUDA_CHECK(cudaGetDevice(&savedActiveDeviceID));
-      CUDA_CHECK(cudaSetDevice(device->cudaDeviceID));
-    }
-    inline SetActiveGPU(const DeviceContext *device)
-    {
-      CUDA_CHECK(cudaGetDevice(&savedActiveDeviceID));
-      CUDA_CHECK(cudaSetDevice(device->cudaDeviceID));
-    }
-    inline ~SetActiveGPU()
-    {
-      CUDA_CHECK_NOTHROW(cudaSetDevice(savedActiveDeviceID));
-    }
-  private:
-    int savedActiveDeviceID = -1;
-  };
-  
+        void destroyMissPrograms();
+
+        void destroyRayGenPrograms();
+
+        void destroyHitGroupPrograms();
+
+        void destroyPipeline();
+
+        void buildPipeline();
+
+        /*! collects all compiled programs during 'buildPrograms', such
+            that all active progs can then be passed to optix durign
+            pipeline creation */
+        std::vector<OptixProgramGroup> allActivePrograms;
+
+        OptixDeviceContext optixContext = nullptr;
+        CUcontext cudaContext = nullptr;
+        CUstream stream = nullptr;
+
+        OptixPipelineCompileOptions pipelineCompileOptions = {};
+        OptixPipelineLinkOptions pipelineLinkOptions = {};
+        OptixModuleCompileOptions moduleCompileOptions = {};
+        OptixPipeline pipeline = nullptr;
+        SBT sbt = {};
+
+        /*! the owl context that this device is in */
+        Context *const parent;
+
+        /*! linear ID (0,1,2,...) of how *we* number devices (i.e.,
+          'first' device is always device 0, no matter if it runs on
+          another physical/cuda device) */
+        const int ID;
+
+        /* the cuda device ID that this logical device runs on */
+        const int cudaDeviceID;
+    };
+
+    /*! creates the N device contexts with the given device IDs. If list
+        of device is nullptr, and number requested devices is > 1, then
+        the first N devices will get used; invalid device IDs in the
+        list will automatically get dropped */
+    std::vector<DeviceContext::SP> createDeviceContexts(Context *parent,
+                                                        int32_t *requestedDeviceIDs,
+                                                        int numRequestedDevices);
+
+    /*! helper class that will set the active cuda device (to the device
+        associated with a given Context::DeviceData) for the duration fo
+        the lifetime of this class, and resets it to whatever it was
+        after class dies */
+    struct SetActiveGPU {
+        inline SetActiveGPU(const DeviceContext::SP &device) {
+            CUDA_CHECK(cudaGetDevice(&savedActiveDeviceID));
+            CUDA_CHECK(cudaSetDevice(device->cudaDeviceID));
+        }
+
+        inline SetActiveGPU(const DeviceContext *device) {
+            CUDA_CHECK(cudaGetDevice(&savedActiveDeviceID));
+            CUDA_CHECK(cudaSetDevice(device->cudaDeviceID));
+        }
+
+        inline ~SetActiveGPU() {
+            CUDA_CHECK_NOTHROW(cudaSetDevice(savedActiveDeviceID));
+        }
+
+    private:
+        int savedActiveDeviceID = -1;
+    };
+
 } // ::owl
 

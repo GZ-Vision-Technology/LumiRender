@@ -32,55 +32,51 @@
       << "#owl: "                               \
       << message                                \
       << OWL_TERMINAL_DEFAULT << std::endl
-  
+
 namespace owl {
-  
-  void APIContext::forget(APIHandle *object)
-  {
-    std::lock_guard<std::mutex> lock(monitor);
-    assert(object);
-    auto it = activeHandles.find(object);
-    assert(it != activeHandles.end());
-    activeHandles.erase(it);
-  }
 
-  void APIContext::releaseAll()
-  {
-    LOG("#owl: context is dying; number of API handles (other than context itself) "
-        << "that have not yet been released: "
-        << (activeHandles.size()-1));
-    for (auto handle : activeHandles)
-      LOG(" - " + handle->toString());
-
-    // create a COPY of the handles we need to destroy, else
-    // destroying the handles modifies the std::set while we're
-    // iterating through it!
-    std::set<APIHandle *> stillActiveHandles = activeHandles;
-    for (auto handle : stillActiveHandles)  {
-      assert(handle);
-      delete handle;
+    void APIContext::forget(APIHandle *object) {
+        std::lock_guard<std::mutex> lock(monitor);
+        assert(object);
+        auto it = activeHandles.find(object);
+        assert(it != activeHandles.end());
+        activeHandles.erase(it);
     }
 
-    assert(activeHandles.empty());
-  }
-  
-  void APIContext::track(APIHandle *object)
-  {
-    assert(object);
+    void APIContext::releaseAll() {
+        LOG("#owl: context is dying; number of API handles (other than context itself) "
+                    << "that have not yet been released: "
+                    << (activeHandles.size() - 1));
+        for (auto handle : activeHandles)
+            LOG(" - " + handle->toString());
 
-    std::lock_guard<std::mutex> lock(monitor);
-    
-    auto it = activeHandles.find(object);
-    assert(it == activeHandles.end());
-    activeHandles.insert(object);
-  }
+        // create a COPY of the handles we need to destroy, else
+        // destroying the handles modifies the std::set while we're
+        // iterating through it!
+        std::set<APIHandle *> stillActiveHandles = activeHandles;
+        for (auto handle : stillActiveHandles) {
+            assert(handle);
+            delete handle;
+        }
 
-  APIHandle *APIContext::createHandle(Object::SP object)
-  {
-    assert(object);
-    APIHandle *handle = new APIHandle(object,this);
-    track(handle);
-    return handle;
-  }
+        assert(activeHandles.empty());
+    }
+
+    void APIContext::track(APIHandle *object) {
+        assert(object);
+
+        std::lock_guard<std::mutex> lock(monitor);
+
+        auto it = activeHandles.find(object);
+        assert(it == activeHandles.end());
+        activeHandles.insert(object);
+    }
+
+    APIHandle *APIContext::createHandle(Object::SP object) {
+        assert(object);
+        APIHandle *handle = new APIHandle(object, this);
+        track(handle);
+        return handle;
+    }
 
 } // ::owl  

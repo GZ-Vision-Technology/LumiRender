@@ -21,25 +21,27 @@
 
 namespace owl {
 
-  /*! a geometry group / BLAS over user-defined/custom
-      primitives. This Group may only be built over UserGeom's */
-  struct UserGeomGroup : public GeomGroup {
+    /*! a geometry group / BLAS over user-defined/custom
+        primitives. This Group may only be built over UserGeom's */
+    struct UserGeomGroup : public GeomGroup {
 
-    UserGeomGroup(Context *const context,
-                   size_t numChildren);
-    virtual std::string toString() const { return "UserGeomGroup"; }
+        UserGeomGroup(Context *const context,
+                      size_t numChildren);
 
-    /*! build() and refit() share most of their code; this functoin
-        does all that code, with only minor specialization based on
-        build vs refit */
-    void buildOrRefit(bool FULL_REBUILD);
-    
-    void buildAccel() override;
-    void refitAccel() override;
+        virtual std::string toString() const { return "UserGeomGroup"; }
 
-    /*! low-level accel structure builder for given device */
-    template<bool FULL_REBUILD>
-    void buildAccelOn(const DeviceContext::SP &device);
-  };
+        /*! build() and refit() share most of their code; this functoin
+            does all that code, with only minor specialization based on
+            build vs refit */
+        void buildOrRefit(bool FULL_REBUILD);
+
+        void buildAccel() override;
+
+        void refitAccel() override;
+
+        /*! low-level accel structure builder for given device */
+        template<bool FULL_REBUILD>
+        void buildAccelOn(const DeviceContext::SP &device);
+    };
 
 } // ::owl

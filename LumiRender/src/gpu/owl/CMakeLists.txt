@@ -24,15 +24,15 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(OWL_CXX_FLAGS "")
 if (NOT WIN32)
-    set (CMAKE_CXX_FLAGS "--std=c++11")
-    set (CUDA_PROPAGATE_HOST_FLAGS ON)
-endif()
+    set(CMAKE_CXX_FLAGS "--std=c++11")
+    set(CUDA_PROPAGATE_HOST_FLAGS ON)
+endif ()
 if (WIN32)
     # Nate: 11/3/20: I get "fatal error C1041: cannot open program database"
     # on windows from multiple targets writing to the same .pdb file simultaneously.
     # This flag doesn't seem to fix it.
     # set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "/FS")
-endif()
+endif ()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -49,7 +49,6 @@ cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 
-
 add_definitions(${OWL_CXX_FLAGS})
 
 
@@ -58,8 +57,8 @@ set(INTERFACE_POSITION_INDEPENDENT_CODE ON)
 set(CUDA_SEPARABLE_COMPILATION ON)
 set(CUDA_VERBOSE_BUILD ON)
 if (NOT WIN32)
-set(CUDA_NVCC_FLAGS --compiler-options -fPIC)
-endif()
+    set(CUDA_NVCC_FLAGS --compiler-options -fPIC)
+endif ()
 
 include_directories(${PROJECT_SOURCE_DIR}/)
 include_directories(${PROJECT_SOURCE_DIR}/include)
@@ -70,85 +69,85 @@ cuda_include_directories(${PROJECT_SOURCE_DIR}/include)
 
 set(OWL_SOURCES
 
-  # -------------------------------------------------------
-  # infrastructure
-  # -------------------------------------------------------
-  include/owl/owl.h
-  cmake/configure_tbb.cmake
-  cmake/configure_owl.cmake
-  cmake/configure_optix.cmake
-  cmake/configure_glfw.cmake
-  cmake/FindOptiX.cmake
+        # -------------------------------------------------------
+        # infrastructure
+        # -------------------------------------------------------
+        include/owl/owl.h
+        cmake/configure_tbb.cmake
+        cmake/configure_owl.cmake
+        cmake/configure_optix.cmake
+        cmake/configure_glfw.cmake
+        cmake/FindOptiX.cmake
 
-  # -------------------------------------------------------
-  # API layer
-  # -------------------------------------------------------
-  APIContext.h
-  APIContext.cpp
-  APIHandle.h
-  APIHandle.cpp
-  impl.cpp
-  
-  # -------------------------------------------------------
-  # data handling
-  # -------------------------------------------------------
-  Buffer.h
-  Buffer.cpp
-  Texture.h
-  Texture.cpp
+        # -------------------------------------------------------
+        # API layer
+        # -------------------------------------------------------
+        APIContext.h
+        APIContext.cpp
+        APIHandle.h
+        APIHandle.cpp
+        impl.cpp
 
-  
-  # -------------------------------------------------------
-  # base classes
-  # -------------------------------------------------------
-  Object.h
-  Object.cpp
-  Module.h
-  Module.cpp
-  RegisteredObject.h
-  RegisteredObject.cpp
-  DeviceContext.h
-  DeviceContext.cpp
-  
-  ObjectRegistry.h
-  ObjectRegistry.cpp
-  Context.h
-  Context.cpp
+        # -------------------------------------------------------
+        # data handling
+        # -------------------------------------------------------
+        Buffer.h
+        Buffer.cpp
+        Texture.h
+        Texture.cpp
 
-  # -------------------------------------------------------
-  # program types
-  # -------------------------------------------------------
-  SBTObject.h
-  SBTObject.cpp
-  RayGen.h
-  RayGen.cpp
-  LaunchParams.h
-  LaunchParams.cpp
-  MissProg.h
-  MissProg.cpp
-  Variable.h
-  Variable.cpp
-  
-  # -------------------------------------------------------
-  # geometries
-  # -------------------------------------------------------
-  Geometry.cpp
-  Triangles.cu
-  UserGeom.cu
-  
-  # -------------------------------------------------------
-  # accel structures
-  # -------------------------------------------------------
-  Group.cpp
-  InstanceGroup.cpp
-  TrianglesGeomGroup.cpp
-  UserGeomGroup.cpp
-)
+
+        # -------------------------------------------------------
+        # base classes
+        # -------------------------------------------------------
+        Object.h
+        Object.cpp
+        Module.h
+        Module.cpp
+        RegisteredObject.h
+        RegisteredObject.cpp
+        DeviceContext.h
+        DeviceContext.cpp
+
+        ObjectRegistry.h
+        ObjectRegistry.cpp
+        Context.h
+        Context.cpp
+
+        # -------------------------------------------------------
+        # program types
+        # -------------------------------------------------------
+        SBTObject.h
+        SBTObject.cpp
+        RayGen.h
+        RayGen.cpp
+        LaunchParams.h
+        LaunchParams.cpp
+        MissProg.h
+        MissProg.cpp
+        Variable.h
+        Variable.cpp
+
+        # -------------------------------------------------------
+        # geometries
+        # -------------------------------------------------------
+        Geometry.cpp
+        Triangles.cu
+        UserGeom.cu
+
+        # -------------------------------------------------------
+        # accel structures
+        # -------------------------------------------------------
+        Group.cpp
+        InstanceGroup.cpp
+        TrianglesGeomGroup.cpp
+        UserGeomGroup.cpp
+        )
 
 cuda_add_library(owl_static
-  ${OWL_SOURCES}
-  STATIC
-  )
+        ${OWL_SOURCES}
+        STATIC
+        )
 
 
 # Nate: 11/3/20: I get "fatal error C1041: cannot open program database" 
@@ -166,9 +165,9 @@ cuda_add_library(owl_static
 #   )
 
 target_link_libraries(owl_static
-   ${CUDA_LIBRARIES}
-   ${CUDA_CUDA_LIBRARY}
-  )
+        ${CUDA_LIBRARIES}
+        ${CUDA_CUDA_LIBRARY}
+        )
 
 
 #set_target_properties(owl PROPERTIES POSITION_INDEPENDENT_CODE ON)

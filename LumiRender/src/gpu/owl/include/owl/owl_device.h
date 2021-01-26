@@ -32,174 +32,168 @@
 
 namespace owl {
 
-  using namespace owl::common;
+    using namespace owl::common;
 
-  inline __device__ vec2i getLaunchIndex()
-  {
-    return (vec2i)optixGetLaunchIndex();
-  }
-
-  /*! return dimensions of a 2-dimensional optix launch. For 1- or
-    3-dimensional launches we'll need separate functions */
-  inline __device__ vec2i getLaunchDims()
-  {
-    return (vec2i)optixGetLaunchDimensions();
-  }
-
-  /*! return pointer to currently running program's "SBT Data" (which
-      is pretty much what in owl we call the Program Data/Program
-      Variables Struct. This method returns an untyped pointer, for
-      automatic type conversion see the getProgramData<T> template */
-  inline __device__ const void *getProgramDataPointer()
-  {
-    return (const void*)optixGetSbtDataPointer();
-  }
-
-  /*! convenience type-tagged version of \see
-      getProgramDataPointer. Note this function does _not_ perform any
-      type-checks, it's just hard-casting the SBT pointer to the
-      expected type. */
-  template<typename T>
-  inline __device__ const T &getProgramData()
-  {
-    return *(const T*)getProgramDataPointer();
-  }
-
-
-  // ==================================================================
-  // general convenience/helper functions - may move to samples
-  // ==================================================================
-  inline __device__ float linear_to_srgb(float x) {
-    if (x <= 0.0031308f) {
-      return 12.92f * x;
+    inline __device__ vec2i getLaunchIndex() {
+        return (vec2i) optixGetLaunchIndex();
     }
-    return 1.055f * pow(x, 1.f/2.4f) - 0.055f;
-  }
 
-  inline __device__ uint32_t make_8bit(const float f)
-  {
-    return min(255,max(0,int(f*256.f)));
-  }
+    /*! return dimensions of a 2-dimensional optix launch. For 1- or
+      3-dimensional launches we'll need separate functions */
+    inline __device__ vec2i getLaunchDims() {
+        return (vec2i) optixGetLaunchDimensions();
+    }
 
-  inline __device__ uint32_t make_rgba(const vec3f color)
-  {
-    return
-      (make_8bit(color.x) << 0) +
-      (make_8bit(color.y) << 8) +
-      (make_8bit(color.z) << 16) +
-      (0xffU << 24);
-  }
-  inline __device__ uint32_t make_rgba(const vec4f color)
-  {
-    return
-      (make_8bit(color.x) << 0) +
-      (make_8bit(color.y) << 8) +
-      (make_8bit(color.z) << 16) +
-      (make_8bit(color.w) << 24);
-  }
+    /*! return pointer to currently running program's "SBT Data" (which
+        is pretty much what in owl we call the Program Data/Program
+        Variables Struct. This method returns an untyped pointer, for
+        automatic type conversion see the getProgramData<T> template */
+    inline __device__ const void *getProgramDataPointer() {
+        return (const void *) optixGetSbtDataPointer();
+    }
 
-
-  static __forceinline__ __device__ void* unpackPointer( uint32_t i0, uint32_t i1 )
-  {
-    const uint64_t uptr = static_cast<uint64_t>( i0 ) << 32 | i1;
-    void*           ptr = reinterpret_cast<void*>( uptr ); 
-    return ptr;
-  }
+    /*! convenience type-tagged version of \see
+        getProgramDataPointer. Note this function does _not_ perform any
+        type-checks, it's just hard-casting the SBT pointer to the
+        expected type. */
+    template<typename T>
+    inline __device__ const T &getProgramData() {
+        return *(const T *) getProgramDataPointer();
+    }
 
 
-  static __forceinline__ __device__ void  packPointer( void* ptr, uint32_t& i0, uint32_t& i1 )
-  {
-    const uint64_t uptr = reinterpret_cast<uint64_t>( ptr );
-    i0 = uptr >> 32;
-    i1 = uptr & 0x00000000ffffffff;
-  }
+    // ==================================================================
+    // general convenience/helper functions - may move to samples
+    // ==================================================================
+    inline __device__ float linear_to_srgb(float x) {
+        if (x <= 0.0031308f) {
+            return 12.92f * x;
+        }
+        return 1.055f * pow(x, 1.f / 2.4f) - 0.055f;
+    }
+
+    inline __device__ uint32_t make_8bit(const float f) {
+        return min(255, max(0, int(f * 256.f)));
+    }
+
+    inline __device__ uint32_t make_rgba(const vec3f color) {
+        return
+                (make_8bit(color.x) << 0) +
+                (make_8bit(color.y) << 8) +
+                (make_8bit(color.z) << 16) +
+                (0xffU << 24);
+    }
+
+    inline __device__ uint32_t make_rgba(const vec4f color) {
+        return
+                (make_8bit(color.x) << 0) +
+                (make_8bit(color.y) << 8) +
+                (make_8bit(color.z) << 16) +
+                (make_8bit(color.w) << 24);
+    }
 
 
-  static __forceinline__ __device__ void *getPRDPointer()
-  { 
-    const uint32_t u0 = optixGetPayload_0();
-    const uint32_t u1 = optixGetPayload_1();
-    return unpackPointer(u0, u1);
-  }
-
-  template<typename T>
-  static __forceinline__ __device__ T &getPRD()
-  { return *(T*)getPRDPointer(); }
-
-  template<int _rayType=0, int _numRayTypes=1>
-  struct RayT {
-    enum { rayType = _rayType };
-    enum { numRayTypes = _numRayTypes };
-    inline __device__ RayT() {}
-    inline __device__ RayT(const vec3f &origin,
-                          const vec3f &direction,
-                          float tmin,
-                          float tmax)
-      : origin(origin),
-        direction(direction),
-        tmin(tmin),
-        tmax(tmax)
-    {}
-    
-    vec3f origin, direction;
-    float tmin=0.f,tmax=1e30f,time=0.f;
-  };
-  typedef RayT<0,1> Ray;
+    static __forceinline__ __device__ void *unpackPointer(uint32_t i0, uint32_t i1) {
+        const uint64_t uptr = static_cast<uint64_t>( i0 ) << 32 | i1;
+        void *ptr = reinterpret_cast<void *>( uptr );
+        return ptr;
+    }
 
 
-  template<typename RayType, typename PRD>
-  inline __device__
-  void traceRay(OptixTraversableHandle traversable,
-                const RayType &ray,
-                PRD           &prd,
-                uint32_t rayFlags = 0u)
-  {
-    unsigned int           p0 = 0;
-    unsigned int           p1 = 0;
-    owl::packPointer(&prd,p0,p1);
+    static __forceinline__ __device__ void packPointer(void *ptr, uint32_t &i0, uint32_t &i1) {
+        const uint64_t uptr = reinterpret_cast<uint64_t>( ptr );
+        i0 = uptr >> 32;
+        i1 = uptr & 0x00000000ffffffff;
+    }
 
-    optixTrace(traversable,
-               (const float3&)ray.origin,
-               (const float3&)ray.direction,
-               ray.tmin,
-               ray.tmax,
-               ray.time,
-               (OptixVisibilityMask)-1,
-               /*rayFlags     */rayFlags,
-               /*SBToffset    */ray.rayType,
-               /*SBTstride    */ray.numRayTypes,
-               /*missSBTIndex */ray.rayType,
-               p0,
-               p1);
-  }
 
-  template<typename PRD>
-  inline __device__
-  void trace(OptixTraversableHandle traversable,
-             const Ray &ray,
-             int numRayTypes,
-             PRD &prd,
-             int sbtOffset = 0)
-  {
-    unsigned int           p0 = 0;
-    unsigned int           p1 = 0;
-    owl::packPointer(&prd,p0,p1);
-    
-    optixTrace(traversable,
-               (const float3&)ray.origin,
-               (const float3&)ray.direction,
-               ray.tmin,
-               ray.tmax,
-               ray.time,
-               (OptixVisibilityMask)-1,
-               /*rayFlags     */0u,
-               /*SBToffset    */ray.rayType + numRayTypes*sbtOffset,
-               /*SBTstride    */numRayTypes,
-               /*missSBTIndex */ray.rayType,
-               p0,
-               p1);
-  }
-  
+    static __forceinline__ __device__ void *getPRDPointer() {
+        const uint32_t u0 = optixGetPayload_0();
+        const uint32_t u1 = optixGetPayload_1();
+        return unpackPointer(u0, u1);
+    }
+
+    template<typename T>
+    static __forceinline__ __device__ T &getPRD() { return *(T *) getPRDPointer(); }
+
+    template<int _rayType = 0, int _numRayTypes = 1>
+    struct RayT {
+        enum {
+            rayType = _rayType
+        };
+        enum {
+            numRayTypes = _numRayTypes
+        };
+
+        inline __device__ RayT() {}
+
+        inline __device__ RayT(const vec3f &origin,
+                               const vec3f &direction,
+                               float tmin,
+                               float tmax)
+                : origin(origin),
+                  direction(direction),
+                  tmin(tmin),
+                  tmax(tmax) {}
+
+        vec3f origin, direction;
+        float tmin = 0.f, tmax = 1e30f, time = 0.f;
+    };
+
+    typedef RayT<0, 1> Ray;
+
+
+    template<typename RayType, typename PRD>
+    inline __device__
+    void traceRay(OptixTraversableHandle traversable,
+                  const RayType &ray,
+                  PRD &prd,
+                  uint32_t rayFlags = 0u) {
+        unsigned int p0 = 0;
+        unsigned int p1 = 0;
+        owl::packPointer(&prd, p0, p1);
+
+        optixTrace(traversable,
+                   (const float3 &) ray.origin,
+                   (const float3 &) ray.direction,
+                   ray.tmin,
+                   ray.tmax,
+                   ray.time,
+                   (OptixVisibilityMask) -1,
+                /*rayFlags     */rayFlags,
+                /*SBToffset    */ray.rayType,
+                /*SBTstride    */ray.numRayTypes,
+                /*missSBTIndex */ray.rayType,
+                   p0,
+                   p1);
+    }
+
+    template<typename PRD>
+    inline __device__
+    void trace(OptixTraversableHandle traversable,
+               const Ray &ray,
+               int numRayTypes,
+               PRD &prd,
+               int sbtOffset = 0) {
+        unsigned int p0 = 0;
+        unsigned int p1 = 0;
+        owl::packPointer(&prd, p0, p1);
+
+        optixTrace(traversable,
+                   (const float3 &) ray.origin,
+                   (const float3 &) ray.direction,
+                   ray.tmin,
+                   ray.tmax,
+                   ray.time,
+                   (OptixVisibilityMask) -1,
+                /*rayFlags     */0u,
+                /*SBToffset    */ray.rayType + numRayTypes * sbtOffset,
+                /*SBTstride    */numRayTypes,
+                /*missSBTIndex */ray.rayType,
+                   p0,
+                   p1);
+    }
+
 } // ::owl
 
 #define OPTIX_RAYGEN_PROGRAM(programName) \

@@ -19,29 +19,29 @@
 
 namespace owl {
 
-  struct APIHandle;
-  
-  struct APIContext : public Context {
-    typedef std::shared_ptr<APIContext> SP;
+    struct APIHandle;
 
-    APIContext(int32_t *requestedDeviceIDs,
-               int      numRequestedDevices)
-      : Context(requestedDeviceIDs,
-                numRequestedDevices)
-    {}
-    
-    APIHandle *createHandle(Object::SP object);
+    struct APIContext : public Context {
+        typedef std::shared_ptr<APIContext> SP;
 
-    void track(APIHandle *object);
-    
-    void forget(APIHandle *object);
+        APIContext(int32_t *requestedDeviceIDs,
+                   int numRequestedDevices)
+                : Context(requestedDeviceIDs,
+                          numRequestedDevices) {}
 
-    /*! delete - and thereby, release - all handles that we still
-      own. */
-    void releaseAll();
-    std::set<APIHandle *> activeHandles;
-    
-    std::mutex monitor;
-  };
-  
+        APIHandle *createHandle(Object::SP object);
+
+        void track(APIHandle *object);
+
+        void forget(APIHandle *object);
+
+        /*! delete - and thereby, release - all handles that we still
+          own. */
+        void releaseAll();
+
+        std::set<APIHandle *> activeHandles;
+
+        std::mutex monitor;
+    };
+
 } // ::owl  

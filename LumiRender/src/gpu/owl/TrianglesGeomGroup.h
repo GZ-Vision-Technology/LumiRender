@@ -20,25 +20,26 @@
 
 namespace owl {
 
-  /*! a group / BLAS over triangle meshes */
-  struct TrianglesGeomGroup : public GeomGroup {
+    /*! a group / BLAS over triangle meshes */
+    struct TrianglesGeomGroup : public GeomGroup {
 
-    /*! constructor - passthroughto parent class */
-    TrianglesGeomGroup(Context *const context, size_t numChildren);
-    
-    /*! pretty-printer, for printf-debugging */
-    std::string toString() const override;
+        /*! constructor - passthroughto parent class */
+        TrianglesGeomGroup(Context *const context, size_t numChildren);
 
-    void buildAccel() override;
-    void refitAccel() override;
+        /*! pretty-printer, for printf-debugging */
+        std::string toString() const override;
 
-    /*! (re-)compute the Group::bounds[2] information for motion blur
-      - ie, our _parent_ node may need this */
-    void updateMotionBounds();
+        void buildAccel() override;
 
-    /*! low-level accel structure builder for given device */
-    template<bool FULL_REBUILD>
-    void buildAccelOn(const DeviceContext::SP &device);
-  };
+        void refitAccel() override;
+
+        /*! (re-)compute the Group::bounds[2] information for motion blur
+          - ie, our _parent_ node may need this */
+        void updateMotionBounds();
+
+        /*! low-level accel structure builder for given device */
+        template<bool FULL_REBUILD>
+        void buildAccelOn(const DeviceContext::SP &device);
+    };
 
 } // ::owl

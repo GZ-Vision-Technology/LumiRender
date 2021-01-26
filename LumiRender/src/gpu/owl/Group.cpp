@@ -18,69 +18,61 @@
 #include "Context.h"
 
 namespace owl {
-  
-  // ------------------------------------------------------------------
-  // Group::DeviceData
-  // ------------------------------------------------------------------
-  
-  /*! constructor - pass-through to parent class */
-  Group::DeviceData::DeviceData(const DeviceContext::SP &device)
-    : RegisteredObject::DeviceData(device)
-  {}
 
-  // ------------------------------------------------------------------
-  // Group
-  // ------------------------------------------------------------------
-  
-  /*! constructor, that registers this group in the context's registry */
-  Group::Group(Context *const context,
-               ObjectRegistry &registry)
-    : RegisteredObject(context,registry)
-  {}
+    // ------------------------------------------------------------------
+    // Group::DeviceData
+    // ------------------------------------------------------------------
 
-  /*! creates the device-specific data for this group */
-  RegisteredObject::DeviceData::SP Group::createOn(const DeviceContext::SP &device) 
-  {
-    return std::make_shared<DeviceData>(device);
-  }
-  
-  /*! pretty-printer, for printf-debugging */
-  std::string Group::toString() const
-  {
-    return "Group";
-  }
+    /*! constructor - pass-through to parent class */
+    Group::DeviceData::DeviceData(const DeviceContext::SP &device)
+            : RegisteredObject::DeviceData(device) {}
 
-  // ------------------------------------------------------------------
-  // GeomGroup
-  // ------------------------------------------------------------------
+    // ------------------------------------------------------------------
+    // Group
+    // ------------------------------------------------------------------
 
-  /*! constructor for given number of chilren, will allocate the SBT
-    range for those children*/
-  GeomGroup::GeomGroup(Context *const context,
-                       size_t numChildren)
-    : Group(context,context->groups),
-      geometries(numChildren),
-      sbtOffset(context->sbtRangeAllocator.alloc(numChildren))
-  {}
-  
-  /*! destructor that releases the SBT range used by this group */
-  GeomGroup::~GeomGroup()
-  {
-    context->sbtRangeAllocator.release(sbtOffset,geometries.size());
-  }
+    /*! constructor, that registers this group in the context's registry */
+    Group::Group(Context *const context,
+                 ObjectRegistry &registry)
+            : RegisteredObject(context, registry) {}
+
+    /*! creates the device-specific data for this group */
+    RegisteredObject::DeviceData::SP Group::createOn(const DeviceContext::SP &device) {
+        return std::make_shared<DeviceData>(device);
+    }
+
+    /*! pretty-printer, for printf-debugging */
+    std::string Group::toString() const {
+        return "Group";
+    }
+
+    // ------------------------------------------------------------------
+    // GeomGroup
+    // ------------------------------------------------------------------
+
+    /*! constructor for given number of chilren, will allocate the SBT
+      range for those children*/
+    GeomGroup::GeomGroup(Context *const context,
+                         size_t numChildren)
+            : Group(context, context->groups),
+              geometries(numChildren),
+              sbtOffset(context->sbtRangeAllocator.alloc(numChildren)) {}
+
+    /*! destructor that releases the SBT range used by this group */
+    GeomGroup::~GeomGroup() {
+        context->sbtRangeAllocator.release(sbtOffset, geometries.size());
+    }
 
 
-  /*! set given child ID to given geometry */
-  void GeomGroup::setChild(size_t childID, Geom::SP child)
-  {
-    assert(childID < geometries.size());
-    geometries[childID] = child;
-  }
-  
-  /*! pretty-printer, for printf-debugging */
-  std::string GeomGroup::toString() const
-  {
-    return "GeomGroup";
-  }
-  
+    /*! set given child ID to given geometry */
+    void GeomGroup::setChild(size_t childID, Geom::SP child) {
+        assert(childID < geometries.size());
+        geometries[childID] = child;
+    }
+
+    /*! pretty-printer, for printf-debugging */
+    std::string GeomGroup::toString() const {
+        return "GeomGroup";
+    }
+
 } // ::owl
