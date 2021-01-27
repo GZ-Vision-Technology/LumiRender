@@ -12,4 +12,3 @@ endfunction()
 
 
 add_subdirectory(cuda)
-add_subdirectory(owl)
