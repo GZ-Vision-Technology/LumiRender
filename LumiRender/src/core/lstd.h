@@ -1,0 +1,362 @@
+//
+// Created by Zero on 2021/1/27.
+//
+
+
+#pragma once
+
+#include <variant>
+#include <vector>
+#include <optional>
+#include <memory>
+#include <cstring>
+#include "math/data_types.h"
+
+namespace luminous {
+    namespace lstd {
+        struct nullopt_t {
+        };
+        inline constexpr nullopt_t nullopt{};
+
+        template<typename T>
+        class optional {
+        public:
+            using value_type = T;
+            XPU optional(nullopt_t) : optional() {}
+
+            optional() = default;
+
+            XPU optional(const T &v) : set(true) { new(ptr()) T(v); }
+
+            XPU optional(T &&v) : set(true) { new(ptr()) T(std::move(v)); }
+
+            XPU optional(const optional &v) : set(v.has_value()) {
+                if (v.has_value())
+                    new(ptr()) T(v.value());
+            }
+
+            XPU optional(optional &&v) : set(v.has_value()) {
+                if (v.has_value()) {
+                    new(ptr()) T(std::move(v.value()));
+                    v.reset();
+                }
+            }
+
+            XPU optional &operator=(const T &v) {
+                reset();
+                new(ptr()) T(v);
+                set = true;
+                return *this;
+            }
+
+            XPU optional &operator=(T &&v) {
+                reset();
+                new(ptr()) T(std::move(v));
+                set = true;
+                return *this;
+            }
+
+            XPU optional &operator=(const optional &v) {
+                reset();
+                if (v.has_value()) {
+                    new(ptr()) T(v.value());
+                    set = true;
+                }
+                return *this;
+            }
+
+            template<typename... Ts>
+            CPU void emplace(Ts &&...args) {
+                reset();
+                new(ptr()) T(std::forward<Ts>(args)...);
+                set = true;
+            }
+
+            XPU optional &operator=(optional &&v) {
+                reset();
+                if (v.has_value()) {
+                    new(ptr()) T(std::move(v.value()));
+                    set = true;
+                    v.reset();
+                }
+                return *this;
+            }
+
+            XPU ~optional() { reset(); }
+
+            XPU explicit operator bool() const { return set; }
+
+            XPU T value_or(const T &alt) const { return set ? value() : alt; }
+
+            XPU T *operator->() { return &value(); }
+
+            XPU const T *operator->() const { return &value(); }
+
+            XPU T &operator*() { return value(); }
+
+            XPU const T &operator*() const { return value(); }
+
+            XPU T &value() {
+                AKR_CHECK(set);
+                return *ptr();
+            }
+
+            XPU const T &value() const {
+                AKR_CHECK(set);
+                return *ptr();
+            }
+
+            XPU void reset() {
+                if (set) {
+                    value().~T();
+                    set = false;
+                }
+            }
+
+            XPU bool has_value() const { return set; }
+
+        private:
+            // #ifdef __NVCC__
+            // Work-around NVCC bug
+            XPU T *ptr() { return reinterpret_cast<T *>(&optionalValue); }
+
+            XPU const T *ptr() const { return reinterpret_cast<const T *>(&optionalValue); }
+            // #else
+            //         XPU
+            //         T *ptr() { return std::launder(reinterpret_cast<T *>(&optionalValue)); }
+            //         XPU
+            //         const T *ptr() const { return std::launder(reinterpret_cast<const T *>(&optionalValue)); }
+            // #endif
+
+            std::aligned_storage_t<sizeof(T), alignof(T)> optionalValue;
+            bool set = false;
+        };
+
+        template<typename... T>
+        struct TypeIndex {
+            template<typename U, typename Tp, typename... Rest>
+            struct GetIndex_ {
+                static const int value =
+                        std::is_same<Tp, U>::value
+                        ? 0
+                        : ((GetIndex_<U, Rest...>::value == -1) ? -1 : 1 + GetIndex_<U, Rest...>::value);
+            };
+            template<typename U, typename Tp>
+            struct GetIndex_<U, Tp> {
+                static const int value = std::is_same<Tp, U>::value ? 0 : -1;
+            };
+            template<int I, typename Tp, typename... Rest>
+            struct GetType_ {
+                using type = typename std::conditional<I == 0, Tp, typename GetType_<I - 1, Rest...>::type>::type;
+            };
+
+            template<int I, typename Tp>
+            struct GetType_<I, Tp> {
+                using type = typename std::conditional<I == 0, Tp, void>::type;
+            };
+
+            template<typename U>
+            struct GetIndex {
+                static const int value = GetIndex_<U, T...>::value;
+            };
+
+            template<int N>
+            struct GetType {
+                using type = typename GetType_<N, T...>::type;
+            };
+        };
+        template<class T, class... Rest>
+        struct FirstOf {
+            using type = T;
+        };
+
+        template<typename U, typename... T>
+        struct SizeOf {
+            static constexpr int value = std::max<int>(sizeof(U), SizeOf<T...>::value);
+        };
+        template<typename T>
+        struct SizeOf<T> {
+            static constexpr int value = sizeof(T);
+        };
+
+        template<typename... T>
+        struct Variant {
+        private:
+            static constexpr int nTypes = sizeof...(T);
+            static constexpr std::size_t alignment_value = std::max({alignof(T)...});
+            typename std::aligned_storage<SizeOf<T...>::value, alignment_value>::type data;
+            int index = -1;
+
+        public:
+            using Index = TypeIndex<T...>;
+            static constexpr size_t num_types = nTypes;
+
+            template<typename U>
+            XPU Variant(const U &u) {
+                static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
+                new(&data) U(u);
+                index = Index::template GetIndex<U>::value;
+            }
+
+            XPU Variant(const Variant &v) : index(v.index) {
+                v.dispatch([&](const auto &item) {
+                    using U = std::decay_t<decltype(item)>;
+                    new(&data) U(item);
+                });
+            }
+
+            XPU int type_index() const { return index; }
+
+            template<typename U>
+            XPU constexpr static int index_of() {
+                return Index::template GetIndex<U>::value;
+            }
+
+            XPU Variant &operator=(const Variant &v) noexcept {
+                if (this == &v)
+                    return *this;
+                if (index != -1)
+                    _drop();
+                index = v.index;
+                v.dispatch([&](const auto &item) {
+                    using U = std::decay_t<decltype(item)>;
+                    new(&data) U(item);
+                });
+                return *this;
+            }
+
+            XPU Variant(Variant &&v) noexcept: index(v.index) {
+                index = v.index;
+                v.index = -1;
+                std::memcpy(&data, &v.data, sizeof(data));
+            }
+
+            XPU Variant &operator=(Variant &&v) noexcept {
+                if (index != -1)
+                    _drop();
+                index = v.index;
+                v.index = -1;
+                std::memcpy(&data, &v.data, sizeof(data));
+                return *this;
+            }
+
+            template<typename U>
+            XPU Variant &operator=(const U &u) {
+                if (index != -1) {
+                    _drop();
+                }
+                static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
+                new(&data) U(u);
+                index = Index::template GetIndex<U>::value;
+                return *this;
+            }
+
+            XPU bool null() const { return index == -1; }
+
+            template<typename U>
+            XPU bool isa() const {
+                static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
+                return Index::template GetIndex<U>::value == index;
+            }
+
+            template<typename U>
+            XPU U *get() {
+                static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
+                return Index::template GetIndex<U>::value != index ? nullptr : reinterpret_cast<U *>(&data);
+            }
+
+            template<typename U>
+            XPU const U *get() const {
+                static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
+                return Index::template GetIndex<U>::value != index ? nullptr : reinterpret_cast<const U *>(&data);
+            }
+
+#define _GEN_CASE_N(N)                                                                                                 \
+    case N:                                                                                                            \
+        if constexpr (N < nTypes) {                                                                                    \
+            using ty = typename Index::template GetType<N>::type;                                                      \
+            if constexpr (!std::is_same_v<ty, std::monostate>) {                                                       \
+                if constexpr (std::is_const_v<std::remove_pointer_t<decltype(this)>>)                                  \
+                    return visitor(*reinterpret_cast<const ty *>(&data));                                              \
+                else                                                                                                   \
+                    return visitor(*reinterpret_cast<ty *>(&data));                                                    \
+            }                                                                                                          \
+        };                                                                                                             \
+        break;
+#define _GEN_CASES_2()                                                                                                 \
+    _GEN_CASE_N(0)                                                                                                     \
+    _GEN_CASE_N(1)
+#define _GEN_CASES_4()                                                                                                 \
+    _GEN_CASES_2()                                                                                                     \
+    _GEN_CASE_N(2)                                                                                                     \
+    _GEN_CASE_N(3)
+#define _GEN_CASES_8()                                                                                                 \
+    _GEN_CASES_4()                                                                                                     \
+    _GEN_CASE_N(4)                                                                                                     \
+    _GEN_CASE_N(5)                                                                                                     \
+    _GEN_CASE_N(6)                                                                                                     \
+    _GEN_CASE_N(7)
+#define _GEN_CASES_16()                                                                                                \
+    _GEN_CASES_8()                                                                                                     \
+    _GEN_CASE_N(8)                                                                                                     \
+    _GEN_CASE_N(9)                                                                                                     \
+    _GEN_CASE_N(10)                                                                                                    \
+    _GEN_CASE_N(11)                                                                                                    \
+    _GEN_CASE_N(12)                                                                                                    \
+    _GEN_CASE_N(13)                                                                                                    \
+    _GEN_CASE_N(14)                                                                                                    \
+    _GEN_CASE_N(15)
+#define _GEN_DISPATCH_BODY()                                                                                           \
+    using Ret = std::invoke_result_t<Visitor, typename FirstOf<T...>::type &>;                                         \
+    static_assert(nTypes <= 16, "too many types");                                                                     \
+    if constexpr (nTypes <= 2) {                                                                                       \
+        switch (index) { _GEN_CASES_2(); }                                                                             \
+    } else if constexpr (nTypes <= 4) {                                                                                \
+        switch (index) { _GEN_CASES_4(); }                                                                             \
+    } else if constexpr (nTypes <= 8) {                                                                                \
+        switch (index) { _GEN_CASES_8(); }                                                                             \
+    } else if constexpr (nTypes <= 16) {                                                                               \
+        switch (index) { _GEN_CASES_16(); }                                                                            \
+    }                                                                                                                  \
+    if constexpr (std::is_same_v<void, Ret>) {                                                                         \
+        return;                                                                                                        \
+    } else {                                                                                                           \
+        LUMINOUS_ERROR("No matching case");                                                                            \
+    }
+
+            template<class Visitor>
+            XPU auto dispatch(Visitor &&visitor) {
+                _GEN_DISPATCH_BODY()
+            }
+
+            template<class Visitor>
+            XPU auto dispatch(Visitor &&visitor) const { _GEN_DISPATCH_BODY()}
+
+            XPU ~Variant() {
+                if (index != -1)
+                    _drop();
+            }
+
+        private:
+            XPU void _drop() {
+                auto *that = this; // prevent gcc ICE
+                dispatch([=](auto &&self) {
+                    using U = std::decay_t<decltype(self)>;
+                    that->template get<U>()->~U();
+                });
+            }
+
+#undef _GEN_CASE_N
+#define LUMINOUS_VAR_DISPATCH(method, ...)                                                                             \
+    return this->dispatch([&, this](auto &&self) {                                                                     \
+        (void)this;                                                                                                    \
+        return self.method(__VA_ARGS__);                                                                               \
+    });
+#define LUMINOUS_VAR_PTR_DISPATCH(method, ...)                                                                         \
+    return this->dispatch([&, this](auto &&self) {                                                                     \
+        (void)this;                                                                                                    \
+        return self->method(__VA_ARGS__);                                                                              \
+    });
+        };
+    }
+}
