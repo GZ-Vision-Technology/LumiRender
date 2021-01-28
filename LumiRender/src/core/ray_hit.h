@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "math_util.h"
-#include "data_types.h"
+#include "math/math_util.h"
+#include "math/data_types.h"
 
 
 namespace luminous {

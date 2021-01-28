@@ -11,7 +11,7 @@
 
 #include <core/concepts.h>
 #include <core/platform.h>
-#include "math/warp.h"
+#include "warp.h"
 
 namespace luminous {
 
