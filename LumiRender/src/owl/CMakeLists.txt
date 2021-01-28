@@ -73,11 +73,11 @@ set(OWL_SOURCES
         # infrastructure
         # -------------------------------------------------------
         include/owl/owl.h
-        cmake/configure_tbb.cmake
-        cmake/configure_owl.cmake
-        cmake/configure_optix.cmake
-        cmake/configure_glfw.cmake
-        cmake/FindOptiX.cmake
+#        cmake/configure_tbb.cmake
+#        cmake/configure_owl.cmake
+#        cmake/configure_optix.cmake
+#        cmake/configure_glfw.cmake
+#        cmake/FindOptiX.cmake
 
         # -------------------------------------------------------
         # API layer
