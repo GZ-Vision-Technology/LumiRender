@@ -345,8 +345,8 @@ namespace luminous {
                     that->template get<U>()->~U();
                 });
             }
-
 #undef _GEN_CASE_N
+
 #define LUMINOUS_VAR_DISPATCH(method, ...)                                                                             \
     return this->dispatch([&, this](auto &&self) {                                                                     \
         (void)this;                                                                                                    \
@@ -358,5 +358,8 @@ namespace luminous {
         return self->method(__VA_ARGS__);                                                                              \
     });
         };
-    }
-}
+
+
+
+    } // luminous::lstd
+} // luminous
