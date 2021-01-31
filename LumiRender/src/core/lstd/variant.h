@@ -10,127 +10,12 @@
 #include <optional>
 #include <memory>
 #include <cstring>
-#include "math/data_types.h"
+#include "core/header.h"
+#include "common.h"
 
 namespace luminous {
     namespace lstd {
-        struct nullopt_t {
-        };
-        inline constexpr nullopt_t nullopt{};
 
-        template<typename T>
-        class optional {
-        public:
-            using value_type = T;
-            XPU optional(nullopt_t) : optional() {}
-
-            optional() = default;
-
-            XPU optional(const T &v) : set(true) { new(ptr()) T(v); }
-
-            XPU optional(T &&v) : set(true) { new(ptr()) T(std::move(v)); }
-
-            XPU optional(const optional &v) : set(v.has_value()) {
-                if (v.has_value())
-                    new(ptr()) T(v.value());
-            }
-
-            XPU optional(optional &&v) : set(v.has_value()) {
-                if (v.has_value()) {
-                    new(ptr()) T(std::move(v.value()));
-                    v.reset();
-                }
-            }
-
-            XPU optional &operator=(const T &v) {
-                reset();
-                new(ptr()) T(v);
-                set = true;
-                return *this;
-            }
-
-            XPU optional &operator=(T &&v) {
-                reset();
-                new(ptr()) T(std::move(v));
-                set = true;
-                return *this;
-            }
-
-            XPU optional &operator=(const optional &v) {
-                reset();
-                if (v.has_value()) {
-                    new(ptr()) T(v.value());
-                    set = true;
-                }
-                return *this;
-            }
-
-            template<typename... Ts>
-            CPU void emplace(Ts &&...args) {
-                reset();
-                new(ptr()) T(std::forward<Ts>(args)...);
-                set = true;
-            }
-
-            XPU optional &operator=(optional &&v) {
-                reset();
-                if (v.has_value()) {
-                    new(ptr()) T(std::move(v.value()));
-                    set = true;
-                    v.reset();
-                }
-                return *this;
-            }
-
-            XPU ~optional() { reset(); }
-
-            XPU explicit operator bool() const { return set; }
-
-            XPU T value_or(const T &alt) const { return set ? value() : alt; }
-
-            XPU T *operator->() { return &value(); }
-
-            XPU const T *operator->() const { return &value(); }
-
-            XPU T &operator*() { return value(); }
-
-            XPU const T &operator*() const { return value(); }
-
-            XPU T &value() {
-                AKR_CHECK(set);
-                return *ptr();
-            }
-
-            XPU const T &value() const {
-                AKR_CHECK(set);
-                return *ptr();
-            }
-
-            XPU void reset() {
-                if (set) {
-                    value().~T();
-                    set = false;
-                }
-            }
-
-            XPU bool has_value() const { return set; }
-
-        private:
-            // #ifdef __NVCC__
-            // Work-around NVCC bug
-            XPU T *ptr() { return reinterpret_cast<T *>(&optionalValue); }
-
-            XPU const T *ptr() const { return reinterpret_cast<const T *>(&optionalValue); }
-            // #else
-            //         XPU
-            //         T *ptr() { return std::launder(reinterpret_cast<T *>(&optionalValue)); }
-            //         XPU
-            //         const T *ptr() const { return std::launder(reinterpret_cast<const T *>(&optionalValue)); }
-            // #endif
-
-            std::aligned_storage_t<sizeof(T), alignof(T)> optionalValue;
-            bool set = false;
-        };
 
         template<typename... T>
         struct TypeIndex {

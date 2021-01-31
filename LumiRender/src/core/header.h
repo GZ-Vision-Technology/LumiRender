@@ -16,6 +16,18 @@
 #define L1_CACHE_LINE_SIZE 64
 #endif
 
+#define XPU
+#define GPU
+#define CPU
+
+#if defined(__CUDACC__)
+#define XPU __host__ __device__
+    #define GPU __device__
+    #define CPU __host__
+#endif
+
+#define F_INLINE __forceinline
+
 #define HAVE_POSIX_MEMALIGN
 
 
