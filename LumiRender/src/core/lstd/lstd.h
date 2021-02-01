@@ -8,4 +8,5 @@
 #include "common.h"
 #include "span.h"
 #include "variant.h"
+#include "vector.h"
 #include "memory_resource.h"
