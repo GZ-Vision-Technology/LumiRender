@@ -29,7 +29,7 @@ namespace luminous::render {
             return vec3f(d.x, d.y, z);
         }
 
-        inline __both__ float cosine_hemisphere_pdf(float cos_theta) {
+        inline __both__ float cosine_hemisphere_PDF(float cos_theta) {
             return cos_theta * constant::invPi;
         }
 
@@ -40,7 +40,7 @@ namespace luminous::render {
             return vec3f(cos(phi) * sin_theta, sin(phi) * sin_theta, cos_theta);
         }
 
-        inline __both__ float uniform_cone_pdf(float cos_theta_max) {
+        inline __both__ float uniform_cone_PDF(float cos_theta_max) {
             return 1 / (constant::_2Pi * (1 - cos_theta_max));
         }
 
@@ -56,7 +56,7 @@ namespace luminous::render {
             return vec3f(r * std::cos(phi), r * std::sin(phi), z);
         }
 
-        inline __both__ float uniform_sphere_pdf() {
+        inline __both__ float uniform_sphere_PDF() {
             return constant::inv4Pi;
         }
 
@@ -70,34 +70,34 @@ namespace luminous::render {
             return vec3f(cosPhi * tmp, sinPhi * tmp, z);
         }
 
-        inline __both__ float uniform_hemisphere_pdf() {
+        inline __both__ float uniform_hemisphere_PDF() {
             return constant::inv2Pi;
         }
 
         inline __both__ float balance_heuristic(int nf,
-                                         float f_pdf,
+                                         float f_PDF,
                                          int ng,
-                                         float g_pdf) {
-            return (nf * f_pdf) / (nf * f_pdf + ng * g_pdf);
+                                         float g_PDF) {
+            return (nf * f_PDF) / (nf * f_PDF + ng * g_PDF);
         }
 
         inline __both__ float power_heuristic(int nf,
-                                     float f_pdf,
+                                     float f_PDF,
                                      int ng,
-                                     float g_pdf) {
-            float f = nf * f_pdf, g = ng * g_pdf;
+                                     float g_PDF) {
+            float f = nf * f_PDF, g = ng * g_PDF;
             return (f * f) / (f * f + g * g);
         }
 
         inline __both__ float mis_weight(int nf,
-                                float f_pdf,
+                                float f_PDF,
                                 int ng,
-                                float g_pdf) {
-            return balance_heuristic(nf, f_pdf, ng, g_pdf);
+                                float g_PDF) {
+            return balance_heuristic(nf, f_PDF, ng, g_PDF);
         }
 
-        inline __both__ float mis_weight(float f_pdf, float g_pdf) {
-            return mis_weight(1, f_pdf, 1, g_pdf);
+        inline __both__ float mis_weight(float f_PDF, float g_PDF) {
+            return mis_weight(1, f_PDF, 1, g_PDF);
         }
     }
 }

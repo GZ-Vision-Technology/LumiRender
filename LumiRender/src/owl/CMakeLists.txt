@@ -144,10 +144,18 @@ set(OWL_SOURCES
         UserGeomGroup.cpp
         )
 
+file(GLOB_RECURSE HEADER_FILES *.h*)
+file(GLOB_RECURSE SOURCE_FILES *.c*)
+
 cuda_add_library(owl_static
-        ${OWL_SOURCES}
+        ${SOURCE_FILES}
         STATIC
         )
+
+#cuda_add_library(owl_static
+#        ${OWL_SOURCES}
+#        STATIC
+#        )
 
 
 # Nate: 11/3/20: I get "fatal error C1041: cannot open program database" 

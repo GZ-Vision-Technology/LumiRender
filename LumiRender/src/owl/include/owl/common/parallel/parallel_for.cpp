@@ -14,11 +14,17 @@
 // limitations under the License.                                           //
 // ======================================================================== //
 
-#include "gdt/parallel/parallel_for.h"
+#include "parallel_for.h"
+#include <vector>
+#include <deque>
 
 namespace owl {
     namespace common {
+
+
+#if OWL_HAVE_TBB
         tbb::task_scheduler_init tbb_init(tbb::task_scheduler_init::automatic);
+#endif
 
         size_t num_work_threads() { return std::thread::hardware_concurrency(); }
 
