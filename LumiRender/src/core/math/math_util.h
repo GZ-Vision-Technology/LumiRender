@@ -426,7 +426,7 @@ MAKE_VECTOR_BINARY_FUNC(pow)
             if constexpr (n < 0) {
                 return 1 / Pow<-n>(v);
             } else if constexpr (n == 1) {
-                return v
+                return v;
             } else if constexpr (n == 0) {
                 return 1;
             }
@@ -445,8 +445,8 @@ MAKE_VECTOR_BINARY_FUNC(pow)
         #else
             // https://stackoverflow.com/a/49743348
             float p;
-            float t = std::log(std::max(FMA(a, -a, 1), std::numeric_limits<float>::min()));
-            CHECK(!IsNaN(t) && !std::isinf(t));
+            float t = log(max(FMA(a, -a, 1), std::numeric_limits<float>::min()));
+            assert(!std::isnan(t) && !std::isinf(t));
             if (std::abs(t) > 6.125f) {          // maximum ulp error = 2.35793
                 p = 3.03697567e-10f;             //  0x1.4deb44p-32
                 p = FMA(p, t, 2.93243101e-8f);   //  0x1.f7c9aep-26

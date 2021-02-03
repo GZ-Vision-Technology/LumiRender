@@ -112,35 +112,35 @@ namespace luminous {
         class VarianceEstimator {
         private:
             // VarianceEstimator Private Members
-            Float mean = 0, S = 0;
-            int64_t n = 0;
+            Float _mean = 0, _S = 0;
+            int64_t _n = 0;
         public:
             // VarianceEstimator Public Methods
             
             XPU void add(Float x) {
-                ++n;
-                Float delta = x - mean;
-                mean += delta / n;
-                Float delta2 = x - mean;
-                S += delta * delta2;
+                ++_n;
+                Float delta = x - _mean;
+                _mean += delta / _n;
+                Float delta2 = x - _mean;
+                _S += delta * delta2;
             }
             
-            XPU Float mean() const { return mean; }
+            XPU Float mean() const { return _mean; }
             
-            XPU Float variance() const { return (n > 1) ? S / (n - 1) : 0; }
+            XPU Float variance() const { return (_n > 1) ? _S / (_n - 1) : 0; }
             
-            XPU int64_t Count() const { return n; }
+            XPU int64_t count() const { return _n; }
             
             XPU Float relative_variance() const {
-                return (n < 1 || mean == 0) ? 0 : variance() / mean();
+                return (_n < 1 || _mean == 0) ? 0 : variance() / mean();
             }
 
             XPU void merge(const VarianceEstimator &ve) {
                 if (ve.n == 0)
                     return;
-                S = S + ve.S + Sqr(ve.mean - mean) * n * ve.n / (n + ve.n);
-                mean = (n * mean + ve.n * ve.mean) / (n + ve.n);
-                n += ve.n;
+                S = S + ve.S + Sqr(ve._mean - _mean) * n * ve.n / (n + ve.n);
+                _mean = (_n * _mean + ve._n * ve._mean) / (_n + ve._n);
+                _n += ve._n;
             }
 
         };
