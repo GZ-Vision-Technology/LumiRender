@@ -8,6 +8,7 @@
 #include <cmath>
 
 #include "data_types.h"
+#include "core/lstd/lstd.h"
 
 namespace luminous {
 
@@ -24,7 +25,8 @@ inline namespace math {
         constexpr auto _2OverPi = 0.636619772367581343075535053490057448f;
         constexpr auto sqrtOf2 = 1.41421356237309504880168872420969808f;
         constexpr auto invSqrtOf2 = 0.707106781186547524400844362104849039f;
-
+        constexpr float float_one_minus_epsilon = 0x1.fffffep-1;
+        constexpr float one_minus_epsilon = float_one_minus_epsilon;
         constexpr auto float_infinity = std::numeric_limits<float>::infinity();
 
         constexpr auto primeNumberCount = 1000u;
@@ -413,6 +415,70 @@ MAKE_VECTOR_BINARY_FUNC(pow)
         inline float safe_asin(float x) noexcept {
             return asin(clamp(x, -1.f, 1.f));
         }
+
+        template <typename T>
+        inline constexpr auto sqr(T v) {
+            return v * v;
+        }
+
+        template <int n>
+        inline constexpr float Pow(float v) {
+            if constexpr (n < 0) {
+                return 1 / Pow<-n>(v);
+            } else if constexpr (n == 1) {
+                return v
+            } else if constexpr (n == 0) {
+                return 1;
+            }
+            float n2 = Pow<n / 2>(v);
+            return n2 * n2 * Pow<n & 1>(v);
+        }
+
+        inline float FMA(float a, float b, float c) {
+            // a * b + c
+            return std::fma(a, b, c);
+        }
+
+        inline float erf_inv(float a) {
+        #ifdef IS_GPU_CODE
+            return erfinv(a);
+        #else
+            // https://stackoverflow.com/a/49743348
+            float p;
+            float t = std::log(std::max(FMA(a, -a, 1), std::numeric_limits<float>::min()));
+            CHECK(!IsNaN(t) && !std::isinf(t));
+            if (std::abs(t) > 6.125f) {          // maximum ulp error = 2.35793
+                p = 3.03697567e-10f;             //  0x1.4deb44p-32
+                p = FMA(p, t, 2.93243101e-8f);   //  0x1.f7c9aep-26
+                p = FMA(p, t, 1.22150334e-6f);   //  0x1.47e512p-20
+                p = FMA(p, t, 2.84108955e-5f);   //  0x1.dca7dep-16
+                p = FMA(p, t, 3.93552968e-4f);   //  0x1.9cab92p-12
+                p = FMA(p, t, 3.02698812e-3f);   //  0x1.8cc0dep-9
+                p = FMA(p, t, 4.83185798e-3f);   //  0x1.3ca920p-8
+                p = FMA(p, t, -2.64646143e-1f);  // -0x1.0eff66p-2
+                p = FMA(p, t, 8.40016484e-1f);   //  0x1.ae16a4p-1
+            } else {                             // maximum ulp error = 2.35456
+                p = 5.43877832e-9f;              //  0x1.75c000p-28
+                p = FMA(p, t, 1.43286059e-7f);   //  0x1.33b458p-23
+                p = FMA(p, t, 1.22775396e-6f);   //  0x1.49929cp-20
+                p = FMA(p, t, 1.12962631e-7f);   //  0x1.e52bbap-24
+                p = FMA(p, t, -5.61531961e-5f);  // -0x1.d70c12p-15
+                p = FMA(p, t, -1.47697705e-4f);  // -0x1.35be9ap-13
+                p = FMA(p, t, 2.31468701e-3f);   //  0x1.2f6402p-9
+                p = FMA(p, t, 1.15392562e-2f);   //  0x1.7a1e4cp-7
+                p = FMA(p, t, -2.32015476e-1f);  // -0x1.db2aeep-3
+                p = FMA(p, t, 8.86226892e-1f);   //  0x1.c5bf88p-1
+            }
+            return a * p;
+        #endif  // IS_GPU_CODE
+        }
+
+        // (0,0): v[0], (1, 0): v[1], (0, 1): v[2], (1, 1): v[3]
+        XPU inline float bilerp(lstd::array<float, 2> p, lstd::span<const float> v) {
+            return ((1 - p[0]) * (1 - p[1]) * v[0] + p[0] * (1 - p[1]) * v[1] +
+                    (1 - p[0]) * p[1] * v[2] + p[0] * p[1] * v[3]);
+        }
+
 
         inline bool is_power_of_two(uint32_t i) noexcept { return (i & (i-1)) == 0; }
 

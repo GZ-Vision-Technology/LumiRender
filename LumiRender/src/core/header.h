@@ -21,12 +21,16 @@
 #define CPU
 
 #if defined(__CUDACC__)
-#define XPU __host__ __device__
+    #define XPU __host__ __device__
     #define GPU __device__
     #define CPU __host__
 #endif
 
 #define F_INLINE __forceinline
+
+#if defined(__CUDA_ARCH__)
+    #define IS_GPU_CODE
+#endif
 
 #define HAVE_POSIX_MEMALIGN
 
