@@ -83,19 +83,6 @@ namespace luminous {
             return 0.5f * (std::erf((mu - x0) / sigmaRoot2) - std::erf((mu - x1) / sigmaRoot2));
         }
 
-        inline float sample_normal(float u, float mu = 0, float sigma = 1) {
-            return mu + sqrtOf2 * sigma * erf_inv(2 * u - 1);
-        }
-
-        XPU inline float bilinear_PDF(float2 p, lstd::span<const float> w) {
-            LUMINOUS_ERROR_IF(4 != w.size());
-            if (p.x < 0 || p.x > 1 || p.y < 0 || p.y > 1)
-                return 0;
-            if (w[0] + w[1] + w[2] + w[3] == 0)
-                return 1;
-            return 4 * bilerp({p[0], p[1]}, w) / (w[0] + w[1] + w[2] + w[3]);
-        }
-
         XPU inline float2 sample_bilinear(float2 u, lstd::span<const float> w) {
             LUMINOUS_ERROR_IF(4 != w.size());
             float2 p;
