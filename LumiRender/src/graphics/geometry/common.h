@@ -10,3 +10,4 @@
 #include "frame.h"
 #include "optics.h"
 #include "transform.h"
+#include "ray_hit.h"

@@ -8,7 +8,7 @@
 #include <atomic>
 #include <functional>
 #include <future>
-#include "core/math/data_types.h"
+#include "graphics/math/common.h"
 
 namespace luminous {
     inline namespace utility {

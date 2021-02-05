@@ -115,7 +115,24 @@ namespace luminous {
 
         inline bool is_power_of_two(int64_t i) noexcept { return i > 0 && (i & (i-1)) == 0; }
 
+
         // Vector Functions
+#define MAKE_VECTOR_UNARY_FUNC(func)                                          \
+    template<typename T, uint N>                                              \
+    [[nodiscard]] constexpr auto func(Vector<T, N> v) noexcept {              \
+        static_assert(N == 2 || N == 3 || N == 4);                            \
+        if constexpr (N == 2) {                                               \
+            return Vector<T, 2>{func(v.x), func(v.y)};                        \
+        } else if constexpr (N == 3) {                                        \
+            return Vector<T, 3>(func(v.x), func(v.y), func(v.z));             \
+        } else {                                                              \
+            return Vector<T, 4>(func(v.x), func(v.y), func(v.z), func(v.w));  \
+        }                                                                     \
+    }
+        MAKE_VECTOR_UNARY_FUNC(rcp)
+        MAKE_VECTOR_UNARY_FUNC(saturate)
+        MAKE_VECTOR_UNARY_FUNC(abs)
+
         template<uint N>
         [[nodiscard]] constexpr auto dot(Vector<float, N> u, Vector<float, N> v) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
@@ -125,18 +142,6 @@ namespace luminous {
                 return u.x * v.x + u.y * v.y + u.z * v.z;
             } else {
                 return u.x * v.x + u.y * v.y + u.z * v.z + u.w * v.w;
-            }
-        }
-
-        template<uint N>
-        [[nodiscard]] constexpr auto rcp(Vector<float, N> v) noexcept {
-            static_assert(N == 2 || N == 3 || N == 4);
-            if constexpr (N == 2) {
-                return make_float2(rcp(v.x), rcp(v.y));
-            } else if constexpr (N == 3) {
-                return make_float3(rcp(v.x), rcp(v.y), rcp(v.z));
-            } else {
-                return make_float4(rcp(v.x), rcp(v.y), rcp(v.z), rcp(v.w));
             }
         }
 

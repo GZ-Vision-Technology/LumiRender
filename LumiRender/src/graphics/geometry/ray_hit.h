@@ -5,12 +5,10 @@
 
 #pragma once
 
-#include "math/math_util.h"
-#include "math/data_types.h"
-
+#include "../header.h"
 
 namespace luminous {
-    inline namespace math {
+    inline namespace geometry {
         struct alignas(16) Ray {
             float origin_x;
             float origin_y;
@@ -22,7 +20,7 @@ namespace luminous {
             float t_max;
 
             XPU Ray(const float3 origin, const float3 direction,
-                    float t_max = math::constant::float_infinity,
+                    float t_max = luminous::constant::float_infinity,
                     float t_min = 0) noexcept:
             t_min(t_min),
             t_max(t_max) {
@@ -43,25 +41,25 @@ namespace luminous {
             }
         };
 
-        XPU inline float3 offset_ray_origin(const float3 &p_in, const float3 &n_in) noexcept {
-
-            constexpr auto origin = 1.0f / 32.0f;
-            constexpr auto float_scale = 1.0f / 65536.0f;
-            constexpr auto int_scale = 256.0f;
-
-            float3 n = n_in;
-            auto of_i = make_int3(static_cast<int>(int_scale * n.x),
-                                  static_cast<int>(int_scale * n.y),
-                                  static_cast<int>(int_scale * n.z));
-
-            float3 p = p_in;
-            float3 p_i = make_float3(
-                    bits_to_float(bits_to_int(p.x) + select(p.x < 0, -of_i.x, of_i.x)),
-                    bits_to_float(bits_to_int(p.y) + select(p.y < 0, -of_i.y, of_i.y)),
-                    bits_to_float(bits_to_int(p.z) + select(p.z < 0, -of_i.z, of_i.z)));
-
-            return select(abs(p) < origin, p + float_scale * n, p_i);
-        }
+//        XPU inline float3 offset_ray_origin(const float3 &p_in, const float3 &n_in) noexcept {
+//
+//            constexpr auto origin = 1.0f / 32.0f;
+//            constexpr auto float_scale = 1.0f / 65536.0f;
+//            constexpr auto int_scale = 256.0f;
+//
+//            float3 n = n_in;
+//            auto of_i = make_int3(static_cast<int>(int_scale * n.x),
+//                                  static_cast<int>(int_scale * n.y),
+//                                  static_cast<int>(int_scale * n.z));
+//
+//            float3 p = p_in;
+//            float3 p_i = make_float3(
+//                    bit_cast<float>(bit_cast<int>(p.x) + select(p.x < 0, -of_i.x, of_i.x)),
+//                    bit_cast<float>(bit_cast<int>(p.y) + select(p.y < 0, -of_i.y, of_i.y)),
+//                    bit_cast<float>(bit_cast<int>(p.z) + select(p.z < 0, -of_i.z, of_i.z)));
+//
+//            return select(luminous::functor::abs(p) < origin, p + float_scale * n, p_i);
+//        }
 
         struct alignas(8) ClosestHit {
             float distance;

@@ -5,8 +5,6 @@
 #include <iostream>
 //#include "cuda.h"
 #include "gpu/cuda/jitify/jitify.hpp"
-//#include "core/math/math_util.h"
-#include "core/ray_hit.h"
 
 using namespace std;
 

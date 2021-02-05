@@ -1,28 +1,24 @@
 //
-// Created by Zero on 2021/2/2.
+// Created by Zero on 2021/2/6.
 //
 
 
 #pragma once
 
-#include "core/math/data_types.h"
-#include "core/header.h"
-#include "core/math/math_util.h"
-#include "core/lstd/lstd.h"
 namespace luminous {
 
     namespace sampling {
 
         XPU [[nodiscard]] float linear_PDF(float x, float a, float b) {
-            LUMINOUS_ERROR_IF(a < 0 || b < 0, "linear_PDF error!");
+            assert(a > 0 && b > 0);
             if (x < 0 || x > 1)
                 return 0;
             return 2 * lerp(x, a, b) / (a + b);
         }
 
-        
+
         inline float sample_linear(float u, float a, float b) {
-            LUMINOUS_ERROR_IF(a < 0 || b < 0, "sample_linear error!");
+            assert(a > 0 && b > 0);
             if (u == 0 && a == 0)
                 return 0;
             float x = u * (a + b) / (a + std::sqrt(lerp(u, sqr(a), sqr(b))));
@@ -30,11 +26,11 @@ namespace luminous {
         }
 
         XPU [[nodiscard]] inline float fast_exp(float x) {
-        #ifdef IS_GPU_CODE
+#ifdef IS_GPU_CODE
             return __expf(x);
-        #else
+#else
             return std::exp(x);
-        #endif
+#endif
         }
 
         XPU inline int sample_discrete(lstd::span<const float> weights, float u,
@@ -73,18 +69,18 @@ namespace luminous {
 
         float gaussian(float x, float mu = 0, float sigma = 1) {
             return 1 / std::sqrt(2 * Pi * sigma * sigma) *
-                fast_exp(-sqr(x - mu) / (2 * sigma * sigma));
+                   fast_exp(-sqr(x - mu) / (2 * sigma * sigma));
         }
 
         inline float gaussian_integral(float x0, float x1, float mu = 0,
-                                           float sigma = 1) {
-            LUMINOUS_ERROR_IF(sigma <= 0, "gaussian_integral error!");
+                                       float sigma = 1) {
+            assert(sigma > 0);
             float sigmaRoot2 = sigma * float(1.414213562373095);
             return 0.5f * (std::erf((mu - x0) / sigmaRoot2) - std::erf((mu - x1) / sigmaRoot2));
         }
 
         XPU inline float2 sample_bilinear(float2 u, lstd::span<const float> w) {
-            LUMINOUS_ERROR_IF(4 != w.size());
+            assert(4 == w.size());
             float2 p;
             // Sample $v$ for bilinear marginal distribution
             p[1] = sample_linear(u[1], w[0] + w[1], w[2] + w[3]);
@@ -103,7 +99,7 @@ namespace luminous {
             int64_t _n = 0;
         public:
             // VarianceEstimator Public Methods
-            
+
             XPU void add(Float x) {
                 ++_n;
                 Float delta = x - _mean;
@@ -111,13 +107,13 @@ namespace luminous {
                 Float delta2 = x - _mean;
                 _S += delta * delta2;
             }
-            
+
             XPU Float mean() const { return _mean; }
-            
+
             XPU Float variance() const { return (_n > 1) ? _S / (_n - 1) : 0; }
-            
+
             XPU int64_t count() const { return _n; }
-            
+
             XPU Float relative_variance() const {
                 return (_n < 1 || _mean == 0) ? 0 : variance() / mean();
             }
@@ -132,5 +128,4 @@ namespace luminous {
 
         };
     }
-
 }
