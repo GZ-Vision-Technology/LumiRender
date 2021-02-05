@@ -3,6 +3,7 @@
 //
 
 #include "core/lstd/lstd.h"
+#include "graphics/common.h"
 
 using namespace luminous;
 
@@ -81,9 +82,7 @@ void testVariant() {
 
 int main() {
 
-
     testVariant();
-
 
     return 0;
 }
