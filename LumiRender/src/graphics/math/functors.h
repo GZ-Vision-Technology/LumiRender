@@ -232,8 +232,7 @@ namespace luminous {
         template <class To, class From>
         XPU typename std::enable_if_t<sizeof(To) == sizeof(From) &&
                                                std::is_trivially_copyable_v<From> &&
-                                               std::is_trivially_copyable_v<To>,
-                To>
+                                               std::is_trivially_copyable_v<To>, To>
         bit_cast(const From &src) noexcept {
             static_assert(std::is_trivially_constructible_v<To>,
                           "This implementation requires the destination type to be trivially "
@@ -243,6 +242,25 @@ namespace luminous {
             return dst;
         }
 
+        XPU [[nodiscard]] inline float fast_exp(float x) {
+    #ifdef IS_GPU_CODE
+            return __expf(x);
+    #else
+            return std::exp(x);
+    #endif
+        }
+
+        XPU [[nodiscard]] float gaussian(float x, float mu = 0, float sigma = 1) {
+            return 1 / std::sqrt(2 * Pi * sigma * sigma) *
+                   fast_exp(-sqr(x - mu) / (2 * sigma * sigma));
+        }
+
+        XPU [[nodiscard]] float gaussian_integral(float x0, float x1, float mu = 0,
+                                       float sigma = 1) {
+            assert(sigma > 0);
+            float sigmaRoot2 = sigma * float(1.414213562373095);
+            return 0.5f * (std::erf((mu - x0) / sigmaRoot2) - std::erf((mu - x1) / sigmaRoot2));
+        }
 
     } // luminous::functors
 } // luminous
