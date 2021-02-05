@@ -129,6 +129,18 @@ namespace luminous {
         }
 
         template<uint N>
+        [[nodiscard]] constexpr auto rcp(Vector<float, N> v) noexcept {
+            static_assert(N == 2 || N == 3 || N == 4);
+            if constexpr (N == 2) {
+                return make_float2(rcp(v.x), rcp(v.y));
+            } else if constexpr (N == 3) {
+                return make_float3(rcp(v.x), rcp(v.y), rcp(v.z));
+            } else {
+                return make_float4(rcp(v.x), rcp(v.y), rcp(v.z), rcp(v.w));
+            }
+        }
+
+        template<uint N>
         [[nodiscard]] constexpr auto length(Vector<float, N> u) noexcept {
             return sqrt(dot(u, u));
         }
@@ -178,9 +190,9 @@ namespace luminous {
                 // 比较直观的理解qperp = q2 - cosθ * q1 = q2 - dot(q1, q2) * q1
                 // q' = q1 * cos(θt) + qperp * sin(θt)
                 float theta = std::acos(clamp(cosTheta, -1, 1));
-                float thetap = theta * t;
-                Quaternion qperp = normalize(q2 - q1 * cosTheta);
-                return q1 * std::cos(thetap) + qperp * std::sin(thetap);
+                float theta_p = theta * t;
+                Quaternion q_perp = normalize(q2 - q1 * cosTheta);
+                return q1 * std::cos(theta_p) + q_perp * std::sin(theta_p);
             }
         }
 
