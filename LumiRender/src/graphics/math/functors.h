@@ -88,6 +88,12 @@ namespace luminous {
             return v * v;
         }
 
+        inline XPU float rcp(float f) noexcept { return 1.f/f; }
+
+        inline XPU double rcp(double d) noexcept { return 1./d; }
+
+        XPU float saturate(const float &f) { return std::min(1.f,std::max(0.f,f)); }
+
         template <int n>
         inline constexpr float Pow(float v) {
             if constexpr (n < 0) {
@@ -151,6 +157,31 @@ namespace luminous {
             return make_float3(u.y * v.z - v.y * u.z,
                                u.z * v.x - v.z * u.x,
                                u.x * v.y - v.x * u.y);
+        }
+
+        // Quaternion Functions
+        [[nodiscard]] float dot(Quaternion q1, Quaternion q2) noexcept {
+            return dot(q1.v, q2.v) + q1.w * q2.w;
+        }
+
+        [[nodiscard]] Quaternion normalize(Quaternion q) noexcept {
+            return q / std::sqrt(dot(q, q));
+        }
+
+        [[nodiscard]] Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) {
+            float cosTheta = dot(q1, q2);
+            if (cosTheta > .9995f)
+                //如果旋转角度特别小，当做直线处理
+                return normalize(q1 * (1 - t) + q2 * t);
+            else {
+                // 原始公式 result = (q1sin((1-t)θ) + q2sin(tθ)) / (sinθ)
+                // 比较直观的理解qperp = q2 - cosθ * q1 = q2 - dot(q1, q2) * q1
+                // q' = q1 * cos(θt) + qperp * sin(θt)
+                float theta = std::acos(clamp(cosTheta, -1, 1));
+                float thetap = theta * t;
+                Quaternion qperp = normalize(q2 - q1 * cosTheta);
+                return q1 * std::cos(thetap) + qperp * std::sin(thetap);
+            }
         }
 
         // Matrix Functions
@@ -260,6 +291,21 @@ namespace luminous {
             assert(sigma > 0);
             float sigmaRoot2 = sigma * float(1.414213562373095);
             return 0.5f * (std::erf((mu - x0) / sigmaRoot2) - std::erf((mu - x1) / sigmaRoot2));
+        }
+
+
+        template <typename Predicate>
+        [[nodiscard]] XPU inline size_t find_interval(size_t sz, const Predicate &pred) {
+            using ssize_t = std::make_signed_t<size_t>;
+            ssize_t size = (ssize_t)sz - 2, first = 1;
+            while (size > 0) {
+                // Evaluate predicate at midpoint and update _first_ and _size_
+                size_t half = (size_t)size >> 1, middle = first + half;
+                bool pred_result = pred(middle);
+                first = pred_result ? middle + 1 : first;
+                size = pred_result ? size - (half + 1) : half;
+            }
+            return (size_t)clamp((ssize_t)first - 1, 0, sz - 2);
         }
 
     } // luminous::functors

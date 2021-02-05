@@ -129,11 +129,11 @@ namespace luminous {
     operator op(Vector<T, N> v) noexcept {                                           \
         static_assert(N == 2 || N == 3 || N == 4);                                   \
         if constexpr (N == 2) {                                                      \
-            return {op v.x, op v.y};                                                 \
+            return Vector<T, N>{op v.x, op v.y};                                                 \
         } else if constexpr (N == 3) {                                               \
-            return {op v.x, op v.y, op v.z};                                         \
+            return Vector<T, N>{op v.x, op v.y, op v.z};                                         \
         } else {                                                                     \
-            return {op v.x, op v.y, op v.z, op v.w};                                 \
+            return Vector<T, N>{op v.x, op v.y, op v.z, op v.w};                                 \
         }                                                                            \
     }
 
