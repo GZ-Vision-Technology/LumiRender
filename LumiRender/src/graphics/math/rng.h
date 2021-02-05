@@ -54,7 +54,7 @@ namespace luminous {
             }
 
             /*! get the next 'random' number in the sequence */
-            [[nodiscard]] inline XPU float next() {
+            inline XPU float next() {
                 const uint64_t a = 0x5DEECE66DULL;
                 const uint64_t c = 0xBULL;
                 const uint64_t mask = 0xFFFFFFFFFFFFULL;
