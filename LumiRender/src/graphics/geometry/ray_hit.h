@@ -20,7 +20,7 @@ namespace luminous {
             float t_max;
 
             XPU Ray(const float3 origin, const float3 direction,
-                    float t_max = luminous::constant::float_infinity,
+                    float t_max = luminous::constant::PosInfTy(),
                     float t_min = 0) noexcept:
             t_min(t_min),
             t_max(t_max) {
