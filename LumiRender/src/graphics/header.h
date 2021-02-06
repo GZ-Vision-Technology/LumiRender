@@ -20,3 +20,9 @@
 #if defined(__CUDA_ARCH__)
     #define IS_GPU_CODE
 #endif
+
+#ifdef __GNUC__
+#define MAYBE_UNUSED __attribute__((unused))
+#else
+#define MAYBE_UNUSED
+#endif

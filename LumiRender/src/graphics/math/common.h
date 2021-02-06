@@ -12,5 +12,6 @@
 #include "matrix_types.h"
 #include "quaternion.h"
 #include "constants.h"
+#include "primes.h"
 #include "functors.h"
 #include "rng.h"

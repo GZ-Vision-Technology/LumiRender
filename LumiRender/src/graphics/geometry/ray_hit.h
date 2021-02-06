@@ -39,27 +39,35 @@ namespace luminous {
                 direction_y = direction.y;
                 direction_z = direction.z;
             }
+
+            XPU [[nodiscard]] float3 origin() noexcept {
+                return make_float3(origin_x, origin_y, origin_z);
+            }
+
+            XPU [[nodiscard]] float3 direction() noexcept {
+                return make_float3(direction_x, direction_y, direction_z);
+            }
         };
 
-//        XPU inline float3 offset_ray_origin(const float3 &p_in, const float3 &n_in) noexcept {
-//
-//            constexpr auto origin = 1.0f / 32.0f;
-//            constexpr auto float_scale = 1.0f / 65536.0f;
-//            constexpr auto int_scale = 256.0f;
-//
-//            float3 n = n_in;
-//            auto of_i = make_int3(static_cast<int>(int_scale * n.x),
-//                                  static_cast<int>(int_scale * n.y),
-//                                  static_cast<int>(int_scale * n.z));
-//
-//            float3 p = p_in;
-//            float3 p_i = make_float3(
-//                    bit_cast<float>(bit_cast<int>(p.x) + select(p.x < 0, -of_i.x, of_i.x)),
-//                    bit_cast<float>(bit_cast<int>(p.y) + select(p.y < 0, -of_i.y, of_i.y)),
-//                    bit_cast<float>(bit_cast<int>(p.z) + select(p.z < 0, -of_i.z, of_i.z)));
-//
-//            return select(luminous::functor::abs(p) < origin, p + float_scale * n, p_i);
-//        }
+        XPU inline float3 offset_ray_origin(const float3 &p_in, const float3 &n_in) noexcept {
+
+            constexpr auto origin = 1.0f / 32.0f;
+            constexpr auto float_scale = 1.0f / 65536.0f;
+            constexpr auto int_scale = 256.0f;
+
+            float3 n = n_in;
+            auto of_i = make_int3(static_cast<int>(int_scale * n.x),
+                                  static_cast<int>(int_scale * n.y),
+                                  static_cast<int>(int_scale * n.z));
+
+            float3 p = p_in;
+            float3 p_i = make_float3(
+                    bit_cast<float>(bit_cast<int>(p.x) + select(p.x < 0, -of_i.x, of_i.x)),
+                    bit_cast<float>(bit_cast<int>(p.y) + select(p.y < 0, -of_i.y, of_i.y)),
+                    bit_cast<float>(bit_cast<int>(p.z) + select(p.z < 0, -of_i.z, of_i.z)));
+
+            return select(functor::abs(p) < origin, p + float_scale * n, p_i);
+        }
 
         struct alignas(8) ClosestHit {
             float distance;

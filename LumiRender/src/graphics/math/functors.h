@@ -9,6 +9,8 @@
 
 namespace luminous {
     inline namespace functor {
+        using std::abs;
+
         // bit manipulation function
         [[nodiscard]] constexpr auto next_pow_of_two(uint v) noexcept {
             v--;
@@ -277,6 +279,7 @@ namespace luminous {
                                  inv_3 * one_over_determinant);
         }
 
+        // other functions
         template <class To, class From>
         XPU typename std::enable_if_t<sizeof(To) == sizeof(From) &&
                                                std::is_trivially_copyable_v<From> &&
