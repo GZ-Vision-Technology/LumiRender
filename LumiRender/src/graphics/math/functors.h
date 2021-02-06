@@ -135,6 +135,24 @@ namespace luminous {
         MAKE_VECTOR_UNARY_FUNC(saturate)
         MAKE_VECTOR_UNARY_FUNC(abs)
 
+        template<typename T, uint N>
+        [[nodiscard]] constexpr auto volume(Vector<T, N> v) noexcept {
+            static_assert(N == 2 || N == 3 || N == 4);
+            T ret = static_cast<T>(1);
+            for (int i = 0; i < N; ++i) {
+                ret = ret * v[i];
+            }
+            return ret;
+
+            if constexpr (N == 2) {
+                return v.x * v.y;
+            } else if constexpr (N == 3) {
+                return v.x * v.y * v.z;
+            } else {
+                return v.x * v.y * v.z * v.w;
+            }
+        }
+
         template<uint N>
         [[nodiscard]] constexpr auto dot(Vector<float, N> u, Vector<float, N> v) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);

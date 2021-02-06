@@ -49,5 +49,28 @@ namespace luminous {
             upper = max(upper, other.upper);
             return *this;
         }
+
+        /*! get the d-th dimensional slab (lo[dim]..hi[dim] */
+        inline XPU interval <scalar_t> get_slab(const uint32_t dim) {
+            return interval<scalar_t>(lower[dim], upper[dim]);
+        }
+
+        inline XPU bool contains(const vector_t &point) const {
+            return all(point >= lower) && all(upper >= point);
+        }
+
+        inline XPU bool contains(const TBox &other) const {
+            return all(other.lower >= lower) && all(upper >= other.upper);
+        }
+
+        inline XPU bool overlap(const TBox &other) const {
+            return contains(other.lower) || contains(other.upper);
+        }
+
+        inline XPU vector_t center() const { return (lower + upper) / (scalar_t) 2; }
+
+        inline XPU vector_t span() const { return upper - lower; }
+
+        inline XPU vector_t size() const { return upper - lower; }
     };
 }

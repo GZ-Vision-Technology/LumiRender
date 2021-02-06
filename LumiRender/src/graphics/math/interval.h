@@ -20,8 +20,6 @@ namespace luminous {
 
             inline XPU interval(T begin, T end) : begin(begin), end(end) {}
 
-
-
             inline XPU bool contains(const T &t) const { return t >= lower && t <= upper; }
 
             inline XPU bool is_empty() const { return begin > end; }
@@ -50,5 +48,31 @@ namespace luminous {
                 return interval<T>(0.f, open_range_upper<T>());
             }
         };
-    }
-}
+
+        template<typename T>
+        inline XPU interval<T> build_interval(const T &a, const T &b) { return interval<T>(min(a, b), max(a, b)); }
+
+        template<typename T>
+        inline XPU interval<T> intersect(const interval<T> &a, const interval<T> &b) {
+            return interval<T>(max(a.lower, b.lower), min(a.upper, b.upper));
+        }
+
+        template<typename T>
+        inline XPU interval<T> operator-(const interval<T> &a, const T &b) {
+            return interval<T>(a.lower - b, a.upper - b);
+        }
+
+        template<typename T>
+        inline XPU interval<T> operator*(const interval<T> &a, const T &b) {
+            return build_interval<T>(a.lower * b, a.upper * b);
+        }
+
+        template<typename T>
+        inline XPU bool operator==(const interval<T> &a, const interval<T> &b) {
+            return a.lower == b.lower && a.upper == b.upper;
+        }
+
+        template<typename T>
+        inline XPU bool operator!=(const interval<T> &a, const interval<T> &b) { return !(a == b); }
+    } // luminous::math
+} // luminous
