@@ -4,3 +4,16 @@
 
 
 #pragma once
+
+namespace luminous {
+    inline namespace geometry {
+        struct Frame {
+        private:
+            float3x3 _basis;
+        public:
+            XPU Frame(float3 n) {
+//                float
+            }
+        };
+    } // luminous::geometry
+} // luminous

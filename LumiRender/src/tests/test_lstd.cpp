@@ -81,8 +81,11 @@ void testVariant() {
 }
 
 void test_math() {
-    Box3f box(make_float3(3.1));
-    cout << box.to_string() << endl;
+//    Box3f box(make_float3(3.1));
+//    cout << box.to_string() << endl;
+
+//    auto a = int3x3(3.234f) ;
+//    cout << a.to_string();
 }
 
 int main() {

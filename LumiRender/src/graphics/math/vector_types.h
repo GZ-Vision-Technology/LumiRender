@@ -308,6 +308,7 @@ namespace luminous {
         MAKE_VECTOR_TYPE(int)
         MAKE_VECTOR_TYPE(uint)
         MAKE_VECTOR_TYPE(float)
+        MAKE_VECTOR_TYPE(double)
 
 #undef MAKE_VECTOR_TYPE
 #undef MAKE_VECTOR_MAKE_TYPE2
