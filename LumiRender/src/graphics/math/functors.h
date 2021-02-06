@@ -138,12 +138,6 @@ namespace luminous {
         template<typename T, uint N>
         [[nodiscard]] constexpr auto volume(Vector<T, N> v) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
-            T ret = static_cast<T>(1);
-            for (int i = 0; i < N; ++i) {
-                ret = ret * v[i];
-            }
-            return ret;
-
             if constexpr (N == 2) {
                 return v.x * v.y;
             } else if constexpr (N == 3) {

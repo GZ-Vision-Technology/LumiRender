@@ -80,9 +80,16 @@ void testVariant() {
     cout << bp2.fun2(9) << endl;
 }
 
+void test_math() {
+    Box3f box(make_float3(3.1));
+    cout << box.to_string() << endl;
+}
+
 int main() {
 
     testVariant();
+
+    test_math();
 
     return 0;
 }
