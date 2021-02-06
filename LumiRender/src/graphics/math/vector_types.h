@@ -96,7 +96,7 @@ namespace luminous {
         }                                            \
         return *this;                                \
     }                                                \
-    XPU Vector &operator op(T rhs) noexcept {            \
+    XPU Vector &operator op(T rhs) noexcept {        \
         static_assert(N == 2 || N == 3 || N == 4);   \
         if constexpr (N == 2) {                      \
             Storage::x op rhs;                       \
@@ -123,18 +123,18 @@ namespace luminous {
 #undef MAKE_ASSIGN_OP
         };
 
-#define MAKE_VECTOR_UNARY_OP(op)                                                     \
-    template<typename T, uint N>                                                     \
+#define MAKE_VECTOR_UNARY_OP(op)                                                         \
+    template<typename T, uint N>                                                         \
     XPU [[nodiscard]] constexpr Vector<std::decay_t<decltype(op static_cast<T>(0))>, N>  \
-    operator op(Vector<T, N> v) noexcept {                                           \
-        static_assert(N == 2 || N == 3 || N == 4);                                   \
-        if constexpr (N == 2) {                                                      \
-            return Vector<T, N>{op v.x, op v.y};                                                 \
-        } else if constexpr (N == 3) {                                               \
-            return Vector<T, N>{op v.x, op v.y, op v.z};                                         \
-        } else {                                                                     \
-            return Vector<T, N>{op v.x, op v.y, op v.z, op v.w};                                 \
-        }                                                                            \
+    operator op(Vector<T, N> v) noexcept {                                               \
+        static_assert(N == 2 || N == 3 || N == 4);                                       \
+        if constexpr (N == 2) {                                                          \
+            return Vector<T, N>{op v.x, op v.y};                                         \
+        } else if constexpr (N == 3) {                                                   \
+            return Vector<T, N>{op v.x, op v.y, op v.z};                                 \
+        } else {                                                                         \
+            return Vector<T, N>{op v.x, op v.y, op v.z, op v.w};                         \
+        }                                                                                \
     }
 
         MAKE_VECTOR_UNARY_OP(-)
@@ -145,7 +145,7 @@ namespace luminous {
 
 #define MAKE_VECTOR_BINARY_OP(op)                                                                 \
     template<typename T, uint32_t N, std::enable_if_t<scalar::is_scalar<T>, int> = 0>             \
-    XPU constexpr Vector<T, N> operator op(Vector<T, N> lhs, Vector<T, N> rhs) noexcept {             \
+    XPU constexpr Vector<T, N> operator op(Vector<T, N> lhs, Vector<T, N> rhs) noexcept {         \
         static_assert(N == 2 || N == 3 || N == 4);                                                \
         if constexpr (N == 2) {                                                                   \
             return Vector<T, 2>{lhs.x op rhs.x, lhs.y op rhs.y};                                  \
@@ -156,7 +156,7 @@ namespace luminous {
         }                                                                                         \
     }                                                                                             \
     template<typename T, uint32_t N, std::enable_if_t<scalar::is_scalar<T>, int> = 0>             \
-    XPU constexpr Vector<T, N> operator op(T lhs, Vector<T, N> rhs) noexcept {                        \
+    XPU constexpr Vector<T, N> operator op(T lhs, Vector<T, N> rhs) noexcept {                    \
         static_assert(N == 2 || N == 3 || N == 4);                                                \
         if constexpr (N == 2) {                                                                   \
             return Vector<T, 2>{lhs op rhs.x, lhs op rhs.y};                                      \
@@ -167,7 +167,7 @@ namespace luminous {
         }                                                                                         \
     }                                                                                             \
     template<typename T, uint32_t N, std::enable_if_t<scalar::is_scalar<T>, int> = 0>             \
-    XPU constexpr Vector<T, N> operator op(Vector<T, N> lhs, T rhs) noexcept {                        \
+    XPU constexpr Vector<T, N> operator op(Vector<T, N> lhs, T rhs) noexcept {                    \
         static_assert(N == 2 || N == 3 || N == 4);                                                \
         if constexpr (N == 2) {                                                                   \
             return Vector<T, 2>{lhs.x op rhs, lhs.y op rhs};                                      \

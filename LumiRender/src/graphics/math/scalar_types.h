@@ -23,6 +23,7 @@ namespace luminous {
 
         MAKE_IS_SCALAR_TRUE(bool)
         MAKE_IS_SCALAR_TRUE(float)
+        MAKE_IS_SCALAR_TRUE(double)
         MAKE_IS_SCALAR_TRUE(int8_t)
         MAKE_IS_SCALAR_TRUE(uint8_t)
         MAKE_IS_SCALAR_TRUE(int16_t)

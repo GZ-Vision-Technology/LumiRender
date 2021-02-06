@@ -147,8 +147,8 @@ namespace luminous {
             }
         }
 
-        template<uint N>
-        [[nodiscard]] constexpr auto dot(Vector<float, N> u, Vector<float, N> v) noexcept {
+        template<typename T, uint N>
+        [[nodiscard]] constexpr auto dot(Vector<T, N> u, Vector<T, N> v) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
                 return u.x * v.x + u.y * v.y;
@@ -159,33 +159,34 @@ namespace luminous {
             }
         }
 
-        template<uint N>
-        [[nodiscard]] constexpr auto length(Vector<float, N> u) noexcept {
+        template<typename T, uint N>
+        [[nodiscard]] constexpr auto length(Vector<T, N> u) noexcept {
             return sqrt(dot(u, u));
         }
 
-        template<uint N>
-        [[nodiscard]] constexpr auto length_squared(Vector<float, N> u) noexcept {
+        template<typename T, uint N>
+        [[nodiscard]] constexpr auto length_squared(Vector<T, N> u) noexcept {
             return dot(u, u);
         }
 
-        template<uint N>
-        [[nodiscard]] constexpr auto normalize(Vector<float, N> u) noexcept {
+        template<typename T, uint N>
+        [[nodiscard]] constexpr auto normalize(Vector<T, N> u) noexcept {
             return u * (1.0f / length(u));
         }
 
-        template<uint N>
-        [[nodiscard]] constexpr auto distance(Vector<float, N> u, Vector<float, N> v) noexcept {
+        template<typename T, uint N>
+        [[nodiscard]] constexpr auto distance(Vector<T, N> u, Vector<T, N> v) noexcept {
             return length(u - v);
         }
 
-        template<uint N>
-        [[nodiscard]] constexpr auto distance_squared(Vector<float, N> u, Vector<float, N> v) noexcept {
+        template<typename T, uint N>
+        [[nodiscard]] constexpr auto distance_squared(Vector<T, N> u, Vector<T, N> v) noexcept {
             return length_squared(u - v);
         }
 
-        [[nodiscard]] constexpr auto cross(float3 u, float3 v) noexcept {
-            return make_float3(u.y * v.z - v.y * u.z,
+        template<typename T>
+        [[nodiscard]] constexpr auto cross(Vector<T, 3> u, Vector<T, 3> v) noexcept {
+            return Vector<T, 3>(u.y * v.z - v.y * u.z,
                                u.z * v.x - v.z * u.x,
                                u.x * v.y - v.x * u.y);
         }
@@ -216,22 +217,25 @@ namespace luminous {
         }
 
         // Matrix Functions
-        [[nodiscard]] constexpr auto transpose(float3x3 m) noexcept {
-            return make_float3x3(m[0].x, m[1].x, m[2].x,
-                                 m[0].y, m[1].y, m[2].y,
-                                 m[0].z, m[1].z, m[2].z);
+        template<typename T>
+        [[nodiscard]] constexpr auto transpose(Matrix3x3<T> m) noexcept {
+            return Matrix3x3<T>(m[0].x, m[1].x, m[2].x,
+                                m[0].y, m[1].y, m[2].y,
+                                m[0].z, m[1].z, m[2].z);
         }
 
-        [[nodiscard]] constexpr auto transpose(float4x4 m) noexcept {
-            return make_float4x4(m[0].x, m[1].x, m[2].x, m[3].x,
-                                 m[0].y, m[1].y, m[2].y, m[3].y,
-                                 m[0].z, m[1].z, m[2].z, m[3].z,
-                                 m[0].w, m[1].w, m[2].w, m[3].w);
+        template<typename T>
+        [[nodiscard]] constexpr auto transpose(Matrix4x4<T> m) noexcept {
+            return Matrix4x4<T>(m[0].x, m[1].x, m[2].x, m[3].x,
+                                m[0].y, m[1].y, m[2].y, m[3].y,
+                                m[0].z, m[1].z, m[2].z, m[3].z,
+                                m[0].w, m[1].w, m[2].w, m[3].w);
         }
 
-        [[nodiscard]] auto inverse(float3x3 m) noexcept {// from GLM
-            auto one_over_determinant = 1.0f / (m[0].x * (m[1].y * m[2].z - m[2].y * m[1].z) - m[1].x * (m[0].y * m[2].z - m[2].y * m[0].z) + m[2].x * (m[0].y * m[1].z - m[1].y * m[0].z));
-            return make_float3x3(
+        template<typename T>
+        [[nodiscard]] auto inverse(Matrix3x3<T> m) noexcept {// from GLM
+            T one_over_determinant = 1.0f / (m[0].x * (m[1].y * m[2].z - m[2].y * m[1].z) - m[1].x * (m[0].y * m[2].z - m[2].y * m[0].z) + m[2].x * (m[0].y * m[1].z - m[1].y * m[0].z));
+            return Matrix3x3<T>(
                     (m[1].y * m[2].z - m[2].y * m[1].z) * one_over_determinant,
                     (m[2].y * m[0].z - m[0].y * m[2].z) * one_over_determinant,
                     (m[0].y * m[1].z - m[1].y * m[0].z) * one_over_determinant,
@@ -243,52 +247,53 @@ namespace luminous {
                     (m[0].x * m[1].y - m[1].x * m[0].y) * one_over_determinant);
         }
 
-        [[nodiscard]] constexpr auto inverse(const float4x4 m) noexcept {// from GLM
-            const auto coef00 = m[2].z * m[3].w - m[3].z * m[2].w;
-            const auto coef02 = m[1].z * m[3].w - m[3].z * m[1].w;
-            const auto coef03 = m[1].z * m[2].w - m[2].z * m[1].w;
-            const auto coef04 = m[2].y * m[3].w - m[3].y * m[2].w;
-            const auto coef06 = m[1].y * m[3].w - m[3].y * m[1].w;
-            const auto coef07 = m[1].y * m[2].w - m[2].y * m[1].w;
-            const auto coef08 = m[2].y * m[3].z - m[3].y * m[2].z;
-            const auto coef10 = m[1].y * m[3].z - m[3].y * m[1].z;
-            const auto coef11 = m[1].y * m[2].z - m[2].y * m[1].z;
-            const auto coef12 = m[2].x * m[3].w - m[3].x * m[2].w;
-            const auto coef14 = m[1].x * m[3].w - m[3].x * m[1].w;
-            const auto coef15 = m[1].x * m[2].w - m[2].x * m[1].w;
-            const auto coef16 = m[2].x * m[3].z - m[3].x * m[2].z;
-            const auto coef18 = m[1].x * m[3].z - m[3].x * m[1].z;
-            const auto coef19 = m[1].x * m[2].z - m[2].x * m[1].z;
-            const auto coef20 = m[2].x * m[3].y - m[3].x * m[2].y;
-            const auto coef22 = m[1].x * m[3].y - m[3].x * m[1].y;
-            const auto coef23 = m[1].x * m[2].y - m[2].x * m[1].y;
-            const auto fac0 = make_float4(coef00, coef00, coef02, coef03);
-            const auto fac1 = make_float4(coef04, coef04, coef06, coef07);
-            const auto fac2 = make_float4(coef08, coef08, coef10, coef11);
-            const auto fac3 = make_float4(coef12, coef12, coef14, coef15);
-            const auto fac4 = make_float4(coef16, coef16, coef18, coef19);
-            const auto fac5 = make_float4(coef20, coef20, coef22, coef23);
-            const auto Vec0 = make_float4(m[1].x, m[0].x, m[0].x, m[0].x);
-            const auto Vec1 = make_float4(m[1].y, m[0].y, m[0].y, m[0].y);
-            const auto Vec2 = make_float4(m[1].z, m[0].z, m[0].z, m[0].z);
-            const auto Vec3 = make_float4(m[1].w, m[0].w, m[0].w, m[0].w);
-            const auto inv0 = Vec1 * fac0 - Vec2 * fac1 + Vec3 * fac2;
-            const auto inv1 = Vec0 * fac0 - Vec2 * fac3 + Vec3 * fac4;
-            const auto inv2 = Vec0 * fac1 - Vec1 * fac3 + Vec3 * fac5;
-            const auto inv3 = Vec0 * fac2 - Vec1 * fac4 + Vec2 * fac5;
-            const auto sign_a = make_float4(+1, -1, +1, -1);
-            const auto sign_b = make_float4(-1, +1, -1, +1);
-            const auto inv_0 = inv0 * sign_a;
-            const auto inv_1 = inv1 * sign_b;
-            const auto inv_2 = inv2 * sign_a;
-            const auto inv_3 = inv3 * sign_b;
-            const auto dot0 = m[0] * make_float4(inv_0.x, inv_1.x, inv_2.x, inv_3.x);
-            const auto dot1 = dot0.x + dot0.y + dot0.z + dot0.w;
-            const auto one_over_determinant = 1.0f / dot1;
-            return make_float4x4(inv_0 * one_over_determinant,
-                                 inv_1 * one_over_determinant,
-                                 inv_2 * one_over_determinant,
-                                 inv_3 * one_over_determinant);
+        template<typename T>
+        [[nodiscard]] constexpr auto inverse(const Matrix4x4<T> m) noexcept {// from GLM
+            const T coef00 = m[2].z * m[3].w - m[3].z * m[2].w;
+            const T coef02 = m[1].z * m[3].w - m[3].z * m[1].w;
+            const T coef03 = m[1].z * m[2].w - m[2].z * m[1].w;
+            const T coef04 = m[2].y * m[3].w - m[3].y * m[2].w;
+            const T coef06 = m[1].y * m[3].w - m[3].y * m[1].w;
+            const T coef07 = m[1].y * m[2].w - m[2].y * m[1].w;
+            const T coef08 = m[2].y * m[3].z - m[3].y * m[2].z;
+            const T coef10 = m[1].y * m[3].z - m[3].y * m[1].z;
+            const T coef11 = m[1].y * m[2].z - m[2].y * m[1].z;
+            const T coef12 = m[2].x * m[3].w - m[3].x * m[2].w;
+            const T coef14 = m[1].x * m[3].w - m[3].x * m[1].w;
+            const T coef15 = m[1].x * m[2].w - m[2].x * m[1].w;
+            const T coef16 = m[2].x * m[3].z - m[3].x * m[2].z;
+            const T coef18 = m[1].x * m[3].z - m[3].x * m[1].z;
+            const T coef19 = m[1].x * m[2].z - m[2].x * m[1].z;
+            const T coef20 = m[2].x * m[3].y - m[3].x * m[2].y;
+            const T coef22 = m[1].x * m[3].y - m[3].x * m[1].y;
+            const T coef23 = m[1].x * m[2].y - m[2].x * m[1].y;
+            const Vector<T, 4> fac0 = Vector<T, 4>(coef00, coef00, coef02, coef03);
+            const Vector<T, 4> fac1 = Vector<T, 4>(coef04, coef04, coef06, coef07);
+            const Vector<T, 4> fac2 = Vector<T, 4>(coef08, coef08, coef10, coef11);
+            const Vector<T, 4> fac3 = Vector<T, 4>(coef12, coef12, coef14, coef15);
+            const Vector<T, 4> fac4 = Vector<T, 4>(coef16, coef16, coef18, coef19);
+            const Vector<T, 4> fac5 = Vector<T, 4>(coef20, coef20, coef22, coef23);
+            const Vector<T, 4> Vec0 = Vector<T, 4>(m[1].x, m[0].x, m[0].x, m[0].x);
+            const Vector<T, 4> Vec1 = Vector<T, 4>(m[1].y, m[0].y, m[0].y, m[0].y);
+            const Vector<T, 4> Vec2 = Vector<T, 4>(m[1].z, m[0].z, m[0].z, m[0].z);
+            const Vector<T, 4> Vec3 = Vector<T, 4>(m[1].w, m[0].w, m[0].w, m[0].w);
+            const Vector<T, 4> inv0 = Vec1 * fac0 - Vec2 * fac1 + Vec3 * fac2;
+            const Vector<T, 4> inv1 = Vec0 * fac0 - Vec2 * fac3 + Vec3 * fac4;
+            const Vector<T, 4> inv2 = Vec0 * fac1 - Vec1 * fac3 + Vec3 * fac5;
+            const Vector<T, 4> inv3 = Vec0 * fac2 - Vec1 * fac4 + Vec2 * fac5;
+            const Vector<T, 4> sign_a = Vector<T, 4>((T)+1, (T)-1, (T)+1, (T)-1);
+            const Vector<T, 4> sign_b = Vector<T, 4>((T)-1, (T)+1, (T)-1, (T)+1);
+            const Vector<T, 4> inv_0 = inv0 * sign_a;
+            const Vector<T, 4> inv_1 = inv1 * sign_b;
+            const Vector<T, 4> inv_2 = inv2 * sign_a;
+            const Vector<T, 4> inv_3 = inv3 * sign_b;
+            const Vector<T, 4> dot0 = m[0] * Vector<T, 4>(inv_0.x, inv_1.x, inv_2.x, inv_3.x);
+            const T dot1 = dot0.x + dot0.y + dot0.z + dot0.w;
+            const T one_over_determinant = 1 / dot1;
+            return Matrix4x4<T>(inv_0 * one_over_determinant,
+                                inv_1 * one_over_determinant,
+                                inv_2 * one_over_determinant,
+                                inv_3 * one_over_determinant);
         }
 
         // other functions

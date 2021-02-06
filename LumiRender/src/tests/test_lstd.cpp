@@ -86,11 +86,25 @@ void test_math() {
 
 //    auto a = int3x3(3.234f) ;
 //    cout << a.to_string();
+
+    auto m1 = make_double4x4(-2);
+
+//    auto v1 = make_double4(1);
+//    auto v2 = v1;
+//    cout << m1.to_string();
+//
+//    auto v3 = v2 * v1;
+//    cout << inverse(m1).to_string() << endl;
+//    cout << transpose(m1).to_string() << endl;
+    auto m2 = inverse(m1);
+
+//    auto m3 =  m2 * m1;
+    cout << m2.to_string() << endl;
 }
 
 int main() {
 
-    testVariant();
+//    testVariant();
 
     test_math();
 

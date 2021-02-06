@@ -96,5 +96,11 @@ namespace luminous {
         XPU Quaternion operator*(float f, const Quaternion &q) {
             return q * f;
         }
+
+
+        template<typename T>
+        struct TQuaternion {
+
+        };
     }
 }

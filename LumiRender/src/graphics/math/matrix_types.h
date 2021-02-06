@@ -18,7 +18,7 @@ namespace luminous {
 
             vector_t cols[3];
 
-            XPU explicit constexpr Matrix3x3(scalar_t s = (scalar_t)1) noexcept
+            XPU explicit constexpr Matrix3x3(scalar_t s = 1) noexcept
                 : cols{vector_t(s, (scalar_t)0, (scalar_t)0),
                        vector_t((scalar_t)0, s, (scalar_t)0),
                        vector_t((scalar_t)0, (scalar_t)0, s)} {
@@ -63,7 +63,7 @@ namespace luminous {
 
             vector_t cols[4];
 
-            XPU explicit constexpr Matrix4x4(scalar_t s = (scalar_t)1) noexcept
+            XPU explicit constexpr Matrix4x4(scalar_t s = 1) noexcept
                     : cols{vector_t(s, (scalar_t)0, (scalar_t)0, (scalar_t)0),
                            vector_t((scalar_t)0, s, (scalar_t)0, (scalar_t)0),
                            vector_t((scalar_t)0, (scalar_t)0, s, (scalar_t)0),
