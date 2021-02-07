@@ -10,42 +10,43 @@
 namespace luminous {
     inline namespace geometry {
         struct alignas(16) Ray {
-            float origin_x;
-            float origin_y;
-            float origin_z;
-            float t_min;
-            float direction_x;
-            float direction_y;
-            float direction_z;
-            float t_max;
-
+        private:
+            float _origin_x;
+            float _origin_y;
+            float _origin_z;
+            float _t_min;
+            float _direction_x;
+            float _direction_y;
+            float _direction_z;
+            float _t_max;
+        public:
             XPU Ray(const float3 origin, const float3 direction,
                     float t_max = luminous::constant::PosInfTy(),
                     float t_min = 0) noexcept:
-            t_min(t_min),
-            t_max(t_max) {
+                    _t_min(t_min),
+                    _t_max(t_max) {
                 update_origin(origin);
                 update_direction(direction);
             }
 
             XPU void update_origin(const float3 origin) noexcept {
-                origin_x = origin.x;
-                origin_y = origin.y;
-                origin_z = origin.z;
+                _origin_x = origin.x;
+                _origin_y = origin.y;
+                _origin_z = origin.z;
             }
 
             XPU void update_direction(const float3 direction) noexcept {
-                direction_x = direction.x;
-                direction_y = direction.y;
-                direction_z = direction.z;
+                _direction_x = direction.x;
+                _direction_y = direction.y;
+                _direction_z = direction.z;
             }
 
             XPU [[nodiscard]] float3 origin() noexcept {
-                return make_float3(origin_x, origin_y, origin_z);
+                return make_float3(_origin_x, _origin_y, _origin_z);
             }
 
             XPU [[nodiscard]] float3 direction() noexcept {
-                return make_float3(direction_x, direction_y, direction_z);
+                return make_float3(_direction_x, _direction_y, _direction_z);
             }
         };
 

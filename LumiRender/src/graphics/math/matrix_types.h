@@ -153,7 +153,6 @@ namespace luminous {
         _define_matrix4x4(type)
 
         _define_matrix(float)
-        _define_matrix(int)
         _define_matrix(double)
 
 #undef _define_matrix
