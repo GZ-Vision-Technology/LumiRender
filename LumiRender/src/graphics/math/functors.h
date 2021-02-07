@@ -191,6 +191,18 @@ namespace luminous {
                                u.x * v.y - v.x * u.y);
         }
 
+        template <typename T>
+        XPU void coordinate_system(Vector<T, 3> v1, 
+                                    Vector<T, 3> *v2,
+                                    Vector<T, 3> *v3) {
+            if (abs(v1.x) > abs(v1.y)) {
+                *v2 = Vector<T, 3>(-v1.z, 0, v1.x) / sqrt(v1.x * v1.x + v1.z * v1.z);
+            } else {
+                *v2 = Vector<T, 3>(0, v1.z, -v1.y) / sqrt(v1.y * v1.y + v1.z * v1.z);
+            }
+            *v3 = cross(v1, *v2);
+        }
+
         // Quaternion Functions
         [[nodiscard]] float dot(Quaternion q1, Quaternion q2) noexcept {
             return dot(q1.v, q2.v) + q1.w * q2.w;
