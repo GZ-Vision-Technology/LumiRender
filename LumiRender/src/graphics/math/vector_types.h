@@ -68,6 +68,14 @@ namespace luminous {
             template<typename Index>
             XPU [[nodiscard]] T operator[](Index i) const noexcept { return reinterpret_cast<const T(&)[N]>(*this)[i]; }
 
+            XPU [[nodiscard]] auto vec2() const {
+                return Vector<T, 2>(Storage::x, Storage::y);
+            }
+
+            XPU [[nodiscard]] auto vec3() const {
+                return Vector<T, 3>(Storage::x, Storage::y, Storage::z);
+            }
+
             [[nodiscard]] std::string to_string() const {
                 static_assert(N == 2 || N == 3 || N == 4);
                 if constexpr (N == 2) {
