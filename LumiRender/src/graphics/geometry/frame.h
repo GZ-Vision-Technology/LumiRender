@@ -7,17 +7,17 @@
 
 namespace luminous {
     inline namespace geometry {
-        
-        template <typename T>
+
+        template<typename T>
         struct TFrame {
             using scalar_t = T;
             using vector_t = Vector<T, 3>;
 
             vector_t n;
-            vector_t s,t;
+            vector_t s, t;
 
             XPU TFrame(vector_t normal)
-                :n(normal) {
+                    : n(normal) {
                 coordinateSystem(n, &s, &t);
             }
 
@@ -65,14 +65,14 @@ namespace luminous {
 
             XPU static scalar_t sin_phi(const vector_t &v) {
                 scalar_t sinTheta = sin_theta(v);
-                if (sinTheta == (scalar_t)0)
+                if (sinTheta == (scalar_t) 0)
                     return 1;
                 return clamp(v.y / sinTheta, (scalar_t) -1, (scalar_t) 1);
             }
 
             XPU static scalar_t cos_phi(const vector_t &v) {
                 scalar_t sinTheta = sin_theta(v);
-                if (sinTheta == (scalar_t)0)
+                if (sinTheta == (scalar_t) 0)
                     return 1;
                 return clamp(v.x / sinTheta, (scalar_t) -1, (scalar_t) 1);
             }
