@@ -16,7 +16,7 @@ namespace luminous {
             return make_float2(r * cos(theta), r * sin(theta));
         }
 
-        inline XPU float uniform_disk_pdf() {
+        inline XPU float uniform_disk_PDF() {
             return constant::invPi;
         }
 

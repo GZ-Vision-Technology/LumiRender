@@ -102,11 +102,45 @@ void test_math() {
     cout << m2.to_string() << endl;
 }
 
+void test_transform() {
+    auto t = make_float3(1,2,3);
+    auto tsf = Transform::translation(t);
+
+    auto r = Transform::rotation(make_float3(3,1,2), 30);
+    auto s = Transform::scale(make_float3(3,4,9));
+
+    tsf = r * tsf * s;
+
+    auto inv = tsf.inverse();
+
+    auto p = make_float3(5,6,7);
+
+    cout << tsf.mat4x4().to_string() << endl;
+    auto np = tsf.apply_normal(p);
+    auto nnp = inv.apply_normal(np);
+    cout << p.to_string() << endl;
+    cout << np.to_string() << endl;
+    cout << nnp.to_string() << endl;
+
+     np = tsf.apply_vector(p);
+     nnp = inv.apply_vector(np);
+    cout << p.to_string() << endl;
+    cout << np.to_string() << endl;
+    cout << nnp.to_string() << endl;
+
+     np = tsf.apply_point(p);
+     nnp = inv.apply_point(np);
+    cout << p.to_string() << endl;
+    cout << np.to_string() << endl;
+    cout << nnp.to_string() << endl;
+}
+
 int main() {
 
 //    testVariant();
 
-    test_math();
+//    test_math();
+    test_transform();
 
     return 0;
 }
