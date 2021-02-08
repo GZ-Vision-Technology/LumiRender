@@ -2,7 +2,7 @@
 // Created by Zero on 2021/1/31.
 //
 
-#include "graphics/lstd/lstd.h"
+#include "lstd/lstd.h"
 #include "graphics/common.h"
 
 using namespace luminous;

@@ -101,7 +101,7 @@ namespace luminous {
             }
 
             [[nodiscard]] inline std::string to_string() const {
-                return string_printf("lower: %s \nupper : %s \n",
+                return string_printf("box : {lower: %s, upper : %s }",
                                      lower.to_string().c_str(),
                                      upper.to_string().c_str());
             }
