@@ -49,6 +49,10 @@ namespace luminous {
                 return cols[i];
             }
 
+            XPU [[nodiscard]] bool has_nan() const noexcept {
+                return cols[0].has_nan() || cols[1].has_nan() || cols[2].has_nan();
+            }
+
             [[nodiscard]] std::string to_string() const {
                 return serialize("[", serialize(cols[0].to_string()), "\n",
                                  serialize(cols[1].to_string()), "\n",
@@ -89,6 +93,10 @@ namespace luminous {
             template<typename Index>
             XPU [[nodiscard]] constexpr vector_t operator[](Index i) const noexcept {
                 return cols[i];
+            }
+
+            XPU [[nodiscard]] bool has_nan() const noexcept {
+                return cols[0].has_nan() || cols[1].has_nan() || cols[2].has_nan() || cols[3].has_nan();
             }
 
             [[nodiscard]] std::string to_string() const {

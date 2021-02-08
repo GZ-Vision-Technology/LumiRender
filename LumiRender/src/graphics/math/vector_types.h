@@ -68,6 +68,17 @@ namespace luminous {
             template<typename Index>
             XPU [[nodiscard]] T operator[](Index i) const noexcept { return reinterpret_cast<const T(&)[N]>(*this)[i]; }
 
+            XPU [[nodiscard]] bool has_nan() const noexcept {
+                static_assert(N == 2 || N == 3 || N == 4);
+                if constexpr (N == 2) {
+                    return is_nan(Storage::x) || is_nan(Storage::y);
+                } else if constexpr (N == 3) {
+                    return is_nan(Storage::x) || is_nan(Storage::y) || is_nan(Storage::z);;
+                } else {
+                    return is_nan(Storage::x) || is_nan(Storage::y) || is_nan(Storage::z) || is_nan(Storage::w);;
+                }
+            }
+
             [[nodiscard]] std::string to_string() const {
                 static_assert(N == 2 || N == 3 || N == 4);
                 if constexpr (N == 2) {

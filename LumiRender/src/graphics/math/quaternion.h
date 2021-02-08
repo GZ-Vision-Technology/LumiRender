@@ -91,6 +91,14 @@ namespace luminous {
                 ret.w /= f;
                 return ret;
             }
+
+            XPU bool has_nan() const {
+                return v.has_nan() || is_nan(w);
+            }
+
+            [[nodiscard]] std::string to_string() const {
+                return string_printf("quaternion: v=%s, w=%f", v.to_string().c_str(), w);
+            }
         };
 
         XPU Quaternion operator*(float f, const Quaternion &q) {
@@ -98,9 +106,5 @@ namespace luminous {
         }
 
 
-        template<typename T>
-        struct TQuaternion {
-
-        };
     }
 }

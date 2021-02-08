@@ -56,6 +56,10 @@ namespace luminous {
                 return Transform(_inv_mat, _mat);
             }
 
+            [[nodiscard]] std::string to_string() const {
+                return string_printf("transform:%s", _mat.to_string().c_str());
+            }
+
             XPU static Transform translation(float3 t) {
                 auto mat = make_float4x4(
                         1.f, 0.f, 0.f, 0.f,

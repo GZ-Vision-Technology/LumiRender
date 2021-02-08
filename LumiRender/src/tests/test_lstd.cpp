@@ -2,7 +2,7 @@
 // Created by Zero on 2021/1/31.
 //
 
-#include "core/lstd/lstd.h"
+#include "graphics/lstd/lstd.h"
 #include "graphics/common.h"
 
 using namespace luminous;
@@ -133,6 +133,8 @@ void test_transform() {
     cout << p.to_string() << endl;
     cout << np.to_string() << endl;
     cout << nnp.to_string() << endl;
+
+    cout << is_nan(0) << endl;
 }
 
 int main() {

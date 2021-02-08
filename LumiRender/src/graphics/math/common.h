@@ -7,6 +7,7 @@
 
 #include "../string_util.h"
 #include "../header.h"
+#include "float.h"
 #include "scalar_types.h"
 #include "vector_types.h"
 #include "matrix_types.h"

@@ -41,12 +41,19 @@ namespace luminous {
                 _direction_z = direction.z;
             }
 
-            XPU [[nodiscard]] float3 origin() noexcept {
+            XPU [[nodiscard]] float3 origin() const noexcept {
                 return make_float3(_origin_x, _origin_y, _origin_z);
             }
 
-            XPU [[nodiscard]] float3 direction() noexcept {
+            XPU [[nodiscard]] float3 direction() const noexcept {
                 return make_float3(_direction_x, _direction_y, _direction_z);
+            }
+
+            [[nodiscard]] std::string to_string() const {
+                return string_printf("ray:origin=%s,direction=%s,tmin=%f,tmax=%f",
+                                     origin().to_string().c_str(),
+                                     direction().to_string().c_str(),
+                                     _t_min,_t_max);
             }
         };
 

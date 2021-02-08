@@ -93,7 +93,16 @@ namespace luminous {
                 return !operator==(frame);
             }
 
+            XPU bool has_nan() const {
+                return s.has_nan() || t.has_nan() || n.has_nan();
+            }
 
+            [[nodiscard]] std::string to_string() const {
+                return string_printf("frame : x=%s,y=%s,z=%s",
+                                     s.to_string().c_str(),
+                                     t.to_string().c_str(),
+                                     n.to_string().c_str());
+            }
         };
 
         using Frame = TFrame<float>;
