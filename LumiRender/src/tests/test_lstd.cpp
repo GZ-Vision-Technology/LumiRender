@@ -109,7 +109,7 @@ void test_transform() {
     auto r = Transform::rotation(make_float3(3,1,2), 30);
     auto s = Transform::scale(make_float3(3,4,9));
 
-    tsf = r * tsf * s;
+    tsf = tsf * r * s;
 
     auto inv = tsf.inverse();
 
@@ -134,7 +134,12 @@ void test_transform() {
     cout << np.to_string() << endl;
     cout << nnp.to_string() << endl;
 
-    cout << is_nan(0) << endl;
+    float3 tt;
+    Quaternion rr;
+    float3 ss;
+    decompose(tsf.mat4x4(), &tt, &rr, &ss);
+    cout << tsf.to_string_detail();
+//    cout << tt.to_string() << endl << rr.to_string() << endl << ss.to_string() << endl;
 }
 
 int main() {

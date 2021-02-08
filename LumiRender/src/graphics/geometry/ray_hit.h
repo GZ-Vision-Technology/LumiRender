@@ -50,7 +50,7 @@ namespace luminous {
             }
 
             [[nodiscard]] std::string to_string() const {
-                return string_printf("ray:origin=%s,direction=%s,tmin=%f,tmax=%f",
+                return string_printf("ray:{origin:%s,direction:%s,tmin:%f,tmax:%f}",
                                      origin().to_string().c_str(),
                                      direction().to_string().c_str(),
                                      _t_min,_t_max);

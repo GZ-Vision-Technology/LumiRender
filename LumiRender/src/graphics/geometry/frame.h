@@ -98,7 +98,7 @@ namespace luminous {
             }
 
             [[nodiscard]] std::string to_string() const {
-                return string_printf("frame : x=%s,y=%s,z=%s",
+                return string_printf("frame : {x:%s,y:%s,z:%s}",
                                      s.to_string().c_str(),
                                      t.to_string().c_str(),
                                      n.to_string().c_str());

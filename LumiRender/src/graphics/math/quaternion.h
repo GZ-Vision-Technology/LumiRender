@@ -97,7 +97,8 @@ namespace luminous {
             }
 
             [[nodiscard]] std::string to_string() const {
-                return string_printf("quaternion: v=%s, w=%f", v.to_string().c_str(), w);
+                auto theta = degrees(acos(w));
+                return string_printf("quaternion:{ v:%s, angle:%f}", v.to_string().c_str(), (theta * 2));
             }
         };
 

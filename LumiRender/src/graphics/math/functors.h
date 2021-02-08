@@ -11,112 +11,11 @@ namespace luminous {
     inline namespace functor {
         using std::abs;
 
-        // bit manipulation function
-        [[nodiscard]] constexpr auto next_pow_of_two(uint v) noexcept {
-            v--;
-            v |= v >> 1u;
-            v |= v >> 2u;
-            v |= v >> 4u;
-            v |= v >> 8u;
-            v |= v >> 16u;
-            v++;
-            return v;
-        }
-
-        [[nodiscard]] constexpr float radians(float deg) noexcept {
-            return deg * constant::Pi / 180.0f;
-        }
-        [[nodiscard]] constexpr float degrees(float rad) noexcept {
-            return rad * constant::invPi * 180.0f;
-        }
-
-        template<typename T, typename F>
-        [[nodiscard]] constexpr auto select(bool pred, T t, F f) noexcept {
-            return pred ? t : f;
-        }
-
-        template<typename T, uint N, std::enable_if_t<scalar::is_scalar<T>, int> = 0>
-        [[nodiscard]] constexpr auto select(Vector<bool, N> pred, Vector<T, N> t, Vector<T, N> f) noexcept {
-            static_assert(N == 2 || N == 3 || N == 4);
-            if constexpr (N == 2) {
-                return Vector<T, N>{select(pred.x, t.x, f.x), select(pred.y, t.y, f.y)};
-            } else if constexpr (N == 3) {
-                return Vector<T, N>{select(pred.x, t.x, f.x), select(pred.y, t.y, f.y), select(pred.z, t.z, f.z)};
-            } else {
-                return Vector<T, N>{select(pred.x, t.x, f.x), select(pred.y, t.y, f.y), select(pred.z, t.z, f.z), select(pred.w, t.w, f.w)};
-            }
-        }
-
-        template<typename A, typename B>
-        [[nodiscard]] constexpr auto lerp(A a, B b, float t) noexcept {
-            return a + t * (b - a);
-        }
-
-        template <typename T, typename U, typename V>
-        [[nodiscard]] constexpr T clamp(T val, U low, V high) noexcept {
-            if (val < low)
-                return low;
-            else if (val > high)
-                return high;
-            else
-                return val;
-        }
-
-#if defined(_GNU_SOURCE)
-        inline void sincos(float theta, float *sin, float *cos) {
-            ::sincosf(theta, sin, cos);
-        }
-#else
-        inline void sincos(float theta, float *_sin, float *_cos) {
-            *_sin = sinf(theta);
-            *_cos = cosf(theta);
-        }
-#endif
-
-        inline float safe_sqrt(float x) noexcept {
-            return sqrt(std::max(x, 0.f));
-        }
-
-        inline float safe_acos(float x) noexcept {
-            return acos(clamp(x, -1.f, 1.f));
-        }
-
-        inline float safe_asin(float x) noexcept {
-            return asin(clamp(x, -1.f, 1.f));
-        }
-
-        template <typename T>
-        inline constexpr auto sqr(T v) {
-            return v * v;
-        }
-
         inline XPU float rcp(float f) noexcept { return 1.f/f; }
 
         inline XPU double rcp(double d) noexcept { return 1./d; }
 
         XPU float saturate(const float &f) { return std::min(1.f,std::max(0.f,f)); }
-
-        template <int n>
-        inline constexpr float Pow(float v) {
-            if constexpr (n < 0) {
-                return 1 / Pow<-n>(v);
-            } else if constexpr (n == 1) {
-                return v;
-            } else if constexpr (n == 0) {
-                return 1;
-            }
-            float n2 = Pow<n / 2>(v);
-            return n2 * n2 * Pow<n & 1>(v);
-        }
-
-        inline bool is_power_of_two(uint32_t i) noexcept { return (i & (i-1)) == 0; }
-
-        inline bool is_power_of_two(int32_t i) noexcept { return i > 0 && (i & (i-1)) == 0; }
-
-        inline bool is_power_of_two(uint64_t i) noexcept { return (i & (i-1)) == 0; }
-
-        inline bool is_power_of_two(int64_t i) noexcept { return i > 0 && (i & (i-1)) == 0; }
-
 
         // Vector Functions
 #define MAKE_VECTOR_UNARY_FUNC(func)                                          \
@@ -135,8 +34,20 @@ namespace luminous {
         MAKE_VECTOR_UNARY_FUNC(saturate)
         MAKE_VECTOR_UNARY_FUNC(abs)
 
+        template<typename T, uint N, std::enable_if_t<scalar::is_scalar<T>, int> = 0>
+        [[nodiscard]] XPU constexpr auto select(Vector<bool, N> pred, Vector<T, N> t, Vector<T, N> f) noexcept {
+            static_assert(N == 2 || N == 3 || N == 4);
+            if constexpr (N == 2) {
+                return Vector<T, N>{select(pred.x, t.x, f.x), select(pred.y, t.y, f.y)};
+            } else if constexpr (N == 3) {
+                return Vector<T, N>{select(pred.x, t.x, f.x), select(pred.y, t.y, f.y), select(pred.z, t.z, f.z)};
+            } else {
+                return Vector<T, N>{select(pred.x, t.x, f.x), select(pred.y, t.y, f.y), select(pred.z, t.z, f.z), select(pred.w, t.w, f.w)};
+            }
+        }
+
         template<typename T, uint N>
-        [[nodiscard]] constexpr auto volume(Vector<T, N> v) noexcept {
+        [[nodiscard]] XPU constexpr auto volume(Vector<T, N> v) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
                 return v.x * v.y;
@@ -148,7 +59,7 @@ namespace luminous {
         }
 
         template<typename T, uint N>
-        [[nodiscard]] constexpr auto dot(Vector<T, N> u, Vector<T, N> v) noexcept {
+        [[nodiscard]] XPU constexpr auto dot(Vector<T, N> u, Vector<T, N> v) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
                 return u.x * v.x + u.y * v.y;
@@ -160,32 +71,32 @@ namespace luminous {
         }
 
         template<typename T, uint N>
-        [[nodiscard]] constexpr auto length(Vector<T, N> u) noexcept {
+        [[nodiscard]] XPU constexpr auto length(Vector<T, N> u) noexcept {
             return sqrt(dot(u, u));
         }
 
         template<typename T, uint N>
-        [[nodiscard]] constexpr auto length_squared(Vector<T, N> u) noexcept {
+        [[nodiscard]] XPU constexpr auto length_squared(Vector<T, N> u) noexcept {
             return dot(u, u);
         }
 
         template<typename T, uint N>
-        [[nodiscard]] constexpr auto normalize(Vector<T, N> u) noexcept {
+        [[nodiscard]] XPU constexpr auto normalize(Vector<T, N> u) noexcept {
             return u * (1.0f / length(u));
         }
 
         template<typename T, uint N>
-        [[nodiscard]] constexpr auto distance(Vector<T, N> u, Vector<T, N> v) noexcept {
+        [[nodiscard]] XPU constexpr auto distance(Vector<T, N> u, Vector<T, N> v) noexcept {
             return length(u - v);
         }
 
         template<typename T, uint N>
-        [[nodiscard]] constexpr auto distance_squared(Vector<T, N> u, Vector<T, N> v) noexcept {
+        [[nodiscard]] XPU constexpr auto distance_squared(Vector<T, N> u, Vector<T, N> v) noexcept {
             return length_squared(u - v);
         }
 
         template<typename T>
-        [[nodiscard]] constexpr auto cross(Vector<T, 3> u, Vector<T, 3> v) noexcept {
+        [[nodiscard]] XPU constexpr auto cross(Vector<T, 3> u, Vector<T, 3> v) noexcept {
             return Vector<T, 3>(u.y * v.z - v.y * u.z,
                                u.z * v.x - v.z * u.x,
                                u.x * v.y - v.x * u.y);
@@ -204,15 +115,15 @@ namespace luminous {
         }
 
         // Quaternion Functions
-        [[nodiscard]] float dot(Quaternion q1, Quaternion q2) noexcept {
+        [[nodiscard]] XPU float dot(Quaternion q1, Quaternion q2) noexcept {
             return dot(q1.v, q2.v) + q1.w * q2.w;
         }
 
-        [[nodiscard]] Quaternion normalize(Quaternion q) noexcept {
+        [[nodiscard]] XPU Quaternion normalize(Quaternion q) noexcept {
             return q / std::sqrt(dot(q, q));
         }
 
-        [[nodiscard]] Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) {
+        [[nodiscard]] XPU Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) {
             float cosTheta = dot(q1, q2);
             if (cosTheta > .9995f)
                 //如果旋转角度特别小，当做直线处理
@@ -230,14 +141,14 @@ namespace luminous {
 
         // Matrix Functions
         template<typename T>
-        [[nodiscard]] constexpr auto transpose(Matrix3x3<T> m) noexcept {
+        [[nodiscard]] XPU constexpr auto transpose(Matrix3x3<T> m) noexcept {
             return Matrix3x3<T>(m[0].x, m[1].x, m[2].x,
                                 m[0].y, m[1].y, m[2].y,
                                 m[0].z, m[1].z, m[2].z);
         }
 
         template<typename T>
-        [[nodiscard]] constexpr auto transpose(Matrix4x4<T> m) noexcept {
+        [[nodiscard]] XPU constexpr auto transpose(Matrix4x4<T> m) noexcept {
             return Matrix4x4<T>(m[0].x, m[1].x, m[2].x, m[3].x,
                                 m[0].y, m[1].y, m[2].y, m[3].y,
                                 m[0].z, m[1].z, m[2].z, m[3].z,
@@ -245,7 +156,7 @@ namespace luminous {
         }
 
         template<typename T>
-        [[nodiscard]] auto inverse(Matrix3x3<T> m) noexcept {// from GLM
+        [[nodiscard]] XPU auto inverse(Matrix3x3<T> m) noexcept {// from GLM
             T one_over_determinant = 1.0f / (m[0].x * (m[1].y * m[2].z - m[2].y * m[1].z) - m[1].x * (m[0].y * m[2].z - m[2].y * m[0].z) + m[2].x * (m[0].y * m[1].z - m[1].y * m[0].z));
             return Matrix3x3<T>(
                     (m[1].y * m[2].z - m[2].y * m[1].z) * one_over_determinant,
@@ -260,7 +171,7 @@ namespace luminous {
         }
 
         template<typename T>
-        [[nodiscard]] constexpr auto inverse(const Matrix4x4<T> m) noexcept {// from GLM
+        [[nodiscard]] XPU constexpr auto inverse(const Matrix4x4<T> m) noexcept {// from GLM
             const T coef00 = m[2].z * m[3].w - m[3].z * m[2].w;
             const T coef02 = m[1].z * m[3].w - m[3].z * m[1].w;
             const T coef03 = m[1].z * m[2].w - m[2].z * m[1].w;
