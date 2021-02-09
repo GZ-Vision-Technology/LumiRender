@@ -79,6 +79,17 @@ namespace luminous {
                 }
             }
 
+            XPU [[nodiscard]] bool is_zero() const noexcept {
+                static_assert(N == 2 || N == 3 || N == 4);
+                if constexpr (N == 2) {
+                    return Storage::x == 0 || Storage::y == 0;
+                } else if constexpr (N == 3) {
+                    return Storage::x == 0 || Storage::y == 0 || Storage::z == 0;;
+                } else {
+                    return Storage::x == 0 || Storage::y == 0 || Storage::z == 0 || Storage::w == 0;;
+                }
+            }
+
             [[nodiscard]] std::string to_string() const {
                 static_assert(N == 2 || N == 3 || N == 4);
                 if constexpr (N == 2) {

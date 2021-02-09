@@ -142,12 +142,25 @@ void test_transform() {
 //    cout << tt.to_string() << endl << rr.to_string() << endl << ss.to_string() << endl;
 }
 
+
+void test_color() {
+    auto s = Color::linear_to_srgb(make_float3(0.1,0.2,0.3));
+    auto l = Color::srgb_to_linear(s);
+    cout << s.to_string() << endl;
+    cout << l.to_string() << endl;
+    cout << Color::linear_to_srgb(Color(make_float3(0.3))).to_string() << endl;
+    cout << Color::srgb_to_linear(Color(make_float3(0.583831))).to_string() << endl;
+}
+
 int main() {
 
 //    testVariant();
 
 //    test_math();
-    test_transform();
+//    test_transform();
+
+    test_color();
+
 
     return 0;
 }

@@ -5,7 +5,8 @@
 
 #pragma once
 
-#include "header.h"
+
 #include "math/common.h"
 #include "geometry/common.h"
 #include "sampling/common.h"
+#include "optics/common.h"

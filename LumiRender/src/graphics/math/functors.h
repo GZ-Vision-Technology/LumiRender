@@ -10,6 +10,9 @@
 namespace luminous {
     inline namespace functor {
         using std::abs;
+        using std::pow;
+        using std::max;
+        using std::min;
 
         inline XPU float rcp(float f) noexcept { return 1.f/f; }
 
@@ -34,6 +37,8 @@ namespace luminous {
         MAKE_VECTOR_UNARY_FUNC(saturate)
         MAKE_VECTOR_UNARY_FUNC(abs)
 
+#undef MAKE_VECTOR_UNARY_FUNC
+
         template<typename T, uint N, std::enable_if_t<scalar::is_scalar<T>, int> = 0>
         [[nodiscard]] XPU constexpr auto select(Vector<bool, N> pred, Vector<T, N> t, Vector<T, N> f) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
@@ -45,6 +50,48 @@ namespace luminous {
                 return Vector<T, N>{select(pred.x, t.x, f.x), select(pred.y, t.y, f.y), select(pred.z, t.z, f.z), select(pred.w, t.w, f.w)};
             }
         }
+
+#define MAKE_VECTOR_BINARY_FUNC(func)                                                             \
+    template<typename T, uint N>                                                                  \
+    [[nodiscard]] constexpr auto func(Vector<T, N> v, Vector<T, N> u) noexcept {                  \
+        static_assert(N == 2 || N == 3 || N == 4);                                                \
+        if constexpr (N == 2) {                                                                   \
+            return Vector<T, 2>{func(v.x, u.x), func(v.y, u.y)};                                  \
+        } else if constexpr (N == 3) {                                                            \
+            return Vector<T, 3>(func(v.x, u.x), func(v.y, u.y), func(v.z, u.z));                  \
+        } else {                                                                                  \
+            return Vector<T, 4>(func(v.x, u.x), func(v.y, u.y), func(v.z, u.z), func(v.w, u.w));  \
+        }                                                                                         \
+    }                                                                                             \
+    template<typename T, uint N>                                                                  \
+    [[nodiscard]] constexpr auto func(T v, Vector<T, N> u) noexcept {                             \
+        static_assert(N == 2 || N == 3 || N == 4);                                                \
+        if constexpr (N == 2) {                                                                   \
+            return Vector<T, 2>{func(v, u.x), func(v, u.y)};                                      \
+        } else if constexpr (N == 3) {                                                            \
+            return Vector<T, 3>(func(v, u.x), func(v, u.y), func(v, u.z));                        \
+        } else {                                                                                  \
+            return Vector<T, 4>(func(v, u.x), func(v, u.y), func(v, u.z), func(v, u.w));          \
+        }                                                                                         \
+    }                                                                                             \
+    template<typename T, uint N>                                                                  \
+    [[nodiscard]] constexpr auto func(Vector<T, N> v, T u) noexcept {                             \
+        static_assert(N == 2 || N == 3 || N == 4);                                                \
+        if constexpr (N == 2) {                                                                   \
+            return Vector<T, 2>{func(v.x, u), func(v.y, u)};                                      \
+        } else if constexpr (N == 3) {                                                            \
+            return Vector<T, 3>(func(v.x, u), func(v.y, u), func(v.z, u));                        \
+        } else {                                                                                  \
+            return Vector<T, 4>(func(v.x, u), func(v.y, u), func(v.z, u), func(v.w, u));          \
+        }                                                                                         \
+    }
+
+        MAKE_VECTOR_BINARY_FUNC(atan2)
+        MAKE_VECTOR_BINARY_FUNC(pow)
+        MAKE_VECTOR_BINARY_FUNC(min)
+        MAKE_VECTOR_BINARY_FUNC(max)
+
+#undef MAKE_VECTOR_UNARY_FUNC
 
         template<typename T, uint N>
         [[nodiscard]] XPU constexpr auto volume(Vector<T, N> v) noexcept {
