@@ -10,7 +10,7 @@
 
 namespace lstd {
 
-    template<typename T, class Allocator = polymorphic_allocator<T>>
+    template<typename T, class Allocator = pmr::polymorphic_allocator<T>>
     class vector {
     public:
         using value_type = T;
