@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "../math/common.h"
+
 namespace luminous {
     inline namespace optics {
 

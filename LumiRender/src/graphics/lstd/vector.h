@@ -131,7 +131,7 @@ namespace luminous {
             }
             template <class InputIt>
             void assign(InputIt first, InputIt last) {
-                LOG_FATAL("TODO");
+                assert(0);
                 // TODO
             }
             void assign(std::initializer_list<T> &init) { assign(init.begin(), init.end()); }
@@ -197,15 +197,15 @@ namespace luminous {
 
             iterator insert(const_iterator, const T &value) {
                 // TODO
-                LUMINOUS_EXCEPTION("TODO");
+                assert(0);
             }
             iterator insert(const_iterator, T &&value) {
                 // TODO
-                LUMINOUS_EXCEPTION("TODO");
+                assert(0);
             }
             iterator insert(const_iterator pos, size_type count, const T &value) {
                 // TODO
-                LUMINOUS_EXCEPTION("TODO");
+                assert(0);
             }
             template <class InputIt>
             iterator insert(const_iterator pos, InputIt first, InputIt last) {
@@ -215,17 +215,17 @@ namespace luminous {
                         push_back(*iter);
                     return begin() + firstOffset;
                 } else
-                    LOG_FATAL("TODO");
+                    assert(0);
             }
             iterator insert(const_iterator pos, std::initializer_list<T> init) {
                 // TODO
-                LOG_FATAL("TODO");
+                assert(0);
             }
 
             template <class... Args>
             iterator emplace(const_iterator pos, Args &&... args) {
                 // TODO
-                LOG_FATAL("TODO");
+                assert(0);
             }
             template <class... Args>
             void emplace_back(Args &&... args) {
@@ -238,11 +238,11 @@ namespace luminous {
 
             iterator erase(const_iterator pos) {
                 // TODO
-                LOG_FATAL("TODO");
+                assert(0);
             }
             iterator erase(const_iterator first, const_iterator last) {
                 // TODO
-                LOG_FATAL("TODO");
+                assert(0);
             }
 
             void push_back(const T &value) {
@@ -283,12 +283,12 @@ namespace luminous {
             }
             void resize(size_type count, const value_type &value) {
                 // TODO
-                LOG_FATAL("TODO");
+                assert(0);
             }
 
             void swap(vector &other) {
                 // TODO
-                LOG_FATAL("TODO");
+                assert(0);
             }
 
         };

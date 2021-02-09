@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "vector_types.h"
+
 namespace luminous {
     inline namespace math {
         /**

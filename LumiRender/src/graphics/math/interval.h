@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "constants.h"
+
 namespace luminous {
     inline namespace math {
         template<typename T>

@@ -7,6 +7,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include "primes.h"
+#include "../header.h"
 
 namespace luminous {
     inline namespace constant {

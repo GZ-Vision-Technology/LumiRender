@@ -6,6 +6,7 @@
 #pragma once
 
 #include "matrix_types.h"
+#include "quaternion.h"
 
 namespace luminous {
     inline namespace functor {

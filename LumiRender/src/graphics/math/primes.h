@@ -9,7 +9,7 @@ namespace luminous {
     inline namespace constant {
         constexpr auto primeNumberCount = 1000u;
 
-        constexpr uint primeNumbers [[maybe_unused]][primeNumberCount] = {
+        constexpr uint32_t primeNumbers [[maybe_unused]][primeNumberCount] = {
                 2, 3, 5, 7, 11,
                 // Subsequent prime numbers
                 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89,
@@ -94,7 +94,7 @@ namespace luminous {
                 7829, 7841, 7853, 7867, 7873, 7877, 7879, 7883, 7901, 7907, 7919
         };
 
-        constexpr uint primeNumberPrefixSums [[maybe_unused]][primeNumberCount] = {
+        constexpr uint32_t primeNumberPrefixSums [[maybe_unused]][primeNumberCount] = {
                 0, 2, 5, 10, 17,
                 // Subsequent prime sums
                 28, 41, 58, 77, 100, 129, 160, 197, 238, 281, 328, 381, 440, 501, 568, 639,

@@ -2,7 +2,7 @@
 // Created by Zero on 2021/1/31.
 //
 
-#include "lstd/lstd.h"
+#include "graphics/lstd/lstd.h"
 #include "graphics/common.h"
 
 using namespace luminous;
@@ -162,7 +162,7 @@ int main() {
 //    test_math();
 //    test_transform();
 
-    test_color();
+//    test_color();
 
 
     return 0;
