@@ -27,6 +27,8 @@
 #define MAYBE_UNUSED
 #endif
 
+#define USE_LSTD 1
+
 #define DCHECK(a) assert(a);
 #define DCHECK_GT(a, b) assert(a > b);
 #define DCHECK_GE(a, b) assert(a >= b);

@@ -29,7 +29,9 @@ public:
     }
 };
 
-class Base : public lstd::Variant<Sub1, Sub2> {
+using ::lstd::Variant;
+
+class Base : public Variant<Sub1, Sub2> {
 public:
     using Variant::Variant;
 
@@ -42,7 +44,7 @@ public:
     }
 };
 
-class BaseP : public lstd::Variant<Sub1 *, Sub2 *> {
+class BaseP : public Variant<Sub1 *, Sub2 *> {
 public:
     using Variant::Variant;
 
@@ -161,14 +163,10 @@ void test_color() {
 
 void piecewise_construct_test() {
     float arr[] = {1.f, 2.f, 1.f};
-    auto sp = lstd::span<float>(arr, 3);
-//    cout << sp[3] << endl;
-    std::vector<int, std::allocator<int>> v;
+    using ::lstd::span;
+    auto sp = span<float>(arr, 3);
 
-    auto a = v.get_allocator();
-    a.allocate(10);
-    int s = 0;
-//    auto dis = PiecewiseConstant1D(sp);
+    auto dis = PiecewiseConstant1D(sp);
 //    auto out = dis.Integral();
 //    cout << out << endl;
 }

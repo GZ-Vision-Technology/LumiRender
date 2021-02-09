@@ -12,9 +12,19 @@
 
 namespace luminous {
     inline namespace sampling {
+
+#if USE_LSTD == 1
+        using ::lstd::vector;
+        using ::lstd::span;
+        using ::lstd::Allocator;
+#else
+        using std::vector;
+        using std::span;
+        using std::Allocator;
+#endif
         class PiecewiseConstant1D {
         private:
-            lstd::vector<float> func, cdf;
+            vector<float> func, cdf;
             float min, max;
             float funcInt = 0;
         public:
@@ -27,10 +37,10 @@ namespace luminous {
 
             PiecewiseConstant1D(Allocator alloc) : func(alloc), cdf(alloc) {}
 
-            PiecewiseConstant1D(lstd::span<const float> f, Allocator alloc = {})
+            PiecewiseConstant1D(span<const float> f, Allocator alloc = {})
                     : PiecewiseConstant1D(f, 0., 1., alloc) {}
 
-            PiecewiseConstant1D(lstd::span<const float> f, float min, float max,
+            PiecewiseConstant1D(span<const float> f, float min, float max,
                                 Allocator alloc = {})
                     : func(f.begin(), f.end(), alloc), cdf(f.size() + 1, alloc), min(min), max(max) {
                 DCHECK_GT(max, min);
