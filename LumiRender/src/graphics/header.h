@@ -26,3 +26,10 @@
 #else
 #define MAYBE_UNUSED
 #endif
+
+#define DCHECK(a) assert(a);
+#define DCHECK_GT(a, b) assert(a > b);
+#define DCHECK_GE(a, b) assert(a >= b);
+#define DCHECK_LT(a, b) assert(a < b);
+#define DCHECK_LE(a, b) assert(a <= b);
+

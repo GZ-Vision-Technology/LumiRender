@@ -41,5 +41,5 @@ namespace luminous {
             return std::fma(a, b, c);
         }
 
-    }
-}
+    } // luminous::math
+} // luminous

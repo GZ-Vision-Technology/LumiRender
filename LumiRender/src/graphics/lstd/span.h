@@ -93,11 +93,11 @@ namespace luminous {
             XPU const_iterator end() const { return ptr + n; }
 
             XPU T &operator[](size_t i) {
-//                DCHECK_LT(i, size());
+                DCHECK_LT(i, size());
                 return ptr[i];
             }
             XPU const T &operator[](size_t i) const {
-//                DCHECK_LT(i, size());
+                DCHECK_LT(i, size());
                 return ptr[i];
             }
 

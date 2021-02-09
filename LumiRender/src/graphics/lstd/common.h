@@ -21,7 +21,7 @@
 #include <optional>
 #include <memory>
 #include <cstring>
-#include "core/header.h"
+#include "../header.h"
 
 namespace luminous {
     namespace lstd {
@@ -130,12 +130,12 @@ namespace luminous {
             XPU const T &operator*() const { return value(); }
 
             XPU T &value() {
-                AKR_CHECK(set);
+                DCHECK(set);
                 return *ptr();
             }
 
             XPU const T &value() const {
-                AKR_CHECK(set);
+                DCHECK(set);
                 return *ptr();
             }
 

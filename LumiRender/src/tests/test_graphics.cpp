@@ -25,13 +25,14 @@ public:
     }
 
     int fun2(int a) {
-        return  2* a;
+        return 2 * a;
     }
 };
 
 class Base : public lstd::Variant<Sub1, Sub2> {
 public:
     using Variant::Variant;
+
     int fun1() {
         return dispatch([](auto &&arg) { return arg.fun1(); });
     }
@@ -41,9 +42,10 @@ public:
     }
 };
 
-class BaseP : public lstd::Variant<Sub1 *, Sub2 * > {
+class BaseP : public lstd::Variant<Sub1 *, Sub2 *> {
 public:
     using Variant::Variant;
+
     int fun1() {
         return dispatch([](auto &&arg) { return arg->fun1(); });
     }
@@ -103,17 +105,17 @@ void test_math() {
 }
 
 void test_transform() {
-    auto t = make_float3(1,2,3);
+    auto t = make_float3(1, 2, 3);
     auto tsf = Transform::translation(t);
 
-    auto r = Transform::rotation(make_float3(3,1,2), 30);
-    auto s = Transform::scale(make_float3(3,4,9));
+    auto r = Transform::rotation(make_float3(3, 1, 2), 30);
+    auto s = Transform::scale(make_float3(3, 4, 9));
 
     tsf = tsf * r * s;
 
     auto inv = tsf.inverse();
 
-    auto p = make_float3(5,6,7);
+    auto p = make_float3(5, 6, 7);
 
     cout << tsf.mat4x4().to_string() << endl;
     auto np = tsf.apply_normal(p);
@@ -122,14 +124,14 @@ void test_transform() {
     cout << np.to_string() << endl;
     cout << nnp.to_string() << endl;
 
-     np = tsf.apply_vector(p);
-     nnp = inv.apply_vector(np);
+    np = tsf.apply_vector(p);
+    nnp = inv.apply_vector(np);
     cout << p.to_string() << endl;
     cout << np.to_string() << endl;
     cout << nnp.to_string() << endl;
 
-     np = tsf.apply_point(p);
-     nnp = inv.apply_point(np);
+    np = tsf.apply_point(p);
+    nnp = inv.apply_point(np);
     cout << p.to_string() << endl;
     cout << np.to_string() << endl;
     cout << nnp.to_string() << endl;
@@ -155,6 +157,22 @@ void test_color() {
     cout << c.luminance() << endl;
 }
 
+#include "new"
+
+void piecewise_construct_test() {
+    float arr[] = {1.f, 2.f, 1.f};
+    auto sp = lstd::span<float>(arr, 3);
+//    cout << sp[3] << endl;
+    std::vector<int, std::allocator<int>> v;
+
+    auto a = v.get_allocator();
+    a.allocate(10);
+    int s = 0;
+//    auto dis = PiecewiseConstant1D(sp);
+//    auto out = dis.Integral();
+//    cout << out << endl;
+}
+
 int main() {
 
 //    testVariant();
@@ -164,6 +182,7 @@ int main() {
 
 //    test_color();
 
+    piecewise_construct_test();
 
     return 0;
 }
