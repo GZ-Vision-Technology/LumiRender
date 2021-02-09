@@ -6,6 +6,6 @@
 #pragma once
 
 #include "../math/common.h"
-#include "color.h"
+#include "rgb.h"
 #include "spectrum.h"
 #include "optics.h"

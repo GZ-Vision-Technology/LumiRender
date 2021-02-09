@@ -144,12 +144,15 @@ void test_transform() {
 
 
 void test_color() {
-    auto s = Color::linear_to_srgb(make_float3(0.1,0.2,0.3));
-    auto l = Color::srgb_to_linear(s);
+    auto s = Spectrum::linear_to_srgb(make_float3(0.1, 0.2, 0.3));
+    auto l = Spectrum::srgb_to_linear(s);
     cout << s.to_string() << endl;
     cout << l.to_string() << endl;
-    cout << Color::linear_to_srgb(Color(make_float3(0.3))).to_string() << endl;
-    cout << Color::srgb_to_linear(Color(make_float3(0.583831))).to_string() << endl;
+    cout << Spectrum::linear_to_srgb(Spectrum(make_float3(0.3))).to_string() << endl;
+    cout << Spectrum::srgb_to_linear(Spectrum(make_float3(0.583831))).to_string() << endl;
+
+    auto c = Spectrum(make_float3(1));
+    cout << c.luminance() << endl;
 }
 
 int main() {
