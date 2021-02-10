@@ -104,5 +104,9 @@ namespace luminous {
             }
         };
 
+        class PiecewiseConstant2D {
+
+        };
+
     } // luminous::sampling
 } // luminous

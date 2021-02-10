@@ -63,7 +63,7 @@ namespace luminous {
         }
 
         template<typename A, typename B>
-        [[nodiscard]] XPU constexpr auto lerp(A a, B b, float t) noexcept {
+        [[nodiscard]] XPU constexpr auto lerp(float t, A a, B b) noexcept {
             return a + t * (b - a);
         }
 

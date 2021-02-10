@@ -162,13 +162,16 @@ void test_color() {
 #include "new"
 
 void piecewise_construct_test() {
-    float arr[] = {1.f, 2.f, 1.f};
+    float arr[] = {1,1,1,1,1,1};
     using ::lstd::span;
-    auto sp = span<float>(arr, 3);
+    auto sp = span<float>(arr,6);
 
     auto dis = PiecewiseConstant1D(sp);
-//    auto out = dis.Integral();
-//    cout << out << endl;
+
+    float pdf;
+    int ofs;
+    cout << dis.Sample(0.51, &pdf, &ofs) << endl;
+    cout << pdf << endl << ofs;
 }
 
 int main() {
