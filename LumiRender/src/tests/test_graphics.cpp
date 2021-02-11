@@ -162,17 +162,30 @@ void test_color() {
 #include "new"
 
 void piecewise_construct_test() {
-    float arr[] = {1,1,1,1,1,3};
+    float arr[] = {0,2};
     using ::lstd::span;
-    auto sp = span<float>(arr,6);
+    auto sp = span<float>(arr,2);
 
     auto dis = PiecewiseConstant1D(sp);
 
     float pdf;
     int ofs;
-    cout << dis.Sample(0.51, &pdf, &ofs) << endl;
-    cout << pdf << endl << ofs;
+    cout << dis.Sample(0.5, &pdf, &ofs) << endl;
+    cout << pdf << endl << ofs << endl;
+    cout << dis.Invert(0.999).value();
 
+}
+
+void piecewise2d_test() {
+    float arr[] = {0,1,1,2};
+    using ::lstd::span;
+    auto sp = span<float>(arr, 4);
+    auto dis = PiecewiseConstant2D(sp, 2, 2);
+
+    auto u = make_float2(0.5, 0.5);
+    float pdf;
+    cout << dis.Sample(u, &pdf).to_string() << endl;
+    cout << pdf;
 }
 
 int main() {
@@ -184,7 +197,8 @@ int main() {
 
 //    test_color();
 
-    piecewise_construct_test();
+//    piecewise_construct_test();
 
+    piecewise2d_test();
     return 0;
 }
