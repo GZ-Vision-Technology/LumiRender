@@ -56,6 +56,10 @@ namespace luminous {
                 return interval<scalar_t>(lower[dim], upper[dim]);
             }
 
+            [[nodiscard]] inline XPU vector_t offset(vector_t p) const {
+                return (p - lower) / span();
+            }
+
             [[nodiscard]] inline XPU bool contains(const vector_t &point) const {
                 return all(point >= lower) && all(upper >= point);
             }

@@ -15,6 +15,7 @@ target_link_libraries(luminous-all INTERFACE
         luminous-core
         imgui
         luminous-ext
+        luminous-graphics
         luminous-util)
 
 find_package(CUDAToolkit)
@@ -30,6 +31,6 @@ add_subdirectory(util)
 add_subdirectory(ext)
 add_subdirectory(gpu)
 add_subdirectory(gui)
-#add_subdirectory(owl)
+add_subdirectory(graphics)
 add_subdirectory(tests)
 add_subdirectory(apps)

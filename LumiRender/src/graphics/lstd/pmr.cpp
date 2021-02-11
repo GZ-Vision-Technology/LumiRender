@@ -11,9 +11,9 @@ namespace lstd {
 
         class NewDeleteResource : public memory_resource {
             void *do_allocate(size_t size, size_t alignment) {
-#if defined(PBRT_HAVE__ALIGNED_MALLOC)
+#if defined(HAVE__ALIGNED_MALLOC)
                 return _aligned_malloc(size, alignment);
-#elif defined(PBRT_HAVE_POSIX_MEMALIGN)
+#elif defined(HAVE_POSIX_MEMALIGN)
                 void *ptr;
         if (alignment < sizeof(void *))
             return malloc(size);
@@ -28,7 +28,7 @@ namespace lstd {
             void do_deallocate(void *ptr, size_t bytes, size_t alignment) {
                 if (ptr == nullptr)
                     return;
-#if defined(PBRT_HAVE__ALIGNED_MALLOC)
+#if defined(HAVE__ALIGNED_MALLOC)
                 _aligned_free(ptr);
 #else
                 free(ptr);

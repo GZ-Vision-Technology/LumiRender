@@ -106,9 +106,9 @@ namespace lstd {
                 return *this;
 
             if (alloc == other.alloc) {
-                pstd::swap(ptr, other.ptr);
-                pstd::swap(nAlloc, other.nAlloc);
-                pstd::swap(nStored, other.nStored);
+                lstd::swap(ptr, other.ptr);
+                lstd::swap(nAlloc, other.nAlloc);
+                lstd::swap(nStored, other.nStored);
             } else {
                 clear();
                 reserve(other.size());

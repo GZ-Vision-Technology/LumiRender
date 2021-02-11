@@ -162,7 +162,7 @@ void test_color() {
 #include "new"
 
 void piecewise_construct_test() {
-    float arr[] = {1,1,1,1,1,1};
+    float arr[] = {1,1,1,1,1,3};
     using ::lstd::span;
     auto sp = span<float>(arr,6);
 
@@ -172,6 +172,7 @@ void piecewise_construct_test() {
     int ofs;
     cout << dis.Sample(0.51, &pdf, &ofs) << endl;
     cout << pdf << endl << ofs;
+
 }
 
 int main() {
