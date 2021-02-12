@@ -33,3 +33,26 @@ set(CMAKE_DEBUG_POSTFIX "")
 
 set(CMAKE_CXX_STANDARD 17)
 add_subdirectory(src)
+
+set (CHECK_CUDA_OUTPUT_EXE ${CMAKE_BINARY_DIR}/check_cuda)
+if (MSVC)
+    execute_process (COMMAND nvcc -lcuda ${CMAKE_SOURCE_DIR}/cmake/check_cuda.cu -ccbin ${CMAKE_CXX_COMPILER} -o ${CHECK_CUDA_OUTPUT_EXE})
+else  ()
+    execute_process (COMMAND nvcc -lcuda ${CMAKE_SOURCE_DIR}/cmake/check_cuda.cu -o ${CHECK_CUDA_OUTPUT_EXE})
+endif ()
+
+execute_process (COMMAND ${CHECK_CUDA_OUTPUT_EXE}
+        RESULT_VARIABLE CUDA_RETURN_CODE
+        OUTPUT_VARIABLE CHECK_CUDA_OUTPUT)
+
+message(${CHECK_CUDA_OUTPUT_EXE})
+message(${CUDA_RETURN_CODE})
+message(${CHECK_CUDA_OUTPUT})
+
+if (NOT ${CUDA_RETURN_CODE} EQUAL 0)
+    message (SEND_ERROR ${CHECK_CUDA_OUTPUT})
+else ()
+    set(ARCH "${CHECK_CUDA_OUTPUT}")
+    message (STATUS "Detected CUDA Architecture: ${ARCH}")
+    string (APPEND CMAKE_CUDA_FLAGS " --gpu-architecture=${ARCH}")
+endif ()

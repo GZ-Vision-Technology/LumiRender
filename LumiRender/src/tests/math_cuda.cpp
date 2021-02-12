@@ -4,7 +4,6 @@
 
 #include <iostream>
 //#include "cuda.h"
-#include "gpu/cuda/jitify/jitify.hpp"
 
 using namespace std;
 
