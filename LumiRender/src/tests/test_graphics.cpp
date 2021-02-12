@@ -70,18 +70,22 @@ void testVariant() {
 
     Base b2 = s1;
 
-    cout << b.fun1() << endl;
-    cout << b.fun2(9) << endl;
+    cout << sizeof(b) << endl;
+    cout << sizeof(s2) << endl;
 
-    BaseP bp = &s1;
-
-    BaseP bp2 = &s2;
-
-    cout << bp.fun1() << endl;
-    cout << bp.fun2(9) << endl;
-
-    cout << bp2.fun1() << endl;
-    cout << bp2.fun2(9) << endl;
+//
+//    cout << b.fun1() << endl;
+//    cout << b.fun2(9) << endl;
+//
+//    BaseP bp = &s1;
+//
+//    BaseP bp2 = &s2;
+//
+//    cout << bp.fun1() << endl;
+//    cout << bp.fun2(9) << endl;
+//
+//    cout << bp2.fun1() << endl;
+//    cout << bp2.fun2(9) << endl;
 }
 
 void test_math() {
@@ -190,7 +194,7 @@ void piecewise2d_test() {
 
 int main() {
 
-//    testVariant();
+    testVariant();
 
 //    test_math();
 //    test_transform();
@@ -199,6 +203,6 @@ int main() {
 
 //    piecewise_construct_test();
 
-    piecewise2d_test();
+//    piecewise2d_test();
     return 0;
 }
