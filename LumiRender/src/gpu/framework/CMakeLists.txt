@@ -7,7 +7,6 @@ find_package(CUDAToolkit REQUIRED)
 
 target_link_libraries(luminous-backend-cuda PRIVATE CUDA::nvrtc CUDA::cuda_driver CUDA::cudart)
 
-
 set_target_properties(luminous-backend-cuda PROPERTIES
         PUBLIC_HEADER "${HEADER_FILES}"
         LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"

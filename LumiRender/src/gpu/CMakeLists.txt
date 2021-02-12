@@ -1,5 +1,7 @@
 add_library(luminous-backends INTERFACE)
 
+include_directories(${OptiX_INCLUDE})
+
 function(luminous_render_add_backend name)
     cmake_parse_arguments(BACKEND "" "" "SOURCES" ${ARGN})
     add_library(luminous-backend-${name} MODULE ${BACKEND_SOURCES})

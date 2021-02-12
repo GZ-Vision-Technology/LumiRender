@@ -4,3 +4,6 @@
 
 
 #pragma once
+
+#include "optix.h"
+#include "cuda.h"
