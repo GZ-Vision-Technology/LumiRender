@@ -12,9 +12,9 @@
 #include <assert.h>
 
 #if defined(__CUDACC__)
-    #define XPU __host__ __device__
-    #define GPU __device__
-    #define CPU __host__
+//    #define XPU __host__ __device__
+//    #define GPU __device__
+//    #define CPU __host__
 #endif
 
 #if defined(__CUDA_ARCH__)
