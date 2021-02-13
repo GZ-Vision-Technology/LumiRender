@@ -11,7 +11,7 @@
 #include <memory>
 #include <cstring>
 #include "../header.h"
-//#include "common.h"
+#include "common.h"
 
 namespace lstd {
 
@@ -204,7 +204,7 @@ namespace lstd {
     if constexpr (std::is_same_v<void, Ret>) {                                                                         \
         return;                                                                                                        \
     } else {                                                                                                           \
-        LUMINOUS_ERROR("No matching case");                                                                            \
+//        LUMINOUS_ERROR("No matching case");                                                                            \
     }
 
         template<class Visitor>

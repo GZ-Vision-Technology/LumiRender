@@ -3,7 +3,7 @@ target_link_libraries(math-cuda PRIVATE CUDA::nvrtc CUDA::cuda_driver CUDA::cuda
 
 luminous_render_add_application(test-graphicslib SOURCES test_graphics.cpp)
 
-#set(CMAKE_CUDA_STANDARD 17)
+set(CMAKE_CUDA_STANDARD 17)
 project(cuda_test CUDA)
 
 luminous_render_add_application(cuda_test SOURCES test_cuda.cu)
