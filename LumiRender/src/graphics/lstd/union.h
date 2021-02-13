@@ -11,29 +11,30 @@
 
 namespace luisa {
 
-namespace detail {
+    namespace detail {
 
-template<typename Tuple, typename U, int index>
-struct IndexOfImpl {
+        template<typename Tuple, typename U, int index>
+        struct IndexOfImpl {
 
-    template<typename T>
-    static constexpr auto always_false = false;
+            template<typename T>
+            static constexpr auto always_false = false;
 
-    static_assert(always_false<U>, "");
-};
+            static_assert(always_false<U>, "");
+        };
 
-template<typename U, int index>
-struct IndexOfImpl<std::tuple<>, U, index> {
-    static constexpr auto value = -1;
-};
+        template<typename U, int index>
+        struct IndexOfImpl<std::tuple<>, U, index> {
+            static constexpr auto value = -1;
+        };
 
-template<typename First, typename... Others, typename U, int index>
-struct IndexOfImpl<std::tuple<First, Others...>, U, index> {
-    static constexpr auto value = IndexOfImpl<std::tuple<Others...>, U, index + 1>::value;
-};
+        template<typename First, typename... Others, typename U, int index>
+        struct IndexOfImpl<std::tuple < First, Others...>, U, index> {
+        static constexpr auto value = IndexOfImpl<std::tuple < Others...>, U, index
+        + 1>::value;
+    };
 
-template<typename... Others, typename U, int index>
-struct IndexOfImpl<std::tuple<U, Others...>, U, index> {
+    template<typename... Others, typename U, int index>
+    struct IndexOfImpl<std::tuple < U, Others...>, U, index> {
     static constexpr auto value = index;
 };
 
@@ -43,7 +44,7 @@ template<typename... T>
 class Union {
 
 public:
-    static_assert(std::conjunction_v<std::is_trivially_destructible<T>...>, "");
+    static_assert(std::conjunction_v < std::is_trivially_destructible < T > ...>, "");
     static constexpr auto alignment_bytes = std::max({alignof(T)...});
     static constexpr auto size_bytes = std::max(alignment_bytes, std::max({sizeof(T)...}));
     static constexpr auto type_count = sizeof...(T);
@@ -74,9 +75,13 @@ private:
 
 public:
     Union() noexcept = default;
+
     Union(Union &&) noexcept = default;
+
     Union(const Union &) noexcept = default;
+
     Union &operator=(Union &&) noexcept = default;
+
     Union &operator=(const Union &u) noexcept = default;
 
     template<typename U, std::enable_if_t<contains<U>, int> = 0>
@@ -91,12 +96,13 @@ public:
     void clear() noexcept { _index = -1; }
 
     [[nodiscard]] auto empty() const noexcept { return _index == -1; }
+
     [[nodiscard]] auto index() const noexcept { return _index; }
 
     template<typename U, std::enable_if_t<contains<U>, int> = 0>
     [[nodiscard]] const U &as() const noexcept {
         auto required_index = index_of<U>;
-        if ( _index != required_index) {
+        if (_index != required_index) {
             printf("Bad type #%d, holding type #%d\n", required_index, _index);
         }
         return *reinterpret_cast<const U *>(&_storage);
@@ -111,4 +117,4 @@ public:
     }
 };
 
-}// namespace luisa
+}// namespace lstd

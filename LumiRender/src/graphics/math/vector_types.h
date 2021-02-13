@@ -11,7 +11,7 @@
 
 namespace luminous {
 
-    inline namespace vector {
+    inline namespace math {
 
         namespace detail {
 
@@ -158,6 +158,7 @@ namespace luminous {
             return Vector<T, N>{op v.x, op v.y, op v.z, op v.w};                         \
         }                                                                                \
     }
+
 
         MAKE_VECTOR_UNARY_OP(-)
         MAKE_VECTOR_UNARY_OP(+)

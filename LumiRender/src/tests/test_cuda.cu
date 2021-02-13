@@ -4,6 +4,8 @@
 
 #include <stdio.h>
 #include "graphics/lstd/lstd.h"
+#include "graphics/common.h"
+#include <iostream>
 
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
@@ -13,8 +15,94 @@ __global__ void addKernel(int *c, const int *a, const int *b)
     c[i] = a[i] + b[i];
 }
 
+class Sub1 {
+public:
+    int fun1() {
+        return 0;
+    }
+
+    int fun2(int a) {
+        return a;
+    }
+};
+
+class Sub2 {
+public:
+    int fun1() {
+        return 1;
+    }
+
+    int fun2(int a) {
+        return 2 * a;
+    }
+};
+
+using ::lstd::Variant;
+
+class Base : public Variant<Sub1, Sub2> {
+public:
+    using Variant::Variant;
+
+    int fun1() {
+        return dispatch([](auto &&arg) { return arg.fun1(); });
+    }
+
+    int fun2(int a) {
+        LUMINOUS_VAR_DISPATCH(fun2, a);
+    }
+};
+
+class BaseP : public Variant<Sub1 *, Sub2 *> {
+public:
+    using Variant::Variant;
+
+    int fun1() {
+        return dispatch([](auto &&arg) { return arg->fun1(); });
+    }
+
+    int fun2(int a) {
+        LUMINOUS_VAR_PTR_DISPATCH(fun2, a);
+    }
+};
+
+
+
+void testVariant() {
+    using namespace std;
+
+    Sub1 s1 = Sub1();
+    Sub2 s2 = Sub2();
+
+    cout << s1.fun1() << endl;
+    cout << s2.fun1() << endl;
+
+    Base b = s2;
+
+    Base b2 = s1;
+
+    cout << sizeof(b) << endl;
+    cout << sizeof(s2) << endl;
+
+//
+    cout << b.fun1() << endl;
+    cout << b.fun2(9) << endl;
+
+    BaseP bp = &s1;
+
+    BaseP bp2 = &s2;
+
+    cout << bp.fun1() << endl;
+    cout << bp.fun2(9) << endl;
+
+    cout << bp2.fun1() << endl;
+    cout << bp2.fun2(9) << endl;
+}
+
+
 int main()
 {
+    testVariant();
+
     const int arraySize = 5;
     const int a[arraySize] = { 1, 2, 3, 4, 5 };
     const int b[arraySize] = { 10, 20, 30, 40, 50 };

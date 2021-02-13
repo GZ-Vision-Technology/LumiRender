@@ -5,16 +5,18 @@
 
 #pragma once
 
-#define XPU
-#define GPU
-#define CPU
+
 
 #include <assert.h>
 
 #if defined(__CUDACC__)
-//    #define XPU __host__ __device__
-//    #define GPU __device__
-//    #define CPU __host__
+    #define XPU __host__ __device__
+    #define GPU __device__
+    #define CPU __host__
+#else
+#define XPU
+#define GPU
+#define CPU
 #endif
 
 #if defined(__CUDA_ARCH__)

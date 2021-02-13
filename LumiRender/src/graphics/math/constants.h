@@ -8,6 +8,10 @@
 #include <algorithm>
 #include <cmath>
 #include "primes.h"
+#ifdef __CUDACC__
+#include <math_constants.h>
+#endif
+
 #include "../header.h"
 
 namespace luminous {
