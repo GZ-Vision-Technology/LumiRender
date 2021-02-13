@@ -16,53 +16,55 @@
 
 namespace lstd {
 
-    template<typename... T>
-    struct TypeIndex {
-        template<typename U, typename Tp, typename... Rest>
-        struct GetIndex_ {
-            static const int value =
-                    std::is_same<Tp, U>::value
-                    ? 0
-                    : ((GetIndex_<U, Rest...>::value == -1) ? -1 : 1 + GetIndex_<U, Rest...>::value);
+    namespace detail {
+        template<typename... T>
+        struct TypeIndex {
+            template<typename U, typename Tp, typename... Rest>
+            struct GetIndex_ {
+                static const int value =
+                        std::is_same<Tp, U>::value
+                        ? 0
+                        : ((GetIndex_<U, Rest...>::value == -1) ? -1 : 1 + GetIndex_<U, Rest...>::value);
+            };
+            template<typename U, typename Tp>
+            struct GetIndex_<U, Tp> {
+                static const int value = std::is_same<Tp, U>::value ? 0 : -1;
+            };
+            template<int I, typename Tp, typename... Rest>
+            struct GetType_ {
+                using type = typename std::conditional<I == 0, Tp, typename GetType_<I - 1, Rest...>::type>::type;
+            };
+
+            template<int I, typename Tp>
+            struct GetType_<I, Tp> {
+                using type = typename std::conditional<I == 0, Tp, void>::type;
+            };
+
+            template<typename U>
+            struct GetIndex {
+                static const int value = GetIndex_<U, T...>::value;
+            };
+
+            template<int N>
+            struct GetType {
+                using type = typename GetType_<N, T...>::type;
+            };
         };
-        template<typename U, typename Tp>
-        struct GetIndex_<U, Tp> {
-            static const int value = std::is_same<Tp, U>::value ? 0 : -1;
-        };
-        template<int I, typename Tp, typename... Rest>
-        struct GetType_ {
-            using type = typename std::conditional<I == 0, Tp, typename GetType_<I - 1, Rest...>::type>::type;
+        template<class T, class... Rest>
+        struct FirstOf {
+            using type = T;
         };
 
-        template<int I, typename Tp>
-        struct GetType_<I, Tp> {
-            using type = typename std::conditional<I == 0, Tp, void>::type;
+        template<typename U, typename... T>
+        struct SizeOf {
+            static constexpr int value = std::max<int>(sizeof(U), SizeOf<T...>::value);
         };
-
-        template<typename U>
-        struct GetIndex {
-            static const int value = GetIndex_<U, T...>::value;
+        template<typename T>
+        struct SizeOf<T> {
+            static constexpr int value = sizeof(T);
         };
-
-        template<int N>
-        struct GetType {
-            using type = typename GetType_<N, T...>::type;
-        };
-    };
-    template<class T, class... Rest>
-    struct FirstOf {
-        using type = T;
-    };
-
-    template<typename U, typename... T>
-    struct SizeOf {
-        static constexpr int value = std::max<int>(sizeof(U), SizeOf<T...>::value);
-    };
-    template<typename T>
-    struct SizeOf<T> {
-        static constexpr int value = sizeof(T);
-    };
-
+    }
+    using namespace detail;
     template<typename... T>
     struct Variant {
     private:
