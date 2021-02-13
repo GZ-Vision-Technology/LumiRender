@@ -6,7 +6,6 @@
 #pragma once
 
 #include "common.h"
-#include <span>
 #include "span.h"
 #include "variant.h"
 #include "vector.h"

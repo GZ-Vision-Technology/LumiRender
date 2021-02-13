@@ -13,6 +13,7 @@
 #include "../header.h"
 #include "common.h"
 
+
 namespace lstd {
 
     template<typename... T>
@@ -204,7 +205,6 @@ namespace lstd {
     if constexpr (std::is_same_v<void, Ret>) {                                                                         \
         return;                                                                                                        \
     } else {                                                                                                           \
-//        LUMINOUS_ERROR("No matching case");                                                                            \
     }
 
         template<class Visitor>
@@ -244,4 +244,4 @@ namespace lstd {
     };
 
 
-} // lstd
+}; // lstd

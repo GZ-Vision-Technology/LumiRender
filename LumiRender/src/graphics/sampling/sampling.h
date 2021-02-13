@@ -4,7 +4,6 @@
 
 
 #pragma once
-#include <span>
 
 namespace luminous {
 

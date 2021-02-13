@@ -164,15 +164,15 @@ namespace lstd {
         bool set = false;
     };
 
-    template<typename T>
-    inline std::ostream &operator<<(std::ostream &os, const optional<T> &opt) {
-        if (opt.has_value())
-            return os << "[ lstd::optional<" << typeid(T).name() << "> set: true "
-                      << "value: " << opt.value() << " ]";
-        else
-            return os << "[ lstd::optional<" << typeid(T).name()
-                      << "> set: false value: n/a ]";
-    }
+//    template<typename T>
+//    inline std::ostream &operator<<(std::ostream &os, const optional<T> &opt) {
+//        if (opt.has_value())
+//            return os << "[ lstd::optional<" << typeid(T).name() << "> set: true "
+//                      << "value: " << opt.value() << " ]";
+//        else
+//            return os << "[ lstd::optional<" << typeid(T).name()
+//                      << "> set: false value: n/a ]";
+//    }
 
     template<typename T, int N>
     class array;

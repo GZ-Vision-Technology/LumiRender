@@ -4,6 +4,7 @@
 
 #include "graphics/lstd/lstd.h"
 #include "graphics/common.h"
+#include "iostream"
 
 using namespace luminous;
 
