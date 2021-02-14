@@ -1,5 +1,5 @@
-luminous_render_add_application(math-cuda SOURCES math_cuda.cpp)
-target_link_libraries(math-cuda PRIVATE CUDA::nvrtc CUDA::cuda_driver CUDA::cudart)
+luminous_render_add_application(test-kernel_launch SOURCES test_kernel_launch.cpp)
+target_link_libraries(test-kernel_launch PRIVATE CUDA::nvrtc CUDA::cuda_driver CUDA::cudart)
 
 luminous_render_add_application(test-graphicslib SOURCES test_graphics.cpp)
 
