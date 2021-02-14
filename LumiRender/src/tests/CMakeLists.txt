@@ -1,4 +1,8 @@
-luminous_render_add_application(test-kernel_launch SOURCES test_kernel_launch.cpp)
+
+cuda_compile_and_embed(ptxCode ${PROJECT_SOURCE_DIR}/src/gpu/shaders/test_kernels.cu)
+
+
+luminous_render_add_application(test-kernel_launch SOURCES test_kernel_launch.cpp ${ptxCode})
 target_link_libraries(test-kernel_launch PRIVATE CUDA::nvrtc CUDA::cuda_driver CUDA::cudart)
 
 luminous_render_add_application(test-graphicslib SOURCES test_graphics.cpp)

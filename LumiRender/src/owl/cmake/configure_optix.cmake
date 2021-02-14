@@ -58,7 +58,7 @@ macro(cuda_compile_and_embed output_var cuda_file)
   endif()
   list(GET ptx_files 0 ptx_file)
   set(embedded_file ${ptx_file}_embedded.c)
-#  message("adding rule to compile and embed ${cuda_file} to \"const char ${var_name}[];\"")
+  message("adding rule to compile and embed ${cuda_file} to \"const char ${var_name}[];\"")
   add_custom_command(
     OUTPUT ${embedded_file}
     COMMAND ${BIN2C} -c --padd 0 --type char --name ${c_var_name} ${ptx_file} > ${embedded_file}

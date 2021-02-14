@@ -19,6 +19,7 @@ function(luminous_render_add_application name)
     set_target_properties(${name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/")
 endfunction()
 
+
 add_subdirectory(thirdparty/spdlog)
 add_library(spdlog_config INTERFACE)
 target_link_libraries(spdlog_config INTERFACE spdlog::spdlog)

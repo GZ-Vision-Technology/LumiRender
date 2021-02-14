@@ -20,19 +20,19 @@
 #  )
 
 include(configure_cuda)
-#find_package(CUDA REQUIRED)
+find_package(CUDA REQUIRED)
 find_package(OptiX REQUIRED VERSION 7)
 
 include_directories(${CUDA_TOOLKIT_INCLUDE})
 include_directories(${OptiX_INCLUDE})
 
 if (WIN32)
-  add_definitions(-DNOMINMAX)
-endif()
+    add_definitions(-DNOMINMAX)
+endif ()
 
-  
+
 find_program(BIN2C bin2c
-  DOC "Path to the cuda-sdk bin2c executable.")
+        DOC "Path to the cuda-sdk bin2c executable.")
 
 # this macro defines cmake rules that execute the following four steps:
 # 1) compile the given cuda file ${cuda_file} to an intermediary PTX file
@@ -45,27 +45,27 @@ find_program(BIN2C bin2c
 # 4) assign the name of the intermediary .o file to the cmake variable
 #    'output_var', which can then be added to cmake targets.
 macro(cuda_compile_and_embed output_var cuda_file)
-  set(c_var_name ${output_var})
-  if(${CMAKE_BUILD_TYPE} MATCHES "Release")
-    cuda_compile_ptx(ptx_files
-      ${cuda_file}
-      OPTIONS -O3 -DNDEBUG=1 --use_fast_math
-      )
-  else()
-    cuda_compile_ptx(ptx_files
-      ${cuda_file}
-      )
-  endif()
-  list(GET ptx_files 0 ptx_file)
-  set(embedded_file ${ptx_file}_embedded.c)
-#  message("adding rule to compile and embed ${cuda_file} to \"const char ${var_name}[];\"")
-  add_custom_command(
-    OUTPUT ${embedded_file}
-    COMMAND ${BIN2C} -c --padd 0 --type char --name ${c_var_name} ${ptx_file} > ${embedded_file}
-    DEPENDS ${ptx_file}
-    COMMENT "compiling (and embedding ptx from) ${cuda_file}"
+    set(c_var_name ${output_var})
+    if (${CMAKE_BUILD_TYPE} MATCHES "Release")
+        cuda_compile_ptx(ptx_files
+                ${cuda_file}
+                OPTIONS -O3 -DNDEBUG=1 --use_fast_math
+                )
+    else ()
+        cuda_compile_ptx(ptx_files
+                ${cuda_file}
+                )
+    endif ()
+    list(GET ptx_files 0 ptx_file)
+    set(embedded_file ${ptx_file}_embedded.c)
+    message("adding rule to compile and embed ${cuda_file} to \"const char ${output_var}[];\"")
+    add_custom_command(
+            OUTPUT ${embedded_file}
+            COMMAND ${BIN2C} -c --padd 0 --type char --name ${c_var_name} ${ptx_file} > ${embedded_file}
+            DEPENDS ${ptx_file}
+            COMMENT "compiling (and embedding ptx from) ${cuda_file}"
     )
-  set(${output_var} ${embedded_file})
+    set(${output_var} ${embedded_file})
 endmacro()
 
 
