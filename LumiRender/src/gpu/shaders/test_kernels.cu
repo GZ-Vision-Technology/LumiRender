@@ -11,16 +11,20 @@
 
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
+extern "C" {
+    __global__ void addKernel(int *c, const int *a, const int *b) {
+        int i = threadIdx.x;
+        c[i] = a[i] + b[i];
+        printf("%d \n", c[i]);
+    }
 
-__global__ void addKernel(int *c, const int *a, const int *b)
-{
-    int i = threadIdx.x;
-    c[i] = a[i] + b[i];
+    __global__ void testKernel(int *c) {
+        printf("%d \n", threadIdx.x);
+    }
 }
 
 // Helper function for using CUDA to add vectors in parallel.
-cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)
-{
+cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size) {
     int *dev_a = 0;
     int *dev_b = 0;
     int *dev_c = 0;
@@ -34,19 +38,19 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)
     }
 
     // Allocate GPU buffers for three vectors (two input, one output)    .
-    cudaStatus = cudaMalloc((void**)&dev_c, size * sizeof(int));
+    cudaStatus = cudaMalloc((void **) &dev_c, size * sizeof(int));
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMalloc failed!");
         goto Error;
     }
 
-    cudaStatus = cudaMalloc((void**)&dev_a, size * sizeof(int));
+    cudaStatus = cudaMalloc((void **) &dev_a, size * sizeof(int));
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMalloc failed!");
         goto Error;
     }
 
-    cudaStatus = cudaMalloc((void**)&dev_b, size * sizeof(int));
+    cudaStatus = cudaMalloc((void **) &dev_b, size * sizeof(int));
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMalloc failed!");
         goto Error;
