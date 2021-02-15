@@ -5,16 +5,107 @@
 
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-
+#include "graphics/lstd/lstd.h"
+#include "graphics/common.h"
 #include <stdio.h>
 #include <iostream>
 
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
+class Sub1 {
+public:
+    XPU int fun1() {
+        return 0;
+    }
+
+    XPU int fun2(int a) {
+        return a;
+    }
+};
+
+class Sub2 {
+public:
+    XPU int fun1() {
+        return 1;
+    }
+
+    XPU int fun2(int a) {
+        return 2 * a;
+    }
+};
+
+using ::lstd::Variant;
+
+class Base : public Variant<Sub1, Sub2> {
+public:
+    using Variant::Variant;
+
+    XPU int fun1() {
+        return dispatch([](auto &&arg) { return arg.fun1(); });
+    }
+
+    XPU int fun2(int a) {
+        LUMINOUS_VAR_DISPATCH(fun2, a);
+    }
+};
+
+class BaseP : public Variant<Sub1 *, Sub2 *> {
+public:
+    using Variant::Variant;
+
+    XPU int fun1() {
+        return dispatch([](auto &&arg) { return arg->fun1(); });
+    }
+
+    XPU int fun2(int a) {
+        LUMINOUS_VAR_PTR_DISPATCH(fun2, a);
+    }
+};
+
+
+
+XPU void testVariant() {
+    using namespace std;
+
+    Sub1 s1 = Sub1();
+    Sub2 s2 = Sub2();
+
+//    printf("%d s--\n", s1.fun1());
+//    printf("%d s2--\n", s2.fun1());
+
+    Base b = s1;
+
+    Base b2 = s2;
+    printf("%d b1--  %d s1\n", b.fun1(), s1.fun1());
+    printf("%d b2--  %d s2\n", b2.fun1(), s2.fun1());
+    printf("%d b1 ++--  %d s1\n", b.fun2(9), s1.fun2(9));
+    printf("%d b2 ++--  %d s2\n", b2.fun2(8), s2.fun2(8));
+
+//
+//    cout << sizeof(b) << endl;
+//    cout << sizeof(s2) << endl;
+//
+////
+//    cout << b.fun1() << endl;
+//    cout << b.fun2(9) << endl;
+//
+//    BaseP bp = &s1;
+//
+//    BaseP bp2 = &s2;
+//
+//    cout << bp.fun1() << endl;
+//    cout << bp.fun2(9) << endl;
+//
+//    cout << bp2.fun1() << endl;
+//    cout << bp2.fun2(9) << endl;
+}
+
+
 extern "C" {
     __global__ void addKernel(int *c, const int *a, const int *b) {
         int i = threadIdx.x;
         c[i] = a[i] + b[i];
+        testVariant();
         printf("%d \n", c[i]);
     }
 
