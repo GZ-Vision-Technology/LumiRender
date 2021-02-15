@@ -9,7 +9,7 @@
 #include <memory>
 
 namespace luminous {
-    inline namespace GPU {
+    inline namespace gpu {
 
         struct RangeAllocator {
             int alloc(size_t size);

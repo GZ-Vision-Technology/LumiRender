@@ -6,7 +6,7 @@
 #include <iostream>
 
 namespace luminous {
-    inline namespace GPU {
+    inline namespace gpu {
 
     }
 }

@@ -34,6 +34,10 @@ target_link_libraries(assimp_config INTERFACE assimp::assimp)
 
 set(CMAKE_DEBUG_POSTFIX "")
 
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions (-D DEBUG_BUILD)
+endif ()
+
 set(CMAKE_CXX_STANDARD 17)
 add_subdirectory(src)
 
