@@ -1,0 +1,57 @@
+{
+	"shapes" : [
+		{
+			"name" : "c_box",
+			"params" : {
+				"transform" : {
+					"type" : "rotate_y",
+					"param" : [180]
+				}
+			}
+		}
+	],
+	"integrator" : {
+		"type" : "pt",
+		"param" : {
+			"maxBounce" : 5,
+			"rrThreshold" : 1,
+			"lightSampleStrategy" : "power"
+		}
+	},
+	"sampler" : {
+		"type" : "independent",
+		"param" : {
+			"spp" : 16
+		}
+	},
+	"camera" : {
+		"type" : "perspective",
+		"param" : {
+			"shutter_open" : 0,
+			"shutter_close" : 1,
+			"lens_radius" : 0,
+			"focal_distance" : 100,
+			"fov" : 20,
+			"look_at" : [
+				[0,0,-6.6],
+				[0,0,0],
+				[0,1,0]
+			]
+		}
+	},
+	"film" : {
+		"param" : {
+			"resolution" : [400, 400],
+			"crop_window" : [0,0,1,1],
+			"file_name" : "cornell_box.png",
+			"diagonal" : 1,
+			"scale" : 1
+		}
+	},
+	"filter" : {
+		"type" : "triangle",
+		"param" : {
+			"radius" : [1,1]
+		}
+	}
+}

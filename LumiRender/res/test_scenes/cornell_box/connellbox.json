@@ -1,0 +1,481 @@
+{
+    "threadNum" : 0,
+    "transforms" :{
+        "name1" : [
+            {
+                "type" : "translate",
+                "param" :[0,0,0]
+            }
+        ]
+    },
+    "mediums" : {
+        "fog" : {
+            "type" : "homo",
+            "param" : {
+                "g" : 0,
+                "sigma_a" : [0.0,0.0,0.0],
+                "sigma_s" : [0.8,0.8,0.8]
+            }
+        },
+        "global" : {
+            "type" : "homo",
+            "param" : {
+                "g" : 0,
+                "sigma_a" : [0.0,0.0,0.0],
+                "sigma_s" : [0.8,0.8,0.8]
+            }
+        }
+    },
+    "lights" : [
+        {
+            "type" : "pointLight",
+            "enable" : false,
+            "param" : {
+                "transform" : {
+                    "type" : "translate",
+                    "param" : [0,0.9,0]
+                },
+                "I" : {
+                    "colorType" : 1,
+                    "color" : [0.9,0.9,0.9]
+                }
+            }
+        },
+        {
+            "type" : "distant",
+            "enable" : false,
+            "param" : {
+                "transform" : {
+                    "type" : "translate",
+                    "param" : [1,0,1]
+                },
+                "L" : {
+                    "colorType" : 1,
+                    "color" : [0.9, 0.9, 0.9]
+                },
+                "wLight" : [0,1,-1]
+            }
+        },
+        {
+            "type" : "envmap",
+            "enable" : false,
+            "param" : {
+                "scale" : 1,
+                "L"     : [
+                    1,
+                    1,
+                    1
+                ],
+                "nSamples" : 1,
+                "transform" : [
+                    {
+                        "type" : "rotateX",
+                        "param" : [
+                            -90
+                        ]
+                    },
+                    {
+                        "type" : "rotateY",
+                        "param" : [
+                            0
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "materials" : {
+        "matte1" : {
+            "type" : "matte",
+            "param" : {
+                "Kd" : [0.725, 0.71, 0.68],
+                "sigma" : 0
+            }
+        },
+        "matte2" : {
+            "type" : "matte",
+            "param" : {
+                "Kd" : {
+                    "type" : "bilerp",
+                    "param" : {
+                        "v00" : [1, 0, 0],
+                        "v01" : [0, 1, 0],
+                        "v10" : [0, 0, 1],
+                        "v11" : [0.1, 0.9, 0.5]
+                    }
+                },
+                "sigma" : {
+                    "type" : "constant",
+                    "param" : 0
+                }
+            }
+        },
+        "matteRed" : {
+            "type" : "matte",
+            "param" : {
+                "Kd" : {
+                    "type" : "constant",
+                    "param" : {
+                        "colorType" : 0,
+                        "color" : [0.63, 0.065, 0.05]
+                    }
+                },
+                "sigma" : {
+                    "type" : "constant",
+                    "param" : 0
+                }
+            }
+        },
+        "matteGreen" : {
+            "type" : "matte",
+            "param" : {
+                "Kd" : {
+                    "type" : "constant",
+                    "param" : {
+                        "colorType" : 0,
+                        "color" : [0.14, 0.45, 0.091]
+                    }
+                },
+                "sigma" : {
+                    "type" : "constant",
+                    "param" : 0
+                }
+            }
+        },
+        "black" : {
+            "type" : "matte",
+            "param" : {
+                "Kd" : {
+                    "type" : "constant",
+                    "param" : {
+                        "colorType" : 0,
+                        "color" : [0,0,0]
+                    }
+                },
+                "sigma" : {
+                    "type" : "constant",
+                    "param" : 0
+                }
+            }
+        },
+        "glass" : {
+            "type" : "glass",
+            "param" : {
+                "Kr" : {
+                    "type" : "constant",
+                    "param" : {
+                        "colorType" : 0,
+                        "color" : [1, 1, 1]
+                    }
+                },
+                "Kt" : {
+                    "type" : "constant",
+                    "param" : {
+                        "colorType" : 0,
+                        "color" : [1, 1, 1]
+                    }
+                },
+                "uRough" : {
+                    "type" : "constant",
+                    "param" : 0.0
+                },
+                "vRough" : {
+                    "type" : "constant",
+                    "param" : 0.0
+                },
+                "eta" : {
+                    "type" : "constant",
+                    "param" : 1.5
+                },
+                "remapRough" : false 
+            }
+        },
+        "metal" : {
+            "type" : "metal",
+            "param" : {
+                "eta" : {
+                    "type" : "constant",
+                    "param" : {
+                        "colorType" : 0,
+                        "color" : [0.6, 1, 1]
+                    }
+                },
+                "k" : {
+                    "type" : "constant",
+                    "param" : {
+                        "colorType" : 0,
+                        "color" : [1, 1, 1]
+                    }
+                },
+                "rough" : {
+                    "type" : "constant",
+                    "param" : 0.1
+                },
+                "uRough" : {
+                    "type" : "constant",
+                    "param" : 0.1
+                },
+                "vRough" : {
+                    "type" : "constant",
+                    "param" : 0.1
+                },
+                "remapRough" : false
+            }
+        },
+        "mirror" : {
+            "type" : "mirror",
+            "param" : {
+                "Kr" : {
+                    "type" : "constant",
+                    "param" : {
+                        "colorType" : 0,
+                        "color" : [1, 1, 1]
+                    }
+                }
+            }
+        }
+    },
+    "shapes" : [
+        {
+            "type" : "triMesh",
+            "subType" : "quad",
+            "name" : "back",
+            "enable" : true,
+            "param" : {
+                "transform" :[
+                    {
+                        "type" : "rotateX",
+                        "param" : [0]
+                    },
+                    {
+                        "type" : "translate",
+                        "param" : [0,0,1]
+                    }
+                ],
+                "width" : 2
+            },
+            "material" : "matte1"
+        },
+        {
+            "type" : "triMesh",
+            "subType" : "quad",
+            "name" : "bottom",
+            "enable" : true,
+            "param" : {
+                "transform" :[
+                    {
+                        "type" : "rotateX",
+                        "param" : [-90]
+                    },
+                    {
+                        "type" : "translate",
+                        "param" : [0,-1,0]
+                    }
+                ],
+                "width" : 2
+            },
+            "material" : "matte1"
+        },
+        {
+            "type" : "triMesh",
+            "subType" : "quad",
+            "name" : "top",
+            "enable" : true,
+            "param" : {
+                "transform" :[
+                    {
+                        "type" : "rotateX",
+                        "param" : [90]
+                    },
+                    {
+                        "type" : "translate",
+                        "param" : [0,1,0]
+                    }
+                ],
+                "width" : 2
+            },
+            "material" : "matte1"
+        },
+        {
+            "type" : "triMesh",
+            "subType" : "quad",
+            "name" : "left",
+            "enable" : true,
+            "param" : {
+                "transform" :[
+                    {
+                        "type" : "rotateY",
+                        "param" : [90]
+                    },
+                    {
+                        "type" : "translate",
+                        "param" : [-1,0,0]
+                    }
+                ],
+                "width" : 2
+            },
+            "material" : "matteRed"
+        },
+        {
+            "type" : "triMesh",
+            "subType" : "quad",
+            "name" : "right",
+            "enable" : true,
+            "param" : {
+                "transform" :[
+                    {
+                        "type" : "rotateY",
+                        "param" : [-90]
+                    },
+                    {
+                        "type" : "translate",
+                        "param" : [1,0,0]
+                    }
+                ],
+                "width" : 2
+            },
+            "material" : "matteGreen"
+        },
+        {
+            "type" : "triMesh",
+            "subType" : "quad",
+            "name" : "front",
+            "enable" : true,
+            "param" : {
+                "transform" :[
+                    {
+                        "type" : "translate",
+                        "param" : [0,0,-1]
+                    }
+                ],
+                "width" : 2
+            },
+            "mediumInterface" : ["", "fog"],
+            "material" : null
+        },
+        {
+            "type" : "triMesh",
+            "subType" : "quad",
+            "name" : "light",
+            "enable" : true,
+            "param" : {
+                "transform" :[
+                    {
+                        "type" : "rotateX",
+                        "param" : [90]
+                    },
+                    {
+                        "type" : "translate",
+                        "param" : [0,0.98,0]
+                    }
+                ],
+                "width" : 0.5
+            },
+            "material" : "black",
+            "emission" : {
+                "nSamples" : 1,
+                "Le" : {
+                    "colorType" : 1,
+                    "color" : [17, 12, 4]
+                },
+                "twoSided" : false
+            },
+            "mediumInterface" : ["fog", "fog"]
+        },
+        {
+            "type" : "triMesh",
+            "subType" : "cube",
+            "name" : "cube2",
+            "enable" : true,
+            "param" : {
+                "transform" :[
+                    {
+                        "type" : "rotateY",
+                        "param" : [-20]
+                    },
+                    {
+                        "type" : "translate",
+                        "param" : [-0.3,-0.4,0.2]
+                    }
+                ],
+                "x" : 0.6,
+                "y" : 1.2,
+                "z" : 0.6
+            },
+            "material" : "matte1"
+        },
+        {
+            "type" : "triMesh",
+            "subType" : "cube",
+            "name" : "cube1",
+            "enable" : true,
+            "param" : {
+                "transform" :[
+                    {
+                        "type" : "rotateY",
+                        "param" : [15]
+                    },
+                    {
+                        "type" : "translate",
+                        "param" : [0.35,-0.7,-0.4]
+                    }
+                ],
+                "x" : 0.6,
+                "y" : 0.6,
+                "z" : 0.6
+            },
+            "material" : "matte1"
+        }
+    ],
+    "integrator" : {
+        "type" : "pt",
+        "param" : {
+            "maxBounce" : 65,
+            "rrThreshold" : 1,
+            "lightSampleStrategy" : "power"
+        }
+    },
+    "sampler" : {
+        "type" : "random",
+        "param" : {
+            "spp" : 2
+        }
+    },
+    "camera" : {
+        "type" : "perspective",
+        "param" : {
+            "shutterOpen" : 0,
+            "shutterClose" : 1,
+            "lensRadius" : 0,
+            "focalDistance" : 100,
+            "fov" : 20,
+            "lookAt" : [
+                [0,0,-6.6],
+                [0,0,0],
+                [0,1,0]
+            ]
+        }
+    },
+    "film" : {
+        "param" : {
+            "resolution" : [1024, 1024],
+            "cropWindow" : [0,0,1,1],
+            "fileName" : "test-connellbox-8spp.png",
+            "diagonal" : 1,
+            "scale" : 1
+        }
+    },
+    "filter" : {
+        "type" : "triangle",
+        "param" : {
+            "radius" : [1,1]
+        }
+    },
+    "accelerator" : {
+        "type" : "embree",
+        "param" : {
+            "maxPrimsInNode" : 1,
+            "splitMethod" : "EqualCounts"
+        }
+    }
+}
