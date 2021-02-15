@@ -62,10 +62,12 @@ namespace luminous {
         _cli_options.add_options()
                 ("d,devices", "Select compute devices", cxxopts::value<std::vector<std::string>>()->default_value(""))
                 ("r,runtime-dir", "Specify runtime directory",
-                        cxxopts::value<std::filesystem::path>()->default_value(std::filesystem::canonical(argv[0]).parent_path().parent_path().string()))
+                 cxxopts::value<std::filesystem::path>()->default_value(
+                         std::filesystem::canonical(argv[0]).parent_path().parent_path().string()))
                 ("w,working-dir",
                  "Specify working directory",
-                 cxxopts::value<std::filesystem::path>()->default_value(std::filesystem::canonical(std::filesystem::current_path()).string()))
+                 cxxopts::value<std::filesystem::path>()->default_value(
+                         std::filesystem::canonical(std::filesystem::current_path()).string()))
                 ("c, clear-cache", "Clear cached kernel compilation", cxxopts::value<bool>())
                 ("p, print-source", "Print generated source code", cxxopts::value<bool>())
                 ("positional", "Specify input file", cxxopts::value<std::string>())
@@ -76,7 +78,8 @@ namespace luminous {
     const cxxopts::ParseResult &Context::_parse_result() const noexcept {
         if (!_parsed_cli_options.has_value()) {
             _cli_options.parse_positional("positional");
-            _parsed_cli_options.emplace(_cli_options.parse(const_cast<int &>(_argc), const_cast<const char **&>(_argv)));
+            _parsed_cli_options.emplace(
+                    _cli_options.parse(const_cast<int &>(_argc), const_cast<const char **&>(_argv)));
         }
         return *_parsed_cli_options;
     }
@@ -84,7 +87,8 @@ namespace luminous {
     const std::filesystem::path &Context::_runtime_dir() noexcept {
         if (_run_dir.empty()) {
             _run_dir = std::filesystem::canonical(_parse_result()["runtime-dir"].as<std::filesystem::path>());
-            LUMINOUS_EXCEPTION_IF(!std::filesystem::exists(_run_dir) || !std::filesystem::is_directory(_run_dir), "Invalid runtime directory: ", _run_dir);
+            LUMINOUS_EXCEPTION_IF(!std::filesystem::exists(_run_dir) || !std::filesystem::is_directory(_run_dir),
+                                  "Invalid runtime directory: ", _run_dir);
             LUMINOUS_INFO("Runtime directory: ", _run_dir);
         }
         return _run_dir;
@@ -93,7 +97,8 @@ namespace luminous {
     const std::filesystem::path &Context::_working_dir() noexcept {
         if (_work_dir.empty()) {
             _work_dir = std::filesystem::canonical(_parse_result()["working-dir"].as<std::filesystem::path>());
-            LUMINOUS_EXCEPTION_IF(!std::filesystem::exists(_work_dir) || !std::filesystem::is_directory(_work_dir), "Invalid working directory: ", _work_dir);
+            LUMINOUS_EXCEPTION_IF(!std::filesystem::exists(_work_dir) || !std::filesystem::is_directory(_work_dir),
+                                  "Invalid working directory: ", _work_dir);
             std::filesystem::current_path(_work_dir);
             LUMINOUS_INFO("Working directory: ", _work_dir);
             auto cache_directory = _work_dir / "cache";
@@ -101,7 +106,8 @@ namespace luminous {
                 LUMINOUS_INFO("Removing cache directory: ", cache_directory);
                 std::filesystem::remove_all(cache_directory);
             }
-            LUMINOUS_EXCEPTION_IF(!_create_folder_if_necessary(cache_directory), "Failed to create cache directory: ", cache_directory);
+            LUMINOUS_EXCEPTION_IF(!_create_folder_if_necessary(cache_directory), "Failed to create cache directory: ",
+                                  cache_directory);
         }
         return _work_dir;
     }
@@ -136,10 +142,12 @@ namespace luminous {
     const std::filesystem::path &Context::_input_dir() noexcept {
         if (_in_dir.empty()) {
             if (_parse_result().count("positional") == 0u) {
-                LUMINOUS_WARNING("No positional CLI argument given, setting input directory to working directory: ", _working_dir());
+                LUMINOUS_WARNING("No positional CLI argument given, setting input directory to working directory: ",
+                                 _working_dir());
             } else {
                 _in_dir = std::filesystem::canonical(cli_positional_option()).parent_path();
-                LUMINOUS_EXCEPTION_IF(!std::filesystem::exists(_in_dir) || !std::filesystem::is_directory(_in_dir), "Invalid input directory: ", _in_dir);
+                LUMINOUS_EXCEPTION_IF(!std::filesystem::exists(_in_dir) || !std::filesystem::is_directory(_in_dir),
+                                      "Invalid input directory: ", _in_dir);
                 LUMINOUS_INFO("Input directory: ", _in_dir);
             }
         }

@@ -9,7 +9,10 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-//    luminous::Context context{argc, argv};
-    cout << argv[0];
+    luminous::Context context{argc, argv};
+    cout << context.input_path() << endl;
+    cout << context.runtime_path() << endl;
+    cout << context.cache_path() << endl;
+    cout << context.working_path() << endl;
     return 0;
 }

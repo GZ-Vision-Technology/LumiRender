@@ -2,6 +2,7 @@
 	"shapes" : [
 		{
 			"name" : "c_box",
+			"file_name": "cornell_box.obj",
 			"params" : {
 				"transform" : {
 					"type" : "rotate_y",
