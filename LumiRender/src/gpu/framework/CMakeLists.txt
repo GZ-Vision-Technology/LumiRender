@@ -7,7 +7,12 @@ target_include_directories(luminous-backend-cuda PRIVATE ${CUDA_INCLUDE_DIRS})
 
 find_package(CUDAToolkit REQUIRED)
 
-target_link_libraries(luminous-backend-cuda PRIVATE CUDA::nvrtc CUDA::cuda_driver CUDA::cudart)
+target_link_libraries(luminous-backend-cuda
+        PRIVATE CUDA::nvrtc
+        CUDA::cuda_driver
+        CUDA::cudart
+        luminous-graphics
+        )
 
 set_target_properties(luminous-backend-cuda PROPERTIES
         PUBLIC_HEADER "${HEADER_FILES}"
