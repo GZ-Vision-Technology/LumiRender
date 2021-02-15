@@ -77,8 +77,12 @@ int main() {
 //        goto Error;
     }
 
+    int minGridSize;
+    int blockSize;
+    cuOccupancyMaxPotentialBlockSize (&minGridSize, &blockSize, func, 0,0, 0);
+    int gridSize = (size + blockSize - 1) / blockSize;
     vector<void *> args = {&dev_c, &dev_a, &dev_b};
-    auto r = cuLaunchKernel(func, 1, 1, 1, 5, 1,
+    auto r = cuLaunchKernel(func, 1, 1, 1, size, 1,
                    1, 1024, stream, args.data(), nullptr);
 
     auto css = cudaStreamSynchronize(stream);
