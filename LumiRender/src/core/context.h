@@ -53,6 +53,10 @@ namespace luminous {
 
         ~Context() noexcept;
 
+        bool has_scene() {
+            return _parse_result().count("scene") > 0;
+        }
+
         bool create_working_folder(const std::filesystem::path &name) noexcept;
 
         bool create_cache_folder(const std::filesystem::path &name) noexcept;

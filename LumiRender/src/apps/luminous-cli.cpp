@@ -4,17 +4,23 @@
 
 #include <iostream>
 #include "core/context.h"
+#include "core/scene_parser.h"
 
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
     luminous::Context context{argc, argv};
-    context.print_help();
-    cout << context.scene_path();
-//    cout << context.input_path() << endl;
-//    cout << context.runtime_path() << endl;
-//    cout << context.cache_path() << endl;
-//    cout << context.working_path() << endl;
+    if (context.has_help_cmd()) {
+        context.print_help();
+        return 0;
+    }
+    if (!context.has_scene()) {
+        context.print_help();
+        return 0;
+    }
+    cout << context.scene_file();
+    luminous::SceneParser sp;
+    sp.load_from_json(context.scene_file());
     return 0;
 }
