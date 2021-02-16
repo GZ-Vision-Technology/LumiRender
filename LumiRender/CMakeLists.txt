@@ -20,14 +20,14 @@ function(luminous_render_add_application name)
 endfunction()
 
 
-add_subdirectory(thirdparty/spdlog)
-add_library(spdlog_config INTERFACE)
-target_link_libraries(spdlog_config INTERFACE spdlog::spdlog)
-
-add_subdirectory(thirdparty/cxxopts)
-add_library(cxxopts_config INTERFACE)
-target_link_libraries(cxxopts_config INTERFACE cxxopts::cxxopts)
-
+#add_subdirectory(thirdparty/spdlog)
+#add_library(spdlog_config INTERFACE)
+#target_link_libraries(spdlog_config INTERFACE spdlog::spdlog)
+#
+#add_subdirectory(thirdparty/cxxopts)
+#add_library(cxxopts_config INTERFACE)
+#target_link_libraries(cxxopts_config INTERFACE cxxopts::cxxopts)
+#
 add_subdirectory(thirdparty/assimp)
 add_library(assimp_config INTERFACE)
 target_link_libraries(assimp_config INTERFACE assimp::assimp)

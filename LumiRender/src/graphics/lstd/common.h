@@ -32,6 +32,20 @@ namespace lstd {
         b = std::move(tmp);
     }
 
+    inline constexpr size_t max(size_t a, size_t b) { return a < b ? b : a; }
+    template <typename T1, typename T2>
+    struct alignas(max(alignof(T1), alignof(T2))) pair {
+        T1 first;
+        T2 second;
+    };
+    template <typename T1, typename T2>
+    pair(T1 &&, T2 &&) -> pair<T1, T2>;
+
+    template <typename T1, typename T2>
+    XPU pair<T1, T2> make_pair(T1 a, T2 b) {
+        return pair<T1, T2>{a, b};
+    }
+
     template<class To, class From>
     XPU typename std::enable_if_t<sizeof(To) == sizeof(From) &&
                                   std::is_trivially_copyable_v<From> &&
