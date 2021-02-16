@@ -31,6 +31,7 @@ namespace luminous {
         std::filesystem::path _run_dir;
         std::filesystem::path _work_dir;
         std::filesystem::path _in_dir;
+        std::filesystem::path _scene_file;
         std::optional<std::vector<DeviceSelection>> _devices;
         mutable cxxopts::Options _cli_options;
         mutable std::optional<cxxopts::ParseResult> _parsed_cli_options;
@@ -65,6 +66,10 @@ namespace luminous {
         [[nodiscard]] std::filesystem::path input_path(const std::filesystem::path &name = {}) noexcept;
 
         [[nodiscard]] std::filesystem::path cache_path(const std::filesystem::path &name = {}) noexcept;
+
+        [[nodiscard]] std::filesystem::path scene_path() noexcept;
+
+        [[nodiscard]] const std::filesystem::path &scene_file() noexcept;
 
         bool has_help_cmd() noexcept {
             return _parse_result().count("help") > 0;

@@ -10,9 +10,11 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     luminous::Context context{argc, argv};
-    cout << context.input_path() << endl;
-    cout << context.runtime_path() << endl;
-    cout << context.cache_path() << endl;
-    cout << context.working_path() << endl;
+    context.print_help();
+    cout << context.scene_path();
+//    cout << context.input_path() << endl;
+//    cout << context.runtime_path() << endl;
+//    cout << context.cache_path() << endl;
+//    cout << context.working_path() << endl;
     return 0;
 }

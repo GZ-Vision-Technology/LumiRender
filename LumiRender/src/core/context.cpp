@@ -48,6 +48,11 @@ namespace luminous {
         return _input_dir() / name;
     }
 
+    std::filesystem::path Context::scene_path() noexcept {
+        return scene_file().parent_path();
+    }
+
+
     Context::~Context() noexcept {
         for (auto &&module_item : _loaded_modules) {
             destroy_dynamic_module(module_item.second);
@@ -69,7 +74,7 @@ namespace luminous {
                  cxxopts::value<std::filesystem::path>()->default_value(
                          std::filesystem::canonical(std::filesystem::current_path()).string()))
                 ("c, clear-cache", "Clear cached kernel compilation", cxxopts::value<bool>())
-                ("p, print-source", "Print generated source code", cxxopts::value<bool>())
+                ("s, scene", "The scene to render", cxxopts::value<std::string>())
                 ("positional", "Specify input file", cxxopts::value<std::string>())
                 ("h,help", "Print usage");
 
@@ -110,6 +115,13 @@ namespace luminous {
                                   cache_directory);
         }
         return _work_dir;
+    }
+
+    const std::filesystem::path &Context::scene_file() noexcept {
+        if (_scene_file.empty()) {
+            _scene_file = std::filesystem::canonical(_parse_result()["scene"].as<std::string>());
+        }
+        return _scene_file;
     }
 
     const std::vector<Context::DeviceSelection> &Context::device_selections() noexcept {
