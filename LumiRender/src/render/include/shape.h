@@ -17,22 +17,20 @@ namespace luminous {
 
         };
 
-        struct triangleHandle {
-            uint32_t i, j, k;
-        };
+        using TriangleHandle = uint3;
 
         class Mesh : public Shape {
         private:
             vector<float3> _normals;
             vector<float3> _positions;
             vector<float2> _tex_coords;
-            vector<triangleHandle> _triangles;
+            vector<uint3> _triangles;
             float _surface_area;
         public:
             Mesh(vector<float3> P,
                  vector<float3> N,
                  vector<float2> uv,
-                 vector<triangleHandle> T) :
+                 vector<TriangleHandle> T) :
                     _positions(std::move(P)),
                     _normals(std::move(N)),
                     _tex_coords(std::move(uv)),

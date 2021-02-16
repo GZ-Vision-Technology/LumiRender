@@ -10,8 +10,11 @@
 
 namespace luminous {
     inline namespace utility {
-        ModelCache *ModelCache::s_model_cache = nullptr;
 
+        using std::vector;
+        ModelCache *ModelCache::s_model_cache = nullptr;
+        using render::TriangleHandle;
+        using std::move;
         ModelCache *ModelCache::instance() {
             if (s_model_cache == nullptr) {
                 s_model_cache = new ModelCache();
@@ -20,7 +23,7 @@ namespace luminous {
         }
 
         shared_ptr<const Model> ModelCache::load_model(const std::string &path, uint32_t subdiv_level) {
-            std::vector<Mesh> meshes;
+            vector<shared_ptr<const Mesh>> meshes;
             Assimp::Importer ai_importer;
             ai_importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
                                            aiComponent_COLORS |
@@ -46,7 +49,7 @@ namespace luminous {
             LUMINOUS_EXCEPTION_IF(ai_scene == nullptr || (ai_scene->mFlags & static_cast<uint>(AI_SCENE_FLAGS_INCOMPLETE)) || ai_scene->mRootNode == nullptr,
                                   "Failed to load triangle mesh: ", ai_importer.GetErrorString());
 
-            std::vector<aiMesh *> ai_meshes(ai_scene->mNumMeshes);
+            vector<aiMesh *> ai_meshes(ai_scene->mNumMeshes);
             if (subdiv_level != 0u) {
                 auto subdiv = Assimp::Subdivider::Create(Assimp::Subdivider::CATMULL_CLARKE);
                 subdiv->Subdivide(ai_scene->mMeshes, ai_scene->mNumMeshes, ai_meshes.data(), subdiv_level);
@@ -55,15 +58,66 @@ namespace luminous {
             }
 
             meshes.reserve(ai_meshes.size());
-            return make_shared<Model>();
+            for (auto ai_mesh : ai_meshes) {
+                vector<float3> positions;
+                vector<float3> normals;
+                vector<float2> tex_coords;
+                positions.reserve(ai_mesh->mNumVertices);
+                normals.reserve(ai_mesh->mNumVertices);
+                tex_coords.reserve(ai_mesh->mNumVertices);
+                vector<TriangleHandle> indices;
+                indices.reserve(ai_mesh->mNumFaces);
+
+                for (auto i = 0u; i < ai_mesh->mNumVertices; i++) {
+                    auto ai_position = ai_mesh->mVertices[i];
+                    auto ai_normal = ai_mesh->mNormals[i];
+                    auto position = make_float3(ai_position.x, ai_position.y, ai_position.z);
+                    auto normal = make_float3(ai_normal.x, ai_normal.y, ai_normal.z);
+                    if (ai_mesh->mTextureCoords[0] != nullptr) {
+                        auto ai_tex_coord = ai_mesh->mTextureCoords[0][i];
+                        auto uv = make_float2(ai_tex_coord.x, ai_tex_coord.y);
+                        tex_coords.push_back(uv);
+                    }
+                    positions.push_back(position);
+                    normals.push_back(normal);
+
+
+                    for (auto f = 0u; f < ai_mesh->mNumFaces; f++) {
+                        auto ai_face = ai_mesh->mFaces[f];
+                        if (ai_face.mNumIndices == 3) {
+                            indices.push_back(TriangleHandle{
+                                    ai_face.mIndices[0],
+                                    ai_face.mIndices[1],
+                                    ai_face.mIndices[2]});
+                        } else if (ai_face.mNumIndices == 4) {
+                            indices.push_back(TriangleHandle{
+                                    ai_face.mIndices[0],
+                                    ai_face.mIndices[1],
+                                    ai_face.mIndices[2]});
+                            indices.push_back(TriangleHandle{
+                                    ai_face.mIndices[0],
+                                    ai_face.mIndices[2],
+                                    ai_face.mIndices[3]});
+                        } else {
+                            LUMINOUS_EXCEPTION("Only triangles and quads supported: ", ai_mesh->mName.data);
+                        }
+                    }
+                }
+                auto mesh = make_shared<const Mesh>(move(positions),
+                                                    move(normals),
+                                                    move(tex_coords),
+                                                    move(indices));
+                meshes.push_back(mesh);
+            }
+            return make_shared<Model>(move(meshes));
         }
 
-//        const shared_ptr<const Model> & ModelCache::get_model(const std::string &path, uint32_t subdiv_level) {
-//            auto key = cal_key(path, subdiv_level);
-//            if (is_contain(key)) {
-//                return _model_map[key];
-//            }
-//            return load_model(path, subdiv_level);
-//        }
+        const shared_ptr<const Model> & ModelCache::get_model(const std::string &path, uint32_t subdiv_level) {
+            auto key = cal_key(path, subdiv_level);
+            if (is_contain(key)) {
+                return _model_map[key];
+            }
+            return load_model(path, subdiv_level);
+        }
     }
 }
