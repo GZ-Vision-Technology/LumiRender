@@ -27,10 +27,11 @@ endfunction()
 #add_subdirectory(thirdparty/cxxopts)
 #add_library(cxxopts_config INTERFACE)
 #target_link_libraries(cxxopts_config INTERFACE cxxopts::cxxopts)
-#
+
 add_subdirectory(thirdparty/assimp)
 add_library(assimp_config INTERFACE)
 target_link_libraries(assimp_config INTERFACE assimp::assimp)
+set_target_properties(assimp PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/")
 
 set(CMAKE_DEBUG_POSTFIX "")
 
