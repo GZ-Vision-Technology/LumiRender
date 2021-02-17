@@ -3,4 +3,4 @@
 //
 
 
-#include "buffer.h"
+#include "cuda_buffer.h"

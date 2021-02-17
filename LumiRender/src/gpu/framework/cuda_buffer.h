@@ -6,3 +6,4 @@
 #pragma once
 
 #include "helper/optix.h"
+#include "backend/buffer.h"

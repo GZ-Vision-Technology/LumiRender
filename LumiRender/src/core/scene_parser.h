@@ -9,9 +9,6 @@
 #include "concepts.h"
 #include "graphics/string_util.h"
 
-
-
-
 namespace luminous {
 
     inline DataWrap create_json_from_file(const std::filesystem::path &fn) {
@@ -21,7 +18,6 @@ namespace luminous {
         buffer << fst.rdbuf();
         std::string str = buffer.str();
         str = jsonc_to_json(str);
-//        std::cout << str;
         LUMINOUS_INFO(str);
         if (fn.extension() == "bson") {
             return DataWrap::from_bson(str);

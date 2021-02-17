@@ -11,11 +11,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     luminous::Context context{argc, argv};
-    if (context.has_help_cmd()) {
-        context.print_help();
-        return 0;
-    }
-    if (!context.has_scene()) {
+    if (context.has_help_cmd() || !context.has_scene()) {
         context.print_help();
         return 0;
     }
