@@ -16,16 +16,16 @@ namespace luminous {
         public:
             virtual void launch(Dispatcher &dispatcher,
                                 std::vector<void *> args,
-                                float3 global_size,
-                                float3 local_size) = 0;
+                                uint3 global_size,
+                                uint3 local_size) = 0;
 
             virtual ~Impl() = default;
         };
 
         void launch(Dispatcher &dispatcher,
                     std::vector<void *> args,
-                    float3 global_size,
-                    float3 local_size) {
+                    uint3 global_size,
+                    uint3 local_size) {
             impl->launch(dispatcher, std::move(args), global_size, local_size);
         }
 
