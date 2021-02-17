@@ -5,3 +5,11 @@
 
 #pragma once
 
+#include "graphics/optics/common.h"
+#include "core/concepts.h"
+
+namespace luminous {
+    class Accelerator : public Noncopyable {
+
+    };
+}

@@ -7,3 +7,9 @@
 
 #include "helper/optix.h"
 #include "backend/buffer.h"
+
+namespace luminous {
+    inline namespace gpu {
+
+    }
+}

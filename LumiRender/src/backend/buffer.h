@@ -14,30 +14,52 @@
 
 namespace luminous {
 
-    class Buffer : private Noncopyable, public std::enable_shared_from_this<Buffer> {
+    class Dispatcher;
 
+    class RawBuffer {
     public:
-        static constexpr auto npos = std::numeric_limits<size_t>::max();
+        class Impl {
+        public:
+            virtual void download(Dispatcher &dispatcher, size_t offset, size_t size, void *host_data) = 0;
+
+            virtual void upload(Dispatcher &dispatcher, size_t offset, size_t size, const void *host_data) = 0;
+
+            virtual size_t size() const = 0;
+
+            virtual void *ptr() = 0;
+
+            virtual ~Impl() = default;
+        };
+
+        RawBuffer(std::unique_ptr<Impl> impl) : impl(std::move(impl)) {}
+
+        Impl *impl_mut() const { return impl.get(); }
+
+        void *ptr() const { return impl->ptr(); }
 
     protected:
-        size_t _size;
+        std::unique_ptr<Impl> impl;
+    };
 
+    template<class T>
+    class Buffer : public RawBuffer {
     public:
-        explicit Buffer(size_t size) noexcept
-                : _size{size} {}
+        using RawBuffer::RawBuffer;
 
-        virtual ~Buffer() noexcept = default;
+        Buffer(RawBuffer buf) : RawBuffer(std::move(buf)) {}
 
-        [[nodiscard]] size_t size() const noexcept { return _size; }
+        T *data() const { return reinterpret_cast<T *>(ptr()); }
 
-        template<typename T>
-        [[nodiscard]] auto view(size_t offset = 0u, size_t size = npos) noexcept;
+        size_t size() const { return impl->size() / sizeof(T); }
 
-        virtual void upload(Dispatcher &dispatcher, size_t offset, size_t size, const void *host_data) = 0;
+        void download(Dispatcher &dispatcher, size_t offset, size_t size, T *host_data) {
+            assert(offset * sizeof(T) + size * sizeof(T) <= impl->size());
+            impl->download(dispatcher, offset * sizeof(T), size * sizeof(T), host_data);
+        }
 
-        virtual void download(Dispatcher &dispatcher, size_t offset, size_t size, void *host_buffer) = 0;
-
-        virtual void clear_cache() noexcept = 0;
-
+        void upload(Dispatcher &dispatcher, size_t offset, size_t size, const T *host_data) {
+            assert(offset * sizeof(T) + size * sizeof(T) <= impl->size());
+            impl->upload(dispatcher, offset * sizeof(T), size * sizeof(T), host_data);
+        }
     };
 }
