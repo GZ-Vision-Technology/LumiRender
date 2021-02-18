@@ -19,7 +19,7 @@ namespace luminous {
         buffer << fst.rdbuf();
         std::string str = buffer.str();
         str = jsonc_to_json(str);
-        LUMINOUS_INFO(str);
+//        LUMINOUS_INFO(str);
         if (fn.extension() == "bson") {
             return DataWrap::from_bson(str);
         } else {

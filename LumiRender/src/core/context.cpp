@@ -65,8 +65,8 @@ namespace luminous {
               _cli_options{std::filesystem::path{argv[0]}.filename().string()} {
 
         _cli_options.add_options()
-                ("d,devices", "Select compute devices", cxxopts::value<std::vector<std::string>>()->default_value(""))
-                ("r,runtime-dir", "Specify runtime directory",
+                ("d, device", "Select compute device", cxxopts::value<std::string>()->default_value("cuda"))
+                ("r, runtime-dir", "Specify runtime directory",
                  cxxopts::value<std::filesystem::path>()->default_value(
                          std::filesystem::canonical(argv[0]).parent_path().parent_path().string()))
                 ("w,working-dir",
