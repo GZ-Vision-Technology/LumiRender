@@ -14,14 +14,13 @@ namespace luminous {
     inline namespace gpu {
 
         class CUDADevice : public Device::Impl {
-        private:
-            Context * _context;
         public:
             RawBuffer allocate_buffer(size_t bytes) override {
                 void *ptr;
                 CUDA_CHECK(cudaMalloc(&ptr, bytes));
                 return RawBuffer(std::make_unique<CUDABuffer>(ptr, bytes));
             }
+
             Dispatcher new_dispatcher() override {
                 cudaStream_t stream;
                 CUDA_CHECK(cudaStreamCreate(&stream));

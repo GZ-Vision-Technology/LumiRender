@@ -8,6 +8,7 @@
 #include "header.h"
 #include "concepts.h"
 #include "graphics/string_util.h"
+#include "parameter_set.h"
 
 namespace luminous {
 
@@ -26,7 +27,7 @@ namespace luminous {
         }
     }
 
-    class SceneParser : public Noncopyable {
+    class Parser : public Noncopyable {
     private:
         DataWrap _data;
     public:

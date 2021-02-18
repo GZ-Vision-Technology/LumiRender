@@ -13,7 +13,7 @@ namespace luminous {
         class ParameterSet {
         private:
             DataWrap _data;
-            string _key;
+            std::string _key;
         public:
             ParameterSet(const DataWrap &data, const std::string &key = "")
                     : _data(data),

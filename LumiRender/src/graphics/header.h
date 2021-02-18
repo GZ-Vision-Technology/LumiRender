@@ -14,10 +14,14 @@
     #define GPU __device__
     #define CPU __host__
 #else
-#define XPU
-#define GPU
-#define CPU
+    #define XPU
+    #define GPU
+    #define CPU
 #endif
+
+#define XPU_INLINE XPU inline
+
+#define NDSC [[nodiscard]]
 
 #if defined(__CUDA_ARCH__)
     #define IS_GPU_CODE

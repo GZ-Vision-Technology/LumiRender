@@ -104,10 +104,8 @@ namespace luminous {
             }
         };
 
-        XPU Quaternion operator*(float f, const Quaternion &q) {
+        [[nodiscard]] XPU_INLINE Quaternion operator*(float f, const Quaternion &q) {
             return q * f;
         }
-
-
     }
 }

@@ -17,14 +17,28 @@ namespace luminous {
 
         };
 
-        using TriangleHandle = uint3;
+        struct TriangleHandle {
+            uint i;
+            uint j;
+            uint k;
+        };
+
+        struct ModelHandle {
+            uint vertex_offset;
+            uint triangle_offset;
+        };
+
+        struct MeshHandle : public ModelHandle {
+            uint vertex_count;
+            uint triangle_count;
+        };
 
         class Mesh : public Shape {
         private:
             vector<float3> _normals;
             vector<float3> _positions;
             vector<float2> _tex_coords;
-            vector<uint3> _triangles;
+            vector<TriangleHandle> _triangles;
             float _surface_area;
         public:
             Mesh(vector<float3> P,

@@ -118,13 +118,13 @@ namespace luminous {
             return n2 * n2 * Pow<n & 1>(v);
         }
 
-        XPU bool is_power_of_two(uint32_t i) noexcept { return (i & (i-1)) == 0; }
+        XPU_INLINE bool is_power_of_two(uint32_t i) noexcept { return (i & (i-1)) == 0; }
 
-        XPU bool is_power_of_two(int32_t i) noexcept { return i > 0 && (i & (i-1)) == 0; }
+        XPU_INLINE bool is_power_of_two(int32_t i) noexcept { return i > 0 && (i & (i-1)) == 0; }
 
-        XPU bool is_power_of_two(uint64_t i) noexcept { return (i & (i-1)) == 0; }
+        XPU_INLINE bool is_power_of_two(uint64_t i) noexcept { return (i & (i-1)) == 0; }
 
-        XPU bool is_power_of_two(int64_t i) noexcept { return i > 0 && (i & (i-1)) == 0; }
+        XPU_INLINE bool is_power_of_two(int64_t i) noexcept { return i > 0 && (i & (i-1)) == 0; }
 
     }
 }

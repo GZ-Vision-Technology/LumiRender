@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "core/context.h"
-#include "core/scene_parser.h"
+#include "core/parser.h"
 
 
 using namespace std;
@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     try {
-        luminous::SceneParser sp;
+        luminous::Parser sp;
         sp.load_from_json(context.scene_file());
     } catch (exception e1) {
         cout << e1.what();

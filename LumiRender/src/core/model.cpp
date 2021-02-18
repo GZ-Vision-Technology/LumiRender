@@ -117,7 +117,8 @@ namespace luminous {
             if (is_contain(key)) {
                 return _model_map[key];
             }
-            return load_model(path, subdiv_level);
+            _model_map[key] = load_model(path, subdiv_level);
+            return _model_map[key];
         }
     }
 }

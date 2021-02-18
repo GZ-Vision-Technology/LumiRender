@@ -19,7 +19,7 @@ namespace luminous {
 
         inline XPU double rcp(double d) noexcept { return 1./d; }
 
-        XPU float saturate(const float &f) { return std::min(1.f,std::max(0.f,f)); }
+        XPU_INLINE float saturate(const float &f) { return std::min(1.f,std::max(0.f,f)); }
 
         // Vector Functions
 #define MAKE_VECTOR_UNARY_FUNC(func)                                          \
@@ -163,15 +163,15 @@ namespace luminous {
         }
 
         // Quaternion Functions
-        [[nodiscard]] XPU float dot(Quaternion q1, Quaternion q2) noexcept {
+        [[nodiscard]] XPU_INLINE float dot(Quaternion q1, Quaternion q2) noexcept {
             return dot(q1.v, q2.v) + q1.w * q2.w;
         }
 
-        [[nodiscard]] XPU Quaternion normalize(Quaternion q) noexcept {
+        [[nodiscard]] XPU_INLINE Quaternion normalize(Quaternion q) noexcept {
             return q / std::sqrt(dot(q, q));
         }
 
-        [[nodiscard]] XPU Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) {
+        [[nodiscard]] XPU_INLINE Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) {
             float cosTheta = dot(q1, q2);
             if (cosTheta > .9995f)
                 //如果旋转角度特别小，当做直线处理
@@ -289,12 +289,12 @@ namespace luminous {
     #endif
         }
 
-        XPU [[nodiscard]] float gaussian(float x, float mu = 0, float sigma = 1) {
+        [[nodiscard]] XPU_INLINE float gaussian(float x, float mu = 0, float sigma = 1) {
             return 1 / std::sqrt(2 * Pi * sigma * sigma) *
                    fast_exp(-sqr(x - mu) / (2 * sigma * sigma));
         }
 
-        XPU [[nodiscard]] float gaussian_integral(float x0, float x1, float mu = 0,
+        [[nodiscard]] XPU_INLINE float gaussian_integral(float x0, float x1, float mu = 0,
                                        float sigma = 1) {
             assert(sigma > 0);
             float sigmaRoot2 = sigma * float(1.414213562373095);
