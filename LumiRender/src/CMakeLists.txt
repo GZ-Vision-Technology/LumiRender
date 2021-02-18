@@ -16,6 +16,7 @@ target_link_libraries(luminous-all INTERFACE
         imgui
         luminous-ext
         luminous-gpu
+        luminous-render
         luminous-graphics
         luminous-util)
 

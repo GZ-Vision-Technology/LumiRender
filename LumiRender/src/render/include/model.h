@@ -38,7 +38,7 @@ namespace luminous {
         public:
 
             [[nodiscard]] const shared_ptr<const Model> &get_model(const std::string &path,
-                                                                   uint32_t subdiv_level);
+                                                                   uint32_t subdiv_level = 0);
 
             [[nodiscard]] static ModelCache *instance();
 

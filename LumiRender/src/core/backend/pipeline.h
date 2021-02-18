@@ -7,9 +7,8 @@
 
 #include "core/concepts.h"
 #include "device.h"
-#include "core/parser.h"
+#include "render/include/parser.h"
 #include "render/include/scene.h"
-#include "../parser.h"
 #include "render/include/sensor.h"
 
 namespace luminous {
@@ -26,7 +25,7 @@ namespace luminous {
             _context(context) {}
 
         void init(const Parser &parser) {
-            
+
         }
 
         virtual void render_gui() = 0;

@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include "header.h"
-#include "concepts.h"
+#include "core/concepts.h"
 #include "graphics/string_util.h"
 #include "parameter_set.h"
+#include "render/include/model.h"
 
 namespace luminous {
 
@@ -30,10 +30,20 @@ namespace luminous {
     class Parser : public Noncopyable {
     private:
         DataWrap _data;
+        Context *_context;
     public:
+        explicit Parser(Context *context) : _context(context) {}
+
         void load_from_json(const std::filesystem::path &fn) {
             _data = create_json_from_file(fn);
-
+            auto shapes = _data["shapes"];
+            using namespace std;
+            for (int i = 0; i < shapes.size(); ++i) {
+                auto path = _context->scene_path() / string(shapes[i]["file_name"]);
+//                cout << path << endl;
+                auto m = ModelCache::instance()->get_model(path.string());
+                int a = 0;
+            }
         }
     };
 }

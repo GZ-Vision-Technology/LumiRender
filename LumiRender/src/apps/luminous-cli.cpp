@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "core/context.h"
-#include "core/parser.h"
+#include "render/include/parser.h"
 #include <memory>
 #include "gpu/framework/cuda_pipeline.h"
 
@@ -18,10 +18,10 @@ int main(int argc, char *argv[]) {
         context.print_help();
         return 0;
     }
-    Parser sp;
+    Parser sp(&context);
     try {
         sp.load_from_json(context.scene_file());
-    } catch (std::exception e1) {
+    } catch (std::exception &e1) {
         cout << e1.what();
         context.print_help();
     }
