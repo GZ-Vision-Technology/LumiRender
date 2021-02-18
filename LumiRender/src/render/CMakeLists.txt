@@ -2,7 +2,11 @@ file(GLOB_RECURSE HEADER_FILES *.h*)
 file(GLOB_RECURSE SOURCE_FILES *.c*)
 
 add_library(luminous-render SHARED ${HEADER_FILES} ${SOURCE_FILES})
-target_link_libraries(luminous-render PUBLIC assimp_config luminous-core)
+target_link_libraries(luminous-render
+        PUBLIC
+        assimp_config
+        luminous-graphics
+        luminous-core)
 
 set_target_properties(luminous-render PROPERTIES
         PUBLIC_HEADER "${HEADER_FILES}"

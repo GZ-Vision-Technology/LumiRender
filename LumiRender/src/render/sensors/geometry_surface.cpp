@@ -4,3 +4,5 @@
 
 
 #pragma once
+
+#include "../include/sensor.h"

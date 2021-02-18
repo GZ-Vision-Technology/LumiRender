@@ -33,6 +33,7 @@ namespace luminous {
     public:
         void load_from_json(const std::filesystem::path &fn) {
             _data = create_json_from_file(fn);
+
         }
     };
 }

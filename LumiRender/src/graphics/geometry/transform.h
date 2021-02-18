@@ -75,7 +75,7 @@ namespace luminous {
             return transpose(ret);
         }
 
-        XPU void decompose(const float4x4 &matrix, float3 *t, Quaternion *r, float3 *s) {
+        XPU_INLINE void decompose(const float4x4 &matrix, float3 *t, Quaternion *r, float3 *s) {
 
             auto M = matrix;
             for (int i = 0; i < 3; ++i) {

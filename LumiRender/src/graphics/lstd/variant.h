@@ -76,7 +76,7 @@ namespace lstd {
     public:
         using Index = TypeIndex<T...>;
         static constexpr size_t num_types = nTypes;
-
+        Variant() = default;
         template<typename U>
         XPU Variant(const U &u) {
             static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
@@ -91,7 +91,7 @@ namespace lstd {
             });
         }
 
-        XPU int type_index() const { return index; }
+        XPU [[nodiscard]] int type_index() const { return index; }
 
         template<typename U>
         XPU constexpr static int index_of() {
@@ -137,22 +137,22 @@ namespace lstd {
             return *this;
         }
 
-        XPU bool null() const { return index == -1; }
+        NDSC XPU bool null() const { return index == -1; }
 
         template<typename U>
-        XPU bool isa() const {
+        NDSC XPU bool isa() const {
             static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
             return Index::template GetIndex<U>::value == index;
         }
 
         template<typename U>
-        XPU U *get() {
+        NDSC XPU U *get() {
             static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
             return Index::template GetIndex<U>::value != index ? nullptr : reinterpret_cast<U *>(&data);
         }
 
         template<typename U>
-        XPU const U *get() const {
+        NDSC XPU const U *get() const {
             static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
             return Index::template GetIndex<U>::value != index ? nullptr : reinterpret_cast<const U *>(&data);
         }
@@ -207,6 +207,7 @@ namespace lstd {
     if constexpr (std::is_same_v<void, Ret>) {                                                                         \
         return;                                                                                                        \
     } else {                                                                                                           \
+        assert(0);\
     }
 
         template<class Visitor>

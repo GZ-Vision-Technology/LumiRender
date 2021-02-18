@@ -16,8 +16,6 @@ namespace luminous {
             CUDAPipeline(unique_ptr<CUDADevice> cuda_device, Context *context)
                 : Pipeline(make_unique<Device>(move(cuda_device)),context) {}
 
-//            CUDAPipeline(unique_ptr<Device> device, Context *context)
-//                    : Pipeline(move(device), context) {}
 
             virtual void render_cli() override {
 

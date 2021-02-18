@@ -10,6 +10,7 @@
 #include "core/parser.h"
 #include "render/include/scene.h"
 #include "../parser.h"
+#include "render/include/sensor.h"
 
 namespace luminous {
     using std::unique_ptr;
@@ -18,13 +19,14 @@ namespace luminous {
         unique_ptr<Device> _device{nullptr};
         Context * _context{nullptr};
         unique_ptr<Scene> _scene{nullptr};
+        SensorHandle _camera;
     public:
         Pipeline(unique_ptr<Device> device, Context *context)
             : _device(move(device)),
             _context(context) {}
 
         void init(const Parser &parser) {
-
+            
         }
 
         virtual void render_gui() = 0;

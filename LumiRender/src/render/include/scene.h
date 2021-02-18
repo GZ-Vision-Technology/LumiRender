@@ -9,6 +9,7 @@
 #include "core/concepts.h"
 #include "graphics/math/common.h"
 #include "model.h"
+#include "sensor.h"
 
 namespace luminous {
     class Scene : public Noncopyable {

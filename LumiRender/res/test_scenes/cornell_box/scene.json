@@ -26,18 +26,14 @@
 		}
 	},
 	"camera" : {
-		"type" : "perspective",
+		"type" : "pinhole",
 		"param" : {
-			"shutter_open" : 0,
-			"shutter_close" : 1,
-			"lens_radius" : 0,
-			"focal_distance" : 100,
 			"fov" : 20,
-			"look_at" : [
-				[0,0,-6.6],
-				[0,0,0],
-				[0,1,0]
-			]
+			"transform": {
+				"position": [0,0,0],
+				"vertical" : 0,
+				"horizontal" : 0
+			}
 		}
 	},
 	"film" : {

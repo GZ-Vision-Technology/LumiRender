@@ -8,13 +8,23 @@
 #include "graphics/optics/common.h"
 #include "graphics/geometry/common.h"
 #include "core/concepts.h"
+#include "graphics/lstd/lstd.h"
 
 namespace luminous {
     namespace render {
 
-        class Sensor {
+        class PinholeCamera;
+        class PerspectiveCamera;
 
+
+        using lstd::Variant;
+        class SensorHandle : public Variant<PinholeCamera*, PerspectiveCamera*> {
+        public:
+            using Variant::Variant;
+
+            SensorHandle(void *) {}
         };
+
 
     }
 }
