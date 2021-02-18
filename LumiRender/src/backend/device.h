@@ -31,7 +31,6 @@ namespace luminous {
 
         Device(std::unique_ptr<Impl> impl) : impl(std::move(impl)) {}
 
-
     protected:
         std::unique_ptr<Impl> impl;
     };

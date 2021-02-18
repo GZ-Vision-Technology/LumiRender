@@ -70,8 +70,7 @@ namespace luminous {
 
         inline void DeviceMemory::upload(const void *h_pointer, const char *debugMessage) {
             assert(allocated() || empty());
-            CUDA_CHECK2(debugMessage,
-                        cudaMemcpy((void *) d_pointer, h_pointer,
+            CUDA_CHECK(cudaMemcpy((void *) d_pointer, h_pointer,
                                    size_in_bytes, cudaMemcpyHostToDevice));
         }
 

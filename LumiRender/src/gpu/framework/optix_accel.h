@@ -5,5 +5,4 @@
 
 #pragma once
 
-#include "optix.h"
-#include "cuda.h"
+#include "cuda_device.h"

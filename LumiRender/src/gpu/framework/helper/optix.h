@@ -20,25 +20,20 @@
 #pragma warning( push )
 #endif
 
+#define OPTIX_CHECK(EXPR)                                                                                              \
+    [&] {                                                                                                              \
+        OptixResult res = EXPR;                                                                                        \
+        if (res != OPTIX_SUCCESS) {                                                                                    \
+            spdlog::error("OptiX call " #EXPR " failed with code {}: \"{}\" at {}:{}", int(res),                       \
+                          optixGetErrorString(res), __FILE__, __LINE__);                                               \
+            std::abort();                                                                                              \
+        }                                                                                                              \
+    }()
 
-#define OPTIX_CHECK( call )                                             \
-  {                                                                     \
-    OptixResult res = call;                                             \
-    if( res != OPTIX_SUCCESS )                                          \
-      {                                                                 \
-        fprintf( stderr, "Optix call (%s) failed with code %d (line %d)\n", #call, res, __LINE__ ); \
-        exit( 2 );                                                      \
-      }                                                                 \
-  }
-
-#define OPTIX_CHECK_LOG( call )                                         \
-  {                                                                     \
-    OptixResult res = call;                                             \
-    if( res != OPTIX_SUCCESS )                                          \
-      {                                                                 \
-        fprintf( stderr, "Optix call (%s) failed with code %d (line %d)\n", #call, res, __LINE__ ); \
-        fprintf( stderr, "Log:\n%s\n", log );                           \
-        exit( 2 );                                                      \
-      }                                                                 \
-  }
-
+#define OPTIX_CHECK_WITH_LOG(EXPR, LOG)                                                                                \
+    [&]{                                                                                                               \
+        OptixResult res = EXPR;                                                                                        \
+        if (res != OPTIX_SUCCESS)                                                                                      \
+            spdlog::error("OptiX call " #EXPR " failed with code {}: \"{}\"\nLogs: {}", int(res),                      \
+                      optixGetErrorString(res), LOG);                                                                  \
+    } ()
