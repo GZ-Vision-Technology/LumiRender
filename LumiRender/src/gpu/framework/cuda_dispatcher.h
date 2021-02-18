@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "backend/dispatcher.h"
+#include "core/backend/dispatcher.h"
 #include "helper/cuda.h"
 
 namespace luminous {

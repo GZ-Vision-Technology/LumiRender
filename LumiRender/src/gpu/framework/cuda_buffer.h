@@ -6,7 +6,7 @@
 #pragma once
 
 #include "helper/optix.h"
-#include "backend/buffer.h"
+#include "core/backend/buffer.h"
 #include "cuda_dispatcher.h"
 
 namespace luminous {

@@ -7,7 +7,7 @@
 
 #include "core/context.h"
 #include "cuda_dispatcher.h"
-#include "backend/device.h"
+#include "core/backend/device.h"
 #include "cuda_buffer.h"
 
 namespace luminous {

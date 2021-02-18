@@ -5,13 +5,14 @@
 
 #pragma once
 
-#include "backend/buffer.h"
+#include "core/backend/buffer.h"
 #include "core/concepts.h"
 #include "graphics/math/common.h"
 #include "model.h"
 
 namespace luminous {
-    struct Scene : public Noncopyable {
+    class Scene : public Noncopyable {
+    private:
         Buffer<float3> _positions;
         Buffer<float3> _normals;
         Buffer<float2> _tex_coords;

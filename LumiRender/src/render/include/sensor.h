@@ -12,7 +12,9 @@
 namespace luminous {
     namespace render {
 
+        class Sensor {
 
+        };
 
     }
 }
