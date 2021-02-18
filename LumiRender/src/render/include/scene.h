@@ -6,7 +6,7 @@
 #pragma once
 
 #include "backend/buffer.h"
-#include "concepts.h"
+#include "core/concepts.h"
 #include "graphics/math/common.h"
 #include "model.h"
 

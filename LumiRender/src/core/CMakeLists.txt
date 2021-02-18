@@ -4,7 +4,7 @@ file(GLOB_RECURSE SOURCE_FILES *.c*)
 
 
 add_library(luminous-core SHARED ${HEADER_FILES} ${SOURCE_FILES})
-target_link_libraries(luminous-core PUBLIC assimp_config)
+target_link_libraries(luminous-core)
 
 set_target_properties(luminous-core PROPERTIES
         PUBLIC_HEADER "${HEADER_FILES}"
