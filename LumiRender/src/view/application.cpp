@@ -4,33 +4,127 @@
 
 
 #include "application.h"
+#include <iostream>
 
+using namespace std;
 
 namespace luminous {
-    App::App(const std::string &title, const int2 &size) {
+
+    template<typename T = App>
+    T *get_user_ptr(GLFWwindow *window) {
+        return static_cast<T *>(glfwGetWindowUserPointer(window));
+    }
+
+    static void on_glfw_error(int error, const char *description) {
+        fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+    }
+
+    /*! callback for a window resizing event */
+    static void glfw_resize(GLFWwindow *window, int width, int height) {
+        get_user_ptr(window)->on_resize(make_int2(width, height));
+    }
+
+    /*! callback for a char key press or release */
+    static void glfw_char_event(GLFWwindow *window,
+                                unsigned int key) {
+
+    }
+
+    /*! callback for a key press or release*/
+    static void glfw_key_event(GLFWwindow *window,
+                               int key,
+                               int scancode,
+                               int action,
+                               int mods) {
+        get_user_ptr(window)->on_key_event(key, scancode, action, mods);
+    }
+
+    /*! callback for _moving_ the mouse to a new position */
+    static void glfw_cursor_move(GLFWwindow *window, double x, double y) {
+        get_user_ptr(window)->on_cursor_move(make_int2(x, y));
+    }
+
+    /*! callback for pressing _or_ releasing a mouse button*/
+    static void glfw_mouse_event(GLFWwindow *window,
+                                 int button,
+                                 int action,
+                                 int mods) {
+        get_user_ptr(window)->on_mouse_event(button, action, mods);
+    }
+
+    void App::on_cursor_move(int2 new_pos) {
+        int2 delta = new_pos - _last_mouse_pos;
+        _last_mouse_pos = new_pos;
+
+    }
+
+    void App::on_key_event(int key, int scancode, int action, int mods) {
+
+    }
+
+    void App::on_mouse_event(int button, int action, int mods) {
+
+    }
+
+    void App::on_resize(const int2 &new_size) {
+
+    }
+
+    App::App(const std::string &title, const int2 &size)
+            : _size(size) {
         init_window(title, size);
+        init_event_cb();
+        init_imgui();
+    }
+
+    void App::imgui_begin() {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGui::Render();
+    }
+
+    void App::imgui_end() {
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
     int App::run() {
         while (!glfwWindowShouldClose(_handle)) {
             loop();
+            imgui_begin();
             glfwPollEvents();
             int display_w, display_h;
             glfwGetFramebufferSize(_handle, &display_w, &display_h);
             glViewport(0, 0, display_w, display_h);
-            glClearColor(1,0,0,0);
+            glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT);
+            imgui_end();
             glfwSwapBuffers(_handle);
         }
         return 0;
     }
 
+    void App::init_event_cb() {
+        glfwSetFramebufferSizeCallback(_handle, glfw_resize);
+        glfwSetMouseButtonCallback(_handle, glfw_mouse_event);
+        glfwSetKeyCallback(_handle, glfw_key_event);
+        glfwSetCharCallback(_handle, glfw_char_event);
+        glfwSetCursorPosCallback(_handle, glfw_cursor_move);
+    }
+
+    void App::draw() {
+
+    }
+
+    void App::render() {
+
+    }
+
     void App::init_window(const std::string &title, const int2 &size) {
-        glfwSetErrorCallback(glfw_error_callback);
+        glfwSetErrorCallback(on_glfw_error);
         if (!glfwInit())
             exit(EXIT_FAILURE);
 
-        const char* glsl_version = "#version 130";
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
@@ -39,8 +133,9 @@ namespace luminous {
             glfwTerminate();
             exit(EXIT_FAILURE);
         }
+        glfwSetWindowUserPointer(_handle, this);
         glfwMakeContextCurrent(_handle);
-        glfwSwapInterval( 1 );
+        glfwSwapInterval(1);
 
         if (gladLoadGL() == 0) {
             fprintf(stderr, "Failed to initialize OpenGL loader!\n");
@@ -48,12 +143,17 @@ namespace luminous {
         }
     }
 
-    void App::set_title(const std::string &s) {
-        glfwSetWindowTitle(_handle,s.c_str());
+    void App::init_imgui() {
+        const char* glsl_version = "#version 130";
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGui::StyleColorsDark();
+        ImGui_ImplGlfw_InitForOpenGL(_handle, true);
+        ImGui_ImplOpenGL3_Init(glsl_version);
     }
 
-    void App::resize(const int2 &new_size) {
-
+    void App::set_title(const std::string &s) {
+        glfwSetWindowTitle(_handle, s.c_str());
     }
 
 }

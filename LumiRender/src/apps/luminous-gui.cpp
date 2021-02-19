@@ -8,6 +8,7 @@
 #include <memory>
 #include "view/application.h"
 #include <glad/glad.h>
+#include<chrono>
 #include "gpu/framework/cuda_pipeline.h"
 
 using namespace std;

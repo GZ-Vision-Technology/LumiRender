@@ -17,29 +17,38 @@
 
 namespace luminous {
 
-    static void glfw_error_callback(int error, const char* description) {
-        fprintf(stderr, "Glfw Error %d: %s\n", error, description);
-    }
-
     class App {
     private:
-        int2    _size;
-        GLuint   _fb_texture;
-        GLFWwindow * _handle { nullptr };
+        int2 _size;
+        GLuint _fb_texture{0};
+        GLFWwindow *_handle{nullptr};
         int2 _last_mouse_pos = make_int2(-1);
     public:
-        App(const std::string &title,
-            const int2 &size);
+        App(const std::string &title, const int2 &size);
 
         void init_window(const std::string &title, const int2 &size);
 
-        void resize(const int2 &new_size);
+        void init_event_cb();
+
+        void init_imgui();
+
+        void on_resize(const int2 &new_size);
+
+        void on_key_event(int key, int scancode,int action,int mods);
+
+        void on_cursor_move(int2 new_pos);
+
+        void on_mouse_event(int button, int action,int mods);
 
         void set_title(const std::string &s);
 
-        void render(){}
+        void render();
 
-        void draw(){}
+        void draw();
+
+        void imgui_begin();
+
+        void imgui_end();
 
         void loop() {
             render();
