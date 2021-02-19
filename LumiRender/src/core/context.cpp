@@ -124,31 +124,11 @@ namespace luminous {
         return _scene_file;
     }
 
-    const std::vector<Context::DeviceSelection> &Context::device_selections() noexcept {
-        if (!_devices.has_value()) {
-            auto &&devices = _devices.emplace();
-            for (auto &&device : _parse_result()["devices"].as<std::vector<std::string>>()) {
-                LUMINOUS_INFO("Device: ", device);
-                if (auto p = device.find(':'); p != std::string::npos) {
-                    auto index = 0u;
-                    std::stringstream ss;
-                    ss << std::string_view{device}.substr(p + 1u);
-                    ss >> index;
-                    devices.emplace_back(std::string_view{device}.substr(0u, p), index);
-                } else {
-                    devices.emplace_back(device, 0u);
-                }
-            }
-            if (!devices.empty()) {
-                std::ostringstream ss;
-                for (auto i = 0u; i < devices.size(); i++) {
-                    ss << devices[i].backend_name << ":" << devices[i].device_id;
-                    if (i != devices.size() - 1u) { ss << ", "; }
-                }
-                LUMINOUS_INFO("Candidate devices: ", ss.str());
-            }
+    std::string Context::device() noexcept {
+        if (_device.empty()) {
+            _device = cli_option<std::string>("device");
         }
-        return *_devices;
+        return _device;
     }
 
     const std::filesystem::path &Context::_input_dir() noexcept {

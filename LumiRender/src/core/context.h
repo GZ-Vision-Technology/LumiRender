@@ -32,7 +32,7 @@ namespace luminous {
         std::filesystem::path _work_dir;
         std::filesystem::path _in_dir;
         std::filesystem::path _scene_file;
-        std::optional<std::vector<DeviceSelection>> _devices;
+        std::string _device;
         mutable cxxopts::Options _cli_options;
         mutable std::optional<cxxopts::ParseResult> _parsed_cli_options;
         mutable std::optional<std::string> _positional_option;
@@ -130,7 +130,7 @@ namespace luminous {
             return _parse_result()["positional"].as<std::string>();
         }
 
-        [[nodiscard]] const std::vector<DeviceSelection> &device_selections() noexcept;
+        [[nodiscard]] std::string device() noexcept;
 
         [[nodiscard]] bool should_print_generated_source() const noexcept {
             return cli_option<bool>("print-source");

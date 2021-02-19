@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
         context.print_help();
     }
     std::unique_ptr<luminous::Pipeline> pipeline;
-    if (context.cli_option<string>("device") == "cuda") {
+    if (context.device() == "cuda") {
         unique_ptr<CUDADevice> cuda_device = make_unique<CUDADevice>();
         pipeline = std::make_unique<CUDAPipeline>(move(cuda_device), &context);
     } else if (context.cli_option<string>("device") == "cpu") {
