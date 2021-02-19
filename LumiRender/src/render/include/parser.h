@@ -40,9 +40,9 @@ namespace luminous {
             using namespace std;
             for (int i = 0; i < shapes.size(); ++i) {
                 auto path = _context->scene_path() / string(shapes[i]["file_name"]);
-//                cout << path << endl;
-                auto m = ModelCache::instance()->get_model(path.string());
-                int a = 0;
+                cout << path << endl;
+//                auto m = ModelCache::instance()->get_model(path.string());
+//                int a = 0;
             }
         }
     };

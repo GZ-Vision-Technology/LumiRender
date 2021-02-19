@@ -1,12 +1,11 @@
 
-file(GLOB_RECURSE HEADER_FILES *.h*)
-file(GLOB_RECURSE SOURCE_FILES *.c*)
 
+add_subdirectory(stblib)
+add_subdirectory(tinyexr)
+add_subdirectory(xatlas)
 
-add_library(luminous-ext SHARED ${HEADER_FILES} ${SOURCE_FILES})
-
-set_target_properties(luminous-ext PROPERTIES
-        PUBLIC_HEADER "${HEADER_FILES}"
-        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
-        WINDOWS_EXPORT_ALL_SYMBOLS ON)
+add_library(luminous-ext INTERFACE)
+target_link_libraries(luminous-ext INTERFACE
+        luminous-ext-xatlas
+        luminous-ext-stb
+        luminous-ext-tinyexr)
