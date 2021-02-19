@@ -7,6 +7,7 @@
 #include "render/include/parser.h"
 #include <memory>
 #include "view/application.h"
+#include <glad/glad.h>
 #include "gpu/framework/cuda_pipeline.h"
 
 using namespace std;
@@ -26,6 +27,5 @@ int main(int argc, char *argv[]) {
     }
 
     App app("luminous-gui", luminous::make_int2(1280,720));
-
     return app.run();
 }

@@ -12,7 +12,7 @@
 #include "graphics/header.h"
 #include "core/logging.h"
 #include "graphics/math/common.h"
-#include "gl/GL.h"
+#include <glad.h>
 #include <GLFW/glfw3.h>
 
 namespace luminous {
@@ -46,18 +46,6 @@ namespace luminous {
             draw();
         }
 
-        int run() {
-            while (!glfwWindowShouldClose(_handle)) {
-                loop();
-                glfwSwapBuffers(_handle);
-                glfwPollEvents();
-                int display_w, display_h;
-                glfwGetFramebufferSize(_handle, &display_w, &display_h);
-                glViewport(0, 0, display_w, display_h);
-                glClearColor(0,0,0,0);
-                glClear(GL_COLOR_BUFFER_BIT);
-            }
-            return 0;
-        }
+        int run();
     };
 }
