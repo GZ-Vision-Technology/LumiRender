@@ -180,8 +180,10 @@ namespace luminous {
     uniform bool correct_gamma;
 
     void main() {
-        color = texture( render_tex, UV ).xyz;
-        color = vec3(1,0,0);
+        vec2 uv = UV;
+        uv.y = 1 - uv.y;
+        color = texture( render_tex, uv ).xyz;
+        //color = vec3(UV,0);
     }
     )";
 

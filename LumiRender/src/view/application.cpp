@@ -92,10 +92,19 @@ namespace luminous {
         glGenTextures(1, &_gl_ctx.fb_texture);
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, res.x,res.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, test_color);
-        glBindTexture(GL_TEXTURE_2D, 0);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        // set texture filtering parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         _gl_ctx.program = createGLProgram(s_vert_source, s_frag_source);
         _gl_ctx.program_tex = getGLUniformLocation(_gl_ctx.program, "render_tex");
+        glUseProgram(_gl_ctx.program);
+        glUniform1i(_gl_ctx.program_tex, 0);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
 
         glGenVertexArrays(1, &_gl_ctx.vao);
         glGenBuffers(1, &_gl_ctx.vbo);
@@ -110,8 +119,6 @@ namespace luminous {
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
-
-
     }
 
     void App::imgui_begin() {
@@ -129,11 +136,6 @@ namespace luminous {
         while (!glfwWindowShouldClose(_handle)) {
             loop();
             imgui_begin();
-
-            int display_w, display_h;
-            glfwGetFramebufferSize(_handle, &display_w, &display_h);
-
-            glViewport(0, 0, display_w, display_h);
             glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
             glClear(GL_COLOR_BUFFER_BIT);
             draw();
@@ -153,10 +155,12 @@ namespace luminous {
 
     }
 
-    void App::draw() {
+    void App::draw() const {
+        glUniform1i(_gl_ctx.program_tex, 0);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
         glUseProgram(_gl_ctx.program);
         glBindVertexArray(_gl_ctx.vao);
-        glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 

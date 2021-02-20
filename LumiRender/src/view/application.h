@@ -53,7 +53,7 @@ namespace luminous {
 
         void render();
 
-        void draw();
+        void draw() const;
 
         void imgui_begin();
 
@@ -61,7 +61,6 @@ namespace luminous {
 
         void loop() {
             render();
-            draw();
         }
 
         int run();
