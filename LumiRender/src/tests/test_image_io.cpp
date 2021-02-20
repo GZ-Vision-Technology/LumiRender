@@ -11,8 +11,8 @@ using namespace std;
 
 int main() {
 
-    auto path = "E:\\work\\graphic\\renderer\\LumiRender\\LumiRender\\res\\image\\exr2tga.tga";
-    auto path2 = "E:\\work\\graphic\\renderer\\LumiRender\\LumiRender\\res\\image\\tga2exr.exr";
+    auto path = "E:\\work\\graphic\\renderer\\LumiRender\\LumiRender\\res\\image\\HelloWorld.png";
+    auto path2 = "E:\\work\\graphic\\renderer\\LumiRender\\LumiRender\\res\\image\\png2exr.exr";
 
     auto [rgb, res] = load_image(path);
 

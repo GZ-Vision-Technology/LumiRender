@@ -12,19 +12,28 @@
 #include "graphics/header.h"
 #include "core/logging.h"
 #include "graphics/math/common.h"
-#include <glad.h>
-#include <GLFW/glfw3.h>
+#include "gl_helper.h"
 
 namespace luminous {
 
     class App {
+        struct GLContext {
+            GLuint program{0};
+            GLuint fb_texture{0};
+            GLuint program_tex{0};
+            GLuint vao{0};
+            GLuint vbo{0};
+        };
     private:
         int2 _size;
-        GLuint _fb_texture{0};
+        GLContext _gl_ctx;
         GLFWwindow *_handle{nullptr};
+        uint32_t * test_color{};
         int2 _last_mouse_pos = make_int2(-1);
     public:
         App(const std::string &title, const int2 &size);
+
+        void init_gl_context();
 
         void init_window(const std::string &title, const int2 &size);
 
