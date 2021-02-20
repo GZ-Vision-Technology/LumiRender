@@ -10,6 +10,8 @@ using namespace std;
 
 namespace luminous {
 
+    static float4 bg_color = make_float4(0.2);
+
     template<typename T = App>
     T *get_user_ptr(GLFWwindow *window) {
         return static_cast<T *>(glfwGetWindowUserPointer(window));
@@ -96,7 +98,7 @@ namespace luminous {
             int display_w, display_h;
             glfwGetFramebufferSize(_handle, &display_w, &display_h);
             glViewport(0, 0, display_w, display_h);
-            glClearColor(0, 0, 0, 0);
+            glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
             glClear(GL_COLOR_BUFFER_BIT);
             imgui_end();
             glfwSwapBuffers(_handle);

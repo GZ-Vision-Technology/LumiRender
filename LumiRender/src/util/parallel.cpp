@@ -12,13 +12,18 @@
 namespace luminous {
     inline namespace utility {
         size_t num_work_threads() { return std::thread::hardware_concurrency(); }
+
         struct ParallelForContext {
             std::atomic_uint32_t workIndex;
             size_t count = 0;
             uint32_t chunkSize = 0;
+
             ParallelForContext() : workIndex(0) {}
+
             const std::function<void(uint32_t, uint32_t)> *func = nullptr;
+
             bool done() const { return workIndex >= count; }
+
             ParallelForContext(const ParallelForContext &rhs)
                     : workIndex(rhs.workIndex.load()), count(rhs.count), chunkSize(rhs.chunkSize), func(rhs.func) {}
         };
@@ -31,6 +36,7 @@ namespace luminous {
             std::atomic_bool stopped;
             std::uint32_t workId;
             std::uint32_t nThreadFinished;
+
             ParallelForWorkPool() : workId(0), nThreadFinished(0) {
                 stopped = false;
                 auto n = num_work_threads();
@@ -57,7 +63,7 @@ namespace luminous {
                             nThreadFinished++;
                             oneThreadFinished.notify_all();
 
-                            while (nThreadFinished != (uint32_t)threads.size() && workId == id) {
+                            while (nThreadFinished != (uint32_t) threads.size() && workId == id) {
                                 oneThreadFinished.wait(lock);
                             }
 
@@ -74,11 +80,13 @@ namespace luminous {
                     });
                 }
             }
+
             void enqueue(const ParallelForContext &context) {
                 std::lock_guard<std::mutex> lock(workMutex);
                 works.emplace_back(context);
                 hasWork.notify_all();
             }
+
             void wait() {
                 std::unique_lock<std::mutex> lock(workMutex);
                 while (!works.empty()) {
@@ -86,6 +94,7 @@ namespace luminous {
                     mainWaiting.wait(lock);
                 }
             }
+
             ~ParallelForWorkPool() {
                 stopped = true;
                 hasWork.notify_all();
@@ -105,7 +114,7 @@ namespace luminous {
             std::call_once(flag, [&]() { pool = std::make_unique<ParallelForWorkPool>(); });
             ParallelForContext ctx;
             ctx.func = &func;
-            ctx.chunkSize = (uint32_t)chunkSize;
+            ctx.chunkSize = (uint32_t) chunkSize;
             ctx.count = count;
             ctx.workIndex = 0;
             pool->enqueue(ctx);

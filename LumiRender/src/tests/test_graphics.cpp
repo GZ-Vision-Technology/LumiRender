@@ -160,8 +160,11 @@ void test_color() {
     cout << Spectrum::linear_to_srgb(Spectrum(make_float3(0.3))).to_string() << endl;
     cout << Spectrum::srgb_to_linear(Spectrum(make_float3(0.583831))).to_string() << endl;
 
-    auto c = Spectrum(make_float3(1));
+    auto c = Spectrum(make_float3(0));
     cout << c.luminance() << endl;
+    cout << "is black " <<c.is_black() << endl;
+    cout << sizeof(Spectrum) << endl;
+    cout << sizeof(float3) << endl;
 }
 
 #include "new"
@@ -195,12 +198,12 @@ void piecewise2d_test() {
 
 int main() {
 
-    testVariant();
+//    testVariant();
 
 //    test_math();
 //    test_transform();
 
-//    test_color();
+    test_color();
 
 //    piecewise_construct_test();
 

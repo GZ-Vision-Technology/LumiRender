@@ -19,9 +19,10 @@ namespace luminous {
 
         public:
             using Float = float;
+
             explicit AtomicFloat(Float v = 0) : val(v) {}
 
-            AtomicFloat(const AtomicFloat &rhs) : val((float)rhs.val) {}
+            AtomicFloat(const AtomicFloat &rhs) : val((float) rhs.val) {}
 
             void add(Float v) {
                 auto current = val.load();
@@ -53,7 +54,7 @@ namespace luminous {
         }
 
 
-        template <class F>
+        template<class F>
         void tiled_for_2d(const int2 &dim, const int2 &tile_size, bool parallel, F &&func) {
             auto tiles = (dim + tile_size - make_int2(1)) / tile_size;
             auto body = [&](int2 t, uint32_t) {
@@ -80,15 +81,18 @@ namespace luminous {
             void finalize();
         }
 
-        template <typename T>
+        template<typename T>
         class Future {
             std::future<T> inner;
-            template <typename R>
-            friend class Future;
+
+            template<typename R>
+            friend
+            class Future;
 
         public:
             Future(std::future<T> ft) : inner(std::move(ft)) {}
-            template <typename F, typename R = std::invoke_result_t<F, decltype(std::declval<std::future<T>>().get())>>
+
+            template<typename F, typename R = std::invoke_result_t<F, decltype(std::declval<std::future<T>>().get())>>
             auto then(F &&f, std::launch policy = std::launch::deferred) -> Future<R> {
                 return Future<R>(std::async(std::launch::deferred, [=, ft = std::move(inner)]() mutable {
                     if constexpr (std::is_same_v<T, void>) {
@@ -102,7 +106,7 @@ namespace luminous {
             }
         };
 
-        template <class _Fty, class... _ArgTypes>
+        template<class _Fty, class... _ArgTypes>
         Future<std::invoke_result_t<std::decay_t<_Fty>, std::decay_t<_ArgTypes>...>>
         async_do(std::launch policy, _Fty &&_Fn_arg, _ArgTypes &&... _Args) {
             return std::async(policy, std::forward<_Fty>(_Fn_arg), std::forward<_ArgTypes>(_Args)...);
