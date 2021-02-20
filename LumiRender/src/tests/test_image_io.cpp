@@ -3,19 +3,20 @@
 //
 
 #include "util/image_io.h"
-
+#include "iostream"
 using namespace luminous;
 using namespace std;
 
+
+
 int main() {
 
-//    testVariant();
+    auto path = "E:\\work\\graphic\\renderer\\LumiRender\\LumiRender\\res\\image\\HelloWorld2.png";
+    auto path2 = "E:\\work\\graphic\\renderer\\LumiRender\\LumiRender\\res\\image\\HelloWorld3.bmp";
 
-//    test_math();
-//    test_transform();
+    auto [rgb, res] = load_image(path);
 
-//    piecewise_construct_test();
+    save_image(path2, rgb, res);
 
-//    piecewise2d_test();
     return 0;
 }

@@ -41,8 +41,13 @@ namespace luminous {
             }
             RGBSpectrum *rgb = new RGBSpectrum[w * h];
             unsigned char *src = c_rgb;
-
-            return pair(nullptr, make_int2(w, h));
+            for (int i = 0; i < w * h; ++i, src += 4) {
+                float r = src[0] / 255.f;
+                float g = src[1] / 255.f;
+                float b = src[2] / 255.f;
+                rgb[i] = RGBSpectrum(r,g,b);
+            }
+            return pair(rgb, make_int2(w, h));
         }
 
         void save_image(const filesystem::path &path, RGBSpectrum * rgb, int2 resolution) {
@@ -65,9 +70,23 @@ namespace luminous {
 
         }
 
-        void save_other(const filesystem::path &path, RGBSpectrum * p, int2 resolution) {
-
-
+        void save_other(const filesystem::path &path, RGBSpectrum * rgb, int2 resolution) {
+            auto path_str = std::filesystem::absolute(path).string();
+            auto extension = to_lower(path.extension().string());
+            auto pixel_count = resolution.x * resolution.y;
+            uint32_t *p = new uint32_t[pixel_count];
+            for (int i = 0; i < resolution.x * resolution.y; ++i) {
+                p[i] = make_rgba(rgb[i].vec());
+            }
+            if (extension == ".png") {
+                stbi_write_png(path_str.c_str(), resolution.x, resolution.y, 4, p, 0);
+            } else if (extension == ".bmp") {
+                stbi_write_bmp(path_str.c_str(), resolution.x, resolution.y, 4, p);
+            } else if (extension == ".tga") {
+                stbi_write_tga(path_str.c_str(), resolution.x, resolution.y, 4, p);
+            } else {
+                stbi_write_jpg(path_str.c_str(), resolution.x, resolution.y, 4, p, 100);
+            }
         }
     }
 }

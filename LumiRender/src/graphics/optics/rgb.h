@@ -27,9 +27,9 @@ namespace luminous {
 
             XPU [[nodiscard]] scalar_t B() const noexcept { return z; }
 
-            XPU [[nodiscard]] scalar_t luminance() const noexcept {
-                return Y();
-            };
+            XPU [[nodiscard]] vector_t vec() const noexcept {
+                return make_float3(x,y,z);
+            }
 
             XPU [[nodiscard]] scalar_t X() const noexcept {
                 return dot(*this, vector_t(0.412453f, 0.357580f, 0.180423f));
@@ -42,6 +42,10 @@ namespace luminous {
             XPU [[nodiscard]] scalar_t Z() const noexcept {
                 return dot(*this, vector_t(0.019334f, 0.119193f, 0.950227f));
             }
+
+            XPU [[nodiscard]] scalar_t luminance() const noexcept {
+                return Y();
+            };
 
             XPU [[nodiscard]] vector_t XYZ() const noexcept {
                 return vector_t(X(), Y(), Z());
@@ -59,7 +63,7 @@ namespace luminous {
             }
 
             XPU static RGBSpectrum linear_to_srgb(RGBSpectrum color) {
-                auto vec = (vector_t)(color);
+                auto vec = (vector_t) (color);
                 return RGBSpectrum(linear_to_srgb(vec));
             }
 
@@ -67,11 +71,11 @@ namespace luminous {
             XPU static T srgb_to_linear(T S) {
                 return select((S < T(0.04045f)),
                               (S / T(12.92f)),
-                              (pow((S + 0.055f) * 1.f / 1.055f, (float)2.4f)));
+                              (pow((S + 0.055f) * 1.f / 1.055f, (float) 2.4f)));
             }
 
             XPU static RGBSpectrum srgb_to_linear(RGBSpectrum color) {
-                auto vec = (vector_t)(color);
+                auto vec = (vector_t) (color);
                 return RGBSpectrum(srgb_to_linear(vec));
             }
 
@@ -80,6 +84,24 @@ namespace luminous {
             }
 
         };
+
+        inline XPU uint32_t make_8bit(const float f) {
+            return min(255, max(0, int(f * 256.f)));
+        }
+
+        inline XPU uint32_t make_rgba(const float3 color) {
+            return (make_8bit(color.x) << 0) +
+                   (make_8bit(color.y) << 8) +
+                   (make_8bit(color.z) << 16) +
+                   (0xffU << 24);
+        }
+
+        inline XPU uint32_t make_rgba(const float4 color) {
+            return (make_8bit(color.x) << 0) +
+                   (make_8bit(color.y) << 8) +
+                   (make_8bit(color.z) << 16) +
+                   (make_8bit(color.w) << 24);
+        }
 
         using Spectrum = RGBSpectrum;
     }
