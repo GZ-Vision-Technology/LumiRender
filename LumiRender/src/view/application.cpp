@@ -86,7 +86,7 @@ namespace luminous {
         auto [rgb, res] = load_image(path);
         test_color = new uint32_t[res.y * res.x];
         for (int i = 0; i < res.y * res.x; ++i) {
-            test_color[i] = make_rgba(rgb[i].vec());
+            test_color[i] = make_rgba(rgb[i]);
         }
 
         glGenTextures(1, &_gl_ctx.fb_texture);

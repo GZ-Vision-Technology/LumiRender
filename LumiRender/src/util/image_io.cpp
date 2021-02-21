@@ -19,7 +19,7 @@
 
 namespace luminous {
     inline namespace utility {
-        pair<RGBSpectrum *, int2> load_image(const filesystem::path &path) {
+        pair<float4 *, int2> load_image(const filesystem::path &path) {
             auto extension = to_lower(path.extension().string());
             if (extension == ".exr") {
                 return load_exr(path);
@@ -30,21 +30,21 @@ namespace luminous {
             }
         }
 
-        pair<RGBSpectrum *, int2> load_hdr(const filesystem::path &path) {
+        pair<float4 *, int2> load_hdr(const filesystem::path &path) {
             int w, h;
             int comp;
             auto path_str = std::filesystem::absolute(path).string();
             float *c_rgb = stbi_loadf(path_str.c_str(), &w, &h, &comp, 3);
             int count = w * h;
-            RGBSpectrum *rgb = new RGBSpectrum[w * h];
+            auto *rgb = new float4[count];
             float *src = c_rgb;
-            for (int i = 0; i < w * h; ++i, src += 3) {
-                rgb[i] = RGBSpectrum(src[0], src[1], src[2]);
+            for (int i = 0; i < count; ++i, src += 3) {
+                rgb[i] = make_float4(src[0], src[1], src[2], 1);
             }
             return make_pair(rgb, make_int2(w, h));
         }
 
-        pair<RGBSpectrum *, int2> load_exr(const filesystem::path &fn) {
+        pair<float4 *, int2> load_exr(const filesystem::path &fn) {
             // Parse OpenEXR
             EXRVersion exr_version;
             auto path_str = std::filesystem::absolute(fn).string();
@@ -85,32 +85,35 @@ namespace luminous {
             if (auto ret = LoadEXRImageFromFile(&exr_image, &exr_header, path_str.c_str(), &err); ret != 0) {
                 LUMINOUS_EXCEPTION("Failed to load ", fn.string(), ": ", err);
             }
-            RGBSpectrum *rgb = new RGBSpectrum[exr_image.width * exr_image.height];
+            auto *rgb = new float4[exr_image.width * exr_image.height];
             switch (exr_image.num_channels) {
                 case 1:
                     for (auto i = 0u; i < exr_image.width * exr_image.height; i++) {
-                        rgb[i] = RGBSpectrum(
+                        rgb[i] = make_float4(
                                 reinterpret_cast<float *>(exr_image.images[0])[i],
                                 reinterpret_cast<float *>(exr_image.images[0])[i],
-                                reinterpret_cast<float *>(exr_image.images[0])[i]);
+                                reinterpret_cast<float *>(exr_image.images[0])[i],
+                                1.f);
                     }
                     break;
                 case 2:
                     LUMINOUS_EXCEPTION("unknow channel num in file ", fn.string());
                 case 3:
                     for (auto i = 0u; i < exr_image.width * exr_image.height; i++) {
-                        rgb[i] = RGBSpectrum(
+                        rgb[i] = make_float4(
                                 reinterpret_cast<float *>(exr_image.images[3])[i],
                                 reinterpret_cast<float *>(exr_image.images[2])[i],
-                                reinterpret_cast<float *>(exr_image.images[1])[i]);
+                                reinterpret_cast<float *>(exr_image.images[1])[i],
+                                1.f);
                     }
                     break;
                 case 4:
                     for (auto i = 0u; i < exr_image.width * exr_image.height; i++) {
-                        rgb[i] = RGBSpectrum(
+                        rgb[i] = make_float4(
                                 reinterpret_cast<float *>(exr_image.images[3])[i],
                                 reinterpret_cast<float *>(exr_image.images[2])[i],
-                                reinterpret_cast<float *>(exr_image.images[1])[i]);
+                                reinterpret_cast<float *>(exr_image.images[1])[i],
+                                1.f);
                     }
                     break;
                 default:
@@ -120,8 +123,8 @@ namespace luminous {
             return make_pair(rgb, make_int2(exr_image.width,exr_image.height));
         }
 
-        pair<RGBSpectrum *, int2> load_other(const filesystem::path &path) {
-            unsigned char *c_rgb;
+        pair<float4 *, int2> load_other(const filesystem::path &path) {
+            uint8_t *c_rgb;
             int w, h;
             int channel;
             auto fn = path.string();
@@ -129,19 +132,19 @@ namespace luminous {
             if (!c_rgb) {
                 throw std::runtime_error(fn + " load fail");
             }
-            RGBSpectrum *rgb = new RGBSpectrum[w * h];
-            unsigned char *src = c_rgb;
+            auto *rgb = new float4[w * h];
+            uint8_t *src = c_rgb;
             for (int i = 0; i < w * h; ++i, src += 4) {
-                float r = src[0] / 255.f;
-                float g = src[1] / 255.f;
-                float b = src[2] / 255.f;
-                rgb[i] = RGBSpectrum(r, g, b);
+                float r = (float)src[0] / 255;
+                float g = (float)src[1] / 255;
+                float b = (float)src[2] / 255;
+                rgb[i] = make_float4(r, g, b, 1.f);
             }
             free(c_rgb);
             return make_pair(rgb, make_int2(w, h));
         }
 
-        void save_image(const filesystem::path &path, RGBSpectrum *rgb, int2 resolution) {
+        void save_image(const filesystem::path &path, float4 *rgb, int2 resolution) {
             auto extension = to_lower(path.extension().string());
             if (extension == ".exr") {
                 save_exr(path, rgb, resolution);
@@ -152,12 +155,12 @@ namespace luminous {
             }
         }
 
-        void save_hdr(const filesystem::path &path, RGBSpectrum *rgb, int2 resolution) {
+        void save_hdr(const filesystem::path &path, float4 *rgb, int2 resolution) {
             auto path_str = std::filesystem::absolute(path).string();
             stbi_write_hdr(path_str.c_str(), resolution.x, resolution.y, 4, reinterpret_cast<const float *>(rgb));
         }
 
-        void save_exr(const filesystem::path &fn, RGBSpectrum *rgb, int2 resolution) {
+        void save_exr(const filesystem::path &fn, float4 *rgb, int2 resolution) {
             EXRHeader header;
             InitEXRHeader(&header);
 
@@ -169,7 +172,7 @@ namespace luminous {
             image.num_channels = 4;
             image.width = resolution.x;
             image.height = resolution.y;
-            image.images = reinterpret_cast<unsigned char **>(image_ptr.data());
+            image.images = reinterpret_cast<uint8_t **>(image_ptr.data());
 
             std::array<int, 4> pixel_types{TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT};
             std::array<EXRChannelInfo, 4> channels{};
@@ -191,23 +194,23 @@ namespace luminous {
                 image_ptr[1][i] = rgba[i].z;
                 image_ptr[0][i] = rgba[i].w;
             }
-            strcpy(header.channels[0].name, "A");
-            strcpy(header.channels[1].name, "B");
-            strcpy(header.channels[2].name, "G");
-            strcpy(header.channels[3].name, "R");
+            strcpy_s(header.channels[0].name, "A");
+            strcpy_s(header.channels[1].name, "B");
+            strcpy_s(header.channels[2].name, "G");
+            strcpy_s(header.channels[3].name, "R");
             const char *err = nullptr;
             if (auto ret = SaveEXRImageToFile(&image, &header, fn.string().c_str(), &err); ret != TINYEXR_SUCCESS) {
                 LUMINOUS_EXCEPTION_IF("Failed to save texture as OpenEXR image: ", fn.string());
             }
         }
 
-        void save_other(const filesystem::path &path, RGBSpectrum *rgb, int2 resolution) {
+        void save_other(const filesystem::path &path, float4 *rgb, int2 resolution) {
             auto path_str = std::filesystem::absolute(path).string();
             auto extension = to_lower(path.extension().string());
             auto pixel_count = resolution.x * resolution.y;
-            uint32_t *p = new uint32_t[pixel_count];
+            auto *p = new uint32_t[pixel_count];
             for (int i = 0; i < resolution.x * resolution.y; ++i) {
-                p[i] = make_rgba(rgb[i].vec());
+                p[i] = make_rgba(rgb[i]);
             }
             if (extension == ".png") {
                 stbi_write_png(path_str.c_str(), resolution.x, resolution.y, 4, p, 0);
