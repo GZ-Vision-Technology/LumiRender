@@ -8,7 +8,7 @@
 #include "core/concepts.h"
 #include "device.h"
 #include "render/include/parser.h"
-#include "render/include/scene.h"
+#include "scene.h"
 #include "render/include/sensor.h"
 
 namespace luminous {

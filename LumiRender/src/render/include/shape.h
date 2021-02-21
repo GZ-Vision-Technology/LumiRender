@@ -5,11 +5,12 @@
 
 #pragma once
 
-#include "graphics/math/common.h"
+#include "graphics/geometry/common.h"
 #include <vector>
 #include "core/concepts.h"
 
-namespace luminous {
+namespace luminous{
+
     inline namespace render {
         using std::vector;
 
@@ -39,7 +40,6 @@ namespace luminous {
             vector<float3> _positions;
             vector<float2> _tex_coords;
             vector<TriangleHandle> _triangles;
-            float _surface_area;
         public:
             Mesh(vector<float3> P,
                  vector<float3> N,
@@ -50,5 +50,12 @@ namespace luminous {
                     _tex_coords(std::move(uv)),
                     _triangles(std::move(T)) {}
         };
+
+        struct MeshInstance {
+            Transform transform;
+            uint32_t mesh_id     = uint32_t(-1);
+            uint32_t material_id = uint32_t(-1);
+        };
     }
+
 }

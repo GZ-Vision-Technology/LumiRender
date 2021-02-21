@@ -3,10 +3,22 @@
 //
 
 #include "optix_accel.h"
-#include "jitify/jitify.hpp"
-#include "device_memory.h"
 
-void func() {
-    int *p;
-    cudaMalloc((void**)&p, 9);
+namespace luminous {
+    inline namespace gpu {
+
+        void OptixAccel::create_module() {
+
+        }
+
+        OptixTraversableHandle OptixAccel::build_bvh(const std::vector<OptixBuildInput> &build_inputs) {
+            return 0;
+        }
+
+        void OptixAccel::build(SP<SceneGraph> graph) {
+
+        }
+
+
+    }
 }

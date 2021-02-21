@@ -9,6 +9,7 @@
 #include "graphics/string_util.h"
 #include "parameter_set.h"
 #include "render/include/model.h"
+#include "scene_graph.h"
 
 namespace luminous {
 

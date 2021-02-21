@@ -55,3 +55,20 @@
 #define LUMINOUS_MAP_LIST(f, ...) LUMINOUS_MAP_EVAL(LUMINOUS_MAP_LIST2(f, __VA_ARGS__, ()()(), ()()(), ()()(), 0))
 
 
+#define LUMINOUS_DECL_RTTI(Class)                                                                                      \
+    template <class T>                                                                                                 \
+    bool isa() const {                                                                                                 \
+        return type() == T::static_type;                                                                               \
+    }                                                                                                                  \
+    template <class T>                                                                                                 \
+    const T *as() const {                                                                                              \
+        return isa<T>() ? dynamic_cast<const T *>(this) : nullptr;                                                     \
+    }                                                                                                                  \
+    template <class T>                                                                                                 \
+    T *as() {                                                                                                          \
+        return isa<T>() ? dynamic_cast<T *>(this) : nullptr;                                                           \
+    }                                                                                                                  \
+    virtual Type type() const = 0;
+#define LUMINOUS_DECL_TYPEID(Class, TypeId)                                                                            \
+    static const Type static_type = Type::TypeId;                                                                      \
+    Type type() const override { return Type::TypeId; }

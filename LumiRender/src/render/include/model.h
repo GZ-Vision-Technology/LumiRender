@@ -18,7 +18,7 @@ namespace luminous {
     inline namespace utility {
 
         class Model;
-
+        using namespace render;
         class ModelCache {
         private:
             static ModelCache *s_model_cache;
@@ -45,7 +45,7 @@ namespace luminous {
         };
         using std::vector;
         struct Model {
-            Model(vector<shared_ptr<const Mesh>> meshes):meshes(std::move(meshes)) {}
+            explicit Model(vector<shared_ptr<const Mesh>> meshes):meshes(std::move(meshes)) {}
             vector<shared_ptr<const Mesh>> meshes;
         };
 

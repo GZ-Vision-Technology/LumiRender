@@ -13,6 +13,7 @@ target_link_libraries(luminous-gpu
         CUDA::cudart
         luminous-graphics
         luminous-core
+        luminous-render
         )
 
 set_target_properties(luminous-gpu PROPERTIES

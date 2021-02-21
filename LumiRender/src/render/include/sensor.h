@@ -11,7 +11,7 @@
 #include "graphics/lstd/lstd.h"
 
 namespace luminous {
-    namespace render {
+    inline namespace render {
 
         class PinholeCamera;
         class PerspectiveCamera;
@@ -22,7 +22,7 @@ namespace luminous {
         public:
             using Variant::Variant;
 
-            SensorHandle(void *) {}
+            explicit SensorHandle(void *) {}
         };
 
 

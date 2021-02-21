@@ -8,8 +8,8 @@
 #include "core/backend/buffer.h"
 #include "core/concepts.h"
 #include "graphics/math/common.h"
-#include "model.h"
-#include "sensor.h"
+#include "render/include/model.h"
+#include "render/include/sensor.h"
 
 namespace luminous {
     class Scene : public Noncopyable {
@@ -22,5 +22,7 @@ namespace luminous {
         Buffer<uint> _models_triangle_counts;
         Buffer<uint> _instance_to_model_id;
         Buffer<float4x4> _instance_transforms;
+
+
     };
 }

@@ -8,12 +8,10 @@
 #include "../include/sensor.h"
 
 
-namespace luminous {
-    namespace render {
+namespace luminous::render {
 
-        class PerspectiveCamera {
+    class PerspectiveCamera {
 
-        };
+    };
 
-    } // luminous::render
 } // luminous
