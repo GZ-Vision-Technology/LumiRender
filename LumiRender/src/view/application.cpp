@@ -204,4 +204,8 @@ namespace luminous {
         glfwSetWindowTitle(_handle, s.c_str());
     }
 
+    void App::init_pipeline() {
+
+    }
+
 }

@@ -7,7 +7,7 @@
 
 #include "core/concepts.h"
 #include "device.h"
-#include "render/include/parser.h"
+#include "render/include/parser.h"a
 #include "scene.h"
 #include "render/include/sensor.h"
 
@@ -20,7 +20,7 @@ namespace luminous {
         unique_ptr<Scene> _scene{nullptr};
         SensorHandle _camera;
     public:
-        Pipeline(shared_ptr<Device> device, Context *context)
+        Pipeline(const shared_ptr<Device> &device, Context *context)
             : _device(device),
             _context(context) {}
 

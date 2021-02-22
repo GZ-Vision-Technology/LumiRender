@@ -32,9 +32,12 @@ namespace luminous {
         uint32_t * test_color{};
         int2 _last_mouse_pos = make_int2(-1);
 
-        
+        unique_ptr<Pipeline> _pipeline;
+
     public:
         App(const std::string &title, const int2 &size);
+
+        void init_pipeline();
 
         void init_gl_context();
 
