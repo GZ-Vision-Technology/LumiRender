@@ -6,6 +6,7 @@ target_link_libraries(luminous-view
         PUBLIC
         luminous-ext
         luminous-util
+        luminous-gpu
         luminous-core)
 
 set_target_properties(luminous-view PROPERTIES

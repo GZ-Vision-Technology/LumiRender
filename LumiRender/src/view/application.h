@@ -35,7 +35,7 @@ namespace luminous {
         unique_ptr<Pipeline> _pipeline;
 
     public:
-        App(const std::string &title, const int2 &size);
+        App(const std::string &title, const int2 &size, Context *context);
 
         void init_pipeline();
 
