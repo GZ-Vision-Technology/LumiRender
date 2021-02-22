@@ -17,11 +17,11 @@ namespace luminous {
                 : Pipeline(make_unique<Device>(move(cuda_device)),context) {}
 
 
-            virtual void render_cli() override {
+            void render_cli() override {
 
             }
 
-            virtual void render_gui() override {
+            void render_gui() override {
 
             }
         };

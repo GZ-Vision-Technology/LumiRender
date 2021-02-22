@@ -46,6 +46,8 @@ namespace luminous {
         using std::vector;
         struct Model {
             explicit Model(vector<shared_ptr<const Mesh>> meshes):meshes(std::move(meshes)) {}
+            string name;
+            string file_name;
             vector<shared_ptr<const Mesh>> meshes;
         };
 

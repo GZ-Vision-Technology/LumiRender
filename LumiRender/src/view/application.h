@@ -13,6 +13,7 @@
 #include "core/logging.h"
 #include "graphics/math/common.h"
 #include "gl_helper.h"
+#include "gpu/framework/cuda_pipeline.h"
 
 namespace luminous {
 
@@ -30,6 +31,8 @@ namespace luminous {
         GLFWwindow *_handle{nullptr};
         uint32_t * test_color{};
         int2 _last_mouse_pos = make_int2(-1);
+
+        
     public:
         App(const std::string &title, const int2 &size);
 

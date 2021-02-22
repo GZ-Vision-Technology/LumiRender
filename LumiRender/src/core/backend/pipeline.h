@@ -15,13 +15,13 @@ namespace luminous {
     using std::unique_ptr;
     class Pipeline : public Noncopyable {
     protected:
-        unique_ptr<Device> _device{nullptr};
+        shared_ptr<Device> _device{nullptr};
         Context * _context{nullptr};
         unique_ptr<Scene> _scene{nullptr};
         SensorHandle _camera;
     public:
-        Pipeline(unique_ptr<Device> device, Context *context)
-            : _device(move(device)),
+        Pipeline(shared_ptr<Device> device, Context *context)
+            : _device(device),
             _context(context) {}
 
         void init(const Parser &parser) {

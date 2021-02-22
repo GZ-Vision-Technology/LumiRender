@@ -52,7 +52,7 @@ namespace luminous{
         };
 
         struct MeshInstance {
-            Transform transform;
+            Transform o2w;
             uint32_t mesh_id     = uint32_t(-1);
             uint32_t material_id = uint32_t(-1);
         };
