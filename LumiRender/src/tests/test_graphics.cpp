@@ -7,9 +7,14 @@
 #include "iostream"
 
 using namespace luminous;
+using namespace std;
 
 class Sub1 {
 public:
+    Sub1() {
+        std::cout << "construct sub1\n";
+    }
+
     int fun1() {
         return 0;
     }
@@ -17,16 +22,27 @@ public:
     int fun2(int a) {
         return a;
     }
+
+    ~Sub1() {
+        std::cout << "destruct sub1 " << this << endl;
+    }
 };
 
 class Sub2 {
 public:
+    Sub2() {
+        std::cout << "construct sub2\n";
+    }
     int fun1() {
         return 1;
     }
 
     int fun2(int a) {
         return 2 * a;
+    }
+
+    ~Sub2() {
+        std::cout << "destruct sub2 " << this << endl;
     }
 };
 
@@ -61,32 +77,39 @@ public:
 using namespace std;
 
 void testVariant() {
-    Sub1 s1 = Sub1();
-    Sub2 s2 = Sub2();
+//    Sub1 s1 = Sub1();
+//    Sub2 s2 = Sub2();
+//
+//    cout << s1.fun1() << endl;
+//    cout << s2.fun1() << endl;
 
-    cout << s1.fun1() << endl;
-    cout << s2.fun1() << endl;
-
-    Base b = s2;
-
-    Base b2 = s1;
-
-    cout << sizeof(b) << endl;
-    cout << sizeof(s2) << endl;
+//    Base b = Sub1();
+//
+//    Base b2 = Sub2();
+//
+//    cout << sizeof(b) << endl;
+//    cout << sizeof(s2) << endl;
 
 //
-    cout << b.fun1() << endl;
-    cout << b.fun2(9) << endl;
+//    cout << b.fun1() << endl;
+//    cout << b.fun2(9) << endl;
 
-    BaseP bp = &s1;
+    BaseP bp = new Sub1;
 
-    BaseP bp2 = &s2;
+    BaseP bp2 = new Sub2;
 
-    cout << bp.fun1() << endl;
-    cout << bp.fun2(9) << endl;
+    auto aa = new Sub1();
 
-    cout << bp2.fun1() << endl;
-    cout << bp2.fun2(9) << endl;
+    cout << is_pointer<decltype(aa)>::value << endl;
+    cout << is_pointer<decltype(bp)>::value << endl;
+
+//    cout << bp.fun1() << endl;
+//    cout << bp.fun2(9) << endl;
+//
+//    cout << bp2.fun1() << endl;
+//    cout << bp2.fun2(9) << endl;
+
+
 }
 
 void test_math() {
@@ -198,12 +221,12 @@ void piecewise2d_test() {
 
 int main() {
 
-//    testVariant();
+    testVariant();
 
 //    test_math();
 //    test_transform();
 
-    test_color();
+//    test_color();
 
 //    piecewise_construct_test();
 

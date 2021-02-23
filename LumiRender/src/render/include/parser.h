@@ -35,7 +35,7 @@ namespace luminous {
     public:
         explicit Parser(Context *context) : _context(context) {}
 
-        UP<SceneGraph> load_from_json(const std::filesystem::path &fn) {
+        SP<SceneGraph> load_from_json(const std::filesystem::path &fn) {
             _data = create_json_from_file(fn);
             auto shapes = _data["shapes"];
             using namespace std;

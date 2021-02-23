@@ -6,6 +6,7 @@
 #include "graphics/lstd/lstd.h"
 #include "graphics/common.h"
 #include <iostream>
+#include <memory>
 
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
@@ -48,7 +49,7 @@ public:
     }
 };
 
-class BaseP : public Variant<Sub1 *, Sub2 *> {
+class BaseP : public Variant<Sub1*, Sub2*> {
 public:
     using Variant::Variant;
 
@@ -88,7 +89,15 @@ XPU void testVariant() {
 //    cout << b.fun1() << endl;
 //    cout << b.fun2(9) << endl;
 //
-//    BaseP bp = &s1;
+    BaseP bp = new Sub1();
+    BaseP bp2 = new Sub2();
+
+    printf("%d bp2 ++--  %d s2\n", bp2.fun2(8), s2.fun2(8));
+    printf("%d bp1 ++--  %d s2\n", bp.fun2(8), s1.fun2(8));
+
+
+//    auto bb =  bp.get();
+//    delete bp2.get();
 //
 //    BaseP bp2 = &s2;
 //

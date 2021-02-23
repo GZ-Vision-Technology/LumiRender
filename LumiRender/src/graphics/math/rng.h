@@ -6,6 +6,7 @@
 #pragma once
 
 #include "../header.h"
+#include "vector_types.h"
 
 namespace luminous {
     inline namespace math {
@@ -13,9 +14,19 @@ namespace luminous {
         template<unsigned int N = 4>
         class LCG {
         private:
-            uint32_t state;
+            uint32_t state{};
         public:
-            [[nodiscard]] inline XPU LCG(unsigned int val0, unsigned int val1) {
+            XPU LCG() { init(0,0); }
+
+            NDSC XPU LCG(uint2 v) {
+                init(v);
+            }
+
+            XPU void init(uint2 v) {
+                init(v.x, v.y);
+            }
+
+            [[nodiscard]] XPU LCG(unsigned int val0, unsigned int val1) {
                 init(val0, val1);
             }
 
@@ -38,6 +49,34 @@ namespace luminous {
                 const uint32_t LCG_C = 1013904223u;
                 state = (LCG_A * state + LCG_C);
                 return ldexpf(float(state), -32);
+            }
+        };
+
+        struct PCG {
+            XPU PCG(uint64_t sequence = 0) { pcg32_init(sequence); }
+
+            XPU uint32_t uniform_u32() { return pcg32(); }
+
+            XPU double uniform_float() { return pcg32() / double(0xffffffff); }
+
+        private:
+            uint64_t state = 0x4d595df4d0f33173; // Or something seed-dependent
+            static uint64_t const multiplier = 6364136223846793005u;
+            static uint64_t const increment = 1442695040888963407u; // Or an arbitrary odd constant
+            XPU static uint32_t rotr32(uint32_t x, unsigned r) { return x >> r | x << (-r & 31); }
+
+            XPU uint32_t pcg32(void) {
+                uint64_t x = state;
+                unsigned count = (unsigned) (x >> 59); // 59 = 64 - 5
+
+                state = x * multiplier + increment;
+                x ^= x >> 18;                              // 18 = (64 - 27)/2
+                return rotr32((uint32_t)(x >> 27), count); // 27 = 32 - 5
+            }
+
+            XPU void pcg32_init(uint64_t seed) {
+                state = seed + increment;
+                (void) pcg32();
             }
         };
 

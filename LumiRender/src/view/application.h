@@ -37,8 +37,6 @@ namespace luminous {
     public:
         App(const std::string &title, const int2 &size, Context *context);
 
-        void init_pipeline();
-
         void init_gl_context();
 
         void init_window(const std::string &title, const int2 &size);

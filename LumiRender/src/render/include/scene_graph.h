@@ -34,17 +34,19 @@ namespace luminous {
 
         };
 
-        struct CameraConfig : Config {
+        struct SensorConfig : Config {
 
         };
 
         struct LightSamplerConfig : Config {
 
         };
+
         using namespace std;
         struct SceneGraph {
             vector<shared_ptr<const Mesh>> mesh_list;
             vector<MeshInstance> instance_list;
+
             void update_mesh_list(const shared_ptr<const Model> &model);
 
         };
