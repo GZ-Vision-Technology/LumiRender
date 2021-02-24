@@ -7,7 +7,7 @@
 namespace luminous {
     inline namespace render {
 
-        void LCGSampler::start_pixel_sample(uint2 pixel, int sampleIndex, int dimension) {
+        void LCGSampler::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
             _rng.init(pixel);
         }
 

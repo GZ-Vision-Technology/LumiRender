@@ -8,7 +8,7 @@
 namespace luminous {
     inline namespace render {
 
-        void PCGSampler::start_pixel_sample(uint2 pixel, int sampleIndex, int dimension) {
+        void PCGSampler::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
             uint64_t idx = (pixel.x + pixel.y) * pixel.x;
             _rng.pcg32_init(idx);
         }

@@ -7,6 +7,7 @@
 
 #include "../include/sampler.h"
 #include "graphics/math/rng.h"
+#include "../include/scene_graph.h"
 
 namespace luminous {
     inline namespace render {
@@ -14,7 +15,7 @@ namespace luminous {
         private:
             LCG<> _rng;
         public:
-            XPU void start_pixel_sample(uint2 pixel, int sampleIndex, int dimension);
+            XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
             GEN_CLASS_NAME(LCGSampler)
 
@@ -26,5 +27,7 @@ namespace luminous {
                 return string_printf("%s:{spp=%d}", name(), spp());
             }
         };
+
+
     }
 }

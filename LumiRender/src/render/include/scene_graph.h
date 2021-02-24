@@ -15,6 +15,7 @@
 #include "model.h"
 
 namespace luminous {
+    using namespace std;
     inline namespace render {
         struct Config {
         };
@@ -23,6 +24,8 @@ namespace luminous {
         };
 
         struct SamplerConfig : Config {
+            string type;
+            int spp;
 
         };
 

@@ -7,6 +7,7 @@
 
 #include "graphics/math/common.h"
 #include "graphics/lstd/lstd.h"
+#include "scene_graph.h"
 
 namespace luminous {
     inline namespace render {
@@ -15,7 +16,7 @@ namespace luminous {
         protected:
             int _spp;
         public:
-            [[nodiscard]] int spp() const { return _spp; }
+            NDSC int spp() const { return _spp; }
         };
 
         class LCGSampler;
@@ -23,6 +24,19 @@ namespace luminous {
 
         using lstd::Variant;
         class SamplerHandler : public Variant<LCGSampler*, PCGSampler*> {
+        using Variant::Variant;
+        public:
+            NDSC XPU int spp() const;
+
+            XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
+
+            XPU const char *name();
+
+            NDSC XPU float next_1d();
+
+            NDSC XPU float2 next_2d();
+
+            NDSC std::string to_string();
 
         };
 
