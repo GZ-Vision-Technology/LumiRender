@@ -8,6 +8,7 @@
 #include "graphics/math/common.h"
 #include "graphics/lstd/lstd.h"
 #include "scene_graph.h"
+#include "class_factory.h"
 
 namespace luminous {
     inline namespace render {
@@ -38,7 +39,11 @@ namespace luminous {
 
             NDSC std::string to_string();
 
+            static SamplerHandler create(SamplerConfig config);
+
+//            static
         };
+
 
     }
 }
