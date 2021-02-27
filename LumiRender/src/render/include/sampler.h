@@ -13,7 +13,7 @@
 namespace luminous {
     inline namespace render {
 
-        class SamplerBase {
+        class SamplerBase : IObject {
         protected:
             int _spp;
         public:
@@ -39,9 +39,6 @@ namespace luminous {
 
             NDSC std::string to_string();
 
-            static SamplerHandler create(SamplerConfig config);
-
-//            static
         };
 
 

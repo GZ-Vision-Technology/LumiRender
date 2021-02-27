@@ -3,6 +3,7 @@
 //
 
 #include "lcg.h"
+#include "../include/class_factory.h"
 
 namespace luminous {
     inline namespace render {
@@ -17,6 +18,10 @@ namespace luminous {
 
         float2 LCGSampler::next_2d() {
             return make_float2(next_1d(), next_1d());
+        }
+
+        LCGSampler * create(const Config &config) {
+            return nullptr;
         }
     }
 }
