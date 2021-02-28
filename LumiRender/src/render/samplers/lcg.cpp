@@ -20,8 +20,10 @@ namespace luminous {
             return make_float2(next_1d(), next_1d());
         }
 
-        LCGSampler * create(const Config &config) {
-            return nullptr;
+        IObject * create(const Config &config) {
+            return new LCGSampler();
         }
+
+        REGISTER(LCGSampler, create);
     }
 }

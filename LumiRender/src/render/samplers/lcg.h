@@ -27,7 +27,7 @@ namespace luminous {
                 return string_printf("%s:{spp=%d}", name(), spp());
             }
         };
-
+        IObject * create(const Config &config);
 
     }
 }

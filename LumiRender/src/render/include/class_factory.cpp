@@ -6,9 +6,9 @@
 
 namespace luminous {
     inline namespace render {
-        ClassFactory * ClassFactory::_instance = nullptr;
+        ClassFactory *ClassFactory::_instance = nullptr;
 
-        void ClassFactory::register_creator(const std::string &name, ClassFactory::Creator * func) {
+        void ClassFactory::register_creator(const std::string &name, Creator *func) {
             _creator_map.insert(make_pair(name, func));
         }
 
@@ -19,8 +19,12 @@ namespace luminous {
             return _instance;
         }
 
-        ClassFactory::Creator * ClassFactory::get_creator(const std::string &name) {
-            return nullptr;
+        Creator *ClassFactory::get_creator(const std::string &name) {
+            auto iter = _creator_map.find(name);
+            if (iter == _creator_map.end()) {
+                LUMINOUS_ERROR(name, "'s creator is not exist!");
+            }
+            return iter->second;
         }
     }
 }

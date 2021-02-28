@@ -13,7 +13,7 @@
 namespace luminous {
     inline namespace render {
 
-        class SamplerBase : IObject {
+        class SamplerBase : public IObject {
         protected:
             int _spp;
         public:

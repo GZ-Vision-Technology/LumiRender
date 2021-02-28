@@ -11,18 +11,17 @@
 
 namespace luminous {
     inline namespace render {
+        using Creator = IObject *(const Config &config);
 
         class ClassFactory {
-        public:
-            using Creator = IObject *(const Config &config);
         private:
             std::map<std::string, Creator *> _creator_map;
+        public:
+            static ClassFactory *instance();
 
             void register_creator(const std::string &name, Creator *func);
 
-            static ClassFactory *instance();
-
-            ClassFactory::Creator *get_creator(const std::string &name);
+            Creator *get_creator(const std::string &name);
 
         private:
 
@@ -34,5 +33,19 @@ namespace luminous {
 
             static ClassFactory *_instance;
         };
+
+        class RegisterAction {
+
+        public:
+
+            RegisterAction(const std::string &name, Creator creator) {
+                ClassFactory::instance()->register_creator(name, creator);
+            }
+        };
+
+#define REGISTER(name, creator)                            \
+RegisterAction g_Register##name(#name,(Creator*)creator);
+
+#define GET_CREATOR(name) ClassFactory::instance()->get_creator(name);
     }
 }
