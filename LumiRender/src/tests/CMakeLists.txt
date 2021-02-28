@@ -8,6 +8,7 @@ target_link_libraries(test-kernel_launch PRIVATE CUDA::nvrtc CUDA::cuda_driver C
 luminous_render_add_application(test-graphicslib SOURCES test_graphics.cpp)
 
 luminous_render_add_application(test-image-io SOURCES test_image_io.cpp)
+luminous_render_add_application(test-sampler SOURCES test_sampler.cpp)
 
 set(CMAKE_CUDA_STANDARD 17)
 project(cuda_test CUDA)

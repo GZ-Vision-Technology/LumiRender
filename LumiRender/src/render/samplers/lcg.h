@@ -15,6 +15,8 @@ namespace luminous {
         private:
             LCG<> _rng;
         public:
+            explicit LCGSampler(int spp = 1) : SamplerBase(spp) {}
+
             XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
             GEN_CLASS_NAME(LCGSampler)
@@ -27,7 +29,5 @@ namespace luminous {
                 return string_printf("%s:{spp=%d}", name(), spp());
             }
         };
-        IObject * create(const Config &config);
-
     }
 }

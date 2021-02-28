@@ -14,6 +14,8 @@ namespace luminous {
         private:
             PCG _rng;
         public:
+            explicit PCGSampler(int spp = 1) : SamplerBase(spp) {}
+
             GEN_CLASS_NAME(PCGSampler)
 
             XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);

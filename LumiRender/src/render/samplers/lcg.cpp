@@ -21,7 +21,8 @@ namespace luminous {
         }
 
         IObject * create(const Config &config) {
-            return new LCGSampler();
+            const SamplerConfig & sc = (SamplerConfig &) config;
+            return new LCGSampler(sc.spp);
         }
 
         REGISTER(LCGSampler, create);

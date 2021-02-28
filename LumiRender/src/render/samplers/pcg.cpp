@@ -14,11 +14,18 @@ namespace luminous {
         }
 
         float PCGSampler::next_1d() {
-            return (float)_rng.uniform_float();
+            return (float) _rng.uniform_float();
         }
 
         float2 PCGSampler::next_2d() {
             return make_float2(next_1d(), next_1d());
         }
+
+        IObject *create_PCGSampler(const Config &config) {
+            const SamplerConfig &sc = (SamplerConfig &) config;
+            return new PCGSampler(sc.spp);
+        }
+
+        REGISTER(PCGSampler, create_PCGSampler);
     }
 }

@@ -46,6 +46,6 @@ namespace luminous {
 #define REGISTER(name, creator)                            \
 RegisterAction g_Register##name(#name,(Creator*)creator);
 
-#define GET_CREATOR(name) ClassFactory::instance()->get_creator(name);
+#define GET_CREATOR(name) luminous::ClassFactory::instance()->get_creator(name);
     }
 }
