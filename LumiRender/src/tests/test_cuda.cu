@@ -73,9 +73,9 @@ XPU void testVariant() {
 //    printf("%d s--\n", s1.fun1());
 //    printf("%d s2--\n", s2.fun1());
 
-    Base b = s1;
+    Base b(s1);
 
-    Base b2 = s2;
+    Base b2(s2);
     printf("%d b1--  %d s1\n", b.fun1(), s1.fun1());
     printf("%d b2--  %d s2\n", b2.fun1(), s2.fun1());
     printf("%d b1 ++--  %d s1\n", b.fun2(9), s1.fun2(9));
@@ -89,8 +89,8 @@ XPU void testVariant() {
 //    cout << b.fun1() << endl;
 //    cout << b.fun2(9) << endl;
 //
-    BaseP bp = new Sub1();
-    BaseP bp2 = new Sub2();
+    BaseP bp(new Sub1());
+    BaseP bp2(new Sub2());
 
     printf("%d bp2 ++--  %d s2\n", bp2.fun2(8), s2.fun2(8));
     printf("%d bp1 ++--  %d s2\n", bp.fun2(8), s1.fun2(8));

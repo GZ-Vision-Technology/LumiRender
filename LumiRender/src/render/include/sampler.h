@@ -8,7 +8,6 @@
 #include "graphics/math/common.h"
 #include "graphics/lstd/lstd.h"
 #include "scene_graph.h"
-#include "class_factory.h"
 
 namespace luminous {
     inline namespace render {

@@ -35,18 +35,21 @@ namespace luminous {
     public:
         explicit Parser(Context *context) : _context(context) {}
 
-        SP<SceneGraph> load_from_json(const std::filesystem::path &fn) {
+
+
+        UP<SceneGraph> load_from_json(const std::filesystem::path &fn) {
             _data = create_json_from_file(fn);
             auto shapes = _data["shapes"];
             using namespace std;
-            auto sceneGraph = make_unique<SceneGraph>();
-            for (int i = 0; i < shapes.size(); ++i) {
-                auto path = _context->scene_path() / string(shapes[i]["file_name"]);
+            auto scene_graph = make_unique<SceneGraph>(_context);
+            scene_graph->shape_configs.reserve(shapes.size());
+            for (auto & shape : shapes) {
+                auto path = _context->scene_path() / string(shape["params"]["fn"]);
                 cout << path << endl;
 //                auto m = ModelCache::instance()->get_model(path.string());
 //                int a = 0;
             }
-            return move(sceneGraph);
+            return move(scene_graph);
         }
     };
 }

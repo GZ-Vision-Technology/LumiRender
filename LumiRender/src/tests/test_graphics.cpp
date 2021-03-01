@@ -76,41 +76,41 @@ public:
 
 using namespace std;
 
-void testVariant() {
-//    Sub1 s1 = Sub1();
-//    Sub2 s2 = Sub2();
+//void testVariant() {
+////    Sub1 s1 = Sub1();
+////    Sub2 s2 = Sub2();
+////
+////    cout << s1.fun1() << endl;
+////    cout << s2.fun1() << endl;
 //
-//    cout << s1.fun1() << endl;
-//    cout << s2.fun1() << endl;
-
-//    Base b = Sub1();
+////    Base b = Sub1();
+////
+////    Base b2 = Sub2();
+////
+////    cout << sizeof(b) << endl;
+////    cout << sizeof(s2) << endl;
 //
-//    Base b2 = Sub2();
+////
+////    cout << b.fun1() << endl;
+////    cout << b.fun2(9) << endl;
 //
-//    cout << sizeof(b) << endl;
-//    cout << sizeof(s2) << endl;
-
+//    BaseP bp = new Sub1;
 //
-//    cout << b.fun1() << endl;
-//    cout << b.fun2(9) << endl;
-
-    BaseP bp = new Sub1;
-
-    BaseP bp2 = new Sub2;
-
-    auto aa = new Sub1();
-
-    cout << is_pointer<decltype(aa)>::value << endl;
-    cout << is_pointer<decltype(bp)>::value << endl;
-
-//    cout << bp.fun1() << endl;
-//    cout << bp.fun2(9) << endl;
+//    BaseP bp2 = new Sub2;
 //
-//    cout << bp2.fun1() << endl;
-//    cout << bp2.fun2(9) << endl;
-
-
-}
+//    auto aa = new Sub1();
+//
+//    cout << is_pointer<decltype(aa)>::value << endl;
+//    cout << is_pointer<decltype(bp)>::value << endl;
+//
+////    cout << bp.fun1() << endl;
+////    cout << bp.fun2(9) << endl;
+////
+////    cout << bp2.fun1() << endl;
+////    cout << bp2.fun2(9) << endl;
+//
+//
+//}
 
 void test_math() {
 //    Box3f box(make_float3(3.1));
@@ -221,7 +221,7 @@ void piecewise2d_test() {
 
 int main() {
 
-    testVariant();
+//    testVariant();
 
 //    test_math();
 //    test_transform();

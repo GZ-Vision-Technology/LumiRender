@@ -2,8 +2,9 @@
 	"shapes" : [
 		{
 			"name" : "c_box",
-			"file_name": "cornell_box.obj",
+			"type": "model",
 			"params" : {
+				"fn": "cornell_box.obj",
 				"transform" : {
 					"type" : "rotate_y",
 					"param" : [180]
@@ -20,13 +21,13 @@
 		}
 	},
 	"sampler" : {
-		"type" : "independent",
+		"type" : "LCGSampler",
 		"param" : {
 			"spp" : 16
 		}
 	},
 	"camera" : {
-		"type" : "pinhole",
+		"type" : "PinholeCamera",
 		"param" : {
 			"fov" : 20,
 			"transform": {

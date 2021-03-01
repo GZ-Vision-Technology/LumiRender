@@ -3,7 +3,6 @@
 //
 
 #include "lcg.h"
-#include "../include/class_factory.h"
 
 namespace luminous {
     inline namespace render {
