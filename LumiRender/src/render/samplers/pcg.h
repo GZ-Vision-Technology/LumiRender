@@ -27,6 +27,8 @@ namespace luminous {
             NDSC std::string to_string() const {
                 return string_printf("%s:{spp=%d}", name(), spp());
             }
+
+            static PCGSampler *create(const SamplerConfig &config);
         };
     }
 }

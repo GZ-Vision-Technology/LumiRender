@@ -65,20 +65,25 @@ namespace lstd {
         };
     }
     using namespace detail;
+
     template<typename... T>
     struct Variant {
     private:
+
         static constexpr int nTypes = sizeof...(T);
         static constexpr std::size_t alignment_value = std::max({alignof(T)...});
         typename std::aligned_storage<SizeOf<T...>::value, alignment_value>::type data;
         int index = -1;
 
     public:
+        using TypeTuple = std::tuple<T...>;
         using Index = TypeIndex<T...>;
         static constexpr size_t num_types = nTypes;
+
         Variant() = default;
+
         template<typename U>
-        XPU Variant(const U &u) {
+        XPU explicit Variant(const U &u) {
             static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
             new(&data) U(u);
             index = Index::template GetIndex<U>::value;

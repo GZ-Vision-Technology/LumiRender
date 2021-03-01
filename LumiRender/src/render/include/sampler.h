@@ -28,7 +28,7 @@ namespace luminous {
 
         using lstd::Variant;
 
-        class SamplerHandler : public Variant<LCGSampler *, PCGSampler *> {
+        class SamplerHandle : public Variant<LCGSampler *, PCGSampler *> {
             using Variant::Variant;
         public:
             NDSC XPU int spp() const;
@@ -43,7 +43,7 @@ namespace luminous {
 
             NDSC std::string to_string();
 
-            static SamplerHandler create(const Config &config);
+            static SamplerHandle create(const Config &config);
         };
     }
 }

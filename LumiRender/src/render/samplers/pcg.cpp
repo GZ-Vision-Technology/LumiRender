@@ -21,11 +21,8 @@ namespace luminous {
             return make_float2(next_1d(), next_1d());
         }
 
-        IObject *create_PCGSampler(const Config &config) {
-            const SamplerConfig &sc = (SamplerConfig &) config;
+        PCGSampler *PCGSampler::create(const SamplerConfig &sc) {
             return new PCGSampler(sc.spp);
         }
-
-        REGISTER(PCGSampler, create_PCGSampler);
     }
 }
