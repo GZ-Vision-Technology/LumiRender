@@ -58,8 +58,8 @@ namespace luminous {
         struct SceneGraph {
         private:
             Context *_context;
-            vector<shared_ptr<const Mesh>> mesh_list;
-            vector<MeshInstance> instance_list;
+            vector<shared_ptr<const Mesh>> _mesh_list;
+            vector<MeshInstance> _instance_list;
         public:
             SamplerConfig sampler_config;
             SensorConfig sensor_config;
@@ -68,10 +68,6 @@ namespace luminous {
             LightSamplerConfig light_sampler_config;
 
             explicit SceneGraph(Context *context) : _context(context) {}
-
-            
-            void update_mesh_list(const shared_ptr<const Model> &model);
-
         };
 
     };
