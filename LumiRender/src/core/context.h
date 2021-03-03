@@ -22,15 +22,6 @@ namespace luminous {
 
     class Context : Noncopyable {
 
-    public:
-        struct DeviceSelection {
-            std::string backend_name;
-            uint32_t device_id;
-
-            DeviceSelection(std::string_view backend, uint32_t index) noexcept: backend_name{backend},
-                                                                                device_id{index} {}
-        };
-
     private:
         int _argc;
         const char **_argv;

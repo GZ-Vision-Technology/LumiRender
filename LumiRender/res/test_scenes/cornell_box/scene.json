@@ -1,13 +1,61 @@
 {
 	"shapes" : [
+//		{
+//			"name" : "c_box",
+//			"type": "model",
+//			"params" : {
+//				"fn": "cornell_box.obj",
+//				"transform" : {
+//					"type" : "rotate_x",
+//					"param" : 180
+//				}
+//			}
+//		},
+//		{
+//			"name" : "c_box",
+//			"type": "model",
+//			"params" : {
+//				"fn": "cornell_box.obj",
+//				"transform" : {
+//					"type" : "translate",
+//					"param" : [1,1,1]
+//				}
+//			}
+//		},
+//		{
+//			"name" : "c_box",
+//			"type": "model",
+//			"params" : {
+//				"fn": "cornell_box.obj",
+//				"transform" : {
+//					"type" : "rotate",
+//					"param" : [1,1,1,60]
+//				}
+//			}
+//		},
+//		{
+//			"name" : "c_box",
+//			"type": "model",
+//			"params" : {
+//				"fn": "cornell_box.obj",
+//				"transform" : {
+//					"type" : "scale",
+//					"param" : [1,1,1]
+//				}
+//			}
+//		},
 		{
 			"name" : "c_box",
 			"type": "model",
 			"params" : {
 				"fn": "cornell_box.obj",
 				"transform" : {
-					"type" : "rotate_y",
-					"param" : [180]
+					"type" : "trs",
+					"param": {
+						"t": [1,1,1],
+						"r": [1,1,1,60],
+						"s": [2,2,2]
+					}
 				}
 			}
 		}

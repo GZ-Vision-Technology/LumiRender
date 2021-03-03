@@ -27,28 +27,42 @@ namespace luminous {
 
         struct SamplerConfig : Config {
             string type;
-            int spp;
-        };
-
-        struct ShapeConfig : Config {
-            string type;
-            struct Param {
-                float4x4 o2w;
-                string fn;
-            };
-            Param param;
+            int spp{};
         };
 
         struct MaterialConfig : Config {
 
         };
 
+        struct TransformConfig : Config {
+            // trs and matrix4x4
+            string type;
+            float4 vec4;
+            float3 t;
+            float4 r;
+            float3 s;
+            float4x4 mat4x4;
+        };
+
+        struct ShapeConfig : Config {
+            string type;
+            string fn;
+            TransformConfig o2w;
+        };
+
+        struct FilterConfig {
+            string type;
+            uint2 radius;
+        };
+
+        struct FilmConfig : Config {
+            string type;
+            uint2 resolution;
+        };
+
         struct SensorConfig : Config {
             string type;
-            struct Param {
-                float4x4 o2w;
-            };
-            Param param;
+            TransformConfig transform_config;
         };
 
         struct LightSamplerConfig : Config {

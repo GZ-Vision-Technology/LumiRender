@@ -67,10 +67,10 @@ namespace luminous {
             float xx = x * x, yy = y * y, zz = z * z;
             float xy = x * y, xz = x * z, yz = y * z;
             float wx = x * w, wy = y * w, wz = z * w;
-            auto ret = make_float4x4(1 - 2 * (yy + zz), 2 * (xy + wz),     2 * (xz - wy),     0,
-                                     2 * (xy - wz),     1 - 2 * (xx + zz), 2 * (yz + wx),     0,
-                                     2 * (xz + wy),     2 * (yz - wx),     1 - 2 * (xx + yy), 0,
-                                     0,                 0,                 0,                 0);
+            auto ret = make_float4x4(1 - 2 * (yy + zz), 2 * (xy + wz), 2 * (xz - wy), 0,
+                                     2 * (xy - wz), 1 - 2 * (xx + zz), 2 * (yz + wx), 0,
+                                     2 * (xz + wy), 2 * (yz - wx), 1 - 2 * (xx + yy), 0,
+                                     0, 0, 0, 0);
 
             return transpose(ret);
         }
@@ -118,7 +118,7 @@ namespace luminous {
             float4x4 _inv_mat;
 
         public:
-            XPU Transform(float4x4 mat = float4x4(1))
+            XPU explicit Transform(float4x4 mat = float4x4(1))
                     : _mat(mat),
                       _inv_mat(::luminous::inverse(mat)) {}
 
@@ -126,29 +126,29 @@ namespace luminous {
                     : _mat(mat),
                       _inv_mat(inv) {}
 
-            XPU auto mat4x4() const {
+            XPU [[nodiscard]] auto mat4x4() const {
                 return _mat;
             }
 
-            XPU auto mat3x3() const {
+            XPU [[nodiscard]] auto mat3x3() const {
                 return make_float3x3(_mat);
             }
 
-            XPU auto inv_mat3x3() const {
+            XPU [[nodiscard]] auto inv_mat3x3() const {
                 return luminous::inverse(mat3x3());
             }
 
-            XPU float3 apply_point(float3 point) {
+            XPU [[nodiscard]] float3 apply_point(float3 point) {
                 float4 homo_point = make_float4(point, 1.f);
                 homo_point = _mat * homo_point;
                 return make_float3(homo_point);
             }
 
-            XPU float3 apply_vector(float3 vec) {
+            XPU [[nodiscard]] float3 apply_vector(float3 vec) const {
                 return mat3x3() * vec;
             }
 
-            XPU float3 apply_normal(float3 normal) {
+            XPU [[nodiscard]] float3 apply_normal(float3 normal) const {
                 return transpose(inv_mat3x3()) * normal;
             }
 
@@ -156,7 +156,7 @@ namespace luminous {
                 return Transform(_mat * t.mat4x4());
             }
 
-            XPU Transform inverse() const {
+            XPU [[nodiscard]] Transform inverse() const {
                 return Transform(_inv_mat, _mat);
             }
 
@@ -222,6 +222,13 @@ namespace luminous {
                         0.0f, 0.0f, 0.0f, 1.0f);
 
                 return Transform(mat, transpose(mat));
+            }
+
+            XPU static Transform trs(float3 t, float4 r, float3 s) {
+                auto T = translation(t);
+                auto R = rotation(make_float3(r), r.w);
+                auto S = scale(s);
+                return S * R * T;
             }
 
             XPU static Transform rotation_x(float angle, bool radian = false) noexcept {
