@@ -29,23 +29,9 @@ namespace luminous {
         TransformConfig ret;
         ret.type = ps["type"].as_string();
         auto param = ps["param"];
-        if (ret.type == "translate") {
-            ret.vec4 = make_float4(param.as_float3(), 0);
-        } else if (ret.type == "rotate_x") {
-            auto deg = param.as_float();
-            ret.vec4 = make_float4(1,0,0,deg);
-        } else if (ret.type == "rotate_y") {
-            auto deg = param.as_float();
-            ret.vec4 = make_float4(0,1,0,deg);
-        } else if (ret.type == "rotate_z") {
-            auto deg = param.as_float();
-            ret.vec4 = make_float4(0,0,1,deg);
-        } else if (ret.type == "rotate") {
-            auto vec4 = param.as_float4();
-            ret.vec4 = make_float4(make_float3(vec4), vec4.w);
-        } else if (ret.type == "scale") {
-            auto scale = param.as_float3();
-            ret.vec4 = make_float4(scale, 0.f);
+        if (ret.type == "matrix4x4") {
+            ret.mat4x4 = param["matrix4x4"].as_float4x4();
+            cout << ret.mat4x4.to_string() << endl;
         } else if (ret.type == "trs") {
             ret.t = param["t"].as_float3();
             ret.r = param["r"].as_float4();

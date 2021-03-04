@@ -37,7 +37,6 @@ namespace luminous {
         struct TransformConfig : Config {
             // trs and matrix4x4
             string type;
-            float4 vec4;
             float3 t;
             float4 r;
             float3 s;

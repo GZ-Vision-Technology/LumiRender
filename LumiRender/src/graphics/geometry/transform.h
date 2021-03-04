@@ -228,7 +228,7 @@ namespace luminous {
                 auto T = translation(t);
                 auto R = rotation(make_float3(r), r.w);
                 auto S = scale(s);
-                return S * R * T;
+                return T * R * S;
             }
 
             XPU static Transform rotation_x(float angle, bool radian = false) noexcept {

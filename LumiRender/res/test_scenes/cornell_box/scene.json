@@ -33,17 +33,42 @@
 //				}
 //			}
 //		},
-//		{
-//			"name" : "c_box",
-//			"type": "model",
-//			"params" : {
-//				"fn": "cornell_box.obj",
-//				"transform" : {
-//					"type" : "scale",
-//					"param" : [1,1,1]
-//				}
-//			}
-//		},
+		{
+			"name" : "c_box",
+			"type": "model",
+			"params" : {
+				"fn": "cornell_box.obj",
+				"transform" : {
+					"type" : "matrix4x4",
+					"param" : {
+						"matrix4x4" : [
+							[1,0,0,1],
+							[0,1,0,2],
+							[0,0,1,3],
+							[0,0,0,1]
+						]
+					}
+				}
+			}
+		},
+		{
+			"name" : "c_box",
+			"type": "model",
+			"params" : {
+				"fn": "cornell_box.obj",
+				"transform" : {
+					"type" : "matrix4x4",
+					"param" : {
+						"matrix4x4" : [
+							1,0,0,0,
+							0,1,0,0,
+							0,0,1,0,
+							0,0,0,1
+						]
+					}
+				}
+			}
+		},
 		{
 			"name" : "c_box",
 			"type": "model",
