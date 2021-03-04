@@ -17,25 +17,26 @@ namespace luminous {
         class PerspectiveCamera;
 
         class CameraBase {
-        private:
+        protected:
             float3 _position;
             float _fovy;
-            float _yaw;
-            float _pitch;
-            float _velocity;
+            float _yaw{};
+            float _pitch{};
+            float _velocity{};
         public:
-            CameraBase(float3 pos = make_float3(0), float _fovy = 0);
+            XPU CameraBase(float3 pos = make_float3(0), float fovy = 0);
 
-            float3 position() const;
+            NDSC_XPU float3 position() const;
 
-            float yaw() const;
+            NDSC_XPU float yaw() const;
 
-            float pitch() const;
+            NDSC_XPU float pitch() const;
 
-            float fovy() const;
+            NDSC_XPU float fovy() const;
 
-            float velocity() const;
-        }
+            NDSC_XPU float velocity() const;
+        };
+
 
         using lstd::Variant;
         class SensorHandle : public Variant<PinholeCamera*, PerspectiveCamera*> {

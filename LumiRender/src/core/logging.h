@@ -83,7 +83,7 @@ namespace luminous {
 
 #define LUMINOUS_SOURCE_LOCATION __FILE__ , ":", __LINE__
 
-#define debug(...) \
+#define LUMINOUS_DEBUG(...) \
     ::luminous::logging::debug(__VA_ARGS__, "\n    Source: ", LUMINOUS_SOURCE_LOCATION);
 
 #define SET_LOG_LEVEL(lv) \

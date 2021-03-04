@@ -10,13 +10,15 @@
 
 namespace luminous {
 
-    class Parser : public Noncopyable {
-    private:
-        DataWrap _data;
-        Context *_context;
-    public:
-        explicit Parser(Context *context) : _context(context) {}
+    inline namespace render {
+        class Parser : public Noncopyable {
+        private:
+            DataWrap _data;
+            Context *_context;
+        public:
+            explicit Parser(Context *context) : _context(context) {}
 
-        UP<SceneGraph> load_from_json(const std::filesystem::path &fn);
-    };
+            UP<SceneGraph> load_from_json(const std::filesystem::path &fn);
+        };
+    }
 }

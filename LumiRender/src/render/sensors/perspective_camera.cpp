@@ -5,13 +5,4 @@
 
 #pragma once
 
-#include "../include/sensor.h"
-
-
-namespace luminous::render {
-
-    class PerspectiveCamera {
-
-    };
-
-} // luminous
+#include "perspective_camera.h"

@@ -5,14 +5,4 @@
 
 #pragma once
 
-#include "../include/sensor.h"
-
-namespace luminous {
-    namespace render {
-
-        class PinholeCamera {
-
-        };
-
-    } // luminous::render
-} // luminous
+#include "pinhole_camera.h"

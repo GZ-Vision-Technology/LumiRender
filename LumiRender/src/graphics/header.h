@@ -25,6 +25,9 @@
 
 #define NDSC [[nodiscard]]
 
+#define NDSC_XPU NDSC XPU
+#define NDSC_XPU_INLINE NDSC XPU_INLINE
+
 #if defined(__CUDA_ARCH__)
     #define IS_GPU_CODE
 #endif
