@@ -8,6 +8,7 @@
 #include "pcg.h"
 
 namespace luminous {
+
     inline namespace render {
         int SamplerHandle::spp() const {
             LUMINOUS_VAR_PTR_DISPATCH(spp)

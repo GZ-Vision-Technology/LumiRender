@@ -11,7 +11,9 @@
 namespace luminous {
 
     inline namespace render {
-        class PerspectiveCamera {
+        class PerspectiveCamera : public CameraBase {
+        public:
+            GEN_CLASS_NAME(PerspectiveCamera)
 
         };
     }

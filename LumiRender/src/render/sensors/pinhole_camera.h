@@ -10,8 +10,9 @@
 namespace luminous {
     inline namespace render {
 
-        class PinholeCamera : CameraBase {
-        private:
+        class PinholeCamera : public CameraBase {
+        public:
+            GEN_CLASS_NAME(PinholeCamera)
 
         };
 
