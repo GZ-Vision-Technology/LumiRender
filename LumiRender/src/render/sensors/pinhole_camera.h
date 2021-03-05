@@ -14,6 +14,9 @@ namespace luminous {
         public:
             GEN_CLASS_NAME(PinholeCamera)
 
+            NDSC std::string to_string() const;
+
+            static PinholeCamera* create(const SensorConfig &config);
         };
 
     } // luminous::render

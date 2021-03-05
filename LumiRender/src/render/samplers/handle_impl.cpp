@@ -50,9 +50,8 @@ namespace luminous {
             }
         }
 
-        SamplerHandle SamplerHandle::create(const Config &config) {
-            const SamplerConfig &sampler_config = (SamplerConfig &) config;
-            return detail::create_sampler<0>(sampler_config);
+        SamplerHandle SamplerHandle::create(const SamplerConfig &config) {
+            return detail::create_sampler<0>(config);
         }
     }
 }

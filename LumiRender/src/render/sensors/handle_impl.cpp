@@ -162,5 +162,33 @@ namespace luminous {
         float3 SensorHandle::right() const {
             LUMINOUS_VAR_PTR_DISPATCH(right)
         }
+
+        const char *SensorHandle::name() {
+            LUMINOUS_VAR_PTR_DISPATCH(name)
+        }
+
+        std::string SensorHandle::to_string() const {
+            LUMINOUS_VAR_PTR_DISPATCH(to_string)
+        }
+
+        namespace detail {
+            template<uint8_t current_index>
+            NDSC SensorHandle create_sensor(const SensorConfig &config) {
+                using Sensor = std::remove_pointer_t<std::tuple_element_t<current_index, SensorHandle::TypeTuple>>;
+                if (Sensor::name() == config.type) {
+                    return SensorHandle(Sensor::create(config));
+                }
+                return create_sensor<current_index + 1>(config);
+            }
+
+            template<>
+            NDSC SensorHandle create_sensor<std::tuple_size_v<SensorHandle::TypeTuple>>(const SensorConfig &config) {
+                LUMINOUS_ERROR("unknow sampler type:", config.type);
+            }
+        }
+
+        SensorHandle SensorHandle::create(const SensorConfig &config) {
+            return detail::create_sensor<0>(config);
+        }
     }
 }

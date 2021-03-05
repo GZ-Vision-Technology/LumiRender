@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "sensor.h"
 #include "shape.h"
 #include "material.h"
 #include "light.h"
@@ -62,6 +61,8 @@ namespace luminous {
         struct SensorConfig : Config {
             string type;
             TransformConfig transform_config;
+            float fovy;
+            float velocity;
         };
 
         struct LightSamplerConfig : Config {

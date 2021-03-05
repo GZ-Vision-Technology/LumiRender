@@ -219,12 +219,35 @@ void piecewise2d_test() {
     cout << pdf;
 }
 
+void test_matrix_to_Euler_angle() {
+    auto yaw = Transform::rotation_y(30);
+    auto pitch = Transform::rotation_x(60);
+    auto roll = Transform::rotation_z(0);
+
+//    auto t = yaw * pitch * roll;
+//    auto t = yaw * roll*pitch;
+//    auto t = roll * yaw *pitch;
+//    auto t = pitch* yaw * roll;
+//    auto t = pitch* roll*yaw;
+    auto t = roll * pitch * yaw;
+
+    auto m = t.mat3x3();
+
+    float sy = sqrt(sqr(m[0][0]) + m[1][0] );
+
+    auto x = degrees(atan2(m[2][1], m[2][2]));
+    auto y = degrees(atan2(-m[2][0], sy));
+    auto z = degrees(atan2(m[1][0], m[0][0]));
+    cout << x << endl << y << endl << z;
+}
+
 int main() {
 
 //    testVariant();
 
 //    test_math();
 //    test_transform();
+test_matrix_to_Euler_angle();
 
 //    test_color();
 

@@ -34,15 +34,15 @@ namespace luminous {
 
             XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
-            XPU const char *name();
+            NDSC_XPU const char *name();
 
-            NDSC XPU float next_1d();
+            NDSC_XPU float next_1d();
 
-            NDSC XPU float2 next_2d();
+            NDSC_XPU float2 next_2d();
 
             NDSC std::string to_string();
 
-            static SamplerHandle create(const Config &config);
+            static SamplerHandle create(const SamplerConfig &config);
         };
     }
 }

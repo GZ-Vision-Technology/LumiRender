@@ -9,6 +9,7 @@
 #include "graphics/geometry/common.h"
 #include "core/concepts.h"
 #include "graphics/lstd/lstd.h"
+#include "scene_graph.h"
 
 namespace luminous {
     inline namespace render {
@@ -78,6 +79,8 @@ namespace luminous {
 
             NDSC_XPU Transform camera_to_world() const;
 
+            NDSC_XPU const char *name();
+
             NDSC_XPU Transform linear_space() const;
 
             NDSC_XPU float3 forward() const;
@@ -103,6 +106,10 @@ namespace luminous {
             NDSC_XPU float velocity() const;
 
             XPU void set_velocity(float val);
+
+            NDSC std::string to_string() const;
+
+            static SensorHandle create(const SensorConfig &config);
         };
     }
 }

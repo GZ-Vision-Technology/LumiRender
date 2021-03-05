@@ -15,6 +15,9 @@ namespace luminous {
         public:
             GEN_CLASS_NAME(PerspectiveCamera)
 
+            NDSC std::string to_string() const;
+
+            static PerspectiveCamera *create(const SensorConfig &config);
         };
     }
 
