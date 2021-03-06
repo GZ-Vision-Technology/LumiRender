@@ -8,7 +8,6 @@
 #include "core/backend/buffer.h"
 #include "core/concepts.h"
 #include "graphics/math/common.h"
-#include "render/include/model.h"
 #include "render/include/sensor.h"
 
 namespace luminous {

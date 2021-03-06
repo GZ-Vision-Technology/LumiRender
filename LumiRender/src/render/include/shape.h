@@ -13,6 +13,7 @@ namespace luminous{
 
     inline namespace render {
         using std::vector;
+        using std::string;
 
         class Shape : public IObject {
 
@@ -39,6 +40,7 @@ namespace luminous{
             vector<float3> _normals;
             vector<float3> _positions;
             vector<float2> _tex_coords;
+            string _name;
             vector<TriangleHandle> _triangles;
         public:
             Mesh(vector<float3> P,
@@ -51,10 +53,18 @@ namespace luminous{
                     _triangles(std::move(T)) {}
         };
 
-        struct MeshInstance {
+        class Model {
+        private:
+            string _name;
+            string _key;
+            vector<std::shared_ptr<const Mesh>> _meshes;
+        public:
+            Model(const std::filesystem::path &fn, uint subdiv_level = 0);
+        };
+
+        struct ModelInstance {
+            uint model_idx = uint32_t(-1);
             Transform o2w;
-            uint32_t mesh_id     = uint32_t(-1);
-            uint32_t material_id = uint32_t(-1);
         };
     }
 

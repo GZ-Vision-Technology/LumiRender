@@ -12,7 +12,6 @@
 #include "core/concepts.h"
 #include <memory>
 #include "core/context.h"
-#include "model.h"
 
 namespace luminous {
     using namespace std;
@@ -95,18 +94,23 @@ namespace luminous {
         struct SceneGraph {
         private:
             Context *_context;
-            vector<shared_ptr<const Mesh>> _mesh_list;
-            vector<MeshInstance> _instance_list;
+            std::map<string, uint32_t> _key_to_idx;
+            vector<SP<const Model>> _model_list;
+            vector<ModelInstance> _instance_list;
         public:
             SamplerConfig sampler_config;
             SensorConfig sensor_config;
             std::vector<ShapeConfig> shape_configs;
             IntegratorConfig integrator_config;
             LightSamplerConfig light_sampler_config;
-
+        private:
+            bool is_contain(const string &key) {
+                return _key_to_idx.find(key) != _key_to_idx.end();
+            }
+        public:
             explicit SceneGraph(Context *context) : _context(context) {}
 
-            void create_geometry();
+            SP<const Model> create_model_instance(const string &fn, uint subdiv_level = 0);
 
             void create_scene();
         };

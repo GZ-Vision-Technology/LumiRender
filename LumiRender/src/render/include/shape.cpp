@@ -1,29 +1,17 @@
 //
-// Created by Zero on 2021/2/16.
+// Created by Zero on 2021/3/7.
 //
 
-#include "model.h"
+#include "shape.h"
 #include "assimp/Importer.hpp"
 #include <assimp/postprocess.h>
 #include <assimp/Subdivision.h>
 #include <assimp/scene.h>
-
+#include "core/concepts.h"
 namespace luminous {
-    inline namespace utility {
+    inline namespace render {
 
-        using std::vector;
-        ModelCache *ModelCache::s_model_cache = nullptr;
-        using render::TriangleHandle;
-        using std::move;
-        ModelCache *ModelCache::instance() {
-            if (s_model_cache == nullptr) {
-                s_model_cache = new ModelCache();
-            }
-            return s_model_cache;
-        }
-
-        shared_ptr<const Model> ModelCache::load_model(const std::string &path, uint32_t subdiv_level) {
-            vector<shared_ptr<const Mesh>> meshes;
+        Model::Model(const std::filesystem::path &path, uint subdiv_level) {
             Assimp::Importer ai_importer;
             ai_importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
                                            aiComponent_COLORS |
@@ -34,7 +22,7 @@ namespace luminous {
                                            aiComponent_TEXTURES |
                                            aiComponent_MATERIALS);
             LUMINOUS_INFO("Loading triangle mesh: ", path);
-            auto ai_scene = ai_importer.ReadFile(path.c_str(),
+            auto ai_scene = ai_importer.ReadFile(path.string().c_str(),
                                                  aiProcess_JoinIdenticalVertices |
                                                  aiProcess_GenNormals |
                                                  aiProcess_PreTransformVertices |
@@ -57,7 +45,7 @@ namespace luminous {
                 std::copy(ai_scene->mMeshes, ai_scene->mMeshes + ai_scene->mNumMeshes, ai_meshes.begin());
             }
 
-            meshes.reserve(ai_meshes.size());
+            _meshes.reserve(ai_meshes.size());
             for (auto ai_mesh : ai_meshes) {
                 vector<float3> positions;
                 vector<float3> normals;
@@ -103,22 +91,12 @@ namespace luminous {
                         }
                     }
                 }
-                auto mesh = make_shared<const Mesh>(move(positions),
+                auto mesh = std::make_shared<const Mesh>(move(positions),
                                                     move(normals),
                                                     move(tex_coords),
                                                     move(indices));
-                meshes.push_back(mesh);
+                _meshes.push_back(mesh);
             }
-            return make_shared<Model>(move(meshes));
-        }
-
-        const shared_ptr<const Model> & ModelCache::get_model(const std::string &path, uint32_t subdiv_level) {
-            auto key = cal_key(path, subdiv_level);
-            if (is_contain(key)) {
-                return _model_map[key];
-            }
-            _model_map[key] = load_model(path, subdiv_level);
-            return _model_map[key];
         }
     }
 }

@@ -5,7 +5,7 @@
 #include "iostream"
 #include "render/include/sampler.h"
 #include "render/include/sensor.h"
-
+#include <set>
 using namespace luminous;
 using namespace std;
 
@@ -41,7 +41,5 @@ void test_sensor() {
 }
 
 int main() {
-
-    test_sensor();
 
 }
