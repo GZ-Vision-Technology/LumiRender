@@ -46,7 +46,7 @@ namespace luminous {
 
             template<>
             NDSC SamplerHandle create_sampler<std::tuple_size_v<SamplerHandle::TypeTuple>>(const SamplerConfig &config) {
-                LUMINOUS_ERROR("unknow sampler type:", config.type);
+                LUMINOUS_ERROR("unknown sampler type:", config.type);
             }
         }
 

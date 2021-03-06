@@ -46,6 +46,23 @@ namespace luminous {
             float yaw;
             float pitch;
             float3 position;
+
+            Transform create() const {
+                if (type == "matrix4x4") {
+                    return Transform(mat4x4);
+                } else if (type == "trs") {
+                    auto tt = Transform::translation(t);
+                    auto rr = Transform::rotation(make_float3(r), r.w);
+                    auto ss = Transform::scale(s);
+                    return tt * rr * ss;
+                } else if (type == "yaw_pitch") {
+                    auto yaw_t = Transform::rotation_y(yaw);
+                    auto pitch_t = Transform::rotation_x(pitch);
+                    auto tt = Transform::translation(position);
+                    return tt * pitch_t * yaw_t;
+                }
+                LUMINOUS_ERROR("unknown transform type ", type);
+            }
         };
 
         struct ShapeConfig : Config {

@@ -10,14 +10,21 @@
 
 namespace luminous {
     inline namespace render {
-        CameraBase::CameraBase(float3 pos, float fovy)
-                : _position(pos), _fov_y(fovy) {}
+        CameraBase::CameraBase(float3 pos, float fov_y)
+                : _position(pos), _fov_y(fov_y) {}
+
+        CameraBase::CameraBase(const float4x4 m, float fov_y, float velocity)
+                : _fov_y(fov_y),
+                  _velocity(velocity) {
+            _update(m);
+        }
 
         void CameraBase::_update(const float4x4 &m) {
-            float sy = sqrt(sqr(m[2][1]) + sqr(m[2][2]) );
+            float sy = sqrt(sqr(m[2][1]) + sqr(m[2][2]));
             _pitch = degrees(-std::atan2(m[2][1], m[2][2]));
             _yaw = degrees(-std::atan2(-m[2][0], sy));
             _position = make_float3(m[3]);
+            cout << _position.to_string();
         }
 
         float3 CameraBase::position() const {
@@ -190,7 +197,7 @@ namespace luminous {
 
             template<>
             NDSC SensorHandle create_sensor<std::tuple_size_v<SensorHandle::TypeTuple>>(const SensorConfig &config) {
-                LUMINOUS_ERROR("unknow sampler type:", config.type);
+                LUMINOUS_ERROR("unknown sampler type:", config.type);
             }
         }
 

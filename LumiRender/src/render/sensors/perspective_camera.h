@@ -13,6 +13,8 @@ namespace luminous {
     inline namespace render {
         class PerspectiveCamera : public CameraBase {
         public:
+            PerspectiveCamera(const float4x4 m, float fov_y, float velocity);
+
             GEN_CLASS_NAME(PerspectiveCamera)
 
             NDSC std::string to_string() const;

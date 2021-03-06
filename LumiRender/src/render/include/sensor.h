@@ -35,7 +35,9 @@ namespace luminous {
             void _update(const float4x4 &m);
 
         public:
-            XPU CameraBase(float3 pos = make_float3(0), float fovy = 30);
+            XPU CameraBase(float3 pos = make_float3(0), float fov_y = 30);
+
+            XPU CameraBase(const float4x4 m, float fov_y, float velocity);
 
             NDSC_XPU Transform camera_to_world() const;
 
