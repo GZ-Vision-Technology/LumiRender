@@ -73,13 +73,14 @@ namespace luminous {
         glViewport(0, 0, new_size.x, new_size.y);
     }
 
-    App::App(const std::string &title, const int2 &size, Context *context)
+    App::App(const std::string &title, const int2 &size, Context *context, const Parser &parser)
             : _size(size) {
         init_window(title, size);
         init_event_cb();
         init_imgui();
         init_gl_context();
         _pipeline = make_unique<CUDAPipeline>(make_unique<CUDADevice>(), context);
+        _pipeline->init(parser);
     }
 
     void App::init_gl_context() {

@@ -27,6 +27,6 @@ int main(int argc, char *argv[]) {
         cout << e1.what();
     }
 
-    App app("luminous-gui", luminous::make_int2(1280,720), &context);
+    App app("luminous-gui", luminous::make_int2(1280,720), &context, sp);
     return app.run();
 }

@@ -105,6 +105,10 @@ namespace luminous {
             LightSamplerConfig light_sampler_config;
 
             explicit SceneGraph(Context *context) : _context(context) {}
+
+            void create_geometry();
+
+            void create_scene();
         };
 
     };

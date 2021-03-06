@@ -8,5 +8,12 @@
 namespace luminous {
     inline namespace render {
 
+        void SceneGraph::create_geometry() {
+            cout << "create geometry";
+        }
+
+        void SceneGraph::create_scene() {
+
+        }
     }
 }

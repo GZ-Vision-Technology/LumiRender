@@ -25,7 +25,8 @@ namespace luminous {
             _context(context) {}
 
         void init(const Parser &parser) {
-
+            auto scene_graph = parser.parse();
+            scene_graph->create_geometry();
         }
 
         virtual void render_gui() = 0;

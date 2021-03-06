@@ -153,7 +153,7 @@ namespace luminous {
             try {                                                                                               \
                 return _as_##type();                                                                            \
             } catch (const std::exception &e) {                                                             \
-                LUMINOUS_WARNING("Error occurred while parsing parameter, using default value: \"", val, "\""); \
+                LUMINOUS_WARNING("Error occurred while parsing parameter type is ", #type,",key is ",_key, ", using default value: \"", val, "\""); \
                 return val;                                                                                     \
             }                                                                                                   \
         }                                                                                                       \
@@ -166,7 +166,7 @@ namespace luminous {
             try {                                                                                                        \
                 return _as_##type##2();                                                                                  \
             } catch (const std::exception &e) {                                                                      \
-                LUMINOUS_WARNING("Error occurred while parsing parameter, using default value: \"(", val.to_string() , ")\""); \
+                LUMINOUS_WARNING("Error occurred while parsing parameter type is ", #type,",key is ",_key, ", using default value: \"(", val.to_string() , ")\""); \
                 return val;                                                                                              \
             }                                                                                                            \
         } \
@@ -178,7 +178,7 @@ namespace luminous {
             try {                                                                                                          \
                 return _as_##type##3();                                                                                    \
             } catch (const std::exception &e) {                                                                        \
-                LUMINOUS_WARNING("Error occurred while parsing parameter, using default value: \"(", val.to_string() , ")\""); \
+                LUMINOUS_WARNING("Error occurred while parsing parameter type is ", #type,",key is ",_key, ", using default value: \"(", val.to_string() , ")\""); \
                 return val;                                                                                              \
             }                                                                                                            \
         } \
@@ -190,7 +190,7 @@ namespace luminous {
             try {                                                                                                          \
                 return _as_##type##4();                                                                                    \
             } catch (const std::exception &e) {                                                                        \
-                LUMINOUS_WARNING("Error occurred while parsing parameter, using default value: \"(", val.to_string() , ")\""); \
+                LUMINOUS_WARNING("Error occurred while parsing parameter type is ", #type,",key is ",_key, ", using default value: \"(", val.to_string() , ")\""); \
                 return val;                                                                                              \
             }                                                                                                            \
         } \
@@ -202,7 +202,7 @@ namespace luminous {
             try {                                                                                                                       \
                 return _as_##type##3x3(); \
             } catch (const std::exception &e) { \
-                LUMINOUS_WARNING("Error occurred while parsing parameter, using default value: \"(", val.to_string() , ")\""); \
+                LUMINOUS_WARNING("Error occurred while parsing parameter type is ", #type,",key is ",_key, ", using default value: \"(", val.to_string() , ")\""); \
                 return val; \
             } \
         }
@@ -210,7 +210,7 @@ namespace luminous {
             try {                                                                                                                       \
                 return _as_##type##4x4(); \
             } catch (const std::exception &e) { \
-                LUMINOUS_WARNING("Error occurred while parsing parameter, using default value: \"(", val.to_string() , ")\""); \
+                LUMINOUS_WARNING("Error occurred while parsing parameter type is ", #type, ",key is ",_key,", using default value: \"(", val.to_string() , ")\""); \
                 return val; \
             } \
         }

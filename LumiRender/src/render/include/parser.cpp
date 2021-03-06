@@ -90,7 +90,7 @@ namespace luminous {
         SamplerConfig parse_sampler(const ParameterSet &ps) {
             SamplerConfig ret;
             ret.type = ps["type"].as_string();
-            ret.spp = ps["spp"].as_uint();
+            ret.spp = ps["param"]["spp"].as_uint();
             return ret;
         }
 
@@ -119,14 +119,17 @@ namespace luminous {
             return ret;
         }
 
-        UP<SceneGraph> Parser::load_from_json(const std::filesystem::path &fn) {
+        void Parser::load_from_json(const std::filesystem::path &fn) {
             _data = create_json_from_file(fn);
+        }
+
+        UP<SceneGraph> Parser::parse() const {
             auto shapes = _data["shapes"];
             auto scene_graph = make_unique<SceneGraph>(_context);
             scene_graph->shape_configs = parse_shapes(shapes);
             scene_graph->sensor_config = parse_sensor(ParameterSet(_data["camera"]));
             scene_graph->sampler_config = parse_sampler(ParameterSet(_data["sampler"]));
-            return move(scene_graph);
+            return scene_graph;
         }
     }
 }
