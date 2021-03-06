@@ -27,15 +27,17 @@ void test_sensor() {
     tc.type = "yaw_pitch";
 
     tc.yaw = 20;
-    tc.pitch = 30;
+    tc.pitch = 15.6;
     tc.position = make_float3(2,3,5);
+
+//    cout <<tc.create().mat4x4().to_string() << endl;
 
     tc.mat4x4 = make_float4x4(1);
     config.transform_config = tc;
 
     auto camera = SensorHandle::create(config);
 
-//    cout << camera.to_string();
+    cout << camera.to_string();
 }
 
 int main() {

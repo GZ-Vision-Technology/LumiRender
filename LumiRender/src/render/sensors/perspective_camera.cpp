@@ -13,7 +13,7 @@ namespace luminous {
                 : CameraBase(m, fov_y, velocity) {}
 
         std::string PerspectiveCamera::to_string() const {
-            return string_printf("%s: {fov_y:%f}", name(), fov_y());
+            return string_printf("%s:%s", name(), _to_string().c_str());
         }
 
         PerspectiveCamera *PerspectiveCamera::create(const SensorConfig &config) {

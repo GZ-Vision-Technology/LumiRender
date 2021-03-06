@@ -14,14 +14,12 @@ namespace luminous {
                 : CameraBase(m, fov_y, velocity) {}
 
         std::string PinholeCamera::to_string() const {
-            return string_printf("%s: {fov_y:%f}", name(), fov_y());
+            return string_printf("%s:%s", name(), _to_string().c_str());
         }
 
         PinholeCamera *PinholeCamera::create(const SensorConfig &config) {
             auto transform = config.transform_config.create();
             return new PinholeCamera(transform.mat4x4(), config.fov_y, config.velocity);
         }
-
-
     }
 }
