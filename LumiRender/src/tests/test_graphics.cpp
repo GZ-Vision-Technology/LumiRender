@@ -220,25 +220,45 @@ void piecewise2d_test() {
 }
 
 void test_matrix_to_Euler_angle() {
-    auto yaw = Transform::rotation_y(30);
-    auto pitch = Transform::rotation_x(60);
-    auto roll = Transform::rotation_z(0);
+
+    auto rx = Transform::rotation_x(60);
+    auto ry = Transform::rotation_y(30);
+    auto rz = Transform::rotation_z(45);
+
+//    cout << rx.mat3x3().to_string() << endl;
+//    cout << ry.mat3x3().to_string() << endl;
+//    cout << rz.mat3x3().to_string() << endl;
 
 //    auto t = yaw * pitch * roll;
 //    auto t = yaw * roll*pitch;
 //    auto t = roll * yaw *pitch;
 //    auto t = pitch* yaw * roll;
 //    auto t = pitch* roll*yaw;
-    auto t = roll * pitch * yaw;
+//    auto t = rx * ry * rz;
+    auto t = rz * ry * rx;
 
-    auto m = t.mat3x3();
+    auto m = t.mat4x4();
+//    cout << m.to_string() << endl;
 
-    float sy = sqrt(sqr(m[0][0]) + m[1][0] );
+    float sy = sqrt(sqr(m[1][2]) + sqr(m[2][2]) );
 
-    auto x = degrees(atan2(m[2][1], m[2][2]));
-    auto y = degrees(atan2(-m[2][0], sy));
-    auto z = degrees(atan2(m[1][0], m[0][0]));
-    cout << x << endl << y << endl << z;
+    auto x = degrees(atan2(m[1][2], m[2][2]));
+    auto y = degrees(atan2(-m[0][2], sy));
+    auto z = degrees(atan2(m[0][1], m[0][0]));
+    cout << x << endl << y << endl << z << endl;
+
+    auto xx = Transform::rotation_x(x);
+    auto yy = Transform::rotation_y(y);
+    auto zz = Transform::rotation_z(z);
+
+//    auto tt = xx * ry * zz;
+//
+//    auto v = make_float3(1,1,1);
+//    auto v1 = t.apply_vector(v);
+//    auto v2 = tt.apply_vector(v);
+//    cout << v1.to_string() << endl;
+//    cout << v2.to_string() << endl;
+
 }
 
 int main() {
