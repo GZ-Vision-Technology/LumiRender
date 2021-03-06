@@ -223,7 +223,7 @@ void test_matrix_to_Euler_angle() {
 
     auto rx = Transform::rotation_x(60);
     auto ry = Transform::rotation_y(30);
-    auto rz = Transform::rotation_z(45);
+    auto rz = Transform::rotation_z(20);
 
 //    cout << rx.mat3x3().to_string() << endl;
 //    cout << ry.mat3x3().to_string() << endl;
