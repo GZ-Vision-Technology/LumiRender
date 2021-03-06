@@ -5,6 +5,9 @@
 
 #pragma once
 
+#include <cmath>
+#include "../math/common.h"
+
 namespace luminous {
     inline namespace geometry {
 
@@ -57,6 +60,20 @@ namespace luminous {
                 z = q[2];
             }
             return Quaternion(make_float3(x, y, z), w);
+        }
+
+        /**
+         * m is rotation matrix from Euler's rotation
+         * axis_x -> axis_y -> axis_z
+         * @param m
+         * @return
+         */
+        NDSC_XPU static float3 matrix_to_Euler_angle(const float4x4 &m) {
+            float sy = sqrt(sqr(m[1][2]) + sqr(m[2][2]) );
+            auto axis_x_angle = degrees(std::atan2(m[1][2], m[2][2]));
+            auto axis_y_angle = degrees(std::atan2(-m[0][2], sy));
+            auto axis_z_angle = degrees(std::atan2(m[0][1], m[0][0]));
+            return make_float3(axis_x_angle, axis_y_angle, axis_z_angle);
         }
 
         XPU [[nodiscard]] static float4x4 quaternion_to_matrix(const Quaternion &q) noexcept {

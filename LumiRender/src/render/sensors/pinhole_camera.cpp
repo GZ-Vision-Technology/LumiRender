@@ -11,7 +11,7 @@ namespace luminous {
     inline namespace render {
 
         std::string PinholeCamera::to_string() const {
-            return string_printf("%s: {fovy:%f}", name(), fovy());
+            return string_printf("%s: {fov_y:%f}", name(), fov_y());
         }
 
         PinholeCamera *PinholeCamera::create(const SensorConfig &config) {

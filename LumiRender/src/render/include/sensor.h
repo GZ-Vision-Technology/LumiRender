@@ -27,16 +27,19 @@ namespace luminous {
             constexpr static float3 up_vec = make_float3(0, 1, 0);
             constexpr static float3 forward_vec = make_float3(0, 0, 1);
             float3 _position;
-            float _fovy;
+            float _fov_y;
             float _yaw{};
             float _pitch{};
             float _velocity{};
+
+            void _update(const float4x4 &m);
+
         public:
             XPU CameraBase(float3 pos = make_float3(0), float fovy = 30);
 
             NDSC_XPU Transform camera_to_world() const;
 
-            NDSC_XPU Transform linear_space() const;
+            NDSC_XPU Transform camera_to_world_rotation() const;
 
             NDSC_XPU float3 forward() const;
 
@@ -58,9 +61,9 @@ namespace luminous {
 
             XPU void update_pitch(float val);
 
-            NDSC_XPU float fovy() const;
+            NDSC_XPU float fov_y() const;
 
-            XPU void update_fovy(float val);
+            XPU void update_fov_y(float val);
 
             NDSC_XPU float velocity() const;
 
@@ -81,7 +84,7 @@ namespace luminous {
 
             NDSC_XPU const char *name();
 
-            NDSC_XPU Transform linear_space() const;
+            NDSC_XPU Transform camera_to_world_rotation() const;
 
             NDSC_XPU float3 forward() const;
 
@@ -99,9 +102,9 @@ namespace luminous {
 
             XPU void update_pitch(float val);
 
-            NDSC_XPU float fovy() const;
+            NDSC_XPU float fov_y() const;
 
-            XPU void update_fovy(float val);
+            XPU void update_fov_y(float val);
 
             NDSC_XPU float velocity() const;
 

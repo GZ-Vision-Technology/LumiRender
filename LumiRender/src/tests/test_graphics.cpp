@@ -33,6 +33,7 @@ public:
     Sub2() {
         std::cout << "construct sub2\n";
     }
+
     int fun1() {
         return 1;
     }
@@ -185,7 +186,7 @@ void test_color() {
 
     auto c = Spectrum(make_float3(0));
     cout << c.luminance() << endl;
-    cout << "is black " <<c.is_black() << endl;
+    cout << "is black " << c.is_black() << endl;
     cout << sizeof(Spectrum) << endl;
     cout << sizeof(float3) << endl;
 }
@@ -193,9 +194,9 @@ void test_color() {
 #include "new"
 
 void piecewise_construct_test() {
-    float arr[] = {0,2};
+    float arr[] = {0, 2};
     using ::lstd::span;
-    auto sp = span<float>(arr,2);
+    auto sp = span<float>(arr, 2);
 
     auto dis = PiecewiseConstant1D(sp);
 
@@ -208,7 +209,7 @@ void piecewise_construct_test() {
 }
 
 void piecewise2d_test() {
-    float arr[] = {0,1,1,2};
+    float arr[] = {0, 1, 1, 2};
     using ::lstd::span;
     auto sp = span<float>(arr, 4);
     auto dis = PiecewiseConstant2D(sp, 2, 2);
@@ -229,35 +230,43 @@ void test_matrix_to_Euler_angle() {
 //    cout << ry.mat3x3().to_string() << endl;
 //    cout << rz.mat3x3().to_string() << endl;
 
-//    auto t = yaw * pitch * roll;
-//    auto t = yaw * roll*pitch;
-//    auto t = roll * yaw *pitch;
-//    auto t = pitch* yaw * roll;
-//    auto t = pitch* roll*yaw;
-//    auto t = rx * ry * rz;
     auto t = rz * ry * rx;
 
     auto m = t.mat4x4();
-//    cout << m.to_string() << endl;
-
-    float sy = sqrt(sqr(m[1][2]) + sqr(m[2][2]) );
-
-    auto x = degrees(atan2(m[1][2], m[2][2]));
-    auto y = degrees(atan2(-m[0][2], sy));
-    auto z = degrees(atan2(m[0][1], m[0][0]));
+    auto euler_angle = matrix_to_Euler_angle(m);
+    auto x = euler_angle.x;
+    auto y = euler_angle.y;
+    auto z = euler_angle.z;
     cout << x << endl << y << endl << z << endl;
 
     auto xx = Transform::rotation_x(x);
     auto yy = Transform::rotation_y(y);
     auto zz = Transform::rotation_z(z);
 
-//    auto tt = xx * ry * zz;
-//
-//    auto v = make_float3(1,1,1);
-//    auto v1 = t.apply_vector(v);
-//    auto v2 = tt.apply_vector(v);
-//    cout << v1.to_string() << endl;
-//    cout << v2.to_string() << endl;
+    auto tt = zz * ry * xx;
+//    auto tt = xx * ry *zz;
+
+    auto v = make_float3(1, 1, 1);
+    auto v1 = t.apply_vector(v);
+    auto v2 = tt.apply_vector(v);
+    cout << v1.to_string() << endl;
+    cout << v2.to_string() << endl;
+    cout << tt.to_string_detail();
+}
+
+void test_yaw_pitch() {
+    auto yaw = Transform::rotation_y(30);
+    auto pitch = Transform::rotation_x(60);
+    auto roll = Transform::rotation_z(0);
+    auto tt = pitch * yaw * roll;
+    auto m = tt.mat4x4();
+
+    float sy = sqrt(sqr(m[2][1]) + sqr(m[2][2]) );
+    auto axis_x_angle = degrees(-std::atan2(m[2][1], m[2][2]));
+    auto axis_y_angle = degrees(-std::atan2(-m[2][0], sy));
+    auto axis_z_angle = degrees(-std::atan2(m[1][0], m[0][0]));
+
+    cout << axis_x_angle << endl << axis_y_angle << endl << axis_z_angle;
 
 }
 
@@ -267,7 +276,9 @@ int main() {
 
 //    test_math();
 //    test_transform();
-test_matrix_to_Euler_angle();
+//    test_matrix_to_Euler_angle();
+
+    test_yaw_pitch();
 
 //    test_color();
 

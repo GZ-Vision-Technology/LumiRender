@@ -26,7 +26,7 @@ namespace luminous {
 
         struct SamplerConfig : Config {
             string type;
-            int spp{};
+            uint spp{};
         };
 
         struct MaterialConfig : Config {
@@ -34,12 +34,18 @@ namespace luminous {
         };
 
         struct TransformConfig : Config {
-            // trs and matrix4x4
+            // trs and matrix4x4 and ...
             string type;
+            // trs
             float3 t;
             float4 r;
             float3 s;
+            // matrix
             float4x4 mat4x4;
+            // yaw_pitch
+            float yaw;
+            float pitch;
+            float3 position;
         };
 
         struct ShapeConfig : Config {
@@ -61,7 +67,7 @@ namespace luminous {
         struct SensorConfig : Config {
             string type;
             TransformConfig transform_config;
-            float fovy;
+            float fov_y;
             float velocity;
         };
 

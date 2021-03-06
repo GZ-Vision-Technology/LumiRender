@@ -11,7 +11,14 @@
 namespace luminous {
     inline namespace render {
         CameraBase::CameraBase(float3 pos, float fovy)
-                : _position(pos), _fovy(fovy) {}
+                : _position(pos), _fov_y(fovy) {}
+
+        void CameraBase::_update(const float4x4 &m) {
+            float sy = sqrt(sqr(m[2][1]) + sqr(m[2][2]) );
+            _pitch = degrees(-std::atan2(m[2][1], m[2][2]));
+            _yaw = degrees(-std::atan2(-m[2][0], sy));
+            _position = make_float3(m[3]);
+        }
 
         float3 CameraBase::position() const {
             return _position;
@@ -29,8 +36,8 @@ namespace luminous {
             return _velocity;
         }
 
-        float CameraBase::fovy() const {
-            return _fovy;
+        float CameraBase::fov_y() const {
+            return _fov_y;
         }
 
         void CameraBase::update_yaw(float val) {
@@ -53,14 +60,14 @@ namespace luminous {
             }
         }
 
-        void CameraBase::update_fovy(float val) {
-            float new_fovy = _fovy + val;
+        void CameraBase::update_fov_y(float val) {
+            float new_fovy = _fov_y + val;
             if (new_fovy > fov_max) {
-                _fovy = fov_max;
+                _fov_y = fov_max;
             } else if (new_fovy < fov_min) {
-                _fovy = fov_min;
+                _fov_y = fov_min;
             } else {
-                _fovy += val;
+                _fov_y += val;
             }
         }
 
@@ -78,25 +85,25 @@ namespace luminous {
 
         Transform CameraBase::camera_to_world() const {
             auto translation = Transform::translation(_position);
-            return translation * linear_space();
+            return translation * camera_to_world_rotation();
         }
 
-        Transform CameraBase::linear_space() const {
+        Transform CameraBase::camera_to_world_rotation() const {
             auto horizontal = Transform::rotation_y(_yaw);
             auto vertical = Transform::rotation_x(_pitch);
             return vertical * horizontal;
         }
 
         float3 CameraBase::forward() const {
-            return linear_space().inverse().apply_vector(forward_vec);
+            return camera_to_world_rotation().inverse().apply_vector(forward_vec);
         }
 
         float3 CameraBase::up() const {
-            return linear_space().inverse().apply_vector(up_vec);
+            return camera_to_world_rotation().inverse().apply_vector(up_vec);
         }
 
         float3 CameraBase::right() const {
-            return linear_space().inverse().apply_vector(right_vec);
+            return camera_to_world_rotation().inverse().apply_vector(right_vec);
         }
 
         float3 SensorHandle::position() const {
@@ -119,12 +126,12 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(update_pitch, val);
         }
 
-        float SensorHandle::fovy() const {
-            LUMINOUS_VAR_PTR_DISPATCH(fovy);
+        float SensorHandle::fov_y() const {
+            LUMINOUS_VAR_PTR_DISPATCH(fov_y);
         }
 
-        void SensorHandle::update_fovy(float val) {
-            LUMINOUS_VAR_PTR_DISPATCH(update_fovy, val);
+        void SensorHandle::update_fov_y(float val) {
+            LUMINOUS_VAR_PTR_DISPATCH(update_fov_y, val);
         }
 
         float SensorHandle::velocity() const {
@@ -147,8 +154,8 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(camera_to_world)
         }
 
-        Transform SensorHandle::linear_space() const {
-            LUMINOUS_VAR_PTR_DISPATCH(linear_space)
+        Transform SensorHandle::camera_to_world_rotation() const {
+            LUMINOUS_VAR_PTR_DISPATCH(camera_to_world_rotation)
         }
 
         float3 SensorHandle::forward() const {

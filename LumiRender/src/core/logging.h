@@ -90,7 +90,7 @@ namespace luminous {
     ::luminous::logging::set_log_level(spdlog::level::level_enum::lv);
 
 #define LUMINOUS_INFO(...) \
-    ::luminous::logging::info(__VA_ARGS__);
+    ::luminous::logging::info(__VA_ARGS__,"\n    Source: ", LUMINOUS_SOURCE_LOCATION);
 
 #define LUMINOUS_WARNING(...) \
     ::luminous::logging::warning(__VA_ARGS__, "\n    Source: ", LUMINOUS_SOURCE_LOCATION);

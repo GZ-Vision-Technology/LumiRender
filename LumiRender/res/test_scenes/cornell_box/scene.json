@@ -57,6 +57,21 @@
 			"params" : {
 				"fn": "cornell_box.obj",
 				"transform" : {
+					"type" : "yaw_pitch",
+					"param" : {
+						"yaw" : 10,
+						"pitch": 20,
+						"position": [1,1,1]
+					}
+				}
+			}
+		},
+		{
+			"name" : "c_box",
+			"type": "model",
+			"params" : {
+				"fn": "cornell_box.obj",
+				"transform" : {
 					"type" : "matrix4x4",
 					"param" : {
 						"matrix4x4" : [
@@ -102,11 +117,15 @@
 	"camera" : {
 		"type" : "PinholeCamera",
 		"param" : {
-			"fov" : 20,
-			"transform": {
-				"position": [0,0,0],
-				"vertical" : 0,
-				"horizontal" : 0
+			"fov_y" : 20,
+			"velocity" : 20,
+			"transform" : {
+				"type" : "yaw_pitch",
+				"param" : {
+					"yaw" : 10,
+					"pitch": 20,
+					"position": [1,1,1]
+				}
 			}
 		}
 	},

@@ -11,7 +11,7 @@ namespace luminous {
     inline namespace render {
 
         std::string PerspectiveCamera::to_string() const {
-            return string_printf("%s: {fovy:%f}", name(), fovy());
+            return string_printf("%s: {fov_y:%f}", name(), fov_y());
         }
 
         PerspectiveCamera *PerspectiveCamera::create(const SensorConfig &config) {
