@@ -67,7 +67,9 @@ namespace luminous {
         struct ShapeConfig : Config {
             string type;
             string fn;
+            string name;
             TransformConfig o2w;
+            uint subdiv_level;
         };
 
         struct FilterConfig {
@@ -96,7 +98,7 @@ namespace luminous {
             Context *_context;
             std::map<string, uint32_t> _key_to_idx;
             vector<SP<const Model>> _model_list;
-            vector<ModelInstance> _instance_list;
+            vector<SP<const ModelInstance>> _instance_list;
         public:
             SamplerConfig sampler_config;
             SensorConfig sensor_config;
@@ -110,7 +112,7 @@ namespace luminous {
         public:
             explicit SceneGraph(Context *context) : _context(context) {}
 
-            SP<const Model> create_model_instance(const string &fn, uint subdiv_level = 0);
+            void create_shape_instance(const ShapeConfig &config);
 
             void create_scene();
         };

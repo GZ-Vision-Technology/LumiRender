@@ -1,43 +1,11 @@
 {
 	"shapes" : [
-//		{
-//			"name" : "c_box",
-//			"type": "model",
-//			"params" : {
-//				"fn": "cornell_box.obj",
-//				"transform" : {
-//					"type" : "rotate_x",
-//					"param" : 180
-//				}
-//			}
-//		},
-//		{
-//			"name" : "c_box",
-//			"type": "model",
-//			"params" : {
-//				"fn": "cornell_box.obj",
-//				"transform" : {
-//					"type" : "translate",
-//					"param" : [1,1,1]
-//				}
-//			}
-//		},
-//		{
-//			"name" : "c_box",
-//			"type": "model",
-//			"params" : {
-//				"fn": "cornell_box.obj",
-//				"transform" : {
-//					"type" : "rotate",
-//					"param" : [1,1,1,60]
-//				}
-//			}
-//		},
 		{
 			"name" : "c_box",
 			"type": "model",
-			"params" : {
+			"param" : {
 				"fn": "cornell_box.obj",
+				"subdiv_level": 0,
 				"transform" : {
 					"type" : "matrix4x4",
 					"param" : {
@@ -54,8 +22,9 @@
 		{
 			"name" : "c_box",
 			"type": "model",
-			"params" : {
+			"param" : {
 				"fn": "cornell_box.obj",
+				"subdiv_level": 0,
 				"transform" : {
 					"type" : "yaw_pitch",
 					"param" : {
@@ -69,8 +38,9 @@
 		{
 			"name" : "c_box",
 			"type": "model",
-			"params" : {
+			"param" : {
 				"fn": "cornell_box.obj",
+				"subdiv_level": 0,
 				"transform" : {
 					"type" : "matrix4x4",
 					"param" : {
@@ -87,8 +57,9 @@
 		{
 			"name" : "c_box",
 			"type": "model",
-			"params" : {
+			"param" : {
 				"fn": "cornell_box.obj",
+				"subdiv_level": 0,
 				"transform" : {
 					"type" : "trs",
 					"param": {

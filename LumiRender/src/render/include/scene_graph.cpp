@@ -12,20 +12,27 @@ namespace luminous {
             return string_printf("%s_subdiv_%u", fn.c_str(), subdiv_level);
         }
 
-        SP<const Model> SceneGraph::create_model_instance(const string &fn, uint subdiv_level) {
-            auto key = gen_key(fn, subdiv_level);
-            if (is_contain(key)) {
-
+        void SceneGraph::create_shape_instance(const ShapeConfig &config) {
+            auto key = gen_key(config.fn, config.subdiv_level);
+            if (!is_contain(key)) {
+                auto path = _context->scene_path() / config.fn;
+                auto mp = make_shared<Model>(path, config.subdiv_level);
+                mp->key = key;
+                _model_list.push_back(mp);
+                _key_to_idx[key] = _model_list.size();
             }
-            return nullptr;
+            uint idx = _key_to_idx[key];
+            Transform o2w = config.o2w.create();
+            auto instance = make_shared<ModelInstance>(idx, o2w, config.name.c_str());
+            _instance_list.push_back(instance);
         }
 
         void SceneGraph::create_scene() {
+            LUMINOUS_INFO("create shapes start!")
             for (const auto& shape_config : shape_configs) {
-                auto path = _context->scene_path() / shape_config.fn;
-                cout << path << endl;
-                Model m(path);
+                create_shape_instance(shape_config);
             }
+            LUMINOUS_INFO("create shapes end!")
         }
     }
 }

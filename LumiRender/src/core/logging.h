@@ -84,13 +84,13 @@ namespace luminous {
 #define LUMINOUS_SOURCE_LOCATION __FILE__ , ":", __LINE__
 
 #define LUMINOUS_DEBUG(...) \
-    ::luminous::logging::debug(__VA_ARGS__, "\n    Source: ", LUMINOUS_SOURCE_LOCATION);
+    ::luminous::logging::debug(__VA_ARGS__);
 
 #define SET_LOG_LEVEL(lv) \
     ::luminous::logging::set_log_level(spdlog::level::level_enum::lv);
 
 #define LUMINOUS_INFO(...) \
-    ::luminous::logging::info(__VA_ARGS__,"\n    Source: ", LUMINOUS_SOURCE_LOCATION);
+    ::luminous::logging::info(__VA_ARGS__);
 
 #define LUMINOUS_WARNING(...) \
     ::luminous::logging::warning(__VA_ARGS__, "\n    Source: ", LUMINOUS_SOURCE_LOCATION);

@@ -74,8 +74,11 @@ namespace luminous {
             for (auto &shape : shapes) {
                 ShapeConfig shape_config;
                 shape_config.type = shape["type"];
-                shape_config.fn = string(shape["params"]["fn"]);
-                shape_config.o2w = parse_transform(ParameterSet(shape["params"]["transform"]));
+                ParameterSet param(shape["param"]);
+                shape_config.subdiv_level = param["subdiv_level"].as_uint();
+                shape_config.fn = param["fn"].as_string();
+                shape_config.name = string(shape["name"]);
+                shape_config.o2w = parse_transform(param["transform"]);
                 ret.push_back(shape_config);
             }
             return move(ret);

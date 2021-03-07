@@ -9,7 +9,7 @@
 #include <vector>
 #include "core/concepts.h"
 
-namespace luminous{
+namespace luminous {
 
     inline namespace render {
         using std::vector;
@@ -55,16 +55,22 @@ namespace luminous{
 
         class Model {
         private:
-            string _name;
-            string _key;
             vector<std::shared_ptr<const Mesh>> _meshes;
         public:
+            string key;
+
             Model(const std::filesystem::path &fn, uint subdiv_level = 0);
         };
 
         struct ModelInstance {
-            uint model_idx = uint32_t(-1);
-            Transform o2w;
+            ModelInstance(uint idx, const Transform &t, const char *n)
+                    : model_idx(idx),
+                      o2w(t),
+                      name(n) {}
+
+            const char *name;
+            const uint model_idx;
+            const Transform o2w;
         };
     }
 
