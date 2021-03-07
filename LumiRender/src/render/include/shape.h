@@ -40,7 +40,6 @@ namespace luminous {
             vector<float3> _normals;
             vector<float3> _positions;
             vector<float2> _tex_coords;
-            string _name;
             vector<TriangleHandle> _triangles;
         public:
             Mesh(vector<float3> P,

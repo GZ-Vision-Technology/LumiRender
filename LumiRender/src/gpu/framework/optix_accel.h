@@ -15,7 +15,6 @@ namespace luminous {
         private:
             std::shared_ptr<Device> _device;
             Dispatcher _dispatcher;
-            cudaStream_t _stream;
             OptixDeviceContext _optix_context;
             uint32_t geom_flags = OPTIX_BUILD_FLAG_ALLOW_COMPACTION;
             size_t _gpu_bvh_bytes = 0;

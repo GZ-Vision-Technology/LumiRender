@@ -18,13 +18,13 @@ namespace luminous {
                 auto path = _context->scene_path() / config.fn;
                 auto mp = make_shared<Model>(path, config.subdiv_level);
                 mp->key = key;
-                _model_list.push_back(mp);
-                _key_to_idx[key] = _model_list.size();
+                model_list.push_back(mp);
+                _key_to_idx[key] = model_list.size();
             }
             uint idx = _key_to_idx[key];
             Transform o2w = config.o2w.create();
             auto instance = make_shared<ModelInstance>(idx, o2w, config.name.c_str());
-            _instance_list.push_back(instance);
+            instance_list.push_back(instance);
         }
 
         void SceneGraph::create_scene() {

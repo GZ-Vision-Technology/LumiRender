@@ -11,17 +11,20 @@
 #include "render/include/sensor.h"
 
 namespace luminous {
-    class Scene : public Noncopyable {
-    private:
-        Buffer<float3> _positions;
-        Buffer<float3> _normals;
-        Buffer<float2> _tex_coords;
-        Buffer<TriangleHandle> _triangles;
-        Buffer<ModelHandle> _models;
-        Buffer<uint> _models_triangle_counts;
-        Buffer<uint> _instance_to_model_id;
-        Buffer<float4x4> _instance_transforms;
+    inline namespace gpu {
+        class Scene : public Noncopyable {
+        private:
+            Buffer<float3> _positions{nullptr};
+            Buffer<float3> _normals{nullptr};
+            Buffer<float2> _tex_coords{nullptr};
+            Buffer<TriangleHandle> _triangles{nullptr};
+            Buffer<ModelHandle> _models{nullptr};
+            Buffer<uint> _models_triangle_counts{nullptr};
+            Buffer<uint> _instance_to_model_id{nullptr};
+            Buffer<float4x4> _instance_transforms{nullptr};
+        public:
+            Scene(UP<SceneGraph> scene_graph);
 
-
-    };
+        };
+    }
 }

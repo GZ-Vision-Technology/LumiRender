@@ -11,11 +11,17 @@
 namespace luminous {
     inline namespace gpu {
         class CUDAPipeline : public Pipeline {
-
+        private:
+            unique_ptr<Scene> _scene{nullptr};
         public:
             CUDAPipeline(unique_ptr<CUDADevice> cuda_device, Context *context)
                 : Pipeline(make_unique<Device>(move(cuda_device)),context) {}
 
+            void init(const Parser &parser) override {
+                auto scene_graph = parser.parse();
+                scene_graph->create_scene();
+                _scene = make_unique<Scene>(move(scene_graph));
+            }
 
             void render_cli() override {
 

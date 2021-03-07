@@ -17,17 +17,13 @@ namespace luminous {
     protected:
         shared_ptr<Device> _device{nullptr};
         Context * _context{nullptr};
-        unique_ptr<Scene> _scene{nullptr};
         SensorHandle _camera;
     public:
         Pipeline(const shared_ptr<Device> &device, Context *context)
             : _device(device),
             _context(context) {}
 
-        void init(const Parser &parser) {
-            auto scene_graph = parser.parse();
-            scene_graph->create_scene();
-        }
+        virtual void init(const Parser &parser) = 0;
 
         virtual void render_gui() = 0;
 
