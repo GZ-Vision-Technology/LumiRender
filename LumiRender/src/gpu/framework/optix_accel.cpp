@@ -15,7 +15,13 @@ namespace luminous {
             return 0;
         }
 
-        void OptixAccel::build(SP<SceneGraph> graph) {
+        void OptixAccel::build(const SP<SceneGraph> &graph) {
+
+        }
+
+        OptixAccel::OptixAccel(const SP<Device> &device)
+        : _device(device),
+        _dispatcher(_device->new_dispatcher()) {
 
         }
 

@@ -27,12 +27,11 @@ namespace luminous {
             instance_list.push_back(instance);
         }
 
-        void SceneGraph::create_scene() {
-            LUMINOUS_INFO("create shapes start!")
+        void SceneGraph::create_shapes() {
+            TASK_TAG("create shapes")
             for (const auto& shape_config : shape_configs) {
                 create_shape_instance(shape_config);
             }
-            LUMINOUS_INFO("create shapes end!")
         }
     }
 }

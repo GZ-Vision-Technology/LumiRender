@@ -25,40 +25,34 @@ namespace luminous {
             uint k;
         };
 
-        struct ModelHandle {
+        struct MeshHandle {
             uint vertex_offset;
             uint triangle_offset;
-        };
-
-        struct MeshHandle : public ModelHandle {
             uint vertex_count;
             uint triangle_count;
         };
 
-        class Mesh : public Shape {
-        private:
-            vector<float3> _normals;
-            vector<float3> _positions;
-            vector<float2> _tex_coords;
-            vector<TriangleHandle> _triangles;
-        public:
+        struct Mesh : public Shape {
             Mesh(vector<float3> P,
                  vector<float3> N,
                  vector<float2> uv,
                  vector<TriangleHandle> T) :
-                    _positions(std::move(P)),
-                    _normals(std::move(N)),
-                    _tex_coords(std::move(uv)),
-                    _triangles(std::move(T)) {}
+                    positions(std::move(P)),
+                    normals(std::move(N)),
+                    tex_coords(std::move(uv)),
+                    triangles(std::move(T)) {}
+
+            vector<float3> normals;
+            vector<float3> positions;
+            vector<float2> tex_coords;
+            vector<TriangleHandle> triangles;
         };
 
-        class Model {
-        private:
-            vector<std::shared_ptr<const Mesh>> _meshes;
-        public:
-            string key;
-
+        struct Model {
             Model(const std::filesystem::path &fn, uint subdiv_level = 0);
+
+            vector<std::shared_ptr<const Mesh>> meshes;
+            string key;
         };
 
         struct ModelInstance {

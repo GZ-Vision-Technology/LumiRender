@@ -20,7 +20,7 @@ namespace luminous {
 
             void load_from_json(const std::filesystem::path &fn);
 
-            UP<SceneGraph> parse() const;
+            SP<SceneGraph> parse() const;
         };
     }
 }

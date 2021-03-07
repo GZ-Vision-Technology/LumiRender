@@ -3,11 +3,10 @@
 //
 
 #include "shape.h"
-#include "assimp/Importer.hpp"
+#include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/Subdivision.h>
 #include <assimp/scene.h>
-#include "core/concepts.h"
 namespace luminous {
     inline namespace render {
 
@@ -45,7 +44,7 @@ namespace luminous {
                 std::copy(ai_scene->mMeshes, ai_scene->mMeshes + ai_scene->mNumMeshes, ai_meshes.begin());
             }
 
-            _meshes.reserve(ai_meshes.size());
+            meshes.reserve(ai_meshes.size());
             for (auto ai_mesh : ai_meshes) {
                 vector<float3> positions;
                 vector<float3> normals;
@@ -68,35 +67,35 @@ namespace luminous {
                     }
                     positions.push_back(position);
                     normals.push_back(normal);
+                }
 
-
-                    for (auto f = 0u; f < ai_mesh->mNumFaces; f++) {
-                        auto ai_face = ai_mesh->mFaces[f];
-                        if (ai_face.mNumIndices == 3) {
-                            indices.push_back(TriangleHandle{
-                                    ai_face.mIndices[0],
-                                    ai_face.mIndices[1],
-                                    ai_face.mIndices[2]});
-                        } else if (ai_face.mNumIndices == 4) {
-                            indices.push_back(TriangleHandle{
-                                    ai_face.mIndices[0],
-                                    ai_face.mIndices[1],
-                                    ai_face.mIndices[2]});
-                            indices.push_back(TriangleHandle{
-                                    ai_face.mIndices[0],
-                                    ai_face.mIndices[2],
-                                    ai_face.mIndices[3]});
-                        } else {
-                            LUMINOUS_EXCEPTION("Only triangles and quads supported: ", ai_mesh->mName.data);
-                        }
+                for (auto f = 0u; f < ai_mesh->mNumFaces; f++) {
+                    auto ai_face = ai_mesh->mFaces[f];
+                    if (ai_face.mNumIndices == 3) {
+                        indices.push_back(TriangleHandle{
+                                ai_face.mIndices[0],
+                                ai_face.mIndices[1],
+                                ai_face.mIndices[2]});
+                    } else if (ai_face.mNumIndices == 4) {
+                        indices.push_back(TriangleHandle{
+                                ai_face.mIndices[0],
+                                ai_face.mIndices[1],
+                                ai_face.mIndices[2]});
+                        indices.push_back(TriangleHandle{
+                                ai_face.mIndices[0],
+                                ai_face.mIndices[2],
+                                ai_face.mIndices[3]});
+                    } else {
+                        LUMINOUS_EXCEPTION("Only triangles and quads supported: ", ai_mesh->mName.data);
                     }
                 }
                 auto mesh = std::make_shared<const Mesh>(move(positions),
                                                     move(normals),
                                                     move(tex_coords),
                                                     move(indices));
-                _meshes.push_back(mesh);
+                meshes.push_back(mesh);
             }
-        }
-    }
-}
+
+        } // luminous::Model
+    } // luminous::render
+} // luminous

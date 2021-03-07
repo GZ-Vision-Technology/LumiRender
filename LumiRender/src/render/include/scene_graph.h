@@ -114,7 +114,7 @@ namespace luminous {
 
             void create_shape_instance(const ShapeConfig &config);
 
-            void create_scene();
+            void create_shapes();
         };
 
     };

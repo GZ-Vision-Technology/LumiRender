@@ -25,9 +25,9 @@ namespace luminous {
             OptixTraversableHandle build_bvh(const std::vector<OptixBuildInput> &build_inputs);
 
         public:
-            OptixAccel(std::shared_ptr<Device> device);
+            OptixAccel(const SP<Device> &device);
 
-            void build(SP<SceneGraph> graph);
+            void build(const SP<SceneGraph> &graph);
         };
     }
 }

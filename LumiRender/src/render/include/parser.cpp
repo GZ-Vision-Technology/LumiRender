@@ -126,9 +126,9 @@ namespace luminous {
             _data = create_json_from_file(fn);
         }
 
-        UP<SceneGraph> Parser::parse() const {
+        SP<SceneGraph> Parser::parse() const {
             auto shapes = _data["shapes"];
-            auto scene_graph = make_unique<SceneGraph>(_context);
+            auto scene_graph = make_shared<SceneGraph>(_context);
             scene_graph->shape_configs = parse_shapes(shapes);
             scene_graph->sensor_config = parse_sensor(ParameterSet(_data["camera"]));
             scene_graph->sampler_config = parse_sampler(ParameterSet(_data["sampler"]));

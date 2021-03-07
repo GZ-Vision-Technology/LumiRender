@@ -10,6 +10,11 @@
 namespace luminous {
     inline namespace optics {
 
+        enum ColorSpace {
+            LINEAR,
+            SRGB
+        };
+
         class RGBSpectrum : public float3 {
         public:
             using scalar_t = float;
