@@ -14,26 +14,26 @@ namespace luminous {
         class CUDABuffer : public RawBuffer::Impl {
         private:
             void *_ptr;
-            size_t bytes;
+            size_t _bytes;
 
         public:
             void *device_ptr() { return _ptr; }
 
             void *ptr() override { return _ptr; }
 
-            CUDABuffer(void *ptr, size_t bytes) : _ptr(ptr), bytes(bytes) {}
+            CUDABuffer(void *ptr, size_t bytes) : _ptr(ptr), _bytes(bytes) {}
 
-            ~CUDABuffer() {CUDA_CHECK(cudaFree(_ptr)); }
+            ~CUDABuffer() { CUDA_CHECK(cudaFree(_ptr)); }
 
-            size_t size() const override { return bytes; }
+            size_t size() const override { return _bytes; }
 
-            void download(Dispatcher &dispatcher, size_t offset, size_t size, void *host_data) {
+            void download(Dispatcher &dispatcher, void *host_data, size_t size, size_t offset = 0) override {
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
                 CUDA_CHECK(cudaMemcpyAsync(host_data, (const uint8_t *) _ptr + offset, size, cudaMemcpyDeviceToHost,
                                            stream));
             }
 
-            void upload(Dispatcher &dispatcher, size_t offset, size_t size, const void *host_data) {
+            void upload(Dispatcher &dispatcher, const void *host_data, size_t size, size_t offset = 0) override {
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
                 CUDA_CHECK(cudaMemcpyAsync((uint8_t *) _ptr + offset, host_data, size, cudaMemcpyHostToDevice, stream));
             }
