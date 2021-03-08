@@ -74,7 +74,7 @@ namespace luminous {
 
         struct FilterConfig {
             string type;
-            uint2 radius;
+            float2 radius;
         };
 
         struct FilmConfig : Config {
