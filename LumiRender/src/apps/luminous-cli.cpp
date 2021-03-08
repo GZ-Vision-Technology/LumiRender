@@ -27,9 +27,8 @@ int main(int argc, char *argv[]) {
     }
     std::unique_ptr<luminous::Pipeline> pipeline;
     if (context.device() == "cuda") {
-        unique_ptr<CUDADevice> cuda_device = make_unique<CUDADevice>();
-        pipeline = std::make_unique<CUDAPipeline>(move(cuda_device), &context);
-    } else if (context.cli_option<string>("device") == "cpu") {
+        pipeline = std::make_unique<CUDAPipeline>(&context);
+    } else if (context.device() == "cpu") {
         LUMINOUS_INFO("cpu is not support");
     }
     pipeline->init(sp);

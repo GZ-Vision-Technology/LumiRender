@@ -23,5 +23,9 @@ namespace luminous {
                 return Dispatcher(std::make_unique<CUDADispatcher>());
             }
         };
+
+        inline std::shared_ptr<Device> create_cuda_device() {
+            return std::make_shared<Device>(std::make_unique<CUDADevice>());
+        }
     }
 }

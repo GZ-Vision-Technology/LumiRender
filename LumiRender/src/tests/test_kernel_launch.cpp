@@ -11,14 +11,15 @@
 #include <string>
 #include <vector>
 #include <driver_types.h>
+#include "gpu/framework/cuda_device.h"
+#include "gpu/framework/cuda_kernel.h"
+#include "gpu/framework/cuda_module.h"
 
 using namespace std;
 
 extern "C" char ptxCode[];
 
-int main() {
-
-
+void test1() {
     string s = ptxCode;
     cudaStream_t stream;
     cudaStreamCreate(&stream);
@@ -83,7 +84,7 @@ int main() {
     int gridSize = (size + blockSize - 1) / blockSize;
     vector<void *> args = {&dev_c, &dev_a, &dev_b};
     auto r = cuLaunchKernel(func, 1, 1, 1, size, 1,
-                   1, 1024, stream, args.data(), nullptr);
+                            1, 1024, stream, args.data(), nullptr);
 
     auto css = cudaStreamSynchronize(stream);
     cudaStatus = cudaMemcpy(c, dev_c, size * sizeof(int), cudaMemcpyDeviceToHost);
@@ -95,5 +96,34 @@ int main() {
     cudaFree(dev_a);
     cudaFree(dev_b);
 //    cout << s;
+}
+
+void test2() {
+    using namespace luminous;
+    auto device = create_cuda_device();
+
+    const auto& d2 = device;
+
+    string s = ptxCode;
+    cudaStream_t stream;
+    cudaStreamCreate(&stream);
+
+    auto cuda_module = create_cuda_module(ptxCode);
+
+    auto cuda_kernel = cuda_module->get_kernel("addKernel");
+
+    const int size = 5;
+    const int a[size] = {1, 2, 3, 4, 5 };
+    const int b[size] = {10, 20, 30, 40, 50 };
+
+    auto buffer_a = device->allocate_buffer<int>(size);
+    auto dispatcher = device->new_dispatcher();
+    buffer_a.upload(dispatcher, a, size);
+}
+
+int main() {
+
+    test2();
+
     return 0;
 }

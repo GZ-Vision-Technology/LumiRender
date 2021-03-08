@@ -14,19 +14,24 @@ namespace luminous {
     public:
         class Impl {
         public:
+            virtual void configure(uint3 grid_size,
+                                   uint3 local_size) = 0;
+
             virtual void launch(Dispatcher &dispatcher,
-                                std::vector<void *> args,
-                                uint3 global_size,
-                                uint3 local_size) = 0;
+                                std::vector<void *> args) = 0;
 
             virtual ~Impl() = default;
         };
 
-        void launch(Dispatcher &dispatcher,
-                    std::vector<void *> args,
-                    uint3 global_size,
-                    uint3 local_size) {
-            impl->launch(dispatcher, std::move(args), global_size, local_size);
+        void configure(uint3 grid_size,
+                       uint3 block_size) {
+            impl->configure(grid_size, block_size);
+        }
+
+        Kernel &launch(Dispatcher &dispatcher,
+                       std::vector<void *> args) {
+            impl->launch(dispatcher, std::move(args));
+            return *this;
         }
 
         explicit Kernel(std::unique_ptr<Impl> impl) : impl(std::move(impl)) {}

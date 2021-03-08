@@ -5,27 +5,35 @@
 
 #pragma once
 
-#include "backend/kernel.h"
-
+#include "core/backend/kernel.h"
+#include "gpu/framework/helper/cuda.h"
 
 namespace luminous {
     inline namespace gpu {
+
         class CUDAKernel : public Kernel::Impl {
         private:
-            CUfunction func;
-
+            CUfunction _func;
+            uint3 _grid_size = make_uint3(0);
+            uint3 _block_size = make_uint3(0);
         public:
-            CUDAKernel(CUfunction func) : func(func) {}
+            CUDAKernel(CUfunction func) : _func(func) {}
+
+            void configure(uint3 grid_size, uint3 local_size) override {
+
+            }
 
             void launch(Dispatcher &dispatcher,
-                        std::vector<void *> args,
-                        uint3 global_size,
-                        uint3 local_size) override {
+                        std::vector<void *> args) override {
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                vec3 grid_size = (global_size + local_size - uvec3(1)) / local_size;
-                CU_CHECK(cuLaunchKernel(func, grid_size.x, grid_size.y, grid_size.z, local_size.x, local_size.y,
-                                        local_size.z, 1024, stream, args.data(), nullptr));
+                CU_CHECK(cuLaunchKernel(_func, _grid_size.x, _grid_size.y, _grid_size.z,
+                                        _block_size.x, _block_size.y,_block_size.z,
+                                        1024, stream, args.data(), nullptr));
             }
         };
+
+        inline SP<Kernel> create_cuda_kernel(CUfunction func) {
+            return std::make_shared<Kernel>(std::make_unique<CUDAKernel>(func));
+        }
     }
 }

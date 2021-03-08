@@ -24,7 +24,7 @@
         CUresult result = EXPR;                                                                                        \
         if (result != CUDA_SUCCESS) {                                                                                  \
             const char *str;                                                                                           \
-            AKR_ASSERT(CUDA_SUCCESS == cuGetErrorString(result, &str));                                                \
+            assert(CUDA_SUCCESS == cuGetErrorString(result, &str));                                                \
             spdlog::error("CUDA error: {} at {}:{}", str, __FILE__, __LINE__);                                         \
             std::abort();                                                                                              \
         }                                                                                                              \

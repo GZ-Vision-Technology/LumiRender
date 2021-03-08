@@ -79,7 +79,7 @@ namespace luminous {
         init_event_cb();
         init_imgui();
         init_gl_context();
-        _pipeline = make_unique<CUDAPipeline>(make_unique<CUDADevice>(), context);
+        _pipeline = make_unique<CUDAPipeline>(context);
         _pipeline->init(parser);
     }
 

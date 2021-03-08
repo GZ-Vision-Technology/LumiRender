@@ -14,8 +14,8 @@ namespace luminous {
         private:
             unique_ptr<Scene> _scene{nullptr};
         public:
-            CUDAPipeline(unique_ptr<CUDADevice> cuda_device, Context *context)
-                : Pipeline(make_unique<Device>(move(cuda_device)),context) {}
+            CUDAPipeline(Context *context)
+                : Pipeline(create_cuda_device(),context) {}
 
             void init(const Parser &parser) override;
 
