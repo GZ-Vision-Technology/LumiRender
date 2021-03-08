@@ -14,7 +14,9 @@ namespace luminous {
         public:
             cudaStream_t stream;
 
-            CUDADispatcher(cudaStream_t stream) : stream(stream) {}
+            CUDADispatcher() {
+                CUDA_CHECK(cudaStreamCreate(&stream));
+            }
 
             void wait() override {CUDA_CHECK(cudaStreamSynchronize(stream)); }
 

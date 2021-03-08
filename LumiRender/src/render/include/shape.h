@@ -26,6 +26,12 @@ namespace luminous {
         };
 
         struct MeshHandle {
+            MeshHandle(uint vert_ofs, uint tri_ofs, uint vert_count, uint tri_count)
+                    : vertex_offset(vert_ofs),
+                      triangle_offset(tri_ofs),
+                      vertex_count(vert_count),
+                      triangle_count(tri_count) {}
+
             uint vertex_offset;
             uint triangle_offset;
             uint vertex_count;
@@ -46,6 +52,7 @@ namespace luminous {
             vector<float3> positions;
             vector<float2> tex_coords;
             vector<TriangleHandle> triangles;
+            mutable uint idx_in_meshes;
         };
 
         struct Model {

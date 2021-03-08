@@ -18,8 +18,8 @@ namespace luminous {
                 auto path = _context->scene_path() / config.fn;
                 auto mp = make_shared<Model>(path, config.subdiv_level);
                 mp->key = key;
-                model_list.push_back(mp);
                 _key_to_idx[key] = model_list.size();
+                model_list.push_back(mp);
             }
             uint idx = _key_to_idx[key];
             Transform o2w = config.o2w.create();

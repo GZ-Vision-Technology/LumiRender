@@ -15,11 +15,11 @@ namespace luminous {
     inline namespace gpu {
         class Scene : public Noncopyable {
         private:
-            Buffer<MeshHandle> _meshes{nullptr};
             Buffer<uint> _instance_to_mesh_idx{nullptr};
             Buffer<uint> _instance_transform_idx{nullptr};
             Buffer<float4x4> _transforms{nullptr};
 
+            Buffer<MeshHandle> _meshes{nullptr};
             Buffer<float3> _positions{nullptr};
             Buffer<float3> _normals{nullptr};
             Buffer<float2> _tex_coords{nullptr};

@@ -64,6 +64,8 @@ namespace luminous {
                         auto ai_tex_coord = ai_mesh->mTextureCoords[0][i];
                         auto uv = make_float2(ai_tex_coord.x, ai_tex_coord.y);
                         tex_coords.push_back(uv);
+                    } else {
+                        tex_coords.emplace_back(0,0);
                     }
                     positions.push_back(position);
                     normals.push_back(normal);

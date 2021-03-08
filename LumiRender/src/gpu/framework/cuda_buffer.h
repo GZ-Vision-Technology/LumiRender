@@ -21,7 +21,9 @@ namespace luminous {
 
             void *ptr() override { return _ptr; }
 
-            CUDABuffer(void *ptr, size_t bytes) : _ptr(ptr), _bytes(bytes) {}
+            CUDABuffer(size_t bytes) : _bytes(bytes) {
+                CUDA_CHECK(cudaMalloc(&_ptr, bytes));
+            }
 
             ~CUDABuffer() { CUDA_CHECK(cudaFree(_ptr)); }
 
