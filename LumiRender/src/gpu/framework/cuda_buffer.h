@@ -29,15 +29,26 @@ namespace luminous {
 
             size_t size() const override { return _bytes; }
 
-            void download(Dispatcher &dispatcher, void *host_data, size_t size, size_t offset = 0) override {
+            void download_async(Dispatcher &dispatcher, void *host_data, size_t size, size_t offset = 0) override {
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
                 CUDA_CHECK(cudaMemcpyAsync(host_data, (const uint8_t *) _ptr + offset, size, cudaMemcpyDeviceToHost,
                                            stream));
             }
 
-            void upload(Dispatcher &dispatcher, const void *host_data, size_t size, size_t offset = 0) override {
+            void upload_async(Dispatcher &dispatcher, const void *host_data, size_t size, size_t offset = 0) override {
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
                 CUDA_CHECK(cudaMemcpyAsync((uint8_t *) _ptr + offset, host_data, size, cudaMemcpyHostToDevice, stream));
+            }
+
+            void download(Dispatcher &dispatcher, void *host_data, size_t size, size_t offset = 0) override {
+                auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
+                CUDA_CHECK(cudaMemcpy(host_data, (const uint8_t *) _ptr + offset, size, cudaMemcpyDeviceToHost,
+                                           stream));
+            }
+
+            void upload(Dispatcher &dispatcher, const void *host_data, size_t size, size_t offset = 0) override {
+                auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
+                CUDA_CHECK(cudaMemcpy((uint8_t *) _ptr + offset, host_data, size, cudaMemcpyHostToDevice, stream));
             }
         };
     }
