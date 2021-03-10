@@ -46,11 +46,11 @@ namespace luminous {
             _triangles = _device->allocate_buffer<TriangleHandle>(T.size());
             _meshes = _device->allocate_buffer<MeshHandle>(mesh_list.size());
             auto dispatcher = _device->new_dispatcher();
-            _positions.upload(dispatcher, P.data(), P.size());
-            _normals.upload(dispatcher, N.data(), N.size());
-            _tex_coords.upload(dispatcher, UV.data(), UV.size());
-            _triangles.upload(dispatcher, T.data(), T.size());
-            _meshes.upload(dispatcher, mesh_list.data(), mesh_list.size());
+            _positions.upload_async(dispatcher, P.data(), P.size());
+            _normals.upload_async(dispatcher, N.data(), N.size());
+            _tex_coords.upload_async(dispatcher, UV.data(), UV.size());
+            _triangles.upload_async(dispatcher, T.data(), T.size());
+            _meshes.upload_async(dispatcher, mesh_list.data(), mesh_list.size());
 
             vector<float4x4> transforms;
             vector<uint> inst_to_mesh_idx;
@@ -66,9 +66,10 @@ namespace luminous {
             _transforms = _device->allocate_buffer<float4x4>(transforms.size());
             _instance_to_mesh_idx = _device->allocate_buffer<uint>(inst_to_mesh_idx.size());
             _instance_transform_idx = _device->allocate_buffer<uint>(inst_tsf_idx.size());
-            _transforms.upload(dispatcher, transforms.data(), transforms.size());
-            _instance_to_mesh_idx.upload(dispatcher, inst_to_mesh_idx.data(), inst_to_mesh_idx.size());
-            _instance_transform_idx.upload(dispatcher, inst_tsf_idx.data(), inst_tsf_idx.size());
+            _transforms.upload_async(dispatcher, transforms.data(), transforms.size());
+            _instance_to_mesh_idx.upload_async(dispatcher, inst_to_mesh_idx.data(), inst_to_mesh_idx.size());
+            _instance_transform_idx.upload_async(dispatcher, inst_tsf_idx.data(), inst_tsf_idx.size());
+            dispatcher.wait();
         }
 
         void Scene::build_accel() {

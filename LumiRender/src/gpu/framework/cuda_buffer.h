@@ -40,15 +40,12 @@ namespace luminous {
                 CUDA_CHECK(cudaMemcpyAsync((uint8_t *) _ptr + offset, host_data, size, cudaMemcpyHostToDevice, stream));
             }
 
-            void download(Dispatcher &dispatcher, void *host_data, size_t size, size_t offset = 0) override {
-                auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CUDA_CHECK(cudaMemcpy(host_data, (const uint8_t *) _ptr + offset, size, cudaMemcpyDeviceToHost,
-                                           stream));
+            void download(void *host_data, size_t size, size_t offset = 0) override {
+                CUDA_CHECK(cudaMemcpy(host_data, (const uint8_t *) _ptr + offset, size, cudaMemcpyDeviceToHost));
             }
 
-            void upload(Dispatcher &dispatcher, const void *host_data, size_t size, size_t offset = 0) override {
-                auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CUDA_CHECK(cudaMemcpy((uint8_t *) _ptr + offset, host_data, size, cudaMemcpyHostToDevice, stream));
+            void upload(const void *host_data, size_t size, size_t offset = 0) override {
+                CUDA_CHECK(cudaMemcpy((uint8_t *) _ptr + offset, host_data, size, cudaMemcpyHostToDevice));
             }
         };
     }

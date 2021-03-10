@@ -12,7 +12,7 @@ namespace luminous {
         struct Pixel {
             float4 rgb;
             float weight_sum;
-        }
+        };
 
         class GBufferFilm : public FilmBase {
         private:

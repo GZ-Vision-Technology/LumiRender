@@ -23,12 +23,12 @@ namespace luminous {
 
             NDSC_XPU int2 resolution() const { return _resolution; }
 
-            NDSC_XPU Box2i pixel_bounds() const { return _pixelBounds; }
+            NDSC_XPU Box2i pixel_bounds() const { return _pixel_bounds; }
 
             NDSC std::string _to_string() const {
                 return string_printf("resolution : %s, pixel bounds : %s", 
                                     _resolution.to_string().c_str(),
-                                    _pixelBounds.to_string().c_str());
+                                    _pixel_bounds.to_string().c_str());
             }
         };
 
@@ -40,6 +40,6 @@ namespace luminous {
         class FilmHandle : public Variant<RGBFilm *, GBufferFilm *> {
             using Variant::Variant;
             
-        } 
+        };
     }
 }

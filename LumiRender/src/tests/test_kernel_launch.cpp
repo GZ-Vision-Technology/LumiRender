@@ -31,9 +31,9 @@ void test1() {
     auto a3 = cuModuleGetFunction(&func2, module, "testKernel");
 
     const int size = 5;
-    const int a[size] = {1, 2, 3, 4, 5 };
-    const int b[size] = {10, 20, 30, 40, 50 };
-    int c[size] = {0 };
+    const int a[size] = {1, 2, 3, 4, 5};
+    const int b[size] = {10, 20, 30, 40, 50};
+    int c[size] = {0};
 
     int *dev_a = 0;
     int *dev_b = 0;
@@ -47,19 +47,19 @@ void test1() {
     }
 
     // Allocate GPU buffers for three vectors (two input, one output)    .
-    cudaStatus = cudaMalloc((void**)&dev_c, size * sizeof(int));
+    cudaStatus = cudaMalloc((void **) &dev_c, size * sizeof(int));
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMalloc failed!");
 //        goto Error;
     }
 
-    cudaStatus = cudaMalloc((void**)&dev_a, size * sizeof(int));
+    cudaStatus = cudaMalloc((void **) &dev_a, size * sizeof(int));
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMalloc failed!");
 //        goto Error;
     }
 
-    cudaStatus = cudaMalloc((void**)&dev_b, size * sizeof(int));
+    cudaStatus = cudaMalloc((void **) &dev_b, size * sizeof(int));
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMalloc failed!");
 //        goto Error;
@@ -80,7 +80,7 @@ void test1() {
 
     int minGridSize;
     int blockSize;
-    cuOccupancyMaxPotentialBlockSize (&minGridSize, &blockSize, func, 0,0, 0);
+    cuOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, func, 0, 0, 0);
     int gridSize = (size + blockSize - 1) / blockSize;
     vector<void *> args = {&dev_c, &dev_a, &dev_b};
     auto r = cuLaunchKernel(func, 1, 1, 1, size, 1,
@@ -102,7 +102,7 @@ void test2() {
     using namespace luminous;
     auto device = create_cuda_device();
 
-    const auto& d2 = device;
+    const auto &d2 = device;
 
     string s = ptxCode;
     cudaStream_t stream;
@@ -112,13 +112,24 @@ void test2() {
 
     auto cuda_kernel = cuda_module->get_kernel("addKernel");
 
-    const int size = 5;
-    const int a[size] = {1, 2, 3, 4, 5 };
-    const int b[size] = {10, 20, 30, 40, 50 };
+    const int size = 50;
+    const int a[size] = {1, 2, 3, 4, 5};
+    int b[size] = {10, 20, 30, 40, 50};
 
     auto buffer_a = device->allocate_buffer<int>(size);
     auto dispatcher = device->new_dispatcher();
-    buffer_a.upload(dispatcher, a, size);
+    buffer_a.upload_async(dispatcher, a, size);
+    buffer_a.download_async(dispatcher,b, size);
+//    dispatcher.wait();
+    dispatcher.then([&] {
+        for (int i = 0; i < size; ++i) {
+            cout << b[i] << endl;
+        };
+    });
+
+    for (int i = 0; i < size; ++i) {
+        cout << b[i] << "---"<< endl;
+    };
 }
 
 int main() {

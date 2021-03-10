@@ -20,11 +20,11 @@ namespace luminous {
     public:
         class Impl {
         public:
-            virtual void download(Dispatcher &dispatcher, void *host_data, size_t size, size_t offset = 0) = 0;
+            virtual void download(void *host_data, size_t size, size_t offset = 0) = 0;
 
             virtual void download_async(Dispatcher &dispatcher, void *host_data, size_t size, size_t offset = 0) = 0;
 
-            virtual void upload(Dispatcher &dispatcher, const void *host_data, size_t size, size_t offset = 0) = 0;
+            virtual void upload(const void *host_data, size_t size, size_t offset = 0) = 0;
 
             virtual void upload_async(Dispatcher &dispatcher, const void *host_data, size_t size, size_t offset = 0) = 0;
 
@@ -58,9 +58,9 @@ namespace luminous {
 
         size_t size() const { return impl->size() / sizeof(T); }
 
-        void download(Dispatcher &dispatcher, T *host_data, size_t size, size_t offset = 0) {
+        void download(T *host_data, size_t size, size_t offset = 0) {
             assert(offset * sizeof(T) + size * sizeof(T) <= impl->size());
-            impl->download(dispatcher, host_data, size * sizeof(T), offset * sizeof(T));
+            impl->download(host_data, size * sizeof(T), offset * sizeof(T));
         }
 
         void download_async(Dispatcher &dispatcher, T *host_data, size_t size, size_t offset = 0) {
@@ -68,9 +68,9 @@ namespace luminous {
             impl->download_async(dispatcher, host_data, size * sizeof(T), offset * sizeof(T));
         }
 
-        void upload(Dispatcher &dispatcher, const T *host_data, size_t size, size_t offset = 0) {
+        void upload(const T *host_data, size_t size, size_t offset = 0) {
             assert(offset * sizeof(T) + size * sizeof(T) <= impl->size());
-            impl->upload(dispatcher, host_data, size * sizeof(T), offset * sizeof(T));
+            impl->upload(host_data, size * sizeof(T), offset * sizeof(T));
         }
 
         void upload_async(Dispatcher &dispatcher, const T *host_data, size_t size, size_t offset = 0) {
