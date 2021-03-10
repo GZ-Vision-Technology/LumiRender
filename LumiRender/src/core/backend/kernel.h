@@ -23,20 +23,20 @@ namespace luminous {
             virtual ~Impl() = default;
         };
 
-        void configure(uint3 grid_size,
+        Kernel& configure(uint3 grid_size,
                        uint3 block_size) {
             impl->configure(grid_size, block_size);
+            return *this;
         }
 
-        Kernel &launch(Dispatcher &dispatcher,
+        void launch(Dispatcher &dispatcher,
                        std::vector<void *> args) {
             impl->launch(dispatcher, std::move(args));
-            return *this;
         }
 
         explicit Kernel(std::unique_ptr<Impl> impl) : impl(std::move(impl)) {}
 
-    private:
+//    private:
         std::unique_ptr<Impl> impl;
     };
 }

@@ -12,7 +12,7 @@ namespace luminous {
     inline namespace gpu {
 
         class CUDAKernel : public Kernel::Impl {
-        private:
+        public:
             CUfunction _func;
             uint3 _grid_size = make_uint3(0);
             uint3 _block_size = make_uint3(0);

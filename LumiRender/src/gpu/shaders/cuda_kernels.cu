@@ -15,7 +15,11 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 __global__ void addKernel(int *c, const int *a, const int *b)
 {
     int i = threadIdx.x;
+    if (i >= 5) {
+        return;
+    }
     c[i] = a[i] + b[i];
+    printf("%d\n", c[i]);
 }
 
 // Helper function for using CUDA to add vectors in parallel.

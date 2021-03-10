@@ -31,13 +31,14 @@ namespace luminous {
 
             void download_async(Dispatcher &dispatcher, void *host_data, size_t size, size_t offset = 0) override {
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CUDA_CHECK(cudaMemcpyAsync(host_data, (const uint8_t *) _ptr + offset, size, cudaMemcpyDeviceToHost,
-                                           stream));
+                CUDA_CHECK(cudaMemcpyAsync(host_data, (const uint8_t *) _ptr + offset,
+                                           size, cudaMemcpyDeviceToHost, stream));
             }
 
             void upload_async(Dispatcher &dispatcher, const void *host_data, size_t size, size_t offset = 0) override {
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CUDA_CHECK(cudaMemcpyAsync((uint8_t *) _ptr + offset, host_data, size, cudaMemcpyHostToDevice, stream));
+                CUDA_CHECK(cudaMemcpyAsync((uint8_t *) _ptr + offset, host_data,
+                                           size, cudaMemcpyHostToDevice, stream));
             }
 
             void download(void *host_data, size_t size, size_t offset = 0) override {

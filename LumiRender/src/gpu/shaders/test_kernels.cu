@@ -105,8 +105,8 @@ extern "C" {
     __global__ void addKernel(int *c, const int *a, const int *b) {
         int i = threadIdx.x;
         c[i] = a[i] + b[i];
-        testVariant();
-        printf("%d \n", c[i]);
+//        testVariant();
+        printf("C:%d, B:%d, A: %d\n", c[i], b[i], a[i]);
     }
 
     __global__ void testKernel(int *c) {

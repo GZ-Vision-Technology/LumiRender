@@ -20,12 +20,25 @@ using namespace std;
 extern "C" char ptxCode[];
 
 void test1() {
+    CUresult err = cuInit(0);
+    CUdevice device;
+    err = cuDeviceGet(&device, 0);
+    CUcontext ctx;
+    err = cuCtxCreate(&ctx, 0, device);
+
+
     string s = ptxCode;
     cudaStream_t stream;
     cudaStreamCreate(&stream);
     CUmodule module;
+
+//    CUstream stream;
+//    cuStreamCreate(&stream, 0);
     auto a0 = cuModuleLoadData(&module, ptxCode);
+
     CUfunction func;
+
+
     CUfunction func2;
     auto a1 = cuModuleGetFunction(&func, module, "addKernel");
     auto a3 = cuModuleGetFunction(&func2, module, "testKernel");
@@ -105,36 +118,52 @@ void test2() {
     const auto &d2 = device;
 
     string s = ptxCode;
-    cudaStream_t stream;
-    cudaStreamCreate(&stream);
+
 
     auto cuda_module = create_cuda_module(ptxCode);
-
+    cudaStream_t stream;
+    cudaStreamCreate(&stream);
     auto cuda_kernel = cuda_module->get_kernel("addKernel");
 
-    const int size = 50;
+    const int size = 5;
     const int a[size] = {1, 2, 3, 4, 5};
-    int b[size] = {10, 20, 30, 40, 50};
+    const int b[size] = {10, 20, 30, 40, 50};
+    int c[size] = {};
 
     auto buffer_a = device->allocate_buffer<int>(size);
+    auto buffer_b = device->allocate_buffer<int>(size);
+    auto buffer_c = device->allocate_buffer<int>(size);
     auto dispatcher = device->new_dispatcher();
     buffer_a.upload_async(dispatcher, a, size);
-    buffer_a.download_async(dispatcher,b, size);
-//    dispatcher.wait();
-    dispatcher.then([&] {
-        for (int i = 0; i < size; ++i) {
-            cout << b[i] << endl;
-        };
-    });
+//    buffer_b.download_async(dispatcher,b, size);
+    auto stream2 = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
+    dispatcher.wait();
+    auto pc = buffer_c.ptr();
+    auto pa = buffer_a.ptr();
+    auto pb = buffer_b.ptr();
 
-    for (int i = 0; i < size; ++i) {
-        cout << b[i] << "---"<< endl;
-    };
+    vector<void *> args = {&pc, &pa, &pb};
+
+//    cuda_kernel->configure(make_uint3(5), make_uint3(5))
+//                .launch(dispatcher,move(args));
+//    auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
+    CUmodule module;
+    auto a0 = cuModuleLoadData(&module, ptxCode);
+    CUfunction func;
+    auto a1 = cuModuleGetFunction(&func, module, "addKernel");
+    auto r = cuLaunchKernel(((CUDAKernel *)(cuda_kernel->impl.get()))->_func, 1, 1, 1, size, 1,
+                            1, 1024, stream2, args.data(), nullptr);
+
+    auto css = cudaStreamSynchronize(stream);
+//    for (int i = 0; i < size; ++i) {
+//        cout << b[i] << "---"<< endl;
+//    };
 }
 
 int main() {
 
-    test2();
+//    test2();
+    test1();
 
     return 0;
 }

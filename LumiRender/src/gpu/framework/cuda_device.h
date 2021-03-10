@@ -14,7 +14,16 @@ namespace luminous {
     inline namespace gpu {
 
         class CUDADevice : public Device::Impl {
+        private:
+            CUdevice  _cu_device{};
+            CUcontext _cu_context{};
         public:
+            CUDADevice() {
+                CU_CHECK(cuInit(0));
+                CU_CHECK(cuDeviceGet(&_cu_device, 0));
+                CU_CHECK(cuCtxCreate(&_cu_context, 0, _cu_device));
+            }
+
             RawBuffer allocate_buffer(size_t bytes) override {
                 return RawBuffer(std::make_unique<CUDABuffer>(bytes));
             }
