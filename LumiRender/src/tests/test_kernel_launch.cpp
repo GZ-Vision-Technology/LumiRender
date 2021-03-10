@@ -25,15 +25,15 @@ void test1() {
     err = cuDeviceGet(&device, 0);
     CUcontext ctx;
     err = cuCtxCreate(&ctx, 0, device);
+    CUstream stream;
+    cuStreamCreate(&stream, 0);
 
+    cuCtxSetCurrent(ctx);
 
     string s = ptxCode;
-    cudaStream_t stream;
-    cudaStreamCreate(&stream);
+//    cudaStream_t stream;
+//    cudaStreamCreate(&stream);
     CUmodule module;
-
-//    CUstream stream;
-//    cuStreamCreate(&stream, 0);
     auto a0 = cuModuleLoadData(&module, ptxCode);
 
     CUfunction func;
@@ -53,42 +53,35 @@ void test1() {
     int *dev_c = 0;
     cudaError_t cudaStatus;
 
-    cudaStatus = cudaSetDevice(0);
+    cudaStatus = cudaSetDevice(device);
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaSetDevice failed!  Do you have a CUDA-capable GPU installed?");
-//        goto Error;
     }
 
     // Allocate GPU buffers for three vectors (two input, one output)    .
     cudaStatus = cudaMalloc((void **) &dev_c, size * sizeof(int));
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMalloc failed!");
-//        goto Error;
     }
 
     cudaStatus = cudaMalloc((void **) &dev_a, size * sizeof(int));
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMalloc failed!");
-//        goto Error;
     }
 
     cudaStatus = cudaMalloc((void **) &dev_b, size * sizeof(int));
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMalloc failed!");
-//        goto Error;
     }
 
-    // Copy input vectors from host memory to GPU buffers.
     cudaStatus = cudaMemcpy(dev_a, a, size * sizeof(int), cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMemcpy failed!");
-//        goto Error;
     }
 
     cudaStatus = cudaMemcpy(dev_b, b, size * sizeof(int), cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMemcpy failed!");
-//        goto Error;
     }
 
     int minGridSize;
