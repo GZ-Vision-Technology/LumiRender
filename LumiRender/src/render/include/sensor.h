@@ -10,6 +10,7 @@
 #include "core/concepts.h"
 #include "graphics/lstd/lstd.h"
 #include "scene_graph.h"
+#include "film.h"
 
 namespace luminous {
     inline namespace render {
@@ -31,13 +32,17 @@ namespace luminous {
             float _yaw{};
             float _pitch{};
             float _velocity{};
-
+            Transform _raster_to_screen{};
+            Transform _camera_to_screen{};
+            FilmHandle _film{nullptr};
             void _update(const float4x4 &m);
 
         public:
             XPU CameraBase(float3 pos = make_float3(0), float fov_y = 30);
 
             XPU CameraBase(const float4x4 m, float fov_y, float velocity);
+
+            XPU void set_film(const FilmHandle &film);
 
             NDSC_XPU Transform camera_to_world() const;
 
@@ -89,6 +94,8 @@ namespace luminous {
             NDSC_XPU float3 position() const;
 
             XPU void set_position(float3 pos);
+
+            XPU void set_film(const Film &film);
 
             NDSC_XPU Transform camera_to_world() const;
 

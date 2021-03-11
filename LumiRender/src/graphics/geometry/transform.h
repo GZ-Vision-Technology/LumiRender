@@ -224,6 +224,17 @@ namespace luminous {
                 return scale(make_float3(s));
             }
 
+            NDSC_XPU static Transform perpective(float fov_y, float z_near, float z_far, bool radian = false) {
+                fov_y = radian ? fov_y : radians(fov_y);
+                float inv_tan = 1 / std::tan(fov_y / 2.f);
+                auto mat = make_float4x4(
+                        inv_tan, 0, 0, 0,
+                        0, inv_tan, 0, 0,
+                        0, 0, z_far / (z_far - z_near), 1,
+                        0, 0, -z_far * z_near / (z_far - z_near), 0);
+                return Transform(mat);
+            }
+
             XPU static Transform rotation(const float3 axis, float angle, bool radian = false) noexcept {
                 angle = radian ? angle : radians(angle);
 

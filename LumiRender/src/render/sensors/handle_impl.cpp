@@ -17,6 +17,7 @@ namespace luminous {
                 : _fov_y(fov_y),
                   _velocity(velocity) {
             _update(m);
+            _camera_to_screen = Transform::perspective(fov_y, 0.01, 1000);
         }
 
         void CameraBase::_update(const float4x4 &m) {
@@ -25,6 +26,17 @@ namespace luminous {
             _yaw = degrees(-std::atan2(-m[2][0], sy));
             _position = make_float3(m[3]);
             cout << _position.to_string();
+        }
+
+        void CameraBase::set_film(const FilmHandle &film) {
+            _film = film;
+            float2 res = _film.resolution();
+            box2f scrn = _film.screen_window();
+            float2 span = scrn.span();
+            Transform screen_to_raster = Transform::scale(res.x, res.y, 1) *
+                                         Transform::scale(1 / span.x, 1 / -span.y, 1) *
+                                         Transform::translate(make_float3(-scrn.lower.x, -scrn.upper.y, 0));
+            _raster_to_screen = screen_to_raster.inverse();
         }
 
         float3 CameraBase::position() const {
@@ -115,6 +127,10 @@ namespace luminous {
 
         float3 SensorHandle::position() const {
             LUMINOUS_VAR_PTR_DISPATCH(position);
+        }
+
+        void SensorHandle::set_film(const Film &film) {
+            LUMINOUS_VAR_PTR_DISPATCH(set_film, film);
         }
 
         float SensorHandle::yaw() const {
