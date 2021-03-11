@@ -108,60 +108,6 @@ void test1() {
 //    cout << s;
 }
 
-void test2() {
-    using namespace luminous;
-    auto device = create_cuda_device();
-
-    const auto &d2 = device;
-
-    string s = ptxCode;
-
-
-    auto cuda_module = create_cuda_module(ptxCode);
-    cudaStream_t stream;
-    cudaStreamCreate(&stream);
-    auto cuda_kernel = cuda_module->get_kernel("addKernel");
-
-    const int size = 5;
-    const int a[size] = {1, 2, 3, 4, 5};
-    const int b[size] = {10, 20, 30, 40, 50};
-    int c[size] = {};
-
-    auto buffer_a = device->allocate_buffer<int>(size);
-    auto buffer_b = device->allocate_buffer<int>(size);
-    auto buffer_c = device->allocate_buffer<int>(size);
-    auto dispatcher = device->new_dispatcher();
-//    buffer_a.upload_async(dispatcher, a, size);
-//    buffer_b.upload_async(dispatcher, b, size);
-
-
-    buffer_a.upload( a, size);
-    buffer_b.upload( b, size);
-//    buffer_b.download_async(dispatcher,b, size);
-    auto stream2 = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-    dispatcher.wait();
-    auto pc = buffer_c.ptr<CUdeviceptr>();
-    auto pa = buffer_a.ptr<CUdeviceptr>();
-    auto pb = buffer_b.ptr<CUdeviceptr>();
-
-    vector<void *> args = {&pc, &pa, &pb};
-
-//    cuda_kernel->configure(make_uint3(5), make_uint3(5))
-//                .launch(dispatcher,move(args));
-//    auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-    CUmodule module;
-    auto a0 = cuModuleLoadData(&module, ptxCode);
-    CUfunction func;
-    auto a1 = cuModuleGetFunction(&func, module, "addKernel");
-    auto r = cuLaunchKernel(((CUDAKernel *)(cuda_kernel->impl.get()))->_func, 1, 1, 1, size, 1,
-                            1, 1024, stream2, args.data(), nullptr);
-
-    auto css = cudaStreamSynchronize(stream);
-//    for (int i = 0; i < size; ++i) {
-//        cout << b[i] << "---"<< endl;
-//    };
-}
-
 void test3() {
     CU_CHECK(cuInit(0));
     CUdevice device;

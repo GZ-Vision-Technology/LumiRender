@@ -27,18 +27,18 @@ namespace luminous {
         Kernel& configure(uint3 grid_size,
                        uint3 block_size,
                        size_t sm = 0) {
-            impl->configure(grid_size, block_size, sm);
+            _impl->configure(grid_size, block_size, sm);
             return *this;
         }
 
         void launch(Dispatcher &dispatcher,
                        std::vector<void *> args) {
-            impl->launch(dispatcher, std::move(args));
+            _impl->launch(dispatcher, std::move(args));
         }
 
-        explicit Kernel(std::unique_ptr<Impl> impl) : impl(std::move(impl)) {}
+        explicit Kernel(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
 
-//    private:
-        std::unique_ptr<Impl> impl;
+    protected:
+        std::unique_ptr<Impl> _impl;
     };
 }

@@ -35,15 +35,15 @@ namespace luminous {
             virtual ~Impl() = default;
         };
 
-        RawBuffer(std::unique_ptr<Impl> impl) : impl(std::move(impl)) {}
+        RawBuffer(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
 
-        Impl *impl_mut() const { return impl.get(); }
+        Impl *impl_mut() const { return _impl.get(); }
 
         template<typename T = void *>
-        auto ptr() const { return (T)impl->ptr(); }
+        auto ptr() const { return (T)_impl->ptr(); }
 
     protected:
-        std::unique_ptr<Impl> impl;
+        std::unique_ptr<Impl> _impl;
     };
 
     template<class T>
@@ -57,26 +57,26 @@ namespace luminous {
 
         T *data() const { return reinterpret_cast<T *>(ptr()); }
 
-        size_t size() const { return impl->size() / sizeof(T); }
+        size_t size() const { return _impl->size() / sizeof(T); }
 
         void download(T *host_data, size_t size = 0, size_t offset = 0) {
-            assert(offset * sizeof(T) + size * sizeof(T) <= impl->size());
-            impl->download(host_data, size * sizeof(T), offset * sizeof(T));
+            assert(offset * sizeof(T) + size * sizeof(T) <= _impl->size());
+            _impl->download(host_data, size * sizeof(T), offset * sizeof(T));
         }
 
         void download_async(Dispatcher &dispatcher, T *host_data, size_t size = 0, size_t offset = 0) {
-            assert(offset * sizeof(T) + size * sizeof(T) <= impl->size());
-            impl->download_async(dispatcher, host_data, size * sizeof(T), offset * sizeof(T));
+            assert(offset * sizeof(T) + size * sizeof(T) <= _impl->size());
+            _impl->download_async(dispatcher, host_data, size * sizeof(T), offset * sizeof(T));
         }
 
         void upload(const T *host_data, size_t size = 0, size_t offset = 0) {
-            assert(offset * sizeof(T) + size * sizeof(T) <= impl->size());
-            impl->upload(host_data, size * sizeof(T), offset * sizeof(T));
+            assert(offset * sizeof(T) + size * sizeof(T) <= _impl->size());
+            _impl->upload(host_data, size * sizeof(T), offset * sizeof(T));
         }
 
         void upload_async(Dispatcher &dispatcher, const T *host_data, size_t size = 0, size_t offset = 0) {
-            assert(offset * sizeof(T) + size * sizeof(T) <= impl->size());
-            impl->upload_async(dispatcher, host_data, size * sizeof(T), offset * sizeof(T));
+            assert(offset * sizeof(T) + size * sizeof(T) <= _impl->size());
+            _impl->upload_async(dispatcher, host_data, size * sizeof(T), offset * sizeof(T));
         }
     };
 }

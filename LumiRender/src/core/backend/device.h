@@ -24,14 +24,14 @@ namespace luminous {
 
         template<typename T>
         Buffer <T> allocate_buffer(size_t n_elements) {
-            return Buffer<T>(impl->allocate_buffer(n_elements * sizeof(T)));
+            return Buffer<T>(_impl->allocate_buffer(n_elements * sizeof(T)));
         }
 
-        Dispatcher new_dispatcher() { return impl->new_dispatcher(); }
+        Dispatcher new_dispatcher() { return _impl->new_dispatcher(); }
 
-        Device(std::unique_ptr<Impl> impl) : impl(std::move(impl)) {}
+        Device(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
 
     protected:
-        std::unique_ptr<Impl> impl;
+        std::unique_ptr<Impl> _impl;
     };
 }

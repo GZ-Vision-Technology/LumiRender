@@ -20,18 +20,18 @@ namespace luminous {
             virtual void wait() = 0;
         };
 
-        void wait() { impl->wait(); }
+        void wait() { _impl->wait(); }
 
         Dispatcher &then(std::function<void(void)> F) {
-            impl->then(std::move(F));
+            _impl->then(std::move(F));
             return *this;
         }
 
-        Dispatcher(std::unique_ptr<Impl> impl) : impl(std::move(impl)) {}
+        Dispatcher(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
 
-        Impl *impl_mut() const { return impl.get(); }
+        Impl *impl_mut() const { return _impl.get(); }
 
     protected:
-        std::unique_ptr<Impl> impl;
+        std::unique_ptr<Impl> _impl;
     };
 }
