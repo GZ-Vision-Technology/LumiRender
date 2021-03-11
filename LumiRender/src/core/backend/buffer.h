@@ -39,7 +39,8 @@ namespace luminous {
 
         Impl *impl_mut() const { return impl.get(); }
 
-        void *ptr() const { return impl->ptr(); }
+        template<typename T = void *>
+        auto ptr() const { return (T)impl->ptr(); }
 
     protected:
         std::unique_ptr<Impl> impl;

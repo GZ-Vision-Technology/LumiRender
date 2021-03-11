@@ -13,40 +13,38 @@ namespace luminous {
     inline namespace gpu {
         class CUDABuffer : public RawBuffer::Impl {
         private:
-            void *_ptr;
-            size_t _bytes;
+            CUdeviceptr _ptr;
+            size_t _size_int_bytes;
 
         public:
-            void *device_ptr() { return _ptr; }
+            CUdeviceptr device_ptr() { return _ptr; }
 
-            void *ptr() override { return _ptr; }
+            void *ptr() override { return (void *)_ptr; }
 
-            CUDABuffer(size_t bytes) : _bytes(bytes) {
-                CUDA_CHECK(cudaMalloc(&_ptr, bytes));
+            CUDABuffer(size_t bytes) : _size_int_bytes(bytes) {
+                CU_CHECK(cuMemAlloc(&_ptr, bytes));
             }
 
-            ~CUDABuffer() { CUDA_CHECK(cudaFree(_ptr)); }
+            ~CUDABuffer() { CU_CHECK(cuMemFree(_ptr)); }
 
-            size_t size() const override { return _bytes; }
+            size_t size() const override { return _size_int_bytes; }
 
             void download_async(Dispatcher &dispatcher, void *host_data, size_t size, size_t offset = 0) override {
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CUDA_CHECK(cudaMemcpyAsync(host_data, (const uint8_t *) _ptr + offset,
-                                           size, cudaMemcpyDeviceToHost, stream));
+                CU_CHECK(cuMemcpyDtoHAsync(host_data, _ptr + offset, size, stream));
             }
 
             void upload_async(Dispatcher &dispatcher, const void *host_data, size_t size, size_t offset = 0) override {
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CUDA_CHECK(cudaMemcpyAsync((uint8_t *) _ptr + offset, host_data,
-                                           size, cudaMemcpyHostToDevice, stream));
+                CU_CHECK(cuMemcpyHtoDAsync(_ptr + offset, host_data, size, stream));
             }
 
             void download(void *host_data, size_t size, size_t offset = 0) override {
-                CUDA_CHECK(cudaMemcpy(host_data, (const uint8_t *) _ptr + offset, size, cudaMemcpyDeviceToHost));
+                CU_CHECK(cuMemcpyDtoH(host_data, _ptr + offset, size));
             }
 
             void upload(const void *host_data, size_t size, size_t offset = 0) override {
-                CUDA_CHECK(cudaMemcpy((uint8_t *) _ptr + offset, host_data, size, cudaMemcpyHostToDevice));
+                CU_CHECK(cuMemcpyHtoD(_ptr + offset, host_data, size));
             }
         };
     }

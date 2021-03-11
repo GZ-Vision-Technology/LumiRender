@@ -12,9 +12,9 @@
 
 #define CUDA_CHECK(EXPR)                                                                                               \
     [&] {                                                                                                              \
-        if (EXPR != cudaSuccess) {                                                                                     \
+        if ((EXPR) != cudaSuccess) {                                                                                   \
             cudaError_t error = cudaGetLastError();                                                                    \
-            spdlog::error("CUDA error: {} at {}:{}", cudaGetErrorString(error), __FILE__, __LINE__);                   \
+            spdlog::error("CUDA runtime error: {} at {}:{}", cudaGetErrorString(error), __FILE__, __LINE__);           \
             std::abort();                                                                                              \
         }                                                                                                              \
     }()
@@ -24,8 +24,8 @@
         CUresult result = EXPR;                                                                                        \
         if (result != CUDA_SUCCESS) {                                                                                  \
             const char *str;                                                                                           \
-            assert(CUDA_SUCCESS == cuGetErrorString(result, &str));                                                \
-            spdlog::error("CUDA error: {} at {}:{}", str, __FILE__, __LINE__);                                         \
+            assert(CUDA_SUCCESS == cuGetErrorString(result, &str));                                                    \
+            spdlog::error("CUDA driver error: {} at {}:{}", str, __FILE__, __LINE__);                                  \
             std::abort();                                                                                              \
         }                                                                                                              \
     }()

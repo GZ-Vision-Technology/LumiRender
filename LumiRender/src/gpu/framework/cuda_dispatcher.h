@@ -7,18 +7,19 @@
 
 #include "core/backend/dispatcher.h"
 #include "helper/cuda.h"
+#include <cuda.h>
 
 namespace luminous {
     inline namespace gpu {
         class CUDADispatcher : public Dispatcher::Impl {
         public:
-            cudaStream_t stream;
+            CUstream stream;
 
             CUDADispatcher() {
-                CUDA_CHECK(cudaStreamCreate(&stream));
+                CU_CHECK(cuStreamCreate(&stream, 0));
             }
 
-            void wait() override {CUDA_CHECK(cudaStreamSynchronize(stream)); }
+            void wait() override {CU_CHECK(cuStreamSynchronize(stream)); }
 
             void then(std::function<void(void)> F) override {
                 using Func = std::function<void(void)>;
@@ -28,10 +29,10 @@ namespace luminous {
                     (*f)();
                     delete f;
                 };
-                CUDA_CHECK(cudaLaunchHostFunc(stream, wrapper, (void *) f));
+                CU_CHECK(cuLaunchHostFunc(stream, wrapper, (void *) f));
             }
 
-            ~CUDADispatcher() {CUDA_CHECK(cudaStreamDestroy(stream)); }
+            ~CUDADispatcher() {CU_CHECK(cuStreamDestroy(stream)); }
         };
     }
 }

@@ -22,6 +22,7 @@ namespace luminous {
                 CU_CHECK(cuInit(0));
                 CU_CHECK(cuDeviceGet(&_cu_device, 0));
                 CU_CHECK(cuCtxCreate(&_cu_context, 0, _cu_device));
+                CU_CHECK(cuCtxSetCurrent(_cu_context));
             }
 
             RawBuffer allocate_buffer(size_t bytes) override {
