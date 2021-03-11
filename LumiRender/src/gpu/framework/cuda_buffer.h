@@ -14,36 +14,40 @@ namespace luminous {
         class CUDABuffer : public RawBuffer::Impl {
         private:
             CUdeviceptr _ptr;
-            size_t _size_int_bytes;
+            size_t _size_in_bytes;
 
         public:
             CUdeviceptr device_ptr() { return _ptr; }
 
             void *ptr() override { return (void *)_ptr; }
 
-            CUDABuffer(size_t bytes) : _size_int_bytes(bytes) {
+            CUDABuffer(size_t bytes) : _size_in_bytes(bytes) {
                 CU_CHECK(cuMemAlloc(&_ptr, bytes));
             }
 
             ~CUDABuffer() { CU_CHECK(cuMemFree(_ptr)); }
 
-            size_t size() const override { return _size_int_bytes; }
+            size_t size() const override { return _size_in_bytes; }
 
-            void download_async(Dispatcher &dispatcher, void *host_data, size_t size, size_t offset = 0) override {
+            void download_async(Dispatcher &dispatcher, void *host_data, size_t size = 0, size_t offset = 0) override {
+                size = size == 0 ? _size_in_bytes : size;
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
                 CU_CHECK(cuMemcpyDtoHAsync(host_data, _ptr + offset, size, stream));
             }
 
-            void upload_async(Dispatcher &dispatcher, const void *host_data, size_t size, size_t offset = 0) override {
+            void upload_async(Dispatcher &dispatcher, const void *host_data, size_t size = 0, size_t offset = 0) override {
+                size = size == 0 ? _size_in_bytes : size;
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
                 CU_CHECK(cuMemcpyHtoDAsync(_ptr + offset, host_data, size, stream));
             }
 
-            void download(void *host_data, size_t size, size_t offset = 0) override {
+            void download(void *host_data, size_t size = 0, size_t offset = 0) override {
+                size = size == 0 ? _size_in_bytes : size;
                 CU_CHECK(cuMemcpyDtoH(host_data, _ptr + offset, size));
             }
 
-            void upload(const void *host_data, size_t size, size_t offset = 0) override {
+            void upload(const void *host_data, size_t size = 0, size_t offset = 0) override {
+                size = size == 0 ? _size_in_bytes : size;
                 CU_CHECK(cuMemcpyHtoD(_ptr + offset, host_data, size));
             }
         };
