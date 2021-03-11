@@ -3,3 +3,9 @@
 //
 
 #include "g_buffer.h"
+
+namespace luminous {
+    inline namespace render {
+
+    }
+}

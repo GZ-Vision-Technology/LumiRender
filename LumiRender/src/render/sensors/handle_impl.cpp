@@ -29,14 +29,14 @@ namespace luminous {
         }
 
         void CameraBase::set_film(const FilmHandle &film) {
-            _film = film;
-            float2 res = _film.resolution();
-            box2f scrn = _film.screen_window();
-            float2 span = scrn.span();
-            Transform screen_to_raster = Transform::scale(res.x, res.y, 1) *
-                                         Transform::scale(1 / span.x, 1 / -span.y, 1) *
-                                         Transform::translate(make_float3(-scrn.lower.x, -scrn.upper.y, 0));
-            _raster_to_screen = screen_to_raster.inverse();
+//            _film = film;
+//            int2 res = _film.resolution();
+//            Box2f scrn = _film.screen_window();
+//            float2 span = scrn.span();
+//            Transform screen_to_raster = Transform::scale(res.x, res.y, 1) *
+//                                         Transform::scale(1 / span.x, 1 / -span.y, 1) *
+//                                         Transform::translation(-scrn.lower.x, -scrn.upper.y, 0);
+//            _raster_to_screen = screen_to_raster.inverse();
         }
 
         float3 CameraBase::position() const {
@@ -129,7 +129,7 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(position);
         }
 
-        void SensorHandle::set_film(const Film &film) {
+        void SensorHandle::set_film(const FilmHandle &film) {
             LUMINOUS_VAR_PTR_DISPATCH(set_film, film);
         }
 

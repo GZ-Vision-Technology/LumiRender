@@ -11,6 +11,11 @@
 
 namespace luminous {
     inline namespace render {
+        struct Pixel {
+            float4 rgb;
+            float weight_sum;
+        };
+
         class FilmBase {
         protected:
             int2 _resolution;
@@ -45,6 +50,7 @@ namespace luminous {
         using lstd::Variant;
 
         class FilmHandle : public Variant<RGBFilm *, GBufferFilm *> {
+        public:
             using Variant::Variant;
             
             NDSC_XPU int2 resolution() const;

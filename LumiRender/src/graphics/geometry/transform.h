@@ -69,7 +69,7 @@ namespace luminous {
          * @return
          */
         NDSC_XPU static float3 matrix_to_Euler_angle(const float4x4 &m) {
-            float sy = sqrt(sqr(m[1][2]) + sqr(m[2][2]) );
+            float sy = sqrt(sqr(m[1][2]) + sqr(m[2][2]));
             auto axis_x_angle = degrees(std::atan2(m[1][2], m[2][2]));
             auto axis_y_angle = degrees(std::atan2(-m[0][2], sy));
             auto axis_z_angle = degrees(std::atan2(m[0][1], m[0][0]));
@@ -206,6 +206,10 @@ namespace luminous {
                 return Transform(mat, inv);
             }
 
+            XPU static Transform translation(float x, float y, float z) {
+                return translation(make_float3(x, y, z));
+            }
+
             XPU static Transform scale(float3 s) {
                 auto mat = make_float4x4(
                         s.x, 0.f, 0.f, 0.f,
@@ -220,11 +224,15 @@ namespace luminous {
                 return Transform(mat, inv);
             }
 
+            XPU static Transform scale(float x, float y, float z) {
+                return scale(make_float3(x, y, z));
+            }
+
             [[nodiscard]] XPU static Transform scale(float s) {
                 return scale(make_float3(s));
             }
 
-            NDSC_XPU static Transform perpective(float fov_y, float z_near, float z_far, bool radian = false) {
+            NDSC_XPU static Transform perspective(float fov_y, float z_near, float z_far, bool radian = false) {
                 fov_y = radian ? fov_y : radians(fov_y);
                 float inv_tan = 1 / std::tan(fov_y / 2.f);
                 auto mat = make_float4x4(

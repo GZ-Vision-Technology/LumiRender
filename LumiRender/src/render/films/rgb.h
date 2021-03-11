@@ -10,10 +10,6 @@
 
 namespace luminous {
     inline namespace render {
-        struct Pixel {
-            float4 rgb;
-            float weight_sum;
-        };
 
         class RGBFilm : public FilmBase {
         private:

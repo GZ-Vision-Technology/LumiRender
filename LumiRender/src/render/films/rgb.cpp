@@ -3,3 +3,12 @@
 //
 
 #include "rgb.h"
+
+namespace luminous {
+    inline namespace render {
+
+        void RGBFilm::add_sample(float2 p_film, float3 color, float weight) {
+
+        }
+    } // luminous::render
+} // luminous

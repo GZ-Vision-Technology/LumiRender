@@ -34,7 +34,7 @@ namespace luminous {
             float _velocity{};
             Transform _raster_to_screen{};
             Transform _camera_to_screen{};
-            FilmHandle _film{nullptr};
+            FilmHandle _film;
             void _update(const float4x4 &m);
 
         public:
@@ -95,7 +95,7 @@ namespace luminous {
 
             XPU void set_position(float3 pos);
 
-            XPU void set_film(const Film &film);
+            XPU void set_film(const FilmHandle &film);
 
             NDSC_XPU Transform camera_to_world() const;
 

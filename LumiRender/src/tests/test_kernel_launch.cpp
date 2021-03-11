@@ -25,10 +25,11 @@ void test1() {
     err = cuDeviceGet(&device, 0);
     CUcontext ctx;
     err = cuCtxCreate(&ctx, 0, device);
+    cuCtxSetCurrent(ctx);
     CUstream stream;
     cuStreamCreate(&stream, 0);
 
-    cuCtxSetCurrent(ctx);
+
 
     string s = ptxCode;
 //    cudaStream_t stream;
@@ -127,7 +128,12 @@ void test2() {
     auto buffer_b = device->allocate_buffer<int>(size);
     auto buffer_c = device->allocate_buffer<int>(size);
     auto dispatcher = device->new_dispatcher();
-    buffer_a.upload_async(dispatcher, a, size);
+//    buffer_a.upload_async(dispatcher, a, size);
+//    buffer_b.upload_async(dispatcher, b, size);
+
+
+    buffer_a.upload( a, size);
+    buffer_b.upload( b, size);
 //    buffer_b.download_async(dispatcher,b, size);
     auto stream2 = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
     dispatcher.wait();
@@ -153,10 +159,57 @@ void test2() {
 //    };
 }
 
+void test3() {
+    CU_CHECK(cuInit(0));
+    CUdevice device;
+    CU_CHECK(cuDeviceGet(&device, 0));
+    CUcontext ctx;
+    CU_CHECK(cuCtxCreate(&ctx, 0, device));
+    CU_CHECK(cuCtxSetCurrent(ctx));
+    CUstream stream;
+    CU_CHECK(cuStreamCreate(&stream, 0));
+
+    CUmodule module;
+    CU_CHECK(cuModuleLoadData(&module, ptxCode));
+    CUfunction func;
+    CU_CHECK(cuModuleGetFunction(&func, module, "addKernel"));
+
+    const int size = 5;
+    const int a[size] = {1, 2, 3, 4, 5};
+    const int b[size] = {10, 20, 30, 40, 50};
+    int c[size] = {};
+
+    CUdeviceptr dev_a = 0;
+    CUdeviceptr dev_b = 0;
+    CUdeviceptr dev_c = 0;
+
+    CU_CHECK(cuMemAlloc(&dev_a, sizeof(int) * size));
+    CU_CHECK(cuMemAlloc(&dev_b, sizeof(int) * size));
+    CU_CHECK(cuMemAlloc(&dev_c, sizeof(int) * size));
+
+    CU_CHECK(cuMemcpyHtoD(dev_a, a, sizeof(int) * size));
+    CU_CHECK(cuMemcpyHtoD(dev_b, b, sizeof(int) * size));
+    CU_CHECK(cuMemcpyHtoD(dev_c, c, sizeof(int) * size));
+
+    vector<void *> args = {&dev_c, &dev_a, &dev_b};
+
+    CU_CHECK(cuLaunchKernel(func, 1, 1, 1, size, 1,
+                            1, 1024, stream, args.data(), nullptr));
+
+//    cuStreamSynchronize(stream);
+    CU_CHECK(cuMemcpyDtoH(c, dev_c, sizeof(int) * size));
+
+    for (int i : c) {
+        cout << i << endl;
+    }
+
+}
+
 int main() {
 
+    test3();
 //    test2();
-    test1();
+//    test1();
 
     return 0;
 }
