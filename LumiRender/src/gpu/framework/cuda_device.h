@@ -32,6 +32,10 @@ namespace luminous {
             Dispatcher new_dispatcher() override {
                 return Dispatcher(std::make_unique<CUDADispatcher>());
             }
+
+            ~CUDADevice() {
+                CU_CHECK(cuCtxDestroy(_cu_context));
+            }
         };
 
         inline std::shared_ptr<Device> create_cuda_device() {

@@ -185,8 +185,9 @@ void test_driver_api() {
     auto pa = buffer_a.ptr();
     auto pb = buffer_b.ptr();
     auto pc = buffer_c.ptr();
-
-    kernel->launch(dispatcher, {&pc, &pa, &pb});
+    vector<void *> args{&pc, &pa, &pb};
+//    kernel->launch(dispatcher, 5,{&pc, &pa, &pb});
+    kernel->launch(dispatcher,args);
 
     dispatcher.wait();
 
