@@ -19,9 +19,8 @@ namespace luminous {
             return make_float2(next_1d(), next_1d());
         }
 
-        LCGSampler * LCGSampler::create(const SamplerConfig &sc) {
-            return new LCGSampler(sc.spp);
+        LCGSampler *LCGSampler::create(const SamplerConfig &sc, Allocator &alloc) {
+            return alloc.new_object<LCGSampler>(sc.spp);
         }
-
     }
 }

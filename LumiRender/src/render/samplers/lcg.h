@@ -29,7 +29,7 @@ namespace luminous {
                 return string_printf("%s:{spp=%d}", name(), spp());
             }
 
-            static LCGSampler *create(const SamplerConfig &config);
+            static LCGSampler *create(const SamplerConfig &config, Allocator &alloc);
         };
     }
 }

@@ -278,12 +278,12 @@ int main() {
 //    test_transform();
 //    test_matrix_to_Euler_angle();
 
-    test_yaw_pitch();
+//    test_yaw_pitch();
 
 //    test_color();
 
 //    piecewise_construct_test();
 
-//    piecewise2d_test();
+    piecewise2d_test();
     return 0;
 }

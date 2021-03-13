@@ -5,6 +5,7 @@
 #include "iostream"
 #include "render/include/sampler.h"
 #include "render/include/sensor.h"
+#include "render/samplers/lcg.h"
 #include <set>
 using namespace luminous;
 using namespace std;
@@ -15,6 +16,9 @@ void test_sampler() {
     config.spp = 9;
     auto sampler = SamplerHandle::create(config);
     cout << sampler.to_string() << endl;
+    cout << sampler.next_2d().to_string();
+    cout << sampler.next_2d().to_string();
+
 }
 
 void test_sensor() {
@@ -41,5 +45,5 @@ void test_sensor() {
 }
 
 int main() {
-
+    test_sampler();
 }

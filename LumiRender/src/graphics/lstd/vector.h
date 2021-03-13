@@ -28,60 +28,60 @@ namespace lstd {
 
 
     private:
-        Allocator alloc;
+        Allocator _allocator;
         T *ptr = nullptr;
-        size_t nAlloc = 0, nStored = 0;
+        size_t _n_alloc = 0, _n_stored = 0;
 
     public:
-        vector(const Allocator &alloc = {}) : alloc(alloc) {}
+        vector(const Allocator &alloc = {}) : _allocator(alloc) {}
 
-        vector(size_t count, const T &value, const Allocator &alloc = {}) : alloc(alloc) {
+        vector(size_t count, const T &value, const Allocator &alloc = {}) : _allocator(alloc) {
             reserve(count);
             for (size_t i = 0; i < count; ++i)
-                this->alloc.template construct<T>(ptr + i, value);
-            nStored = count;
+                this->_allocator.template construct<T>(ptr + i, value);
+            _n_stored = count;
         }
 
         vector(size_t count, const Allocator &alloc = {}) : vector(count, T{}, alloc) {}
 
-        vector(const vector &other, const Allocator &alloc = {}) : alloc(alloc) {
+        vector(const vector &other, const Allocator &alloc = {}) : _allocator(alloc) {
             reserve(other.size());
             for (size_t i = 0; i < other.size(); ++i)
-                this->alloc.template construct<T>(ptr + i, other[i]);
-            nStored = other.size();
+                this->_allocator.template construct<T>(ptr + i, other[i]);
+            _n_stored = other.size();
         }
 
         template<class InputIt>
-        vector(InputIt first, InputIt last, const Allocator &alloc = {}) : alloc(alloc) {
+        vector(InputIt first, InputIt last, const Allocator &alloc = {}) : _allocator(alloc) {
             reserve(last - first);
             size_t i = 0;
             for (InputIt iter = first; iter != last; ++iter, ++i)
-                this->alloc.template construct<T>(ptr + i, *iter);
-            nStored = nAlloc;
+                this->_allocator.template construct<T>(ptr + i, *iter);
+            _n_stored = _n_alloc;
         }
 
-        vector(vector &&other) : alloc(other.alloc) {
-            nStored = other.nStored;
-            nAlloc = other.nAlloc;
+        vector(vector &&other) : _allocator(other._allocator) {
+            _n_stored = other._n_stored;
+            _n_alloc = other._n_alloc;
             ptr = other.ptr;
 
-            other.nStored = other.nAlloc = 0;
+            other._n_stored = other._n_alloc = 0;
             other.ptr = nullptr;
         }
 
         vector(vector &&other, const Allocator &alloc) {
-            if (alloc == other.alloc) {
+            if (alloc == other._allocator) {
                 ptr = other.ptr;
-                nAlloc = other.nAlloc;
-                nStored = other.nStored;
+                _n_alloc = other._n_alloc;
+                _n_stored = other._n_stored;
 
                 other.ptr = nullptr;
-                other.nAlloc = other.nStored = 0;
+                other._n_alloc = other._n_stored = 0;
             } else {
                 reserve(other.size());
                 for (size_t i = 0; i < other.size(); ++i)
                     alloc.template construct<T>(ptr + i, std::move(other[i]));
-                nStored = other.size();
+                _n_stored = other.size();
             }
         }
 
@@ -95,8 +95,8 @@ namespace lstd {
             clear();
             reserve(other.size());
             for (size_t i = 0; i < other.size(); ++i)
-                alloc.template construct<T>(ptr + i, other[i]);
-            nStored = other.size();
+                _allocator.template construct<T>(ptr + i, other[i]);
+            _n_stored = other.size();
 
             return *this;
         }
@@ -105,16 +105,16 @@ namespace lstd {
             if (this == &other)
                 return *this;
 
-            if (alloc == other.alloc) {
+            if (_allocator == other._allocator) {
                 lstd::swap(ptr, other.ptr);
-                lstd::swap(nAlloc, other.nAlloc);
-                lstd::swap(nStored, other.nStored);
+                lstd::swap(_n_alloc, other._n_alloc);
+                lstd::swap(_n_stored, other._n_stored);
             } else {
                 clear();
                 reserve(other.size());
                 for (size_t i = 0; i < other.size(); ++i)
-                    alloc.template construct<T>(ptr + i, std::move(other[i]));
-                nStored = other.size();
+                    _allocator.template construct<T>(ptr + i, std::move(other[i]));
+                _n_stored = other.size();
             }
 
             return *this;
@@ -148,20 +148,20 @@ namespace lstd {
 
         ~vector() {
             clear();
-            alloc.deallocate_object(ptr, nAlloc);
+            _allocator.deallocate_object(ptr, _n_alloc);
         }
 
         XPU iterator begin() { return ptr; }
 
-        XPU iterator end() { return ptr + nStored; }
+        XPU iterator end() { return ptr + _n_stored; }
 
         XPU const_iterator begin() const { return ptr; }
 
-        XPU const_iterator end() const { return ptr + nStored; }
+        XPU const_iterator end() const { return ptr + _n_stored; }
 
         XPU const_iterator cbegin() const { return ptr; }
 
-        XPU const_iterator cend() const { return ptr + nStored; }
+        XPU const_iterator cend() const { return ptr + _n_stored; }
 
         XPU reverse_iterator rbegin() { return reverse_iterator(end()); }
 
@@ -171,28 +171,28 @@ namespace lstd {
 
         XPU const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
 
-        allocator_type get_allocator() const { return alloc; }
+        allocator_type get_allocator() const { return _allocator; }
 
-        XPU size_t size() const { return nStored; }
+        XPU size_t size() const { return _n_stored; }
 
         XPU bool empty() const { return size() == 0; }
 
         XPU size_t max_size() const { return (size_t) -1; }
 
-        XPU size_t capacity() const { return nAlloc; }
+        XPU size_t capacity() const { return _n_alloc; }
 
         void reserve(size_t n) {
-            if (nAlloc >= n)
+            if (_n_alloc >= n)
                 return;
 
-            T *ra = alloc.template allocate_object<T>(n);
-            for (int i = 0; i < nStored; ++i) {
-                alloc.template construct<T>(ra + i, std::move(begin()[i]));
-                alloc.destroy(begin() + i);
+            T *ra = _allocator.template allocate_object<T>(n);
+            for (int i = 0; i < _n_stored; ++i) {
+                _allocator.template construct<T>(ra + i, std::move(begin()[i]));
+                _allocator.destroy(begin() + i);
             }
 
-            alloc.deallocate_object(ptr, nAlloc);
-            nAlloc = n;
+            _allocator.deallocate_object(ptr, _n_alloc);
+            _n_alloc = n;
             ptr = ra;
         }
         // TODO: shrink_to_fit
@@ -211,18 +211,18 @@ namespace lstd {
 
         XPU const_reference front() const { return ptr[0]; }
 
-        XPU reference back() { return ptr[nStored - 1]; }
+        XPU reference back() { return ptr[_n_stored - 1]; }
 
-        XPU const_reference back() const { return ptr[nStored - 1]; }
+        XPU const_reference back() const { return ptr[_n_stored - 1]; }
 
         XPU pointer data() { return ptr; }
 
         XPU const_pointer data() const { return ptr; }
 
         void clear() {
-            for (int i = 0; i < nStored; ++i)
-                alloc.destroy(&ptr[i]);
-            nStored = 0;
+            for (int i = 0; i < _n_stored; ++i)
+                _allocator.destroy(&ptr[i]);
+            _n_stored = 0;
         }
 
         iterator insert(const_iterator, const T &value) {
@@ -264,11 +264,11 @@ namespace lstd {
 
         template<class... Args>
         void emplace_back(Args &&... args) {
-            if (nAlloc == nStored)
-                reserve(nAlloc == 0 ? 4 : 2 * nAlloc);
+            if (_n_alloc == _n_stored)
+                reserve(_n_alloc == 0 ? 4 : 2 * _n_alloc);
 
-            alloc.construct(ptr + nStored, std::forward<Args>(args)...);
-            ++nStored;
+            _allocator.construct(ptr + _n_stored, std::forward<Args>(args)...);
+            ++_n_stored;
         }
 
         iterator erase(const_iterator pos) {
@@ -282,42 +282,42 @@ namespace lstd {
         }
 
         void push_back(const T &value) {
-            if (nAlloc == nStored)
-                reserve(nAlloc == 0 ? 4 : 2 * nAlloc);
+            if (_n_alloc == _n_stored)
+                reserve(_n_alloc == 0 ? 4 : 2 * _n_alloc);
 
-            alloc.construct(ptr + nStored, value);
-            ++nStored;
+            _allocator.construct(ptr + _n_stored, value);
+            ++_n_stored;
         }
 
         void push_back(T &&value) {
-            if (nAlloc == nStored)
-                reserve(nAlloc == 0 ? 4 : 2 * nAlloc);
+            if (_n_alloc == _n_stored)
+                reserve(_n_alloc == 0 ? 4 : 2 * _n_alloc);
 
-            alloc.construct(ptr + nStored, std::move(value));
-            ++nStored;
+            _allocator.construct(ptr + _n_stored, std::move(value));
+            ++_n_stored;
         }
 
         void pop_back() {
             // DCHECK(!empty());
-            alloc.destroy(ptr + nStored - 1);
-            --nStored;
+            _allocator.destroy(ptr + _n_stored - 1);
+            --_n_stored;
         }
 
         void resize(size_type n) {
             if (n < size()) {
                 for (size_t i = n; i < size(); ++i)
-                    alloc.destroy(ptr + i);
+                    _allocator.destroy(ptr + i);
                 if (n == 0) {
-                    alloc.deallocate_object(ptr, nAlloc);
+                    _allocator.deallocate_object(ptr, _n_alloc);
                     ptr = nullptr;
-                    nAlloc = 0;
+                    _n_alloc = 0;
                 }
             } else if (n > size()) {
                 reserve(n);
-                for (size_t i = nStored; i < n; ++i)
-                    alloc.construct(ptr + i);
+                for (size_t i = _n_stored; i < n; ++i)
+                    _allocator.construct(ptr + i);
             }
-            nStored = n;
+            _n_stored = n;
         }
 
         void resize(size_type count, const value_type &value) {

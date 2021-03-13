@@ -21,8 +21,8 @@ namespace luminous {
             return make_float2(next_1d(), next_1d());
         }
 
-        PCGSampler *PCGSampler::create(const SamplerConfig &sc) {
-            return new PCGSampler(sc.spp);
+        PCGSampler *PCGSampler::create(const SamplerConfig &sc, Allocator &alloc) {
+            return alloc.new_object<PCGSampler>(sc.spp);
         }
     }
 }
