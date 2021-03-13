@@ -30,24 +30,20 @@ namespace luminous {
             size_t size() const override { return _size_in_bytes; }
 
             void download_async(Dispatcher &dispatcher, void *host_data, size_t size = 0, size_t offset = 0) override {
-                size = size == 0 ? _size_in_bytes : size;
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
                 CU_CHECK(cuMemcpyDtoHAsync(host_data, _ptr + offset, size, stream));
             }
 
             void upload_async(Dispatcher &dispatcher, const void *host_data, size_t size = 0, size_t offset = 0) override {
-                size = size == 0 ? _size_in_bytes : size;
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
                 CU_CHECK(cuMemcpyHtoDAsync(_ptr + offset, host_data, size, stream));
             }
 
             void download(void *host_data, size_t size = 0, size_t offset = 0) override {
-                size = size == 0 ? _size_in_bytes : size;
                 CU_CHECK(cuMemcpyDtoH(host_data, _ptr + offset, size));
             }
 
             void upload(const void *host_data, size_t size = 0, size_t offset = 0) override {
-                size = size == 0 ? _size_in_bytes : size;
                 CU_CHECK(cuMemcpyHtoD(_ptr + offset, host_data, size));
             }
         };

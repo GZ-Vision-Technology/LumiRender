@@ -60,21 +60,25 @@ namespace luminous {
         size_t size() const { return _impl->size() / sizeof(T); }
 
         void download(T *host_data, size_t size = 0, size_t offset = 0) {
+            size = size == 0 ? _impl->size() : size;
             assert(offset * sizeof(T) + size * sizeof(T) <= _impl->size());
             _impl->download(host_data, size * sizeof(T), offset * sizeof(T));
         }
 
         void download_async(Dispatcher &dispatcher, T *host_data, size_t size = 0, size_t offset = 0) {
+            size = size == 0 ? _impl->size() : size;
             assert(offset * sizeof(T) + size * sizeof(T) <= _impl->size());
             _impl->download_async(dispatcher, host_data, size * sizeof(T), offset * sizeof(T));
         }
 
         void upload(const T *host_data, size_t size = 0, size_t offset = 0) {
+            size = size == 0 ? _impl->size() : size;
             assert(offset * sizeof(T) + size * sizeof(T) <= _impl->size());
             _impl->upload(host_data, size * sizeof(T), offset * sizeof(T));
         }
 
         void upload_async(Dispatcher &dispatcher, const T *host_data, size_t size = 0, size_t offset = 0) {
+            size = size == 0 ? _impl->size() : size;
             assert(offset * sizeof(T) + size * sizeof(T) <= _impl->size());
             _impl->upload_async(dispatcher, host_data, size * sizeof(T), offset * sizeof(T));
         }

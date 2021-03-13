@@ -53,134 +53,26 @@ namespace lstd {
             return !(a == b);
         }
 
-// TODO
-        struct pool_options {
-            size_t max_blocks_per_chunk = 0;
-            size_t largest_required_pool_block = 0;
-        };
-
-        class synchronized_pool_resource;
-
-        class unsynchronized_pool_resource;
-
-// global memory resources
         memory_resource *new_delete_resource() noexcept;
 
-// TODO: memory_resource* null_memory_resource() noexcept;
         memory_resource *set_default_resource(memory_resource *r) noexcept;
 
         memory_resource *get_default_resource() noexcept;
-
-        class monotonic_buffer_resource : public memory_resource {
-        public:
-            explicit monotonic_buffer_resource(memory_resource *upstream)
-                    : upstreamResource(upstream) {}
-
-            monotonic_buffer_resource(size_t blockSize, memory_resource *upstream)
-                    : blockSize(blockSize), upstreamResource(upstream) {}
-
-#if 0
-            // TODO
-    monotonic_buffer_resource(void *buffer, size_t buffer_size,
-                              memory_resource *upstream);
-#endif
-
-            monotonic_buffer_resource() : monotonic_buffer_resource(get_default_resource()) {}
-
-            explicit monotonic_buffer_resource(size_t initial_size)
-                    : monotonic_buffer_resource(initial_size, get_default_resource()) {}
-
-#if 0
-            // TODO
-    monotonic_buffer_resource(void *buffer, size_t buffer_size)
-        : monotonic_buffer_resource(buffer, buffer_size, get_default_resource()) {}
-#endif
-
-            monotonic_buffer_resource(const monotonic_buffer_resource &) = delete;
-
-            ~monotonic_buffer_resource() { release(); }
-
-            monotonic_buffer_resource operator=(const monotonic_buffer_resource &) = delete;
-
-            void release() {
-                for (const auto &block : usedBlocks)
-                    upstreamResource->deallocate(block.ptr, block.size);
-                usedBlocks.clear();
-
-                upstreamResource->deallocate(currentBlock.ptr, currentBlock.size);
-                currentBlock = MemoryBlock();
-            }
-
-            memory_resource *upstream_resource() const { return upstreamResource; }
-
-        protected:
-            void *do_allocate(size_t bytes, size_t align) override {
-                if (bytes > blockSize) {
-                    // We've got a big allocation; let the current block be so that
-                    // smaller allocations have a chance at using up more of it.
-                    usedBlocks.push_back(
-                            MemoryBlock{upstreamResource->allocate(bytes, align), bytes});
-                    return usedBlocks.back().ptr;
-                }
-
-                if ((currentBlockPos % align) != 0)
-                    currentBlockPos += align - (currentBlockPos % align);
-                DCHECK_EQ(0, currentBlockPos % align);
-
-                if (currentBlockPos + bytes > currentBlock.size) {
-                    // Add current block to _usedBlocks_ list
-                    if (currentBlock.size) {
-                        usedBlocks.push_back(currentBlock);
-                        currentBlock = {};
-                    }
-
-                    currentBlock = {
-                            upstreamResource->allocate(blockSize, alignof(std::max_align_t)),
-                            blockSize};
-                    currentBlockPos = 0;
-                }
-
-                void *ptr = (char *) currentBlock.ptr + currentBlockPos;
-                currentBlockPos += bytes;
-                return ptr;
-            }
-
-            void do_deallocate(void *p, size_t bytes, size_t alignment) override {
-                // no-op
-            }
-
-            bool do_is_equal(const memory_resource &other) const noexcept override {
-                return this == &other;
-            }
-
-        private:
-            struct MemoryBlock {
-                void *ptr = nullptr;
-                size_t size = 0;
-            };
-
-            memory_resource *upstreamResource;
-            size_t blockSize = 256 * 1024;
-            MemoryBlock currentBlock;
-            size_t currentBlockPos = 0;
-            // TODO: should use the memory_resource for this list's allocations...
-            std::list<MemoryBlock> usedBlocks;
-        };
 
         template<class Tp = std::byte>
         class polymorphic_allocator {
         public:
             using value_type = Tp;
 
-            polymorphic_allocator() noexcept { memoryResource = new_delete_resource(); }
+            polymorphic_allocator() noexcept { _memory_resource = new_delete_resource(); }
 
-            polymorphic_allocator(memory_resource *r) : memoryResource(r) {}
+            polymorphic_allocator(memory_resource *r) : _memory_resource(r) {}
 
             polymorphic_allocator(const polymorphic_allocator &other) = default;
 
             template<class U>
             polymorphic_allocator(const polymorphic_allocator<U> &other) noexcept
-                    : memoryResource(other.resource()) {}
+                    : _memory_resource(other.resource()) {}
 
             polymorphic_allocator &operator=(const polymorphic_allocator &rhs) = delete;
 
@@ -234,12 +126,10 @@ namespace lstd {
                 p->~T();
             }
 
-            // polymorphic_allocator select_on_container_copy_construction() const;
-
-            memory_resource *resource() const { return memoryResource; }
+            memory_resource *resource() const { return _memory_resource; }
 
         private:
-            memory_resource *memoryResource;
+            memory_resource *_memory_resource;
         };
 
         template<class T1, class T2>
