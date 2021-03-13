@@ -44,8 +44,6 @@ namespace luminous {
 
             NDSC std::string to_string();
 
-            ~SamplerHandle();
-
             static SamplerHandle create(const SamplerConfig &config, Allocator alloc = {});
         };
     }

@@ -4,8 +4,7 @@
 
 #include <render/include/sampler.h>
 
-#include "lcg.h"
-#include "pcg.h"
+#include "independent.h"
 
 namespace luminous {
 
@@ -32,10 +31,6 @@ namespace luminous {
 
         std::string SamplerHandle::to_string() {
             LUMINOUS_VAR_PTR_DISPATCH(to_string)
-        }
-
-        SamplerHandle::~SamplerHandle() {
-            //todo 之后考虑是否需要实现析构函数
         }
 
         namespace detail {
