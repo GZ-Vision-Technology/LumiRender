@@ -5,17 +5,26 @@
 
 #pragma once
 
-#include "../include/sampler.h"
+#include "sampler_handle.h"
 #include "graphics/math/rng.h"
 #include "../include/scene_graph.h"
 
 namespace luminous {
     inline namespace render {
+        class SamplerBase : public IObject {
+        protected:
+            int _spp;
+        public:
+            XPU explicit SamplerBase(int spp = 1) : _spp(spp) {}
+
+            NDSC int spp() const { return _spp; }
+        };
+
         class LCGSampler : public SamplerBase {
         private:
             LCG<> _rng;
         public:
-            explicit LCGSampler(int spp = 1) : SamplerBase(spp) {}
+            XPU explicit LCGSampler(int spp = 1) : SamplerBase(spp) {}
 
             XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
@@ -29,14 +38,14 @@ namespace luminous {
                 return string_printf("%s:{spp=%d}", name(), spp());
             }
 
-            static LCGSampler *create(const SamplerConfig &config, Allocator &alloc);
+            static LCGSampler create(const SamplerConfig &config);
         };
 
         class PCGSampler : public SamplerBase {
         private:
             PCG _rng;
         public:
-            explicit PCGSampler(int spp = 1) : SamplerBase(spp) {}
+            XPU explicit PCGSampler(int spp = 1) : SamplerBase(spp) {}
 
             GEN_CLASS_NAME(PCGSampler)
 
@@ -50,7 +59,7 @@ namespace luminous {
                 return string_printf("%s:{spp=%d}", name(), spp());
             }
 
-            static PCGSampler *create(const SamplerConfig &config, Allocator &alloc);
+            static PCGSampler create(const SamplerConfig &config);
         };
     }
 }

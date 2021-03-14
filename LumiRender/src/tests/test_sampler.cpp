@@ -3,23 +3,23 @@
 //
 
 #include "iostream"
-#include "render/include/sampler.h"
+#include "render/samplers/sampler_handle.h"
 #include "render/include/sensor.h"
-#include "render/samplers/independent.h"
-#include <set>
 using namespace luminous;
 using namespace std;
 
 void test_sampler() {
     auto config = SamplerConfig();
-    config.type = "LCGSampler";
+    config.type = "PCGSampler";
     config.spp = 9;
     auto sampler = SamplerHandle::create(config);
     cout << sampler.to_string() << endl;
-    cout << sampler.null();
-    auto p = sampler.get<LCGSampler*>();
-    cout << p<<endl;
-//    cout << p.next_2d().to_string();
+    cout << sampler.next_2d().to_string() << endl;
+    auto s2 = sampler;
+    cout << s2.next_2d().to_string();
+//    auto p = sampler.get<LCGSampler*>();
+//    cout << p<<endl;
+//    cout << (*p)->next_2d().to_string();
 }
 
 void test_sensor() {

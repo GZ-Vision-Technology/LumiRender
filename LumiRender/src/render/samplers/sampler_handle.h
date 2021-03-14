@@ -7,30 +7,16 @@
 
 #include "graphics/math/common.h"
 #include "graphics/lstd/lstd.h"
-#include "scene_graph.h"
+#include "../include/scene_graph.h"
+#include "independent.h"
 
 namespace luminous {
     inline namespace render {
 
-        class SamplerBase : public IObject {
-        protected:
-            int _spp;
-        public:
-            explicit SamplerBase(int spp = 1) : _spp(spp) {}
-
-            NDSC int spp() const { return _spp; }
-        };
-
-        class LCGSampler;
-
-        class PCGSampler;
-
         using lstd::Variant;
-        using lstd::Allocator;
-        class SamplerHandle : public Variant<LCGSampler *, PCGSampler *>, public Noncopyable {
+        class SamplerHandle : public Variant<LCGSampler, PCGSampler> {
         private:
             using Variant::Variant;
-            Allocator _allocator;
         public:
             NDSC XPU int spp() const;
 
@@ -44,7 +30,7 @@ namespace luminous {
 
             NDSC std::string to_string();
 
-            static SamplerHandle create(const SamplerConfig &config, Allocator alloc = {});
+            static SamplerHandle create(const SamplerConfig &config);
         };
     }
 }

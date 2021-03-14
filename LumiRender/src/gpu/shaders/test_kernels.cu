@@ -9,7 +9,9 @@
 #include "graphics/common.h"
 #include <stdio.h>
 #include <iostream>
-
+//#include "render/samplers/sampler_handle.h"
+#include "render/samplers/independent.cpp"
+#include "render/samplers/sampler_handle.cpp"
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
 class Sub1 {
@@ -111,6 +113,18 @@ extern "C" {
 
     __global__ void testKernel(int *c) {
         printf("%d \n", threadIdx.x);
+    }
+    using namespace luminous;
+
+    __global__ void test_sampler(SamplerHandle sh) {
+//        auto s = LCGSampler(6);
+//        printf("%f \n", s.next_1d());
+//        printf("%f \n", sh.next_1d());
+//        LCGSampler s = LCGSampler(6);
+//        SamplerHandle handle = SamplerHandle(s);
+//        printf("%f \n", s.next_1d());
+
+        printf("%f \n", sh.next_1d());
     }
 }
 

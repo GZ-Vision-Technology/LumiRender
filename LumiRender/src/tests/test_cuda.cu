@@ -7,6 +7,8 @@
 #include "graphics/common.h"
 #include <iostream>
 #include <memory>
+#include "render/samplers/independent.cpp"
+#include "render/samplers/sampler_handle.cpp"
 
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
@@ -110,39 +112,71 @@ XPU void testVariant() {
 
 __global__ void addKernel(int *c, const int *a, const int *b)
 {
-    testVariant();
-    int i = threadIdx.x;
-    c[i] = a[i] + b[i];
+//    testVariant();
+//    int i = threadIdx.x;
+//    c[i] = a[i] + b[i];
+}
+
+
+__global__ void test_sampler(luminous::SamplerHandle sh) {
+//        auto s = LCGSampler(6);
+//        printf("%f \n", s.next_1d());
+//        printf("%f \n", sh.next_1d());
+//    printf("adsfadsf %f\n", sh.next_1d());
+//    printf("adsfadsf \n");
+//    auto s = luminous::LCGSampler(6);
+//    auto handle = luminous::SamplerHandle(s);
+//    printf("%f \n", s.next_1d());
+
+        printf("%f \n", sh.next_1d());
+}
+
+void testsampler(luminous::SamplerHandle sh) {
+    printf("%f \n", sh.next_1d());
 }
 
 int main()
 {
-    testVariant();
+//    testVariant();
 
-    const int arraySize = 5;
-    const int a[arraySize] = { 1, 2, 3, 4, 5 };
-    const int b[arraySize] = { 10, 20, 30, 40, 50 };
-    int c[arraySize] = { 0 };
 
-    // Add vectors in parallel.
-    cudaError_t cudaStatus = addWithCuda(c, a, b, arraySize);
+    auto config = luminous::SamplerConfig();
+    config.type = "LCGSampler";
+    config.spp = 9;
+//    auto sampler = SamplerHandle::create(config).get<LCGSampler>();
+    auto sampler = luminous::SamplerHandle::create(config);
+
+    test_sampler<<<1u, 5u>>>(sampler);
+//    testsampler(sampler);
+    cudaDeviceSynchronize();
+    auto cudaStatus = cudaGetLastError();
     if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "addWithCuda failed!");
-        return 1;
+        fprintf(stderr, "addKernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
     }
-
-    printf("{1,2,3,4,5} + {10,20,30,40,50} = {%d,%d,%d,%d,%d}\n",
-           c[0], c[1], c[2], c[3], c[4]);
-
-    // cudaDeviceReset must be called before exiting in order for profiling and
-    // tracing tools such as Nsight and Visual Profiler to show complete traces.
-    cudaStatus = cudaDeviceReset();
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaDeviceReset failed!");
-        return 1;
-    }
-
-    return 0;
+//    const int arraySize = 5;
+//    const int a[arraySize] = { 1, 2, 3, 4, 5 };
+//    const int b[arraySize] = { 10, 20, 30, 40, 50 };
+//    int c[arraySize] = { 0 };
+//
+//    // Add vectors in parallel.
+//    cudaError_t cudaStatus = addWithCuda(c, a, b, arraySize);
+//    if (cudaStatus != cudaSuccess) {
+//        fprintf(stderr, "addWithCuda failed!");
+//        return 1;
+//    }
+//
+//    printf("{1,2,3,4,5} + {10,20,30,40,50} = {%d,%d,%d,%d,%d}\n",
+//           c[0], c[1], c[2], c[3], c[4]);
+//
+//    // cudaDeviceReset must be called before exiting in order for profiling and
+//    // tracing tools such as Nsight and Visual Profiler to show complete traces.
+//    cudaStatus = cudaDeviceReset();
+//    if (cudaStatus != cudaSuccess) {
+//        fprintf(stderr, "cudaDeviceReset failed!");
+//        return 1;
+//    }
+//
+//    return 0;
 }
 
 // Helper function for using CUDA to add vectors in parallel.

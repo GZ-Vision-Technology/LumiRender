@@ -2,7 +2,7 @@
 // Created by Zero on 2021/2/23.
 //
 
-#include "independent.h"
+#include "sampler_handle.h"
 
 namespace luminous {
     inline namespace render {
@@ -19,8 +19,8 @@ namespace luminous {
             return make_float2(next_1d(), next_1d());
         }
 
-        LCGSampler *LCGSampler::create(const SamplerConfig &sc, Allocator &alloc) {
-            return alloc.new_object<LCGSampler>(sc.spp);
+        LCGSampler LCGSampler::create(const SamplerConfig &sc) {
+            return LCGSampler(sc.spp);
         }
 
         void PCGSampler::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
@@ -36,8 +36,8 @@ namespace luminous {
             return make_float2(next_1d(), next_1d());
         }
 
-        PCGSampler *PCGSampler::create(const SamplerConfig &sc, Allocator &alloc) {
-            return alloc.new_object<PCGSampler>(sc.spp);
+        PCGSampler PCGSampler::create(const SamplerConfig &sc) {
+            return PCGSampler(sc.spp);
         }
     }
 }

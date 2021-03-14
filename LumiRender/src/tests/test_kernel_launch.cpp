@@ -15,98 +15,11 @@
 #include "gpu/framework/cuda_kernel.h"
 #include "gpu/framework/cuda_module.h"
 
+#include "render/samplers/sampler_handle.h"
+
 using namespace std;
 
 extern "C" char ptxCode[];
-
-void test1() {
-    CUresult err = cuInit(0);
-    CUdevice device;
-    err = cuDeviceGet(&device, 0);
-    CUcontext ctx;
-//    err = cuCtxCreate(&ctx, 0, device);
-//    cuCtxSetCurrent(ctx);
-//    CUstream stream;
-//    cuStreamCreate(&stream, 0);
-
-
-
-    string s = ptxCode;
-    cudaStream_t stream;
-    cudaStreamCreate(&stream);
-    CUmodule module;
-    auto a0 = cuModuleLoadData(&module, ptxCode);
-
-    CUfunction func;
-
-
-    CUfunction func2;
-    auto a1 = cuModuleGetFunction(&func, module, "addKernel");
-    auto a3 = cuModuleGetFunction(&func2, module, "testKernel");
-
-    const int size = 5;
-    const int a[size] = {1, 2, 3, 4, 5};
-    const int b[size] = {10, 20, 30, 40, 50};
-    int c[size] = {0};
-
-    int *dev_a = 0;
-    int *dev_b = 0;
-    int *dev_c = 0;
-    cudaError_t cudaStatus;
-
-    cudaStatus = cudaSetDevice(device);
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaSetDevice failed!  Do you have a CUDA-capable GPU installed?");
-    }
-
-    // Allocate GPU buffers for three vectors (two input, one output)    .
-    cudaStatus = cudaMalloc((void **) &dev_c, size * sizeof(int));
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMalloc failed!");
-    }
-
-    cudaStatus = cudaMalloc((void **) &dev_a, size * sizeof(int));
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMalloc failed!");
-    }
-
-    cudaStatus = cudaMalloc((void **) &dev_b, size * sizeof(int));
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMalloc failed!");
-    }
-
-    cudaStatus = cudaMemcpy(dev_a, a, size * sizeof(int), cudaMemcpyHostToDevice);
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMemcpy failed!");
-    }
-
-    cudaStatus = cudaMemcpy(dev_b, b, size * sizeof(int), cudaMemcpyHostToDevice);
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMemcpy failed!");
-    }
-
-    int minGridSize;
-    int blockSize;
-    cuOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, func, 0, 0, 0);
-    int gridSize = (size + blockSize - 1) / blockSize;
-    vector<void *> args = {&dev_c, &dev_a, &dev_b};
-    auto r = cuLaunchKernel(func, 1, 1, 1, size, 1,
-                            1, 1024, stream, args.data(), nullptr);
-
-    auto css = cudaStreamSynchronize(stream);
-    cudaStatus = cudaMemcpy(c, (const uint8_t *)dev_c + sizeof(int), 3 * sizeof(int), cudaMemcpyDeviceToHost);
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMemcpy failed!");
-    }
-//    cout << r;
-    cudaFree(dev_c);
-    cudaFree(dev_a);
-    cudaFree(dev_b);
-    for (int i = 0; i < size; ++i) {
-        cout << c[i] << endl;
-    }
-//    cout << s;
-}
 
 void test3() {
     CU_CHECK(cuInit(0));
@@ -199,8 +112,30 @@ void test_driver_api() {
 //    });
 }
 
+void test_kernel_sampler() {
+    using namespace luminous;
+    cout << "adsfdsafsa" << endl;
+
+    auto device = create_cuda_device();
+    auto dispatcher = device->new_dispatcher();
+
+    auto cudaModule = create_cuda_module(ptxCode);
+    auto kernel = cudaModule->get_kernel("test_sampler");
+
+    auto config = SamplerConfig();
+    config.type = "LCGSampler";
+    config.spp = 9;
+//    auto sampler = SamplerHandle::create(config).get<LCGSampler>();
+    auto sampler = SamplerHandle::create(config);
+
+//    sampler->next_2d();
+
+    kernel->launch(dispatcher, {&sampler});
+}
+
 int main() {
-    test_driver_api();
+//    test_driver_api();
+    test_kernel_sampler();
 //    test3();
 //    test2();
 //    test1();
