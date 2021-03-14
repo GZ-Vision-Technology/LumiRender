@@ -126,6 +126,11 @@ extern "C" {
 
         printf("%f \n", sh.next_1d());
     }
+
+    __global__ void test_sampler2(SamplerHandle *sh) {
+
+        printf("%f \n", sh->next_1d());
+    }
 }
 
 // Helper function for using CUDA to add vectors in parallel.

@@ -120,17 +120,18 @@ void test_kernel_sampler() {
     auto dispatcher = device->new_dispatcher();
 
     auto cudaModule = create_cuda_module(ptxCode);
-    auto kernel = cudaModule->get_kernel("test_sampler");
+    auto kernel = cudaModule->get_kernel("test_sampler2");
 
     auto config = SamplerConfig();
     config.type = "LCGSampler";
     config.spp = 9;
 //    auto sampler = SamplerHandle::create(config).get<LCGSampler>();
     auto sampler = SamplerHandle::create(config);
+    auto buffer = device->allocate_buffer<SamplerHandle>(1);
+    buffer.upload(&sampler);
+    auto ps = buffer.ptr();
 
-//    sampler->next_2d();
-
-    kernel->launch(dispatcher, {&sampler});
+    kernel->launch(dispatcher, {&ps});
 }
 
 int main() {
