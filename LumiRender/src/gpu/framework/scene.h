@@ -19,6 +19,8 @@ namespace luminous {
             Buffer<uint> _instance_transform_idx{nullptr};
             Buffer<float4x4> _transforms{nullptr};
 
+            vector<MeshHandle> _cpu_meshes;
+
             Buffer<MeshHandle> _meshes{nullptr};
             Buffer<float3> _positions{nullptr};
             Buffer<float3> _normals{nullptr};

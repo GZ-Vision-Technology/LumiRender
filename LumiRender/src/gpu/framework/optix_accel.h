@@ -16,18 +16,24 @@ namespace luminous {
             std::shared_ptr<Device> _device;
             Dispatcher _dispatcher;
             OptixDeviceContext _optix_context;
-            uint32_t geom_flags = OPTIX_BUILD_FLAG_ALLOW_COMPACTION;
+            uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
             size_t _gpu_bvh_bytes = 0;
             OptixTraversableHandle _root_traversable;
         private:
             void create_module();
 
-            OptixTraversableHandle build_bvh(const std::vector<OptixBuildInput> &build_inputs);
+            void init_context();
+
+            OptixBuildInput get_mesh_build_input(const Buffer<float3> &positions,
+                                                 const Buffer<TriangleHandle> &triangles,
+                                                 const MeshHandle &mesh);
 
         public:
             OptixAccel(const SP<Device> &device);
 
-            void build(const SP<SceneGraph> &graph);
+            void build_bvh(const Buffer<float3> &positions, const Buffer<uint> &triangles,
+                           const Buffer<MeshHandle> &meshes, const Buffer<uint> &instance_list,
+                           const Buffer<uint> &transform_list, const Buffer<uint> &inst_to_transform);
         };
     }
 }

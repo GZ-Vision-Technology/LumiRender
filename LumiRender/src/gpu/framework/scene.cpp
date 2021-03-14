@@ -15,6 +15,7 @@ namespace luminous {
         Scene::Scene(const SP<Device> &device)
                 : _device(device) {
             _optix_accel = make_unique<OptixAccel>(device);
+
         }
 
         void Scene::convert_geometry_data(const SP<SceneGraph> &scene_graph) {
@@ -23,7 +24,7 @@ namespace luminous {
             vector<float3> N;
             vector<float2> UV;
             vector<TriangleHandle> T;
-            vector<MeshHandle> mesh_list;
+            _cpu_meshes.clear();
             uint vert_offset = 0u;
             uint tri_offset = 0u;
             for (const SP<const Model> &model : scene_graph->model_list) {
@@ -34,8 +35,8 @@ namespace luminous {
                     T.insert(T.end(), mesh->triangles.begin(), mesh->triangles.end());
                     uint vert_count = mesh->positions.size();
                     uint tri_count = mesh->triangles.size();
-                    mesh->idx_in_meshes = mesh_list.size();
-                    mesh_list.emplace_back(vert_offset, tri_offset, vert_count, tri_count);
+                    mesh->idx_in_meshes = _cpu_meshes.size();
+                    _cpu_meshes.emplace_back(vert_offset, tri_offset, vert_count, tri_count);
                     vert_offset += vert_count;
                     tri_offset += tri_count;
                 }
@@ -44,13 +45,13 @@ namespace luminous {
             _normals = _device->allocate_buffer<float3>(N.size());
             _tex_coords = _device->allocate_buffer<float2>(UV.size());
             _triangles = _device->allocate_buffer<TriangleHandle>(T.size());
-            _meshes = _device->allocate_buffer<MeshHandle>(mesh_list.size());
+            _meshes = _device->allocate_buffer<MeshHandle>(_cpu_meshes.size());
             auto dispatcher = _device->new_dispatcher();
             _positions.upload_async(dispatcher, P.data(), P.size());
             _normals.upload_async(dispatcher, N.data(), N.size());
             _tex_coords.upload_async(dispatcher, UV.data(), UV.size());
             _triangles.upload_async(dispatcher, T.data(), T.size());
-            _meshes.upload_async(dispatcher, mesh_list.data(), mesh_list.size());
+            _meshes.upload_async(dispatcher, _cpu_meshes.data(), _cpu_meshes.size());
 
             vector<float4x4> transforms;
             vector<uint> inst_to_mesh_idx;
