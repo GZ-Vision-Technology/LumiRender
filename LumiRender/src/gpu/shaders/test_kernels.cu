@@ -9,9 +9,9 @@
 #include "graphics/common.h"
 #include <stdio.h>
 #include <iostream>
-//#include "render/samplers/sampler_handle.h"
-#include "render/samplers/independent.cpp"
-#include "render/samplers/sampler_handle.cpp"
+#include "render/samplers/sampler_handle.inl"
+#include "render/samplers/independent.inl"
+//#include "render/samplers/sampler_handle.cpp"
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
 class Sub1 {

@@ -8,7 +8,7 @@
 #include <iostream>
 #include <memory>
 #include "render/samplers/independent.cpp"
-#include "render/samplers/sampler_handle.cpp"
+#include "render/samplers/sampler_handle.inl"
 
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
