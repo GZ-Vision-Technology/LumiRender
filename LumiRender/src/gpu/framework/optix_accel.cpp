@@ -57,15 +57,13 @@ namespace luminous {
                 input.triangleArray.vertexFormat = OPTIX_VERTEX_FORMAT_FLOAT3;
                 input.triangleArray.indexStrideInBytes = sizeof(float3);
                 input.triangleArray.numVertices = mesh.vertex_count;
-                CUdeviceptr p_vert_buffer = positions.ptr<CUdeviceptr>() + sizeof(float3) * mesh.vertex_offset;
-                input.triangleArray.vertexBuffers = &p_vert_buffer;
+                _vert_buffer_ptr.push_back(positions.address<CUdeviceptr>(mesh.vertex_offset));
+                input.triangleArray.vertexBuffers = &_vert_buffer_ptr.back();
             }
             {
                 input.triangleArray.indexFormat = OPTIX_INDICES_FORMAT_UNSIGNED_INT3;
                 input.triangleArray.indexStrideInBytes = sizeof(TriangleHandle);
-                CUdeviceptr p_index_buffer =
-                        triangles.ptr<CUdeviceptr>() + sizeof(TriangleHandle) * mesh.triangle_offset;
-                input.triangleArray.indexBuffer = p_index_buffer;
+                input.triangleArray.indexBuffer = triangles.address<CUdeviceptr>(mesh.triangle_offset);
             }
             {
                 //todo fix

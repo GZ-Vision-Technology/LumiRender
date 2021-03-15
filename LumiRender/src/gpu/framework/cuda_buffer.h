@@ -17,8 +17,6 @@ namespace luminous {
             size_t _size_in_bytes;
 
         public:
-            CUdeviceptr device_ptr() { return _ptr; }
-
             void *ptr() override { return (void *)_ptr; }
 
             CUDABuffer(size_t bytes) : _size_in_bytes(bytes) {
@@ -28,6 +26,8 @@ namespace luminous {
             ~CUDABuffer() { CU_CHECK(cuMemFree(_ptr)); }
 
             size_t size() const override { return _size_in_bytes; }
+
+            void *address(size_t offset = 0) override { return (void *)(_ptr + offset); }
 
             void download_async(Dispatcher &dispatcher, void *host_data, size_t size = 0, size_t offset = 0) override {
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;

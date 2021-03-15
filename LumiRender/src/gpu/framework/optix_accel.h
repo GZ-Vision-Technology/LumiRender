@@ -18,6 +18,7 @@ namespace luminous {
             OptixDeviceContext _optix_context;
             uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
             size_t _gpu_bvh_bytes = 0;
+            std::vector<CUdeviceptr> _vert_buffer_ptr;
             OptixTraversableHandle _root_traversable;
         private:
             void create_module();

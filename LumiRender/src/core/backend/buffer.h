@@ -28,6 +28,8 @@ namespace luminous {
 
             virtual void upload_async(Dispatcher &dispatcher, const void *host_data, size_t size = 0, size_t offset = 0) = 0;
 
+            virtual void *address(size_t offset = 0) = 0;
+
             virtual size_t size() const = 0;
 
             virtual void *ptr() = 0;
@@ -56,6 +58,9 @@ namespace luminous {
         Buffer(RawBuffer buf) : RawBuffer(std::move(buf)) {}
 
         T *data() const { return reinterpret_cast<T *>(ptr()); }
+
+        template<typename U = void *>
+        auto address(size_t offset = 0) { return (U)_impl->address(offset * sizeof(T)); }
 
         size_t size() const { return _impl->size() / sizeof(T); }
 
