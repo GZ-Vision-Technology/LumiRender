@@ -12,6 +12,7 @@ namespace luminous {
             scene_graph->create_shapes();
             _scene = make_unique<Scene>(_device);
             _scene->convert_geometry_data(scene_graph);
+            _scene->build_accel();
         }
     }
 }

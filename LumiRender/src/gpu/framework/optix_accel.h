@@ -33,9 +33,9 @@ namespace luminous {
         public:
             OptixAccel(const SP<Device> &device);
 
-            void build_bvh(const Buffer<float3> &positions, const Buffer<uint> &triangles,
+            void build_bvh(const Buffer<float3> &positions, const Buffer<TriangleHandle> &triangles,
                            const vector<MeshHandle> &meshes, const Buffer<uint> &instance_list,
-                           const vector<uint> &transform_list, const vector<uint> &inst_to_transform);
+                           const vector<float4x4> &transform_list, const vector<uint> &inst_to_transform);
         };
     }
 }
