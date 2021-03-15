@@ -27,7 +27,7 @@ namespace luminous {
 
             size_t size() const override { return _size_in_bytes; }
 
-            void *address(size_t offset = 0) override { return (void *)(_ptr + offset); }
+            void *address(size_t offset = 0) const override { return (void *)(_ptr + offset); }
 
             void download_async(Dispatcher &dispatcher, void *host_data, size_t size = 0, size_t offset = 0) override {
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;

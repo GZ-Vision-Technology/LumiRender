@@ -12,10 +12,6 @@
 #pragma warning( disable : 4996 )
 #endif
 
-#include <optix.h>
-#include <optix_function_table.h>
-#include <optix_stubs.h>
-
 #ifdef _WIN32
 #pragma warning( push )
 #endif

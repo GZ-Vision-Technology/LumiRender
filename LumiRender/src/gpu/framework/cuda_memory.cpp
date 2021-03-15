@@ -3,6 +3,8 @@
 //
 
 #include "cuda_memory.h"
+#include <cuda.h>
+#include "helper/cuda.h"
 
 namespace luminous {
     inline namespace gpu {

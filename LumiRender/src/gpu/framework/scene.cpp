@@ -20,19 +20,14 @@ namespace luminous {
 
         void Scene::convert_geometry_data(const SP<SceneGraph> &scene_graph) {
             TASK_TAG("convert geometry data start!")
-            vector<float3> P;
-            vector<float3> N;
-            vector<float2> UV;
-            vector<TriangleHandle> T;
-            _cpu_meshes.clear();
             uint vert_offset = 0u;
             uint tri_offset = 0u;
             for (const SP<const Model> &model : scene_graph->model_list) {
                 for (const SP<const Mesh> &mesh : model->meshes) {
-                    P.insert(P.end(), mesh->positions.begin(), mesh->positions.end());
-                    N.insert(N.end(), mesh->normals.begin(), mesh->normals.end());
-                    UV.insert(UV.end(), mesh->tex_coords.begin(), mesh->tex_coords.end());
-                    T.insert(T.end(), mesh->triangles.begin(), mesh->triangles.end());
+                    _cpu_positions.insert(_cpu_positions.end(), mesh->positions.begin(), mesh->positions.end());
+                    _cpu_normals.insert(_cpu_normals.end(), mesh->normals.begin(), mesh->normals.end());
+                    _cpu_tex_coords.insert(_cpu_tex_coords.end(), mesh->tex_coords.begin(), mesh->tex_coords.end());
+                    _cpu_triangles.insert(_cpu_triangles.end(), mesh->triangles.begin(), mesh->triangles.end());
                     uint vert_count = mesh->positions.size();
                     uint tri_count = mesh->triangles.size();
                     mesh->idx_in_meshes = _cpu_meshes.size();
@@ -41,35 +36,32 @@ namespace luminous {
                     tri_offset += tri_count;
                 }
             }
-            _positions = _device->allocate_buffer<float3>(P.size());
-            _normals = _device->allocate_buffer<float3>(N.size());
-            _tex_coords = _device->allocate_buffer<float2>(UV.size());
-            _triangles = _device->allocate_buffer<TriangleHandle>(T.size());
+            _positions = _device->allocate_buffer<float3>(_cpu_positions.size());
+            _normals = _device->allocate_buffer<float3>(_cpu_normals.size());
+            _tex_coords = _device->allocate_buffer<float2>(_cpu_tex_coords.size());
+            _triangles = _device->allocate_buffer<TriangleHandle>(_cpu_triangles.size());
             _meshes = _device->allocate_buffer<MeshHandle>(_cpu_meshes.size());
             auto dispatcher = _device->new_dispatcher();
-            _positions.upload_async(dispatcher, P.data(), P.size());
-            _normals.upload_async(dispatcher, N.data(), N.size());
-            _tex_coords.upload_async(dispatcher, UV.data(), UV.size());
-            _triangles.upload_async(dispatcher, T.data(), T.size());
+            _positions.upload_async(dispatcher, _cpu_positions.data());
+            _normals.upload_async(dispatcher, _cpu_normals.data());
+            _tex_coords.upload_async(dispatcher, _cpu_tex_coords.data());
+            _triangles.upload_async(dispatcher, _cpu_triangles.data());
             _meshes.upload_async(dispatcher, _cpu_meshes.data(), _cpu_meshes.size());
 
-            vector<float4x4> transforms;
-            vector<uint> inst_to_mesh_idx;
-            vector<uint> inst_tsf_idx;
             for (const SP<const ModelInstance> &instance : scene_graph->instance_list) {
                 const SP<const Model> &model = scene_graph->model_list[instance->model_idx];
                 for (const SP<const Mesh> &mesh : model->meshes) {
-                    inst_tsf_idx.push_back(transforms.size());
-                    inst_to_mesh_idx.push_back(mesh->idx_in_meshes);
+                    _cpu_instance_to_transform_idx.push_back(_cpu_transforms.size());
+                    _cpu_instance_to_mesh_idx.push_back(mesh->idx_in_meshes);
                 }
-                transforms.push_back(instance->o2w.mat4x4());
+                _cpu_transforms.push_back(instance->o2w.mat4x4());
             }
-            _transforms = _device->allocate_buffer<float4x4>(transforms.size());
-            _instance_to_mesh_idx = _device->allocate_buffer<uint>(inst_to_mesh_idx.size());
-            _instance_transform_idx = _device->allocate_buffer<uint>(inst_tsf_idx.size());
-            _transforms.upload_async(dispatcher, transforms.data(), transforms.size());
-            _instance_to_mesh_idx.upload_async(dispatcher, inst_to_mesh_idx.data(), inst_to_mesh_idx.size());
-            _instance_transform_idx.upload_async(dispatcher, inst_tsf_idx.data(), inst_tsf_idx.size());
+            _transforms = _device->allocate_buffer<float4x4>(_cpu_transforms.size());
+            _instance_to_mesh_idx = _device->allocate_buffer<uint>(_cpu_instance_to_mesh_idx.size());
+            _instance_to_transform_idx = _device->allocate_buffer<uint>(_cpu_instance_to_transform_idx.size());
+            _transforms.upload_async(dispatcher, _cpu_transforms.data());
+            _instance_to_mesh_idx.upload_async(dispatcher, _cpu_instance_to_mesh_idx.data());
+            _instance_to_transform_idx.upload_async(dispatcher, _cpu_instance_to_transform_idx.data());
             dispatcher.wait();
         }
 

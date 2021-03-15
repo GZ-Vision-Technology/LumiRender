@@ -3,8 +3,9 @@
 //
 
 #include "optix_accel.h"
+#include <optix.h>
 #include <optix_function_table_definition.h>
-
+#include <optix_stubs.h>
 
 namespace luminous {
     inline namespace gpu {
@@ -42,12 +43,6 @@ namespace luminous {
 
         }
 
-        void OptixAccel::build_bvh(const Buffer<float3> &positions, const Buffer<uint> &triangles,
-                                   const Buffer<MeshHandle> &meshes, const Buffer<uint> &instance_list,
-                                   const Buffer<uint> &transform_list, const Buffer<uint> &inst_to_transform) {
-
-        }
-
         OptixBuildInput OptixAccel::get_mesh_build_input(const Buffer<float3> &positions,
                                                          const Buffer<TriangleHandle> &triangles,
                                                          const MeshHandle &mesh) {
@@ -63,6 +58,7 @@ namespace luminous {
             {
                 input.triangleArray.indexFormat = OPTIX_INDICES_FORMAT_UNSIGNED_INT3;
                 input.triangleArray.indexStrideInBytes = sizeof(TriangleHandle);
+                input.triangleArray.numIndexTriplets = triangles.size();
                 input.triangleArray.indexBuffer = triangles.address<CUdeviceptr>(mesh.triangle_offset);
             }
             {
@@ -74,6 +70,12 @@ namespace luminous {
                 input.triangleArray.sbtIndexOffsetStrideInBytes = 0;
             }
             return input;
+        }
+
+        void OptixAccel::build_bvh(const Buffer<float3> &positions, const Buffer<uint> &triangles,
+                                   const vector<MeshHandle> &meshes, const Buffer<uint> &instance_list,
+                                   const vector<uint> &transform_list, const vector<uint> &inst_to_transform) {
+
         }
     }
 }

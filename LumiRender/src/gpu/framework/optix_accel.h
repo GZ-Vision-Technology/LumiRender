@@ -8,6 +8,7 @@
 #include "cuda_device.h"
 #include "graphics/geometry/common.h"
 #include "render/include/scene_graph.h"
+#include <optix.h>
 
 namespace luminous {
     inline namespace gpu {
@@ -15,11 +16,11 @@ namespace luminous {
         private:
             std::shared_ptr<Device> _device;
             Dispatcher _dispatcher;
-            OptixDeviceContext _optix_context;
+            OptixDeviceContext _optix_context{};
             uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
             size_t _gpu_bvh_bytes = 0;
             std::vector<CUdeviceptr> _vert_buffer_ptr;
-            OptixTraversableHandle _root_traversable;
+            OptixTraversableHandle _root_traversable{};
         private:
             void create_module();
 
@@ -33,8 +34,8 @@ namespace luminous {
             OptixAccel(const SP<Device> &device);
 
             void build_bvh(const Buffer<float3> &positions, const Buffer<uint> &triangles,
-                           const Buffer<MeshHandle> &meshes, const Buffer<uint> &instance_list,
-                           const Buffer<uint> &transform_list, const Buffer<uint> &inst_to_transform);
+                           const vector<MeshHandle> &meshes, const Buffer<uint> &instance_list,
+                           const vector<uint> &transform_list, const vector<uint> &inst_to_transform);
         };
     }
 }

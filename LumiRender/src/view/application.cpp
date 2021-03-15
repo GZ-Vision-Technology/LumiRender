@@ -75,12 +75,12 @@ namespace luminous {
 
     App::App(const std::string &title, const int2 &size, Context *context, const Parser &parser)
             : _size(size) {
-        init_window(title, size);
-        init_event_cb();
-        init_imgui();
-        init_gl_context();
         _pipeline = make_unique<CUDAPipeline>(context);
         _pipeline->init(parser);
+//        init_window(title, size);
+//        init_event_cb();
+//        init_imgui();
+//        init_gl_context();
     }
 
     void App::init_gl_context() {
@@ -135,16 +135,16 @@ namespace luminous {
     }
 
     int App::run() {
-        while (!glfwWindowShouldClose(_handle)) {
-            loop();
-            imgui_begin();
-            glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
-            glClear(GL_COLOR_BUFFER_BIT);
-            draw();
-            imgui_end();
-            glfwPollEvents();
-            glfwSwapBuffers(_handle);
-        }
+//        while (!glfwWindowShouldClose(_handle)) {
+//            loop();
+//            imgui_begin();
+//            glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
+//            glClear(GL_COLOR_BUFFER_BIT);
+//            draw();
+//            imgui_end();
+//            glfwPollEvents();
+//            glfwSwapBuffers(_handle);
+//        }
         return 0;
     }
 
