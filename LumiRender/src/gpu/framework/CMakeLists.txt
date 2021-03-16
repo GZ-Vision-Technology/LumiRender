@@ -1,11 +1,10 @@
 
-#file(GLOB SOURCE_FILES *.h *.c*)
-
+cuda_compile_and_embed(optix_shader_code ${PROJECT_SOURCE_DIR}/src/gpu/shaders/optix_kernels.cu)
 
 file(GLOB_RECURSE HEADER_FILES *.h*)
 file(GLOB_RECURSE SOURCE_FILES *.c*)
 
-add_library(luminous-gpu SHARED ${HEADER_FILES} ${SOURCE_FILES})
+add_library(luminous-gpu SHARED ${HEADER_FILES} ${SOURCE_FILES} ${optix_shader_code})
 
 target_link_libraries(luminous-gpu
         PUBLIC CUDA::nvrtc

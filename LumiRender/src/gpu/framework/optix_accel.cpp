@@ -7,6 +7,8 @@
 #include <optix_function_table_definition.h>
 #include <optix_stubs.h>
 
+extern "C" char optix_shader_code[];
+
 namespace luminous {
     inline namespace gpu {
 
@@ -40,6 +42,18 @@ namespace luminous {
         }
 
         void OptixAccel::create_module() {
+
+        }
+
+        void OptixAccel::create_program_groups() {
+
+        }
+
+        void OptixAccel::create_pipeline() {
+
+        }
+
+        void OptixAccel::create_SBT() {
 
         }
 
@@ -116,6 +130,7 @@ namespace luminous {
                                    const vector<MeshHandle> &meshes, const Buffer<uint> &instance_list,
                                    const vector<float4x4> &transform_list, const vector<uint> &inst_to_transform) {
             TASK_TAG("build optix bvh");
+            cout << optix_shader_code;
             vector<OptixTraversableHandle> traversable_handles;
             for (const auto &mesh : meshes) {
                 traversable_handles.push_back(build_mesh_bvh(positions, triangles, mesh));

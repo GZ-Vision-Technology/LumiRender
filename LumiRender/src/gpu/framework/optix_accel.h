@@ -26,6 +26,12 @@ namespace luminous {
 
             void init_context();
 
+            void create_program_groups();
+
+            void create_pipeline();
+
+            void create_SBT();
+
             OptixBuildInput get_mesh_build_input(const Buffer<float3> &positions,
                                                  const Buffer<TriangleHandle> &triangles,
                                                  const MeshHandle &mesh);
