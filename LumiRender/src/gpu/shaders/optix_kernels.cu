@@ -2,6 +2,24 @@
 // Created by Zero on 2021/2/14.
 //
 
-extern "C" __global__ void __raygen__rg() {
+#define GLOBAL extern "C" __global__ void
+
+GLOBAL __raygen__rg() {
+
+}
+
+GLOBAL __miss__radiance() {
+
+}
+
+GLOBAL __miss__shadow() {
+
+}
+
+GLOBAL __closesthit__radiance() {
+
+}
+
+GLOBAL __closesthit__occlusion() {
 
 }

@@ -19,10 +19,14 @@ namespace luminous {
         OptixAccel::OptixAccel(const SP<Device> &device)
                 : _device(device),
                   _dispatcher(_device->new_dispatcher()) {
-            init_context();
+            _optix_device_context = create_context();
+            _optix_module = create_module(_optix_device_context);
+            _program_group_table = create_program_groups(_optix_module);
+            _optix_pipeline = create_pipeline(_program_group_table);
+            create_sbt(_program_group_table);
         }
 
-        void OptixAccel::init_context() {
+        OptixDeviceContext OptixAccel::create_context() {
             // Initialize CUDA for this device on this thread
             CU_CHECK(cuMemFree(0));
             OPTIX_CHECK(optixInit());
@@ -38,36 +42,184 @@ namespace luminous {
 #endif
             // Zero means take the current context
             CUcontext cuda_context = 0;
-            OPTIX_CHECK(optixDeviceContextCreate(cuda_context, &ctx_options, &_optix_context));
+            OPTIX_CHECK(optixDeviceContextCreate(cuda_context, &ctx_options, &_optix_device_context));
+            return _optix_device_context;
         }
 
-        void OptixAccel::create_module() {
+        OptixModule OptixAccel::create_module(OptixDeviceContext optix_device_context) {
+            OptixModule optix_module = 0;
+
+            // OptiX module
+            OptixModuleCompileOptions module_compile_options = {};
+            // TODO: REVIEW THIS
+            module_compile_options.maxRegisterCount = OPTIX_COMPILE_DEFAULT_MAX_REGISTER_COUNT;
+#ifndef NDEBUG
+            module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_LEVEL_0;
+            module_compile_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_LINEINFO;
+#else
+            module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
+            module_compile_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_NONE;
+#endif
+
+            _pipeline_compile_options.traversableGraphFlags = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_ANY;
+            _pipeline_compile_options.usesMotionBlur = false;
+            _pipeline_compile_options.numPayloadValues = 3;
+            _pipeline_compile_options.numAttributeValues = 4;
+            // OPTIX_EXCEPTION_FLAG_NONE;
+            _pipeline_compile_options.exceptionFlags =
+                    (OPTIX_EXCEPTION_FLAG_STACK_OVERFLOW | OPTIX_EXCEPTION_FLAG_TRACE_DEPTH |
+                     OPTIX_EXCEPTION_FLAG_DEBUG);
+            _pipeline_compile_options.pipelineLaunchParamsVariableName = "params";
+
+            char log[2048];
+            size_t log_size = sizeof(log);
+            std::string ptx_code(optix_shader_code);
+
+            OPTIX_CHECK_WITH_LOG(optixModuleCreateFromPTX(
+                    _optix_device_context,
+                    &module_compile_options,
+                    &_pipeline_compile_options,
+                    ptx_code.c_str(), ptx_code.size(),
+                    log, &log_size, &optix_module), log);
+
+            return optix_module;
+        }
+
+        OptixAccel::ProgramGroupTable OptixAccel::create_program_groups(OptixModule optix_module) {
+            ProgramGroupTable program_group_table;
+            OptixProgramGroupOptions program_group_options = {};
+            char log[2048];
+            size_t sizeof_log = sizeof(log);
+
+            {
+                OptixProgramGroupDesc raygen_prog_group_desc = {};
+                raygen_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_RAYGEN;
+                raygen_prog_group_desc.raygen.module = _optix_module;
+                raygen_prog_group_desc.raygen.entryFunctionName = "__raygen__rg";
+                OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
+                        _optix_device_context,
+                        &raygen_prog_group_desc,
+                        1,  // num program groups
+                        &program_group_options,
+                        log,
+                        &sizeof_log,
+                        &(program_group_table.raygen_prog_group)
+                ), log);
+            }
+
+            {
+                OptixProgramGroupDesc miss_prog_group_desc = {};
+                miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
+                miss_prog_group_desc.miss.module = _optix_module;
+                miss_prog_group_desc.miss.entryFunctionName = "__miss__radiance";
+                sizeof_log = sizeof(log);
+                OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
+                        _optix_device_context,
+                        &miss_prog_group_desc,
+                        1,  // num program groups
+                        &program_group_options,
+                        log,
+                        &sizeof_log,
+                        &(program_group_table.radiance_miss_group)
+                ), log);
+
+                memset(&miss_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
+                miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
+                miss_prog_group_desc.miss.module = NULL;  // NULL miss program for occlusion rays
+                miss_prog_group_desc.miss.entryFunctionName = NULL;
+                sizeof_log = sizeof(log);
+
+                OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
+                        _optix_device_context,
+                        &miss_prog_group_desc,
+                        1,  // num program groups
+                        &program_group_options,
+                        log,
+                        &sizeof_log,
+                        &(program_group_table.occlusion_miss_group)
+                ), log);
+            }
+
+            {
+                OptixProgramGroupDesc hit_prog_group_desc = {};
+                hit_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
+                hit_prog_group_desc.hitgroup.moduleCH = _optix_module;
+                hit_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__radiance";
+                sizeof_log = sizeof(log);
+
+                OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
+                        _optix_device_context,
+                        &hit_prog_group_desc,
+                        1,  // num program groups
+                        &program_group_options,
+                        log,
+                        &sizeof_log,
+                        &(program_group_table.radiance_hit_group)
+                ), log);
+
+                memset(&hit_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
+                hit_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
+                hit_prog_group_desc.hitgroup.moduleCH = _optix_module;
+                hit_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__occlusion";
+                sizeof_log = sizeof(log);
+
+                OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
+                        _optix_device_context,
+                        &hit_prog_group_desc,
+                        1,  // num program groups
+                        &program_group_options,
+                        log,
+                        &sizeof_log,
+                        &(program_group_table.occlusion_hit_group)
+                ), log);
+            }
+
+            return program_group_table;
+        }
+
+
+        OptixPipeline OptixAccel::create_pipeline(OptixAccel::ProgramGroupTable program_group_table) {
+            OptixPipeline pipeline = 0;
+            OptixPipelineLinkOptions pipeline_link_options = {};
+            pipeline_link_options.maxTraceDepth = 2;
+#ifndef NDEBUG
+            pipeline_link_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_FULL;
+#else
+            pipeline_link_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_NONE;
+#endif
+            char   log[2048];
+            size_t sizeof_log = sizeof( log );
+
+            OPTIX_CHECK_WITH_LOG(optixPipelineCreate(
+                    _optix_device_context,
+                    &_pipeline_compile_options,
+                    &pipeline_link_options,
+                     (OptixProgramGroup*)&_program_group_table,
+                    sizeof(_program_group_table) / sizeof(_program_group_table.occlusion_hit_group),
+                    log, &sizeof_log,
+                    &pipeline
+                    ), log);
+
+            return pipeline;
+        }
+
+        void OptixAccel::create_sbt(ProgramGroupTable program_group_table) {
 
         }
 
-        void OptixAccel::create_program_groups() {
-
-        }
-
-        void OptixAccel::create_pipeline() {
-
-        }
-
-        void OptixAccel::create_SBT() {
-
-        }
 
         OptixBuildInput OptixAccel::get_mesh_build_input(const Buffer<float3> &positions,
                                                          const Buffer<TriangleHandle> &triangles,
-                                                         const MeshHandle &mesh) {
+                                                         const MeshHandle &mesh,
+                                                         std::list<CUdeviceptr> &vert_buffer_ptr) {
             OptixBuildInput input = {};
             input.type = OPTIX_BUILD_INPUT_TYPE_TRIANGLES;
             {
                 input.triangleArray.vertexFormat = OPTIX_VERTEX_FORMAT_FLOAT3;
                 input.triangleArray.indexStrideInBytes = sizeof(float3);
                 input.triangleArray.numVertices = mesh.vertex_count;
-                _vert_buffer_ptr.push_back(positions.address<CUdeviceptr>(mesh.vertex_offset));
-                input.triangleArray.vertexBuffers = &_vert_buffer_ptr.back();
+                vert_buffer_ptr.push_back(positions.address<CUdeviceptr>(mesh.vertex_offset));
+                input.triangleArray.vertexBuffers = &vert_buffer_ptr.back();
             }
             {
                 input.triangleArray.indexFormat = OPTIX_INDICES_FORMAT_UNSIGNED_INT3;
@@ -88,9 +240,10 @@ namespace luminous {
 
         OptixTraversableHandle OptixAccel::build_mesh_bvh(const Buffer<float3> &positions,
                                                           const Buffer<TriangleHandle> &triangles,
-                                                          const MeshHandle &mesh) {
+                                                          const MeshHandle &mesh,
+                                                          std::list<CUdeviceptr> &vert_buffer_ptr) {
 
-            OptixBuildInput build_input = get_mesh_build_input(positions, triangles, mesh);
+            OptixBuildInput build_input = get_mesh_build_input(positions, triangles, mesh, vert_buffer_ptr);
 
             OptixAccelBuildOptions accel_options = {};
             accel_options.buildFlags = (OPTIX_BUILD_FLAG_ALLOW_COMPACTION | OPTIX_BUILD_FLAG_PREFER_FAST_TRACE);
@@ -99,7 +252,7 @@ namespace luminous {
 
             OptixAccelBufferSizes gas_buffer_sizes;
             OPTIX_CHECK(optixAccelComputeMemoryUsage(
-                    _optix_context,
+                    _optix_device_context,
                     &accel_options,
                     &build_input,
                     1,  // num_build_inputs
@@ -127,14 +280,14 @@ namespace luminous {
         }
 
         void OptixAccel::build_bvh(const Buffer<float3> &positions, const Buffer<TriangleHandle> &triangles,
-                                   const vector<MeshHandle> &meshes, const Buffer<uint> &instance_list,
+                                   const vector<MeshHandle> &meshes, const vector<uint> &instance_list,
                                    const vector<float4x4> &transform_list, const vector<uint> &inst_to_transform) {
             TASK_TAG("build optix bvh");
-            cout << optix_shader_code;
+            std::list<CUdeviceptr> vert_buffer_ptr;
             vector<OptixTraversableHandle> traversable_handles;
-            for (const auto &mesh : meshes) {
-                traversable_handles.push_back(build_mesh_bvh(positions, triangles, mesh));
-            }
+//            for (const auto &mesh : meshes) {
+//                traversable_handles.push_back(build_mesh_bvh(positions, triangles, mesh, vert_buffer_ptr));
+//            }
 
         }
 

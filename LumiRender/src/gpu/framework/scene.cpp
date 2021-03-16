@@ -67,7 +67,7 @@ namespace luminous {
 
         void Scene::build_accel() {
             _optix_accel->build_bvh(_positions, _triangles, _cpu_meshes,
-                                    _instance_to_mesh_idx,_cpu_transforms,
+                                    _cpu_instance_to_mesh_idx,_cpu_transforms,
                                     _cpu_instance_to_transform_idx);
         }
     }
