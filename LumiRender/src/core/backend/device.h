@@ -22,7 +22,7 @@ namespace luminous {
             virtual ~Impl() = default;
         };
 
-        template<typename T>
+        template<typename T = std::byte>
         Buffer <T> allocate_buffer(size_t n_elements) {
             return Buffer<T>(_impl->allocate_buffer(n_elements * sizeof(T)));
         }

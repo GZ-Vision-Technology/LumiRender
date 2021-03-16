@@ -51,15 +51,15 @@ namespace luminous {
             {
                 input.triangleArray.vertexFormat = OPTIX_VERTEX_FORMAT_FLOAT3;
                 input.triangleArray.indexStrideInBytes = sizeof(float3);
-                input.triangleArray.numVertices = positions.size();
-                _vert_buffer_ptr.push_back(positions.address<CUdeviceptr>(0));
+                input.triangleArray.numVertices = mesh.vertex_count;
+                _vert_buffer_ptr.push_back(positions.address<CUdeviceptr>(mesh.vertex_offset));
                 input.triangleArray.vertexBuffers = &_vert_buffer_ptr.back();
             }
             {
                 input.triangleArray.indexFormat = OPTIX_INDICES_FORMAT_UNSIGNED_INT3;
                 input.triangleArray.indexStrideInBytes = sizeof(TriangleHandle);
-                input.triangleArray.numIndexTriplets = triangles.size();
-                input.triangleArray.indexBuffer = triangles.address<CUdeviceptr>(0);
+                input.triangleArray.numIndexTriplets = mesh.triangle_count;
+                input.triangleArray.indexBuffer = triangles.address<CUdeviceptr>(mesh.triangle_offset);
             }
             {
                 //todo fix
@@ -72,15 +72,12 @@ namespace luminous {
             return input;
         }
 
-        void OptixAccel::build_bvh(const Buffer<float3> &positions, const Buffer<TriangleHandle> &triangles,
-                                   const vector<MeshHandle> &meshes, const Buffer<uint> &instance_list,
-                                   const vector<float4x4> &transform_list, const vector<uint> &inst_to_transform) {
-            TASK_TAG("build optix bvh");
-            vector<OptixBuildInput> inputs;
-            for (int i = 0; i < meshes.size(); ++i) {
-                if (i == 0 || i == 1)
-                inputs.push_back(get_mesh_build_input(positions, triangles, meshes[i]));
-            }
+        OptixTraversableHandle OptixAccel::build_mesh_bvh(const Buffer<float3> &positions,
+                                                          const Buffer<TriangleHandle> &triangles,
+                                                          const MeshHandle &mesh) {
+
+            OptixBuildInput build_input = get_mesh_build_input(positions, triangles, mesh);
+
             OptixAccelBuildOptions accel_options = {};
             accel_options.buildFlags = (OPTIX_BUILD_FLAG_ALLOW_COMPACTION | OPTIX_BUILD_FLAG_PREFER_FAST_TRACE);
             accel_options.motionOptions.numKeys = 1;
@@ -90,11 +87,41 @@ namespace luminous {
             OPTIX_CHECK(optixAccelComputeMemoryUsage(
                     _optix_context,
                     &accel_options,
-                    &inputs[0],
+                    &build_input,
                     1,  // num_build_inputs
                     &gas_buffer_sizes
             ));
-cout << "adfdsf" << endl;
+            auto output_buffer = _device->allocate_buffer(gas_buffer_sizes.outputSizeInBytes);
+            auto temp_buffer = _device->allocate_buffer(gas_buffer_sizes.tempSizeInBytes);
+            auto compact_size_buffer = _device->allocate_buffer<uint64_t>(1);
+
+            OptixAccelEmitDesc emit_desc;
+            emit_desc.type = OPTIX_PROPERTY_TYPE_COMPACTED_SIZE;
+            emit_desc.result = compact_size_buffer.ptr<uint64_t>();
+
+            OptixTraversableHandle traversable_handle = 0;
+//            OPTIX_CHECK(optixAccelBuild(_optix_context, 0, &accel_options,
+//                                        inputs.data(), inputs.size(),
+//                                        temp_buffer.ptr<CUdeviceptr>(), gas_buffer_sizes.tempSizeInBytes,
+//                                        output_buffer.ptr<CUdeviceptr>(), gas_buffer_sizes.outputSizeInBytes,
+//                                        &traversable_handle, &emit_desc, 1));
+//
+//            //todo
+//            CUDA_CHECK(cudaDeviceSynchronize());
+
+            return traversable_handle;
         }
+
+        void OptixAccel::build_bvh(const Buffer<float3> &positions, const Buffer<TriangleHandle> &triangles,
+                                   const vector<MeshHandle> &meshes, const Buffer<uint> &instance_list,
+                                   const vector<float4x4> &transform_list, const vector<uint> &inst_to_transform) {
+            TASK_TAG("build optix bvh");
+            vector<OptixTraversableHandle> traversable_handles;
+            for (const auto &mesh : meshes) {
+                traversable_handles.push_back(build_mesh_bvh(positions, triangles, mesh));
+            }
+
+        }
+
     }
 }
