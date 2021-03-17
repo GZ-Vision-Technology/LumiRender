@@ -9,26 +9,12 @@
 #include "graphics/geometry/common.h"
 #include "render/include/scene_graph.h"
 #include <optix.h>
+#include "optix_params.h"
 
 namespace luminous {
     inline namespace gpu {
 
-        struct Params {
 
-        };
-
-        struct RayGenData{
-
-        };
-
-
-        struct MissData{
-            float4 bg_color;
-        };
-
-        struct HitGroupData {
-
-        };
 
         class OptixAccel : public Noncopyable {
         private:
@@ -45,6 +31,9 @@ namespace luminous {
                 OptixProgramGroup occlusion_miss_group = 0;
                 OptixProgramGroup radiance_hit_group = 0;
                 OptixProgramGroup occlusion_hit_group = 0;
+                constexpr auto size() const {
+                    return sizeof(ProgramGroupTable) / sizeof(OptixProgramGroup);
+                }
             };
             ProgramGroupTable _program_group_table{};
 

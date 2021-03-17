@@ -7,19 +7,36 @@
 #include <list>
 #include <cstddef>
 #include "core/header.h"
+#include "core/concepts.h"
 
 #define ARENA_ALLOC(arena, Type) new ((arena).alloc(sizeof(Type))) Type
 
 namespace luminous {
     inline namespace utility {
-        void *alloc_aligned(size_t size);
-        template <typename T>
-        T *alloc_aligned(size_t count) {
-            return (T *)alloc_aligned(count * sizeof(T));
+//        void *alloc_aligned(size_t size);
+//
+//        template<typename T>
+//        T *alloc_aligned(size_t count) {
+//            return (T *) alloc_aligned(count * sizeof(T));
+//        }
+
+
+//        void free_aligned(void *);
+
+
+        void *aligned_alloc(size_t alignment, size_t size) noexcept {
+            return _aligned_malloc(size, alignment);
         }
 
-        void free_aligned(void *);
+        void aligned_free(void *p) noexcept {
+            _aligned_free(p);
+        }
 
+        template<typename T, typename... Args>
+        constexpr T *construct_at(T *p, Args &&...args) {
+            return ::new(const_cast<void *>(static_cast<const volatile void *>(p)))
+                    T(std::forward<Args>(args)...);
+        }
 
         /*
          * 内存管理是一个很复杂的问题，但在离线渲染器中，内存管理的情况相对简单，大部分的内存申请
@@ -37,130 +54,57 @@ namespace luminous {
          *     如果该数据的完全在一个cache line以内，那么cache miss的次数最多为一次
          *
          */
-        class alignas(L1_CACHE_LINE_SIZE) MemoryArena {
+        class Arena : public Noncopyable {
+        public:
+            static constexpr auto block_size = static_cast<size_t>(256ul * 1024ul);
 
         private:
-            MemoryArena(const MemoryArena &) = delete;
-            MemoryArena &operator=(const MemoryArena &) = delete;
-
-            // 默认内存块大小
-            const size_t _block_size;
-
-            // 当前块已经分配的位置
-            size_t _current_block_pos = 0;
-
-            // 当前块的尺寸
-            size_t _current_alloc_size = 0;
-
-            // 当前块指针
-            uint8_t *_current_block = nullptr;
-
-            // 已经使用的内存块列表
-            std::list<std::pair<size_t, uint8_t *>> _used_blocks;
-
-            // 可使用的内存块列表
-            std::list<std::pair<size_t, uint8_t *>> _available_blocks;
+            std::vector<std::byte *> _blocks;
+            uint64_t _ptr{0ul};
+            size_t _total{0ul};
 
         public:
+            Arena() noexcept = default;
 
-            /**
-             * MemoryArena是内存池的一种，基于arena方式分配内存
-             * 整个对象大体分为三个部分
-             *   1.可用列表，用于储存可分配的内存块
-             *   2.已用列表，储存已经使用的内存块
-             *   3.当前内存块
-             */
-            MemoryArena(size_t block_size = 262144) : _block_size(block_size) {
+            Arena(Arena &&) noexcept = default;
 
+            Arena &operator=(Arena &&) noexcept = default;
+
+            ~Arena() noexcept {
+                for (auto p : _blocks) { aligned_free(p); }
             }
 
-            ~MemoryArena() {
-                free_aligned(_current_block);
+            [[nodiscard]] auto total_size() const noexcept { return _total; }
 
-                for (auto &block : _used_blocks) {
-                    free_aligned(block.second);
-                }
+            template<typename T = std::byte, size_t alignment = alignof(T)>
+            [[nodiscard]] auto allocate(size_t n = 1u) {
 
-                for (auto &block : _available_blocks) {
-                    free_aligned(block.second);
-                }
-            }
+                static_assert(std::is_trivially_destructible_v<T>);
+                static constexpr auto size = sizeof(T);
 
-            /**
-             * 1.对齐内存块
-             * 2.
-             */
-            void * alloc(size_t nBytes) {
-
-                // 16位对齐，对齐之后nBytes为16的整数倍
-                nBytes = (nBytes + 15) & ~(15);
-                if (_current_block_pos + nBytes > _current_alloc_size) {
-                    // 如果已经分配的内存加上请求内存大于当前内存块大小
-
-                    if (_current_block) {
-                        // 如果当前块不为空，则把当前块放入已用列表中
-                        _used_blocks.push_back(std::make_pair(_current_alloc_size, _current_block));
-                        _current_block = nullptr;
-                        _current_alloc_size = 0;
+                auto byte_size = n * size;
+                auto aligned_p = reinterpret_cast<std::byte *>((_ptr + alignment - 1u) / alignment * alignment);
+                if (_blocks.empty() || aligned_p + byte_size > _blocks.back() + block_size) {
+                    static constexpr auto alloc_alignment = std::max(alignment, sizeof(void *));
+                    static_assert((alloc_alignment & (alloc_alignment - 1u)) == 0, "Alignment should be power of two.");
+                    auto alloc_size = (std::max(block_size, byte_size) + alloc_alignment - 1u) / alloc_alignment *
+                                      alloc_alignment;
+                    aligned_p = static_cast<std::byte *>(aligned_alloc(alloc_alignment, alloc_size));
+                    if (aligned_p == nullptr) {
+                        LUMINOUS_ERROR(string_printf("Failed to allocate memory: size = %d, alignment = %d, count = %d"),
+                                       size, alignment, n)
                     }
-
-                    // 在可用列表中查找是否有尺寸大于请求内存的块
-                    for (auto iter = _available_blocks.begin(); iter != _available_blocks.end(); ++iter) {
-                        if (iter->first >= nBytes) {
-                            // 如果找到将当前块指针指向该块，并将该块从可用列表中移除
-                            _current_alloc_size = iter->first;
-                            _current_block = iter->second;
-                            _available_blocks.erase(iter);
-                            break;
-                        }
-                    }
-
-                    if (!_current_block) {
-                        // 如果没有找到符合标准的内存块，则申请一块内存
-                        _current_alloc_size = std::max(nBytes, _block_size);
-                        _current_block = alloc_aligned<uint8_t>(_current_alloc_size);
-                    }
-                    _current_block_pos = 0;
+                    _blocks.emplace_back(aligned_p);
+                    _total += alloc_size;
                 }
-                void * ret = _current_block + _current_block_pos;
-                _current_block_pos += nBytes;
-                return ret;
+                _ptr = reinterpret_cast<uint64_t>(aligned_p + byte_size);
+                return reinterpret_cast<T *>(aligned_p);
             }
 
-            /**
-             * 外部向内存池申请一块连续内存
-             */
-            template <typename T>
-            T * alloc(size_t n = 1, bool runConstructor = true) {
-                T *ret = (T *)alloc(n * sizeof(T));
-                if (runConstructor) {
-                    for (size_t i = 0; i < n; ++i) {
-                        new (&ret[i]) T();
-                    }
-                }
-                return ret;
+            template<typename T, typename... Args>
+            [[nodiscard]] T *create(Args &&...args) {
+                return luisa::construct_at(allocate<T>(1u), std::forward<Args>(args)...);
             }
-
-            /**
-             * 重置当前内存池，将可用列表与已用列表合并，已用列表在可用列表之前
-             */
-            void reset() {
-                _current_block_pos = 0;
-                _available_blocks.splice(_available_blocks.begin(), _used_blocks);
-            }
-
-            //获取已经分配的内存大小
-            size_t total_allocated() const {
-                size_t total = _current_alloc_size;
-                for (const auto &alloc : _used_blocks) {
-                    total += alloc.first;
-                }
-                for (const auto &alloc : _available_blocks) {
-                    total += alloc.first;
-                }
-                return total;
-            }
-
         };
 
     }

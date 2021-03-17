@@ -12,16 +12,6 @@ extern "C" char optix_shader_code[];
 namespace luminous {
     inline namespace gpu {
 
-        template<typename T>
-        struct Record {
-            __align__(OPTIX_SBT_RECORD_ALIGNMENT) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
-            T data;
-        };
-
-        using RayGenRecord = Record<RayGenData>;
-        using MissRecord = Record<MissData>;
-        using HitGroupRecord = Record<HitGroupData>;
-
         static void context_log_cb(unsigned int level, const char *tag, const char *message, void * /*cbdata */ ) {
             std::cerr << "[" << std::setw(2) << level << "][" << std::setw(12) << tag << "]: " << message << "\n";
         }
@@ -205,7 +195,7 @@ namespace luminous {
                     &_pipeline_compile_options,
                     &pipeline_link_options,
                     (OptixProgramGroup *) &_program_group_table,
-                    sizeof(_program_group_table) / sizeof(_program_group_table.occlusion_hit_group),
+                    _program_group_table.size(),
                     log, &sizeof_log,
                     &pipeline
             ), log);
@@ -218,6 +208,12 @@ namespace luminous {
             RayGenRecord rg_sbt = {};
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.raygen_prog_group, &rg_sbt));
             d_rg_record_ptr.upload(&rg_sbt);
+
+            auto d_miss_record_ptr = _device->allocate_buffer<MissRecord>(RayType::Count);
+            MissRecord ms_sbt[2] = {};
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::Radiance]));
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::Occlusion]));
+            d_miss_record_ptr.upload(ms_sbt);
         }
 
 
