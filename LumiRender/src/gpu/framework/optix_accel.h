@@ -12,6 +12,24 @@
 
 namespace luminous {
     inline namespace gpu {
+
+        struct Params {
+
+        };
+
+        struct RayGenData{
+
+        };
+
+
+        struct MissData{
+            float4 bg_color;
+        };
+
+        struct HitGroupData {
+
+        };
+
         class OptixAccel : public Noncopyable {
         private:
             std::shared_ptr<Device> _device;
@@ -29,9 +47,6 @@ namespace luminous {
                 OptixProgramGroup occlusion_hit_group = 0;
             };
             ProgramGroupTable _program_group_table{};
-
-            OptixShaderBindingTable _closesthit_sbt{};
-            OptixShaderBindingTable _anyhit_sbt{};
 
             OptixShaderBindingTable _shader_binding_table{};
             OptixTraversableHandle _root_traversable{};
