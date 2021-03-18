@@ -59,6 +59,8 @@ namespace luminous {
 
         T *data() const { return reinterpret_cast<T *>(ptr()); }
 
+        size_t stride_in_bytes() const { return sizeof(value_type); }
+
         template<typename U = void *>
         auto address(size_t offset = 0) const { return (U)_impl->address(offset * sizeof(T)); }
 

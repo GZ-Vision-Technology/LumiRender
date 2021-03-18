@@ -37,7 +37,7 @@ namespace luminous {
             };
             ProgramGroupTable _program_group_table{};
 
-            OptixShaderBindingTable _shader_binding_table{};
+            OptixShaderBindingTable _sbt{};
             OptixTraversableHandle _root_traversable{};
         private:
 

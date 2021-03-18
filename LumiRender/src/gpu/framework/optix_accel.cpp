@@ -204,16 +204,30 @@ namespace luminous {
         }
 
         void OptixAccel::create_sbt(ProgramGroupTable program_group_table) {
-            auto d_rg_record_ptr = _device->allocate_buffer<RayGenRecord>(1);
+            auto d_rg_record = _device->allocate_buffer<RayGenRecord>(1);
             RayGenRecord rg_sbt = {};
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.raygen_prog_group, &rg_sbt));
-            d_rg_record_ptr.upload(&rg_sbt);
+            d_rg_record.upload(&rg_sbt);
 
-            auto d_miss_record_ptr = _device->allocate_buffer<MissRecord>(RayType::Count);
-            MissRecord ms_sbt[2] = {};
+            auto d_miss_record = _device->allocate_buffer<MissRecord>(RayType::Count);
+            MissRecord ms_sbt[RayType::Count] = {};
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::Radiance]));
-            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::Occlusion]));
-            d_miss_record_ptr.upload(ms_sbt);
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::Occlusion]));
+            d_miss_record.upload(ms_sbt);
+
+            auto d_hit_record = _device->allocate_buffer<HitGroupRecord>(RayType::Count);
+            HitGroupRecord hit_sbt[RayType::Count] = {};
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_hit_group, &hit_sbt[RayType::Radiance]));
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.occlusion_hit_group, &hit_sbt[RayType::Occlusion]));
+            d_hit_record.upload(hit_sbt);
+
+            _sbt.raygenRecord = d_rg_record.ptr<CUdeviceptr>();
+            _sbt.missRecordBase = d_miss_record.ptr<CUdeviceptr>();
+            _sbt.missRecordStrideInBytes = d_miss_record.stride_in_bytes();
+            _sbt.missRecordCount = d_miss_record.size();
+            _sbt.hitgroupRecordBase = d_hit_record.ptr<CUdeviceptr>();
+            _sbt.hitgroupRecordStrideInBytes = d_hit_record.stride_in_bytes();
+            _sbt.hitgroupRecordCount = d_hit_record.size();
         }
 
 
@@ -276,14 +290,13 @@ namespace luminous {
             emit_desc.result = compact_size_buffer.ptr<uint64_t>();
 
             OptixTraversableHandle traversable_handle = 0;
-//            OPTIX_CHECK(optixAccelBuild(_optix_context, 0, &accel_options,
-//                                        inputs.data(), inputs.size(),
-//                                        temp_buffer.ptr<CUdeviceptr>(), gas_buffer_sizes.tempSizeInBytes,
-//                                        output_buffer.ptr<CUdeviceptr>(), gas_buffer_sizes.outputSizeInBytes,
-//                                        &traversable_handle, &emit_desc, 1));
-//
-//            //todo
-//            CUDA_CHECK(cudaDeviceSynchronize());
+            OPTIX_CHECK(optixAccelBuild(_optix_device_context, 0, &accel_options,
+                                        &build_input, 1,
+                                        temp_buffer.ptr<CUdeviceptr>(), gas_buffer_sizes.tempSizeInBytes,
+                                        output_buffer.ptr<CUdeviceptr>(), gas_buffer_sizes.outputSizeInBytes,
+                                        &traversable_handle, &emit_desc, 1));
+
+            CU_CHECK(cuCtxSynchronize());
 
             return traversable_handle;
         }
@@ -294,9 +307,9 @@ namespace luminous {
             TASK_TAG("build optix bvh");
             std::list<CUdeviceptr> vert_buffer_ptr;
             vector<OptixTraversableHandle> traversable_handles;
-//            for (const auto &mesh : meshes) {
-//                traversable_handles.push_back(build_mesh_bvh(positions, triangles, mesh, vert_buffer_ptr));
-//            }
+            for (const auto &mesh : meshes) {
+                traversable_handles.push_back(build_mesh_bvh(positions, triangles, mesh, vert_buffer_ptr));
+            }
 
         }
 
