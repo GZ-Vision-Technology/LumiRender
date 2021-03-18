@@ -212,13 +212,15 @@ namespace luminous {
             auto d_miss_record = _device->allocate_buffer<MissRecord>(RayType::Count);
             MissRecord ms_sbt[RayType::Count] = {};
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::Radiance]));
-            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::Occlusion]));
+            OPTIX_CHECK(
+                    optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::Occlusion]));
             d_miss_record.upload(ms_sbt);
 
             auto d_hit_record = _device->allocate_buffer<HitGroupRecord>(RayType::Count);
             HitGroupRecord hit_sbt[RayType::Count] = {};
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_hit_group, &hit_sbt[RayType::Radiance]));
-            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.occlusion_hit_group, &hit_sbt[RayType::Occlusion]));
+            OPTIX_CHECK(
+                    optixSbtRecordPackHeader(_program_group_table.occlusion_hit_group, &hit_sbt[RayType::Occlusion]));
             d_hit_record.upload(hit_sbt);
 
             _sbt.raygenRecord = d_rg_record.ptr<CUdeviceptr>();
@@ -281,7 +283,7 @@ namespace luminous {
                     1,  // num_build_inputs
                     &gas_buffer_sizes
             ));
-            auto output_buffer = _device->allocate_buffer(gas_buffer_sizes.outputSizeInBytes);
+            auto tri_gas_buffer = _device->allocate_buffer(gas_buffer_sizes.outputSizeInBytes);
             auto temp_buffer = _device->allocate_buffer(gas_buffer_sizes.tempSizeInBytes);
             auto compact_size_buffer = _device->allocate_buffer<uint64_t>(1);
 
@@ -293,8 +295,23 @@ namespace luminous {
             OPTIX_CHECK(optixAccelBuild(_optix_device_context, 0, &accel_options,
                                         &build_input, 1,
                                         temp_buffer.ptr<CUdeviceptr>(), gas_buffer_sizes.tempSizeInBytes,
-                                        output_buffer.ptr<CUdeviceptr>(), gas_buffer_sizes.outputSizeInBytes,
+                                        tri_gas_buffer.ptr<CUdeviceptr>(), gas_buffer_sizes.outputSizeInBytes,
                                         &traversable_handle, &emit_desc, 1));
+
+            auto compacted_gas_size = download<size_t>(emit_desc.result);
+            if (compacted_gas_size < gas_buffer_sizes.outputSizeInBytes) {
+                auto tri_compacted_gas_buffer = _device->allocate_buffer(compacted_gas_size);
+                OPTIX_CHECK(optixAccelCompact(_optix_device_context, 0,
+                                              traversable_handle,
+                                              tri_compacted_gas_buffer.ptr<CUdeviceptr>(),
+                                              compacted_gas_size,
+                                              &traversable_handle));
+                _bvh_size_in_bytes += tri_compacted_gas_buffer.size_in_bytes();
+                _as_buffer_list.push_back(move(tri_compacted_gas_buffer));
+            } else {
+                _bvh_size_in_bytes += tri_gas_buffer.size_in_bytes();
+                _as_buffer_list.push_back(move(tri_gas_buffer));
+            }
 
             CU_CHECK(cuCtxSynchronize());
 
@@ -311,6 +328,11 @@ namespace luminous {
                 traversable_handles.push_back(build_mesh_bvh(positions, triangles, mesh, vert_buffer_ptr));
             }
 
+        }
+
+        std::string OptixAccel::description() const {
+            size_t size_in_M = _bvh_size_in_bytes / (sqr(1024));
+            return string_printf("bvh size is %f MB\n", size_in_M);
         }
 
     }

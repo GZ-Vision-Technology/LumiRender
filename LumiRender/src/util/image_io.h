@@ -11,6 +11,7 @@
 namespace luminous {
     inline namespace utility {
         using namespace std;
+
         // todo consider SRGB and linear
         pair<float4 *, int2> load_image(const filesystem::path &fn);
 
@@ -23,15 +24,15 @@ namespace luminous {
          */
         pair<float4 *, int2> load_other(const filesystem::path &fn);
 
-        void save_image(const filesystem::path &fn, float4 * rgb, int2 resolution);
+        void save_image(const filesystem::path &fn, float4 *rgb, int2 resolution);
 
-        void save_hdr(const filesystem::path &fn, float4 * rgb, int2 resolution);
+        void save_hdr(const filesystem::path &fn, float4 *rgb, int2 resolution);
 
-        void save_exr(const filesystem::path &fn, float4 * rgb, int2 resolution);
+        void save_exr(const filesystem::path &fn, float4 *rgb, int2 resolution);
 
         /**
          * ".bmp" or ".png" or ".tga" or ".jpg" or ".jpeg"
          */
-        void save_other(const filesystem::path &fn, float4 * rgb, int2 resolution);
+        void save_other(const filesystem::path &fn, float4 *rgb, int2 resolution);
     }
 }

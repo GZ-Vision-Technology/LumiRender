@@ -10,7 +10,13 @@
 namespace luminous {
     inline namespace gpu {
         struct Params {
-
+            OptixTraversableHandle traversable_handle;
+            uint frame_index;
+            float4 *accum_buffer;
+            uchar4 *frame_buffer;
+            uint width;
+            uint height;
+            uint samples_per_launch;
         };
 
         struct RayGenData {

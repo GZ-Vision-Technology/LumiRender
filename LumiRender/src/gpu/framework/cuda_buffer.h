@@ -29,22 +29,22 @@ namespace luminous {
 
             void *address(size_t offset = 0) const override { return (void *)(_ptr + offset); }
 
-            void download_async(Dispatcher &dispatcher, void *host_data, size_t size = 0, size_t offset = 0) override {
+            void download_async(Dispatcher &dispatcher, void *host_ptr, size_t size = 0, size_t offset = 0) override {
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CU_CHECK(cuMemcpyDtoHAsync(host_data, _ptr + offset, size, stream));
+                CU_CHECK(cuMemcpyDtoHAsync(host_ptr, _ptr + offset, size, stream));
             }
 
-            void upload_async(Dispatcher &dispatcher, const void *host_data, size_t size = 0, size_t offset = 0) override {
+            void upload_async(Dispatcher &dispatcher, const void *host_ptr, size_t size = 0, size_t offset = 0) override {
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CU_CHECK(cuMemcpyHtoDAsync(_ptr + offset, host_data, size, stream));
+                CU_CHECK(cuMemcpyHtoDAsync(_ptr + offset, host_ptr, size, stream));
             }
 
-            void download(void *host_data, size_t size = 0, size_t offset = 0) override {
-                CU_CHECK(cuMemcpyDtoH(host_data, _ptr + offset, size));
+            void download(void *host_ptr, size_t size = 0, size_t offset = 0) override {
+                CU_CHECK(cuMemcpyDtoH(host_ptr, _ptr + offset, size));
             }
 
-            void upload(const void *host_data, size_t size = 0, size_t offset = 0) override {
-                CU_CHECK(cuMemcpyHtoD(_ptr + offset, host_data, size));
+            void upload(const void *host_ptr, size_t size = 0, size_t offset = 0) override {
+                CU_CHECK(cuMemcpyHtoD(_ptr + offset, host_ptr, size));
             }
         };
     }

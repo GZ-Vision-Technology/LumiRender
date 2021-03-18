@@ -118,6 +118,11 @@ namespace luminous {
             return n2 * n2 * Pow<n & 1>(v);
         }
 
+        template <typename IntegerType>
+        XPU_INLINE IntegerType round_up(IntegerType x, IntegerType y) {
+            return ( ( x + y - 1 ) / y ) * y;
+        }
+
         XPU_INLINE bool is_power_of_two(uint32_t i) noexcept { return (i & (i-1)) == 0; }
 
         XPU_INLINE bool is_power_of_two(int32_t i) noexcept { return i > 0 && (i & (i-1)) == 0; }

@@ -7,6 +7,7 @@
 
 #include "graphics/header.h"
 #include <cuda_runtime.h>
+#include <cuda.h>
 #include <stdexcept>
 #include "spdlog/spdlog.h"
 
@@ -29,3 +30,20 @@
             std::abort();                                                                                              \
         }                                                                                                              \
     }()
+
+namespace luminous {
+    inline namespace gpu {
+
+        template<typename T>
+        void download(T * host_ptr, CUdeviceptr device_ptr, size_t num = 1, size_t offset = 0) {
+            CU_CHECK(cuMemcpyDtoH(host_ptr, device_ptr + offset * sizeof(T), num * sizeof(T)));
+        }
+
+        template<typename T>
+        T download(CUdeviceptr device_ptr, size_t offset = 0) {
+            T ret;
+            download<T>(&ret, device_ptr, 1, offset);
+            return ret;
+        }
+    }
+}
