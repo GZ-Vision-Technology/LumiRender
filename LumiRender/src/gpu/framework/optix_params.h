@@ -47,5 +47,10 @@ namespace luminous {
         using RayGenRecord = Record<RayGenData>;
         using MissRecord = Record<MissData>;
         using HitGroupRecord = Record<HitGroupData>;
+
+        template<typename T>
+        void mat4x4_to_array12(Matrix4x4<T> mat, T output[12]) {
+            
+        }
     }
 }

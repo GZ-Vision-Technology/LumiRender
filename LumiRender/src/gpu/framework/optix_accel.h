@@ -42,7 +42,7 @@ namespace luminous {
             OptixShaderBindingTable _sbt{};
             OptixTraversableHandle _root_ias_handle{};
 
-            size_t _bvh_size_in_bytes;
+            size_t _bvh_size_in_bytes{0u};
 
             std::list<Buffer<std::byte>> _as_buffer_list;
         private:

@@ -328,10 +328,30 @@ namespace luminous {
                 traversable_handles.push_back(build_mesh_bvh(positions, triangles, mesh, vert_buffer_ptr));
             }
 
+            size_t instance_num = instance_list.size();
+            OptixBuildInput instance_input = {};
+            auto instance_buffer = _device->allocate_buffer<OptixInstance>(instance_num);
+            instance_input.type = OPTIX_BUILD_INPUT_TYPE_INSTANCES;
+            instance_input.instanceArray.numInstances = instance_num;
+            instance_input.instanceArray.instances = instance_buffer.ptr<CUdeviceptr>();
+
+            OptixAccelBuildOptions accel_options = {};
+            accel_options.buildFlags             = OPTIX_BUILD_FLAG_NONE;
+            accel_options.operation              = OPTIX_BUILD_OPERATION_BUILD;
+
+            OptixAccelBufferSizes ias_buffer_sizes;
+            OPTIX_CHECK( optixAccelComputeMemoryUsage( _optix_device_context,
+                                                       &accel_options, &instance_input,
+                                                       1,  // num build inputs
+                                                       &ias_buffer_sizes ) );
+
+            auto tri_gas_buffer = _device->allocate_buffer(ias_buffer_sizes.outputSizeInBytes);
+            auto temp_buffer = _device->allocate_buffer(ias_buffer_sizes.tempSizeInBytes);
+            auto compact_size_buffer = _device->allocate_buffer<uint64_t>(1);
         }
 
         std::string OptixAccel::description() const {
-            size_t size_in_M = _bvh_size_in_bytes / (sqr(1024));
+            size_t size_in_M = (_bvh_size_in_bytes * 1.f) / (sqr(1024));
             return string_printf("bvh size is %f MB\n", size_in_M);
         }
 
