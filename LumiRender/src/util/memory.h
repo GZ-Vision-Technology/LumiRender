@@ -9,20 +9,9 @@
 #include "core/header.h"
 #include "core/concepts.h"
 
-#define ARENA_ALLOC(arena, Type) new ((arena).alloc(sizeof(Type))) Type
 
 namespace luminous {
     inline namespace utility {
-//        void *alloc_aligned(size_t size);
-//
-//        template<typename T>
-//        T *alloc_aligned(size_t count) {
-//            return (T *) alloc_aligned(count * sizeof(T));
-//        }
-
-
-//        void free_aligned(void *);
-
 
         void *aligned_alloc(size_t alignment, size_t size) noexcept {
             return _aligned_malloc(size, alignment);
@@ -38,39 +27,23 @@ namespace luminous {
                     T(std::forward<Args>(args)...);
         }
 
-        /*
-         * 内存管理是一个很复杂的问题，但在离线渲染器中，内存管理的情况相对简单，大部分的内存申请
-         * 主要集中在解析场景的阶段，这些内存在渲染结束之前一直被使用
-         * 为何要使用内存池？
-         *
-         * 1.频繁的new跟delete性能消耗很高，new运算符执行的时候相当于会使当前线程block，
-         * 直到操作系统返回可用内存时，线程才继续执行，如果使用了内存池，预先申请一大块连续内存
-         * 之后每次申请内存时不是向操作系统申请，而是直接将指向当前地址的指针自增就可以了，分配效率高
-         *
-         * 2.用内存池可以自定义内存对齐的方式，从而写出对缓存友好的程序
-         *     好的对齐方式可以提高缓存命中率，比如CPU从内存中将数据加载到缓存中时
-         *     会从特定的地址(必须是cache line长度的整数倍)中加载特定的长度(必须是cache line的长度)
-         *     通常cache line的长度为64字节，如果一个int所占的位置横跨了两个cache line，cache miss最多为两次
-         *     如果该数据的完全在一个cache line以内，那么cache miss的次数最多为一次
-         *
-         */
-        class Arena : public Noncopyable {
+        class MemoryArena : public Noncopyable {
         public:
             static constexpr auto block_size = static_cast<size_t>(256ul * 1024ul);
 
         private:
-            std::vector<std::byte *> _blocks;
+            std::list<std::byte *> _blocks;
             uint64_t _ptr{0ul};
             size_t _total{0ul};
 
         public:
-            Arena() noexcept = default;
+            MemoryArena() noexcept = default;
 
-            Arena(Arena &&) noexcept = default;
+            MemoryArena(MemoryArena &&) noexcept = default;
 
-            Arena &operator=(Arena &&) noexcept = default;
+            MemoryArena &operator=(MemoryArena &&) noexcept = default;
 
-            ~Arena() noexcept {
+            ~MemoryArena() noexcept {
                 for (auto p : _blocks) { aligned_free(p); }
             }
 
@@ -103,7 +76,7 @@ namespace luminous {
 
             template<typename T, typename... Args>
             [[nodiscard]] T *create(Args &&...args) {
-                return luisa::construct_at(allocate<T>(1u), std::forward<Args>(args)...);
+                return construct_at(allocate<T>(1u), std::forward<Args>(args)...);
             }
         };
 
