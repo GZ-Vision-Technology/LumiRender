@@ -49,8 +49,22 @@ namespace luminous {
         using HitGroupRecord = Record<HitGroupData>;
 
         template<typename T>
-        void mat4x4_to_array12(Matrix4x4<T> mat, T output[12]) {
-            
+        void mat4x4_to_array12(Matrix4x4<T> mat, T *output) {
+            output[0] = mat[0][0];
+            output[1] = mat[0][1];
+            output[2] = mat[0][2];
+
+            output[3] = mat[1][0];
+            output[4] = mat[1][1];
+            output[5] = mat[1][2];
+
+            output[6] = mat[2][0];
+            output[7] = mat[2][1];
+            output[8] = mat[2][2];
+
+            output[9] = mat[3][0];
+            output[10] = mat[3][1];
+            output[11] = mat[3][2];
         }
     }
 }
