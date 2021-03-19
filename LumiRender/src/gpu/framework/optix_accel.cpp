@@ -347,7 +347,7 @@ namespace luminous {
 
             auto ias_buffer = _device->allocate_buffer(ias_buffer_sizes.outputSizeInBytes);
             auto temp_buffer = _device->allocate_buffer(ias_buffer_sizes.tempSizeInBytes);
-            auto compact_size_buffer = _device->allocate_buffer<uint64_t>(1);
+//            auto compact_size_buffer = _device->allocate_buffer<uint64_t>(1);
 
             vector<OptixInstance> optix_instances;
             optix_instances.reserve(instance_num);
@@ -355,10 +355,6 @@ namespace luminous {
                 uint mesh_idx = instance_list[i];
                 uint transform_idx = inst_to_transform[i];
                 float4x4 transform_mat = transform_list[transform_idx];
-                transform_mat = make_float4x4(1);
-                float array12[12] = {};
-                mat4x4_to_array12(transform_mat, array12);
-
                 OptixInstance optix_instance;
                 optix_instance.traversableHandle = traversable_handles[mesh_idx];
                 optix_instance.flags = OPTIX_INSTANCE_FLAG_NONE;
