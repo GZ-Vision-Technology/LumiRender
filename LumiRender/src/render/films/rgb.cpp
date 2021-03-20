@@ -10,5 +10,9 @@ namespace luminous {
         void RGBFilm::add_sample(float2 p_film, float3 color, float weight) {
             //todo
         }
+
+        RGBFilm RGBFilm::create(const FilmConfig &config) {
+            return RGBFilm(config.resolution);
+        }
     } // luminous::render
 } // luminous

@@ -20,6 +20,8 @@ namespace luminous {
             NDSC_XPU int2 resolution() const;
 
             NDSC_XPU Box2f screen_window() const;
+
+            static FilmHandle create(const FilmConfig &fc);
         };
     }
 }

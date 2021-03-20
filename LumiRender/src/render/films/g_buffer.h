@@ -12,14 +12,12 @@ namespace luminous {
 
 
         class GBufferFilm : public FilmBase {
-        private:
-            Pixel * _pixels;
-
         public:
             GBufferFilm(int2 res) : FilmBase(res) {}
 
             GEN_CLASS_NAME(GBufferFilm)
 
+            static GBufferFilm create(const FilmConfig &config);
         };
     }
 }

@@ -18,6 +18,8 @@ namespace luminous {
             GEN_CLASS_NAME(RGBFilm)
 
             XPU void add_sample(float2 p_film, float3 color, float weight);
+
+            static RGBFilm create(const FilmConfig &config);
         };
     }
 }
