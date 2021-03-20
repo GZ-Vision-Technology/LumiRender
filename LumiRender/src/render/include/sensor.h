@@ -10,7 +10,7 @@
 #include "core/concepts.h"
 #include "graphics/lstd/lstd.h"
 #include "scene_graph.h"
-#include "film.h"
+#include "../films/film_handle.h"
 
 namespace luminous {
     inline namespace render {
