@@ -14,7 +14,13 @@ namespace luminous {
             float2 p_film;
             float2 p_lens;
             float time;
-            float filter_weight{1.f};
+            float weight{1.f};
+            NDSC std::string to_string() const {
+                return string_printf("p_film: %s, p_lens : %s, time: %f, weight : %f",
+                                     p_film.to_string().c_str(),
+                                     p_lens.to_string().c_str(),
+                                     time, weight);
+            }
         };
 
         class SamplerBase {

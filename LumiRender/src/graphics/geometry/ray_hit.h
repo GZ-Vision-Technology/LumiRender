@@ -11,15 +11,19 @@ namespace luminous {
     inline namespace geometry {
         struct alignas(16) Ray {
         private:
-            float _origin_x;
-            float _origin_y;
-            float _origin_z;
-            float _t_min;
-            float _direction_x;
-            float _direction_y;
-            float _direction_z;
-            float _t_max;
+            float _origin_x{};
+            float _origin_y{};
+            float _origin_z{};
+            float _t_min{};
+            float _direction_x{};
+            float _direction_y{};
+            float _direction_z{};
+            float _t_max{};
         public:
+            explicit XPU Ray(float t_max = luminous::constant::PosInfTy(),
+                             float t_min = 0) noexcept: _t_min(t_min),
+                                                        _t_max(t_max) {}
+
             XPU Ray(const float3 origin, const float3 direction,
                     float t_max = luminous::constant::PosInfTy(),
                     float t_min = 0) noexcept:
@@ -53,7 +57,7 @@ namespace luminous {
                 return string_printf("ray:{origin:%s,direction:%s,tmin:%f,tmax:%f}",
                                      origin().to_string().c_str(),
                                      direction().to_string().c_str(),
-                                     _t_min,_t_max);
+                                     _t_min, _t_max);
             }
         };
 
@@ -70,9 +74,9 @@ namespace luminous {
 
             float3 p = p_in;
             float3 p_i = make_float3(
-                    bit_cast<float>(bit_cast<int>(p.x) + select(p.x < 0, -of_i.x, of_i.x)),
-                    bit_cast<float>(bit_cast<int>(p.y) + select(p.y < 0, -of_i.y, of_i.y)),
-                    bit_cast<float>(bit_cast<int>(p.z) + select(p.z < 0, -of_i.z, of_i.z)));
+                    bit_cast < float > (bit_cast < int > (p.x) + select(p.x < 0, -of_i.x, of_i.x)),
+                    bit_cast < float > (bit_cast < int > (p.y) + select(p.y < 0, -of_i.y, of_i.y)),
+                    bit_cast < float > (bit_cast < int > (p.z) + select(p.z < 0, -of_i.z, of_i.z)));
 
             return select(functor::abs(p) < origin, p + float_scale * n, p_i);
         }

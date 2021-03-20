@@ -21,6 +21,8 @@ namespace luminous {
 
             XPU void set_position(float3 pos);
 
+            XPU float generate_ray(const SensorSample &ss, Ray * ray);
+
             XPU void set_film(const FilmHandle &film);
 
             NDSC_XPU Transform camera_to_world() const;

@@ -4,6 +4,7 @@
 
 #include "iostream"
 #include "render/sensors/sensor_handle.h"
+
 using namespace luminous;
 using namespace std;
 
@@ -17,14 +18,14 @@ FilmHandle create_film() {
 void test_sensor() {
     SensorConfig config;
     config.type = "PinholeCamera";
-    config.fov_y = 30;
+    config.fov_y = 90;
     config.velocity = 20;
 
     TransformConfig tc;
     tc.type = "yaw_pitch";
 
-    tc.yaw = 20;
-    tc.pitch = 15.6;
+    tc.yaw = 0;
+    tc.pitch = 0;
     tc.position = make_float3(2,3,5);
 
     tc.mat4x4 = make_float4x4(1);
@@ -39,6 +40,16 @@ void test_sensor() {
 //    cout << camera.to_string();
 
     camera.set_film(film);
+
+    SensorSample ss;
+    ss.p_film = make_float2(500, 0);
+
+    Ray ray;
+    camera.generate_ray(ss, &ray);
+
+    cout << camera.to_string() << endl;
+    cout << ray.to_string() << endl;
+
 
 }
 

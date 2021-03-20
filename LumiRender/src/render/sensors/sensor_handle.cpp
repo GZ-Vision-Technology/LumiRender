@@ -64,6 +64,10 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(camera_to_world_rotation)
         }
 
+        float SensorHandle::generate_ray(const SensorSample &ss, Ray *ray) {
+            LUMINOUS_VAR_DISPATCH(generate_ray, ss, ray);
+        }
+
         float3 SensorHandle::forward() const {
             LUMINOUS_VAR_DISPATCH(forward)
         }

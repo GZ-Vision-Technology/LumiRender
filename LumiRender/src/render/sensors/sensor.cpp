@@ -33,6 +33,7 @@ namespace luminous {
                                          Transform::scale(1 / span.x, 1 / -span.y, 1) *
                                          Transform::translation(-scrn.lower.x, -scrn.upper.y, 0);
             _raster_to_screen = screen_to_raster.inverse();
+            _raster_to_camera =  _camera_to_screen.inverse() * _raster_to_screen;
         }
 
         float3 CameraBase::position() const {

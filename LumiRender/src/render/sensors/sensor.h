@@ -11,6 +11,7 @@
 #include "graphics/lstd/lstd.h"
 #include "../include/scene_graph.h"
 #include "../films/film_handle.h"
+#include "../samplers/sampler.h"
 
 namespace luminous {
     inline namespace render {
@@ -30,6 +31,7 @@ namespace luminous {
             float _velocity{};
             Transform _raster_to_screen{};
             Transform _camera_to_screen{};
+            Transform _raster_to_camera{};
             FilmHandle _film;
             void _update(const float4x4 &m);
 

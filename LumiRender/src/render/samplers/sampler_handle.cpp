@@ -14,7 +14,9 @@ namespace luminous {
 
         SensorSample SamplerHandle::sensor_sample(int2 p_raster) {
             SensorSample ss;
-            // todo
+            ss.p_film = make_float2(p_raster) + next_2d();
+            ss.p_lens = next_2d();
+            ss.time = next_1d();
             return ss;
         }
 

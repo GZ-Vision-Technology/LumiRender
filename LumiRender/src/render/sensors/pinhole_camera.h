@@ -7,6 +7,7 @@
 
 #include "sensor.h"
 
+
 namespace luminous {
     inline namespace render {
 
@@ -15,6 +16,8 @@ namespace luminous {
             GEN_CLASS_NAME(PinholeCamera)
 
             PinholeCamera(const float4x4 m, float fov_y, float velocity);
+
+            XPU float generate_ray(const SensorSample &ss, Ray * ray);
 
             NDSC std::string to_string() const;
 
