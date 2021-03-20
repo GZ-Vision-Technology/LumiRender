@@ -24,7 +24,7 @@ void test_sensor() {
     TransformConfig tc;
     tc.type = "yaw_pitch";
 
-    tc.yaw = 0;
+    tc.yaw = 1;
     tc.pitch = 0;
     tc.position = make_float3(2,3,5);
 
@@ -42,7 +42,7 @@ void test_sensor() {
     camera.set_film(film);
 
     SensorSample ss;
-    ss.p_film = make_float2(500, 0);
+    ss.p_film = make_float2(250,250);
 
     Ray ray;
     camera.generate_ray(ss, &ray);

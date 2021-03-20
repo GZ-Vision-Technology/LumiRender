@@ -18,7 +18,7 @@ namespace luminous {
             auto c2w = camera_to_world();
 
             auto origin = c2w.apply_point(make_float3(0,0,0));
-            auto direction = c2w.apply_vector(p_sensor);
+            auto direction = c2w.apply_vector(normalize(p_sensor));
             *ray = Ray(origin, direction);
 
             return 1;
