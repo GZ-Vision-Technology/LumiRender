@@ -9,7 +9,7 @@
 #include "device.h"
 #include "render/include/parser.h"
 #include "scene.h"
-#include "render/include/sensor.h"
+#include "render/sensors/sensor_handle.h"
 
 namespace luminous {
     using std::unique_ptr;

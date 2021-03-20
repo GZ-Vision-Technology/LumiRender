@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "../include/sensor.h"
+#include "sensor.h"
 
 namespace luminous {
     inline namespace render {

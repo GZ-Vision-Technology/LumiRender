@@ -4,7 +4,7 @@
 
 #include "iostream"
 #include "render/samplers/sampler_handle.h"
-#include "render/include/sensor.h"
+#include "render/sensors/sensor_handle.h"
 using namespace luminous;
 using namespace std;
 

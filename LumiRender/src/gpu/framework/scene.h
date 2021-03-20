@@ -8,7 +8,7 @@
 #include "core/backend/buffer.h"
 #include "core/concepts.h"
 #include "graphics/math/common.h"
-#include "render/include/sensor.h"
+#include "render/sensors/sensor.h"
 #include "optix_accel.h"
 
 namespace luminous {
