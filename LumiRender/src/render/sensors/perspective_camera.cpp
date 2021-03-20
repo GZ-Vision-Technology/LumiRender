@@ -16,9 +16,9 @@ namespace luminous {
             return string_printf("%s:%s", name(), _to_string().c_str());
         }
 
-        PerspectiveCamera *PerspectiveCamera::create(const SensorConfig &config) {
+        PerspectiveCamera PerspectiveCamera::create(const SensorConfig &config) {
             auto transform = config.transform_config.create();
-            return new PerspectiveCamera(transform.mat4x4(), config.fov_y, config.velocity);
+            return PerspectiveCamera(transform.mat4x4(), config.fov_y, config.velocity);
         }
     }
 }

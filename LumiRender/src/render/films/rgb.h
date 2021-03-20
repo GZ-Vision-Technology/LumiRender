@@ -12,9 +12,6 @@ namespace luminous {
     inline namespace render {
 
         class RGBFilm : public FilmBase {
-        private:
-            Pixel * _pixels;
-
         public:
             RGBFilm(int2 res) : FilmBase(res) {}
 

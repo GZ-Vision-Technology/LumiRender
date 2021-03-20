@@ -13,7 +13,7 @@ namespace luminous {
     inline namespace render {
         using lstd::Variant;
 
-        class SensorHandle : public Variant<PinholeCamera*, PerspectiveCamera*> {
+        class SensorHandle : public Variant<PinholeCamera, PerspectiveCamera> {
         public:
             using Variant::Variant;
 
@@ -55,7 +55,7 @@ namespace luminous {
 
             NDSC std::string to_string() const;
 
-//            static SensorHandle create(const SensorConfig &config);
+            static SensorHandle create(const SensorConfig &config);
         };
     }
 }

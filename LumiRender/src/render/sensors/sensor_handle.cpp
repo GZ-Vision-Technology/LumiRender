@@ -9,99 +9,99 @@ namespace luminous {
 
 
         float3 SensorHandle::position() const {
-            LUMINOUS_VAR_PTR_DISPATCH(position);
+            LUMINOUS_VAR_DISPATCH(position);
         }
 
         void SensorHandle::set_film(const FilmHandle &film) {
-            LUMINOUS_VAR_PTR_DISPATCH(set_film, film);
+            LUMINOUS_VAR_DISPATCH(set_film, film);
         }
 
         float SensorHandle::yaw() const {
-            LUMINOUS_VAR_PTR_DISPATCH(yaw);
+            LUMINOUS_VAR_DISPATCH(yaw);
         }
 
         void SensorHandle::update_yaw(float val) {
-            LUMINOUS_VAR_PTR_DISPATCH(update_yaw, val);
+            LUMINOUS_VAR_DISPATCH(update_yaw, val);
         }
 
         float SensorHandle::pitch() const {
-            LUMINOUS_VAR_PTR_DISPATCH(pitch);
+            LUMINOUS_VAR_DISPATCH(pitch);
         }
 
         void SensorHandle::update_pitch(float val) {
-            LUMINOUS_VAR_PTR_DISPATCH(update_pitch, val);
+            LUMINOUS_VAR_DISPATCH(update_pitch, val);
         }
 
         float SensorHandle::fov_y() const {
-            LUMINOUS_VAR_PTR_DISPATCH(fov_y);
+            LUMINOUS_VAR_DISPATCH(fov_y);
         }
 
         void SensorHandle::update_fov_y(float val) {
-            LUMINOUS_VAR_PTR_DISPATCH(update_fov_y, val);
+            LUMINOUS_VAR_DISPATCH(update_fov_y, val);
         }
 
         float SensorHandle::velocity() const {
-            LUMINOUS_VAR_PTR_DISPATCH(velocity);
+            LUMINOUS_VAR_DISPATCH(velocity);
         }
 
         void SensorHandle::set_velocity(float val) {
-            LUMINOUS_VAR_PTR_DISPATCH(set_velocity, val);
+            LUMINOUS_VAR_DISPATCH(set_velocity, val);
         }
 
         void SensorHandle::set_position(float3 pos) {
-            LUMINOUS_VAR_PTR_DISPATCH(set_position, pos);
+            LUMINOUS_VAR_DISPATCH(set_position, pos);
         }
 
         void SensorHandle::move(float3 delta) {
-            LUMINOUS_VAR_PTR_DISPATCH(move, delta);
+            LUMINOUS_VAR_DISPATCH(move, delta);
         }
 
         Transform SensorHandle::camera_to_world() const {
-            LUMINOUS_VAR_PTR_DISPATCH(camera_to_world)
+            LUMINOUS_VAR_DISPATCH(camera_to_world)
         }
 
         Transform SensorHandle::camera_to_world_rotation() const {
-            LUMINOUS_VAR_PTR_DISPATCH(camera_to_world_rotation)
+            LUMINOUS_VAR_DISPATCH(camera_to_world_rotation)
         }
 
         float3 SensorHandle::forward() const {
-            LUMINOUS_VAR_PTR_DISPATCH(forward)
+            LUMINOUS_VAR_DISPATCH(forward)
         }
 
         float3 SensorHandle::up() const {
-            LUMINOUS_VAR_PTR_DISPATCH(up)
+            LUMINOUS_VAR_DISPATCH(up)
         }
 
         float3 SensorHandle::right() const {
-            LUMINOUS_VAR_PTR_DISPATCH(right)
+            LUMINOUS_VAR_DISPATCH(right)
         }
 
         const char *SensorHandle::name() {
-            LUMINOUS_VAR_PTR_DISPATCH(name)
+            LUMINOUS_VAR_DISPATCH(name)
         }
 
         std::string SensorHandle::to_string() const {
-            LUMINOUS_VAR_PTR_DISPATCH(to_string)
+            LUMINOUS_VAR_DISPATCH(to_string)
         }
 
-//        namespace detail {
-//            template<uint8_t current_index>
-//            NDSC SensorHandle create_sensor(const SensorConfig &config) {
-//                using Sensor = std::remove_pointer_t<std::tuple_element_t<current_index, SensorHandle::TypeTuple>>;
-//                if (Sensor::name() == config.type) {
-//                    return SensorHandle(Sensor::create(config));
-//                }
-//                return create_sensor<current_index + 1>(config);
-//            }
-//
-//            template<>
-//            NDSC SensorHandle create_sensor<std::tuple_size_v<SensorHandle::TypeTuple>>(const SensorConfig &config) {
-//                LUMINOUS_ERROR("unknown sampler type:", config.type);
-//            }
-//        }
+        namespace detail {
+            template<uint8_t current_index>
+            NDSC SensorHandle create_sensor(const SensorConfig &config) {
+                using Sensor = std::remove_pointer_t<std::tuple_element_t<current_index, SensorHandle::TypeTuple>>;
+                if (Sensor::name() == config.type) {
+                    return SensorHandle(Sensor::create(config));
+                }
+                return create_sensor<current_index + 1>(config);
+            }
 
-//        SensorHandle SensorHandle::create(const SensorConfig &config) {
-//            return detail::create_sensor<0>(config);
-//        }
+            template<>
+            NDSC SensorHandle create_sensor<std::tuple_size_v<SensorHandle::TypeTuple>>(const SensorConfig &config) {
+                LUMINOUS_ERROR("unknown sampler type:", config.type);
+            }
+        }
+
+        SensorHandle SensorHandle::create(const SensorConfig &config) {
+            return detail::create_sensor<0>(config);
+        }
     }
 }

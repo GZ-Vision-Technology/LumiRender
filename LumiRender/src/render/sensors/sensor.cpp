@@ -77,10 +77,10 @@ namespace luminous {
         }
 
         void CameraBase::update_fov_y(float val) {
-            float new_fovy = _fov_y + val;
-            if (new_fovy > fov_max) {
+            float new_fov_y = _fov_y + val;
+            if (new_fov_y > fov_max) {
                 _fov_y = fov_max;
-            } else if (new_fovy < fov_min) {
+            } else if (new_fov_y < fov_min) {
                 _fov_y = fov_min;
             } else {
                 _fov_y += val;

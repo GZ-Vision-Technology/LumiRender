@@ -40,6 +40,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 endif ()
 
 set(CMAKE_CXX_STANDARD 17)
+add_definitions(-D _ENABLE_EXTENDED_ALIGNED_STORAGE)
 add_subdirectory(src)
 
 set (CHECK_CUDA_OUTPUT_EXE ${CMAKE_BINARY_DIR}/check_cuda)

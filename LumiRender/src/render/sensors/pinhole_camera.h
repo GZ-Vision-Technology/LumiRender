@@ -18,7 +18,7 @@ namespace luminous {
 
             NDSC std::string to_string() const;
 
-            static PinholeCamera *create(const SensorConfig &config);
+            static PinholeCamera create(const SensorConfig &config);
         };
 
     } // luminous::render

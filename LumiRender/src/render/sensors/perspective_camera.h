@@ -19,7 +19,7 @@ namespace luminous {
 
             NDSC std::string to_string() const;
 
-            static PerspectiveCamera *create(const SensorConfig &config);
+            static PerspectiveCamera create(const SensorConfig &config);
         };
     }
 

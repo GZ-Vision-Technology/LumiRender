@@ -17,9 +17,9 @@ namespace luminous {
             return string_printf("%s:%s", name(), _to_string().c_str());
         }
 
-        PinholeCamera *PinholeCamera::create(const SensorConfig &config) {
+        PinholeCamera PinholeCamera::create(const SensorConfig &config) {
             auto transform = config.transform_config.create();
-            return new PinholeCamera(transform.mat4x4(), config.fov_y, config.velocity);
+            return PinholeCamera(transform.mat4x4(), config.fov_y, config.velocity);
         }
     }
 }
