@@ -55,6 +55,5 @@ namespace luminous {
                                     _screen_window.to_string().c_str());
             }
         };
-
     }
 }

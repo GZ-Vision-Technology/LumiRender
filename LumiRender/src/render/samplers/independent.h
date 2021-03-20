@@ -5,20 +5,12 @@
 
 #pragma once
 
-#include "sampler_handle.h"
 #include "graphics/math/rng.h"
 #include "../include/scene_graph.h"
+#include "sampler.h"
 
 namespace luminous {
     inline namespace render {
-        class SamplerBase : public IObject {
-        protected:
-            int _spp;
-        public:
-            XPU explicit SamplerBase(int spp = 1) : _spp(spp) {}
-
-            NDSC int spp() const { return _spp; }
-        };
 
         class LCGSampler : public SamplerBase {
         private:

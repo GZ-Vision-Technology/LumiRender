@@ -21,6 +21,14 @@ namespace luminous {
 
             NDSC_XPU Box2f screen_window() const;
 
+            NDSC_XPU const char *name();
+
+            XPU void set_accumulate_buffer(float4 *d_ptr);
+
+            XPU void set_frame_buffer(FrameBufferType *d_ptr);
+
+            NDSC std::string to_string() const;
+
             static FilmHandle create(const FilmConfig &fc);
         };
     }

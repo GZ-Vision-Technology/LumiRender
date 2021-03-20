@@ -22,7 +22,6 @@ namespace luminous {
             _pitch = degrees(-std::atan2(m[2][1], m[2][2]));
             _yaw = degrees(-std::atan2(-m[2][0], sy));
             _position = make_float3(m[3]);
-            cout << _position.to_string();
         }
 
         void CameraBase::set_film(const FilmHandle &film) {

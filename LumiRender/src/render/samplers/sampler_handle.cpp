@@ -12,6 +12,12 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(spp)
         }
 
+        SensorSample SamplerHandle::sensor_sample(int2 p_raster) {
+            SensorSample ss;
+            // todo
+            return ss;
+        }
+
         void SamplerHandle::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
             LUMINOUS_VAR_DISPATCH(start_pixel_sample, pixel, sample_index, dimension)
         }

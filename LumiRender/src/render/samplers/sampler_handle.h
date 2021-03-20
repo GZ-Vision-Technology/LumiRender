@@ -22,6 +22,8 @@ namespace luminous {
 
             XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
+            XPU SensorSample sensor_sample(int2 p_raster);
+
             NDSC_XPU const char *name();
 
             NDSC_XPU float next_1d();

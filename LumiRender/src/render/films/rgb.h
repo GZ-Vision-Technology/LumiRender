@@ -19,6 +19,8 @@ namespace luminous {
 
             XPU void add_sample(float2 p_film, float3 color, float weight);
 
+            NDSC std::string to_string() const;
+
             static RGBFilm create(const FilmConfig &config);
         };
     }

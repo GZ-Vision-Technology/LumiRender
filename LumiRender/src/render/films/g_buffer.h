@@ -17,6 +17,8 @@ namespace luminous {
 
             GEN_CLASS_NAME(GBufferFilm)
 
+            NDSC std::string to_string() const;
+
             static GBufferFilm create(const FilmConfig &config);
         };
     }

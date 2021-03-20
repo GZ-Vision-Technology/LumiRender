@@ -6,12 +6,28 @@
 
 namespace luminous {
     inline namespace render {
+        const char *FilmHandle::name() {
+            LUMINOUS_VAR_DISPATCH(name);
+        }
+
         int2 FilmHandle::resolution() const {
             LUMINOUS_VAR_DISPATCH(resolution);
         }
 
         Box2f FilmHandle::screen_window() const {
             LUMINOUS_VAR_DISPATCH(screen_window);
+        }
+
+        void FilmHandle::set_accumulate_buffer(float4 *d_ptr) {
+            LUMINOUS_VAR_DISPATCH(set_accumulate_buffer, d_ptr);
+        }
+
+        void FilmHandle::set_frame_buffer(FrameBufferType *d_ptr) {
+            LUMINOUS_VAR_DISPATCH(set_frame_buffer, d_ptr);
+        }
+
+        std::string FilmHandle::to_string() const {
+            LUMINOUS_VAR_DISPATCH(to_string);
         }
 
         namespace detail {
@@ -33,5 +49,8 @@ namespace luminous {
         FilmHandle FilmHandle::create(const FilmConfig &config) {
             return detail::create_film<0>(config);
         }
+
+
+
     }
 }
