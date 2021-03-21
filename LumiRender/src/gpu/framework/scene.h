@@ -38,6 +38,8 @@ namespace luminous {
             SP<Device> _device;
             UP<OptixAccel> _optix_accel;
 
+            Buffer<LaunchParams> _params{nullptr};
+
         public:
             Scene(const SP<Device> &device);
 

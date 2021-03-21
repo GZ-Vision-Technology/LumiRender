@@ -5,18 +5,21 @@
 
 #pragma once
 
+#include <optix.h>
 #include "graphics/math/common.h"
+//#include "render/sensors/sensor_handle.h"
 
 namespace luminous {
     inline namespace gpu {
-        struct Params {
-            OptixTraversableHandle traversable_handle;
+        struct LaunchParams {
+//            OptixTraversableHandle traversable_handle;
             uint frame_index;
-            float4 *accum_buffer;
-            uchar4 *frame_buffer;
-            uint width;
-            uint height;
-            uint samples_per_launch;
+//            float4 *accum_buffer;
+//            uchar4 *frame_buffer;
+//            uint width;
+//            uint height;
+//            SensorHandle d_camera;
+//            uint samples_per_launch;
         };
 
         struct RayGenData {

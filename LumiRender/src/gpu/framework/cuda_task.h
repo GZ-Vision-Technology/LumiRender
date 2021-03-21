@@ -7,17 +7,22 @@
 
 #include "core/backend/task.h"
 #include "cuda_device.h"
+#include "render/films/film_handle.h"
 
 namespace luminous {
     inline namespace gpu {
         class CUDATask : public Task {
         private:
             unique_ptr<Scene> _scene{nullptr};
+            Buffer<float4> _accumulate_buffer{nullptr};
+            Buffer<FrameBufferType> _frame_buffer{nullptr};
         public:
             CUDATask(Context *context)
                 : Task(create_cuda_device(), context) {}
 
             void init(const Parser &parser) override;
+
+            void update_device_buffer();
 
             void render_cli() override {}
 

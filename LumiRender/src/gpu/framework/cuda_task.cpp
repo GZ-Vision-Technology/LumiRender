@@ -49,6 +49,7 @@ namespace luminous {
         void CUDATask::update_film_resolution(int2 res) {
             auto film = _camera.film();
             film->set_resolution(res);
+            update_device_buffer();
         }
 
         void CUDATask::init(const Parser &parser) {
@@ -59,8 +60,16 @@ namespace luminous {
             _scene->build_accel();
 
             _camera = SensorHandle::create(scene_graph->sensor_config);
-            auto film = _camera.film();
-            cout << film->to_string() << endl;
+            update_device_buffer();
+        }
+
+        void CUDATask::update_device_buffer() {
+            auto res = _camera.film()->resolution();
+            auto num = res.x * res.y;
+            _accumulate_buffer = _device->allocate_buffer<float4>(num);
+            _frame_buffer = _device->allocate_buffer<FrameBufferType>(num);
+            _camera.film()->set_accumulate_buffer(_accumulate_buffer.data());
+            _camera.film()->set_frame_buffer(_frame_buffer.data());
         }
 
         void CUDATask::render_gui() {
@@ -70,6 +79,7 @@ namespace luminous {
         int2 CUDATask::resolution() {
             return _camera.film()->resolution();
         }
+
 
     }
 }

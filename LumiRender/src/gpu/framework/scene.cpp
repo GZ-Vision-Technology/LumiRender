@@ -69,6 +69,11 @@ namespace luminous {
             _optix_accel->build_bvh(_positions, _triangles, _cpu_meshes,
                                     _cpu_instance_to_mesh_idx,_cpu_transforms,
                                     _cpu_instance_to_transform_idx);
+
+            _params = _device->allocate_buffer<LaunchParams>(1);
+            LaunchParams l;
+            _params.upload(&l);
+            _optix_accel->launch(make_int2(500),_params.data());
         }
     }
 }

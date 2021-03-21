@@ -8,7 +8,6 @@
 #include "cuda_device.h"
 #include "graphics/geometry/common.h"
 #include "render/include/scene_graph.h"
-#include <optix.h>
 #include "optix_params.h"
 
 namespace luminous {
@@ -71,6 +70,8 @@ namespace luminous {
             OptixAccel(const SP<Device> &device);
 
             size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
+
+            void launch(int2 res, LaunchParams *d_params);
 
             NDSC std::string description() const;
 

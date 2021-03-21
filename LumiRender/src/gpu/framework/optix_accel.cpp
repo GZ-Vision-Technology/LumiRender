@@ -74,7 +74,7 @@ namespace luminous {
             char log[2048];
             size_t log_size = sizeof(log);
             std::string ptx_code(optix_shader_code);
-
+            cout << ptx_code;
             OPTIX_CHECK_WITH_LOG(optixModuleCreateFromPTX(
                     _optix_device_context,
                     &module_compile_options,
@@ -374,6 +374,18 @@ namespace luminous {
                                         ias_buffer_sizes.outputSizeInBytes,
                                         &_root_ias_handle, nullptr, 0));
             _as_buffer_list.push_back(move(ias_buffer));
+        }
+
+        void OptixAccel::launch(int2 res, LaunchParams *d_params) {
+            auto stream = dynamic_cast<CUDADispatcher*>(_dispatcher.impl_mut())->stream;
+            OPTIX_CHECK(optixLaunch(_optix_pipeline,
+                                    stream,
+                                    reinterpret_cast<CUdeviceptr>(d_params),
+                                    sizeof(LaunchParams),
+                                    &_sbt,
+                                    500,
+                                    500,
+                                    1u));
         }
 
         std::string OptixAccel::description() const {
