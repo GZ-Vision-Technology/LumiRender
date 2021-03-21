@@ -23,6 +23,8 @@ namespace luminous {
 
             NDSC_XPU const char *name();
 
+            XPU void set_resolution(int2 res);
+
             XPU void set_accumulate_buffer(float4 *d_ptr);
 
             XPU void set_frame_buffer(FrameBufferType *d_ptr);

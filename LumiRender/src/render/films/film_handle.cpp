@@ -18,6 +18,10 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(screen_window);
         }
 
+        void FilmHandle::set_resolution(int2 res) {
+            LUMINOUS_VAR_DISPATCH(set_resolution, res);
+        }
+
         void FilmHandle::set_accumulate_buffer(float4 *d_ptr) {
             LUMINOUS_VAR_DISPATCH(set_accumulate_buffer, d_ptr);
         }
@@ -49,8 +53,5 @@ namespace luminous {
         FilmHandle FilmHandle::create(const FilmConfig &config) {
             return detail::create_film<0>(config);
         }
-
-
-
     }
 }

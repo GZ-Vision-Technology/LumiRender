@@ -32,7 +32,7 @@ namespace luminous {
         uint32_t * test_color{};
         int2 _last_mouse_pos = make_int2(-1);
 
-        unique_ptr<Task> _pipeline;
+        unique_ptr<Task> _task;
 
     public:
         App(const std::string &title, const int2 &size, Context *context, const Parser &parser);

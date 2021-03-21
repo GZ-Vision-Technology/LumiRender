@@ -36,6 +36,10 @@ namespace luminous {
             _raster_to_camera =  _camera_to_screen.inverse() * _raster_to_screen;
         }
 
+        FilmHandle *CameraBase::film() {
+            return &_film;
+        }
+
         float3 CameraBase::position() const {
             return _position;
         }
@@ -56,35 +60,46 @@ namespace luminous {
             return _fov_y;
         }
 
-        void CameraBase::update_yaw(float val) {
-            _yaw += val;
+        void CameraBase::set_yaw(float yaw) {
+            _yaw = yaw;
             if (_yaw > 360) {
                 _yaw = fmodf(_yaw, 360);
             } else if (_yaw < 0) {
-                _yaw = 360 - fmodf(_yaw, 360);
+                _yaw = 360 + fmodf(_yaw, 360);
             }
+        }
+
+        void CameraBase::set_pitch(float pitch) {
+            if (pitch > pitch_max) {
+                _pitch = pitch_max;
+            } else if (pitch < -pitch_max) {
+                _pitch = -pitch_max;
+            } else {
+                _pitch = pitch;
+            }
+        }
+
+        void CameraBase::update_yaw(float val) {
+            set_yaw(_yaw + val);
         }
 
         void CameraBase::update_pitch(float val) {
-            float p = _pitch + val;
-            if (p > pitch_max) {
-                _pitch = pitch_max;
-            } else if (p < -pitch_max) {
-                _pitch = -pitch_max;
-            } else {
-                _pitch = p;
-            }
+            set_pitch(_pitch + val);
         }
 
-        void CameraBase::update_fov_y(float val) {
-            float new_fov_y = _fov_y + val;
+        void CameraBase::set_fov_y(float new_fov_y) {
             if (new_fov_y > fov_max) {
                 _fov_y = fov_max;
             } else if (new_fov_y < fov_min) {
                 _fov_y = fov_min;
             } else {
-                _fov_y += val;
+                _fov_y = new_fov_y;
             }
+        }
+
+        void CameraBase::update_fov_y(float val) {
+            float new_fov_y = _fov_y + val;
+            set_fov_y(new_fov_y);
         }
 
         void CameraBase::set_velocity(float val) {

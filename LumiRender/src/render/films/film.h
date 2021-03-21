@@ -22,12 +22,10 @@ namespace luminous {
         protected:
             int2 _resolution;
             Box2f _screen_window;
-            float4 *_d_accumulate_buffer{};
-            FrameBufferType *_d_frame_buffer{};
-        public:
-            FilmBase(int2 res)
-                : _resolution(res) {
-                auto aspect = float(res.x) / float(res.y);
+            float4 *_d_accumulate_buffer{nullptr};
+            FrameBufferType *_d_frame_buffer{nullptr};
+            XPU void update() {
+                auto aspect = float(_resolution.x) / float(_resolution.y);
                 if (aspect > 1.f) {
                     _screen_window.lower = make_float2(-aspect, -1.f);
                     _screen_window.upper = make_float2(aspect, 1.f);
@@ -35,6 +33,16 @@ namespace luminous {
                     _screen_window.lower = make_float2(-1.f, -1.f / aspect);
                     _screen_window.upper = make_float2(1.f, 1.f / aspect);
                 }
+            }
+        public:
+            FilmBase(int2 res)
+                : _resolution(res) {
+                update();
+            }
+
+            XPU void set_resolution(int2 resolution) {
+                _resolution = resolution;
+                update();
             }
 
             XPU void set_accumulate_buffer(float4 *d_ptr) {

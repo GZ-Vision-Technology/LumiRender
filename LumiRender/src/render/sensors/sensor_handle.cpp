@@ -16,6 +16,22 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(set_film, film);
         }
 
+        FilmHandle *SensorHandle::film() {
+            LUMINOUS_VAR_DISPATCH(film);
+        }
+
+        void SensorHandle::set_fov_y(float val) {
+            LUMINOUS_VAR_DISPATCH(set_fov_y, val);
+        }
+
+        void SensorHandle::set_pitch(float val) {
+            LUMINOUS_VAR_DISPATCH(set_pitch, val);
+        }
+
+        void SensorHandle::set_yaw(float val) {
+            LUMINOUS_VAR_DISPATCH(set_yaw, val);
+        }
+
         float SensorHandle::yaw() const {
             LUMINOUS_VAR_DISPATCH(yaw);
         }
