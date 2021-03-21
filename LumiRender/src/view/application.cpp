@@ -75,7 +75,7 @@ namespace luminous {
 
     App::App(const std::string &title, const int2 &size, Context *context, const Parser &parser)
             : _size(size) {
-        _pipeline = make_unique<CUDAPipeline>(context);
+        _pipeline = make_unique<CUDATask>(context);
         _pipeline->init(parser);
 //        init_window(title, size);
 //        init_event_cb();

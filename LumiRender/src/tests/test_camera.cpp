@@ -10,7 +10,7 @@ using namespace std;
 
 FilmHandle create_film() {
     FilmConfig fc;
-    fc.type = "GBufferFilm";
+    fc.type = "RGBFilm";
     fc.resolution = make_int2(500);
     return FilmHandle::create(fc);
 }
@@ -24,8 +24,8 @@ void test_sensor() {
     TransformConfig tc;
     tc.type = "yaw_pitch";
 
-    tc.yaw = 1;
-    tc.pitch = 0;
+    tc.yaw = 0;
+    tc.pitch = 10;
     tc.position = make_float3(2,3,5);
 
     tc.mat4x4 = make_float4x4(1);
@@ -34,10 +34,6 @@ void test_sensor() {
     auto camera = SensorHandle::create(config);
 
     auto film = create_film();
-
-//    cout << film.to_string() << endl;
-//
-//    cout << camera.to_string();
 
     camera.set_film(film);
 
@@ -50,6 +46,17 @@ void test_sensor() {
     cout << camera.to_string() << endl;
     cout << ray.to_string() << endl;
 
+    cout << camera.forward().to_string() << endl;
+
+    auto mat = camera.camera_to_world_rotation().mat4x4();
+
+    tc.type = "matrix4x4";
+    tc.mat4x4 = mat;
+
+    config.transform_config = tc;
+    auto c2 = SensorHandle::create(config);
+
+    cout << camera.to_string() << endl;
 
 }
 

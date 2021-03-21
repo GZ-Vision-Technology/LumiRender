@@ -106,20 +106,20 @@ namespace luminous {
 
         Transform CameraBase::camera_to_world_rotation() const {
             auto horizontal = Transform::rotation_y(_yaw);
-            auto vertical = Transform::rotation_x(_pitch);
+            auto vertical = Transform::rotation_x(-_pitch);
             return vertical * horizontal;
         }
 
         float3 CameraBase::forward() const {
-            return camera_to_world_rotation().inverse().apply_vector(forward_vec);
+            return camera_to_world_rotation().apply_vector(forward_vec);
         }
 
         float3 CameraBase::up() const {
-            return camera_to_world_rotation().inverse().apply_vector(up_vec);
+            return camera_to_world_rotation().apply_vector(up_vec);
         }
 
         float3 CameraBase::right() const {
-            return camera_to_world_rotation().inverse().apply_vector(right_vec);
+            return camera_to_world_rotation().apply_vector(right_vec);
         }
 
     } // luminous::render

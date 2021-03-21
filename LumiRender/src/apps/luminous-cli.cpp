@@ -6,7 +6,7 @@
 #include "core/context.h"
 #include "render/include/parser.h"
 #include <memory>
-#include "gpu/framework/cuda_pipeline.h"
+#include "gpu/framework/cuda_task.h"
 
 using namespace std;
 using namespace luminous;
@@ -25,13 +25,13 @@ int main(int argc, char *argv[]) {
         cout << e1.what();
         context.print_help();
     }
-    std::unique_ptr<luminous::Pipeline> pipeline;
+    std::unique_ptr<luminous::Task> task;
     if (context.device() == "cuda") {
-        pipeline = std::make_unique<CUDAPipeline>(&context);
+        task = std::make_unique<CUDATask>(&context);
     } else if (context.device() == "cpu") {
         LUMINOUS_INFO("cpu is not support");
     }
-    pipeline->init(sp);
+    task->init(sp);
 
     return 0;
 }

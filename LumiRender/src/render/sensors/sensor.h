@@ -15,7 +15,6 @@
 
 namespace luminous {
     inline namespace render {
-
         class CameraBase {
         protected:
             constexpr static float fov_max = 120.f;
@@ -75,16 +74,13 @@ namespace luminous {
             XPU void set_velocity(float val);
 
             NDSC std::string _to_string() const {
-                return string_printf("{fov_y:%f, position:%s, yaw:%f, pitch:%f}",
+                return string_printf("{fov_y:%f, position:%s, yaw:%f, pitch:%f, velocity : %f}",
                                      fov_y(),
                                      position().to_string().c_str(),
                                      yaw(),
-                                     pitch());
+                                     pitch(),
+                                     velocity());
             }
-
-
-        };
-
-
+        }; // luminous::render::CameraBase
     } // luminous::render
 } // luminous

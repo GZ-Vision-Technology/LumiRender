@@ -13,13 +13,13 @@
 
 namespace luminous {
     using std::unique_ptr;
-    class Pipeline : public Noncopyable {
+    class Task : public Noncopyable {
     protected:
         shared_ptr<Device> _device{nullptr};
         Context * _context{nullptr};
         SensorHandle _camera;
     public:
-        Pipeline(const shared_ptr<Device> &device, Context *context)
+        Task(const shared_ptr<Device> &device, Context *context)
             : _device(device),
             _context(context) {}
 
