@@ -8,20 +8,33 @@ namespace luminous {
     inline namespace gpu {
 
         void CUDATask::on_key(int key, int scancode, int action, int mods) {
+            float3 forward = _camera.forward();
+            float3 up = _camera.up();
+            float3 right = _camera.right();
+            float velocity = _camera.velocity();
             switch (key) {
                 case 'A':
+                    _camera.move(-right * velocity);
                     break;
                 case 'S':
+                    _camera.move(-forward * velocity);
                     break;
                 case 'D':
+                    _camera.move(right * velocity);
                     break;
                 case 'W':
+                    _camera.move(forward * velocity);
                     break;
                 case 'Q':
+                    _camera.move(-up * velocity);
                     break;
                 case 'E':
+                    _camera.move(up * velocity);
+                    break;
+                default:
                     break;
             }
+            cout << _camera.to_string() << endl;
         }
 
         void CUDATask::update_camera_fov_y(float val) {
