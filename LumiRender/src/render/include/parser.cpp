@@ -97,6 +97,15 @@ namespace luminous {
             return ret;
         }
 
+        FilmConfig parse_film(const ParameterSet &ps) {
+            FilmConfig fc;
+            fc.type = "RGBFilm";
+            ParameterSet param(ps["param"]);
+            fc.resolution = param["resolution"].as_int2(make_int2(500, 500));
+            fc.file_name = param["file_name"].as_string("luminous.png");
+            return fc;
+        }
+
         //	"camera" : {
         //		"type" : "PinholeCamera",
         //		"param" : {
@@ -119,6 +128,7 @@ namespace luminous {
             ret.fov_y = param["fov_y"].as_float();
             ret.velocity = param["velocity"].as_float();
             ret.transform_config = parse_transform(param["transform"]);
+            ret.film_config = parse_film(param["film"]);
             return ret;
         }
 

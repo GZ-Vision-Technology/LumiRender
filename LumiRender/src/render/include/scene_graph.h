@@ -80,6 +80,7 @@ namespace luminous {
         struct FilmConfig : Config {
             string type;
             int2 resolution;
+            string file_name;
         };
 
         struct SensorConfig : Config {
@@ -87,6 +88,7 @@ namespace luminous {
             TransformConfig transform_config;
             float fov_y;
             float velocity;
+            FilmConfig film_config;
         };
 
         struct LightSamplerConfig : Config {

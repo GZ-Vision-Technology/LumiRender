@@ -121,7 +121,9 @@ namespace luminous {
         }
 
         SensorHandle SensorHandle::create(const SensorConfig &config) {
-            return detail::create_sensor<0>(config);
+            auto ret = detail::create_sensor<0>(config);
+            ret.set_film(FilmHandle::create(config.film_config));
+            return ret;
         }
     }
 }

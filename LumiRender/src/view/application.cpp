@@ -55,37 +55,48 @@ namespace luminous {
         get_user_ptr(window)->on_mouse_event(button, action, mods);
     }
 
+    static void glfw_scroll_event(GLFWwindow *window, double scroll_x, double scroll_y) {
+        get_user_ptr(window)->on_scroll_event(scroll_x, scroll_y);
+    }
+
     void App::on_cursor_move(int2 new_pos) {
         int2 delta = new_pos - _last_mouse_pos;
+        if (!_last_mouse_pos.is_zero()) {
+            _task->update_camera_view(delta.x, -delta.y);
+        }
         _last_mouse_pos = new_pos;
+    }
 
+    void App::on_scroll_event(double scroll_x, double scroll_y) {
+        _task->update_camera_fov_y(scroll_y);
     }
 
     void App::on_key_event(int key, int scancode, int action, int mods) {
-
+        _task->on_key(key, scancode, action, mods);
     }
 
     void App::on_mouse_event(int button, int action, int mods) {
-
+        // todo
     }
 
     void App::on_resize(const int2 &new_size) {
         glViewport(0, 0, new_size.x, new_size.y);
+        _task->update_film_resolution(new_size);
     }
 
     App::App(const std::string &title, const int2 &size, Context *context, const Parser &parser)
             : _size(size) {
         _task = make_unique<CUDATask>(context);
         _task->init(parser);
-//        init_window(title, size);
-//        init_event_cb();
-//        init_imgui();
-//        init_gl_context();
+        init_window(title, _task->resolution());
+        init_event_cb();
+        init_imgui();
+        init_gl_context();
     }
 
     void App::init_gl_context() {
         auto path = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\HelloWorld.png)";
-        auto [rgb, res] = load_image(path);
+        auto[rgb, res] = load_image(path);
         test_color = new uint32_t[res.y * res.x];
         for (int i = 0; i < res.y * res.x; ++i) {
             test_color[i] = make_rgba(rgb[i]);
@@ -93,9 +104,10 @@ namespace luminous {
 
         glGenTextures(1, &_gl_ctx.fb_texture);
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, res.x,res.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, test_color);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, res.x, res.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, test_color);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+                        GL_REPEAT);    // set texture wrapping to GL_REPEAT (default wrapping method)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         // set texture filtering parameters
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -116,7 +128,7 @@ namespace luminous {
         glBindBuffer(GL_ARRAY_BUFFER, _gl_ctx.vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer_data), vertex_buffer_data, GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
         glEnableVertexAttribArray(0);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -135,16 +147,16 @@ namespace luminous {
     }
 
     int App::run() {
-//        while (!glfwWindowShouldClose(_handle)) {
-//            loop();
-//            imgui_begin();
-//            glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
-//            glClear(GL_COLOR_BUFFER_BIT);
-//            draw();
-//            imgui_end();
-//            glfwPollEvents();
-//            glfwSwapBuffers(_handle);
-//        }
+        while (!glfwWindowShouldClose(_handle)) {
+            loop();
+            imgui_begin();
+            glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
+            glClear(GL_COLOR_BUFFER_BIT);
+            draw();
+            imgui_end();
+            glfwPollEvents();
+            glfwSwapBuffers(_handle);
+        }
         return 0;
     }
 
@@ -154,7 +166,7 @@ namespace luminous {
         glfwSetKeyCallback(_handle, glfw_key_event);
         glfwSetCharCallback(_handle, glfw_char_event);
         glfwSetCursorPosCallback(_handle, glfw_cursor_move);
-
+        glfwSetScrollCallback(_handle, glfw_scroll_event);
     }
 
     void App::draw() const {
@@ -194,7 +206,7 @@ namespace luminous {
     }
 
     void App::init_imgui() {
-        const char* glsl_version = "#version 130";
+        const char *glsl_version = "#version 130";
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGui::StyleColorsDark();

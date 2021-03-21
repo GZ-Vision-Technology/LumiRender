@@ -29,10 +29,10 @@ namespace luminous {
         int2 _size;
         GLContext _gl_ctx;
         GLFWwindow *_handle{nullptr};
-        uint32_t * test_color{};
-        int2 _last_mouse_pos = make_int2(-1);
+        uint32_t *test_color{};
+        int2 _last_mouse_pos = make_int2(0);
 
-        unique_ptr<Task> _task;
+        unique_ptr<CUDATask> _task;
 
     public:
         App(const std::string &title, const int2 &size, Context *context, const Parser &parser);
@@ -47,11 +47,13 @@ namespace luminous {
 
         void on_resize(const int2 &new_size);
 
-        void on_key_event(int key, int scancode,int action,int mods);
+        void on_key_event(int key, int scancode, int action, int mods);
 
         void on_cursor_move(int2 new_pos);
 
-        void on_mouse_event(int button, int action,int mods);
+        void on_mouse_event(int button, int action, int mods);
+
+        void on_scroll_event(double scroll_x, double scroll_y);
 
         void set_title(const std::string &s);
 

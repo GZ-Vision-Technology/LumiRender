@@ -97,16 +97,13 @@
 					"pitch": 0,
 					"position": [1,1,1]
 				}
+			},
+			"film" : {
+				"param" : {
+					"resolution" : [500, 500],
+					"file_name" : "cornell_box.png"
+				}
 			}
-		}
-	},
-	"film" : {
-		"param" : {
-			"resolution" : [400, 400],
-			"crop_window" : [0,0,1,1],
-			"file_name" : "cornell_box.png",
-			"diagonal" : 1,
-			"scale" : 1
 		}
 	},
 	"filter" : {

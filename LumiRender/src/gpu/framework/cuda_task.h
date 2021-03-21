@@ -21,7 +21,17 @@ namespace luminous {
 
             void render_cli() override {}
 
+            int2 resolution();
+
             void render_gui() override;
+
+            void on_key(int key,int scancode, int action, int mods);
+
+            void update_camera_fov_y(float val);
+
+            void update_camera_view(float d_yaw, float d_pitch);
+
+            void update_film_resolution(int2 res);
         };
     }
 }
