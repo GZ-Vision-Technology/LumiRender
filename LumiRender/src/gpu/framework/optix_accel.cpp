@@ -204,32 +204,31 @@ namespace luminous {
         }
 
         void OptixAccel::create_sbt(ProgramGroupTable program_group_table) {
-            auto d_rg_record = _device->allocate_buffer<RayGenRecord>(1);
+            _device_ptr_table.rg_record = _device->allocate_buffer<RayGenRecord>(1);
             RayGenRecord rg_sbt = {};
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.raygen_prog_group, &rg_sbt));
-            d_rg_record.upload(&rg_sbt);
+            _device_ptr_table.rg_record.upload(&rg_sbt);
 
-            auto d_miss_record = _device->allocate_buffer<MissRecord>(RayType::Count);
+            _device_ptr_table.miss_record = _device->allocate_buffer<MissRecord>(RayType::Count);
             MissRecord ms_sbt[RayType::Count] = {};
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::Radiance]));
-            OPTIX_CHECK(
-                    optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::Occlusion]));
-            d_miss_record.upload(ms_sbt);
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::Occlusion]));
+            _device_ptr_table.miss_record.upload(ms_sbt);
 
-            auto d_hit_record = _device->allocate_buffer<HitGroupRecord>(RayType::Count);
+            _device_ptr_table.hit_record = _device->allocate_buffer<HitGroupRecord>(RayType::Count);
             HitGroupRecord hit_sbt[RayType::Count] = {};
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_hit_group, &hit_sbt[RayType::Radiance]));
             OPTIX_CHECK(
                     optixSbtRecordPackHeader(_program_group_table.occlusion_hit_group, &hit_sbt[RayType::Occlusion]));
-            d_hit_record.upload(hit_sbt);
+            _device_ptr_table.hit_record.upload(hit_sbt);
 
-            _sbt.raygenRecord = d_rg_record.ptr<CUdeviceptr>();
-            _sbt.missRecordBase = d_miss_record.ptr<CUdeviceptr>();
-            _sbt.missRecordStrideInBytes = d_miss_record.stride_in_bytes();
-            _sbt.missRecordCount = d_miss_record.size();
-            _sbt.hitgroupRecordBase = d_hit_record.ptr<CUdeviceptr>();
-            _sbt.hitgroupRecordStrideInBytes = d_hit_record.stride_in_bytes();
-            _sbt.hitgroupRecordCount = d_hit_record.size();
+            _sbt.raygenRecord = _device_ptr_table.rg_record.ptr<CUdeviceptr>();
+            _sbt.missRecordBase = _device_ptr_table.miss_record.ptr<CUdeviceptr>();
+            _sbt.missRecordStrideInBytes = _device_ptr_table.miss_record.stride_in_bytes();
+            _sbt.missRecordCount = _device_ptr_table.miss_record.size();
+            _sbt.hitgroupRecordBase = _device_ptr_table.hit_record.ptr<CUdeviceptr>();
+            _sbt.hitgroupRecordStrideInBytes = _device_ptr_table.hit_record.stride_in_bytes();
+            _sbt.hitgroupRecordCount = _device_ptr_table.hit_record.size();
         }
 
 
@@ -330,10 +329,10 @@ namespace luminous {
 
             size_t instance_num = instance_list.size();
             OptixBuildInput instance_input = {};
-            auto instance_buffer = _device->allocate_buffer<OptixInstance>(instance_num);
+            _device_ptr_table.instances = _device->allocate_buffer<OptixInstance>(instance_num);
             instance_input.type = OPTIX_BUILD_INPUT_TYPE_INSTANCES;
             instance_input.instanceArray.numInstances = instance_num;
-            instance_input.instanceArray.instances = instance_buffer.ptr<CUdeviceptr>();
+            instance_input.instanceArray.instances = _device_ptr_table.instances.ptr<CUdeviceptr>();
 
             OptixAccelBuildOptions accel_options = {};
             accel_options.buildFlags = OPTIX_BUILD_FLAG_NONE;
@@ -364,7 +363,7 @@ namespace luminous {
                 mat4x4_to_array12(transform_mat, optix_instance.transform);
                 optix_instances.push_back(optix_instance);
             }
-            instance_buffer.upload(optix_instances.data());
+            _device_ptr_table.instances.upload(optix_instances.data());
             OPTIX_CHECK(optixAccelBuild(_optix_device_context,
                                         0, &accel_options,
                                         &instance_input, 1,

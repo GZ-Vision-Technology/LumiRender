@@ -36,6 +36,15 @@ namespace luminous {
                 }
             };
 
+            struct DevicePtrTable {
+                Buffer<RayGenRecord> rg_record{nullptr};
+                Buffer<MissRecord> miss_record{nullptr};
+                Buffer<HitGroupRecord> hit_record{nullptr};
+                Buffer<OptixInstance> instances{nullptr};
+            };
+
+            DevicePtrTable _device_ptr_table;
+
             ProgramGroupTable _program_group_table{};
 
             OptixShaderBindingTable _sbt{};
