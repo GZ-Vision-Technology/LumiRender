@@ -5,7 +5,7 @@
 #define GLOBAL extern "C" __global__ void
 
 #include "optix_kernels.h"
-#include "gpu/framework/optix_params.h"
+
 
 extern "C" {
 __constant__ luminous::LaunchParams params;

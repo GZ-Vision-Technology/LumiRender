@@ -7,9 +7,6 @@
 
 #include "graphics/optics/common.h"
 #include "graphics/geometry/common.h"
-#include "core/concepts.h"
-#include "graphics/lstd/lstd.h"
-#include "../include/scene_graph.h"
 #include "../films/film_handle.h"
 #include "../samplers/sampler.h"
 

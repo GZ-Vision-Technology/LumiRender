@@ -5,7 +5,13 @@
 
 #pragma once
 
+#define _ENABLE_EXTENDED_ALIGNED_STORAGE
+
 #include "render/include/interaction.h"
+#include "render/films/shader_include.h"
+#include "render/samplers/shader_include.h"
+#include "render/sensors/shader_include.h"
+#include "gpu/framework/optix_params.h"
 
 static __forceinline__ __device__ void *unpackPointer(unsigned int i0, unsigned int i1) {
     const unsigned long long uptr = static_cast<unsigned long long>( i0 ) << 32 | i1;

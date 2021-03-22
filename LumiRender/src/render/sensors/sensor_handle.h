@@ -5,9 +5,14 @@
 
 #pragma once
 
-#include "sensor.h"
+
+#include "graphics/math/common.h"
+#include "graphics/lstd/lstd.h"
+#include "../include/scene_graph.h"
 #include "pinhole_camera.h"
 #include "perspective_camera.h"
+
+
 
 namespace luminous {
     inline namespace render {
