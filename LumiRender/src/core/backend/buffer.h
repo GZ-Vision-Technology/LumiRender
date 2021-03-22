@@ -39,10 +39,20 @@ namespace luminous {
 
         RawBuffer(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
 
-        Impl *impl_mut() const { return _impl.get(); }
+        Impl *impl_mut() const {
+            assert(valid());
+            return _impl.get();
+        }
 
         template<typename T = void *>
-        auto ptr() const { return (T)_impl->ptr(); }
+        auto ptr() const {
+            assert(valid());
+            return (T)_impl->ptr();
+        }
+
+        bool valid() const { return _impl != nullptr; }
+
+        void clear() { _impl.reset(nullptr); }
 
     protected:
         std::unique_ptr<Impl> _impl;
@@ -62,33 +72,46 @@ namespace luminous {
         size_t stride_in_bytes() const { return sizeof(value_type); }
 
         template<typename U = void *>
-        auto address(size_t offset = 0) const { return (U)_impl->address(offset * sizeof(T)); }
+        auto address(size_t offset = 0) const {
+            assert(valid());
+            return (U)_impl->address(offset * sizeof(T));
+        }
 
-        size_t size() const { return _impl->size() / sizeof(T); }
+        size_t size() const {
+            assert(valid());
+            return _impl->size() / sizeof(T);
+        }
 
-        size_t size_in_bytes() const { return  _impl->size(); }
+        size_t size_in_bytes() const {
+            assert(valid());
+            return _impl->size();
+        }
 
         void download(T *host_ptr, size_t n_elements = 0, size_t offset = 0) {
             n_elements = n_elements == 0 ? _impl->size() / sizeof(T) : n_elements;
             assert(offset * sizeof(T) + n_elements * sizeof(T) <= _impl->size());
+            assert(valid());
             _impl->download(host_ptr, n_elements * sizeof(T), offset * sizeof(T));
         }
 
         void download_async(Dispatcher &dispatcher, T *host_ptr, size_t n_elements = 0, size_t offset = 0) {
             n_elements = n_elements == 0 ? _impl->size() / sizeof(T) : n_elements;
             assert(offset * sizeof(T) + n_elements * sizeof(T) <= _impl->size());
+            assert(valid());
             _impl->download_async(dispatcher, host_ptr, n_elements * sizeof(T), offset * sizeof(T));
         }
 
         void upload(const T *host_ptr, size_t n_elements = 0, size_t offset = 0) {
             n_elements = n_elements == 0 ? _impl->size() / sizeof(T) : n_elements;
             assert(offset * sizeof(T) + n_elements * sizeof(T) <= _impl->size());
+            assert(valid());
             _impl->upload(host_ptr, n_elements * sizeof(T), offset * sizeof(T));
         }
 
         void upload_async(Dispatcher &dispatcher, const T *host_ptr, size_t n_elements = 0, size_t offset = 0) {
             n_elements = n_elements == 0 ? _impl->size() / sizeof(T) : n_elements;
             assert(offset * sizeof(T) + n_elements * sizeof(T) <= _impl->size());
+            assert(valid());
             _impl->upload_async(dispatcher, host_ptr, n_elements * sizeof(T), offset * sizeof(T));
         }
     };
