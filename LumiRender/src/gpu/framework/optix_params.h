@@ -7,13 +7,14 @@
 
 #include <optix.h>
 #include "graphics/math/common.h"
-//#include "render/sensors/sensor_handle.h"
+#include "render/sensors/sensor_handle.h"
 
 namespace luminous {
     inline namespace gpu {
         struct LaunchParams {
-//            OptixTraversableHandle traversable_handle;
+            OptixTraversableHandle traversable_handle;
             uint frame_index;
+            SensorHandle camera;
 //            float4 *accum_buffer;
 //            uchar4 *frame_buffer;
 //            uint width;

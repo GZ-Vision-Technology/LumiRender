@@ -7,7 +7,6 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
-#include "gpu/framework/jitify/jitify.hpp"
 
 namespace luminous {
     inline namespace gpu {
@@ -70,10 +69,9 @@ namespace luminous {
                                     _cpu_instance_to_mesh_idx,_cpu_transforms,
                                     _cpu_instance_to_transform_idx);
 
-            _params = _device->allocate_buffer<LaunchParams>(1);
             LaunchParams l;
-            _params.upload(&l);
-            _optix_accel->launch(make_int2(500),_params.data());
+//            _params.upload(&l);
+//            _optix_accel->launch(make_int2(500),_params.data());
         }
     }
 }
