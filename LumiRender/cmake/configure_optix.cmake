@@ -49,12 +49,12 @@ macro(cuda_compile_and_embed output_var cuda_file)
     if (${CMAKE_BUILD_TYPE} MATCHES "Release")
         cuda_compile_ptx(ptx_files
                 ${cuda_file}
-                OPTIONS -O3 -DNDEBUG=1 --use_fast_math --expt-relaxed-constexpr --std=c++17
+                OPTIONS -O3 -D NDEBUG=1 -D _ENABLE_EXTENDED_ALIGNED_STORAGE --use_fast_math --expt-relaxed-constexpr --std=c++17
                 )
     else ()
         cuda_compile_ptx(ptx_files
                 ${cuda_file}
-                OPTIONS --expt-relaxed-constexpr --std=c++17
+                OPTIONS -D _ENABLE_EXTENDED_ALIGNED_STORAGE --expt-relaxed-constexpr --std=c++17
                 )
     endif ()
     list(GET ptx_files 0 ptx_file)

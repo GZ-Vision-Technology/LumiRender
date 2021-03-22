@@ -5,8 +5,6 @@
 
 #pragma once
 
-#define _ENABLE_EXTENDED_ALIGNED_STORAGE
-
 #include "render/include/interaction.h"
 #include "render/films/shader_include.h"
 #include "render/samplers/shader_include.h"
