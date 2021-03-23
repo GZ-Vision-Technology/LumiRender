@@ -30,7 +30,7 @@ namespace luminous {
 
             NDSC_XPU float2 next_2d();
 
-            NDSC std::string to_string();
+            NDSC std::string to_string() const;
 
             static SamplerHandle create(const SamplerConfig &config);
         };

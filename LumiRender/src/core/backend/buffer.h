@@ -88,30 +88,30 @@ namespace luminous {
         }
 
         void download(T *host_ptr, size_t n_elements = 0, size_t offset = 0) {
+            assert(valid());
             n_elements = n_elements == 0 ? _impl->size() / sizeof(T) : n_elements;
             assert(offset * sizeof(T) + n_elements * sizeof(T) <= _impl->size());
-            assert(valid());
             _impl->download(host_ptr, n_elements * sizeof(T), offset * sizeof(T));
         }
 
         void download_async(Dispatcher &dispatcher, T *host_ptr, size_t n_elements = 0, size_t offset = 0) {
+            assert(valid());
             n_elements = n_elements == 0 ? _impl->size() / sizeof(T) : n_elements;
             assert(offset * sizeof(T) + n_elements * sizeof(T) <= _impl->size());
-            assert(valid());
             _impl->download_async(dispatcher, host_ptr, n_elements * sizeof(T), offset * sizeof(T));
         }
 
         void upload(const T *host_ptr, size_t n_elements = 0, size_t offset = 0) {
+            assert(valid());
             n_elements = n_elements == 0 ? _impl->size() / sizeof(T) : n_elements;
             assert(offset * sizeof(T) + n_elements * sizeof(T) <= _impl->size());
-            assert(valid());
             _impl->upload(host_ptr, n_elements * sizeof(T), offset * sizeof(T));
         }
 
         void upload_async(Dispatcher &dispatcher, const T *host_ptr, size_t n_elements = 0, size_t offset = 0) {
+            assert(valid());
             n_elements = n_elements == 0 ? _impl->size() / sizeof(T) : n_elements;
             assert(offset * sizeof(T) + n_elements * sizeof(T) <= _impl->size());
-            assert(valid());
             _impl->upload_async(dispatcher, host_ptr, n_elements * sizeof(T), offset * sizeof(T));
         }
     };

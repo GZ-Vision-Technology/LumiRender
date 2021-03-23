@@ -36,7 +36,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(next_2d)
         }
 
-        std::string SamplerHandle::to_string() {
+        std::string SamplerHandle::to_string() const {
             LUMINOUS_VAR_DISPATCH(to_string)
         }
 
