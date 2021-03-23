@@ -2,15 +2,28 @@ add_library(luminous-backends INTERFACE)
 
 include_directories(${OptiX_INCLUDE})
 
-function(luminous_render_add_backend name)
-    cmake_parse_arguments(BACKEND "" "" "SOURCES" ${ARGN})
-    add_library(luminous-backend-${name} MODULE ${BACKEND_SOURCES})
-    target_compile_features(luminous-backend-${name} PRIVATE c_std_11 cxx_std_17)
-    add_dependencies(luminous-backends luminous-backend-${name})
-    set_target_properties(luminous-backend-${name} PROPERTIES
-            LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/backends/"
-            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/backends/")
-endfunction()
 
+#add_subdirectory(framework)
+cuda_compile_and_embed(optix_shader_code ${PROJECT_SOURCE_DIR}/src/gpu/shaders/optix_kernels.cu)
 
-add_subdirectory(framework)
+file(GLOB_RECURSE HEADER_FILES *.h*)
+file(GLOB_RECURSE SOURCE_FILES *.cpp)
+
+add_library(luminous-gpu SHARED ${HEADER_FILES} ${SOURCE_FILES} ${optix_shader_code})
+
+target_link_libraries(luminous-gpu
+        PUBLIC CUDA::nvrtc
+        CUDA::cuda_driver
+        CUDA::cudart
+        luminous-graphics
+        luminous-core
+        luminous-render
+        )
+
+set_target_properties(luminous-gpu PROPERTIES
+        PUBLIC_HEADER "${HEADER_FILES}"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
+        WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+find_package(CUDAToolkit REQUIRED)

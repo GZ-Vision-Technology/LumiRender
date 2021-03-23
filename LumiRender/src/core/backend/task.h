@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <render/samplers/sampler_handle.h>
 #include "core/concepts.h"
 #include "device.h"
 #include "render/include/parser.h"

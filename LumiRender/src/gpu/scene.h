@@ -9,7 +9,7 @@
 #include "core/concepts.h"
 #include "graphics/math/common.h"
 #include "render/sensors/sensor.h"
-#include "optix_accel.h"
+#include "framework/optix_accel.h"
 
 namespace luminous {
     inline namespace gpu {
