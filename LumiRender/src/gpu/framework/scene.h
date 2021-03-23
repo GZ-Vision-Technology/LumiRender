@@ -38,12 +38,21 @@ namespace luminous {
             SP<Device> _device;
             UP<OptixAccel> _optix_accel;
 
-            LaunchParams _launch_params;
+            const SensorHandle * _camera{nullptr};
+            Buffer<SensorHandle> _d_camera{nullptr};
 
+            LaunchParams _launch_params{};
+            Buffer<LaunchParams> _d_launch_params{nullptr};
+        private:
+            void allocate_device_buffer();
         public:
             Scene(const SP<Device> &device);
 
             void convert_geometry_data(const SP<SceneGraph> &scene_graph);
+
+            void launch();
+
+            void update_camera(const SensorHandle *camera);
 
             void build_accel();
         };

@@ -26,6 +26,8 @@ namespace luminous {
 
             void render_cli() override {}
 
+            void upload_data();
+
             int2 resolution();
 
             void render_gui() override;

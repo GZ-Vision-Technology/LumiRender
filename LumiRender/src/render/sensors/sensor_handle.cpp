@@ -20,6 +20,10 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(film);
         }
 
+        int2 SensorHandle::resolution() const {
+            LUMINOUS_VAR_DISPATCH(resolution);
+        }
+
         void SensorHandle::set_fov_y(float val) {
             LUMINOUS_VAR_DISPATCH(set_fov_y, val);
         }

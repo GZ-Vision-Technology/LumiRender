@@ -152,6 +152,7 @@ namespace luminous {
             imgui_begin();
             glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
             glClear(GL_COLOR_BUFFER_BIT);
+            render();
             draw();
             imgui_end();
             glfwPollEvents();
@@ -179,7 +180,7 @@ namespace luminous {
     }
 
     void App::render() {
-
+        _task->render_gui();
     }
 
     void App::init_window(const std::string &title, const int2 &size) {

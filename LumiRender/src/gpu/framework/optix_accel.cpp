@@ -377,13 +377,15 @@ namespace luminous {
 
         void OptixAccel::launch(int2 res, LaunchParams *d_params) {
             auto stream = dynamic_cast<CUDADispatcher*>(_dispatcher.impl_mut())->stream;
+            auto x = res.x;
+            auto y = res.y;
             OPTIX_CHECK(optixLaunch(_optix_pipeline,
                                     stream,
                                     reinterpret_cast<CUdeviceptr>(d_params),
                                     sizeof(LaunchParams),
                                     &_sbt,
-                                    500,
-                                    500,
+                                    x,
+                                    y,
                                     1u));
         }
 

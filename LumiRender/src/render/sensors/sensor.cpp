@@ -36,6 +36,10 @@ namespace luminous {
             _raster_to_camera =  _camera_to_screen.inverse() * _raster_to_screen;
         }
 
+        int2 CameraBase::resolution() const {
+            return _film.resolution();
+        }
+
         FilmHandle *CameraBase::film() {
             return &_film;
         }

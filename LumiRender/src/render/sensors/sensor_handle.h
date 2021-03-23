@@ -32,6 +32,8 @@ namespace luminous {
 
             NDSC_XPU FilmHandle *film();
 
+            NDSC_XPU int2 resolution() const;
+
             NDSC_XPU Transform camera_to_world() const;
 
             NDSC_XPU const char *name();

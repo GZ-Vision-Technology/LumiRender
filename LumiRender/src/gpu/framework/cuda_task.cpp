@@ -34,7 +34,6 @@ namespace luminous {
                 default:
                     break;
             }
-            cout << _camera.to_string() << endl;
         }
 
         void CUDATask::update_camera_fov_y(float val) {
@@ -44,6 +43,10 @@ namespace luminous {
         void CUDATask::update_camera_view(float d_yaw, float d_pitch) {
             _camera.update_yaw(d_yaw);
             _camera.update_pitch(d_pitch);
+        }
+
+        void CUDATask::upload_data() {
+            _scene->update_camera(&_camera);
         }
 
         void CUDATask::update_film_resolution(int2 res) {
@@ -61,6 +64,9 @@ namespace luminous {
 
             _camera = SensorHandle::create(scene_graph->sensor_config);
             update_device_buffer();
+            upload_data();
+
+            _scene->launch();
         }
 
         void CUDATask::update_device_buffer() {
@@ -73,13 +79,12 @@ namespace luminous {
         }
 
         void CUDATask::render_gui() {
-
+            upload_data();
         }
 
         int2 CUDATask::resolution() {
             return _camera.film()->resolution();
         }
-
 
     }
 }

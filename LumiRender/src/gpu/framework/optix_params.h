@@ -14,7 +14,7 @@ namespace luminous {
         struct LaunchParams {
             OptixTraversableHandle traversable_handle;
             uint frame_index;
-//            SensorHandle camera;
+            SensorHandle *camera;
 //            float4 *accum_buffer;
 //            uchar4 *frame_buffer;
 //            uint width;
