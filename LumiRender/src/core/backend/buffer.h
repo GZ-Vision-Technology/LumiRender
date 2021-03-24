@@ -44,11 +44,7 @@ namespace luminous {
             return _impl.get();
         }
 
-        template<typename T = void *>
-        auto ptr() const {
-            assert(valid());
-            return (T)_impl->ptr();
-        }
+
 
         bool valid() const { return _impl != nullptr; }
 
@@ -58,28 +54,35 @@ namespace luminous {
         std::unique_ptr<Impl> _impl;
     };
 
-    template<class T = std::byte>
+    template<class T = std::byte, typename TP = void *>
     class Buffer : public RawBuffer {
     public:
         using value_type = T;
+        using pointer_type = TP;
 
         using RawBuffer::RawBuffer;
 
         Buffer(RawBuffer buf) : RawBuffer(std::move(buf)) {}
 
-        T *data() const { return reinterpret_cast<T *>(ptr()); }
+        value_type *data() const { return reinterpret_cast<value_type *>(ptr()); }
 
         size_t stride_in_bytes() const { return sizeof(value_type); }
+
+        template<typename U = pointer_type>
+        auto ptr() const {
+            assert(valid());
+            return (U)_impl->ptr();
+        }
 
         template<typename U = void *>
         auto address(size_t offset = 0) const {
             assert(valid());
-            return (U)_impl->address(offset * sizeof(T));
+            return (U)_impl->address(offset * sizeof(value_type));
         }
 
         size_t size() const {
             assert(valid());
-            return _impl->size() / sizeof(T);
+            return _impl->size() / sizeof(value_type);
         }
 
         size_t size_in_bytes() const {
