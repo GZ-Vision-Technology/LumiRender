@@ -15,8 +15,12 @@ namespace luminous {
     inline namespace gpu {
         class CUDATask : public Task {
         private:
+
+            vector<FrameBufferType> _host_frame_buffer;
+
             Buffer<float4> _accumulate_buffer{nullptr};
-            Buffer<FrameBufferType> _frame_buffer{nullptr};
+
+            Managed<FrameBufferType *> _frame_buffer;
 
             UP<Integrator> _integrator;
 
@@ -30,7 +34,7 @@ namespace luminous {
 
             void render_cli() override {}
 
-            void download_frame_buffer(FrameBufferType * output);
+            FrameBufferType *download_frame_buffer();
 
             int2 resolution();
 

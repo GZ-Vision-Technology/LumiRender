@@ -64,9 +64,11 @@ namespace luminous {
             auto res = _camera.film()->resolution();
             auto num = res.x * res.y;
             _accumulate_buffer = _device->allocate_buffer<float4>(num);
-            _frame_buffer = _device->allocate_buffer<FrameBufferType>(num);
             _camera.film()->set_accumulate_buffer(_accumulate_buffer.data());
-            _camera.film()->set_frame_buffer(_frame_buffer.data());
+
+            _host_frame_buffer.resize(num);
+            _frame_buffer.reset(_host_frame_buffer.data(), _device, num);
+            _camera.film()->set_frame_buffer(_frame_buffer.device_data());
         }
 
         void CUDATask::render_gui() {
@@ -78,8 +80,9 @@ namespace luminous {
             return _camera.film()->resolution();
         }
 
-        void CUDATask::download_frame_buffer(FrameBufferType *output) {
-
+        FrameBufferType *CUDATask::download_frame_buffer() {
+            _frame_buffer.synchronize_to_cpu();
+            return _frame_buffer.get();
         }
     }
 }

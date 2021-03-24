@@ -39,7 +39,11 @@ namespace luminous {
 
         template<typename T = void *>
         T device_ptr() const {
-            return _device_buffer.template ptr<T>();
+            return _device_buffer.ptr<T>();
+        }
+
+        auto device_data() const {
+            return _device_buffer.data();
         }
 
         auto operator[](uint i) {
