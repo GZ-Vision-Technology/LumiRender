@@ -97,14 +97,14 @@ void test_managed() {
     auto ps = buffer.ptr();
 
 
-    auto hd = DeviceHandle(sampler, device, 1);
+    auto hd = Managed(sampler, device);
     hd.synchronize_to_gpu();
 
     cout << hd->to_string();
     ps = hd.device_ptr();
     kernel->launch(dispatcher, {&ps});
     dispatcher.wait();
-//    hd.synchronize_to_cpu();
+    hd.synchronize_to_cpu();
     cout << hd->next_1d() << endl;
 }
 

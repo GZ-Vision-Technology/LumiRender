@@ -7,17 +7,18 @@
 
 #include "buffer.h"
 #include "device.h"
+#include "core/concepts.h"
 
 namespace luminous {
     template<typename THost, typename TDevice = std::remove_pointer_t<THost>>
-    struct DeviceHandle {
+    struct Managed : Noncopyable {
     private:
-        int _n_elements;
+        static_assert(!std::is_pointer_v<std::remove_pointer_t<THost>>, "THost can not be the secondary pointer!");
         THost _host;
         Buffer <TDevice> _device_buffer{nullptr};
     public:
-        DeviceHandle(THost host, const std::shared_ptr<Device> &device, int n = 1)
-                : _n_elements(n), _host(host) {
+        Managed(THost host, const std::shared_ptr<Device> &device, int n = 1)
+                : _host(host) {
             _device_buffer = device->allocate_buffer<TDevice>(n);
         }
 
@@ -40,18 +41,17 @@ namespace luminous {
 
         void synchronize_to_gpu() {
             if constexpr (std::is_pointer_v<THost>) {
-                _device_buffer.upload(_host, _n_elements);
+                _device_buffer.upload(_host);
             } else {
-                const THost *p = &_host;
-                _device_buffer.upload(p, _n_elements);
+                _device_buffer.upload(&_host);
             }
         }
 
         void synchronize_to_cpu() {
             if constexpr (std::is_pointer_v<THost>) {
-                _device_buffer.download(_host, _n_elements);
+                _device_buffer.download(_host);
             } else {
-                _device_buffer.download(&_host, _n_elements);
+                _device_buffer.download(&_host);
             }
         }
     };
