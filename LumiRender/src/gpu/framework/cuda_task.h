@@ -9,6 +9,7 @@
 #include "cuda_device.h"
 #include "render/films/film_handle.h"
 #include "../mega_kernel_pt.h"
+#include "core/backend/managed.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -25,9 +26,11 @@ namespace luminous {
 
             void init(const Parser &parser) override;
 
-            void update_device_frame_buffer();
+            void update_device_buffer();
 
             void render_cli() override {}
+
+            void download_frame_buffer(FrameBufferType * output);
 
             int2 resolution();
 

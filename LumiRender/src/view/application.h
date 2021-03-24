@@ -39,6 +39,8 @@ namespace luminous {
 
         void init_gl_context();
 
+        void update_render_texture();
+
         void init_window(const std::string &title, const int2 &size);
 
         void init_event_cb();

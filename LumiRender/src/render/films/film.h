@@ -16,7 +16,7 @@ namespace luminous {
             float weight_sum;
         };
 
-        using FrameBufferType = uchar4;
+        using FrameBufferType = uint32_t;
 
         class FilmBase {
         protected:

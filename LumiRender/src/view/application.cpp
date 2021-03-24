@@ -153,6 +153,7 @@ namespace luminous {
             glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
             glClear(GL_COLOR_BUFFER_BIT);
             render();
+            update_render_texture();
             draw();
             imgui_end();
             glfwPollEvents();
@@ -217,6 +218,18 @@ namespace luminous {
 
     void App::set_title(const std::string &s) {
         glfwSetWindowTitle(_handle, s.c_str());
+    }
+
+    void App::update_render_texture() {
+        auto path = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\HelloWorld.png)";
+        auto[rgb, res] = load_image(path);
+        test_color = new uint32_t[res.y * res.x];
+        for (int i = 0; i < res.y * res.x; ++i) {
+            test_color[i] = make_rgba(rgb[i]);
+        }
+
+        glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, res.x, res.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, test_color);
     }
 
 }
