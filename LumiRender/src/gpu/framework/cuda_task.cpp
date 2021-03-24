@@ -54,14 +54,14 @@ namespace luminous {
         void CUDATask::init(const Parser &parser) {
             auto scene_graph = parser.parse();
             scene_graph->create_shapes();
-            _scene = make_unique<GPUScene>(_device);
-
-            _scene->init(scene_graph);
 
             _camera = SensorHandle::create(scene_graph->sensor_config);
             update_device_buffer();
 
-            _scene->launch();
+            _integrator = make_unique<MegaKernelPT>(_device);
+
+            _integrator->init(scene_graph, &_camera);
+
         }
 
         void CUDATask::update_device_buffer() {

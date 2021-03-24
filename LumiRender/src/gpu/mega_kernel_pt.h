@@ -6,7 +6,7 @@
 #pragma once
 
 #include "render/include/integrator.h"
-#include "render/sensors/sensor.h"
+
 #include "framework/optix_accel.h"
 #include "gpu_scene.h"
 #include "render/samplers/sampler_handle.h"
@@ -17,11 +17,15 @@ namespace luminous {
         class MegaKernelPT : public Integrator {
         private:
             Managed<SamplerHandle> _sampler;
-            Managed<SensorHandle> _camera;
-
+            Managed<const SensorHandle *> _camera;
+            UP<GPUScene> _scene{nullptr};
+            SP<Device> _device{};
         public:
 
-//            MegaKernelPT()
+            MegaKernelPT(const SP<Device> &device)
+                    : _device(device) {}
+
+            void init(const SP<SceneGraph> &scene_graph, SensorHandle *camera) override;
 
             void render() override;
         };
