@@ -19,14 +19,17 @@
 
 namespace luminous {
     inline namespace utility {
-        pair<float4 *, int2> load_image(const filesystem::path &path) {
+        pair <unique_ptr<float4[]>, int2> load_image(const filesystem::path &path) {
             auto extension = to_lower(path.extension().string());
             if (extension == ".exr") {
-                return load_exr(path);
+                auto[color, res] = load_exr(path);
+                return make_pair(unique_ptr<float4[]>(color), res);
             } else if (extension == ".hdr") {
-                return load_hdr(path);
+                auto[color, res] = load_hdr(path);
+                return make_pair(unique_ptr<float4[]>(color), res);
             } else {
-                return load_other(path);
+                auto[color, res] = load_other(path);
+                return make_pair(unique_ptr<float4[]>(color), res);
             }
         }
 
@@ -69,7 +72,7 @@ namespace luminous {
                        channel.pixel_type != TINYEXR_PIXELTYPE_HALF;
             };
             if (exr_header.num_channels > 4 || exr_header.tiled ||
-                std::any_of(exr_header.channels,exr_header.channels + exr_header.num_channels, predict)) {
+                std::any_of(exr_header.channels, exr_header.channels + exr_header.num_channels, predict)) {
                 LUMINOUS_EXCEPTION("Unsupported pixel format in file: ", fn.string());
             }
 
@@ -120,7 +123,7 @@ namespace luminous {
                     break;
             }
             FreeEXRImage(&exr_image);
-            return make_pair(rgb, make_int2(exr_image.width,exr_image.height));
+            return make_pair(rgb, make_int2(exr_image.width, exr_image.height));
         }
 
         pair<float4 *, int2> load_other(const filesystem::path &path) {
@@ -135,9 +138,9 @@ namespace luminous {
             auto *rgb = new float4[w * h];
             uint8_t *src = c_rgb;
             for (int i = 0; i < w * h; ++i, src += 4) {
-                float r = (float)src[0] / 255;
-                float g = (float)src[1] / 255;
-                float b = (float)src[2] / 255;
+                float r = (float) src[0] / 255;
+                float g = (float) src[1] / 255;
+                float b = (float) src[2] / 255;
                 rgb[i] = make_float4(r, g, b, 1.f);
             }
             free(c_rgb);
@@ -174,7 +177,8 @@ namespace luminous {
             image.height = resolution.y;
             image.images = reinterpret_cast<uint8_t **>(image_ptr.data());
 
-            std::array<int, 4> pixel_types{TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT};
+            std::array<int, 4> pixel_types{TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT,
+                                           TINYEXR_PIXELTYPE_FLOAT};
             std::array<EXRChannelInfo, 4> channels{};
             header.num_channels = c;
             header.channels = channels.data();

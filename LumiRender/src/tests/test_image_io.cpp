@@ -16,7 +16,7 @@ int main() {
 
     auto [rgb, res] = load_image(path);
 
-    save_image(path2, rgb, res);
+    save_image(path2, rgb.get(), res);
 
     return 0;
 }

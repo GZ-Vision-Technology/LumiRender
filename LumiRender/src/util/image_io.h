@@ -13,7 +13,7 @@ namespace luminous {
         using namespace std;
 
         // todo consider SRGB and linear
-        pair<float4 *, int2> load_image(const filesystem::path &fn);
+        pair <unique_ptr<float4[]>, int2> load_image(const filesystem::path &fn);
 
         pair<float4 *, int2> load_hdr(const filesystem::path &fn);
 
