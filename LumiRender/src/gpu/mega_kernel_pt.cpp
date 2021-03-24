@@ -11,12 +11,21 @@ namespace luminous {
                                 SensorHandle *camera) {
             _scene = make_unique<GPUScene>(_device);
             _scene->init(scene_graph);
-
             _camera.reset(camera, _device);
+            auto sampler = SamplerHandle::create(scene_graph->sampler_config);
+            _sampler.reset(sampler, _device);
         }
 
         void MegaKernelPT::render() {
 
+        }
+
+        void MegaKernelPT::synchronize_to_gpu() {
+            _camera.synchronize_to_gpu();
+        }
+
+        void MegaKernelPT::update() {
+            synchronize_to_gpu();
         }
     }
 }

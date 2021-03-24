@@ -27,6 +27,10 @@ namespace luminous {
 
             void init(const SP<SceneGraph> &scene_graph, SensorHandle *camera) override;
 
+            void update() override;
+
+            void synchronize_to_gpu();
+
             void render() override;
         };
     }

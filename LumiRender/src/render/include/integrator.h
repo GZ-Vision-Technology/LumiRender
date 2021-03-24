@@ -16,6 +16,8 @@ namespace luminous {
 
         virtual void init(const std::shared_ptr<SceneGraph> &scene_graph, SensorHandle *camera) = 0;
 
+        virtual void update() = 0;
+
         virtual void render() = 0;
     };
 }
