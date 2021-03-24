@@ -9,7 +9,7 @@
 #include "core/concepts.h"
 #include "device.h"
 #include "render/include/parser.h"
-#include "gpu/scene.h"
+#include "gpu/gpu_scene.h"
 #include "render/sensors/sensor_handle.h"
 
 namespace luminous {

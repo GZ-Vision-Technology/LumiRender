@@ -31,6 +31,12 @@ namespace luminous {
             return _device_buffer.ptr();
         }
 
+        auto operator[] (uint i) {
+            static_assert(std::is_pointer_v<THost>, "subscript only operate pointer!");
+            assert(i < _device_buffer.size());
+            return _host[i];
+        }
+
         auto operator->() {
             if constexpr (std::is_pointer_v<THost>) {
                 return _host;

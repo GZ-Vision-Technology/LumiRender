@@ -13,7 +13,7 @@
 
 namespace luminous {
     inline namespace gpu {
-        class Scene : public Noncopyable {
+        class GPUScene : public Noncopyable {
         private:
             Buffer<uint> _instance_to_mesh_idx{nullptr};
             Buffer<uint> _instance_to_transform_idx{nullptr};
@@ -38,15 +38,8 @@ namespace luminous {
             SP<Device> _device;
             UP<OptixAccel> _optix_accel;
 
-            const SensorHandle * _camera{nullptr};
-            Buffer<SensorHandle> _d_camera{nullptr};
-
-            LaunchParams _launch_params{};
-            Buffer<LaunchParams> _d_launch_params{nullptr};
-        private:
-            void allocate_device_buffer();
         public:
-            Scene(const SP<Device> &device);
+            GPUScene(const SP<Device> &device);
 
             void convert_geometry_data(const SP<SceneGraph> &scene_graph);
 

@@ -1,5 +1,5 @@
 //
-// Created by Zero on 2021/3/23.
+// Created by Zero on 2021/3/24.
 //
 
 
@@ -12,9 +12,8 @@
 #include "render/samplers/sampler_handle.h"
 
 namespace luminous {
-
     inline namespace gpu {
-        class MegaKernelPT : public Integrator {
+        class WavefrontPT : public Integrator {
         private:
 
         public:

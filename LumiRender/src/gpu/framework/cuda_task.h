@@ -13,7 +13,7 @@ namespace luminous {
     inline namespace gpu {
         class CUDATask : public Task {
         private:
-            unique_ptr<Scene> _scene{nullptr};
+            unique_ptr<GPUScene> _scene{nullptr};
             Buffer<float4> _accumulate_buffer{nullptr};
             Buffer<FrameBufferType> _frame_buffer{nullptr};
         public:

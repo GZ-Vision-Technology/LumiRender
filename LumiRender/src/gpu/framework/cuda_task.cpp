@@ -58,7 +58,7 @@ namespace luminous {
         void CUDATask::init(const Parser &parser) {
             auto scene_graph = parser.parse();
             scene_graph->create_shapes();
-            _scene = make_unique<Scene>(_device);
+            _scene = make_unique<GPUScene>(_device);
             _scene->convert_geometry_data(scene_graph);
             _scene->build_accel();
 

@@ -3,7 +3,7 @@
 //
 
 
-#include "scene.h"
+#include "gpu_scene.h"
 #include <cassert>
 #include <cmath>
 #include <iostream>
@@ -11,19 +11,12 @@
 namespace luminous {
     inline namespace gpu {
 
-        Scene::Scene(const SP<Device> &device)
+        GPUScene::GPUScene(const SP<Device> &device)
                 : _device(device) {
             _optix_accel = make_unique<OptixAccel>(device);
-            allocate_device_buffer();
         }
 
-        void Scene::allocate_device_buffer() {
-            _d_camera = _device->allocate_buffer<SensorHandle>(1);
-            _launch_params.camera = _d_camera.data();
-            _d_launch_params = _device->allocate_buffer<LaunchParams>(1);
-        }
-
-        void Scene::convert_geometry_data(const SP<SceneGraph> &scene_graph) {
+        void GPUScene::convert_geometry_data(const SP<SceneGraph> &scene_graph) {
             TASK_TAG("convert geometry data start!")
             uint vert_offset = 0u;
             uint tri_offset = 0u;
@@ -71,23 +64,19 @@ namespace luminous {
         }
 
 
-        void Scene::update_camera(const SensorHandle *camera) {
-            _camera = camera;
-            _d_camera.upload(_camera);
+        void GPUScene::update_camera(const SensorHandle *camera) {
+
         }
 
-        void Scene::build_accel() {
+        void GPUScene::build_accel() {
             _optix_accel->build_bvh(_positions, _triangles, _cpu_meshes,
                                     _cpu_instance_to_mesh_idx,_cpu_transforms,
                                     _cpu_instance_to_transform_idx);
 
-//            _params.upload(&l);
-//            _optix_accel->launch(make_int2(500),_params.data());
         }
 
-        void Scene::launch() {
-            _d_launch_params.upload(&_launch_params);
-            _optix_accel->launch(_camera->resolution(), _d_launch_params.data());
+        void GPUScene::launch() {
+
         }
 
     }
