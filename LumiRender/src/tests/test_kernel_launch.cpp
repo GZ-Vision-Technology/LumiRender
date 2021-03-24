@@ -101,14 +101,14 @@ void test_managed() {
     hd.synchronize_to_gpu();
 
     Managed<SamplerHandle> s;
-
-
-    cout << hd->to_string();
-    ps = hd.device_ptr();
+    s.reset(sampler, device);
+    s.synchronize_to_gpu();
+    cout << s->to_string();
+    ps = s.device_ptr();
     kernel->launch(dispatcher, {&ps});
     dispatcher.wait();
-    hd.synchronize_to_cpu();
-    cout << hd->next_1d() << endl;
+    s.synchronize_to_cpu();
+    cout << s->next_1d() << endl;
 }
 
 int main() {

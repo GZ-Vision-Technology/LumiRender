@@ -17,9 +17,7 @@ namespace luminous {
         private:
 
         public:
-            void render() override {
-
-            }
+            void render() override;
         };
     }
 }

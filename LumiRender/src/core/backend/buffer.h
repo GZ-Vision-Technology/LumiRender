@@ -44,8 +44,6 @@ namespace luminous {
             return _impl.get();
         }
 
-
-
         bool valid() const { return _impl != nullptr; }
 
         void clear() { _impl.reset(nullptr); }

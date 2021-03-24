@@ -8,14 +8,18 @@
 #include "core/backend/task.h"
 #include "cuda_device.h"
 #include "render/films/film_handle.h"
+#include "../mega_kernel_pt.h"
 
 namespace luminous {
     inline namespace gpu {
         class CUDATask : public Task {
         private:
-            unique_ptr<GPUScene> _scene{nullptr};
+            UP<GPUScene> _scene{nullptr};
             Buffer<float4> _accumulate_buffer{nullptr};
             Buffer<FrameBufferType> _frame_buffer{nullptr};
+
+            UP<Integrator> _integrator;
+
         public:
             CUDATask(Context *context)
                 : Task(create_cuda_device(), context) {}
@@ -25,8 +29,6 @@ namespace luminous {
             void update_device_buffer();
 
             void render_cli() override {}
-
-            void upload_data();
 
             int2 resolution();
 

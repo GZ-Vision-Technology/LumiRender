@@ -17,27 +17,16 @@ namespace luminous {
     inline namespace gpu {
         class GPUScene : public Scene {
         private:
-            Buffer<uint> _instance_to_mesh_idx{nullptr};
-            Buffer<uint> _instance_to_transform_idx{nullptr};
-            Buffer<float4x4> transforms{nullptr};
-
-            Buffer<MeshHandle> meshes{nullptr};
-            Buffer<float3> positions{nullptr};
-            Buffer<float3> normals{nullptr};
-            Buffer<float2> tex_coords{nullptr};
-            Buffer<TriangleHandle> triangles{nullptr};
-
-
+            // instance data
             Managed<uint*> _inst_to_mesh_idx;
             Managed<uint*> _inst_to_transform_idx;
             Managed<float4x4*> _transforms;
-
+            // mesh data
             Managed<MeshHandle*> _meshes;
             Managed<float3*> _positions;
             Managed<float3*> _normals;
             Managed<float2*> _tex_coords;
             Managed<TriangleHandle*> _triangles;
-
 
             SP<Device> _device;
             UP<OptixAccel> _optix_accel;
@@ -48,6 +37,8 @@ namespace luminous {
             void init(const SP<SceneGraph> &scene_graph) override;
 
             void create_device_memory();
+
+            void synchronize_to_gpu();
 
             void launch();
 

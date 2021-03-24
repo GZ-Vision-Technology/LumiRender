@@ -45,10 +45,6 @@ namespace luminous {
             _camera.update_pitch(d_pitch);
         }
 
-        void CUDATask::upload_data() {
-
-        }
-
         void CUDATask::update_film_resolution(int2 res) {
             auto film = _camera.film();
             film->set_resolution(res);
@@ -64,7 +60,6 @@ namespace luminous {
 
             _camera = SensorHandle::create(scene_graph->sensor_config);
             update_device_buffer();
-            upload_data();
 
             _scene->launch();
         }
@@ -79,7 +74,7 @@ namespace luminous {
         }
 
         void CUDATask::render_gui() {
-            upload_data();
+
         }
 
         int2 CUDATask::resolution() {

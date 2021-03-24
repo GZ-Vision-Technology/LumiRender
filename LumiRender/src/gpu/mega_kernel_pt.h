@@ -16,11 +16,14 @@ namespace luminous {
     inline namespace gpu {
         class MegaKernelPT : public Integrator {
         private:
+            Managed<SamplerHandle> _sampler;
+            Managed<SensorHandle> _camera;
 
         public:
-            void render() override {
 
-            }
+//            MegaKernelPT()
+
+            void render() override;
         };
     }
 }

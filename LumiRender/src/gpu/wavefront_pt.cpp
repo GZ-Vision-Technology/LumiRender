@@ -7,5 +7,8 @@
 namespace luminous {
     inline namespace gpu {
 
+        void WavefrontPT::render() {
+
+        }
     }
 }

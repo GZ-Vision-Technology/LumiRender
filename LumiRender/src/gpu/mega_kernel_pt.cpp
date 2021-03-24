@@ -3,3 +3,12 @@
 //
 
 #include "mega_kernel_pt.h"
+
+namespace luminous {
+    inline namespace gpu {
+
+        void MegaKernelPT::render() {
+
+        }
+    }
+}
