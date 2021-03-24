@@ -10,10 +10,11 @@
 #include "graphics/math/common.h"
 #include "render/sensors/sensor.h"
 #include "framework/optix_accel.h"
+#include "render/include/scene.h"
 
 namespace luminous {
     inline namespace gpu {
-        class GPUScene : public Noncopyable {
+        class GPUScene : public Scene {
         private:
             Buffer<uint> _instance_to_mesh_idx{nullptr};
             Buffer<uint> _instance_to_transform_idx{nullptr};
@@ -24,16 +25,6 @@ namespace luminous {
             Buffer<float3> _normals{nullptr};
             Buffer<float2> _tex_coords{nullptr};
             Buffer<TriangleHandle> _triangles{nullptr};
-
-            vector<uint> _cpu_instance_to_mesh_idx{};
-            vector<uint> _cpu_instance_to_transform_idx{};
-            vector<float4x4> _cpu_transforms{};
-
-            vector<MeshHandle> _cpu_meshes{};
-            vector<float3> _cpu_positions{};
-            vector<float3> _cpu_normals{};
-            vector<float2> _cpu_tex_coords{};
-            vector<TriangleHandle> _cpu_triangles{};
 
             SP<Device> _device;
             UP<OptixAccel> _optix_accel;
