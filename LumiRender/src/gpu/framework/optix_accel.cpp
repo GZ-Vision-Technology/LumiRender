@@ -346,7 +346,6 @@ namespace luminous {
 
             auto ias_buffer = _device->allocate_buffer(ias_buffer_sizes.outputSizeInBytes);
             auto temp_buffer = _device->allocate_buffer(ias_buffer_sizes.tempSizeInBytes);
-//            auto compact_size_buffer = _device->allocate_buffer<uint64_t>(1);
 
             vector<OptixInstance> optix_instances;
             optix_instances.reserve(instance_num);

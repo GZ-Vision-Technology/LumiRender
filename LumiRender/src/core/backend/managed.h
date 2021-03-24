@@ -14,12 +14,23 @@ namespace luminous {
     struct Managed : Noncopyable {
     private:
         static_assert(!std::is_pointer_v<std::remove_pointer_t<THost>>, "THost can not be the secondary pointer!");
-        THost _host;
+        THost _host{};
         Buffer <TDevice> _device_buffer{nullptr};
     public:
-        Managed(THost host, const std::shared_ptr<Device> &device, int n = 1)
+        Managed(THost host, const SP <Device> &device, int n = 1)
                 : _host(host) {
             _device_buffer = device->allocate_buffer<TDevice>(n);
+        }
+
+        Managed() {}
+
+        void reset(THost host, const SP <Device> &device, int n = 1) {
+            _device_buffer = device->allocate_buffer<TDevice>(n);
+            _host = host;
+        }
+
+        const Buffer <TDevice> &device_buffer() const {
+            return _device_buffer;
         }
 
         THost get() {
@@ -28,10 +39,10 @@ namespace luminous {
 
         template<typename T = void *>
         T device_ptr() const {
-            return _device_buffer.ptr();
+            return _device_buffer.template ptr<T>();
         }
 
-        auto operator[] (uint i) {
+        auto operator[](uint i) {
             static_assert(std::is_pointer_v<THost>, "subscript only operate pointer!");
             assert(i < _device_buffer.size());
             return _host[i];

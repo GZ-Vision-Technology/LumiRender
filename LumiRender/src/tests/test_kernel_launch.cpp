@@ -100,6 +100,9 @@ void test_managed() {
     auto hd = Managed(sampler, device);
     hd.synchronize_to_gpu();
 
+    Managed<SamplerHandle> s;
+
+
     cout << hd->to_string();
     ps = hd.device_ptr();
     kernel->launch(dispatcher, {&ps});

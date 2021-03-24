@@ -8,6 +8,7 @@
 #include "core/concepts.h"
 #include "graphics/math/common.h"
 #include "shape.h"
+#include "scene_graph.h"
 
 namespace luminous {
     inline namespace render {
@@ -25,6 +26,9 @@ namespace luminous {
             vector<TriangleHandle> _cpu_triangles{};
         public:
 
+            virtual void init(const SP<SceneGraph> &scene_graph) = 0;
+
+            void convert_geometry_data(const SP<SceneGraph> &scene_graph);
         };
     }
 }

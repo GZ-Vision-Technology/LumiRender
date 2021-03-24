@@ -46,7 +46,7 @@ namespace luminous {
         }
 
         void CUDATask::upload_data() {
-            _scene->update_camera(&_camera);
+
         }
 
         void CUDATask::update_film_resolution(int2 res) {
@@ -59,8 +59,8 @@ namespace luminous {
             auto scene_graph = parser.parse();
             scene_graph->create_shapes();
             _scene = make_unique<GPUScene>(_device);
-            _scene->convert_geometry_data(scene_graph);
-            _scene->build_accel();
+
+            _scene->init(scene_graph);
 
             _camera = SensorHandle::create(scene_graph->sensor_config);
             update_device_buffer();
