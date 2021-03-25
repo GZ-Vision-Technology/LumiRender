@@ -15,8 +15,8 @@ namespace luminous {
         using namespace std;
         class Scene : public Noncopyable {
         protected:
-            vector<uint> _cpu_instance_to_mesh_idx{};
-            vector<uint> _cpu_instance_to_transform_idx{};
+            vector<uint> _cpu_inst_to_mesh_idx{};
+            vector<uint> _cpu_inst_to_transform_idx{};
             vector<float4x4> _cpu_transforms{};
 
             vector<MeshHandle> _cpu_meshes{};
@@ -24,7 +24,11 @@ namespace luminous {
             vector<float3> _cpu_normals{};
             vector<float2> _cpu_tex_coords{};
             vector<TriangleHandle> _cpu_triangles{};
+
+
         public:
+
+            size_t size_in_bytes() const;
 
             virtual void init(const SP<SceneGraph> &scene_graph) = 0;
 

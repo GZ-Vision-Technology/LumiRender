@@ -19,10 +19,10 @@ namespace luminous {
         void GPUScene::create_device_memory() {
             {
                 // instance data
-                _inst_to_mesh_idx.reset(_cpu_instance_to_mesh_idx.data(), _device,
-                                        _cpu_instance_to_mesh_idx.size());
-                _inst_to_transform_idx.reset(_cpu_instance_to_transform_idx.data(), _device,
-                                             _cpu_instance_to_transform_idx.size());
+                _inst_to_mesh_idx.reset(_cpu_inst_to_mesh_idx.data(), _device,
+                                        _cpu_inst_to_mesh_idx.size());
+                _inst_to_transform_idx.reset(_cpu_inst_to_transform_idx.data(), _device,
+                                             _cpu_inst_to_transform_idx.size());
                 _transforms.reset(_cpu_transforms.data(), _device,
                                   _cpu_transforms.size());
             }
@@ -62,8 +62,8 @@ namespace luminous {
 
             _optix_accel->build_bvh(_positions.device_buffer(), _triangles.device_buffer(),
                                     _cpu_meshes,
-                                    _cpu_instance_to_mesh_idx, _cpu_transforms,
-                                    _cpu_instance_to_transform_idx);
+                                    _cpu_inst_to_mesh_idx, _cpu_transforms,
+                                    _cpu_inst_to_transform_idx);
             cout << _optix_accel->description() << endl;
         }
 
