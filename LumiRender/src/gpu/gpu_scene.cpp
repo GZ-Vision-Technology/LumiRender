@@ -67,9 +67,5 @@ namespace luminous {
             cout << _optix_accel->description() << endl;
         }
 
-        void GPUScene::launch() {
-
-        }
-
     }
 }

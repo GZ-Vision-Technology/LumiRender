@@ -12,7 +12,12 @@ __constant__ luminous::LaunchParams params;
 }
 
 GLOBAL __raygen__rg() {
-
+    const uint3 idx = optixGetLaunchIndex();
+    auto pFilm = luminous::make_float2(idx.x, idx.y);
+    auto camera = params.camera;
+    auto film = camera->film();
+//    printf("%s\n", film->name());
+    film->add_sample(pFilm, luminous::make_float3(1.f,0.2f,1.f), 1.f);
 }
 
 GLOBAL __miss__radiance() {

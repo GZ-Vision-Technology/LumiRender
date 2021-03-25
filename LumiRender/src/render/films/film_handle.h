@@ -13,7 +13,7 @@ namespace luminous {
     inline namespace render {
 
         using lstd::Variant;
-        class FilmHandle : public Variant<RGBFilm, GBufferFilm> {
+        class FilmHandle : public Variant<RGBFilm> {
         public:
             using Variant::Variant;
 
@@ -22,6 +22,8 @@ namespace luminous {
             NDSC_XPU Box2f screen_window() const;
 
             NDSC_XPU const char *name();
+
+            XPU void add_sample(float2 p_film, float3 color, float weight);
 
             XPU void set_resolution(int2 res);
 

@@ -17,15 +17,18 @@ namespace luminous {
         class MegaKernelPT : public Integrator {
         private:
             Managed<SamplerHandle> _sampler;
-            Managed<const SensorHandle *> _camera;
+            Managed<SensorHandle *> _camera;
             UP<GPUScene> _scene{nullptr};
             SP<Device> _device{};
+            Managed<LaunchParams> _launch_params;
         public:
 
             MegaKernelPT(const SP<Device> &device)
                     : _device(device) {}
 
             void init(const SP<SceneGraph> &scene_graph, SensorHandle *camera) override;
+
+            void init_launch_params();
 
             void update() override;
 

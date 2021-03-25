@@ -7,6 +7,13 @@
 namespace luminous {
     inline namespace gpu {
 
+        void MegaKernelPT::init_launch_params() {
+            LaunchParams lp{};
+            lp.camera = _camera.device_data();
+            _launch_params.reset(lp, _device);
+            _launch_params.synchronize_to_gpu();
+        }
+
         void MegaKernelPT::init(const std::shared_ptr<SceneGraph> &scene_graph,
                                 SensorHandle *camera) {
             _scene = make_unique<GPUScene>(_device);
@@ -14,10 +21,13 @@ namespace luminous {
             _camera.reset(camera, _device);
             auto sampler = SamplerHandle::create(scene_graph->sampler_config);
             _sampler.reset(sampler, _device);
+
+            init_launch_params();
         }
 
         void MegaKernelPT::render() {
-
+            auto res = _camera->resolution();
+            _scene->launch(res, _launch_params.device_data());
         }
 
         void MegaKernelPT::synchronize_to_gpu() {

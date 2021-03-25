@@ -40,7 +40,10 @@ namespace luminous {
 
             void synchronize_to_gpu();
 
-            void launch();
+            template<typename... Args>
+            void launch(Args &&...args) {
+                _optix_accel->launch(std::forward<Args>(args)...);
+            }
 
             void build_accel();
         };

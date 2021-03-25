@@ -3,12 +3,14 @@
 //
 
 #include "rgb.h"
+#include "graphics/optics/rgb.h"
 
 namespace luminous {
     inline namespace render {
 
         void RGBFilm::add_sample(float2 p_film, float3 color, float weight) {
-            //todo
+            auto p = make_int2(p_film);
+            _d_frame_buffer[p.y * _resolution.x + p.x] = make_rgba(color);
         }
 
         std::string RGBFilm::to_string() const {

@@ -44,7 +44,13 @@ namespace luminous {
             return _impl.get();
         }
 
-        bool valid() const { return _impl != nullptr; }
+        bool valid() const {
+#ifdef DEBUG_BUILD
+            if (_impl == nullptr)
+                std::cerr << "invalid buffer !!!" << std::endl;
+#endif
+            return _impl != nullptr;
+        }
 
         void clear() { _impl.reset(nullptr); }
 

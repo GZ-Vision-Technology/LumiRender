@@ -22,6 +22,10 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(set_resolution, res);
         }
 
+        void FilmHandle::add_sample(float2 p_film, float3 color, float weight) {
+            LUMINOUS_VAR_DISPATCH(add_sample, p_film, color, weight);
+        }
+
         void FilmHandle::set_accumulate_buffer(float4 *d_ptr) {
             LUMINOUS_VAR_DISPATCH(set_accumulate_buffer, d_ptr);
         }
@@ -53,5 +57,6 @@ namespace luminous {
         FilmHandle FilmHandle::create(const FilmConfig &config) {
             return detail::create_film<0>(config);
         }
+
     }
 }
