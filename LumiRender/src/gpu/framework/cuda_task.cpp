@@ -67,7 +67,9 @@ namespace luminous {
             _camera.film()->set_accumulate_buffer(_accumulate_buffer.data());
 
             _host_frame_buffer.resize(num);
+
             _frame_buffer.reset(_host_frame_buffer.data(), _device, num);
+            _frame_buffer.synchronize_to_gpu();
             _camera.film()->set_frame_buffer(_frame_buffer.device_data());
         }
 
