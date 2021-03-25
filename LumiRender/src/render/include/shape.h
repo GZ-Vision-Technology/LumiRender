@@ -58,6 +58,8 @@ namespace luminous {
         struct Model {
             Model(const std::filesystem::path &fn, uint subdiv_level = 0);
 
+            Model() {}
+
             vector<std::shared_ptr<const Mesh>> meshes;
             string key;
         };

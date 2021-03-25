@@ -25,10 +25,11 @@ namespace luminous {
             vector<float2> _cpu_tex_coords{};
             vector<TriangleHandle> _cpu_triangles{};
 
-
         public:
 
             size_t size_in_bytes() const;
+
+            void clear();
 
             virtual void init(const SP<SceneGraph> &scene_graph) = 0;
 

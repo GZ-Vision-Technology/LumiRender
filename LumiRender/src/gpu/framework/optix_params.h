@@ -33,7 +33,9 @@ namespace luminous {
         };
 
         struct HitGroupData {
-
+            float3 *positions;
+            float3 *normals;
+            float2 *tex_coords;
         };
 
         template<typename T>

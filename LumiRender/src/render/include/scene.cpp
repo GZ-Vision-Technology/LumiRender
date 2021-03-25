@@ -60,5 +60,17 @@ namespace luminous {
 
             return ret;
         }
+
+        void Scene::clear() {
+            _cpu_triangles.clear();
+            _cpu_tex_coords.clear();
+            _cpu_positions.clear();
+            _cpu_normals.clear();
+            _cpu_meshes.clear();
+            _cpu_transforms.clear();
+            _cpu_inst_to_mesh_idx.clear();
+            _cpu_inst_to_transform_idx.clear();
+        }
+
     }
 }

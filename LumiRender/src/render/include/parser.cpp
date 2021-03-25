@@ -36,7 +36,7 @@ namespace luminous {
         //				}
         TransformConfig parse_transform(const ParameterSet &ps) {
             TransformConfig ret;
-            ret.type = ps["type"].as_string();
+            ret.type = ps["type"].as_string("matrix4x4");
             auto param = ps["param"];
             if (ret.type == "matrix4x4") {
                 ret.mat4x4 = param["matrix4x4"].as_float4x4();
@@ -55,7 +55,7 @@ namespace luminous {
 
         //		{
         //			"name" : "c_box",
-        //			"type": "model",
+        //			"type": "model", or "quad"
         //			"params" : {
         //				"fn": "cornell_box.obj",
         //				"transform" : {
@@ -73,12 +73,18 @@ namespace luminous {
             ret.reserve(shapes.size());
             for (auto &shape : shapes) {
                 ShapeConfig shape_config;
-                shape_config.type = shape["type"];
+                shape_config.type = string(shape["type"]);
                 ParameterSet param(shape["param"]);
-                shape_config.subdiv_level = param["subdiv_level"].as_uint();
-                shape_config.fn = param["fn"].as_string();
+                if (shape_config.type == "model"){
+                    shape_config.subdiv_level = param["subdiv_level"].as_uint();
+                    shape_config.fn = param["fn"].as_string();
+                } else if (shape_config.type == "quad") {
+                    shape_config.width = param["width"].as_float(1);
+                    shape_config.height = param["height"].as_float(1);
+                }
                 shape_config.name = string(shape["name"]);
                 shape_config.o2w = parse_transform(param["transform"]);
+
                 ret.push_back(shape_config);
             }
             return move(ret);

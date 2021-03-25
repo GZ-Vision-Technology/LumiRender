@@ -70,6 +70,9 @@ namespace luminous {
             string name;
             TransformConfig o2w;
             uint subdiv_level;
+
+            float width;
+            float height;
         };
 
         struct FilterConfig {
@@ -113,6 +116,8 @@ namespace luminous {
             }
         public:
             explicit SceneGraph(Context *context) : _context(context) {}
+
+            SP<Model> create_shape(const ShapeConfig &config);
 
             void create_shape_instance(const ShapeConfig &config);
 

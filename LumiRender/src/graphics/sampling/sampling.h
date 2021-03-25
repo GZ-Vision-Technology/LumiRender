@@ -130,7 +130,7 @@ namespace luminous {
             XPU void merge(const VarianceEstimator &ve) {
                 if (ve.n == 0)
                     return;
-                _S = _S + ve._S + Sqr(ve._mean - _mean) * n * ve._n / (n + ve._n);
+                _S = _S + ve._S + sqr(ve._mean - _mean) * n * ve._n / (n + ve._n);
                 _mean = (_n * _mean + ve._n * ve._mean) / (_n + ve._n);
                 _n += ve._n;
             }

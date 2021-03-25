@@ -21,6 +21,22 @@
 		},
 		{
 			"name" : "c_box",
+			"type": "quad",
+			"param" : {
+				"width": 1,
+				"height": 1,
+				"transform" : {
+					"type" : "yaw_pitch",
+					"param" : {
+						"yaw" : 0,
+						"pitch": 80,
+						"position": [1,1,1]
+					}
+				}
+			}
+		},
+		{
+			"name" : "c_box",
 			"type": "model",
 			"param" : {
 				"fn": "cbox_smallbox.obj",
