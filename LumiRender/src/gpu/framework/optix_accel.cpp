@@ -374,13 +374,15 @@ namespace luminous {
             _as_buffer_list.push_back(move(ias_buffer));
         }
 
-        void OptixAccel::launch(int2 res, LaunchParams *d_params) {
+        void OptixAccel::launch(int2 res, Managed<LaunchParams> &launch_params) {
             auto stream = dynamic_cast<CUDADispatcher*>(_dispatcher.impl_mut())->stream;
             auto x = res.x;
             auto y = res.y;
+            launch_params->traversable_handle = _root_ias_handle;
+
             OPTIX_CHECK(optixLaunch(_optix_pipeline,
                                     stream,
-                                    reinterpret_cast<CUdeviceptr>(d_params),
+                                    launch_params.device_ptr<CUdeviceptr>(),
                                     sizeof(LaunchParams),
                                     &_sbt,
                                     x,

@@ -27,7 +27,7 @@ namespace luminous {
 
         void MegaKernelPT::render() {
             auto res = _camera->resolution();
-            _scene->launch(res, _launch_params.device_data());
+            _scene->launch(res, _launch_params);
         }
 
         void MegaKernelPT::synchronize_to_gpu() {

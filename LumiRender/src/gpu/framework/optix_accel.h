@@ -9,6 +9,7 @@
 #include "graphics/geometry/common.h"
 #include "render/include/scene_graph.h"
 #include "optix_params.h"
+#include "core/backend/managed.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -80,7 +81,7 @@ namespace luminous {
 
             size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 
-            void launch(int2 res, LaunchParams *d_params);
+            void launch(int2 res, Managed<LaunchParams> &launch_params);
 
             NDSC std::string description() const;
 
