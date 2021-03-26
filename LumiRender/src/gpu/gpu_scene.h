@@ -18,15 +18,15 @@ namespace luminous {
         class GPUScene : public Scene {
         private:
             // instance data
-            Managed<uint*> _inst_to_mesh_idx;
-            Managed<uint*> _inst_to_transform_idx;
-            Managed<float4x4*> _transforms;
+            Managed_old<uint*> _inst_to_mesh_idx;
+            Managed_old<uint*> _inst_to_transform_idx;
+            Managed_old<float4x4*> _transforms;
             // mesh data
-            Managed<MeshHandle*> _meshes;
-            Managed<float3*> _positions;
-            Managed<float3*> _normals;
-            Managed<float2*> _tex_coords;
-            Managed<TriangleHandle*> _triangles;
+            Managed_old<MeshHandle*> _meshes;
+            Managed_old<float3*> _positions;
+            Managed_old<float3*> _normals;
+            Managed_old<float2*> _tex_coords;
+            Managed_old<TriangleHandle*> _triangles;
 
             SP<Device> _device;
             UP<OptixAccel> _optix_accel;

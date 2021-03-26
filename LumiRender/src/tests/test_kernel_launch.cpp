@@ -96,11 +96,14 @@ void test_managed() {
     buffer.upload(&sampler);
     auto ps = buffer.ptr();
 
+    int a[10] = {1,2,3};
 
-    auto hd = Managed(sampler, device);
+
+
+    auto hd = Managed_old(sampler, device);
     hd.synchronize_to_gpu();
 
-    Managed<SamplerHandle> s;
+    Managed_old<SamplerHandle> s;
     s.reset(sampler, device);
     s.synchronize_to_gpu();
     cout << s->to_string();
