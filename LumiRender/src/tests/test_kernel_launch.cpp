@@ -98,20 +98,16 @@ void test_managed() {
 
     int a[10] = {1,2,3};
 
-
-
-    auto hd = Managed_old(sampler, device);
-    hd.synchronize_to_gpu();
-
-    Managed_old<SamplerHandle> s;
-    s.reset(sampler, device);
+    Managed<SamplerHandle> s;
+    s.reset(&sampler, device);
     s.synchronize_to_gpu();
-    cout << s->to_string();
     ps = s.device_ptr();
     kernel->launch(dispatcher, {&ps});
     dispatcher.wait();
     s.synchronize_to_cpu();
     cout << s->next_1d() << endl;
+
+    
 }
 
 int main() {
