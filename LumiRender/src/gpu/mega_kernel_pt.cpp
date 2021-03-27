@@ -10,7 +10,7 @@ namespace luminous {
         void MegaKernelPT::init_launch_params() {
             LaunchParams lp{};
             lp.camera = _camera.device_data();
-            _launch_params.reset(lp, _device);
+            _launch_params.reset(&lp, _device);
             _launch_params.synchronize_to_gpu();
         }
 
@@ -20,7 +20,7 @@ namespace luminous {
             _scene->init(scene_graph);
             _camera.reset(camera, _device);
             auto sampler = SamplerHandle::create(scene_graph->sampler_config);
-            _sampler.reset(sampler, _device);
+            _sampler.reset(&sampler, _device);
 
             init_launch_params();
         }

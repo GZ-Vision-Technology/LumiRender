@@ -10,73 +10,6 @@
 #include "core/concepts.h"
 
 namespace luminous {
-    template<typename THost, typename TDevice = std::remove_pointer_t<THost>>
-    struct Managed_old : Noncopyable {
-    private:
-        static_assert(!std::is_pointer_v<std::remove_pointer_t<THost>>, "THost can not be the secondary pointer!");
-        THost _host{};
-        Buffer <TDevice> _device_buffer{nullptr};
-    public:
-        Managed_old(THost host, const SP <Device> &device, int n = 1)
-                : _host(host) {
-            _device_buffer = device->allocate_buffer<TDevice>(n);
-        }
-
-        Managed_old() {}
-
-        void reset(THost host, const SP <Device> &device, int n = 1) {
-            _device_buffer = device->allocate_buffer<TDevice>(n);
-            _host = host;
-        }
-
-        const Buffer <TDevice> &device_buffer() const {
-            return _device_buffer;
-        }
-
-        THost get() {
-            return _host;
-        }
-
-        template<typename T = void *>
-        T device_ptr() const {
-            return _device_buffer.ptr<T>();
-        }
-
-        auto device_data() const {
-            return _device_buffer.data();
-        }
-
-        auto operator[](uint i) {
-            static_assert(std::is_pointer_v<THost>, "subscript only operate pointer!");
-            assert(i < _device_buffer.size());
-            return _host[i];
-        }
-
-        auto operator->() {
-            if constexpr (std::is_pointer_v<THost>) {
-                return _host;
-            } else {
-                return &_host;
-            }
-        }
-
-        void synchronize_to_gpu() {
-            if constexpr (std::is_pointer_v<THost>) {
-                _device_buffer.upload(_host);
-            } else {
-                _device_buffer.upload(&_host);
-            }
-        }
-
-        void synchronize_to_cpu() {
-            if constexpr (std::is_pointer_v<THost>) {
-                _device_buffer.download(_host);
-            } else {
-                _device_buffer.download(&_host);
-            }
-        }
-    };
-
     template<typename THost, typename TDevice = THost>
     struct Managed : Noncopyable {
     private:
@@ -115,7 +48,7 @@ namespace luminous {
             _host.reset(nullptr);
         }
 
-        THost get() {
+        THost * get() {
             return _host.get();
         }
 
@@ -124,11 +57,11 @@ namespace luminous {
             return _device_buffer.ptr<T>();
         }
 
-        TDevice device_data() const {
+        TDevice* device_data() const {
             return _device_buffer.data();
         }
 
-        auto operator[](uint i) {
+        THost operator[](uint i) {
             assert(i < _device_buffer.size());
             return _host.get()[i];
         }

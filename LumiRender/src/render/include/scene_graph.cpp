@@ -40,6 +40,8 @@ namespace luminous {
                 model->meshes.push_back(mesh);
 
                 return model;
+            } else {
+                LUMINOUS_ERROR("unknown shape type !")
             }
         }
 

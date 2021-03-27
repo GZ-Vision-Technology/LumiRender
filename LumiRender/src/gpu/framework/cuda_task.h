@@ -16,11 +16,9 @@ namespace luminous {
         class CUDATask : public Task {
         private:
 
-            vector<FrameBufferType> _host_frame_buffer;
-
             Buffer<float4> _accumulate_buffer{nullptr};
 
-            Managed_old<FrameBufferType *> _frame_buffer;
+            Managed<FrameBufferType> _frame_buffer;
 
             UP<Integrator> _integrator;
 

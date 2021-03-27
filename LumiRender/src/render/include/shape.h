@@ -26,6 +26,7 @@ namespace luminous {
         };
 
         struct MeshHandle {
+            MeshHandle() = default;
             MeshHandle(uint vert_ofs, uint tri_ofs, uint vert_count, uint tri_count)
                     : vertex_offset(vert_ofs),
                       triangle_offset(tri_ofs),

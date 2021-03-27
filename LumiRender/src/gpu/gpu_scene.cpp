@@ -19,20 +19,18 @@ namespace luminous {
         void GPUScene::create_device_memory() {
             {
                 // instance data
-                _inst_to_mesh_idx.reset(_cpu_inst_to_mesh_idx.data(), _device,
-                                        _cpu_inst_to_mesh_idx.size());
-                _inst_to_transform_idx.reset(_cpu_inst_to_transform_idx.data(), _device,
-                                             _cpu_inst_to_transform_idx.size());
-                _transforms.reset(_cpu_transforms.data(), _device,
-                                  _cpu_transforms.size());
+                _inst_to_mesh_idx.reset(_cpu_inst_to_mesh_idx, _device);
+                _inst_to_transform_idx.reset(_cpu_inst_to_transform_idx, _device);
+                _transforms.reset(_cpu_transforms, _device);
             }
             {
                 // mesh data
-                _meshes.reset(_cpu_meshes.data(), _device, _cpu_meshes.size());
-                _positions.reset(_cpu_positions.data(), _device, _cpu_positions.size());
-                _tex_coords.reset(_cpu_tex_coords.data(), _device, _cpu_tex_coords.size());
-                _triangles.reset(_cpu_triangles.data(), _device, _cpu_triangles.size());
+                _meshes.reset(_cpu_meshes, _device);
+                _positions.reset(_cpu_positions, _device);
+                _tex_coords.reset(_cpu_tex_coords, _device);
+                _triangles.reset(_cpu_triangles, _device);
             }
+            clear_host();
         }
 
         void GPUScene::synchronize_to_gpu() {
@@ -66,6 +64,5 @@ namespace luminous {
                                     _cpu_inst_to_transform_idx);
             cout << _optix_accel->description() << endl;
         }
-
     }
 }

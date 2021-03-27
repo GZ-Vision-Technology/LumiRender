@@ -56,8 +56,10 @@ namespace luminous {
             scene_graph->create_shapes();
             _camera = SensorHandle::create(scene_graph->sensor_config);
             _integrator = make_unique<MegaKernelPT>(_device);
-            _integrator->init(scene_graph, &_camera);
+
             update_device_buffer();
+
+            _integrator->init(scene_graph, &_camera);
         }
 
         void CUDATask::update_device_buffer() {
@@ -66,9 +68,9 @@ namespace luminous {
             _accumulate_buffer = _device->allocate_buffer<float4>(num);
             _camera.film()->set_accumulate_buffer(_accumulate_buffer.data());
 
-            _host_frame_buffer.resize(num);
+            vector<FrameBufferType> v(num);
 
-            _frame_buffer.reset(_host_frame_buffer.data(), _device, num);
+            _frame_buffer.reset(v, _device);
             _frame_buffer.synchronize_to_gpu();
             _camera.film()->set_frame_buffer(_frame_buffer.device_data());
         }

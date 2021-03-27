@@ -16,11 +16,11 @@ namespace luminous {
     inline namespace gpu {
         class MegaKernelPT : public Integrator {
         private:
-            Managed_old<SamplerHandle> _sampler;
-            Managed_old<SensorHandle *> _camera;
+            Managed<SamplerHandle> _sampler;
+            Managed<SensorHandle> _camera;
             UP<GPUScene> _scene{nullptr};
             SP<Device> _device{};
-            Managed_old<LaunchParams> _launch_params;
+            Managed<LaunchParams> _launch_params;
         public:
 
             MegaKernelPT(const SP<Device> &device)
