@@ -27,6 +27,8 @@ namespace luminous {
 
         public:
 
+            void shrink_to_fit();
+
             size_t size_in_bytes() const;
 
             void clear();

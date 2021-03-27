@@ -96,18 +96,25 @@ void test_managed() {
     buffer.upload(&sampler);
     auto ps = buffer.ptr();
 
-    int a[10] = {1,2,3};
-
     Managed<SamplerHandle> s;
-    s.reset(&sampler, device);
+
+    vector<SamplerHandle> v;
+
+    v.push_back(sampler);
+    v.push_back(sampler);
+
+//    s.reset(&sampler, device);
+    s.reset(v,device);
+    cout << v[0].to_string() << endl;
     s.synchronize_to_gpu();
     ps = s.device_ptr();
     kernel->launch(dispatcher, {&ps});
     dispatcher.wait();
     s.synchronize_to_cpu();
-    cout << s->next_1d() << endl;
+    cout << s[1].next_1d() << endl;
 
-    
+    cout << sizeof(vector<SamplerHandle>);
+
 }
 
 int main() {

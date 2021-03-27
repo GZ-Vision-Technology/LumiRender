@@ -45,6 +45,7 @@ namespace luminous {
                 }
                 _cpu_transforms.push_back(instance->o2w.mat4x4());
             }
+            _cpu_inst_to_transform_idx.shrink_to_fit();
         }
 
         size_t Scene::size_in_bytes() const {
@@ -70,6 +71,17 @@ namespace luminous {
             _cpu_transforms.clear();
             _cpu_inst_to_mesh_idx.clear();
             _cpu_inst_to_transform_idx.clear();
+        }
+
+        void Scene::shrink_to_fit() {
+            _cpu_triangles.shrink_to_fit();
+            _cpu_tex_coords.shrink_to_fit();
+            _cpu_positions.shrink_to_fit();
+            _cpu_normals.shrink_to_fit();
+            _cpu_meshes.shrink_to_fit();
+            _cpu_transforms.shrink_to_fit();
+            _cpu_inst_to_mesh_idx.shrink_to_fit();
+            _cpu_inst_to_transform_idx.shrink_to_fit();
         }
 
     }

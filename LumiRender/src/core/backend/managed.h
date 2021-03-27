@@ -129,7 +129,6 @@ namespace luminous {
         }
 
         auto operator[](uint i) {
-            static_assert(std::is_pointer_v<THost>, "subscript only operate pointer!");
             assert(i < _device_buffer.size());
             return _host.get()[i];
         }
