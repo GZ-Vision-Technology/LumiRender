@@ -111,7 +111,7 @@ void test_managed() {
     kernel->launch(dispatcher, {&ps});
     dispatcher.wait();
     s.synchronize_to_cpu();
-    cout << s[1].next_1d() << endl;
+    cout << s[0].next_1d() << endl;
 
     cout << sizeof(vector<SamplerHandle>);
 

@@ -19,18 +19,17 @@ namespace luminous {
         void GPUScene::create_device_memory() {
             {
                 // instance data
-                _inst_to_mesh_idx.reset(_cpu_inst_to_mesh_idx, _device);
-                _inst_to_transform_idx.reset(_cpu_inst_to_transform_idx, _device);
-                _transforms.reset(_cpu_transforms, _device);
+                _inst_to_mesh_idx.reset(move(_cpu_inst_to_mesh_idx), _device);
+                _inst_to_transform_idx.reset(move(_cpu_inst_to_transform_idx), _device);
+                _transforms.reset(move(_cpu_transforms), _device);
             }
             {
                 // mesh data
-                _meshes.reset(_cpu_meshes, _device);
-                _positions.reset(_cpu_positions, _device);
-                _tex_coords.reset(_cpu_tex_coords, _device);
-                _triangles.reset(_cpu_triangles, _device);
+                _meshes.reset(move(_cpu_meshes), _device);
+                _positions.reset(move(_cpu_positions), _device);
+                _tex_coords.reset(move(_cpu_tex_coords), _device);
+                _triangles.reset(move(_cpu_triangles), _device);
             }
-            clear_host();
         }
 
         void GPUScene::synchronize_to_gpu() {
@@ -57,11 +56,12 @@ namespace luminous {
         }
 
         void GPUScene::build_accel() {
-
-            _optix_accel->build_bvh(_positions.device_buffer(), _triangles.device_buffer(),
-                                    _cpu_meshes,
-                                    _cpu_inst_to_mesh_idx, _cpu_transforms,
-                                    _cpu_inst_to_transform_idx);
+            _optix_accel->build_bvh(_positions.device_buffer(),
+                                    _triangles.device_buffer(),
+                                    _meshes.vector(),
+                                    _inst_to_mesh_idx.vector(),
+                                    _transforms.vector(),
+                                    _inst_to_transform_idx.vector());
             cout << _optix_accel->description() << endl;
         }
     }

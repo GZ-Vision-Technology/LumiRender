@@ -39,7 +39,7 @@ namespace luminous {
             void create_device_memory();
 
             inline void clear_host() {
-//                Scene::clear();
+                Scene::clear();
             }
 
             void synchronize_to_gpu();
