@@ -313,7 +313,7 @@ namespace luminous {
             }
 
             CU_CHECK(cuCtxSynchronize());
-
+            _root_gas_handle = traversable_handle;
             return traversable_handle;
         }
 
@@ -379,7 +379,7 @@ namespace luminous {
             auto x = res.x;
             auto y = res.y;
             launch_params->traversable_handle = _root_ias_handle;
-
+            launch_params.synchronize_to_gpu();
             OPTIX_CHECK(optixLaunch(_optix_pipeline,
                                     stream,
                                     launch_params.device_ptr<CUdeviceptr>(),

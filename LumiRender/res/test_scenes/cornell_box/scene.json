@@ -30,7 +30,7 @@
 					"param" : {
 						"yaw" : 0,
 						"pitch": 0,
-						"position": [1,1,1]
+						"position": [0,0,0]
 					}
 				}
 			}

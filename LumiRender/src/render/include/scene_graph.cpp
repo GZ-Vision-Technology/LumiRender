@@ -34,7 +34,7 @@ namespace luminous {
                                   make_float2(0, 0)};
 
                 vector<TriangleHandle> triangles{TriangleHandle{0,1,2},
-                                                 TriangleHandle{3,1,2}};
+                                                 TriangleHandle{2,1,3}};
 
                 auto mesh = make_shared<Mesh>(move(P),move(N), move(UV), move(triangles));
                 model->meshes.push_back(mesh);
