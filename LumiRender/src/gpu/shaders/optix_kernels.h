@@ -47,10 +47,34 @@ static __forceinline__ __device__ void traceRadiance(
             tmax,
             0.0f,                // rayTime
             OptixVisibilityMask( 1 ),
-            OPTIX_RAY_FLAG_NONE,
+            OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT,
             luminous::RayType::Radiance,        // SBT offset
             luminous::RayType::Count,           // SBT stride
             luminous::RayType::Radiance,        // missSBTIndex
             u0, u1 );
-//    printf("sdaf-----------\n");
+}
+
+static __forceinline__ __device__ bool traceOcclusion(
+        OptixTraversableHandle handle,
+        float3                 ray_origin,
+        float3                 ray_direction,
+        float                  tmin,
+        float                  tmax
+)
+{
+    unsigned int occluded = 0u;
+    optixTrace(
+            handle,
+            ray_origin,
+            ray_direction,
+            tmin,
+            tmax,
+            0.0f,                    // rayTime
+            OptixVisibilityMask( 1 ),
+            OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT,
+            luminous::RayType::Occlusion,        // SBT offset
+            luminous::RayType::Count,           // SBT stride
+            luminous::RayType::Occlusion,        // missSBTIndex
+            occluded );
+    return occluded;
 }
