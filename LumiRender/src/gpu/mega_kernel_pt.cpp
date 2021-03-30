@@ -14,15 +14,29 @@ namespace luminous {
             _launch_params.synchronize_to_gpu();
         }
 
-        void MegaKernelPT::init(const std::shared_ptr<SceneGraph> &scene_graph,
-                                SensorHandle *camera) {
+        void MegaKernelPT::init(const std::shared_ptr<SceneGraph> &scene_graph) {
             _scene = make_unique<GPUScene>(_device);
             _scene->init(scene_graph);
-            _camera.reset(camera, _device);
+            auto camera = SensorHandle::create(scene_graph->sensor_config);
+            _camera.reset(&camera, _device);
             auto sampler = SamplerHandle::create(scene_graph->sampler_config);
             _sampler.reset(&sampler, _device);
 
             init_launch_params();
+        }
+
+        void MegaKernelPT::update_camera_fov_y(float val) {
+            _camera->update_fov_y(val);
+        }
+
+        void MegaKernelPT::update_camera_view(float d_yaw, float d_pitch) {
+            _camera->update_yaw(d_yaw);
+            _camera->update_pitch(d_pitch);
+        }
+
+        void MegaKernelPT::update_film_resolution(int2 res) {
+            auto film = _camera->film();
+            film->set_resolution(res);
         }
 
         void MegaKernelPT::render() {
@@ -36,6 +50,10 @@ namespace luminous {
 
         void MegaKernelPT::update() {
             synchronize_to_gpu();
+        }
+
+        SensorHandle *MegaKernelPT::camera() {
+            return _camera.get();
         }
     }
 }

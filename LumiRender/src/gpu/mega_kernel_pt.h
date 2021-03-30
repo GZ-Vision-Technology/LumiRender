@@ -26,15 +26,23 @@ namespace luminous {
             MegaKernelPT(const SP<Device> &device)
                     : _device(device) {}
 
-            void init(const SP<SceneGraph> &scene_graph, SensorHandle *camera) override;
+            void init(const SP<SceneGraph> &scene_graph) override;
 
             void init_launch_params();
+
+            SensorHandle *camera() override;
 
             void update() override;
 
             void synchronize_to_gpu();
 
             void render() override;
+
+            void update_camera_fov_y(float val);
+
+            void update_camera_view(float d_yaw, float d_pitch);
+
+            void update_film_resolution(int2 res);
         };
     }
 }

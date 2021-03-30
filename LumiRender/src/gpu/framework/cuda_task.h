@@ -32,6 +32,8 @@ namespace luminous {
 
             void render_cli() override {}
 
+            SensorHandle * camera();
+
             FrameBufferType *download_frame_buffer();
 
             int2 resolution();

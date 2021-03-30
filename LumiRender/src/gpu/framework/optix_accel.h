@@ -50,7 +50,6 @@ namespace luminous {
 
             OptixShaderBindingTable _sbt{};
             OptixTraversableHandle _root_ias_handle{};
-            OptixTraversableHandle _root_gas_handle{};
 
             size_t _bvh_size_in_bytes{0u};
 

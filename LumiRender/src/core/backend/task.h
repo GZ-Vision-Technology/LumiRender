@@ -18,8 +18,6 @@ namespace luminous {
     protected:
         shared_ptr<Device> _device{nullptr};
         Context * _context{nullptr};
-        SensorHandle _camera;
-        SamplerHandle _sampler;
     public:
         Task(const shared_ptr<Device> &device, Context *context)
             : _device(device),

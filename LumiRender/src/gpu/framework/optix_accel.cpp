@@ -313,7 +313,6 @@ namespace luminous {
             }
 
             CU_CHECK(cuCtxSynchronize());
-            _root_gas_handle = traversable_handle;
             return traversable_handle;
         }
 

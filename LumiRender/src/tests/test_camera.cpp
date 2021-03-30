@@ -24,18 +24,15 @@ void test_sensor() {
     TransformConfig tc;
     tc.type = "yaw_pitch";
 
-    tc.yaw = -180;
+    tc.yaw = 0;
     tc.pitch = 0;
     tc.position = make_float3(2,3,5);
-
+    config.film_config.type = "RGBFilm";
+    config.film_config.resolution = make_int2(500,500);
     tc.mat4x4 = make_float4x4(1);
     config.transform_config = tc;
 
     auto camera = SensorHandle::create(config);
-
-    auto film = create_film();
-
-    camera.set_film(film);
 
     SensorSample ss;
     ss.p_film = make_float2(250,250);
@@ -56,13 +53,13 @@ void test_sensor() {
     config.transform_config = tc;
     auto c2 = SensorHandle::create(config);
 
-    cout << camera.to_string() << endl;
-
-    auto f = camera.film();
-    cout << f->to_string() << endl;
-    f->set_resolution(make_int2(300));
-    auto f2 = camera.film();
-    cout << f2->to_string();
+//    cout << camera.to_string() << endl;
+//
+//    auto f = camera.film();
+//    cout << f->to_string() << endl;
+//    f->set_resolution(make_int2(300));
+//    auto f2 = camera.film();
+//    cout << f2->to_string();
 }
 
 int main() {

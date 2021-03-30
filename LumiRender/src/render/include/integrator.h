@@ -14,7 +14,9 @@ namespace luminous {
     public:
         virtual ~Integrator() {}
 
-        virtual void init(const std::shared_ptr<SceneGraph> &scene_graph, SensorHandle *camera) = 0;
+        virtual void init(const std::shared_ptr<SceneGraph> &scene_graph) = 0;
+
+        virtual SensorHandle *camera() = 0;
 
         virtual void update() = 0;
 
