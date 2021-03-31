@@ -59,7 +59,7 @@ namespace luminous {
         get_user_ptr(window)->on_scroll_event(scroll_x, scroll_y);
     }
 
-    auto cur_time() {
+    auto get_cur_time() {
         return std::chrono::system_clock::now();
     }
 
@@ -99,6 +99,7 @@ namespace luminous {
         init_event_cb();
         init_imgui();
         init_gl_context();
+        update_time();
     }
 
     void App::init_gl_context() {
@@ -155,11 +156,20 @@ namespace luminous {
     }
 
     void App::update_time() {
-        _last_frame_t = cur_time();
+        _last_frame_t = get_cur_time();
+    }
+
+    void App::render() {
+        auto dt = compute_dt();
+        update_time();
+        cout << dt << endl;
+        _task->render_gui(dt);
     }
 
     double App::compute_dt() {
-        return 0;
+        auto cur_time = get_cur_time();
+        auto duration = duration_cast<microseconds>(cur_time - _last_frame_t);
+        return double(duration.count()) * microseconds::period::num / microseconds::period::den;
     }
 
     int App::run() {
@@ -167,7 +177,7 @@ namespace luminous {
             imgui_begin();
             glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
             glClear(GL_COLOR_BUFFER_BIT);
-            render(0);
+            render();
             update_render_texture();
             draw();
             imgui_end();
@@ -193,10 +203,6 @@ namespace luminous {
         glUseProgram(_gl_ctx.program);
         glBindVertexArray(_gl_ctx.vao);
         glDrawArrays(GL_TRIANGLES, 0, 6);
-    }
-
-    void App::render(double dt) {
-        _task->render_gui(dt);
     }
 
     void App::init_window(const std::string &title, const int2 &size) {
@@ -242,6 +248,4 @@ namespace luminous {
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, res.x, res.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, test_color);
     }
-
-
 }

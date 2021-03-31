@@ -62,7 +62,7 @@ namespace luminous {
 
         void set_title(const std::string &s);
 
-        void render(double dt);
+        void render();
 
         void update_time();
 

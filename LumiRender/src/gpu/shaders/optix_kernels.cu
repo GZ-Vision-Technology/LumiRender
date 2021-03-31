@@ -16,10 +16,10 @@ GLOBAL __raygen__rg() {
     auto pFilm = luminous::make_float2(idx.x, idx.y);
     auto camera = params.camera;
     auto film = camera->film();
-    if (idx.x == 0 && idx.y == 0) {
-        auto f = camera->forward();
-        printf("%f,%f,%f\n", f.x,f.y,f.z);
-    }
+//    if (idx.x == 0 && idx.y == 0) {
+//        auto f = camera->forward();
+//        printf("%f,%f,%f\n", f.x,f.y,f.z);
+//    }
 ////    printf("%s\n", film->name());
     film->add_sample(pFilm, luminous::make_float3(1.f,0.2f,1.f), 1.f);
 //
