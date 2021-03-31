@@ -11,10 +11,9 @@ namespace luminous {
                 : _position(pos), _fov_y(fov_y) {}
 
         CameraBase::CameraBase(const float4x4 m, float fov_y, float velocity)
-                : _fov_y(fov_y),
-                  _velocity(velocity) {
+                : _velocity(velocity) {
             _update(m);
-            _camera_to_screen = Transform::perspective(fov_y, 0.01, 1000);
+            set_fov_y(_fov_y);
         }
 
         void CameraBase::_update(const float4x4 &m) {
@@ -99,11 +98,11 @@ namespace luminous {
             } else {
                 _fov_y = new_fov_y;
             }
+            _camera_to_screen = Transform::perspective(_fov_y, z_near, z_far);
         }
 
         void CameraBase::update_fov_y(float val) {
-            float new_fov_y = _fov_y + val;
-            set_fov_y(new_fov_y);
+            set_fov_y(_fov_y + val);
         }
 
         void CameraBase::set_velocity(float val) {

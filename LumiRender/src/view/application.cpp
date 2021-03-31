@@ -162,7 +162,6 @@ namespace luminous {
     void App::render() {
         auto dt = compute_dt();
         update_time();
-        cout << dt << endl;
         _task->render_gui(dt);
     }
 

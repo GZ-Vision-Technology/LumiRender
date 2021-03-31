@@ -54,6 +54,26 @@ static __forceinline__ __device__ void traceRadiance(
             u0, u1 );
 }
 
+static __forceinline__ GPU bool traceOcclusion(OptixTraversableHandle handle, luminous::Ray ray) {
+    unsigned int occluded = 0u;
+    float3 origin = make_float3(ray.org_x, ray.org_y, ray.org_z);
+    float3 direction = make_float3(ray.dir_x, ray.dir_y, ray.dir_z);
+    optixTrace(
+            handle,
+            origin,
+            direction,
+            ray.t_min,
+            ray.t_max,
+            0.0f,                    // rayTime
+            OptixVisibilityMask( 1 ),
+            OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT,
+            luminous::RayType::Occlusion,        // SBT offset
+            luminous::RayType::Count,           // SBT stride
+            luminous::RayType::Occlusion,        // missSBTIndex
+            occluded );
+    return false;
+}
+
 static __forceinline__ __device__ bool traceOcclusion(
         OptixTraversableHandle handle,
         float3                 ray_origin,

@@ -10,54 +10,54 @@
 namespace luminous {
     inline namespace geometry {
         struct alignas(16) Ray {
-        private:
-            float _origin_x{};
-            float _origin_y{};
-            float _origin_z{};
-            float _t_min{};
-            float _direction_x{};
-            float _direction_y{};
-            float _direction_z{};
-            float _t_max{};
         public:
-            explicit XPU Ray(float t_max = luminous::constant::PosInfTy(),
-                             float t_min = 0) noexcept: _t_min(t_min),
-                                                        _t_max(t_max) {}
+            float org_x{0.f};
+            float org_y{0.f};
+            float org_z{0.f};
+            float t_min{0.f};
+            float dir_x{0.f};
+            float dir_y{0.f};
+            float dir_z{0.f};
+            float t_max{0.f};
+        public:
+            explicit XPU Ray(float t_max = ray_t_max,
+                             float t_min = 0) noexcept: t_min(t_min),
+                                                        t_max(t_max) {}
 
             XPU Ray(const float3 origin, const float3 direction,
-                    float t_max = luminous::constant::PosInfTy(),
+                    float t_max = ray_t_max,
                     float t_min = 0) noexcept:
-                    _t_min(t_min),
-                    _t_max(t_max) {
+                    t_min(t_min),
+                    t_max(t_max) {
                 update_origin(origin);
                 update_direction(direction);
             }
 
             XPU void update_origin(const float3 origin) noexcept {
-                _origin_x = origin.x;
-                _origin_y = origin.y;
-                _origin_z = origin.z;
+                org_x = origin.x;
+                org_y = origin.y;
+                org_z = origin.z;
             }
 
             XPU void update_direction(const float3 direction) noexcept {
-                _direction_x = direction.x;
-                _direction_y = direction.y;
-                _direction_z = direction.z;
+                dir_x = direction.x;
+                dir_y = direction.y;
+                dir_z = direction.z;
             }
 
             XPU [[nodiscard]] float3 origin() const noexcept {
-                return make_float3(_origin_x, _origin_y, _origin_z);
+                return make_float3(org_x, org_y, org_z);
             }
 
             XPU [[nodiscard]] float3 direction() const noexcept {
-                return make_float3(_direction_x, _direction_y, _direction_z);
+                return make_float3(dir_x, dir_y, dir_z);
             }
 
             [[nodiscard]] std::string to_string() const {
                 return string_printf("ray:{origin:%s,direction:%s,tmin:%f,tmax:%f}",
                                      origin().to_string().c_str(),
                                      direction().to_string().c_str(),
-                                     _t_min, _t_max);
+                                     t_min, t_max);
             }
         };
 

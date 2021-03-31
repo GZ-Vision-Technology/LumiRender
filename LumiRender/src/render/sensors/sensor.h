@@ -14,6 +14,8 @@ namespace luminous {
     inline namespace render {
         class CameraBase {
         protected:
+            constexpr static float z_near = 0.01f;
+            constexpr static float z_far = 1000.f;
             constexpr static float fov_max = 120.f;
             constexpr static float fov_min = 20.f;
             constexpr static float pitch_max = 80.f;
@@ -21,7 +23,7 @@ namespace luminous {
             constexpr static float3 up_vec = make_float3(0, 1, 0);
             constexpr static float3 forward_vec = make_float3(0, 0, 1);
             float3 _position;
-            float _fov_y;
+            float _fov_y{0};
             float _yaw{};
             float _pitch{};
             float _velocity{};
@@ -30,7 +32,7 @@ namespace luminous {
             Transform _camera_to_screen{};
             Transform _raster_to_camera{};
             FilmHandle _film;
-            void _update(const float4x4 &m);
+            XPU void _update(const float4x4 &m);
 
         public:
             XPU CameraBase(float3 pos = make_float3(0), float fov_y = 30);
