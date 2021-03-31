@@ -25,7 +25,7 @@ namespace luminous {
 
         virtual void init(const Parser &parser) = 0;
 
-        virtual void render_gui() = 0;
+        virtual void render_gui(double dt) = 0;
 
         virtual void render_cli() = 0;
     };

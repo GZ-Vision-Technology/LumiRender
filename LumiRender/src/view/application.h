@@ -14,9 +14,10 @@
 #include "graphics/math/common.h"
 #include "gl_helper.h"
 #include "gpu/framework/cuda_task.h"
+#include <chrono>
 
 namespace luminous {
-
+    using namespace std::chrono;
     class App {
         struct GLContext {
             GLuint program{0};
@@ -33,6 +34,8 @@ namespace luminous {
         int2 _last_mouse_pos = make_int2(0);
 
         unique_ptr<CUDATask> _task;
+
+        system_clock::time_point _last_frame_t;
 
     public:
         App(const std::string &title, const int2 &size, Context *context, const Parser &parser);
@@ -59,17 +62,17 @@ namespace luminous {
 
         void set_title(const std::string &s);
 
-        void render();
+        void render(double dt);
+
+        void update_time();
+
+        double compute_dt();
 
         void draw() const;
 
         void imgui_begin();
 
         void imgui_end();
-
-        void loop() {
-            render();
-        }
 
         int run();
     };

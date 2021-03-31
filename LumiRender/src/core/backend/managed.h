@@ -39,6 +39,13 @@ namespace luminous {
             _host = std::move(v);
         }
 
+        void reset(const SP <Device> &device, size_t n) {
+            _n_elements = n;
+            _host.resize(n);
+            _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
+            std::memset(_host.data(), 0, sizeof(THost) * _n_elements);
+        }
+
         const Buffer <TDevice> &device_buffer() const {
             return _device_buffer;
         }

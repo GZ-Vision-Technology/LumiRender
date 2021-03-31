@@ -59,6 +59,10 @@ namespace luminous {
         get_user_ptr(window)->on_scroll_event(scroll_x, scroll_y);
     }
 
+    auto cur_time() {
+        return std::chrono::system_clock::now();
+    }
+
     void App::on_cursor_move(int2 new_pos) {
         int2 delta = new_pos - _last_mouse_pos;
         if (!_last_mouse_pos.is_zero()) {
@@ -88,6 +92,9 @@ namespace luminous {
             : _size(size) {
         _task = make_unique<CUDATask>(context);
         _task->init(parser);
+        using namespace std;
+        using namespace chrono;
+
         init_window(title, _task->resolution());
         init_event_cb();
         init_imgui();
@@ -101,6 +108,7 @@ namespace luminous {
         for (int i = 0; i < res.y * res.x; ++i) {
             test_color[i] = make_rgba(rgb[i]);
         }
+        auto a = std::chrono::system_clock::now();
 
         glGenTextures(1, &_gl_ctx.fb_texture);
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
@@ -146,13 +154,20 @@ namespace luminous {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
+    void App::update_time() {
+        _last_frame_t = cur_time();
+    }
+
+    double App::compute_dt() {
+        return 0;
+    }
+
     int App::run() {
         while (!glfwWindowShouldClose(_handle)) {
-            loop();
             imgui_begin();
             glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
             glClear(GL_COLOR_BUFFER_BIT);
-            render();
+            render(0);
             update_render_texture();
             draw();
             imgui_end();
@@ -180,8 +195,8 @@ namespace luminous {
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
-    void App::render() {
-        _task->render_gui();
+    void App::render(double dt) {
+        _task->render_gui(dt);
     }
 
     void App::init_window(const std::string &title, const int2 &size) {
@@ -227,5 +242,6 @@ namespace luminous {
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, res.x, res.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, test_color);
     }
+
 
 }

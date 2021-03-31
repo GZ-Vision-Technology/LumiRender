@@ -22,6 +22,8 @@ namespace luminous {
 
             UP<Integrator> _integrator;
 
+            double _dt;
+
         public:
             CUDATask(Context *context)
                 : Task(create_cuda_device(), context) {}
@@ -38,7 +40,7 @@ namespace luminous {
 
             int2 resolution();
 
-            void render_gui() override;
+            void render_gui(double dt) override;
 
             void on_key(int key,int scancode, int action, int mods);
 

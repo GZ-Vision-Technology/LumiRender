@@ -66,14 +66,12 @@ namespace luminous {
             _accumulate_buffer = _device->allocate_buffer<float4>(num);
             camera()->film()->set_accumulate_buffer(_accumulate_buffer.data());
 
-            vector<FrameBufferType> v(num);
-
-            _frame_buffer.reset(v, _device);
+            _frame_buffer.reset(_device, num);
             _frame_buffer.synchronize_to_gpu();
             camera()->film()->set_frame_buffer(_frame_buffer.device_data());
         }
 
-        void CUDATask::render_gui() {
+        void CUDATask::render_gui(double dt) {
             _integrator->update();
             _integrator->render();
         }
