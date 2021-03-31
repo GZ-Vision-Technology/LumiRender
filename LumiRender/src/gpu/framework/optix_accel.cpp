@@ -125,8 +125,8 @@ namespace luminous {
 
                 memset(&miss_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
-                miss_prog_group_desc.miss.module = NULL;  // NULL miss program for occlusion rays
-                miss_prog_group_desc.miss.entryFunctionName = NULL;
+                miss_prog_group_desc.miss.module = _optix_module;  // NULL miss program for occlusion rays
+                miss_prog_group_desc.miss.entryFunctionName = "__miss__shadow";
                 sizeof_log = sizeof(log);
 
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(

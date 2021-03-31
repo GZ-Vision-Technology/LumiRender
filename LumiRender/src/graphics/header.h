@@ -21,7 +21,9 @@
 
 #define GEN_CLASS_NAME(arg)  XPU static constexpr const char *name() { return #arg; }
 
-#define XPU_INLINE XPU inline
+#define XPU_INLINE XPU __forceinline
+
+#define GPU_INLINE __forceinline GPU
 
 #define NDSC [[nodiscard]]
 
