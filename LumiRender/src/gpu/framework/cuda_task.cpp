@@ -9,28 +9,28 @@ namespace luminous {
 
         void CUDATask::on_key(int key, int scancode, int action, int mods) {
             auto p_camera = camera();
-            float3 forward = _integrator->camera()->forward();
+            float3 forward = p_camera->forward();
             float3 up = p_camera->up();
             float3 right = p_camera->right();
-            float velocity = p_camera->velocity();
+            float distance = p_camera->velocity() * _dt;
             switch (key) {
                 case 'A':
-                    p_camera->move(-right * velocity);
+                    p_camera->move(-right * distance);
                     break;
                 case 'S':
-                    p_camera->move(-forward * velocity);
+                    p_camera->move(-forward * distance);
                     break;
                 case 'D':
-                    p_camera->move(right * velocity);
+                    p_camera->move(right * distance);
                     break;
                 case 'W':
-                    p_camera->move(forward * velocity);
+                    p_camera->move(forward * distance);
                     break;
                 case 'Q':
-                    p_camera->move(-up * velocity);
+                    p_camera->move(-up * distance);
                     break;
                 case 'E':
-                    p_camera->move(up * velocity);
+                    p_camera->move(up * distance);
                     break;
                 default:
                     break;
@@ -42,8 +42,9 @@ namespace luminous {
         }
 
         void CUDATask::update_camera_view(float d_yaw, float d_pitch) {
-            camera()->update_yaw(d_yaw);
-            camera()->update_pitch(d_pitch);
+            float sensitivity = camera()->sensitivity();
+            camera()->update_yaw(d_yaw * sensitivity);
+            camera()->update_pitch(d_pitch * sensitivity);
         }
 
         void CUDATask::update_film_resolution(int2 res) {

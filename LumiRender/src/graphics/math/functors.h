@@ -11,6 +11,7 @@
 namespace luminous {
     inline namespace functor {
         using std::abs;
+        using std::sqrt;
         using std::pow;
         using std::max;
         using std::min;
@@ -37,6 +38,8 @@ namespace luminous {
         MAKE_VECTOR_UNARY_FUNC(rcp)
         MAKE_VECTOR_UNARY_FUNC(saturate)
         MAKE_VECTOR_UNARY_FUNC(abs)
+        MAKE_VECTOR_UNARY_FUNC(sqrt)
+        MAKE_VECTOR_UNARY_FUNC(sqr)
 
 #undef MAKE_VECTOR_UNARY_FUNC
 
