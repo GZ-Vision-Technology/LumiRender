@@ -45,7 +45,7 @@ namespace luminous {
                 }
                 _cpu_transforms.push_back(instance->o2w.mat4x4());
             }
-            _cpu_inst_to_transform_idx.shrink_to_fit();
+            shrink_to_fit();
         }
 
         size_t Scene::size_in_bytes() const {

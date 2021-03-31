@@ -20,17 +20,18 @@ GLOBAL __raygen__rg() {
 //    luminous::float3 d = luminous::make_float3(0,0,3);
 //    traceOcclusion(params.traversable_handle,luminous::Ray(o,d));
 
-    float3 o = make_float3(0,-6.25,-1);
+    float3 o = make_float3(0,-0.55,-1);
     float3 d = make_float3(0,0,3);
 
-    auto occ = traceOcclusion(
-            params.traversable_handle,
-            o,
-            d,
-            0.01f,  // tmin       // TODO: smarter offset
-            100  // tmax
-    );
-
+//    auto occ = traceOcclusion(
+//            params.traversable_handle,
+//            o,
+//            d,
+//            0.01f,  // tmin       // TODO: smarter offset
+//            100  // tmax
+//    );
+    RadiancePRD prd;
+    traceRadiance(params.traversable_handle, o, d, 0, 100, &prd);
 }
 
 GLOBAL __miss__radiance() {
@@ -42,7 +43,7 @@ GLOBAL __miss__shadow() {
 }
 
 GLOBAL __closesthit__radiance() {
-
+    printf("__closesthit__radiance\n");
 
 }
 
