@@ -68,6 +68,14 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(set_velocity, val);
         }
 
+        float SensorHandle::sensitivity() const {
+            LUMINOUS_VAR_DISPATCH(sensitivity);
+        }
+
+        void SensorHandle::set_sensitivity(float val) {
+            LUMINOUS_VAR_DISPATCH(set_sensitivity, val);
+        }
+
         void SensorHandle::set_position(float3 pos) {
             LUMINOUS_VAR_DISPATCH(set_position, pos);
         }

@@ -114,6 +114,14 @@ namespace luminous {
             _position = pos;
         }
 
+        float CameraBase::sensitivity() const {
+            return _sensitivity;
+        }
+
+        void CameraBase::set_sensitivity(float val) {
+            _sensitivity = val;
+        }
+
         void CameraBase::move(float3 delta) {
             _position += delta;
         }

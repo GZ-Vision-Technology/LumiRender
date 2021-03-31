@@ -25,6 +25,7 @@ namespace luminous {
             float _yaw{};
             float _pitch{};
             float _velocity{};
+            float _sensitivity{1.f};
             Transform _raster_to_screen{};
             Transform _camera_to_screen{};
             Transform _raster_to_camera{};
@@ -79,6 +80,10 @@ namespace luminous {
             NDSC_XPU float velocity() const;
 
             XPU void set_velocity(float val);
+
+            NDSC_XPU float sensitivity() const;
+
+            XPU void set_sensitivity(float val);
 
             NDSC std::string _to_string() const {
                 return string_printf("{fov_y:%f, position:%s, yaw:%f, pitch:%f, velocity : %f}",

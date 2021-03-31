@@ -70,6 +70,10 @@ namespace luminous {
 
             XPU void set_velocity(float val);
 
+            NDSC_XPU float sensitivity() const;
+
+            XPU void set_sensitivity(float val);
+
             NDSC std::string to_string() const;
 
             static SensorHandle create(const SensorConfig &config);
