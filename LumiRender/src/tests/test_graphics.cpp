@@ -172,9 +172,19 @@ void test_transform() {
     float3 ss;
     decompose(tsf.mat4x4(), &tt, &rr, &ss);
     cout << tsf.to_string_detail();
-//    cout << tt.to_string() << endl << rr.to_string() << endl << ss.to_string() << endl;
 }
 
+void test_transform_order() {
+    auto p = make_float3(1,0,0);
+    auto t = Transform::translation(1,0,0);
+    auto r = Transform::rotation_y(90);
+    auto r2 = Transform::rotation_x(-45);
+
+    auto tt = r2 * r;
+    cout << tt.apply_point(p).to_string() << endl;
+    auto t2 = r * r2;
+    cout << t2.apply_point(p).to_string();
+}
 
 void test_color() {
     auto s = Spectrum::linear_to_srgb(make_float3(0.1, 0.2, 0.3));
@@ -276,6 +286,7 @@ int main() {
 
 //    test_math();
 //    test_transform();
+    test_transform_order();
 //    test_matrix_to_Euler_angle();
 
 //    test_yaw_pitch();
@@ -284,6 +295,6 @@ int main() {
 
 //    piecewise_construct_test();
 
-    piecewise2d_test();
+//    piecewise2d_test();
     return 0;
 }
