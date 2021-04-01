@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include "../math/common.h"
+#include "ray_hit.h"
 
 namespace luminous {
     inline namespace geometry {
@@ -155,7 +156,7 @@ namespace luminous {
                 return luminous::inverse(mat3x3());
             }
 
-            XPU [[nodiscard]] float3 apply_point(float3 point) {
+            XPU [[nodiscard]] float3 apply_point(float3 point) const {
                 float4 homo_point = make_float4(point, 1.f);
                 homo_point = _mat * homo_point;
                 return make_float3(homo_point);
@@ -167,6 +168,12 @@ namespace luminous {
 
             XPU [[nodiscard]] float3 apply_normal(float3 normal) const {
                 return transpose(inv_mat3x3()) * normal;
+            }
+
+            XPU Ray apply_ray(Ray ray) const {
+                ray.update_origin(apply_point(ray.origin()));
+                ray.update_direction(apply_vector(ray.direction()));
+                return ray;
             }
 
             XPU Transform operator*(const Transform &t) const {

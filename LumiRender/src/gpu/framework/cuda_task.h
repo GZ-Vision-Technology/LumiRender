@@ -22,7 +22,7 @@ namespace luminous {
 
             UP<Integrator> _integrator;
 
-            double _dt;
+            double _dt{0};
 
         public:
             CUDATask(Context *context)

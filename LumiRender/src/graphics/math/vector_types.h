@@ -111,11 +111,35 @@ namespace luminous {
             XPU void print() const noexcept {
                 static_assert(N == 2 || N == 3 || N == 4);
                 if constexpr (N == 2) {
-                    printf("%f,%f \n", Storage::x, Storage::y);
+                    if constexpr (std::is_same_v<T, float>) {
+                        printf("%f,%f \n", Storage::x, Storage::y);
+                    } else if (std::is_same_v<T, int>) {
+                        printf("%d,%d \n", Storage::x, Storage::y);
+                    } else if (std::is_same_v<T, uint>) {
+                        printf("%u,%u \n", Storage::x, Storage::y);
+                    } else {
+                        assert(0);
+                    }
                 } else if constexpr (N == 3) {
-                    printf("%f,%f,%f \n", Storage::x, Storage::y, Storage::z);
+                    if constexpr (std::is_same_v<T, float>) {
+                        printf("%f,%f,%f \n", Storage::x, Storage::y, Storage::z);
+                    } else if (std::is_same_v<T, int>) {
+                        printf("%d,%d,%d \n", Storage::x, Storage::y, Storage::z);
+                    } else if (std::is_same_v<T, uint>) {
+                        printf("%u,%u,%u \n", Storage::x, Storage::y, Storage::z);
+                    } else {
+                        assert(0);
+                    }
                 } else {
-                    printf("%f,%f,%f,%f \n", Storage::x, Storage::y, Storage::z, Storage::w);
+                    if constexpr (std::is_same_v<T, float>) {
+                        printf("%f,%f,%f,%f \n", Storage::x, Storage::y, Storage::z, Storage::w);
+                    } else if (std::is_same_v<T, int>) {
+                        printf("%d,%d,%d,%d \n", Storage::x, Storage::y, Storage::z, Storage::w);
+                    } else if (std::is_same_v<T, uint>) {
+                        printf("%u,%u,%u,%u \n", Storage::x, Storage::y, Storage::z, Storage::w);
+                    } else {
+                        assert(0);
+                    }
                 }
             }
 
