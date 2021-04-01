@@ -48,8 +48,7 @@ namespace luminous {
         }
 
         void CUDATask::update_film_resolution(int2 res) {
-            auto film = camera()->film();
-            film->set_resolution(res);
+            camera()->update_film_resolution(res);
             update_device_buffer();
         }
 

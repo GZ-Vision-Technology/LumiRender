@@ -16,6 +16,10 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(set_film, film);
         }
 
+        void SensorHandle::update_film_resolution(int2 res) {
+            LUMINOUS_VAR_DISPATCH(update_film_resolution, res);
+        }
+
         FilmHandle *SensorHandle::film() {
             LUMINOUS_VAR_DISPATCH(film);
         }

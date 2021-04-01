@@ -28,15 +28,24 @@ namespace luminous {
             _position = make_float3(m[3]);
         }
 
-        void CameraBase::set_film(const FilmHandle &film) {
-            _film = film;
-            int2 res = _film.resolution();
+        void CameraBase::update_film_resolution(int2 res) {
+            _film.set_resolution(res);
+            _set_resolution(res);
+        }
+
+        void CameraBase::_set_resolution(int2 res) {
             Box2f scrn = _film.screen_window();
             float2 span = scrn.span();
             Transform screen_to_raster = Transform::scale(res.x, res.y, 1) *
                                          Transform::scale(1 / span.x, 1 / -span.y, 1) *
                                          Transform::translation(-scrn.lower.x, -scrn.upper.y, 0);
             _raster_to_screen = screen_to_raster.inverse();
+            _update_raster();
+        }
+
+        void CameraBase::set_film(const FilmHandle &film) {
+            _film = film;
+            _set_resolution(_film.resolution());
             _update_raster();
         }
 
