@@ -19,14 +19,14 @@ namespace luminous {
             vector_t cols[3];
 
             XPU explicit constexpr Matrix3x3(scalar_t s = 1) noexcept
-                : cols{vector_t(s, (scalar_t)0, (scalar_t)0),
-                       vector_t((scalar_t)0, s, (scalar_t)0),
-                       vector_t((scalar_t)0, (scalar_t)0, s)} {
+                    : cols{vector_t(s, (scalar_t) 0, (scalar_t) 0),
+                           vector_t((scalar_t) 0, s, (scalar_t) 0),
+                           vector_t((scalar_t) 0, (scalar_t) 0, s)} {
 
             }
 
             XPU explicit constexpr Matrix3x3(vector_t c0, vector_t c1, vector_t c2) noexcept
-                :cols{c0, c1, c2} {
+                    : cols{c0, c1, c2} {
 
             }
 
@@ -57,6 +57,13 @@ namespace luminous {
                 return cols[0].has_inf() || cols[1].has_inf() || cols[2].has_inf();
             }
 
+            XPU void print() const noexcept {
+                printf("[%f,%f,%f]\n[%f,%f,%f]\n[%f,%f,%f]\n",
+                       cols[0].x, cols[0].y, cols[0].z,
+                       cols[1].x, cols[1].y, cols[1].z,
+                       cols[2].x, cols[2].y, cols[2].z);
+            }
+
             [[nodiscard]] std::string to_string() const {
                 return serialize("[", serialize(cols[0].to_string()), "\n",
                                  serialize(cols[1].to_string()), "\n",
@@ -72,13 +79,13 @@ namespace luminous {
             vector_t cols[4];
 
             XPU explicit constexpr Matrix4x4(scalar_t s = 1) noexcept
-                    : cols{vector_t(s, (scalar_t)0, (scalar_t)0, (scalar_t)0),
-                           vector_t((scalar_t)0, s, (scalar_t)0, (scalar_t)0),
-                           vector_t((scalar_t)0, (scalar_t)0, s, (scalar_t)0),
-                           vector_t((scalar_t)0, (scalar_t)0, (scalar_t)0, s)} {}
+                    : cols{vector_t(s, (scalar_t) 0, (scalar_t) 0, (scalar_t) 0),
+                           vector_t((scalar_t) 0, s, (scalar_t) 0, (scalar_t) 0),
+                           vector_t((scalar_t) 0, (scalar_t) 0, s, (scalar_t) 0),
+                           vector_t((scalar_t) 0, (scalar_t) 0, (scalar_t) 0, s)} {}
 
             XPU constexpr Matrix4x4(vector_t c0, vector_t c1, vector_t c2, vector_t c3) noexcept
-                : cols{c0, c1, c2, c3} {}
+                    : cols{c0, c1, c2, c3} {}
 
             XPU constexpr Matrix4x4(scalar_t m00, scalar_t m01, scalar_t m02, scalar_t m03,
                                     scalar_t m10, scalar_t m11, scalar_t m12, scalar_t m13,
@@ -105,6 +112,14 @@ namespace luminous {
 
             XPU [[nodiscard]] bool has_inf() const noexcept {
                 return cols[0].has_inf() || cols[1].has_inf() || cols[2].has_inf() || cols[3].has_inf();
+            }
+
+            XPU void print() const noexcept {
+                printf("[%f,%f,%f,%f]\n[%f,%f,%f,%f]\n[%f,%f,%f,%f]\n[%f,%f,%f,%f]\n",
+                       cols[0].x, cols[0].y, cols[0].z,cols[0].w,
+                       cols[1].x, cols[1].y, cols[1].z,cols[1].w,
+                       cols[2].x, cols[2].y, cols[2].z,cols[2].w,
+                       cols[3].x, cols[3].y, cols[3].z,cols[3].w);
             }
 
             [[nodiscard]] std::string to_string() const {
@@ -169,6 +184,7 @@ namespace luminous {
         _define_matrix4x4(type)
 
         _define_matrix(float)
+
         _define_matrix(double)
 
 #undef _define_matrix

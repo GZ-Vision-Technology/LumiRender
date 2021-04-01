@@ -61,6 +61,11 @@ namespace luminous {
                 return origin().has_inf() || direction().has_inf();
             }
 
+            XPU void print() const noexcept {
+                printf("origin:[%f,%f,%f],direction[%f,%f,%f]\n",
+                       org_x, org_y, org_z, dir_x, dir_y, dir_z);
+            }
+
             [[nodiscard]] std::string to_string() const {
                 return string_printf("ray:{origin:%s,direction:%s,tmin:%f,tmax:%f}",
                                      origin().to_string().c_str(),
@@ -82,9 +87,9 @@ namespace luminous {
 
             float3 p = p_in;
             float3 p_i = make_float3(
-                    bit_cast < float > (bit_cast < int > (p.x) + select(p.x < 0, -of_i.x, of_i.x)),
-                    bit_cast < float > (bit_cast < int > (p.y) + select(p.y < 0, -of_i.y, of_i.y)),
-                    bit_cast < float > (bit_cast < int > (p.z) + select(p.z < 0, -of_i.z, of_i.z)));
+                    bit_cast<float>(bit_cast<int>(p.x) + select(p.x < 0, -of_i.x, of_i.x)),
+                    bit_cast<float>(bit_cast<int>(p.y) + select(p.y < 0, -of_i.y, of_i.y)),
+                    bit_cast<float>(bit_cast<int>(p.z) + select(p.z < 0, -of_i.z, of_i.z)));
 
             return select(functor::abs(p) < origin, p + float_scale * n, p_i);
         }
