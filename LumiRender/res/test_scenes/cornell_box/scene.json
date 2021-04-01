@@ -30,7 +30,7 @@
 					"param" : {
 						"yaw" : 0,
 						"pitch": 0,
-						"position": [0,0.0999,0]
+						"position": [0,0,0]
 					}
 				}
 			}
@@ -104,14 +104,14 @@
 	"camera" : {
 		"type" : "PinholeCamera",
 		"param" : {
-			"fov_y" : 40,
+			"fov_y" : 90,
 			"velocity" : 20,
 			"transform" : {
 				"type" : "yaw_pitch",
 				"param" : {
 					"yaw" : 0,
 					"pitch": 0,
-					"position": [0,0,-1]
+					"position": [0,0,-100]
 				}
 			},
 			"film" : {

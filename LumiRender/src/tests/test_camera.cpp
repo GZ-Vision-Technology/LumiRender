@@ -37,21 +37,18 @@ void test_sensor() {
     SensorSample ss;
     ss.p_film = make_float2(250,250);
 
-    Ray ray;
-    camera.generate_ray(ss, &ray);
-
-    cout << camera.to_string() << endl;
-    cout << ray.to_string() << endl;
-
-    cout << camera.forward().to_string() << endl;
-
     auto mat = camera.camera_to_world_rotation().mat4x4();
 
     tc.type = "matrix4x4";
     tc.mat4x4 = mat;
 
-    config.transform_config = tc;
-    auto c2 = SensorHandle::create(config);
+//    camera.move(camera.forward());
+
+    Ray ray;
+    camera.generate_ray(ss, &ray);
+
+//    cout << camera.to_string() << endl;
+    cout << ray.to_string() << endl;
 
 //    cout << camera.to_string() << endl;
 //

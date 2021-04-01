@@ -12,7 +12,11 @@ namespace luminous {
         template <typename T>
         inline XPU typename std::enable_if_t<std::is_floating_point<T>::value, bool>
         is_nan(T v) {
+#if defined(__CUDACC__)
+            return ::isnan(v);
+#else
             return std::isnan(v);
+#endif
         }
 
         template <typename T>
@@ -24,7 +28,11 @@ namespace luminous {
         template <typename T>
         inline XPU typename std::enable_if_t<std::is_floating_point<T>::value, bool>
         is_inf(T v) {
+#if defined(__CUDACC__)
+            return ::isinf(v);
+#else
             return std::isinf(v);
+#endif
         }
 
         template <typename T>

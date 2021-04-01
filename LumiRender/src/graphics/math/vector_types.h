@@ -79,6 +79,17 @@ namespace luminous {
                 }
             }
 
+            XPU [[nodiscard]] bool has_inf() const noexcept {
+                static_assert(N == 2 || N == 3 || N == 4);
+                if constexpr (N == 2) {
+                    return is_inf(Storage::x) || is_inf(Storage::y);
+                } else if constexpr (N == 3) {
+                    return is_inf(Storage::x) || is_inf(Storage::y) || is_inf(Storage::z);;
+                } else {
+                    return is_inf(Storage::x) || is_inf(Storage::y) || is_inf(Storage::z) || is_inf(Storage::w);;
+                }
+            }
+
             XPU [[nodiscard]] bool is_zero() const noexcept {
                 static_assert(N == 2 || N == 3 || N == 4);
                 if constexpr (N == 2) {

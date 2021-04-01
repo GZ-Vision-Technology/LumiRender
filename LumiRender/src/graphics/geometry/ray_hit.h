@@ -45,12 +45,20 @@ namespace luminous {
                 dir_z = direction.z;
             }
 
-            XPU [[nodiscard]] float3 origin() const noexcept {
+            NDSC_XPU float3 origin() const noexcept {
                 return make_float3(org_x, org_y, org_z);
             }
 
-            XPU [[nodiscard]] float3 direction() const noexcept {
+            NDSC_XPU float3 direction() const noexcept {
                 return make_float3(dir_x, dir_y, dir_z);
+            }
+
+            NDSC_XPU bool has_nan() const noexcept {
+                return origin().has_nan() || direction().has_nan();
+            }
+
+            NDSC_XPU bool has_inf() const noexcept {
+                return origin().has_inf() || direction().has_inf();
             }
 
             [[nodiscard]] std::string to_string() const {

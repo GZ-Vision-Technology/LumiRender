@@ -53,6 +53,10 @@ namespace luminous {
                 return cols[0].has_nan() || cols[1].has_nan() || cols[2].has_nan();
             }
 
+            XPU [[nodiscard]] bool has_inf() const noexcept {
+                return cols[0].has_inf() || cols[1].has_inf() || cols[2].has_inf();
+            }
+
             [[nodiscard]] std::string to_string() const {
                 return serialize("[", serialize(cols[0].to_string()), "\n",
                                  serialize(cols[1].to_string()), "\n",
@@ -97,6 +101,10 @@ namespace luminous {
 
             XPU [[nodiscard]] bool has_nan() const noexcept {
                 return cols[0].has_nan() || cols[1].has_nan() || cols[2].has_nan() || cols[3].has_nan();
+            }
+
+            XPU [[nodiscard]] bool has_inf() const noexcept {
+                return cols[0].has_inf() || cols[1].has_inf() || cols[2].has_inf() || cols[3].has_inf();
             }
 
             [[nodiscard]] std::string to_string() const {
