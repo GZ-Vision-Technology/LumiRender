@@ -8,13 +8,6 @@
 using namespace luminous;
 using namespace std;
 
-FilmHandle create_film() {
-    FilmConfig fc;
-    fc.type = "RGBFilm";
-    fc.resolution = make_int2(500);
-    return FilmHandle::create(fc);
-}
-
 void test_sensor() {
     SensorConfig config;
     config.type = "PinholeCamera";
@@ -26,7 +19,7 @@ void test_sensor() {
 
     tc.yaw = 0;
     tc.pitch = 0;
-    tc.position = make_float3(2,3,5);
+    tc.position = make_float3(0,0,0);
     config.film_config.type = "RGBFilm";
     config.film_config.resolution = make_int2(500,500);
     tc.mat4x4 = make_float4x4(1);
@@ -35,34 +28,29 @@ void test_sensor() {
     auto camera = SensorHandle::create(config);
 
     SensorSample ss;
-    ss.p_film = make_float2(0,0);
+    ss.p_film = make_float2(250,250);
 
     auto mat = camera.camera_to_world_rotation().mat4x4();
 
     tc.type = "matrix4x4";
     tc.mat4x4 = mat;
 
+
 //    camera.move(camera.forward());
 
     Ray ray;
     camera.generate_ray(ss, &ray);
+    cout << camera.to_string() << endl;
 
-//    cout << camera.to_string() << endl;
     cout << ray.to_string() << endl;
 
-    camera.update_fov_y(5);
+//    camera.update_fov_y(5);
+    camera.set_yaw(90);
+    camera.set_pitch(45);
     camera.generate_ray(ss, &ray);
 
-//    cout << camera.to_string() << endl;
     cout << ray.to_string() << endl;
 
-//    cout << camera.to_string() << endl;
-//
-//    auto f = camera.film();
-//    cout << f->to_string() << endl;
-//    f->set_resolution(make_int2(300));
-//    auto f2 = camera.film();
-//    cout << f2->to_string();
 }
 
 int main() {

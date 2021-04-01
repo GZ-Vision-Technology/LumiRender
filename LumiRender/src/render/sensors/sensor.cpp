@@ -13,7 +13,7 @@ namespace luminous {
         CameraBase::CameraBase(const float4x4 m, float fov_y, float velocity)
                 : _velocity(velocity) {
             _update(m);
-            set_fov_y(_fov_y);
+            set_fov_y(fov_y);
         }
 
         void CameraBase::_update_raster() {
@@ -147,7 +147,6 @@ namespace luminous {
         Transform CameraBase::camera_to_world_rotation() const {
             auto horizontal = Transform::rotation_y(_yaw);
             auto vertical = Transform::rotation_x(-_pitch);
-//            return vertical * horizontal;
             return horizontal *vertical;
         }
 

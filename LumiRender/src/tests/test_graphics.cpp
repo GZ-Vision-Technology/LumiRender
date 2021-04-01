@@ -175,13 +175,26 @@ void test_transform() {
 }
 
 void test_transform_order() {
-    auto p = make_float3(1,0,0);
+    auto p = make_float3(0,0,1);
     auto t = Transform::translation(1,0,0);
     auto r = Transform::rotation_y(90);
-    auto r2 = Transform::rotation_x(-45);
+    auto r2 = Transform::rotation_x(45);
+
+
+    auto pr = r.apply_point(p);
+
+    auto pr2 = r2.apply_point(pr);
+
+    cout << r2.to_string_detail() << endl;
+
+    cout << r2.to_string() << endl;
+    cout << "p " << p.to_string() << endl;
+    cout << "pr " <<pr.to_string() << endl;
+    cout <<"pr2 " << pr2.to_string() << endl;
 
     auto tt = r2 * r;
     cout << tt.apply_point(p).to_string() << endl;
+
     auto t2 = r * r2;
     cout << t2.apply_point(p).to_string();
 }
