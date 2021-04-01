@@ -35,7 +35,7 @@ void test_sensor() {
     auto camera = SensorHandle::create(config);
 
     SensorSample ss;
-    ss.p_film = make_float2(250,250);
+    ss.p_film = make_float2(0,0);
 
     auto mat = camera.camera_to_world_rotation().mat4x4();
 
@@ -45,6 +45,12 @@ void test_sensor() {
 //    camera.move(camera.forward());
 
     Ray ray;
+    camera.generate_ray(ss, &ray);
+
+//    cout << camera.to_string() << endl;
+    cout << ray.to_string() << endl;
+
+    camera.update_fov_y(5);
     camera.generate_ray(ss, &ray);
 
 //    cout << camera.to_string() << endl;

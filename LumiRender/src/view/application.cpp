@@ -65,7 +65,7 @@ namespace luminous {
 
     void App::on_cursor_move(int2 new_pos) {
         int2 delta = new_pos - _last_mouse_pos;
-        if (!_last_mouse_pos.is_zero()) {
+        if (!_last_mouse_pos.is_zero() && _left_key_press) {
             _task->update_camera_view(delta.x, -delta.y);
         }
         _last_mouse_pos = new_pos;
@@ -81,6 +81,9 @@ namespace luminous {
 
     void App::on_mouse_event(int button, int action, int mods) {
         // todo
+        if (button == 0) {
+            _left_key_press = bool(action);
+        }
     }
 
     void App::on_resize(const int2 &new_size) {

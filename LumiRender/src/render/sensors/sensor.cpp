@@ -16,6 +16,11 @@ namespace luminous {
             set_fov_y(_fov_y);
         }
 
+        void CameraBase::_update_raster() {
+            _camera_to_screen = Transform::perspective(_fov_y, z_near, z_far);
+            _raster_to_camera = _camera_to_screen.inverse() * _raster_to_screen;
+        }
+
         void CameraBase::_update(const float4x4 &m) {
             float sy = sqrt(sqr(m[2][1]) + sqr(m[2][2]));
             _pitch = degrees(-std::atan2(m[2][1], m[2][2]));
@@ -32,7 +37,7 @@ namespace luminous {
                                          Transform::scale(1 / span.x, 1 / -span.y, 1) *
                                          Transform::translation(-scrn.lower.x, -scrn.upper.y, 0);
             _raster_to_screen = screen_to_raster.inverse();
-            _raster_to_camera =  _camera_to_screen.inverse() * _raster_to_screen;
+            _update_raster();
         }
 
         int2 CameraBase::resolution() const {
@@ -98,7 +103,7 @@ namespace luminous {
             } else {
                 _fov_y = new_fov_y;
             }
-            _camera_to_screen = Transform::perspective(_fov_y, z_near, z_far);
+            _update_raster();
         }
 
         void CameraBase::update_fov_y(float val) {
@@ -133,7 +138,8 @@ namespace luminous {
         Transform CameraBase::camera_to_world_rotation() const {
             auto horizontal = Transform::rotation_y(_yaw);
             auto vertical = Transform::rotation_x(-_pitch);
-            return vertical * horizontal;
+//            return vertical * horizontal;
+            return horizontal *vertical;
         }
 
         float3 CameraBase::forward() const {

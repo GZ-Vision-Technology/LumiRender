@@ -26,6 +26,7 @@ namespace luminous {
             GLuint vao{0};
             GLuint vbo{0};
         };
+
     private:
         int2 _size;
         GLContext _gl_ctx;
@@ -36,6 +37,8 @@ namespace luminous {
         unique_ptr<CUDATask> _task;
 
         system_clock::time_point _last_frame_t;
+
+        bool _left_key_press{false};
 
     public:
         App(const std::string &title, const int2 &size, Context *context, const Parser &parser);

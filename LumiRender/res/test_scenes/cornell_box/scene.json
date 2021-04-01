@@ -111,7 +111,7 @@
 				"param" : {
 					"yaw" : 0,
 					"pitch": 0,
-					"position": [0,0,-100]
+					"position": [0,0,-300000000]
 				}
 			},
 			"film" : {
