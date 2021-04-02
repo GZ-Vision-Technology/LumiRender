@@ -240,7 +240,7 @@ namespace luminous {
             input.type = OPTIX_BUILD_INPUT_TYPE_TRIANGLES;
             {
                 input.triangleArray.vertexFormat = OPTIX_VERTEX_FORMAT_FLOAT3;
-                input.triangleArray.indexStrideInBytes = sizeof(float3);
+                input.triangleArray.vertexStrideInBytes = sizeof(float3);
                 input.triangleArray.numVertices = mesh.vertex_count;
                 vert_buffer_ptr.push_back(positions.address<CUdeviceptr>(mesh.vertex_offset));
                 input.triangleArray.vertexBuffers = &vert_buffer_ptr.back();
@@ -378,7 +378,7 @@ namespace luminous {
             auto stream = dynamic_cast<CUDADispatcher*>(_dispatcher.impl_mut())->stream;
             auto x = res.x;
             auto y = res.y;
-            launch_params->traversable_handle = _root_gas_handle;
+            launch_params->traversable_handle = _root_ias_handle;
             launch_params.synchronize_to_gpu();
             OPTIX_CHECK(optixLaunch(_optix_pipeline,
                                     stream,
