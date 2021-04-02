@@ -6,5 +6,9 @@
 #pragma once
 
 // this file just for cuda shader include
-#include "sampler_handle.cpp"
-#include "independent.cpp"
+#if defined(__CUDACC__)
+    #include "sampler_handle.cpp"
+    #include "independent.cpp"
+#else
+    #error "this file just for cuda shader include"
+#endif
