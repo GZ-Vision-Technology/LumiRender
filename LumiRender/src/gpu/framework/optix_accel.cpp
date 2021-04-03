@@ -298,18 +298,15 @@ namespace luminous {
 
             auto compacted_gas_size = download<size_t>(emit_desc.result);
             if (compacted_gas_size < gas_buffer_sizes.outputSizeInBytes) {
-                auto tri_compacted_gas_buffer = _device->allocate_buffer(compacted_gas_size);
-                OPTIX_CHECK(optixAccelCompact(_optix_device_context, 0,
+                tri_gas_buffer = _device->allocate_buffer(compacted_gas_size);
+                OPTIX_CHECK(optixAccelCompact(_optix_device_context, nullptr,
                                               traversable_handle,
-                                              tri_compacted_gas_buffer.ptr<CUdeviceptr>(),
+                                              tri_gas_buffer.ptr<CUdeviceptr>(),
                                               compacted_gas_size,
                                               &traversable_handle));
-                _bvh_size_in_bytes += tri_compacted_gas_buffer.size_in_bytes();
-                _as_buffer_list.push_back(move(tri_compacted_gas_buffer));
-            } else {
-                _bvh_size_in_bytes += tri_gas_buffer.size_in_bytes();
-                _as_buffer_list.push_back(move(tri_gas_buffer));
             }
+            _bvh_size_in_bytes += tri_gas_buffer.size_in_bytes();
+            _as_buffer_list.push_back(move(tri_gas_buffer));
 
             CU_CHECK(cuCtxSynchronize());
             _root_gas_handle = traversable_handle;
@@ -334,7 +331,7 @@ namespace luminous {
             instance_input.instanceArray.instances = _device_ptr_table.instances.ptr<CUdeviceptr>();
 
             OptixAccelBuildOptions accel_options = {};
-            accel_options.buildFlags = OPTIX_BUILD_FLAG_NONE;
+            accel_options.buildFlags = (OPTIX_BUILD_FLAG_ALLOW_COMPACTION | OPTIX_BUILD_FLAG_PREFER_FAST_TRACE);
             accel_options.operation = OPTIX_BUILD_OPERATION_BUILD;
 
             OptixAccelBufferSizes ias_buffer_sizes;
@@ -345,6 +342,11 @@ namespace luminous {
 
             auto ias_buffer = _device->allocate_buffer(ias_buffer_sizes.outputSizeInBytes);
             auto temp_buffer = _device->allocate_buffer(ias_buffer_sizes.tempSizeInBytes);
+            auto compact_size_buffer = _device->allocate_buffer<uint64_t>(1);
+            OptixAccelEmitDesc emit_desc;
+            emit_desc.type = OPTIX_PROPERTY_TYPE_COMPACTED_SIZE;
+            emit_desc.result = compact_size_buffer.ptr<uint64_t>();
+
 
             vector<OptixInstance> optix_instances;
             optix_instances.reserve(instance_num);
@@ -362,6 +364,7 @@ namespace luminous {
                 optix_instances.push_back(optix_instance);
             }
             _device_ptr_table.instances.upload(optix_instances.data());
+
             OPTIX_CHECK(optixAccelBuild(_optix_device_context,
                                         0, &accel_options,
                                         &instance_input, 1,
@@ -369,7 +372,17 @@ namespace luminous {
                                         ias_buffer_sizes.tempSizeInBytes,
                                         ias_buffer.ptr<CUdeviceptr>(),
                                         ias_buffer_sizes.outputSizeInBytes,
-                                        &_root_ias_handle, nullptr, 0));
+                                        &_root_ias_handle, &emit_desc, 1));
+            auto compacted_gas_size = download<size_t>(emit_desc.result);
+            if (compacted_gas_size < ias_buffer_sizes.outputSizeInBytes) {
+                ias_buffer = _device->allocate_buffer(compacted_gas_size);
+                OPTIX_CHECK(optixAccelCompact(_optix_device_context, nullptr,
+                                              _root_ias_handle,
+                                              ias_buffer.ptr<CUdeviceptr>(),
+                                              compacted_gas_size,
+                                              &_root_ias_handle));
+            }
+            _bvh_size_in_bytes += ias_buffer.size_in_bytes();
             _as_buffer_list.push_back(move(ias_buffer));
         }
 
