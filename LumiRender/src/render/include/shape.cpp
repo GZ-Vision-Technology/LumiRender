@@ -46,6 +46,7 @@ namespace luminous {
 
             meshes.reserve(ai_meshes.size());
             for (auto ai_mesh : ai_meshes) {
+                Box3f aabb;
                 vector<float3> positions;
                 vector<float3> normals;
                 vector<float2> tex_coords;
@@ -59,6 +60,7 @@ namespace luminous {
                     auto ai_position = ai_mesh->mVertices[i];
                     auto ai_normal = ai_mesh->mNormals[i];
                     auto position = make_float3(ai_position.x, ai_position.y, ai_position.z);
+                    aabb.extend(position);
                     auto normal = make_float3(ai_normal.x, ai_normal.y, ai_normal.z);
                     if (ai_mesh->mTextureCoords[0] != nullptr) {
                         auto ai_tex_coord = ai_mesh->mTextureCoords[0][i];
@@ -94,7 +96,8 @@ namespace luminous {
                 auto mesh = std::make_shared<const Mesh>(move(positions),
                                                     move(normals),
                                                     move(tex_coords),
-                                                    move(indices));
+                                                    move(indices),
+                                                    aabb);
                 meshes.push_back(mesh);
             }
 

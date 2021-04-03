@@ -27,6 +27,7 @@ namespace luminous {
 
         struct MeshHandle {
             MeshHandle() = default;
+
             MeshHandle(uint vert_ofs, uint tri_ofs, uint vert_count, uint tri_count)
                     : vertex_offset(vert_ofs),
                       triangle_offset(tri_ofs),
@@ -43,16 +44,19 @@ namespace luminous {
             Mesh(vector<float3> P,
                  vector<float3> N,
                  vector<float2> uv,
-                 vector<TriangleHandle> T) :
+                 vector<TriangleHandle> T,
+                 Box3f aabb) :
                     positions(std::move(P)),
                     normals(std::move(N)),
                     tex_coords(std::move(uv)),
-                    triangles(std::move(T)) {}
+                    triangles(std::move(T)),
+                    aabb(aabb) {}
 
             vector<float3> normals;
             vector<float3> positions;
             vector<float2> tex_coords;
             vector<TriangleHandle> triangles;
+            Box3f aabb;
             mutable uint idx_in_meshes;
         };
 

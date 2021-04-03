@@ -20,11 +20,15 @@ namespace luminous {
                 auto model = make_shared<Model>();
                 auto x = config.width / 2;
                 auto y = config.height / 2;
-
+                Box3f aabb;
                 vector<float3> P{make_float3(x, y, 0),
                                  make_float3(x, -y, 0),
                                  make_float3(-x, y, 0),
                                  make_float3(-x, -y, 0)};
+
+                for (auto p : P) {
+                    aabb.extend(p);
+                }
 
                 vector<float3> N(4, make_float3(0, 0, 1));
 
@@ -36,7 +40,7 @@ namespace luminous {
                 vector<TriangleHandle> triangles{TriangleHandle{0,1,2},
                                                  TriangleHandle{2,1,3}};
 
-                auto mesh = make_shared<Mesh>(move(P),move(N), move(UV), move(triangles));
+                auto mesh = make_shared<Mesh>(move(P),move(N), move(UV), move(triangles), aabb);
                 model->meshes.push_back(mesh);
 
                 return model;

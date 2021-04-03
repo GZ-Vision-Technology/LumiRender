@@ -38,7 +38,7 @@ namespace luminous {
             }
 
             /*! returns new box including both ourselves _and_ the given point */
-            [[nodiscard]] inline XPU TBox &extend(const vector_t &other) {
+            inline XPU TBox &extend(const vector_t &other) {
                 lower = min(lower, other);
                 upper = max(upper, other);
                 return *this;
