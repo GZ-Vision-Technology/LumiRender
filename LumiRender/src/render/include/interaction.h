@@ -12,6 +12,7 @@ namespace luminous {
         struct Interaction {
             float3 position;
             float3 normal;
+            float2 uv;
             float3 wo;
             float time;
         };

@@ -12,8 +12,7 @@
 #include "gpu/framework/optix_params.h"
 
 struct RadiancePRD {
-    // TODO: move some state directly into payload registers?
-    int pad;
+    luminous::Interaction interaction;
 };
 
 static GPU_INLINE void *unpackPointer(unsigned int i0, unsigned int i1) {
@@ -42,8 +41,19 @@ static GPU_INLINE luminous::uint2 getPixelCoords() {
     return luminous::make_uint2(idx.x, idx.y);
 }
 
+template<typename T>
+static GPU_INLINE T getSbtData() {
+    return *reinterpret_cast<T *>(optixGetSbtDataPointer());
+}
+
+static GPU_INLINE RadiancePRD *getPRD() {
+    const unsigned int u0 = optixGetPayload_0();
+    const unsigned int u1 = optixGetPayload_1();
+    return reinterpret_cast<RadiancePRD *>(unpackPointer(u0, u1));
+}
+
 static GPU_INLINE void traceRadiance(OptixTraversableHandle handle,
-                                              luminous::Ray ray, RadiancePRD *prd) {
+                                     luminous::Ray ray, RadiancePRD *prd) {
     unsigned int u0, u1;
     packPointer(prd, u0, u1);
     float3 origin = make_float3(ray.org_x, ray.org_y, ray.org_z);

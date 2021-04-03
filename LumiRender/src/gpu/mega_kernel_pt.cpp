@@ -9,6 +9,7 @@ namespace luminous {
 
         void MegaKernelPT::init_launch_params() {
             LaunchParams lp{};
+            lp.sampler = _sampler.device_data();
             lp.camera = _camera.device_data();
             _launch_params.reset(&lp, _device);
             _launch_params.synchronize_to_gpu();

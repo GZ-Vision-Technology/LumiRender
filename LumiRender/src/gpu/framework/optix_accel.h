@@ -14,6 +14,7 @@
 namespace luminous {
     inline namespace gpu {
 
+        class GPUScene;
 
         class OptixAccel : public Noncopyable {
         private:
@@ -65,7 +66,7 @@ namespace luminous {
 
             OptixPipeline create_pipeline(ProgramGroupTable program_group_table);
 
-            void create_sbt(ProgramGroupTable program_group_table);
+            void create_sbt(ProgramGroupTable program_group_table, const GPUScene *gpu_scene);
 
             OptixBuildInput get_mesh_build_input(const Buffer<float3> &positions,
                                                  const Buffer<TriangleHandle> &triangles,
@@ -78,7 +79,7 @@ namespace luminous {
                                                   std::list<CUdeviceptr> &_vert_buffer_ptr);
 
         public:
-            OptixAccel(const SP<Device> &device);
+            OptixAccel(const SP<Device> &device, const GPUScene *gpu_scene);
 
             size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 

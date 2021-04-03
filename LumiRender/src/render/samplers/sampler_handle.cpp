@@ -12,7 +12,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(spp)
         }
 
-        SensorSample SamplerHandle::sensor_sample(int2 p_raster) {
+        SensorSample SamplerHandle::sensor_sample(uint2 p_raster) {
             SensorSample ss;
             ss.p_film = make_float2(p_raster) + next_2d();
             ss.p_lens = next_2d();

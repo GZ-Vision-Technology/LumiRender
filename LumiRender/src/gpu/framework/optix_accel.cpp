@@ -6,6 +6,7 @@
 #include <optix.h>
 #include <optix_function_table_definition.h>
 #include <optix_stubs.h>
+#include "../gpu_scene.h"
 
 extern "C" char optix_shader_code[];
 
@@ -16,14 +17,14 @@ namespace luminous {
             std::cerr << "[" << std::setw(2) << level << "][" << std::setw(12) << tag << "]: " << message << "\n";
         }
 
-        OptixAccel::OptixAccel(const SP<Device> &device)
+        OptixAccel::OptixAccel(const SP<Device> &device, const GPUScene *gpu_scene)
                 : _device(device),
                   _dispatcher(_device->new_dispatcher()) {
             _optix_device_context = create_context();
             _optix_module = create_module(_optix_device_context);
             _program_group_table = create_program_groups(_optix_module);
             _optix_pipeline = create_pipeline(_program_group_table);
-            create_sbt(_program_group_table);
+            create_sbt(_program_group_table, gpu_scene);
         }
 
         OptixDeviceContext OptixAccel::create_context() {
@@ -202,7 +203,7 @@ namespace luminous {
             return pipeline;
         }
 
-        void OptixAccel::create_sbt(ProgramGroupTable program_group_table) {
+        void OptixAccel::create_sbt(ProgramGroupTable program_group_table, const GPUScene *gpu_scene) {
             _device_ptr_table.rg_record = _device->allocate_buffer<RayGenRecord>(1);
             RayGenRecord rg_sbt = {};
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.raygen_prog_group, &rg_sbt));
@@ -210,8 +211,11 @@ namespace luminous {
 
             _device_ptr_table.miss_record = _device->allocate_buffer<MissRecord>(RayType::Count);
             MissRecord ms_sbt[RayType::Count] = {};
+            ms_sbt[RayType::Radiance].data.bg_color = gpu_scene->_bg_color;
+            ms_sbt[RayType::Occlusion].data.bg_color = gpu_scene->_bg_color;
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::Radiance]));
-            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::Occlusion]));
+            OPTIX_CHECK(
+                    optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::Occlusion]));
             _device_ptr_table.miss_record.upload(ms_sbt);
 
             _device_ptr_table.hit_record = _device->allocate_buffer<HitGroupRecord>(RayType::Count);
@@ -229,7 +233,6 @@ namespace luminous {
             _sbt.hitgroupRecordStrideInBytes = _device_ptr_table.hit_record.stride_in_bytes();
             _sbt.hitgroupRecordCount = _device_ptr_table.hit_record.size();
         }
-
 
         OptixBuildInput OptixAccel::get_mesh_build_input(const Buffer<float3> &positions,
                                                          const Buffer<TriangleHandle> &triangles,
@@ -387,7 +390,7 @@ namespace luminous {
         }
 
         void OptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {
-            auto stream = dynamic_cast<CUDADispatcher*>(_dispatcher.impl_mut())->stream;
+            auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;
             auto x = res.x;
             auto y = res.y;
             launch_params->traversable_handle = _root_ias_handle;
@@ -406,5 +409,6 @@ namespace luminous {
             float size_in_M = (_bvh_size_in_bytes * 1.f) / (sqr(1024));
             return string_printf("bvh size is %f MB\n", size_in_M);
         }
+
     }
 }

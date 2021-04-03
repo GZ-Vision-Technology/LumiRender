@@ -13,7 +13,7 @@ namespace luminous {
 
         GPUScene::GPUScene(const SP<Device> &device)
                 : _device(device) {
-            _optix_accel = make_unique<OptixAccel>(device);
+            _optix_accel = make_unique<OptixAccel>(device, this);
         }
 
         void GPUScene::create_device_memory() {

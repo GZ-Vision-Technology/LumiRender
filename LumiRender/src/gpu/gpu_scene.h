@@ -28,10 +28,12 @@ namespace luminous {
             Managed<float2> _tex_coords;
             Managed<TriangleHandle> _triangles;
 
+            float3 _bg_color = make_float3(0.f);
+
             SP<Device> _device;
             UP<OptixAccel> _optix_accel;
 
-            size_t _size_in_bytes;
+            friend class OptixAccel;
 
         public:
             GPUScene(const SP<Device> &device);

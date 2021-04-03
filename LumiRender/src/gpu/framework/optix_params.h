@@ -8,6 +8,7 @@
 #include <optix.h>
 #include "graphics/math/common.h"
 #include "render/sensors/sensor_handle.h"
+#include "render/samplers/sampler_handle.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -15,12 +16,7 @@ namespace luminous {
             OptixTraversableHandle traversable_handle;
             uint frame_index;
             SensorHandle *camera;
-//            float4 *accum_buffer;
-//            uchar4 *frame_buffer;
-//            uint width;
-//            uint height;
-//            SensorHandle d_camera;
-//            uint samples_per_launch;
+            SamplerHandle *sampler;
         };
 
         struct RayGenData {
@@ -29,13 +25,20 @@ namespace luminous {
 
 
         struct MissData {
-            float4 bg_color;
+            float3 bg_color;
         };
 
         struct HitGroupData {
+            // instance data
+            uint *inst_to_mesh_idx;
+            uint *inst_to_transform_idx;
+            float4x4 *transforms;
+            // mesh data
+            MeshHandle *meshes;
             float3 *positions;
             float3 *normals;
             float2 *tex_coords;
+            TriangleHandle *triangles;
         };
 
         template<typename T>
