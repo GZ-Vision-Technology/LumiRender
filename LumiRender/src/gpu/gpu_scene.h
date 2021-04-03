@@ -31,10 +31,14 @@ namespace luminous {
             SP<Device> _device;
             UP<OptixAccel> _optix_accel;
 
+            size_t _size_in_bytes;
+
         public:
             GPUScene(const SP<Device> &device);
 
             void init(const SP<SceneGraph> &scene_graph) override;
+
+            size_t size_in_bytes() const override;
 
             void create_device_memory();
 
@@ -50,6 +54,8 @@ namespace luminous {
             }
 
             void build_accel();
+
+            NDSC std::string description() const override;
         };
     }
 }

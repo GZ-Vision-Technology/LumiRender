@@ -25,6 +25,14 @@ namespace luminous {
 
         Managed() {}
 
+        size_t size_in_bytes() const {
+            return _device_buffer.size_in_bytes();
+        }
+
+        size_t size() const {
+            return _n_elements;
+        }
+
         void reset(THost *host, const SP <Device> &device, int n = 1) {
             _n_elements = n;
             _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
@@ -81,7 +89,7 @@ namespace luminous {
             return _host[i];
         }
 
-        auto operator->() {
+        THost* operator->() {
             return _host.data();
         }
 

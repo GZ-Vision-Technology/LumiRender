@@ -29,6 +29,7 @@ namespace luminous {
                 _positions.reset(move(_cpu_positions), _device);
                 _tex_coords.reset(move(_cpu_tex_coords), _device);
                 _triangles.reset(move(_cpu_triangles), _device);
+                _normals.reset(move(_cpu_normals), _device);
             }
         }
 
@@ -45,6 +46,7 @@ namespace luminous {
                 _positions.synchronize_to_gpu();
                 _tex_coords.synchronize_to_gpu();
                 _triangles.synchronize_to_gpu();
+                _normals.synchronize_to_gpu();
             }
         }
 
@@ -63,6 +65,29 @@ namespace luminous {
                                     _transforms.vector(),
                                     _inst_to_transform_idx.vector());
             cout << _optix_accel->description() << endl;
+            cout << description() << endl;
+        }
+
+        size_t GPUScene::size_in_bytes() const {
+            size_t ret = 0u;
+            ret += _inst_to_mesh_idx.size_in_bytes();
+            ret += _inst_to_transform_idx.size_in_bytes();
+            ret += _transforms.size_in_bytes();
+            ret += _meshes.size_in_bytes();
+            ret += _positions.size_in_bytes();
+            ret += _normals.size_in_bytes();
+            ret += _tex_coords.size_in_bytes();
+            ret += _triangles.size_in_bytes();
+            return ret;
+        }
+
+        std::string GPUScene::description() const {
+            float size_in_MB = float(size_in_bytes()) / sqr(1024);
+
+            return string_printf("scene data occupy %f MB, instance triangle is %u, instance vertices is %u",
+                                 size_in_MB,
+                                 _inst_triangle_num,
+                                 _inst_vertices_num);
         }
     }
 }

@@ -25,11 +25,16 @@ namespace luminous {
             vector<float2> _cpu_tex_coords{};
             vector<TriangleHandle> _cpu_triangles{};
 
+            size_t _inst_vertices_num{0};
+            size_t _inst_triangle_num{0};
+
         public:
 
             void shrink_to_fit();
 
-            size_t size_in_bytes() const;
+            NDSC virtual std::string description() const;
+
+            virtual size_t size_in_bytes() const;
 
             void clear();
 

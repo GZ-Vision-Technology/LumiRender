@@ -42,6 +42,8 @@ namespace luminous {
                 for (const SP<const Mesh> &mesh : model->meshes) {
                     _cpu_inst_to_transform_idx.push_back(_cpu_transforms.size());
                     _cpu_inst_to_mesh_idx.push_back(mesh->idx_in_meshes);
+                    _inst_triangle_num += mesh->triangles.size();
+                    _inst_vertices_num += mesh->positions.size();
                 }
                 _cpu_transforms.push_back(instance->o2w.mat4x4());
             }
@@ -82,6 +84,15 @@ namespace luminous {
             _cpu_transforms.shrink_to_fit();
             _cpu_inst_to_mesh_idx.shrink_to_fit();
             _cpu_inst_to_transform_idx.shrink_to_fit();
+        }
+
+        std::string Scene::description() const {
+            size_t size_in_MB = size_in_bytes() / sqr(1024);
+
+            return string_printf("scene data occupy %u MB, instance triangle is %u, instance vertices is %u",
+                                 size_in_MB,
+                                 _inst_triangle_num,
+                                 _inst_vertices_num);
         }
 
     }
