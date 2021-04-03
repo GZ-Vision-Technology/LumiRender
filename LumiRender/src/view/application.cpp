@@ -24,7 +24,7 @@ namespace luminous {
 
     /*! callback for a window resizing event */
     static void glfw_resize(GLFWwindow *window, int width, int height) {
-        get_user_ptr(window)->on_resize(make_int2(width, height));
+        get_user_ptr(window)->on_resize(make_uint2(width, height));
     }
 
     /*! callback for a char key press or release */
@@ -86,7 +86,7 @@ namespace luminous {
         }
     }
 
-    void App::on_resize(const int2 &new_size) {
+    void App::on_resize(const uint2 &new_size) {
         glViewport(0, 0, new_size.x, new_size.y);
         _task->update_film_resolution(new_size);
     }
@@ -207,7 +207,7 @@ namespace luminous {
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
-    void App::init_window(const std::string &title, const int2 &size) {
+    void App::init_window(const std::string &title, const uint2 &size) {
         glfwSetErrorCallback(on_glfw_error);
         if (!glfwInit())
             exit(EXIT_FAILURE);

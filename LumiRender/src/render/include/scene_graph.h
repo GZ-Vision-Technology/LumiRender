@@ -82,7 +82,7 @@ namespace luminous {
 
         struct FilmConfig : Config {
             string type;
-            int2 resolution;
+            uint2 resolution;
             string file_name;
         };
 

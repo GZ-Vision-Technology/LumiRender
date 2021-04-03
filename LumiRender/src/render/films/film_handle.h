@@ -17,7 +17,7 @@ namespace luminous {
         public:
             using Variant::Variant;
 
-            NDSC_XPU int2 resolution() const;
+            NDSC_XPU uint2 resolution() const;
 
             NDSC_XPU Box2f screen_window() const;
 
@@ -25,7 +25,7 @@ namespace luminous {
 
             XPU void add_sample(float2 p_film, float3 color, float weight);
 
-            XPU void set_resolution(int2 res);
+            XPU void set_resolution(uint2 res);
 
             XPU void set_accumulate_buffer(float4 *d_ptr);
 

@@ -13,7 +13,7 @@ namespace luminous {
 
         class GBufferFilm : public FilmBase {
         public:
-            GBufferFilm(int2 res) : FilmBase(res) {}
+            GBufferFilm(uint2 res) : FilmBase(res) {}
 
             GEN_CLASS_NAME(GBufferFilm)
 

@@ -47,7 +47,7 @@ namespace luminous {
             camera()->update_pitch(d_pitch * sensitivity);
         }
 
-        void CUDATask::update_film_resolution(int2 res) {
+        void CUDATask::update_film_resolution(uint2 res) {
             camera()->update_film_resolution(res);
             update_device_buffer();
         }
@@ -77,7 +77,7 @@ namespace luminous {
             _integrator->render();
         }
 
-        int2 CUDATask::resolution() {
+        uint2 CUDATask::resolution() {
             return camera()->film()->resolution();
         }
 

@@ -20,7 +20,7 @@ namespace luminous {
 
         class FilmBase {
         protected:
-            int2 _resolution;
+            uint2 _resolution;
             Box2f _screen_window;
             float4 *_d_accumulate_buffer{nullptr};
             FrameBufferType *_d_frame_buffer{nullptr};
@@ -35,12 +35,12 @@ namespace luminous {
                 }
             }
         public:
-            FilmBase(int2 res)
+            FilmBase(uint2 res)
                 : _resolution(res) {
                 update();
             }
 
-            XPU void set_resolution(int2 resolution) {
+            XPU void set_resolution(uint2 resolution) {
                 _resolution = resolution;
                 update();
             }
@@ -53,7 +53,7 @@ namespace luminous {
                 _d_frame_buffer = d_ptr;
             }
 
-            NDSC_XPU int2 resolution() const { return _resolution; }
+            NDSC_XPU uint2 resolution() const { return _resolution; }
 
             NDSC_XPU Box2f screen_window() const { return _screen_window; }
 

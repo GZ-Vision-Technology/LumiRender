@@ -55,7 +55,6 @@ GLOBAL __closesthit__radiance() {
 
 GLOBAL __closesthit__occlusion() {
     auto id = optixGetInstanceId();
-    if (id != 0)
-        printf("asdf %u, %u\n", optixGetInstanceId(), optixGetPrimitiveIndex());
+
     setPayloadOcclusion(true);
 }

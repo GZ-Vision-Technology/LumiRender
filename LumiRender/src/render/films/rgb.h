@@ -13,7 +13,7 @@ namespace luminous {
 
         class RGBFilm : public FilmBase {
         public:
-            RGBFilm(int2 res) : FilmBase(res) {}
+            RGBFilm(uint2 res) : FilmBase(res) {}
 
             GEN_CLASS_NAME(RGBFilm)
 

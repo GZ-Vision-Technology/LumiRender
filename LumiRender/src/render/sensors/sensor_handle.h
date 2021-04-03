@@ -30,11 +30,11 @@ namespace luminous {
 
             XPU void set_film(const FilmHandle &film);
 
-            XPU void update_film_resolution(int2 res);
+            XPU void update_film_resolution(uint2 res);
 
             NDSC_XPU FilmHandle *film();
 
-            NDSC_XPU int2 resolution() const;
+            NDSC_XPU uint2 resolution() const;
 
             NDSC_XPU Transform camera_to_world() const;
 

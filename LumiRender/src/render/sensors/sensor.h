@@ -36,20 +36,20 @@ namespace luminous {
 
             XPU void _update_raster();
 
-            XPU void _set_resolution(int2 res);
+            XPU void _set_resolution(uint2 res);
 
         public:
             XPU CameraBase(float3 pos = make_float3(0), float fov_y = 30);
 
             XPU CameraBase(const float4x4 m, float fov_y, float velocity);
 
-            XPU void update_film_resolution(int2 res);
+            XPU void update_film_resolution(uint2 res);
 
             XPU void set_film(const FilmHandle &film);
 
             NDSC_XPU FilmHandle *film();
 
-            NDSC_XPU int2 resolution() const;
+            NDSC_XPU uint2 resolution() const;
 
             NDSC_XPU Transform camera_to_world() const;
 

@@ -10,7 +10,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(name);
         }
 
-        int2 FilmHandle::resolution() const {
+        uint2 FilmHandle::resolution() const {
             LUMINOUS_VAR_DISPATCH(resolution);
         }
 
@@ -18,7 +18,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(screen_window);
         }
 
-        void FilmHandle::set_resolution(int2 res) {
+        void FilmHandle::set_resolution(uint2 res) {
             LUMINOUS_VAR_DISPATCH(set_resolution, res);
         }
 

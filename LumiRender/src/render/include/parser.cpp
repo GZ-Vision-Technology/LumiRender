@@ -107,7 +107,7 @@ namespace luminous {
             FilmConfig fc;
             fc.type = "RGBFilm";
             ParameterSet param(ps["param"]);
-            fc.resolution = param["resolution"].as_int2(make_int2(500, 500));
+            fc.resolution = param["resolution"].as_uint2(make_uint2(500, 500));
             fc.file_name = param["file_name"].as_string("luminous.png");
             return fc;
         }

@@ -47,13 +47,13 @@ namespace luminous {
 
         void update_render_texture();
 
-        void init_window(const std::string &title, const int2 &size);
+        void init_window(const std::string &title, const uint2 &size);
 
         void init_event_cb();
 
         void init_imgui();
 
-        void on_resize(const int2 &new_size);
+        void on_resize(const uint2 &new_size);
 
         void on_key_event(int key, int scancode, int action, int mods);
 

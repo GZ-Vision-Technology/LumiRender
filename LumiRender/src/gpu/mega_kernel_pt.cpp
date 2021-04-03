@@ -34,7 +34,7 @@ namespace luminous {
             _camera->update_pitch(d_pitch);
         }
 
-        void MegaKernelPT::update_film_resolution(int2 res) {
+        void MegaKernelPT::update_film_resolution(uint2 res) {
             auto film = _camera->film();
             film->set_resolution(res);
         }

@@ -373,7 +373,7 @@ namespace luminous {
             _as_buffer_list.push_back(move(ias_buffer));
         }
 
-        void OptixAccel::launch(int2 res, Managed<LaunchParams> &launch_params) {
+        void OptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {
             auto stream = dynamic_cast<CUDADispatcher*>(_dispatcher.impl_mut())->stream;
             auto x = res.x;
             auto y = res.y;
