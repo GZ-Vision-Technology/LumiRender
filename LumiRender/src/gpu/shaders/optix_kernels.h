@@ -32,6 +32,16 @@ static GPU_INLINE void setPayloadOcclusion(bool occluded) {
     optixSetPayload_0(static_cast<unsigned int>( occluded ));
 }
 
+static GPU_INLINE luminous::uint3 getLaunchIndex() {
+    auto idx = optixGetLaunchIndex();
+    return luminous::make_uint3(idx.x, idx.y, idx.z);
+}
+
+static GPU_INLINE luminous::uint2 getPixelCoords() {
+    auto idx = optixGetLaunchIndex();
+    return luminous::make_uint2(idx.x, idx.y);
+}
+
 static GPU_INLINE void traceRadiance(OptixTraversableHandle handle,
                                               luminous::Ray ray, RadiancePRD *prd) {
     unsigned int u0, u1;
@@ -70,5 +80,10 @@ static GPU_INLINE bool traceOcclusion(OptixTraversableHandle handle, luminous::R
             luminous::RayType::Count,           // SBT stride
             luminous::RayType::Occlusion,        // missSBTIndex
             occluded);
-    return occluded;
+    return bool(occluded);
+}
+
+static GPU_INLINE luminous::float2 getTriangleBarycentric() {
+    float2 barycentric = optixGetTriangleBarycentrics();
+    return luminous::make_float2(barycentric.x, barycentric.y);
 }

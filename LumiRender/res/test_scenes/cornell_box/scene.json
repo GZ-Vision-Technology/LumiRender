@@ -69,6 +69,25 @@
 					}
 				}
 			}
+		},
+		{
+			"name" : "c_box",
+			"type": "model",
+			"param" : {
+				"fn": "teapot.obj",
+				"subdiv_level": 0,
+				"transform" : {
+					"type" : "matrix4x4",
+					"param" : {
+						"matrix4x4" : [
+							1,0,0,0,
+							0,1,0,0,
+							0,0,1,0,
+							2,3,5,1
+						]
+					}
+				}
+			}
 		}
 //		{
 //			"name" : "c_box",

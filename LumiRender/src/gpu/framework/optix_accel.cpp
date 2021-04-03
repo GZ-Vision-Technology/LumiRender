@@ -74,7 +74,6 @@ namespace luminous {
             char log[2048];
             size_t log_size = sizeof(log);
             std::string ptx_code(optix_shader_code);
-            cout << ptx_code;
             OPTIX_CHECK_WITH_LOG(optixModuleCreateFromPTX(
                     _optix_device_context,
                     &module_compile_options,
@@ -394,6 +393,5 @@ namespace luminous {
             float size_in_M = (_bvh_size_in_bytes * 1.f) / (sqr(1024));
             return string_printf("bvh size is %f MB\n", size_in_M);
         }
-
     }
 }
