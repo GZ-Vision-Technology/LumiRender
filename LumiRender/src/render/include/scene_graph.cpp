@@ -21,15 +21,15 @@ namespace luminous {
                 auto x = config.width / 2;
                 auto y = config.height / 2;
                 Box3f aabb;
-                vector<float3> P{make_float3(x, y, 0),
+                vector<float3> P{make_float3(x, y, 0.1),
                                  make_float3(x, -y, 0),
                                  make_float3(-x, y, 0),
-                                 make_float3(-x, -y, 0)};
+                                 make_float3(-x, -y, 0.1)};
 
                 for (auto p : P) {
                     aabb.extend(p);
                 }
-
+                
                 vector<float3> N(4, make_float3(0, 0, 1));
 
                 vector<float2> UV{make_float2(1, 1),

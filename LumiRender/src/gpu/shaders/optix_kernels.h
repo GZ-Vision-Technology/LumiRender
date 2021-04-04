@@ -125,9 +125,17 @@ static GPU_INLINE luminous::Interaction getInteraction(uint32_t instance_id, uin
     luminous::float3 *normals = &data.normals[mesh.vertex_offset];
     luminous::float2 *tex_coords = &data.tex_coords[mesh.vertex_offset];
 
-    luminous::float3 n0 = normals[tri.i];
-    luminous::float3 n1 = normals[tri.j];
-    luminous::float3 n2 = normals[tri.k];
+    auto n0 = normals[tri.i];
+    auto n1 = normals[tri.j];
+    auto n2 = normals[tri.k];
+
+    auto p0 = positions[tri.i];
+    auto p1 = positions[tri.j];
+    auto p2 = positions[tri.k];
+    auto v01 = p1 - p0;
+    auto v02 = p2 - p0;
+
+    interaction.ng = normalize(cross(v01, v02));
 
     interaction.ns = triangle_lerp(barycentric, n0, n1, n2);
 
