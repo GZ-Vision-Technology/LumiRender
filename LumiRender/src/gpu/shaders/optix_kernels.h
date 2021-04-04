@@ -13,6 +13,7 @@
 
 struct RadiancePRD {
     luminous::Interaction interaction;
+    luminous::float3 radiance;
 };
 
 static GPU_INLINE void *unpackPointer(unsigned int i0, unsigned int i1) {
