@@ -6,7 +6,8 @@
 #pragma once
 
 #include "../math/common.h"
+#include "util.h"
 #include "box.h"
 #include "frame.h"
 #include "transform.h"
-#include "ray_hit.h"
+#include "util.h"

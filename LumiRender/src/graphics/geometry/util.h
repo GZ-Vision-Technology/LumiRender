@@ -94,6 +94,14 @@ namespace luminous {
             return select(functor::abs(p) < origin, p + float_scale * n, p_i);
         }
 
+        template<typename vector_t>
+        NDSC_XPU vector_t triangle_lerp(float2 barycentric, vector_t v0, vector_t v1, vector_t v2) {
+            auto weight0 = barycentric.x;
+            auto weight1 = barycentric.y;
+            auto weight2 = 1 - barycentric.x - barycentric.y;
+            return weight0 * v0 + weight1 * v1 + weight2 * v2;
+        }
+
         struct alignas(8) ClosestHit {
             float distance;
             uint triangle_id;

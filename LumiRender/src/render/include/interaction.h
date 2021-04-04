@@ -10,8 +10,9 @@
 namespace luminous {
     inline namespace render {
         struct Interaction {
-            float3 position;
-            float3 normal;
+            float3 pos;
+            float3 ng;
+            float3 ns;
             float2 uv;
             float3 wo;
             float time;

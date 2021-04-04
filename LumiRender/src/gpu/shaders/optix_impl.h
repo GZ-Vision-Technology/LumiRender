@@ -39,11 +39,14 @@ GLOBAL __miss__shadow() {
 }
 
 GLOBAL __closesthit__radiance() {
+
     RadiancePRD *prd = getPRD();
+    auto interaction = getInteraction(getInstanceId(), getPrimIdx(), getTriangleBarycentric());
+    auto n = interaction.ns;
+    n = (n + 1.f) / 2.f;
     prd->radiance = luminous::make_float3(1);
-    auto data = getSbtData<luminous::HitGroupData>();
-    auto tri = data.triangles[123];
-//    tri.print();
+    prd->radiance = n;
+
 }
 
 GLOBAL __closesthit__occlusion() {

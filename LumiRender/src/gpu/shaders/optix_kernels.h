@@ -104,3 +104,32 @@ static GPU_INLINE luminous::float2 getTriangleBarycentric() {
     float2 barycentric = optixGetTriangleBarycentrics();
     return luminous::make_float2(barycentric.x, barycentric.y);
 }
+
+static GPU_INLINE uint32_t getInstanceId() {
+    return optixGetInstanceId();
+}
+
+static GPU_INLINE uint32_t getPrimIdx() {
+    return optixGetPrimitiveIndex();
+}
+
+static GPU_INLINE luminous::Interaction getInteraction(uint32_t instance_id, uint32_t prim_idx,
+                                                       luminous::float2 barycentric) {
+    using namespace luminous;
+    Interaction interaction;
+    HitGroupData data = getSbtData<HitGroupData>();
+    uint mesh_idx = data.inst_to_mesh_idx[instance_id];
+    MeshHandle mesh = data.meshes[mesh_idx];
+    TriangleHandle tri = data.triangles[mesh.triangle_offset + prim_idx];
+    luminous::float3 *positions = &data.positions[mesh.vertex_offset];
+    luminous::float3 *normals = &data.normals[mesh.vertex_offset];
+    luminous::float2 *tex_coords = &data.tex_coords[mesh.vertex_offset];
+
+    luminous::float3 n0 = normals[tri.i];
+    luminous::float3 n1 = normals[tri.j];
+    luminous::float3 n2 = normals[tri.k];
+
+    interaction.ns = triangle_lerp(barycentric, n0, n1, n2);
+
+    return interaction;
+}

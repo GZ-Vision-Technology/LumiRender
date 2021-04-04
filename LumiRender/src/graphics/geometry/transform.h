@@ -7,7 +7,7 @@
 
 #include <cmath>
 #include "../math/common.h"
-#include "ray_hit.h"
+#include "util.h"
 
 namespace luminous {
     inline namespace geometry {
