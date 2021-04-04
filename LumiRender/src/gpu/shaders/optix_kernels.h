@@ -53,12 +53,17 @@ static GPU_INLINE RadiancePRD *getPRD() {
     return reinterpret_cast<RadiancePRD *>(unpackPointer(u0, u1));
 }
 
-static GPU_INLINE void traceRadiance(OptixTraversableHandle handle,
-                                     luminous::Ray ray, RadiancePRD *prd) {
-    unsigned int u0, u1;
-    packPointer(prd, u0, u1);
+template<typename... Args>
+static GPU_INLINE void trace(OptixTraversableHandle handle,
+                             luminous::Ray ray,
+                             OptixRayFlags flags,
+                             uint32_t SBToffset,
+                             uint32_t SBTstride,
+                             uint32_t missSBTIndex,
+                             Args &&... payload) {
     float3 origin = make_float3(ray.org_x, ray.org_y, ray.org_z);
     float3 direction = make_float3(ray.dir_x, ray.dir_y, ray.dir_z);
+
     optixTrace(
             handle,
             origin,
@@ -67,30 +72,31 @@ static GPU_INLINE void traceRadiance(OptixTraversableHandle handle,
             ray.t_max,
             0.0f,                // rayTime
             OptixVisibilityMask(1),
-            OPTIX_RAY_FLAG_NONE,
-            luminous::RayType::Radiance,        // SBT offset
-            luminous::RayType::Count,           // SBT stride
-            luminous::RayType::Radiance,        // missSBTIndex
-            u0, u1);
+            flags,
+            SBToffset,        // SBT offset
+            SBTstride,           // SBT stride
+            missSBTIndex,        // missSBTIndex
+            std::forward<Args>(payload)...);
+}
+
+static GPU_INLINE void traceRadiance(OptixTraversableHandle handle,
+                                     luminous::Ray ray, RadiancePRD *prd) {
+    unsigned int u0, u1;
+    packPointer(prd, u0, u1);
+    trace(handle, ray, OPTIX_RAY_FLAG_NONE,
+          luminous::RayType::Radiance,        // SBT offset
+          luminous::RayType::Count,           // SBT stride
+          luminous::RayType::Radiance,        // missSBTIndex
+          u0, u1);
 }
 
 static GPU_INLINE bool traceOcclusion(OptixTraversableHandle handle, luminous::Ray ray) {
     unsigned int occluded = 0u;
-    float3 origin = make_float3(ray.org_x, ray.org_y, ray.org_z);
-    float3 direction = make_float3(ray.dir_x, ray.dir_y, ray.dir_z);
-    optixTrace(
-            handle,
-            origin,
-            direction,
-            ray.t_min,
-            ray.t_max,
-            0.0f,                    // rayTime
-            OptixVisibilityMask(1),
-            OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT,
-            luminous::RayType::Occlusion,        // SBT offset
-            luminous::RayType::Count,           // SBT stride
-            luminous::RayType::Occlusion,        // missSBTIndex
-            occluded);
+    trace(handle, ray, OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT,
+          luminous::RayType::Occlusion,        // SBT offset
+          luminous::RayType::Count,           // SBT stride
+          luminous::RayType::Occlusion,        // missSBTIndex
+          occluded);
     return bool(occluded);
 }
 

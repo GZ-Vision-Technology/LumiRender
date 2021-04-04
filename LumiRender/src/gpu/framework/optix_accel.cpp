@@ -203,6 +203,18 @@ namespace luminous {
             return pipeline;
         }
 
+        void OptixAccel::fill_hit_group_data(HitGroupRecord *p, const GPUScene *gpu_scene) {
+            p->data.positions = gpu_scene->_positions.device_data();
+            p->data.normals = gpu_scene->_normals.device_data();
+            p->data.tex_coords = gpu_scene->_tex_coords.device_data();
+            p->data.triangles = gpu_scene->_triangles.device_data();
+            p->data.meshes = gpu_scene->_meshes.device_data();
+
+            p->data.inst_to_mesh_idx = gpu_scene->_inst_to_mesh_idx.device_data();
+            p->data.inst_to_transform_idx = gpu_scene->_inst_to_transform_idx.device_data();
+            p->data.transforms = gpu_scene->_transforms.device_data();
+        }
+
         void OptixAccel::create_sbt(ProgramGroupTable program_group_table, const GPUScene *gpu_scene) {
             _device_ptr_table.rg_record = _device->allocate_buffer<RayGenRecord>(1);
             RayGenRecord rg_sbt = {};
@@ -220,9 +232,12 @@ namespace luminous {
 
             _device_ptr_table.hit_record = _device->allocate_buffer<HitGroupRecord>(RayType::Count);
             HitGroupRecord hit_sbt[RayType::Count] = {};
-            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_hit_group, &hit_sbt[RayType::Radiance]));
-            OPTIX_CHECK(
-                    optixSbtRecordPackHeader(_program_group_table.occlusion_hit_group, &hit_sbt[RayType::Occlusion]));
+            fill_hit_group_data(&hit_sbt[RayType::Radiance], gpu_scene);
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_hit_group,
+                                                 &hit_sbt[RayType::Radiance]));
+            fill_hit_group_data(&hit_sbt[RayType::Occlusion], gpu_scene);
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.occlusion_hit_group,
+                                                 &hit_sbt[RayType::Occlusion]));
             _device_ptr_table.hit_record.upload(hit_sbt);
 
             _sbt.raygenRecord = _device_ptr_table.rg_record.ptr<CUdeviceptr>();
@@ -409,6 +424,5 @@ namespace luminous {
             float size_in_M = (_bvh_size_in_bytes * 1.f) / (sqr(1024));
             return string_printf("bvh size is %f MB\n", size_in_M);
         }
-
     }
 }

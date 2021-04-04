@@ -23,6 +23,9 @@ namespace luminous {
             uint i;
             uint j;
             uint k;
+            XPU void print() const {
+                printf("i:%u, j:%u, k:%u \n", i, j, k);
+            }
         };
 
         struct MeshHandle {
@@ -38,6 +41,14 @@ namespace luminous {
             uint triangle_offset;
             uint vertex_count;
             uint triangle_count;
+
+            XPU void print() const {
+                printf("vert offset:%u, tri offset:%u, vert num:%u, tri num:%u\n",
+                       vertex_offset,
+                       triangle_offset,
+                       vertex_count,
+                       triangle_count);
+            }
         };
 
         struct Mesh : public Shape {

@@ -12,9 +12,7 @@ namespace luminous {
     inline namespace gpu {
 
         GPUScene::GPUScene(const SP<Device> &device)
-                : _device(device) {
-            _optix_accel = make_unique<OptixAccel>(device, this);
-        }
+                : _device(device) {}
 
         void GPUScene::create_device_memory() {
             {
@@ -50,11 +48,16 @@ namespace luminous {
             }
         }
 
+        void GPUScene::init_accel() {
+            _optix_accel = make_unique<OptixAccel>(_device, this);
+            build_accel();
+        }
+
         void GPUScene::init(const SP<SceneGraph> &scene_graph) {
             convert_geometry_data(scene_graph);
             create_device_memory();
             synchronize_to_gpu();
-            build_accel();
+            init_accel();
         }
 
         void GPUScene::build_accel() {
@@ -89,5 +92,6 @@ namespace luminous {
                                  _inst_triangle_num,
                                  _inst_vertices_num);
         }
+
     }
 }

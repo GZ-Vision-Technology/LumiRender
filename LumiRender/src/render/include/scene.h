@@ -40,6 +40,8 @@ namespace luminous {
 
             virtual void init(const SP<SceneGraph> &scene_graph) = 0;
 
+            virtual void init_accel() = 0;
+
             void convert_geometry_data(const SP<SceneGraph> &scene_graph);
         };
     }

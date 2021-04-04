@@ -40,6 +40,8 @@ namespace luminous {
 
             void init(const SP<SceneGraph> &scene_graph) override;
 
+            void init_accel() override;
+
             size_t size_in_bytes() const override;
 
             void create_device_memory();
