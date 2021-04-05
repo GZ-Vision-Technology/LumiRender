@@ -11,6 +11,7 @@ namespace luminous {
             LaunchParams lp{};
             lp.sampler = _sampler.device_data();
             lp.camera = _camera.device_data();
+            lp.frame_index = 0u;
             _launch_params.reset(&lp, _device);
             _launch_params.synchronize_to_gpu();
         }
@@ -41,6 +42,7 @@ namespace luminous {
 
         void MegaKernelPT::render() {
             auto res = _camera->resolution();
+            _launch_params->frame_index += 1;
             _scene->launch(res, _launch_params);
         }
 
@@ -50,6 +52,7 @@ namespace luminous {
         }
 
         void MegaKernelPT::update() {
+            _launch_params->frame_index = 0u;
             synchronize_to_gpu();
         }
 

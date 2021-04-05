@@ -67,16 +67,19 @@ namespace luminous {
         int2 delta = new_pos - _last_mouse_pos;
         if (!_last_mouse_pos.is_zero() && _left_key_press) {
             _task->update_camera_view(delta.x, -delta.y);
+            _need_update = true;
         }
         _last_mouse_pos = new_pos;
     }
 
     void App::on_scroll_event(double scroll_x, double scroll_y) {
         _task->update_camera_fov_y(scroll_y);
+        _need_update = true;
     }
 
     void App::on_key_event(int key, int scancode, int action, int mods) {
         _task->on_key(key, scancode, action, mods);
+        _need_update = true;
     }
 
     void App::on_mouse_event(int button, int action, int mods) {
@@ -89,6 +92,7 @@ namespace luminous {
     void App::on_resize(const uint2 &new_size) {
         glViewport(0, 0, new_size.x, new_size.y);
         _task->update_film_resolution(new_size);
+        _need_update = true;
     }
 
     App::App(const std::string &title, const int2 &size, Context *context, const Parser &parser)
@@ -162,9 +166,17 @@ namespace luminous {
         _last_frame_t = get_cur_time();
     }
 
+    void App::check_and_update() {
+        if (_need_update) {
+            _task->update();
+            _need_update = false;
+        }
+    }
+
     void App::render() {
         auto dt = compute_dt();
         update_time();
+        check_and_update();
         _task->render_gui(dt);
     }
 

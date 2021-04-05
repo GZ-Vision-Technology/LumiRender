@@ -40,6 +40,8 @@ namespace luminous {
 
         bool _left_key_press{false};
 
+        bool _need_update{true};
+
     public:
         App(const std::string &title, const int2 &size, Context *context, const Parser &parser);
 
@@ -66,6 +68,8 @@ namespace luminous {
         void set_title(const std::string &s);
 
         void render();
+
+        void check_and_update();
 
         void update_time();
 

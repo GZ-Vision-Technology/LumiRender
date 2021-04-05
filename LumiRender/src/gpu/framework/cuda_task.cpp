@@ -71,9 +71,13 @@ namespace luminous {
             camera()->film()->set_frame_buffer(_frame_buffer.device_data());
         }
 
+        void CUDATask::update() {
+            _integrator->update();
+        }
+
         void CUDATask::render_gui(double dt) {
             _dt = dt;
-            _integrator->update();
+//            _integrator->update();
             _integrator->render();
         }
 
@@ -89,5 +93,6 @@ namespace luminous {
         SensorHandle *CUDATask::camera() {
             return _integrator->camera();
         }
+
     }
 }
