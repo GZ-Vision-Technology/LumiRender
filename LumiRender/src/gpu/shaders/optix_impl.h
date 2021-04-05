@@ -25,7 +25,12 @@ GLOBAL __raygen__rg() {
     camera->generate_ray(ss, &ray);
     RadiancePRD prd;
     traceRadiance(params.traversable_handle, ray, &prd);
-    film->add_sample(ss.p_film, prd.radiance, 1);
+    film->add_sample(ss.p_film, prd.radiance, 1, params.frame_index);
+
+    auto result = luminous::make_float3(0.f);
+    for (int i = 0; i < sampler.spp(); ++i) {
+
+    }
 }
 
 GLOBAL __miss__radiance() {

@@ -23,7 +23,7 @@ namespace luminous {
 
             NDSC_XPU const char *name();
 
-            XPU void add_sample(float2 p_film, float3 color, float weight);
+            XPU void add_sample(float2 p_film, float3 color, float weight, uint frame_index = 0u);
 
             XPU void set_resolution(uint2 res);
 
