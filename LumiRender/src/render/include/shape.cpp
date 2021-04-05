@@ -23,7 +23,7 @@ namespace luminous {
             LUMINOUS_INFO("Loading triangle mesh: ", path);
             auto ai_scene = ai_importer.ReadFile(path.string().c_str(),
                                                  aiProcess_JoinIdenticalVertices |
-                                                 aiProcess_GenNormals |
+                                                 aiProcess_GenSmoothNormals |
                                                  aiProcess_PreTransformVertices |
                                                  aiProcess_ImproveCacheLocality |
                                                  aiProcess_FixInfacingNormals |

@@ -102,7 +102,7 @@ static GPU_INLINE bool traceOcclusion(OptixTraversableHandle handle, luminous::R
 
 static GPU_INLINE luminous::float2 getTriangleBarycentric() {
     float2 barycentric = optixGetTriangleBarycentrics();
-    return luminous::make_float2(barycentric.x, barycentric.y);
+    return luminous::make_float2(1 - barycentric.y - barycentric.x, barycentric.x);
 }
 
 static GPU_INLINE uint32_t getInstanceId() {
@@ -114,11 +114,13 @@ static GPU_INLINE uint32_t getPrimIdx() {
 }
 
 static GPU_INLINE luminous::Interaction getInteraction(uint32_t instance_id, uint32_t prim_idx,
-                                                       luminous::float2 barycentric) {
+                                                       luminous::float2 uv) {
     using namespace luminous;
     Interaction interaction;
     HitGroupData data = getSbtData<HitGroupData>();
     uint mesh_idx = data.inst_to_mesh_idx[instance_id];
+    luminous::float4x4 mat4x4 = data.transforms[data.inst_to_transform_idx[instance_id]];
+    Transform o2w(mat4x4);
     MeshHandle mesh = data.meshes[mesh_idx];
     TriangleHandle tri = data.triangles[mesh.triangle_offset + prim_idx];
     luminous::float3 *positions = &data.positions[mesh.vertex_offset];
@@ -128,16 +130,26 @@ static GPU_INLINE luminous::Interaction getInteraction(uint32_t instance_id, uin
     auto n0 = normals[tri.i];
     auto n1 = normals[tri.j];
     auto n2 = normals[tri.k];
+    interaction.ns = normalize(o2w.apply_normal(triangle_lerp(uv, n0, n1, n2)));
 
     auto p0 = positions[tri.i];
     auto p1 = positions[tri.j];
     auto p2 = positions[tri.k];
     auto v01 = p1 - p0;
     auto v02 = p2 - p0;
+    interaction.pos = o2w.apply_point(triangle_lerp(uv, p0, p1, p2));
+    interaction.ng = normalize(o2w.apply_normal(cross(v01, v02)));
 
-    interaction.ng = normalize(cross(v01, v02));
+    auto tex_coord0 = tex_coords[tri.i];
+    auto tex_coord1 = tex_coords[tri.j];
+    auto tex_coord2 = tex_coords[tri.k];
 
-    interaction.ns = triangle_lerp(barycentric, n0, n1, n2);
+    if (tex_coord0.is_zero() && tex_coord1.is_zero() && tex_coord2.is_zero()) {
+        tex_coord0 = luminous::make_float2(0,0);
+        tex_coord1 = luminous::make_float2(1,0);
+        tex_coord2 = luminous::make_float2(1,1);
+    }
+    interaction.uv = triangle_lerp(uv, tex_coord0, tex_coord1, tex_coord2);
 
     return interaction;
 }

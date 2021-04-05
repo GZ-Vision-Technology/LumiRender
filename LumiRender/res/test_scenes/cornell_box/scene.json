@@ -55,7 +55,7 @@
 			"name" : "c_box",
 			"type": "model",
 			"param" : {
-				"fn": "quad.obj",
+				"fn": "teapot.obj",
 				"subdiv_level": 0,
 				"transform" : {
 					"type" : "matrix4x4",
