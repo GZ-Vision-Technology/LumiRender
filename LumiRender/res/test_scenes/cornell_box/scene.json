@@ -116,7 +116,7 @@
 		}
 	},
 	"sampler" : {
-		"type" : "LCGSampler",
+		"type" : "PCGSampler",
 		"param" : {
 			"spp" : 16
 		}

@@ -35,7 +35,8 @@ namespace luminous {
 
         class PCGSampler : public SamplerBase {
         private:
-            PCG _rng;
+            RNG _rng;
+            int _seed;
         public:
             XPU explicit PCGSampler(int spp = 1) : SamplerBase(spp) {}
 

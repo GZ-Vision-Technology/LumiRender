@@ -9,6 +9,16 @@
 
 namespace luminous {
     inline namespace math {
+
+#if defined(__CUDACC__)
+        #define DoubleOneMinusEpsilon 0x1.fffffffffffffp-1
+        #define FloatOneMinusEpsilon float(0x1.fffffep-1)
+        #define OneMinusEpsilon FloatOneMinusEpsilon
+#else
+        static constexpr float FloatOneMinusEpsilon = 0.99999994;
+        static constexpr float OneMinusEpsilon = FloatOneMinusEpsilon;
+#endif
+
         template <typename T>
         inline XPU typename std::enable_if_t<std::is_floating_point<T>::value, bool>
         is_nan(T v) {

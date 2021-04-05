@@ -7,6 +7,8 @@
 
 #include "../header.h"
 #include "vector_types.h"
+#include "inttypes.h"
+#include "float.h"
 
 namespace luminous {
     inline namespace math {
@@ -52,68 +54,162 @@ namespace luminous {
             }
         };
 
-        static const float FloatOneMinusEpsilon = 0.99999994;
-        static const float OneMinusEpsilon = FloatOneMinusEpsilon;
 
+// Random Number Declarations
 #define PCG32_DEFAULT_STATE 0x853c49e6748fea9bULL
 #define PCG32_DEFAULT_STREAM 0xda3e39cb94b95bdbULL
 #define PCG32_MULT 0x5851f42d4c957f2dULL
 
+// Hashing Inline Functions
+// http://zimbry.blogspot.ch/2011/09/better-bit-mixing-improving-on.html
+        XPU inline uint64_t MixBits(uint64_t v);
+
+        inline uint64_t MixBits(uint64_t v) {
+            v ^= (v >> 31);
+            v *= 0x7fb5d329728ea185;
+            v ^= (v >> 27);
+            v *= 0x81dadef4bc2dd44d;
+            v ^= (v >> 33);
+            return v;
+        }
+
         class RNG {
-        private:
-            // RNG Private Data
-            uint64_t state{}, inc{};
         public:
             // RNG Public Methods
-            RNG() : state(PCG32_DEFAULT_STATE), inc(PCG32_DEFAULT_STREAM) {}
+            XPU RNG() : state(PCG32_DEFAULT_STATE), inc(PCG32_DEFAULT_STREAM) {}
 
-            RNG(uint64_t sequenceIndex) { SetSequence(sequenceIndex); }
+            XPU RNG(uint64_t seqIndex, uint64_t start) { SetSequence(seqIndex, start); }
 
-            void SetSequence(uint64_t sequenceIndex) {
-                state = 0u;
-                inc = (sequenceIndex << 1u) | 1u;
-                UniformUInt32();
-                state += PCG32_DEFAULT_STATE;
-                UniformUInt32();
+            XPU RNG(uint64_t seqIndex) { SetSequence(seqIndex); }
+
+            XPU void SetSequence(uint64_t sequenceIndex, uint64_t seed);
+
+            XPU void SetSequence(uint64_t sequenceIndex) {
+                SetSequence(sequenceIndex, MixBits(sequenceIndex));
             }
 
-            uint32_t UniformUInt32() {
-                uint64_t oldstate = state;
-                state = oldstate * PCG32_MULT + inc;
-                uint32_t xorshifted = (uint32_t)(((oldstate >> 18u) ^ oldstate) >> 27u);
-                uint32_t rot = (uint32_t)(oldstate >> 59u);
-                return (xorshifted >> rot) | (xorshifted << ((~rot + 1u) & 31));
-            }
+            template<typename T>
+            XPU T Uniform();
 
-            uint32_t UniformUInt32(uint32_t b) {
-                uint32_t threshold = (~b + 1u) % b;
+            template<typename T>
+            XPU typename std::enable_if_t<std::is_integral_v<T>, T> Uniform(T b) {
+                T threshold = (~b + 1u) % b;
                 while (true) {
-                    uint32_t r = UniformUInt32();
-                    if (r >= threshold) return r % b;
+                    T r = Uniform < T > ();
+                    if (r >= threshold)
+                        return r % b;
                 }
             }
 
-            float UniformFloat() {
-                return std::min(OneMinusEpsilon,
-                                float(UniformUInt32() * 2.3283064365386963e-10f));
+            XPU void Advance(int64_t idelta);
+
+            XPU int64_t operator-(const RNG &other) const;
+
+            std::string ToString() const {
+                return string_printf("[ RNG state: %" PRIu64 " inc: %" PRIu64 " ]", state, inc);
             }
 
-            void Advance(int64_t idelta) {
-                uint64_t cur_mult = PCG32_MULT, cur_plus = inc, acc_mult = 1u,
-                        acc_plus = 0u, delta = (uint64_t) idelta;
-                while (delta > 0) {
-                    if (delta & 1) {
-                        acc_mult *= cur_mult;
-                        acc_plus = acc_plus * cur_mult + cur_plus;
-                    }
-                    cur_plus = (cur_mult + 1) * cur_plus;
-                    cur_mult *= cur_mult;
-                    delta /= 2;
-                }
-                state = acc_mult * state + acc_plus;
-            }
-
+        private:
+            // RNG Private Members
+            uint64_t state, inc;
         };
+
+        // RNG Inline Method Definitions
+        template <typename T>
+        inline T RNG::Uniform() {
+            return T::unimplemented;
+        }
+
+        template <>
+        inline uint32_t RNG::Uniform<uint32_t>();
+
+        template <>
+        inline uint32_t RNG::Uniform<uint32_t>() {
+            uint64_t oldstate = state;
+            state = oldstate * PCG32_MULT + inc;
+            uint32_t xorshifted = (uint32_t)(((oldstate >> 18u) ^ oldstate) >> 27u);
+            uint32_t rot = (uint32_t)(oldstate >> 59u);
+            return (xorshifted >> rot) | (xorshifted << ((~rot + 1u) & 31));
+        }
+
+        template <>
+        inline uint64_t RNG::Uniform<uint64_t>() {
+            uint64_t v0 = Uniform<uint32_t>(), v1 = Uniform<uint32_t>();
+            return (v0 << 32) | v1;
+        }
+
+        template <>
+        inline int32_t RNG::Uniform<int32_t>() {
+            // https://stackoverflow.com/a/13208789
+            uint32_t v = Uniform<uint32_t>();
+            if (v <= (uint32_t)std::numeric_limits<int32_t>::max())
+                return int32_t(v);
+            DCHECK_GE(v, (uint32_t)std::numeric_limits<int32_t>::min());
+            return int32_t(v - std::numeric_limits<int32_t>::min()) +
+                   std::numeric_limits<int32_t>::min();
+        }
+
+        template <>
+        inline int64_t RNG::Uniform<int64_t>() {
+            // https://stackoverflow.com/a/13208789
+            uint64_t v = Uniform<uint64_t>();
+            if (v <= (uint64_t)std::numeric_limits<int64_t>::max())
+                // Safe to type convert directly.
+                return int64_t(v);
+            DCHECK_GE(v, (uint64_t)std::numeric_limits<int64_t>::min());
+            return int64_t(v - std::numeric_limits<int64_t>::min()) +
+                   std::numeric_limits<int64_t>::min();
+        }
+
+        inline void RNG::SetSequence(uint64_t sequenceIndex, uint64_t seed) {
+            state = 0u;
+            inc = (sequenceIndex << 1u) | 1u;
+            Uniform<uint32_t>();
+            state += seed;
+            Uniform<uint32_t>();
+        }
+
+        template <>
+        inline float RNG::Uniform<float>() {
+            return std::min<float>(OneMinusEpsilon, Uniform<uint32_t>() * 0x1p-32f);
+        }
+
+        template <>
+        inline double RNG::Uniform<double>() {
+            return std::min<double>(OneMinusEpsilon, Uniform<uint64_t>() * 0x1p-64);
+        }
+
+        inline void RNG::Advance(int64_t idelta) {
+            uint64_t curMult = PCG32_MULT, curPlus = inc, accMult = 1u;
+            uint64_t accPlus = 0u, delta = (uint64_t)idelta;
+            while (delta > 0) {
+                if (delta & 1) {
+                    accMult *= curMult;
+                    accPlus = accPlus * curMult + curPlus;
+                }
+                curPlus = (curMult + 1) * curPlus;
+                curMult *= curMult;
+                delta /= 2;
+            }
+            state = accMult * state + accPlus;
+        }
+
+        XPU inline int64_t RNG::operator-(const RNG &other) const {
+            DCHECK_EQ(inc, other.inc);
+            uint64_t curMult = PCG32_MULT, curPlus = inc, curState = other.state;
+            uint64_t theBit = 1u, distance = 0u;
+            while (state != curState) {
+                if ((state & theBit) != (curState & theBit)) {
+                    curState = curState * curMult + curPlus;
+                    distance |= theBit;
+                }
+                DCHECK_EQ(state & theBit, curState & theBit);
+                theBit <<= 1;
+                curPlus = (curMult + 1ULL) * curPlus;
+                curMult *= curMult;
+            }
+            return (int64_t)distance;
+        }
 
         struct PCG {
             XPU explicit PCG(uint64_t sequence = 0) { pcg32_init(sequence); }
