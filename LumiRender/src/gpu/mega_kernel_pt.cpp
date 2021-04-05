@@ -22,7 +22,6 @@ namespace luminous {
             _camera.reset(&camera, _device);
             auto sampler = SamplerHandle::create(scene_graph->sampler_config);
             _sampler.reset(&sampler, _device);
-
             init_launch_params();
         }
 
@@ -47,6 +46,7 @@ namespace luminous {
 
         void MegaKernelPT::synchronize_to_gpu() {
             _camera.synchronize_to_gpu();
+            _sampler.synchronize_to_gpu();
         }
 
         void MegaKernelPT::update() {

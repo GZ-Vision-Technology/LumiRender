@@ -208,11 +208,13 @@ namespace lstd {
         switch (index) { _GEN_CASES_8(); }                                                                             \
     } else if constexpr (nTypes <= 16) {                                                                               \
         switch (index) { _GEN_CASES_16(); }                                                                            \
+    } else  {                                                                                                          \
+        assert(0);                                                                                                     \
     }                                                                                                                  \
     if constexpr (std::is_same_v<void, Ret>) {                                                                         \
         return;                                                                                                        \
     } else {                                                                                                           \
-        assert(0);\
+        assert(0);                                                                                                     \
     }
 
         template<class Visitor>
