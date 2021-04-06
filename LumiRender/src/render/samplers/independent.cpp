@@ -25,12 +25,12 @@ namespace luminous {
         }
 
         void PCGSampler::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
-            _rng.SetSequence((pixel.x + pixel.y * 65536) | (uint64_t(_seed) << 32));
-            _rng.Advance(sample_index * 65536 + dimension);
+            _rng.set_sequence((pixel.x + pixel.y * 65536) | (uint64_t(_seed) << 32));
+            _rng.advance(sample_index * 65536 + dimension);
         }
 
         float PCGSampler::next_1d() {
-            return _rng.Uniform<float>();
+            return _rng.uniform<float>();
         }
 
         float2 PCGSampler::next_2d() {

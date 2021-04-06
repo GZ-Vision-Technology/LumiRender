@@ -18,7 +18,7 @@ GLOBAL __raygen__rg() {
     SensorHandle* camera = params.camera;
     FilmHandle * film = camera->film();
     SamplerHandle sampler = *params.sampler;
-    sampler.start_pixel_sample(pixel, 0, 0);
+    sampler.start_pixel_sample(pixel, params.frame_index, 0);
     auto ss = sampler.sensor_sample(pixel);
 
     Ray ray;

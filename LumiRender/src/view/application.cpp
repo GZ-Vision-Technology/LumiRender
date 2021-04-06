@@ -116,7 +116,6 @@ namespace luminous {
         for (int i = 0; i < res.y * res.x; ++i) {
             test_color[i] = make_rgba(rgb[i]);
         }
-        auto a = std::chrono::system_clock::now();
 
         glGenTextures(1, &_gl_ctx.fb_texture);
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);

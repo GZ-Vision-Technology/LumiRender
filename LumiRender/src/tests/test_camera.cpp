@@ -21,7 +21,7 @@ void test_sensor() {
     tc.pitch = 0;
     tc.position = make_float3(0,0,0);
     config.film_config.type = "RGBFilm";
-    config.film_config.resolution = make_int2(500,500);
+    config.film_config.resolution = make_uint2(500,500);
     tc.mat4x4 = make_float4x4(1);
     config.transform_config = tc;
 

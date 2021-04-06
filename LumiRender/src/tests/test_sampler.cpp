@@ -9,6 +9,7 @@ using namespace luminous;
 using namespace std;
 
 void test_sampler() {
+    TASK_TAG("test_sampler");
     auto config = SamplerConfig();
     config.type = "PCGSampler";
     config.spp = 9;
@@ -16,10 +17,12 @@ void test_sampler() {
     cout << sampler.to_string() << endl;
     cout << sampler.next_2d().to_string() << endl;
     auto s2 = sampler;
-    cout << s2.next_2d().to_string();
-//    auto p = sampler.get<LCGSampler*>();
-//    cout << p<<endl;
-//    cout << (*p)->next_2d().to_string();
+    auto f = 0.f;
+    for (int i = 0; i < 100000000; ++i) {
+        f = f + sampler.next_1d();
+    }
+    cout << f << endl;
+
 }
 
 void test_sensor() {
