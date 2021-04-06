@@ -305,7 +305,7 @@ namespace luminous {
 
             OptixAccelEmitDesc emit_desc;
             emit_desc.type = OPTIX_PROPERTY_TYPE_COMPACTED_SIZE;
-            emit_desc.result = compact_size_buffer.ptr<uint64_t>();
+            emit_desc.result = compact_size_buffer.ptr<CUdeviceptr>();
 
             OptixTraversableHandle traversable_handle = 0;
             OPTIX_CHECK(optixAccelBuild(_optix_device_context, 0, &accel_options,
@@ -316,18 +316,20 @@ namespace luminous {
 
             auto compacted_gas_size = download<size_t>(emit_desc.result);
             if (compacted_gas_size < gas_buffer_sizes.outputSizeInBytes) {
-                tri_gas_buffer = _device->allocate_buffer(compacted_gas_size);
+                //todo auto release bug
+                auto tri_gas_buffer = _device->allocate_buffer(compacted_gas_size);
                 OPTIX_CHECK(optixAccelCompact(_optix_device_context, nullptr,
                                               traversable_handle,
                                               tri_gas_buffer.ptr<CUdeviceptr>(),
                                               compacted_gas_size,
                                               &traversable_handle));
+                _bvh_size_in_bytes += tri_gas_buffer.size_in_bytes();
+                _as_buffer_list.push_back(move(tri_gas_buffer));
+            } else {
+                _bvh_size_in_bytes += tri_gas_buffer.size_in_bytes();
+                _as_buffer_list.push_back(move(tri_gas_buffer));
             }
-            _bvh_size_in_bytes += tri_gas_buffer.size_in_bytes();
-            _as_buffer_list.push_back(move(tri_gas_buffer));
-
             CU_CHECK(cuCtxSynchronize());
-            _root_gas_handle = traversable_handle;
             return traversable_handle;
         }
 
@@ -399,9 +401,13 @@ namespace luminous {
                                               ias_buffer.ptr<CUdeviceptr>(),
                                               compacted_gas_size,
                                               &_root_ias_handle));
+                _bvh_size_in_bytes += ias_buffer.size_in_bytes();
+                _as_buffer_list.push_back(move(ias_buffer));
+            } else {
+                _bvh_size_in_bytes += ias_buffer.size_in_bytes();
+                _as_buffer_list.push_back(move(ias_buffer));
             }
-            _bvh_size_in_bytes += ias_buffer.size_in_bytes();
-            _as_buffer_list.push_back(move(ias_buffer));
+            CU_CHECK(cuCtxSynchronize());
         }
 
         void OptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {

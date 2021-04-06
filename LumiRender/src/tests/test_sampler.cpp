@@ -18,7 +18,7 @@ void test_sampler() {
     cout << sampler.next_2d().to_string() << endl;
     auto s2 = sampler;
     auto f = 0.f;
-    for (int i = 0; i < 100000000; ++i) {
+    for (int i = 0; i < 10000000; ++i) {
         f = f + sampler.next_1d();
     }
     cout << f << endl;

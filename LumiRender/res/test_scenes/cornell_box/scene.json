@@ -56,7 +56,7 @@
 			"type": "model",
 			"param" : {
 				"fn": "teapot.obj",
-				"subdiv_level": 0,
+				"subdiv_level": 1,
 				"transform" : {
 					"type" : "matrix4x4",
 					"param" : {

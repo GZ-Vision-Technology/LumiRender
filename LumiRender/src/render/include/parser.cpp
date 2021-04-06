@@ -77,7 +77,7 @@ namespace luminous {
                 ParameterSet param(shape["param"]);
                 if (shape_config.type == "model"){
                     // todo fixed sub div level bug
-                    shape_config.subdiv_level = 0;
+                    shape_config.subdiv_level = param["subdiv_level"].as_uint(0u);
                     shape_config.fn = param["fn"].as_string();
                 } else if (shape_config.type == "quad") {
                     shape_config.width = param["width"].as_float(1);
