@@ -99,13 +99,19 @@ namespace luminous {
         };
 
         struct LightConfig : Config {
+            LightConfig() {}
             string type;
-            
-            uint instance_idx{0};
-            float3 emission;
 
-            float3 intensity;
-            float3 position;
+            union {
+                struct {
+                    uint instance_idx;
+                    float3 emission;
+                };
+                struct {
+                    float3 intensity;
+                    float3 position;
+                };
+            };
         };
 
         struct SceneGraph {

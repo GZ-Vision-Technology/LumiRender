@@ -54,11 +54,15 @@ namespace luminous {
                 }
                 _cpu_transforms.push_back(instance->o2w.mat4x4());
             }
+            load_lights(scene_graph->light_configs);
             shrink_to_fit();
         }
 
-        void Scene::load_lights(const vector<LightConfig> &lc) {
-
+        void Scene::load_lights(const vector<LightConfig> &light_configs) {
+            _cpu_lights.reserve(light_configs.size());
+            for (const auto &lc : light_configs) {
+                _cpu_lights.push_back(LightHandle::create(lc));
+            }
         }
 
         size_t Scene::size_in_bytes() const {
@@ -72,6 +76,8 @@ namespace luminous {
             ret += _size_in_bytes(_cpu_inst_to_mesh_idx);
             ret += _size_in_bytes(_cpu_inst_to_transform_idx);
 
+            ret += _size_in_bytes(_cpu_lights);
+
             return ret;
         }
 
@@ -84,6 +90,7 @@ namespace luminous {
             _cpu_transforms.clear();
             _cpu_inst_to_mesh_idx.clear();
             _cpu_inst_to_transform_idx.clear();
+            _cpu_lights.clear();
         }
 
         void Scene::shrink_to_fit() {
@@ -95,15 +102,18 @@ namespace luminous {
             _cpu_transforms.shrink_to_fit();
             _cpu_inst_to_mesh_idx.shrink_to_fit();
             _cpu_inst_to_transform_idx.shrink_to_fit();
+            _cpu_lights.shrink_to_fit();
         }
 
         std::string Scene::description() const {
             size_t size_in_MB = size_in_bytes() / sqr(1024);
 
-            return string_printf("scene data occupy %u MB, instance triangle is %u, instance vertices is %u",
+            return string_printf("scene data occupy %u MB, instance triangle is %u,"
+                                 " instance vertices is %u, light num is %u",
                                  size_in_MB,
                                  _inst_triangle_num,
-                                 _inst_vertices_num);
+                                 _inst_vertices_num,
+                                 _cpu_lights.size());
         }
     }
 }
