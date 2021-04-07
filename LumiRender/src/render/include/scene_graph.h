@@ -33,18 +33,27 @@ namespace luminous {
         };
 
         struct TransformConfig : Config {
+            TransformConfig() {}
+
             // trs and matrix4x4 and ...
             string type;
-            // trs
-            float3 t;
-            float4 r;
-            float3 s;
-            // matrix
-            float4x4 mat4x4;
-            // yaw_pitch
-            float yaw;
-            float pitch;
-            float3 position;
+
+            union {
+                struct {
+                    // trs
+                    float3 t;
+                    float4 r;
+                    float3 s;
+                };
+                struct {
+                    float4x4 mat4x4;
+                };
+                struct {
+                    float yaw;
+                    float pitch;
+                    float3 position;
+                };
+            };
 
             Transform create() const {
                 if (type == "matrix4x4") {
@@ -65,14 +74,25 @@ namespace luminous {
         };
 
         struct ShapeConfig : Config {
+            ShapeConfig() {
+            }
+
             string type;
-            string fn;
             string name;
             TransformConfig o2w;
-            uint subdiv_level;
             float3 emission = make_float3(0.f);
-            float width;
-            float height;
+//            union {
+//                // model param
+//                struct {
+                    string fn;
+                    uint subdiv_level;
+//                };
+//                // quad param
+//                struct {
+                    float width;
+                    float height;
+//                };
+//            };
         };
 
         struct FilterConfig {
@@ -91,6 +111,8 @@ namespace luminous {
             TransformConfig transform_config;
             float fov_y;
             float velocity;
+            float focal_distance;
+            float lens_radius;
             FilmConfig film_config;
         };
 
@@ -100,6 +122,7 @@ namespace luminous {
 
         struct LightConfig : Config {
             LightConfig() {}
+
             string type;
 
             union {
