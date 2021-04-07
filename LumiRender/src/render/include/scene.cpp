@@ -50,6 +50,10 @@ namespace luminous {
             shrink_to_fit();
         }
 
+        void Scene::load_lights(const SP<SceneGraph> &scene_graph) {
+
+        }
+
         size_t Scene::size_in_bytes() const {
             size_t ret = _size_in_bytes(_cpu_triangles);
             ret += _size_in_bytes(_cpu_tex_coords);
@@ -94,6 +98,5 @@ namespace luminous {
                                  _inst_triangle_num,
                                  _inst_vertices_num);
         }
-
     }
 }

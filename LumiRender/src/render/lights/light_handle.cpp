@@ -11,6 +11,10 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(type);
         }
 
+        const char *LightHandle::name() {
+            LUMINOUS_VAR_DISPATCH(name);
+        }
+
         Interaction LightHandle::sample(float u) const {
             LUMINOUS_VAR_DISPATCH(sample, u);
         }
@@ -34,7 +38,5 @@ namespace luminous {
         std::string LightHandle::to_string() const {
             LUMINOUS_VAR_DISPATCH(to_string);
         }
-
-
     } // luminous::render
 } // luminous

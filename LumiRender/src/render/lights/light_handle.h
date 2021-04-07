@@ -23,6 +23,8 @@ namespace luminous {
         public:
             NDSC_XPU LightType type() const;
 
+            NDSC_XPU const char *name();
+
             NDSC_XPU bool is_delta() const;
 
             NDSC_XPU Interaction sample(float u) const;

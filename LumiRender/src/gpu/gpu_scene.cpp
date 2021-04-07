@@ -55,6 +55,7 @@ namespace luminous {
 
         void GPUScene::init(const SP<SceneGraph> &scene_graph) {
             convert_geometry_data(scene_graph);
+            load_lights(scene_graph);
             create_device_memory();
             synchronize_to_gpu();
             init_accel();

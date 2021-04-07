@@ -19,6 +19,8 @@ namespace luminous {
                       _pos(pos),
                       _intensity(intensity) {}
 
+            GEN_CLASS_NAME(PointLight)
+
             NDSC_XPU Interaction sample(float u) const;
 
             NDSC_XPU LightLiSample Li(LightLiSample lls) const;

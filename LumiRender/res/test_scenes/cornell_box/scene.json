@@ -19,22 +19,23 @@
 //				}
 //			}
 //		},
-//		{
-//			"name" : "c_box",
-//			"type": "quad",
-//			"param" : {
-//				"width": 1,
-//				"height": 1,
-//				"transform" : {
-//					"type" : "yaw_pitch",
-//					"param" : {
-//						"yaw" : 0,
-//						"pitch": 0,
-//						"position": [0,0,0]
-//					}
-//				}
-//			}
-//		},
+		{
+			"name" : "c_box",
+			"type": "quad",
+			"param" : {
+				"width": 1,
+				"height": 1,
+				"emission": [5,5,5],
+				"transform" : {
+					"type" : "yaw_pitch",
+					"param" : {
+						"yaw" : 0,
+						"pitch": 0,
+						"position": [0,0,0]
+					}
+				}
+			}
+		},
 //		{
 //			"name" : "c_box",
 //			"type": "model",
@@ -106,6 +107,15 @@
 //				}
 //			}
 //		}
+	],
+	"lights" : [
+		{
+			"type": "PointLight",
+			"param": {
+				"pos": [10,10,10],
+				"intensity": [10,1,6]
+			}
+		}
 	],
 	"integrator" : {
 		"type" : "pt",

@@ -9,6 +9,7 @@
 #include "graphics/math/common.h"
 #include "shape.h"
 #include "scene_graph.h"
+#include "render/lights/light_handle.h"
 
 namespace luminous {
     inline namespace render {
@@ -24,6 +25,8 @@ namespace luminous {
             vector<float3> _cpu_normals{};
             vector<float2> _cpu_tex_coords{};
             vector<TriangleHandle> _cpu_triangles{};
+
+            vector<LightHandle> _cpu_lights;
 
             size_t _inst_vertices_num{0};
             size_t _inst_triangle_num{0};
@@ -43,6 +46,8 @@ namespace luminous {
             virtual void init_accel() = 0;
 
             void convert_geometry_data(const SP<SceneGraph> &scene_graph);
+
+            void load_lights(const SP<SceneGraph> &scene_graph);
         };
     }
 }
