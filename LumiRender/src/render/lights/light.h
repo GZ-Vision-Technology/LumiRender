@@ -7,6 +7,7 @@
 
 #include "graphics/geometry/common.h"
 #include "graphics/optics/common.h"
+#include "render/include/interaction.h"
 
 namespace luminous {
     inline namespace render {
@@ -26,16 +27,16 @@ namespace luminous {
 
         class LightBase {
         protected:
-            LightType _type;
+            const LightType _type;
         public:
             XPU LightBase(LightType type) : _type(type) {}
 
-            NDSC_XPU Spectrum L(float3 p, float3 n, float2, float3 wi) const {
-                return Spectrum(0,0,0);
-            }
-
             NDSC_XPU LightType type() const {
                 return _type;
+            }
+
+            NDSC_XPU bool is_delta() const {
+                return _type == LightType::DeltaDirection || _type == LightType::DeltaPosition;
             }
 
             NDSC std::string _to_string() const {

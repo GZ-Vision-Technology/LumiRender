@@ -96,10 +96,10 @@ namespace luminous {
 
         template<typename T>
         NDSC_XPU T triangle_lerp(float2 barycentric, T v0, T v1, T v2) {
-            auto weight0 = barycentric.x;
-            auto weight1 = barycentric.y;
-            auto weight2 = 1 - barycentric.x - barycentric.y;
-            return weight0 * v0 + weight1 * v1 + weight2 * v2;
+            auto u = barycentric.x;
+            auto v = barycentric.y;
+            auto w = 1 - barycentric.x - barycentric.y;
+            return u * v0 + v * v1 + w * v2;
         }
 
         struct alignas(8) ClosestHit {

@@ -17,5 +17,25 @@ namespace luminous {
             float3 wo;
             float time;
         };
+
+        struct PositionSamplingRecord {
+            float3 pos;
+            float3 normal;
+            float2 uv;
+            float PDF_pos;
+        };
+
+        struct DirectSamplingRecord : PositionSamplingRecord {
+            float3 ref_pos;
+            float3 ref_ng;
+            // unit vector
+            float3 dir;
+            float PDF_dir;
+            float dist;
+
+            float cos_target_theta() const {
+                return dot(-dir, normal);
+            }
+        };
     }
 }
