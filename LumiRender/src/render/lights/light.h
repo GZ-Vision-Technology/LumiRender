@@ -8,6 +8,7 @@
 #include "graphics/geometry/common.h"
 #include "graphics/optics/common.h"
 #include "render/include/interaction.h"
+#include "render/include/scene_graph.h"
 
 namespace luminous {
     inline namespace render {

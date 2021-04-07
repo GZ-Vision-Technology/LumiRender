@@ -70,7 +70,7 @@ namespace luminous {
             string name;
             TransformConfig o2w;
             uint subdiv_level;
-
+            float3 emission = make_float3(0.f);
             float width;
             float height;
         };
@@ -98,6 +98,16 @@ namespace luminous {
             string type;
         };
 
+        struct LightConfig : Config {
+            string type;
+            
+            uint instance_idx{0};
+            float3 emission;
+
+            float3 intensity;
+            float3 position;
+        };
+
         struct SceneGraph {
         private:
             Context *_context;
@@ -106,6 +116,7 @@ namespace luminous {
             SamplerConfig sampler_config;
             SensorConfig sensor_config;
             std::vector<ShapeConfig> shape_configs;
+            mutable std::vector<LightConfig> light_configs;
             IntegratorConfig integrator_config;
             LightSamplerConfig light_sampler_config;
             vector<SP<const Model>> model_list;
@@ -114,6 +125,7 @@ namespace luminous {
             bool is_contain(const string &key) {
                 return _key_to_idx.find(key) != _key_to_idx.end();
             }
+
         public:
             explicit SceneGraph(Context *context) : _context(context) {}
 

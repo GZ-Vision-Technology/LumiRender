@@ -81,14 +81,17 @@ namespace luminous {
         };
 
         struct ModelInstance {
-            ModelInstance(uint idx, const Transform &t, const char *n)
+            ModelInstance(uint idx, const Transform &t, const char *n,
+                          float3 emission = make_float3(0))
                     : model_idx(idx),
                       o2w(t),
-                      name(n) {}
+                      name(n),
+                      emission(emission) {}
 
             const char *name;
             const uint model_idx;
             const Transform o2w;
+            float3 emission = make_float3(0.f);
         };
     }
 

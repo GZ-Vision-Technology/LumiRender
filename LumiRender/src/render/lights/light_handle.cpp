@@ -38,5 +38,25 @@ namespace luminous {
         std::string LightHandle::to_string() const {
             LUMINOUS_VAR_DISPATCH(to_string);
         }
+
+        namespace detail {
+            template<uint8_t current_index>
+            NDSC LightHandle create_light(const LightConfig &config) {
+                using Light = std::remove_pointer_t<std::tuple_element_t<current_index, LightHandle::TypeTuple>>;
+                if (Light::name() == config.type) {
+                    return LightHandle(Light::create(config));
+                }
+                return create_light<current_index + 1>(config);
+            }
+
+            template<>
+            NDSC LightHandle create_light<std::tuple_size_v<LightHandle::TypeTuple>>(const LightConfig &config) {
+                LUMINOUS_ERROR("unknown sampler type:", config.type);
+            }
+        }
+
+        LightHandle LightHandle::create(const LightConfig &config) {
+            return detail::create_light<0>(config);
+        }
     } // luminous::render
 } // luminous

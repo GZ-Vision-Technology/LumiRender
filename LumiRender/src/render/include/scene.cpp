@@ -17,8 +17,8 @@ namespace luminous {
             return a.insert(a.end(), b.begin(), b.end());
         }
 
-        void Scene::convert_geometry_data(const SP<SceneGraph> &scene_graph) {
-            TASK_TAG("convert geometry data start!")
+        void Scene::convert_data(const SP<SceneGraph> &scene_graph) {
+            TASK_TAG("convert scene data start!")
             uint vert_offset = 0u;
             uint tri_offset = 0u;
             for (const SP<const Model> &model : scene_graph->model_list) {
@@ -41,6 +41,13 @@ namespace luminous {
                 const SP<const Model> &model = scene_graph->model_list[instance->model_idx];
                 for (const SP<const Mesh> &mesh : model->meshes) {
                     _cpu_inst_to_transform_idx.push_back(_cpu_transforms.size());
+                    if (!instance->emission.is_zero()) {
+                        LightConfig lc;
+                        lc.emission = instance->emission;
+                        lc.type = "AreaLight";
+                        lc.instance_idx = _cpu_inst_to_mesh_idx.size();
+                        scene_graph->light_configs.push_back(lc);
+                    }
                     _cpu_inst_to_mesh_idx.push_back(mesh->idx_in_meshes);
                     _inst_triangle_num += mesh->triangles.size();
                     _inst_vertices_num += mesh->positions.size();
@@ -50,7 +57,7 @@ namespace luminous {
             shrink_to_fit();
         }
 
-        void Scene::load_lights(const SP<SceneGraph> &scene_graph) {
+        void Scene::load_lights(const vector<LightConfig> &lc) {
 
         }
 

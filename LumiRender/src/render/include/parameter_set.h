@@ -145,6 +145,10 @@ namespace luminous {
                 return ParameterSet(_data.value(key, DataWrap()), key);
             }
 
+            [[nodiscard]] bool contains(const std::string &key) const {
+                return _data.contains(key);
+            }
+
             [[nodiscard]] ParameterSet operator[](uint i) const {
                 return ParameterSet(_data[i]);
             }

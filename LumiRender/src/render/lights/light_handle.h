@@ -36,7 +36,8 @@ namespace luminous {
             NDSC_XPU float3 power() const;
 
             NDSC std::string to_string() const;
-        };
 
+            static LightHandle create(const LightConfig &config);
+        };
     } // luminous::render
 } // luminous

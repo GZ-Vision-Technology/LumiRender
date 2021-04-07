@@ -6,6 +6,7 @@
 #pragma once
 
 #include "light.h"
+#include "render/include/scene_graph.h"
 
 namespace luminous {
     inline namespace render {
@@ -30,6 +31,8 @@ namespace luminous {
             NDSC_XPU float3 power() const;
 
             NDSC std::string to_string() const;
+
+            static PointLight create(const LightConfig &config);
         };
     } // luminous::render
 } // luminous

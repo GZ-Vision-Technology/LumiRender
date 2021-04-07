@@ -26,7 +26,7 @@ namespace luminous {
             vector<float2> _cpu_tex_coords{};
             vector<TriangleHandle> _cpu_triangles{};
 
-            vector<LightHandle> _cpu_lights;
+            vector<LightHandle> _cpu_lights{};
 
             size_t _inst_vertices_num{0};
             size_t _inst_triangle_num{0};
@@ -45,9 +45,9 @@ namespace luminous {
 
             virtual void init_accel() = 0;
 
-            void convert_geometry_data(const SP<SceneGraph> &scene_graph);
+            void convert_data(const SP<SceneGraph> &scene_graph);
 
-            void load_lights(const SP<SceneGraph> &scene_graph);
+            void load_lights(const vector<LightConfig> &lc);
         };
     }
 }

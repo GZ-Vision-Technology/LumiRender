@@ -37,5 +37,9 @@ namespace luminous {
                                  _to_string().c_str(),
                                  _L.to_string().c_str());
         }
+
+        AreaLight AreaLight::create(const LightConfig &config) {
+            return AreaLight(config.instance_idx, config.emission);
+        }
     } //luminous::render
 } // luminous::render

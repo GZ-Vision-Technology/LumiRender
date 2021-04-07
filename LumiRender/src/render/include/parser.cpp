@@ -76,7 +76,6 @@ namespace luminous {
                 shape_config.type = string(shape["type"]);
                 ParameterSet param(shape["param"]);
                 if (shape_config.type == "model"){
-                    // todo fixed sub div level bug
                     shape_config.subdiv_level = param["subdiv_level"].as_uint(0u);
                     shape_config.fn = param["fn"].as_string();
                 } else if (shape_config.type == "quad") {
@@ -85,7 +84,9 @@ namespace luminous {
                 }
                 shape_config.name = string(shape["name"]);
                 shape_config.o2w = parse_transform(param["transform"]);
-
+                if (param.contains("emission")) {
+                    shape_config.emission = param["emission"].as_float3(make_float3(0.f));
+                }
                 ret.push_back(shape_config);
             }
             return move(ret);
@@ -139,6 +140,35 @@ namespace luminous {
             return ret;
         }
 
+        //    {
+        //        "type": "PointLight",
+        //            "param": {
+        //            "pos": [10,10,10],
+        //            "intensity": [10,1,6]
+        //        }
+        //    }
+        LightConfig parse_light(const ParameterSet &ps) {
+            LightConfig ret;
+            ret.type = ps["type"].as_string("PointLight");
+            ParameterSet param = ps["param"];
+            ret.position = param["pos"].as_float3(make_float3(0.f));
+            ret.intensity = param["intensity"].as_float3(make_float3(0.f));
+            return ret;
+        }
+
+        std::vector<LightConfig> parse_lights(const DataWrap &lights) {
+            std::vector<LightConfig> ret;
+            if (!lights.is_array()) {
+                return ret;
+            }
+            ret.reserve(lights.size());
+            for (const auto &light : lights) {
+                LightConfig lc = parse_light(ParameterSet(light));
+                ret.push_back(lc);
+            }
+            return ret;
+        }
+
         void Parser::load_from_json(const std::filesystem::path &fn) {
             _data = create_json_from_file(fn);
         }
@@ -149,6 +179,7 @@ namespace luminous {
             scene_graph->shape_configs = parse_shapes(shapes);
             scene_graph->sensor_config = parse_sensor(ParameterSet(_data["camera"]));
             scene_graph->sampler_config = parse_sampler(ParameterSet(_data["sampler"]));
+            scene_graph->light_configs = parse_lights(_data.value("lights", DataWrap()));
             return scene_graph;
         }
     }
