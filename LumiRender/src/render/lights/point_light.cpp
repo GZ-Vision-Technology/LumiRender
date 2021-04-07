@@ -7,13 +7,14 @@
 namespace luminous {
     inline namespace render {
 
-        float3 PointLight::sample_Li(DirectSamplingRecord *rcd, float2 u) const {
-            //todo
-            return _intensity;
+        Interaction PointLight::sample(float u) const {
+            Interaction ret;
+            ret.pos = _pos;
+            return ret;
         }
 
-        float PointLight::PDF_Li(const DirectSamplingRecord &rcd) const {
-            return rcd.PDF_dir;
+        float PointLight::PDF_Li(const Interaction &ref_p, float3 wi) const {
+            return 0;
         }
 
         float3 PointLight::power() const {
@@ -25,5 +26,15 @@ namespace luminous {
                                  _to_string().c_str(),
                                  _intensity.to_string().c_str());
         }
+
+        LightLiSample PointLight::Li(LightLiSample lls) const {
+            float3 wi = lls.p_light.pos - lls.p_ref.pos;
+            lls.L = _intensity / length_squared(wi);
+            lls.PDF_dir = 0;
+            lls.wi = normalize(wi);
+            return lls;
+        }
+
+
     } // luminous::render
 } // luminous

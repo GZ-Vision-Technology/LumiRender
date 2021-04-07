@@ -7,21 +7,29 @@
 namespace luminous {
     inline namespace render {
 
-        float3 AreaLight::sample_Li(DirectSamplingRecord *rcd, float2 u) const {
-            //todo
-            return _L;
+        Interaction AreaLight::sample(float u) const {
+            Interaction ret;
+            // todo
+            return ret;
         }
 
-        float AreaLight::PDF_Li(const DirectSamplingRecord &rcd) const {
-            return rcd.PDF_dir;
+        LightLiSample AreaLight::Li(LightLiSample lls) const {
+            // todo
+            return lls;
+        }
+
+        float AreaLight::PDF_Li(const Interaction &ref_p, float3 wi) const {
+            //todo
+            return 0;
         }
 
         float3 AreaLight::power() const {
             return (_two_sided ? _2Pi : Pi) * _L / _inv_area;
         }
 
-        float3 AreaLight::L(const DirectSamplingRecord &rcd) const {
-            return (_two_sided || rcd.cos_target_theta() > 0) ? _L : make_float3(0.f);
+        float3 AreaLight::L(const Interaction &ref_p) const {
+            // todo
+            return {};
         }
 
         std::string AreaLight::to_string() const {

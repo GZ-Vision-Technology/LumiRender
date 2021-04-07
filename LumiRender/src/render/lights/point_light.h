@@ -19,9 +19,11 @@ namespace luminous {
                       _pos(pos),
                       _intensity(intensity) {}
 
-            NDSC_XPU float3 sample_Li(DirectSamplingRecord *rcd, float2 u) const;
+            NDSC_XPU Interaction sample(float u) const;
 
-            NDSC_XPU float PDF_Li(const DirectSamplingRecord &rcd) const;
+            NDSC_XPU LightLiSample Li(LightLiSample lls) const;
+
+            NDSC_XPU float PDF_Li(const Interaction &ref_p, float3 wi) const;
 
             NDSC_XPU float3 power() const;
 

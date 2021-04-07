@@ -25,6 +25,29 @@ namespace luminous {
             WithoutMIS
         };
 
+        struct LightLiSample {
+            float3 L{};
+            float3 wi{};
+            float PDF_dir{};
+            Interaction p_light{};
+            Interaction p_ref{};
+            XPU LightLiSample() = default;
+
+            XPU LightLiSample(const float3 &L, float3 wi,
+                              float PDF, const Interaction &i)
+                    : L(L), wi(wi), PDF_dir(PDF), p_light(i) {}
+        };
+
+        struct LightSampleContext {
+            float3 pos;
+            float3 ng;
+            float3 ns;
+            XPU LightSampleContext() = default;
+
+            XPU LightSampleContext(float3 p, float3 ng, float3 ns)
+                    : pos(p), ng(ng), ns(ns) {}
+        };
+
         class LightBase {
         protected:
             const LightType _type;
@@ -40,7 +63,7 @@ namespace luminous {
             }
 
             NDSC std::string _to_string() const {
-                return string_printf("type : %d", (int)_type);
+                return string_printf("type : %d", (int) _type);
             }
         };
     }
