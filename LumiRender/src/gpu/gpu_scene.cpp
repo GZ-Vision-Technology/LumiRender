@@ -103,6 +103,5 @@ namespace luminous {
                                  _inst_vertices_num,
                                  _lights.size());
         }
-
-    }
-}
+    } // luminous::gpu
+} // luminous

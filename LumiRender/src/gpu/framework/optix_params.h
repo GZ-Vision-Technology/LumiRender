@@ -28,19 +28,6 @@ namespace luminous {
             float3 bg_color;
         };
 
-        struct HitGroupData {
-            // instance data
-            uint *inst_to_mesh_idx;
-            uint *inst_to_transform_idx;
-            float4x4 *transforms;
-            // mesh data
-            MeshHandle *meshes;
-            float3 *positions;
-            float3 *normals;
-            float2 *tex_coords;
-            TriangleHandle *triangles;
-        };
-
         template<typename T>
         struct Record {
             __align__(OPTIX_SBT_RECORD_ALIGNMENT) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
