@@ -18,7 +18,7 @@ namespace luminous {
             return lls;
         }
 
-        float AreaLight::PDF_Li(const Interaction &ref_p, float3 wi) const {
+        float AreaLight::PDF_Li(const Interaction &ref_p, const Interaction &p_light) const {
             //todo
             return 0;
         }

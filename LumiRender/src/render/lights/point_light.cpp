@@ -13,7 +13,7 @@ namespace luminous {
             return ret;
         }
 
-        float PointLight::PDF_Li(const Interaction &ref_p, float3 wi) const {
+        float PointLight::PDF_Li(const Interaction &ref_p, const Interaction &p_light) const {
             return 0;
         }
 
