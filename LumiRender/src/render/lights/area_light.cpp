@@ -7,7 +7,7 @@
 namespace luminous {
     inline namespace render {
 
-        Interaction AreaLight::sample(float u) const {
+        Interaction AreaLight::sample(float u, const HitGroupData *hit_group_data) const {
             Interaction ret;
             // todo
             return ret;

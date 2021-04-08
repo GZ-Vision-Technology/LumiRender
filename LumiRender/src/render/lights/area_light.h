@@ -28,7 +28,7 @@ namespace luminous {
 
             NDSC_XPU LightLiSample Li(LightLiSample lls) const;
 
-            NDSC_XPU Interaction sample(float u) const;
+            NDSC_XPU Interaction sample(float u, const HitGroupData * hit_group_data) const;
 
             NDSC_XPU float PDF_Li(const Interaction &ref_p, float3 wi) const;
 

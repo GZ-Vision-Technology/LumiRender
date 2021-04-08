@@ -15,8 +15,8 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(name);
         }
 
-        Interaction LightHandle::sample(float u) const {
-            LUMINOUS_VAR_DISPATCH(sample, u);
+        Interaction LightHandle::sample(float u,const HitGroupData * hit_group_data) const {
+            LUMINOUS_VAR_DISPATCH(sample, u,hit_group_data);
         }
 
         LightLiSample LightHandle::Li(LightLiSample lls) const {

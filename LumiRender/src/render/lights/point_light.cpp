@@ -7,7 +7,7 @@
 namespace luminous {
     inline namespace render {
 
-        Interaction PointLight::sample(float u) const {
+        Interaction PointLight::sample(float u, const HitGroupData *hit_group_data) const {
             Interaction ret;
             ret.pos = _pos;
             return ret;

@@ -22,7 +22,7 @@ namespace luminous {
 
             GEN_CLASS_NAME(PointLight)
 
-            NDSC_XPU Interaction sample(float u) const;
+            NDSC_XPU Interaction sample(float u, const HitGroupData *hit_group_data) const;
 
             NDSC_XPU LightLiSample Li(LightLiSample lls) const;
 
