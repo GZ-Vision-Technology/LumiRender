@@ -1,12 +1,8 @@
 //
-// Created by Zero on 2021/1/31.
+// Created by Zero on 2021/4/9.
 //
 
-
-#pragma once
-
-
-//#include "../lights/light_handle.h"
+#include "uniform.h"
 
 namespace luminous {
     inline namespace render {

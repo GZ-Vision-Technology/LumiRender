@@ -8,7 +8,6 @@
 #include "shape.h"
 #include "material.h"
 #include "render/lights/light.h"
-#include "render/light_samplers/light_sampler.h"
 #include "core/concepts.h"
 #include <memory>
 #include "core/context.h"

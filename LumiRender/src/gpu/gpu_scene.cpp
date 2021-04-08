@@ -96,7 +96,7 @@ namespace luminous {
         std::string GPUScene::description() const {
             float size_in_MB = float(size_in_bytes()) / sqr(1024);
 
-            return string_printf("scene data occupy %u MB, instance triangle is %u,"
+            return string_printf("scene data occupy %f MB, instance triangle is %u,"
                                  " instance vertices is %u, light num is %u",
                                  size_in_MB,
                                  _inst_triangle_num,

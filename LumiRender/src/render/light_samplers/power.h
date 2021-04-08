@@ -4,3 +4,14 @@
 
 
 #pragma once
+
+
+//#include "../lights/light_handle.h"
+
+namespace luminous {
+    inline namespace render {
+
+
+
+    } // luminous::render
+} // luminous

@@ -9,8 +9,8 @@
 #include "point_light.h"
 #include "spot_light.h"
 #include "area_light.h"
-#include "mesh_light.h"
 #include "graphics/lstd/lstd.h"
+#include "render/include/scene_graph.h"
 
 namespace luminous {
     inline namespace render {
