@@ -122,6 +122,11 @@ namespace luminous {
         }
 
         template<typename T, uint N>
+        [[nodiscard]] XPU constexpr auto abs_dot(Vector<T, N> u, Vector<T, N> v) noexcept {
+            return abs(dot(u, v));
+        }
+
+        template<typename T, uint N>
         [[nodiscard]] XPU constexpr auto length(Vector<T, N> u) noexcept {
             return sqrt(dot(u, u));
         }
