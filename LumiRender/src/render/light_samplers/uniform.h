@@ -5,24 +5,30 @@
 
 #pragma once
 
-#include "../lights/light_handle.h"
+#include "light_sampler_base.h"
 
 namespace luminous {
     inline namespace render {
 
-        class UniformLightSampler {
-        private:
-
+        class UniformLightSampler : LightSamplerBase {
         public:
+            UniformLightSampler() = default;
+
+            void init(const LightHandle * host_lights, const LightHandle *device_lights);
+
+            GEN_CLASS_NAME(UniformLightSampler)
+
             NDSC_XPU SampledLight sample(float u) const;
 
             NDSC_XPU SampledLight sample(const LightSampleContext &ctx, float u) const;
 
             NDSC_XPU float PMF(const LightHandle &light) const;
 
-            NDSC_XPU float PMF(const LightSampleContext &ctx, float u) const;
+            NDSC_XPU float PMF(const LightSampleContext &ctx, const LightHandle &light) const;
 
             NDSC std::string to_string() const;
+
+            static UniformLightSampler create(const LightSamplerConfig &config);
         };
 
     } // luminous::render
