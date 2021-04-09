@@ -28,11 +28,11 @@ namespace luminous {
 
             XPU float generate_ray(const SensorSample &ss, Ray * ray);
 
-            XPU void set_film(const FilmHandle &film);
+            XPU void set_film(const Film &film);
 
             XPU void update_film_resolution(uint2 res);
 
-            NDSC_XPU FilmHandle *film();
+            NDSC_XPU Film *film();
 
             NDSC_XPU uint2 resolution() const;
 

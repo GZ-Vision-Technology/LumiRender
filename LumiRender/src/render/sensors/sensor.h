@@ -7,7 +7,7 @@
 
 #include "graphics/optics/common.h"
 #include "graphics/geometry/common.h"
-#include "../films/film_handle.h"
+#include "../films/film.h"
 #include "../samplers/sampler.h"
 
 namespace luminous {
@@ -31,7 +31,7 @@ namespace luminous {
             Transform _raster_to_screen{};
             Transform _camera_to_screen{};
             Transform _raster_to_camera{};
-            FilmHandle _film;
+            Film _film;
             XPU void _update(const float4x4 &m);
 
             XPU void _update_raster();
@@ -45,9 +45,9 @@ namespace luminous {
 
             XPU void update_film_resolution(uint2 res);
 
-            XPU void set_film(const FilmHandle &film);
+            XPU void set_film(const Film &film);
 
-            NDSC_XPU FilmHandle *film();
+            NDSC_XPU Film *film();
 
             NDSC_XPU uint2 resolution() const;
 

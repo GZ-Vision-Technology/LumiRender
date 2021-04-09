@@ -7,7 +7,7 @@
 
 // this file just for cuda shader include
 #if defined(__CUDACC__)
-    #include "film_handle.cpp"
+    #include "film.cpp"
     #include "rgb.cpp"
     #include "g_buffer.cpp"
 #else

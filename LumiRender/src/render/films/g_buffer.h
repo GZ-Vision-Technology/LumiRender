@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "film.h"
+#include "film_base.h"
 
 namespace luminous {
     inline namespace render {

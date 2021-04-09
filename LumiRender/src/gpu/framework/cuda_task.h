@@ -7,7 +7,7 @@
 
 #include "core/backend/task.h"
 #include "cuda_device.h"
-#include "render/films/film_handle.h"
+#include "render/films/film.h"
 #include "../mega_kernel_pt.h"
 #include "core/backend/managed.h"
 

@@ -43,7 +43,7 @@ namespace luminous {
             _update_raster();
         }
 
-        void CameraBase::set_film(const FilmHandle &film) {
+        void CameraBase::set_film(const Film &film) {
             _film = film;
             _set_resolution(_film.resolution());
             _update_raster();
@@ -53,7 +53,7 @@ namespace luminous {
             return _film.resolution();
         }
 
-        FilmHandle *CameraBase::film() {
+        Film *CameraBase::film() {
             return &_film;
         }
 

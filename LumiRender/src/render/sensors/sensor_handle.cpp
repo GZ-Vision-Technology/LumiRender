@@ -12,7 +12,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(position);
         }
 
-        void SensorHandle::set_film(const FilmHandle &film) {
+        void SensorHandle::set_film(const Film &film) {
             LUMINOUS_VAR_DISPATCH(set_film, film);
         }
 
@@ -20,7 +20,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(update_film_resolution, res);
         }
 
-        FilmHandle *SensorHandle::film() {
+        Film *SensorHandle::film() {
             LUMINOUS_VAR_DISPATCH(film);
         }
 
@@ -138,7 +138,7 @@ namespace luminous {
 
         SensorHandle SensorHandle::create(const SensorConfig &config) {
             auto ret = detail::create_sensor<0>(config);
-            ret.set_film(FilmHandle::create(config.film_config));
+            ret.set_film(Film::create(config.film_config));
             return ret;
         }
     }
