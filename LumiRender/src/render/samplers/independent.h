@@ -7,7 +7,7 @@
 
 #include "graphics/math/rng.h"
 #include "../include/scene_graph.h"
-#include "sampler.h"
+#include "sampler_base.h"
 
 namespace luminous {
     inline namespace render {

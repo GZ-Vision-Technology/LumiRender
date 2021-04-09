@@ -16,7 +16,7 @@
 #include "gpu/framework/cuda_module.h"
 #include "core/backend/managed.h"
 
-#include "render/samplers/sampler_handle.h"
+#include "render/samplers/sampler.h"
 
 using namespace std;
 
@@ -71,8 +71,8 @@ void test_kernel_sampler() {
     auto config = SamplerConfig();
     config.type = "LCGSampler";
     config.spp = 9;
-    auto sampler = SamplerHandle::create(config);
-    auto buffer = device->allocate_buffer<SamplerHandle>(1);
+    auto sampler = Sampler::create(config);
+    auto buffer = device->allocate_buffer<Sampler>(1);
     buffer.upload(&sampler);
     auto ps = buffer.ptr();
 
@@ -91,14 +91,14 @@ void test_managed() {
     auto config = SamplerConfig();
     config.type = "LCGSampler";
     config.spp = 9;
-    auto sampler = SamplerHandle::create(config);
-    auto buffer = device->allocate_buffer<SamplerHandle>(1);
+    auto sampler = Sampler::create(config);
+    auto buffer = device->allocate_buffer<Sampler>(1);
     buffer.upload(&sampler);
     auto ps = buffer.ptr();
 
-    Managed<SamplerHandle> s;
+    Managed<Sampler> s;
 
-    vector<SamplerHandle> v;
+    vector<Sampler> v;
 
     v.push_back(sampler);
     v.push_back(sampler);
@@ -113,7 +113,7 @@ void test_managed() {
     s.synchronize_to_cpu();
     cout << s[0].next_1d() << endl;
 
-    cout << sizeof(vector<SamplerHandle>);
+    cout << sizeof(vector<Sampler>);
 
 }
 

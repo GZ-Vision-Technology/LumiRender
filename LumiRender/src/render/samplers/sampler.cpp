@@ -3,16 +3,16 @@
 //
 
 
-#include "sampler_handle.h"
+#include "sampler.h"
 
 namespace luminous {
 
     inline namespace render {
-        int SamplerHandle::spp() const {
+        int Sampler::spp() const {
             LUMINOUS_VAR_DISPATCH(spp)
         }
 
-        SensorSample SamplerHandle::sensor_sample(uint2 p_raster) {
+        SensorSample Sampler::sensor_sample(uint2 p_raster) {
             SensorSample ss;
             ss.p_film = make_float2(p_raster) + next_2d();
             ss.p_lens = next_2d();
@@ -20,44 +20,44 @@ namespace luminous {
             return ss;
         }
 
-        void SamplerHandle::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
+        void Sampler::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
             LUMINOUS_VAR_DISPATCH(start_pixel_sample, pixel, sample_index, dimension)
         }
 
-        const char *SamplerHandle::name() {
+        const char *Sampler::name() {
             LUMINOUS_VAR_DISPATCH(name)
         }
 
-        float SamplerHandle::next_1d() {
+        float Sampler::next_1d() {
             LUMINOUS_VAR_DISPATCH(next_1d)
         }
 
-        float2 SamplerHandle::next_2d() {
+        float2 Sampler::next_2d() {
             LUMINOUS_VAR_DISPATCH(next_2d)
         }
 
-        std::string SamplerHandle::to_string() const {
+        std::string Sampler::to_string() const {
             LUMINOUS_VAR_DISPATCH(to_string)
         }
 
         namespace detail {
             template<uint8_t current_index>
-            NDSC SamplerHandle create_sampler(const SamplerConfig &config) {
-                using Sampler = std::remove_pointer_t<std::tuple_element_t<current_index, SamplerHandle::TypeTuple>>;
-                if (Sampler::name() == config.type) {
-                    return SamplerHandle(Sampler::create(config));
+            NDSC Sampler create_sampler(const SamplerConfig &config) {
+                using Class = std::remove_pointer_t<std::tuple_element_t<current_index, Sampler::TypeTuple>>;
+                if (Class::name() == config.type) {
+                    return Sampler(Class::create(config));
                 }
                 return create_sampler<current_index + 1>(config);
             }
 
             template<>
-            NDSC SamplerHandle
-            create_sampler<std::tuple_size_v<SamplerHandle::TypeTuple>>(const SamplerConfig &config) {
+            NDSC Sampler
+            create_sampler<std::tuple_size_v<Sampler::TypeTuple>>(const SamplerConfig &config) {
                 LUMINOUS_ERROR("unknown sampler type:", config.type);
             }
         }
 
-        SamplerHandle SamplerHandle::create(const SamplerConfig &config) {
+        Sampler Sampler::create(const SamplerConfig &config) {
             return detail::create_sampler<0>(config);
         }
     }

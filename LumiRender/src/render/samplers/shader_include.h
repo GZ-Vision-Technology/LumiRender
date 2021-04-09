@@ -7,7 +7,7 @@
 
 // this file just for cuda shader include
 #if defined(__CUDACC__)
-    #include "sampler_handle.cpp"
+    #include "sampler.cpp"
     #include "independent.cpp"
 #else
     #error "this file just for cuda shader include"

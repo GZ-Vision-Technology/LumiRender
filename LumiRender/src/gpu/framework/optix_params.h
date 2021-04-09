@@ -8,7 +8,7 @@
 #include <optix.h>
 #include "graphics/math/common.h"
 #include "render/sensors/sensor.h"
-#include "render/samplers/sampler_handle.h"
+#include "render/samplers/sampler.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -16,7 +16,7 @@ namespace luminous {
             OptixTraversableHandle traversable_handle;
             uint frame_index;
             Sensor *camera;
-            SamplerHandle *sampler;
+            Sampler *sampler;
         };
 
         struct RayGenData {

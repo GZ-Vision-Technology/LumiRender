@@ -8,7 +8,7 @@
 #include "graphics/optics/common.h"
 #include "graphics/geometry/common.h"
 #include "../films/film.h"
-#include "../samplers/sampler.h"
+#include "../samplers/sampler_base.h"
 
 namespace luminous {
     inline namespace render {

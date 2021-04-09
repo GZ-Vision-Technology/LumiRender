@@ -3,7 +3,7 @@
 //
 
 
-#include "sampler_handle.h"
+#include "sampler.h"
 
 namespace luminous {
     inline namespace render {

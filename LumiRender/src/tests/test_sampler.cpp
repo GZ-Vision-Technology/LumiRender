@@ -3,7 +3,7 @@
 //
 
 #include "iostream"
-#include "render/samplers/sampler_handle.h"
+#include "render/samplers/sampler.h"
 #include "render/sensors/sensor.h"
 using namespace luminous;
 using namespace std;
@@ -13,7 +13,7 @@ void test_sampler() {
     auto config = SamplerConfig();
     config.type = "PCGSampler";
     config.spp = 9;
-    auto sampler = SamplerHandle::create(config);
+    auto sampler = Sampler::create(config);
     cout << sampler.to_string() << endl;
     cout << sampler.next_2d().to_string() << endl;
     auto s2 = sampler;

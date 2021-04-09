@@ -8,7 +8,7 @@
 #include <iostream>
 #include <memory>
 #include "render/samplers/independent.cpp"
-#include "render/samplers/sampler_handle.cpp"
+#include "render/samplers/sampler.cpp"
 
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
@@ -118,7 +118,7 @@ __global__ void addKernel(int *c, const int *a, const int *b)
 }
 
 
-__global__ void test_sampler(luminous::SamplerHandle sh) {
+__global__ void test_sampler(luminous::Sampler sh) {
 //        auto s = LCGSampler(6);
 //        printf("%f \n", s.next_1d());
 //        printf("%f \n", sh.next_1d());
@@ -131,7 +131,7 @@ __global__ void test_sampler(luminous::SamplerHandle sh) {
         printf("%f \n", sh.next_1d());
 }
 
-void testsampler(luminous::SamplerHandle sh) {
+void testsampler(luminous::Sampler sh) {
     printf("%f \n", sh.next_1d());
 }
 
@@ -144,7 +144,7 @@ int main()
     config.type = "LCGSampler";
     config.spp = 9;
 //    auto sampler = SamplerHandle::create(config).get<LCGSampler>();
-    auto sampler = luminous::SamplerHandle::create(config);
+    auto sampler = luminous::Sampler::create(config);
 
     test_sampler<<<1u, 5u>>>(sampler);
 //    testsampler(sampler);

@@ -9,14 +9,14 @@
 
 #include "framework/optix_accel.h"
 #include "gpu_scene.h"
-#include "render/samplers/sampler_handle.h"
+#include "render/samplers/sampler.h"
 
 namespace luminous {
 
     inline namespace gpu {
         class MegaKernelPT : public Integrator {
         private:
-            Managed<SamplerHandle> _sampler;
+            Managed<Sampler> _sampler;
             Managed<Sensor> _camera;
             UP<GPUScene> _scene{nullptr};
             SP<Device> _device{};

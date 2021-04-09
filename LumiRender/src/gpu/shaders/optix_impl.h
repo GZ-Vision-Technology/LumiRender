@@ -17,7 +17,7 @@ GLOBAL __raygen__rg() {
     luminous::uint2 pixel = getPixelCoords();
     Sensor* camera = params.camera;
     Film * film = camera->film();
-    SamplerHandle sampler = *params.sampler;
+    Sampler sampler = *params.sampler;
     sampler.start_pixel_sample(pixel, params.frame_index, 0);
     auto ss = sampler.sensor_sample(pixel);
 

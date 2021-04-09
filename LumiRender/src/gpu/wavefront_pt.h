@@ -9,7 +9,7 @@
 #include "render/sensors/camera_base.h"
 #include "framework/optix_accel.h"
 #include "gpu_scene.h"
-#include "render/samplers/sampler_handle.h"
+#include "render/samplers/sampler.h"
 
 namespace luminous {
     inline namespace gpu {
