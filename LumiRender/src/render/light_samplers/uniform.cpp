@@ -20,8 +20,7 @@ namespace luminous {
         }
 
         SampledLight UniformLightSampler::sample(const LightSampleContext &ctx, float u) const {
-            // todo
-            return SampledLight();
+            return sample(u);
         }
 
         float UniformLightSampler::PMF(const LightHandle &light) const {

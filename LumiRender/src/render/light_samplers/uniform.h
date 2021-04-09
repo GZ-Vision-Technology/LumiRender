@@ -10,7 +10,7 @@
 namespace luminous {
     inline namespace render {
 
-        class UniformLightSampler : LightSamplerBase {
+        class UniformLightSampler : public LightSamplerBase {
         public:
             UniformLightSampler() = default;
 

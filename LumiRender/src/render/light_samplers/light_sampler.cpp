@@ -31,24 +31,24 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(to_string);
         }
 
-//        namespace detail {
-//            template<uint8_t current_index>
-//            NDSC LightSampler create_light_sampler(const LightSamplerConfig &config) {
-//                using Light = std::remove_pointer_t<std::tuple_element_t<current_index, LightSampler::TypeTuple>>;
-//                if (Light::name() == config.type) {
-//                    return LightSampler(Light::create(config));
-//                }
-//                return create_light_sampler<current_index + 1>(config);
-//            }
-//
-//            template<>
-//            NDSC LightSampler create_light_sampler<std::tuple_size_v<LightHandle::TypeTuple>>(const LightSamplerConfig &config) {
-//                LUMINOUS_ERROR("unknown sampler type:", config.type);
-//            }
-//        }
-//
-//        LightSampler LightSampler::create(const LightSamplerConfig &config) {
-//            return detail::create_light_sampler<0>(config);
-//        }
+        namespace detail {
+            template<uint8_t current_index>
+            NDSC LightSampler create_light_sampler(const LightSamplerConfig &config) {
+                using Class = std::remove_pointer_t<std::tuple_element_t<current_index, LightSampler::TypeTuple>>;
+                if (Class::name() == config.type) {
+                    return LightSampler(Class::create(config));
+                }
+                return create_light_sampler<current_index + 1>(config);
+            }
+
+            template<>
+            NDSC LightSampler create_light_sampler<std::tuple_size_v<LightSampler::TypeTuple>>(const LightSamplerConfig &config) {
+                LUMINOUS_ERROR("unknown sampler type:", config.type);
+            }
+        }
+
+        LightSampler LightSampler::create(const LightSamplerConfig &config) {
+            return detail::create_light_sampler<0>(config);
+        }
     } // luminous::render
 } // luminous
