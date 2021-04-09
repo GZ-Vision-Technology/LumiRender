@@ -7,8 +7,8 @@
 
 // this file just for cuda shader include
 #if defined(__CUDACC__)
+    #include "camera_base.cpp"
     #include "sensor.cpp"
-    #include "sensor_handle.cpp"
     #include "perspective_camera.cpp"
     #include "pinhole_camera.cpp"
 #else

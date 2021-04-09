@@ -7,7 +7,7 @@
 
 #include <optix.h>
 #include "graphics/math/common.h"
-#include "render/sensors/sensor_handle.h"
+#include "render/sensors/sensor.h"
 #include "render/samplers/sampler_handle.h"
 
 namespace luminous {
@@ -15,7 +15,7 @@ namespace luminous {
         struct LaunchParams {
             OptixTraversableHandle traversable_handle;
             uint frame_index;
-            SensorHandle *camera;
+            Sensor *camera;
             SamplerHandle *sampler;
         };
 

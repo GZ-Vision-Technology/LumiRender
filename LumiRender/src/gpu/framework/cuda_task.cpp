@@ -90,7 +90,7 @@ namespace luminous {
             return _frame_buffer.get();
         }
 
-        SensorHandle *CUDATask::camera() {
+        Sensor *CUDATask::camera() {
             return _integrator->camera();
         }
 

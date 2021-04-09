@@ -19,7 +19,7 @@ namespace luminous {
         void MegaKernelPT::init(const std::shared_ptr<SceneGraph> &scene_graph) {
             _scene = make_unique<GPUScene>(_device);
             _scene->init(scene_graph);
-            auto camera = SensorHandle::create(scene_graph->sensor_config);
+            auto camera = Sensor::create(scene_graph->sensor_config);
             _camera.reset(&camera, _device);
             auto sampler = SamplerHandle::create(scene_graph->sampler_config);
             _sampler.reset(&sampler, _device);
@@ -56,7 +56,7 @@ namespace luminous {
             synchronize_to_gpu();
         }
 
-        SensorHandle *MegaKernelPT::camera() {
+        Sensor *MegaKernelPT::camera() {
             return _camera.get();
         }
     }

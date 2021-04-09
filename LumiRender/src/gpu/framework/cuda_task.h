@@ -36,7 +36,7 @@ namespace luminous {
 
             void update() override;
 
-            SensorHandle * camera();
+            Sensor * camera();
 
             FrameBufferType *download_frame_buffer();
 

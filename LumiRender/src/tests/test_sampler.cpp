@@ -4,7 +4,7 @@
 
 #include "iostream"
 #include "render/samplers/sampler_handle.h"
-#include "render/sensors/sensor_handle.h"
+#include "render/sensors/sensor.h"
 using namespace luminous;
 using namespace std;
 
@@ -43,7 +43,7 @@ void test_sensor() {
     tc.mat4x4 = make_float4x4(1);
     config.transform_config = tc;
 
-    auto camera = SensorHandle::create(config);
+    auto camera = Sensor::create(config);
 
     cout << camera.to_string();
 }

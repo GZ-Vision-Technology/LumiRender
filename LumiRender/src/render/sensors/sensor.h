@@ -1,57 +1,44 @@
 //
-// Created by Zero on 2021/1/15.
+// Created by Zero on 2021/3/20.
 //
 
 
 #pragma once
 
-#include "graphics/optics/common.h"
-#include "graphics/geometry/common.h"
-#include "../films/film.h"
-#include "../samplers/sampler.h"
+
+#include "graphics/math/common.h"
+#include "graphics/lstd/lstd.h"
+#include "../include/scene_graph.h"
+#include "pinhole_camera.h"
+#include "perspective_camera.h"
+
+
 
 namespace luminous {
     inline namespace render {
-        class CameraBase {
-        protected:
-            constexpr static float z_near = 0.01f;
-            constexpr static float z_far = 1000.f;
-            constexpr static float fov_max = 120.f;
-            constexpr static float fov_min = 20.f;
-            constexpr static float pitch_max = 80.f;
-            constexpr static float3 right_vec = make_float3(1, 0, 0);
-            constexpr static float3 up_vec = make_float3(0, 1, 0);
-            constexpr static float3 forward_vec = make_float3(0, 0, 1);
-            float3 _position;
-            float _fov_y{0};
-            float _yaw{};
-            float _pitch{};
-            float _velocity{};
-            float _sensitivity{1.f};
-            Transform _raster_to_screen{};
-            Transform _camera_to_screen{};
-            Transform _raster_to_camera{};
-            Film _film;
-            XPU void _update(const float4x4 &m);
+        using lstd::Variant;
 
-            XPU void _update_raster();
-
-            XPU void _set_resolution(uint2 res);
-
+        class Sensor : public Variant<PinholeCamera, PerspectiveCamera> {
         public:
-            XPU CameraBase(float3 pos = make_float3(0), float fov_y = 30);
+            using Variant::Variant;
 
-            XPU CameraBase(const float4x4 m, float fov_y, float velocity);
+            NDSC_XPU float3 position() const;
 
-            XPU void update_film_resolution(uint2 res);
+            XPU void set_position(float3 pos);
+
+            XPU float generate_ray(const SensorSample &ss, Ray * ray);
 
             XPU void set_film(const Film &film);
+
+            XPU void update_film_resolution(uint2 res);
 
             NDSC_XPU Film *film();
 
             NDSC_XPU uint2 resolution() const;
 
             NDSC_XPU Transform camera_to_world() const;
+
+            NDSC_XPU const char *name();
 
             NDSC_XPU Transform camera_to_world_rotation() const;
 
@@ -60,10 +47,6 @@ namespace luminous {
             NDSC_XPU float3 up() const;
 
             NDSC_XPU float3 right() const;
-
-            NDSC_XPU float3 position() const;
-
-            XPU void set_position(float3 pos);
 
             XPU void move(float3 delta);
 
@@ -75,7 +58,7 @@ namespace luminous {
 
             NDSC_XPU float pitch() const;
 
-            XPU void set_pitch(float pitch);
+            XPU void set_pitch(float val);
 
             XPU void update_pitch(float val);
 
@@ -93,14 +76,9 @@ namespace luminous {
 
             XPU void set_sensitivity(float val);
 
-            NDSC std::string _to_string() const {
-                return string_printf("{fov_y:%f, position:%s, yaw:%f, pitch:%f, velocity : %f}",
-                                     fov_y(),
-                                     position().to_string().c_str(),
-                                     yaw(),
-                                     pitch(),
-                                     velocity());
-            }
-        }; // luminous::render::CameraBase
-    } // luminous::render
-} // luminous
+            NDSC std::string to_string() const;
+
+            static Sensor create(const SensorConfig &config);
+        };
+    }
+}

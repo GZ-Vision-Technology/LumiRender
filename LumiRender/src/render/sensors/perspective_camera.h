@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "sensor.h"
+#include "camera_base.h"
 
 namespace luminous {
 
