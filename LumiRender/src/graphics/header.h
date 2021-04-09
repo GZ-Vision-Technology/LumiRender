@@ -21,6 +21,8 @@
 
 #define GEN_CLASS_NAME(arg)  XPU static constexpr const char *name() { return #arg; }
 
+#define GEN_BASE_NAME(arg)  XPU static constexpr const char *base_name() { return #arg; }
+
 #define XPU_INLINE XPU __forceinline
 
 #define GPU_INLINE __forceinline GPU

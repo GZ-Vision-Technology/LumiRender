@@ -3,6 +3,7 @@
 //
 
 #include "sensor.h"
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
@@ -120,24 +121,8 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(to_string)
         }
 
-        namespace detail {
-            template<uint8_t current_index>
-            NDSC Sensor create_sensor(const SensorConfig &config) {
-                using Class = std::remove_pointer_t<std::tuple_element_t<current_index, Sensor::TypeTuple>>;
-                if (Class::name() == config.type) {
-                    return Sensor(Class::create(config));
-                }
-                return create_sensor<current_index + 1>(config);
-            }
-
-            template<>
-            NDSC Sensor create_sensor<std::tuple_size_v<Sensor::TypeTuple>>(const SensorConfig &config) {
-                LUMINOUS_ERROR("unknown sampler type:", config.type);
-            }
-        }
-
         Sensor Sensor::create(const SensorConfig &config) {
-            auto ret = detail::create_sensor<0>(config);
+            auto ret = detail::create<Sensor>(config);
             ret.set_film(Film::create(config.film_config));
             return ret;
         }

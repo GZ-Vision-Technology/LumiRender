@@ -3,11 +3,12 @@
 //
 
 #include "light_sampler.h"
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
 
-        void LightSampler::init(const LightHandle *host_lights, const LightHandle *device_lights) {
+        void LightSampler::init(const Light *host_lights, const Light *device_lights) {
             LUMINOUS_VAR_DISPATCH(init, host_lights, device_lights);
         }
 
@@ -19,11 +20,11 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(sample, ctx, u);
         }
 
-        float LightSampler::PMF(const LightHandle &light) const {
+        float LightSampler::PMF(const Light &light) const {
             LUMINOUS_VAR_DISPATCH(PMF, light);
         }
 
-        float LightSampler::PMF(const LightSampleContext &ctx, const LightHandle &light) const {
+        float LightSampler::PMF(const LightSampleContext &ctx, const Light &light) const {
             LUMINOUS_VAR_DISPATCH(PMF, ctx, light);
         }
 
@@ -31,24 +32,8 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(to_string);
         }
 
-        namespace detail {
-            template<uint8_t current_index>
-            NDSC LightSampler create_light_sampler(const LightSamplerConfig &config) {
-                using Class = std::remove_pointer_t<std::tuple_element_t<current_index, LightSampler::TypeTuple>>;
-                if (Class::name() == config.type) {
-                    return LightSampler(Class::create(config));
-                }
-                return create_light_sampler<current_index + 1>(config);
-            }
-
-            template<>
-            NDSC LightSampler create_light_sampler<std::tuple_size_v<LightSampler::TypeTuple>>(const LightSamplerConfig &config) {
-                LUMINOUS_ERROR("unknown sampler type:", config.type);
-            }
-        }
-
         LightSampler LightSampler::create(const LightSamplerConfig &config) {
-            return detail::create_light_sampler<0>(config);
+            return detail::create<LightSampler>(config);
         }
     } // luminous::render
 } // luminous

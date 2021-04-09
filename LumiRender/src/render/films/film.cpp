@@ -3,6 +3,7 @@
 //
 
 #include "film.h"
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
@@ -38,25 +39,8 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(to_string);
         }
 
-        namespace detail {
-            template<uint8_t current_index>
-            NDSC Film create_film(const FilmConfig &config) {
-                using Class = std::remove_pointer_t<std::tuple_element_t<current_index, Film::TypeTuple>>;
-                if (Class::name() == config.type) {
-                    return Film(Class::create(config));
-                }
-                return create_film<current_index + 1>(config);
-            }
-
-            template<>
-            NDSC Film create_film<std::tuple_size_v<Film::TypeTuple>>(const FilmConfig &config) {
-                LUMINOUS_ERROR("unknown sampler type:", config.type);
-            }
-        }
-
         Film Film::create(const FilmConfig &config) {
-            return detail::create_film<0>(config);
+            return detail::create<Film>(config);
         }
-
     }
 }

@@ -61,7 +61,7 @@ namespace luminous {
         void Scene::load_lights(const vector<LightConfig> &light_configs) {
             _cpu_lights.reserve(light_configs.size());
             for (const auto &lc : light_configs) {
-                _cpu_lights.push_back(LightHandle::create(lc));
+                _cpu_lights.push_back(Light::create(lc));
             }
         }
 

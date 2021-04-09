@@ -19,15 +19,17 @@ namespace luminous {
         public:
             using Variant::Variant;
 
-            void init(const LightHandle * host_lights, const LightHandle *device_lights);
+            GEN_BASE_NAME(LightSampler)
+
+            void init(const Light * host_lights, const Light *device_lights);
 
             NDSC_XPU SampledLight sample(float u) const;
 
             NDSC_XPU SampledLight sample(const LightSampleContext &ctx, float u) const;
 
-            NDSC_XPU float PMF(const LightHandle &light) const;
+            NDSC_XPU float PMF(const Light &light) const;
 
-            NDSC_XPU float PMF(const LightSampleContext &ctx, const LightHandle &light) const;
+            NDSC_XPU float PMF(const LightSampleContext &ctx, const Light &light) const;
 
             NDSC std::string to_string() const;
 

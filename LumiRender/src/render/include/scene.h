@@ -9,7 +9,7 @@
 #include "graphics/math/common.h"
 #include "shape.h"
 #include "scene_graph.h"
-#include "render/lights/light_handle.h"
+#include "render/lights/light.h"
 
 namespace luminous {
     inline namespace render {
@@ -26,7 +26,7 @@ namespace luminous {
             vector<float2> _cpu_tex_coords{};
             vector<TriangleHandle> _cpu_triangles{};
 
-            vector<LightHandle> _cpu_lights{};
+            vector<Light> _cpu_lights{};
 
             size_t _inst_vertices_num{0};
             size_t _inst_triangle_num{0};

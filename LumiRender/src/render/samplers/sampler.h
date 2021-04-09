@@ -18,6 +18,8 @@ namespace luminous {
         private:
             using Variant::Variant;
         public:
+            GEN_BASE_NAME(Sampler)
+
             NDSC XPU int spp() const;
 
             XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);

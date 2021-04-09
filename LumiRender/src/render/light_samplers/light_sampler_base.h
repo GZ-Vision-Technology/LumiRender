@@ -6,12 +6,12 @@
 #pragma once
 
 #include "graphics/math/common.h"
-#include "render/lights/light_handle.h"
+#include "render/lights/light.h"
 
 namespace luminous {
     inline namespace render {
         struct SampledLight {
-            LightHandle light;
+            Light light;
             float PMF = -1;
 
             bool valid() const {
@@ -26,10 +26,10 @@ namespace luminous {
 
         class LightSamplerBase {
         protected:
-            const LightHandle *_host_lights{nullptr};
-            const LightHandle *_device_lights{nullptr};
+            const Light *_host_lights{nullptr};
+            const Light *_device_lights{nullptr};
             size_t _num_lights{0};
-            const LightHandle * lights() const {
+            const Light * lights() const {
                 return _device_lights;
             }
         };

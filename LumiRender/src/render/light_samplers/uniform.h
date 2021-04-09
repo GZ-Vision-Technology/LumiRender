@@ -14,7 +14,7 @@ namespace luminous {
         public:
             UniformLightSampler() = default;
 
-            void init(const LightHandle * host_lights, const LightHandle *device_lights);
+            void init(const Light * host_lights, const Light *device_lights);
 
             GEN_CLASS_NAME(UniformLightSampler)
 
@@ -22,9 +22,9 @@ namespace luminous {
 
             NDSC_XPU SampledLight sample(const LightSampleContext &ctx, float u) const;
 
-            NDSC_XPU float PMF(const LightHandle &light) const;
+            NDSC_XPU float PMF(const Light &light) const;
 
-            NDSC_XPU float PMF(const LightSampleContext &ctx, const LightHandle &light) const;
+            NDSC_XPU float PMF(const LightSampleContext &ctx, const Light &light) const;
 
             NDSC std::string to_string() const;
 

@@ -22,6 +22,8 @@ namespace luminous {
         public:
             using Variant::Variant;
 
+            GEN_BASE_NAME(Sensor)
+
             NDSC_XPU float3 position() const;
 
             XPU void set_position(float3 pos);

@@ -4,6 +4,7 @@
 
 
 #include "sampler.h"
+#include "render/include/creator.h"
 
 namespace luminous {
 
@@ -40,25 +41,8 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(to_string)
         }
 
-        namespace detail {
-            template<uint8_t current_index>
-            NDSC Sampler create_sampler(const SamplerConfig &config) {
-                using Class = std::remove_pointer_t<std::tuple_element_t<current_index, Sampler::TypeTuple>>;
-                if (Class::name() == config.type) {
-                    return Sampler(Class::create(config));
-                }
-                return create_sampler<current_index + 1>(config);
-            }
-
-            template<>
-            NDSC Sampler
-            create_sampler<std::tuple_size_v<Sampler::TypeTuple>>(const SamplerConfig &config) {
-                LUMINOUS_ERROR("unknown sampler type:", config.type);
-            }
-        }
-
         Sampler Sampler::create(const SamplerConfig &config) {
-            return detail::create_sampler<0>(config);
+            return detail::create<Sampler>(config);
         }
     }
 }

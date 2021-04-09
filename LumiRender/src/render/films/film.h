@@ -15,6 +15,8 @@ namespace luminous {
         using lstd::Variant;
         class Film : public Variant<RGBFilm> {
         public:
+            GEN_BASE_NAME(Film)
+
             using Variant::Variant;
 
             NDSC_XPU uint2 resolution() const;

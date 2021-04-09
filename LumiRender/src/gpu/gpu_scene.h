@@ -28,7 +28,7 @@ namespace luminous {
             Managed<float2> _tex_coords;
             Managed<TriangleHandle> _triangles;
 
-            Managed<LightHandle> _lights;
+            Managed<Light> _lights;
 
             float3 _bg_color = make_float3(0.f);
 

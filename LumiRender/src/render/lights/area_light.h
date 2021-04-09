@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "light.h"
+#include "light_base.h"
 
 namespace luminous {
     inline namespace render {
