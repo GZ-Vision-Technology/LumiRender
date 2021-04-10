@@ -17,8 +17,11 @@ namespace luminous {
             std::vector<float> func;
             std::vector<float> CDF;
             float func_integral;
+
+            Distribute1DBuilder() = default;
+
             Distribute1DBuilder(std::vector<float> func, std::vector<float> CDF, float integral)
-                : func(move(func)), CDF(move(CDF)), func_integral(integral) {}
+                    : func(move(func)), CDF(move(CDF)), func_integral(integral) {}
         };
 
         class Distribute1D {
@@ -26,12 +29,12 @@ namespace luminous {
             using value_type = float;
             using const_value_type = const float;
         private:
-            BufferView<const_value_type> _func;
-            BufferView<value_type> _CDF;
+            BufferView <const_value_type> _func;
+            BufferView <value_type> _CDF;
             float _func_integral;
         public:
-            XPU Distribute1D(BufferView<const_value_type> func,
-                             BufferView<value_type> CDF, float integral)
+            XPU Distribute1D(BufferView <const_value_type> func,
+                             BufferView <value_type> CDF, float integral)
                     : _func(func), _CDF(CDF), _func_integral(integral) {}
 
             NDSC_XPU size_t size() const { return _func.size(); }
@@ -85,7 +88,7 @@ namespace luminous {
 
             static Distribute1DBuilder create_builder(std::vector<float> func) {
                 size_t num = func.size();
-                vector<float> CDF(num);
+                vector<float> CDF(num + 1);
                 CDF[0] = 0;
                 for (int i = 1; i < num + 1; ++i) {
                     CDF[i] = CDF[i - 1] + func[i - 1] / num;

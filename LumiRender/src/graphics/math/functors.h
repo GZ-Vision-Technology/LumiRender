@@ -16,11 +16,11 @@ namespace luminous {
         using std::max;
         using std::min;
 
-        inline XPU float rcp(float f) noexcept { return 1.f/f; }
+        inline XPU float rcp(float f) noexcept { return 1.f / f; }
 
-        inline XPU double rcp(double d) noexcept { return 1./d; }
+        inline XPU double rcp(double d) noexcept { return 1. / d; }
 
-        XPU_INLINE float saturate(const float &f) { return std::min(1.f,std::max(0.f,f)); }
+        XPU_INLINE float saturate(const float &f) { return std::min(1.f, std::max(0.f, f)); }
 
         // Vector Functions
 #define MAKE_VECTOR_UNARY_FUNC(func)                                          \
@@ -35,23 +35,30 @@ namespace luminous {
             return Vector<T, 4>(func(v.x), func(v.y), func(v.z), func(v.w));  \
         }                                                                     \
     }
+
         MAKE_VECTOR_UNARY_FUNC(rcp)
+
         MAKE_VECTOR_UNARY_FUNC(saturate)
+
         MAKE_VECTOR_UNARY_FUNC(abs)
+
         MAKE_VECTOR_UNARY_FUNC(sqrt)
+
         MAKE_VECTOR_UNARY_FUNC(sqr)
 
 #undef MAKE_VECTOR_UNARY_FUNC
 
-        template<typename T, uint N, std::enable_if_t<scalar::is_scalar<T>, int> = 0>
-        [[nodiscard]] XPU constexpr auto select(Vector<bool, N> pred, Vector<T, N> t, Vector<T, N> f) noexcept {
+        template<typename T, uint N, std::enable_if_t<scalar::is_scalar < T>, int> = 0>
+
+        [[nodiscard]] XPU constexpr auto select(Vector<bool, N> pred, Vector <T, N> t, Vector <T, N> f) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
-                return Vector<T, N>{select(pred.x, t.x, f.x), select(pred.y, t.y, f.y)};
+                return Vector < T, N > {select(pred.x, t.x, f.x), select(pred.y, t.y, f.y)};
             } else if constexpr (N == 3) {
-                return Vector<T, N>{select(pred.x, t.x, f.x), select(pred.y, t.y, f.y), select(pred.z, t.z, f.z)};
+                return Vector < T, N > {select(pred.x, t.x, f.x), select(pred.y, t.y, f.y), select(pred.z, t.z, f.z)};
             } else {
-                return Vector<T, N>{select(pred.x, t.x, f.x), select(pred.y, t.y, f.y), select(pred.z, t.z, f.z), select(pred.w, t.w, f.w)};
+                return Vector < T, N > {select(pred.x, t.x, f.x), select(pred.y, t.y, f.y), select(pred.z, t.z, f.z),
+                                        select(pred.w, t.w, f.w)};
             }
         }
 
@@ -91,14 +98,17 @@ namespace luminous {
     }
 
         MAKE_VECTOR_BINARY_FUNC(atan2)
+
         MAKE_VECTOR_BINARY_FUNC(pow)
+
         MAKE_VECTOR_BINARY_FUNC(min)
+
         MAKE_VECTOR_BINARY_FUNC(max)
 
 #undef MAKE_VECTOR_UNARY_FUNC
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto volume(Vector<T, N> v) noexcept {
+        [[nodiscard]] XPU constexpr auto volume(Vector <T, N> v) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
                 return v.x * v.y;
@@ -110,7 +120,7 @@ namespace luminous {
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto dot(Vector<T, N> u, Vector<T, N> v) noexcept {
+        [[nodiscard]] XPU constexpr auto dot(Vector <T, N> u, Vector <T, N> v) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
                 return u.x * v.x + u.y * v.y;
@@ -122,50 +132,63 @@ namespace luminous {
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto abs_dot(Vector<T, N> u, Vector<T, N> v) noexcept {
+        [[nodiscard]] XPU constexpr auto abs_dot(Vector <T, N> u, Vector <T, N> v) noexcept {
             return abs(dot(u, v));
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto length(Vector<T, N> u) noexcept {
+        [[nodiscard]] XPU constexpr auto length(Vector <T, N> u) noexcept {
             return sqrt(dot(u, u));
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto length_squared(Vector<T, N> u) noexcept {
+        [[nodiscard]] XPU constexpr auto length_squared(Vector <T, N> u) noexcept {
             return dot(u, u);
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto normalize(Vector<T, N> u) noexcept {
+        [[nodiscard]] XPU constexpr auto normalize(Vector <T, N> u) noexcept {
             return u * (1.0f / length(u));
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto distance(Vector<T, N> u, Vector<T, N> v) noexcept {
+        [[nodiscard]] XPU constexpr auto distance(Vector <T, N> u, Vector <T, N> v) noexcept {
             return length(u - v);
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto distance_squared(Vector<T, N> u, Vector<T, N> v) noexcept {
+        [[nodiscard]] XPU constexpr auto distance_squared(Vector <T, N> u, Vector <T, N> v) noexcept {
             return length_squared(u - v);
         }
 
         template<typename T>
         [[nodiscard]] XPU constexpr auto cross(Vector<T, 3> u, Vector<T, 3> v) noexcept {
             return Vector<T, 3>(u.y * v.z - v.y * u.z,
-                               u.z * v.x - v.z * u.x,
-                               u.x * v.y - v.x * u.y);
+                                u.z * v.x - v.z * u.x,
+                                u.x * v.y - v.x * u.y);
         }
 
-        template <typename T>
-        XPU void coordinate_system(Vector<T, 3> v1, 
-                                    Vector<T, 3> *v2,
-                                    Vector<T, 3> *v3) {
-            if (abs(v1.x) > abs(v1.y)) {
-                *v2 = Vector<T, 3>(-v1.z, 0, v1.x) / sqrt(v1.x * v1.x + v1.z * v1.z);
+        template<typename T, uint N>
+        NDSC_XPU_INLINE T triangle_area(Vector<T, N> p0, Vector<T, N> p1, Vector<T, N> p2) {
+            static_assert(N == 3 || N == 2 , "N must be greater than 1!");
+            if constexpr (N == 2) {
+                Vector<T, 3> pp0 = Vector<T, 3>{p0.x, p0.y, 0};
+                Vector<T, 3> pp1 = Vector<T, 3>{p1.x, p1.y, 0};
+                Vector<T, 3> pp2 = Vector<T, 3>{p2.x, p2.y, 0};
+                return 0.5 * length(cross(pp1 - pp0, pp2 - pp0));
             } else {
-                *v2 = Vector<T, 3>(0, v1.z, -v1.y) / sqrt(v1.y * v1.y + v1.z * v1.z);
+                return 0.5 * length(cross(p1 - p0, p2 - p0));
+            }
+        }
+
+        template<typename T>
+        XPU void coordinate_system(Vector<T, 3> v1,
+                                   Vector<T, 3> *v2,
+                                   Vector<T, 3> *v3) {
+            if (abs(v1.x) > abs(v1.y)) {
+                *v2 = Vector < T, 3 > (-v1.z, 0, v1.x) / sqrt(v1.x * v1.x + v1.z * v1.z);
+            } else {
+                *v2 = Vector < T, 3 > (0, v1.z, -v1.y) / sqrt(v1.y * v1.y + v1.z * v1.z);
             }
             *v3 = cross(v1, *v2);
         }
@@ -197,14 +220,14 @@ namespace luminous {
 
         // Matrix Functions
         template<typename T>
-        [[nodiscard]] XPU constexpr auto transpose(Matrix3x3<T> m) noexcept {
+        [[nodiscard]] XPU constexpr auto transpose(Matrix3x3 <T> m) noexcept {
             return Matrix3x3<T>(m[0].x, m[1].x, m[2].x,
                                 m[0].y, m[1].y, m[2].y,
                                 m[0].z, m[1].z, m[2].z);
         }
 
         template<typename T>
-        [[nodiscard]] XPU constexpr auto transpose(Matrix4x4<T> m) noexcept {
+        [[nodiscard]] XPU constexpr auto transpose(Matrix4x4 <T> m) noexcept {
             return Matrix4x4<T>(m[0].x, m[1].x, m[2].x, m[3].x,
                                 m[0].y, m[1].y, m[2].y, m[3].y,
                                 m[0].z, m[1].z, m[2].z, m[3].z,
@@ -212,8 +235,10 @@ namespace luminous {
         }
 
         template<typename T>
-        [[nodiscard]] XPU auto inverse(Matrix3x3<T> m) noexcept {// from GLM
-            T one_over_determinant = 1.0f / (m[0].x * (m[1].y * m[2].z - m[2].y * m[1].z) - m[1].x * (m[0].y * m[2].z - m[2].y * m[0].z) + m[2].x * (m[0].y * m[1].z - m[1].y * m[0].z));
+        [[nodiscard]] XPU auto inverse(Matrix3x3 <T> m) noexcept {// from GLM
+            T one_over_determinant = 1.0f / (m[0].x * (m[1].y * m[2].z - m[2].y * m[1].z) -
+                                             m[1].x * (m[0].y * m[2].z - m[2].y * m[0].z) +
+                                             m[2].x * (m[0].y * m[1].z - m[1].y * m[0].z));
             return Matrix3x3<T>(
                     (m[1].y * m[2].z - m[2].y * m[1].z) * one_over_determinant,
                     (m[2].y * m[0].z - m[0].y * m[2].z) * one_over_determinant,
@@ -227,7 +252,7 @@ namespace luminous {
         }
 
         template<typename T>
-        [[nodiscard]] XPU constexpr auto inverse(const Matrix4x4<T> m) noexcept {// from GLM
+        [[nodiscard]] XPU constexpr auto inverse(const Matrix4x4 <T> m) noexcept {// from GLM
             const T coef00 = m[2].z * m[3].w - m[3].z * m[2].w;
             const T coef02 = m[1].z * m[3].w - m[3].z * m[1].w;
             const T coef03 = m[1].z * m[2].w - m[2].z * m[1].w;
@@ -260,8 +285,8 @@ namespace luminous {
             const Vector<T, 4> inv1 = Vec0 * fac0 - Vec2 * fac3 + Vec3 * fac4;
             const Vector<T, 4> inv2 = Vec0 * fac1 - Vec1 * fac3 + Vec3 * fac5;
             const Vector<T, 4> inv3 = Vec0 * fac2 - Vec1 * fac4 + Vec2 * fac5;
-            const Vector<T, 4> sign_a = Vector<T, 4>((T)+1, (T)-1, (T)+1, (T)-1);
-            const Vector<T, 4> sign_b = Vector<T, 4>((T)-1, (T)+1, (T)-1, (T)+1);
+            const Vector<T, 4> sign_a = Vector<T, 4>((T) +1, (T) -1, (T) +1, (T) -1);
+            const Vector<T, 4> sign_b = Vector<T, 4>((T) -1, (T) +1, (T) -1, (T) +1);
             const Vector<T, 4> inv_0 = inv0 * sign_a;
             const Vector<T, 4> inv_1 = inv1 * sign_b;
             const Vector<T, 4> inv_2 = inv2 * sign_a;
@@ -276,10 +301,10 @@ namespace luminous {
         }
 
         // other functions
-        template <class To, class From>
+        template<class To, class From>
         XPU typename std::enable_if_t<sizeof(To) == sizeof(From) &&
-                                               std::is_trivially_copyable_v<From> &&
-                                               std::is_trivially_copyable_v<To>, To>
+                                      std::is_trivially_copyable_v<From> &&
+                                      std::is_trivially_copyable_v<To>, To>
         bit_cast(const From &src) noexcept {
             static_assert(std::is_trivially_constructible_v<To>,
                           "This implementation requires the destination type to be trivially "
@@ -290,11 +315,11 @@ namespace luminous {
         }
 
         XPU [[nodiscard]] inline float fast_exp(float x) {
-    #ifdef IS_GPU_CODE
+#ifdef IS_GPU_CODE
             return __expf(x);
-    #else
+#else
             return std::exp(x);
-    #endif
+#endif
         }
 
         [[nodiscard]] XPU_INLINE float gaussian(float x, float mu = 0, float sigma = 1) {
@@ -303,25 +328,25 @@ namespace luminous {
         }
 
         [[nodiscard]] XPU_INLINE float gaussian_integral(float x0, float x1, float mu = 0,
-                                       float sigma = 1) {
+                                                         float sigma = 1) {
             assert(sigma > 0);
             float sigmaRoot2 = sigma * float(1.414213562373095);
             return 0.5f * (std::erf((mu - x0) / sigmaRoot2) - std::erf((mu - x1) / sigmaRoot2));
         }
 
 
-        template <typename Predicate>
+        template<typename Predicate>
         [[nodiscard]] XPU inline size_t find_interval(size_t sz, const Predicate &pred) {
             using ssize_t = std::make_signed_t<size_t>;
-            ssize_t size = (ssize_t)sz - 2, first = 1;
+            ssize_t size = (ssize_t) sz - 2, first = 1;
             while (size > 0) {
                 // Evaluate predicate at midpoint and update _first_ and _size_
-                size_t half = (size_t)size >> 1, middle = first + half;
+                size_t half = (size_t) size >> 1, middle = first + half;
                 bool pred_result = pred(middle);
                 first = pred_result ? middle + 1 : first;
                 size = pred_result ? size - (half + 1) : half;
             }
-            return (size_t)clamp((ssize_t)first - 1, 0, sz - 2);
+            return (size_t) clamp((ssize_t) first - 1, 0, sz - 2);
         }
 
     } // luminous::functors

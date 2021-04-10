@@ -25,7 +25,30 @@ namespace luminous {
         }
 
         void Scene::init_emission_distribute() {
+            auto process_mesh = [&](MeshHandle mesh) {
+                if (mesh.distribute_idx == -1) {
+                    return;
+                }
+                uint start = mesh.triangle_offset;
+                uint end = start + mesh.triangle_count;
+                vector<float> areas;
+                areas.reserve(mesh.triangle_count);
+                const float3 *pos = &_cpu_positions[mesh.vertex_offset];
+                for (int i = start; i < end; ++i) {
+                    TriangleHandle tri = _cpu_triangles[i];
+                    float3 p0 = pos[tri.i];
+                    float3 p1 = pos[tri.j];
+                    float3 p2 = pos[tri.k];
+                    float area = triangle_area(p0, p1, p2);
+                    areas.push_back(area);
+                }
+                auto builder = Distribute1D::create_builder(move(areas));
+                _emission_distribute_builders.push_back(builder);
+            };
 
+            for (const auto &mesh : _cpu_meshes) {
+                process_mesh(mesh);
+            }
         }
 
         void Scene::convert_data(const SP<SceneGraph> &scene_graph) {
