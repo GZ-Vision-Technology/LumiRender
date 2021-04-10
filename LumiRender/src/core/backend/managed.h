@@ -17,6 +17,7 @@ namespace luminous {
         size_t _n_elements{0};
         std::vector<THost> _host{};
         Buffer <TDevice> _device_buffer{nullptr};
+        TDevice * _device_ptr{nullptr};
     public:
         Managed(THost *host, const SP <Device> &device, int n = 1)
                 : _host(host) {
@@ -39,12 +40,14 @@ namespace luminous {
             _host.reserve(_n_elements);
             _host.resize(_n_elements);
             std::memcpy(_host.data(), host, sizeof(THost) * _n_elements);
+            _device_ptr = _device_buffer.data();
         }
 
         void reset(std::vector<THost> v, const SP <Device> &device) {
             _n_elements = v.size();
             _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
             _host = std::move(v);
+            _device_ptr = _device_buffer.data();
         }
 
         void reset(const SP <Device> &device, size_t n) {
@@ -52,6 +55,13 @@ namespace luminous {
             _host.resize(n);
             _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
             std::memset(_host.data(), 0, sizeof(THost) * _n_elements);
+            _device_ptr = _device_buffer.data();
+        }
+
+        template<typename... Args>
+        void reset_all(Args &&...args) {
+            reset(std::forward<Args>(args)...);
+            synchronize_to_gpu();
         }
 
         const Buffer <TDevice> &device_buffer() const {
@@ -78,6 +88,10 @@ namespace luminous {
         template<typename T = void *>
         T device_ptr() const {
             return _device_buffer.ptr<T>();
+        }
+
+        XPU TDevice * d_ptr() const {
+            return _device_ptr;
         }
 
         TDevice *device_data() const {

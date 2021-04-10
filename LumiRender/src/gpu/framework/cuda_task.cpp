@@ -77,7 +77,6 @@ namespace luminous {
 
         void CUDATask::render_gui(double dt) {
             _dt = dt;
-//            _integrator->update();
             _integrator->render();
         }
 

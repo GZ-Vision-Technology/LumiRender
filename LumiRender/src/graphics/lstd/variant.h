@@ -243,12 +243,10 @@ namespace lstd {
 
 #define LUMINOUS_VAR_DISPATCH(method, ...)                                                                             \
     return this->dispatch([&, this](auto &&self) {                                                                     \
-        (void)this;                                                                                                    \
         return self.method(__VA_ARGS__);                                                                               \
     });
 #define LUMINOUS_VAR_PTR_DISPATCH(method, ...)                                                                         \
     return this->dispatch([&, this](auto &&self) {                                                                     \
-        (void)this;                                                                                                    \
         return self->method(__VA_ARGS__);                                                                              \
     });
     };
