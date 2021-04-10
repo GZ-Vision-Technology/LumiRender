@@ -64,11 +64,11 @@ namespace luminous {
             auto res = camera()->film()->resolution();
             auto num = res.x * res.y;
             _accumulate_buffer = _device->allocate_buffer<float4>(num);
-            camera()->film()->set_accumulate_buffer(_accumulate_buffer.data());
+            camera()->film()->set_accumulate_buffer_view(_accumulate_buffer.view());
 
             _frame_buffer.reset(_device, num);
             _frame_buffer.synchronize_to_gpu();
-            camera()->film()->set_frame_buffer(_frame_buffer.device_data());
+            camera()->film()->set_frame_buffer_view(_frame_buffer.device_buffer_view());
         }
 
         void CUDATask::update() {

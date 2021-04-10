@@ -8,17 +8,16 @@
 namespace luminous {
     inline namespace render {
 
-        void RGBFilm::add_sample(float2 p_film, float3 color, float weight, uint frame_index) {
-            auto p = make_int2(p_film);
-            uint pixel_index = p.y * _resolution.x + p.x;
+        void RGBFilm::add_sample(uint2 pixel, float3 color, float weight, uint frame_index) {
+            uint pixel_index = pixel.y * _resolution.x + pixel.x;
             color *= weight;
             if (frame_index > 0) {
                 const float a = 1.0f / static_cast<float>(frame_index + 1);
-                const float3 accum_color_prev = make_float3(_d_accumulate_buffer[pixel_index]);
+                const float3 accum_color_prev = make_float3(_accumulate_buffer_view[pixel_index]);
                 color = lerp(a, accum_color_prev, color);
             }
-            _d_accumulate_buffer[pixel_index] = make_float4(color, 1.f);
-            _d_frame_buffer[pixel_index] = make_rgba(color);
+            _accumulate_buffer_view[pixel_index] = make_float4(color, 1.f);
+            _frame_buffer_view[pixel_index] = make_rgba(color);
         }
 
         std::string RGBFilm::to_string() const {

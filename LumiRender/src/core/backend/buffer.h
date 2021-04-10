@@ -11,7 +11,7 @@
 #include <functional>
 #include <utility>
 #include "dispatcher.h"
-#include "graphics/header.h"
+#include "buffer_view.h"
 
 namespace luminous {
 
@@ -60,55 +60,6 @@ namespace luminous {
         std::unique_ptr<Impl> _impl;
     };
 
-    template<typename T>
-    struct BufferView {
-    private:
-        // point to device memory or host memory
-        T *_ptr;
-        // count of elements
-        const size_t _num;
-    public:
-        using value_type = T;
-        using iterator = T *;
-        using const_iterator = const T *;
-
-        XPU BufferView() : _ptr(nullptr), _num(0) {}
-
-        XPU BufferView(T *ptr, size_t num)
-                : _ptr(ptr), _num(num) {}
-
-        XPU BufferView(std::initializer_list<value_type> v)
-                : BufferView(v.begin(), v.size()) {}
-
-        NDSC_XPU iterator begin() { return _ptr; }
-
-        NDSC_XPU iterator end() { return _ptr + _num; }
-
-        NDSC_XPU const_iterator c_begin() const { return _ptr; }
-
-        NDSC_XPU const_iterator c_end() const { return _ptr + _num; }
-
-        NDSC_XPU T operator[](size_t i) {
-            DCHECK_LT(i, size());
-            return _ptr[i];
-        }
-
-        NDSC_XPU bool empty() const { return _num == 0; }
-
-        NDSC_XPU T front() const { return _ptr[0]; }
-
-        NDSC_XPU T back() const { return _ptr[_num - 1]; }
-
-        NDSC_XPU BufferView sub_view(size_t pos, size_t count) {
-            size_t np = count < (size() - pos) ? count : (size() - pos);
-            return BufferView(_ptr + pos, np);
-        }
-
-        NDSC_XPU size_t size() const {
-            return _num;
-        }
-    };
-
     template<class T = std::byte, typename TP = void *>
     class Buffer : public RawBuffer {
     public:
@@ -129,8 +80,8 @@ namespace luminous {
             return (U) _impl->ptr();
         }
 
-        BufferView<T> view() const {
-            return BufferView<T>(ptr<T>(), size());
+        BufferView<value_type> view() const {
+            return BufferView<value_type>(data(), size());
         }
 
         template<typename U = void *>

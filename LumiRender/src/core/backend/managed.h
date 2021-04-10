@@ -102,7 +102,7 @@ namespace luminous {
             return _device_buffer.data();
         }
 
-        THost operator[](uint i) {
+        THost &operator[](uint i) {
             assert(i < _device_buffer.size());
             return _host[i];
         }

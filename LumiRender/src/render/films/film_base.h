@@ -8,6 +8,7 @@
 #include "graphics/math/common.h"
 #include "graphics/lstd/lstd.h"
 #include "../include/scene_graph.h"
+#include "core/backend/buffer_view.h"
 
 namespace luminous {
     inline namespace render {
@@ -22,8 +23,12 @@ namespace luminous {
         protected:
             uint2 _resolution;
             Box2f _screen_window;
-            float4 *_d_accumulate_buffer{nullptr};
-            FrameBufferType *_d_frame_buffer{nullptr};
+//            float4 *_d_accumulate_buffer{nullptr};
+//            FrameBufferType *_d_frame_buffer{nullptr};
+
+            BufferView<float4> _accumulate_buffer_view;
+            BufferView<FrameBufferType> _frame_buffer_view;
+
             XPU void update() {
                 auto aspect = float(_resolution.x) / float(_resolution.y);
                 if (aspect > 1.f) {
@@ -45,12 +50,12 @@ namespace luminous {
                 update();
             }
 
-            XPU void set_accumulate_buffer(float4 *d_ptr) {
-                _d_accumulate_buffer = d_ptr;
+            void set_accumulate_buffer_view(BufferView<float4> buffer_view) {
+                _accumulate_buffer_view = buffer_view;
             }
 
-            XPU void set_frame_buffer(FrameBufferType *d_ptr) {
-                _d_frame_buffer = d_ptr;
+            void set_frame_buffer_view(BufferView<FrameBufferType> buffer_view) {
+                _frame_buffer_view = buffer_view;
             }
 
             NDSC_XPU uint2 resolution() const { return _resolution; }
