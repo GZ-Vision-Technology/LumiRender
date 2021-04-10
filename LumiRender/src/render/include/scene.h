@@ -29,6 +29,8 @@ namespace luminous {
 
             vector<Light> _cpu_lights{};
 
+            list<Distribute1DBuilder> _emission_distribute_builders;
+
             size_t _inst_vertices_num{0};
             size_t _inst_triangle_num{0};
 
@@ -49,6 +51,8 @@ namespace luminous {
             void convert_data(const SP<SceneGraph> &scene_graph);
 
             void load_lights(const vector<LightConfig> &lc);
+
+            void init_emission_distribute();
         };
     }
 }

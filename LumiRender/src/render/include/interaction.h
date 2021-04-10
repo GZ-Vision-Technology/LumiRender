@@ -30,23 +30,28 @@ namespace luminous {
         struct MeshHandle {
             MeshHandle() = default;
 
-            MeshHandle(uint vert_ofs, uint tri_ofs, uint vert_count, uint tri_count)
+            MeshHandle(uint vert_ofs, uint tri_ofs,
+                       uint vert_count, uint tri_count,
+                       int distribute_idx = -1)
                     : vertex_offset(vert_ofs),
                       triangle_offset(tri_ofs),
                       vertex_count(vert_count),
-                      triangle_count(tri_count) {}
+                      triangle_count(tri_count),
+                      distribute_idx(distribute_idx) {}
 
             uint vertex_offset;
             uint triangle_offset;
             uint vertex_count;
             uint triangle_count;
+            int distribute_idx;
 
             XPU void print() const {
-                printf("vert offset:%u, tri offset:%u, vert num:%u, tri num:%u\n",
+                printf("vert offset:%u, tri offset:%u, vert num:%u, tri num:%u, distribute idx: %d\n",
                        vertex_offset,
                        triangle_offset,
                        vertex_count,
-                       triangle_count);
+                       triangle_count,
+                       distribute_idx);
             }
         };
 

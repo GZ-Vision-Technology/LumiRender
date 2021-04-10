@@ -17,6 +17,17 @@ namespace luminous {
             return a.insert(a.end(), b.begin(), b.end());
         }
 
+        void Scene::load_lights(const vector<LightConfig> &light_configs) {
+            _cpu_lights.reserve(light_configs.size());
+            for (const auto &lc : light_configs) {
+                _cpu_lights.push_back(Light::create(lc));
+            }
+        }
+
+        void Scene::init_emission_distribute() {
+
+        }
+
         void Scene::convert_data(const SP<SceneGraph> &scene_graph) {
             TASK_TAG("convert scene data start!")
             uint vert_offset = 0u;
@@ -37,6 +48,7 @@ namespace luminous {
                 }
             }
 
+            int distribute_idx = 0;
             for (const SP<const ModelInstance> &instance : scene_graph->instance_list) {
                 const SP<const Model> &model = scene_graph->model_list[instance->model_idx];
                 for (const SP<const Mesh> &mesh : model->meshes) {
@@ -47,22 +59,21 @@ namespace luminous {
                         lc.type = "AreaLight";
                         lc.instance_idx = _cpu_inst_to_mesh_idx.size();
                         scene_graph->light_configs.push_back(lc);
+                        MeshHandle &mesh_handle = _cpu_meshes[mesh->idx_in_meshes];
+                        if (mesh_handle.distribute_idx == -1) {
+                            mesh_handle.distribute_idx = distribute_idx++;
+                        }
                     }
                     _cpu_inst_to_mesh_idx.push_back(mesh->idx_in_meshes);
+
                     _inst_triangle_num += mesh->triangles.size();
                     _inst_vertices_num += mesh->positions.size();
                 }
                 _cpu_transforms.push_back(instance->o2w.mat4x4());
             }
             load_lights(scene_graph->light_configs);
+            init_emission_distribute();
             shrink_to_fit();
-        }
-
-        void Scene::load_lights(const vector<LightConfig> &light_configs) {
-            _cpu_lights.reserve(light_configs.size());
-            for (const auto &lc : light_configs) {
-                _cpu_lights.push_back(Light::create(lc));
-            }
         }
 
         size_t Scene::size_in_bytes() const {
@@ -115,5 +126,6 @@ namespace luminous {
                                  _inst_vertices_num,
                                  _cpu_lights.size());
         }
+
     }
 }
