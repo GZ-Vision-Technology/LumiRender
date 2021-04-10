@@ -12,7 +12,14 @@
 namespace luminous {
     inline namespace sampling {
 
-        class WrapDistribute1D;
+        class Distribute1DBuilder {
+        private:
+            std::vector<float> _func;
+            std::vector<float> _CDF;
+        public:
+            Distribute1DBuilder(std::vector<float> func, std::vector<float> CDF)
+                : _func(move(func)), _CDF(move(CDF)) {}
+        };
 
         class Distribute1D {
         public:
@@ -76,9 +83,9 @@ namespace luminous {
                 return func_at(i) / (integral() * size());
             }
 
-            static Distribute1D create(const std::vector<float> &func) {
+            static Distribute1DBuilder create_builder(std::vector<float> func) {
                 size_t num = func.size();
-                std::vector<float> CDF(num + 1);
+                vector<float> CDF(num);
                 CDF[0] = 0;
                 for (int i = 1; i < num + 1; ++i) {
                     CDF[i] = CDF[i - 1] + func[i - 1] / num;
@@ -93,17 +100,8 @@ namespace luminous {
                         CDF[i] = CDF[i] / integral;
                     }
                 }
-
-                
-//                return Distribute1D
+                return Distribute1DBuilder(move(func), move(CDF));
             }
         };
-
-        struct WrapDistribute1D {
-            Distribute1D distribute_1d;
-            Managed<Distribute1D::value_type> func;
-            Managed<Distribute1D::value_type> CDF;
-        };
-
     } // luminous::sampling
 } // luminous

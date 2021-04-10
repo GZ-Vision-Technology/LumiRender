@@ -10,7 +10,7 @@
 #include "shape.h"
 #include "scene_graph.h"
 #include "render/lights/light.h"
-#include "graphics/sampling/sampling.h"
+#include "graphics/sampling/common.h"
 
 namespace luminous {
     inline namespace render {

@@ -112,6 +112,12 @@ namespace luminous {
             return _host[i];
         }
 
+        template<typename Index>
+        const THost &operator[](Index i) const {
+            assert(i < _device_buffer.size());
+            return _host[i];
+        }
+
         THost* operator->() {
             return _host.data();
         }

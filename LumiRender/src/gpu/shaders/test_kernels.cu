@@ -9,7 +9,7 @@
 #include "graphics/common.h"
 #include <stdio.h>
 #include <iostream>
-#include "render/samplers/sampler_handle.cpp"
+#include "render/samplers/sampler.cpp"
 #include "render/samplers/independent.cpp"
 //#include "render/samplers/sampler_handle.cpp"
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
@@ -116,7 +116,7 @@ extern "C" {
     }
     using namespace luminous;
 
-    __global__ void test_sampler(SamplerHandle sh) {
+    __global__ void test_sampler(Sampler sh) {
 //        auto s = LCGSampler(6);
 //        printf("%f \n", s.next_1d());
 //        printf("%f \n", sh.next_1d());
@@ -127,7 +127,7 @@ extern "C" {
         printf("%f \n", sh.next_1d());
     }
 
-    __global__ void test_sampler2(SamplerHandle *sh) {
+    __global__ void test_sampler2(Sampler *sh) {
 
         printf("%f \n", sh->next_1d());
     }
