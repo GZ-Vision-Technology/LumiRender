@@ -74,7 +74,15 @@ namespace luminous {
 
         void clear() {
             _device_buffer.clear();
-            _host.reset(nullptr);
+            _host.clear();
+        }
+
+        void clear_host() {
+            _host.clear();
+        }
+
+        void clear_device() {
+            _device_buffer.clear();
         }
 
         const std::vector<THost> &c_vector() const {
@@ -94,15 +102,12 @@ namespace luminous {
             return _device_buffer.ptr<T>();
         }
 
-        XPU TDevice * d_ptr() const {
-            return _device_ptr;
-        }
-
         TDevice *device_data() const {
             return _device_buffer.data();
         }
 
-        THost &operator[](uint i) {
+        template<typename Index>
+        THost &operator[](Index i) {
             assert(i < _device_buffer.size());
             return _host[i];
         }

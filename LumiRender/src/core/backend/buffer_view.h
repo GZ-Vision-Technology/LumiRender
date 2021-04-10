@@ -33,7 +33,14 @@ namespace luminous {
 
         NDSC_XPU const_iterator c_end() const { return _ptr + _num; }
 
-        NDSC_XPU T &operator[](size_t i) {
+        template<typename Index>
+        NDSC_XPU T &operator[](Index i) {
+            DCHECK_LT(i, size());
+            return _ptr[i];
+        }
+
+        template<typename Index>
+        NDSC_XPU const T &operator[](Index i) const {
             DCHECK_LT(i, size());
             return _ptr[i];
         }
