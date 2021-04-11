@@ -23,6 +23,12 @@ namespace luminous {
             _device_buffer = device->allocate_buffer<TDevice>(n);
         }
 
+        Managed(Managed<THost, TDevice> &&other) {
+            _host = move(other._host);
+            _device_buffer = move(other._device_buffer);
+            _n_elements = other._n_elements;
+        }
+
         Managed() {}
 
         size_t size_in_bytes() const {
@@ -78,8 +84,12 @@ namespace luminous {
             synchronize_to_gpu();
         }
 
+        void allocate_device(const SP<Device> device) {
+            _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
+        }
+
         BufferView<THost> host_buffer_view() const {
-            return BufferView<THost>(_host.data(), _host.size());
+            return BufferView<THost>((THost *)_host.data(), _host.size());
         }
 
         BufferView<TDevice> device_buffer_view() const {

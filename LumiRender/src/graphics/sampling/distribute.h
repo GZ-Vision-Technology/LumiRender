@@ -30,10 +30,27 @@ namespace luminous {
             Managed<float> CDF;
             float func_integral;
 
+            Distribute1DData() = default;
+
             Distribute1DData(vector<float> func, vector<float> CDF, float integral)
                     : func_integral(integral) {
                 this->func.reset(move(func));
                 this->CDF.reset(move(CDF));
+            }
+
+            void allocate_device(const SP<Device> device) {
+                func.allocate_device(device);
+                CDF.allocate_device(device);
+            }
+
+            void synchronize_to_gpu() {
+                func.synchronize_to_gpu();
+                CDF.synchronize_to_gpu();
+            }
+
+            void allocate_synchronize(const SP<Device> &device) {
+                allocate_device(device);
+                synchronize_to_gpu();
             }
         };
 
@@ -42,11 +59,11 @@ namespace luminous {
             using value_type = float;
             using const_value_type = const float;
         private:
-            BufferView <const_value_type> _func;
+            BufferView <value_type> _func;
             BufferView <value_type> _CDF;
             float _func_integral;
         public:
-            XPU Distribute1D(BufferView <const_value_type> func,
+            XPU Distribute1D(BufferView <value_type> func,
                              BufferView <value_type> CDF, float integral)
                     : _func(func), _CDF(CDF), _func_integral(integral) {}
 
@@ -119,8 +136,16 @@ namespace luminous {
                 return Distribute1DBuilder(move(func), move(CDF), integral);
             }
 
-            static auto create(Distribute1DBuilder builder) {
+            static auto create_data(Distribute1DBuilder builder) {
+                return Distribute1DData(move(builder.func), move(builder.CDF), builder.func_integral);
+            }
 
+            static Distribute1D create_on_host(const Distribute1DData &data) {
+                return Distribute1D(data.func.host_buffer_view(), data.CDF.host_buffer_view(), data.func_integral);
+            }
+
+            static Distribute1D create_on_device(const Distribute1DData &data) {
+                return Distribute1D(data.func.device_buffer_view(), data.CDF.device_buffer_view(), data.func_integral);
             }
         };
 

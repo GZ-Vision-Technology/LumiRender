@@ -15,12 +15,42 @@
 
 namespace luminous {
     inline namespace gpu {
+
+        struct EmissionDistributeData {
+            struct DistributeHandle {
+                DistributeHandle() = default;
+
+                DistributeHandle(uint func_offset,
+                                 uint func_count,
+                                 uint CDF_offset,
+                                 uint CDF_count,
+                                 uint integral)
+                        : func_offset(func_offset),
+                          func_count(func_count),
+                          CDF_offset(CDF_offset),
+                          CDF_count(CDF_count),
+                          integral(integral) {}
+
+                uint func_offset;
+                uint func_count;
+                uint CDF_offset;
+                uint CDF_count;
+                uint integral;
+            };
+
+            Managed<float> func;
+            Managed<float> CDF;
+            vector<DistributeHandle> handles;
+        };
+
+
         class GPUScene : public Scene {
         private:
             // instance data
             Managed<uint> _inst_to_mesh_idx;
             Managed<uint> _inst_to_transform_idx;
             Managed<float4x4> _transforms;
+
             // mesh data
             Managed<MeshHandle> _meshes;
             Managed<float3> _positions;
@@ -28,8 +58,10 @@ namespace luminous {
             Managed<float2> _tex_coords;
             Managed<TriangleHandle> _triangles;
 
+            // light data
             Managed<Light> _lights;
-            Buffer<Distribute1D> _emission_distributes{nullptr};
+            Managed<Distribute1D> _emission_distributes;
+            EmissionDistributeData _emission_distribute_data;
 
             float3 _bg_color = make_float3(0.f);
 

@@ -52,6 +52,23 @@
 				}
 			}
 		},
+		{
+			"name" : "c_box",
+			"type": "quad",
+			"param" : {
+				"width": 1,
+				"height": 1,
+				"emission": [0,0,5],
+				"transform" : {
+					"type" : "yaw_pitch",
+					"param" : {
+						"yaw" : 0,
+						"pitch": 0,
+						"position": [5,7,5]
+					}
+				}
+			}
+		},
 //		{
 //			"name" : "c_box",
 //			"type": "model",
