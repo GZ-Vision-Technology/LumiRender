@@ -13,19 +13,19 @@
 namespace luminous {
     inline namespace sampling {
 
-        struct Distribute1DBuilder {
+        struct Distribution1DBuilder {
         public:
             std::vector<float> func;
             std::vector<float> CDF;
             float func_integral;
 
-            Distribute1DBuilder() = default;
+            Distribution1DBuilder() = default;
 
-            Distribute1DBuilder(std::vector<float> func, std::vector<float> CDF, float integral)
+            Distribution1DBuilder(std::vector<float> func, std::vector<float> CDF, float integral)
                     : func(move(func)), CDF(move(CDF)), func_integral(integral) {}
         };
 
-        class Distribute1D {
+        class Distribution1D {
         public:
             using value_type = float;
             using const_value_type = const float;
@@ -34,8 +34,8 @@ namespace luminous {
             BufferView <value_type> _CDF;
             float _func_integral;
         public:
-            XPU Distribute1D(BufferView <value_type> func,
-                             BufferView <value_type> CDF, float integral)
+            XPU Distribution1D(BufferView <value_type> func,
+                               BufferView <value_type> CDF, float integral)
                     : _func(func), _CDF(CDF), _func_integral(integral) {}
 
             NDSC_XPU size_t size() const { return _func.size(); }
@@ -87,9 +87,9 @@ namespace luminous {
                 return func_at(i) / (integral() * size());
             }
 
-            static Distribute1DBuilder create_builder(std::vector<float> func) {
+            static Distribution1DBuilder create_builder(std::vector<float> func) {
                 size_t num = func.size();
-                vector<float> CDF(num + 1);
+                std::vector<float> CDF(num + 1);
                 CDF[0] = 0;
                 for (int i = 1; i < num + 1; ++i) {
                     CDF[i] = CDF[i - 1] + func[i - 1] / num;
@@ -104,7 +104,7 @@ namespace luminous {
                         CDF[i] = CDF[i] / integral;
                     }
                 }
-                return Distribute1DBuilder(move(func), move(CDF), integral);
+                return Distribution1DBuilder(move(func), move(CDF), integral);
             }
         };
 

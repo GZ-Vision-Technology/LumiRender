@@ -12,7 +12,7 @@
 #include "framework/optix_accel.h"
 #include "render/include/scene.h"
 #include "core/backend/managed.h"
-#include "render/include/emission_distribute.h"
+#include "render/include/emission_distribution.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -34,7 +34,7 @@ namespace luminous {
             // light data
             Managed<Light> _lights;
 
-            EmissionDistributeData _emission_distribute_data;
+            EmissionDistribution _emission_distribute;
 
             float3 _bg_color = make_float3(0.f);
 

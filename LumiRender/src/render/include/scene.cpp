@@ -42,8 +42,8 @@ namespace luminous {
                     float area = triangle_area(p0, p1, p2);
                     areas.push_back(area);
                 }
-                auto builder = Distribute1D::create_builder(move(areas));
-                _emission_distribute_builders.push_back(builder);
+                auto builder = Distribution1D::create_builder(move(areas));
+                _emission_distribution_builders.push_back(builder);
             };
 
             for (const auto &mesh : _cpu_meshes) {
