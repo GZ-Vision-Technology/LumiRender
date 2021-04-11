@@ -8,7 +8,14 @@
 #include "graphics/header.h"
 
 namespace luminous {
-    template<typename T>
+
+    NDSC_XPU_INLINE size_t fix_count(size_t offset, size_t count, size_t size) {
+        count = count == 0 ? size : count;
+        count = count < (size - offset) ? count : (size - offset);
+        return count;
+    }
+
+    template<typename T = std::byte>
     struct BufferView {
     private:
         // point to device memory or host memory
@@ -51,9 +58,9 @@ namespace luminous {
 
         NDSC_XPU T back() const { return _ptr[_num - 1]; }
 
-        NDSC_XPU BufferView sub_view(size_t pos, size_t count) {
-            size_t np = count < (size() - pos) ? count : (size() - pos);
-            return BufferView(_ptr + pos, np);
+        NDSC_XPU BufferView sub_view(size_t offset, size_t count) {
+            count = fix_count(offset, count, size());
+            return BufferView(_ptr + offset, count);
         }
 
         NDSC_XPU size_t size() const {

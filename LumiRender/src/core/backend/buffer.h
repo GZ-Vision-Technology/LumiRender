@@ -27,8 +27,8 @@ namespace luminous {
 
             virtual void upload(const void *host_ptr, size_t size = 0, size_t offset = 0) = 0;
 
-            virtual void
-            upload_async(Dispatcher &dispatcher, const void *host_ptr, size_t size = 0, size_t offset = 0) = 0;
+            virtual void upload_async(Dispatcher &dispatcher, const void *host_ptr,
+                                      size_t size = 0, size_t offset = 0) = 0;
 
             virtual void *address(size_t offset = 0) const = 0;
 
@@ -80,8 +80,9 @@ namespace luminous {
             return (U) _impl->ptr();
         }
 
-        BufferView<value_type> view() const {
-            return BufferView<value_type>(data(), size());
+        BufferView<value_type> view(size_t offset = 0, size_t count = 0) const {
+            count = fix_count(offset, count, size());
+            return BufferView<value_type>(data() + offset, count);
         }
 
         template<typename U = void *>

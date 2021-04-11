@@ -17,6 +17,7 @@ namespace luminous {
         size_t _n_elements{0};
         std::vector<THost> _host{};
         Buffer <TDevice> _device_buffer{nullptr};
+
     public:
         Managed(THost *host, const SP <Device> &device, int n = 1)
                 : _host(host) {
@@ -88,12 +89,13 @@ namespace luminous {
             _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
         }
 
-        BufferView<THost> host_buffer_view() const {
-            return BufferView<THost>((THost *)_host.data(), _host.size());
+        BufferView<THost> host_buffer_view(size_t offset = 0, size_t count = 0) const {
+            count = fix_count(offset, count, size());
+            return BufferView<THost>(((THost *)_host.data()) + offset, count);
         }
 
-        BufferView<TDevice> device_buffer_view() const {
-            return _device_buffer.view();
+        BufferView<TDevice> device_buffer_view(size_t offset = 0, size_t count = 0) const {
+            return _device_buffer.view(offset, count);
         }
 
         const Buffer <TDevice> &device_buffer() const {
@@ -122,7 +124,7 @@ namespace luminous {
         }
 
         THost *get() {
-            return _host.data();
+            return reinterpret_cast<THost *>(_host.data());
         }
 
         template<typename T = void *>
