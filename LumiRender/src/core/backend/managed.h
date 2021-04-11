@@ -10,27 +10,29 @@
 #include "core/concepts.h"
 
 namespace luminous {
-    template<typename THost, typename TDevice = THost>
+    template<typename T>
     struct Managed : Noncopyable {
+    public:
+        using value_type = T;
     private:
-        static_assert(!std::is_pointer_v<std::remove_pointer_t<THost>>, "THost can not be the secondary pointer!");
+        static_assert(!std::is_pointer_v<std::remove_pointer_t<T>>, "T can not be the secondary pointer!");
         size_t _n_elements{0};
-        std::vector<THost> _host{};
-        Buffer <TDevice> _device_buffer{nullptr};
+        std::vector<T> _host{};
+        Buffer <T> _device_buffer{nullptr};
 
     public:
-        Managed(THost *host, const SP <Device> &device, int n = 1)
+        Managed() = default;
+
+        Managed(T *host, const SP <Device> &device, int n = 1)
                 : _host(host) {
-            _device_buffer = device->allocate_buffer<TDevice>(n);
+            _device_buffer = device->allocate_buffer<T>(n);
         }
 
-        Managed(Managed<THost, TDevice> &&other) {
+        Managed(Managed<T> &&other) {
             _host = move(other._host);
             _device_buffer = move(other._device_buffer);
             _n_elements = other._n_elements;
         }
-
-        Managed() {}
 
         size_t size_in_bytes() const {
             return _device_buffer.size_in_bytes();
@@ -40,43 +42,43 @@ namespace luminous {
             return _n_elements;
         }
 
-        void reset(THost *host, const SP <Device> &device, int n = 1) {
+        void reset(T *host, const SP <Device> &device, int n = 1) {
             _n_elements = n;
-            _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
+            _device_buffer = device->allocate_buffer<T>(_n_elements);
             _host.reserve(_n_elements);
             _host.resize(_n_elements);
-            std::memcpy(_host.data(), host, sizeof(THost) * _n_elements);
+            std::memcpy(_host.data(), host, sizeof(T) * _n_elements);
         }
 
-        void reset(THost *host, int n = 1) {
+        void reset(T *host, int n = 1) {
             _n_elements = n;
             _host.reserve(_n_elements);
             _host.resize(_n_elements);
-            std::memcpy(_host.data(), host, sizeof(THost) * _n_elements);
+            std::memcpy(_host.data(), host, sizeof(T) * _n_elements);
         }
 
-        void reset(std::vector<THost> v) {
+        void reset(std::vector<T> v) {
             _n_elements = v.size();
             _host = std::move(v);
         }
 
-        void reset(std::vector<THost> v, const SP <Device> &device) {
+        void reset(std::vector<T> v, const SP <Device> &device) {
             _n_elements = v.size();
             _host = std::move(v);
-            _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
+            _device_buffer = device->allocate_buffer<T>(_n_elements);
         }
 
         void reset(size_t n) {
             _n_elements = n;
             _host.resize(n);
-            std::memset(_host.data(), 0, sizeof(THost) * _n_elements);
+            std::memset(_host.data(), 0, sizeof(T) * _n_elements);
         }
 
         void reset(const SP <Device> &device, size_t n) {
             _n_elements = n;
             _host.resize(n);
-            _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
-            std::memset(_host.data(), 0, sizeof(THost) * _n_elements);
+            _device_buffer = device->allocate_buffer<T>(_n_elements);
+            std::memset(_host.data(), 0, sizeof(T) * _n_elements);
         }
 
         template<typename... Args>
@@ -85,20 +87,20 @@ namespace luminous {
             synchronize_to_gpu();
         }
 
-        void allocate_device(const SP<Device> device) {
-            _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
+        void allocate_device(const SP <Device> device) {
+            _device_buffer = device->allocate_buffer<T>(_n_elements);
         }
 
-        BufferView<THost> host_buffer_view(size_t offset = 0, size_t count = 0) const {
+        BufferView <T> host_buffer_view(size_t offset = 0, size_t count = 0) const {
             count = fix_count(offset, count, size());
-            return BufferView<THost>(((THost *)_host.data()) + offset, count);
+            return BufferView<T>(((T *) _host.data()) + offset, count);
         }
 
-        BufferView<TDevice> device_buffer_view(size_t offset = 0, size_t count = 0) const {
+        BufferView <T> device_buffer_view(size_t offset = 0, size_t count = 0) const {
             return _device_buffer.view(offset, count);
         }
 
-        const Buffer <TDevice> &device_buffer() const {
+        const Buffer <T> &device_buffer() const {
             return _device_buffer;
         }
 
@@ -115,16 +117,16 @@ namespace luminous {
             _device_buffer.clear();
         }
 
-        const std::vector<THost> &c_vector() const {
+        const std::vector<T> &c_vector() const {
             return _host;
         }
 
-        std::vector<THost> &vector() {
+        std::vector<T> &vector() {
             return _host;
         }
 
-        THost *get() {
-            return reinterpret_cast<THost *>(_host.data());
+        T *get() {
+            return reinterpret_cast<T *>(_host.data());
         }
 
         template<typename T = void *>
@@ -132,23 +134,23 @@ namespace luminous {
             return _device_buffer.ptr<T>();
         }
 
-        TDevice *device_data() const {
+        T *device_data() const {
             return _device_buffer.data();
         }
 
         template<typename Index>
-        THost &operator[](Index i) {
-            assert(i < _device_buffer.size());
+        T &operator[](Index i) {
+            DCHECK(i < _device_buffer.size());
             return _host[i];
         }
 
         template<typename Index>
-        const THost &operator[](Index i) const {
-            assert(i < _device_buffer.size());
+        const T &operator[](Index i) const {
+            DCHECK(i < _device_buffer.size());
             return _host[i];
         }
 
-        THost* operator->() {
+        T *operator->() {
             return _host.data();
         }
 

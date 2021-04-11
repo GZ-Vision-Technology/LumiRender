@@ -22,9 +22,9 @@ namespace luminous {
             virtual ~Impl() = default;
         };
 
-        template<typename T = std::byte, typename TP = void *>
-        Buffer<T, TP> allocate_buffer(size_t n_elements) {
-            return Buffer<T, TP>(_impl->allocate_buffer(n_elements * sizeof(T)));
+        template<typename T = std::byte>
+        Buffer<T> allocate_buffer(size_t n_elements) {
+            return Buffer<T>(_impl->allocate_buffer(n_elements * sizeof(T)));
         }
 
         Dispatcher new_dispatcher() { return _impl->new_dispatcher(); }

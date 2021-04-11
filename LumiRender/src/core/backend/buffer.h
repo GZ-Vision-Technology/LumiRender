@@ -60,11 +60,10 @@ namespace luminous {
         std::unique_ptr<Impl> _impl;
     };
 
-    template<class T = std::byte, typename TP = void *>
+    template<class T = std::byte>
     class Buffer : public RawBuffer {
     public:
         using value_type = T;
-        using pointer_type = TP;
 
         using RawBuffer::RawBuffer;
 
@@ -74,7 +73,7 @@ namespace luminous {
 
         size_t stride_in_bytes() const { return sizeof(value_type); }
 
-        template<typename U = pointer_type>
+        template<typename U = void *>
         auto ptr() const {
             DCHECK(valid());
             return (U) _impl->ptr();
