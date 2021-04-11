@@ -48,11 +48,13 @@ namespace luminous {
 
             virtual void init_accel() = 0;
 
+            virtual void build_emission_distribute() = 0;
+
             void convert_data(const SP<SceneGraph> &scene_graph);
 
             void load_lights(const vector<LightConfig> &lc);
 
-            void init_emission_distribute();
+            void preprocess_meshes();
         };
     }
 }

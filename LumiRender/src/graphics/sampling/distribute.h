@@ -9,10 +9,11 @@
 #include "core/backend/buffer_view.h"
 #include "core/backend/managed.h"
 
+
 namespace luminous {
     inline namespace sampling {
 
-        class Distribute1DBuilder {
+        struct Distribute1DBuilder {
         public:
             std::vector<float> func;
             std::vector<float> CDF;
@@ -22,6 +23,18 @@ namespace luminous {
 
             Distribute1DBuilder(std::vector<float> func, std::vector<float> CDF, float integral)
                     : func(move(func)), CDF(move(CDF)), func_integral(integral) {}
+        };
+
+        struct Distribute1DData {
+            Managed<float> func;
+            Managed<float> CDF;
+            float func_integral;
+
+            Distribute1DData(vector<float> func, vector<float> CDF, float integral)
+                    : func_integral(integral) {
+                this->func.reset(move(func));
+                this->CDF.reset(move(CDF));
+            }
         };
 
         class Distribute1D {
@@ -106,9 +119,9 @@ namespace luminous {
                 return Distribute1DBuilder(move(func), move(CDF), integral);
             }
 
-//            static Distribute1D create(Distribute1DBuilder builder) {
-//
-//            }
+            static auto create(Distribute1DBuilder builder) {
+
+            }
         };
 
     } // luminous::sampling

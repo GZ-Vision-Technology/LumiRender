@@ -41,10 +41,28 @@ namespace luminous {
             std::memcpy(_host.data(), host, sizeof(THost) * _n_elements);
         }
 
+        void reset(THost *host, int n = 1) {
+            _n_elements = n;
+            _host.reserve(_n_elements);
+            _host.resize(_n_elements);
+            std::memcpy(_host.data(), host, sizeof(THost) * _n_elements);
+        }
+
+        void reset(std::vector<THost> v) {
+            _n_elements = v.size();
+            _host = std::move(v);
+        }
+
         void reset(std::vector<THost> v, const SP <Device> &device) {
             _n_elements = v.size();
-            _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
             _host = std::move(v);
+            _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
+        }
+
+        void reset(size_t n) {
+            _n_elements = n;
+            _host.resize(n);
+            std::memset(_host.data(), 0, sizeof(THost) * _n_elements);
         }
 
         void reset(const SP <Device> &device, size_t n) {

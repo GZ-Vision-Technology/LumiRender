@@ -24,7 +24,7 @@ namespace luminous {
             }
         }
 
-        void Scene::init_emission_distribute() {
+        void Scene::preprocess_meshes() {
             auto process_mesh = [&](MeshHandle mesh) {
                 if (mesh.distribute_idx == -1) {
                     return;
@@ -95,7 +95,7 @@ namespace luminous {
                 _cpu_transforms.push_back(instance->o2w.mat4x4());
             }
             load_lights(scene_graph->light_configs);
-            init_emission_distribute();
+            preprocess_meshes();
             shrink_to_fit();
         }
 
@@ -149,6 +149,5 @@ namespace luminous {
                                  _inst_vertices_num,
                                  _cpu_lights.size());
         }
-
     }
 }

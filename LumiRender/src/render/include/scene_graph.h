@@ -16,14 +16,13 @@ namespace luminous {
     using namespace std;
     inline namespace render {
         struct Config {
+            string type;
         };
 
         struct IntegratorConfig : Config {
-            string type;
         };
 
         struct SamplerConfig : Config {
-            string type;
             uint spp{};
         };
 
@@ -35,8 +34,6 @@ namespace luminous {
             TransformConfig() {}
 
             // trs and matrix4x4 and ...
-            string type;
-
             union {
                 struct {
                     // trs
@@ -76,7 +73,6 @@ namespace luminous {
             ShapeConfig() {
             }
 
-            string type;
             string name;
             TransformConfig o2w;
             float3 emission = make_float3(0.f);
@@ -95,18 +91,15 @@ namespace luminous {
         };
 
         struct FilterConfig {
-            string type;
             float2 radius;
         };
 
         struct FilmConfig : Config {
-            string type;
             uint2 resolution;
             string file_name;
         };
 
         struct SensorConfig : Config {
-            string type;
             TransformConfig transform_config;
             float fov_y;
             float velocity;
@@ -116,13 +109,10 @@ namespace luminous {
         };
 
         struct LightSamplerConfig : Config {
-            string type;
         };
 
         struct LightConfig : Config {
             LightConfig() {}
-
-            string type;
 
             union {
                 struct {

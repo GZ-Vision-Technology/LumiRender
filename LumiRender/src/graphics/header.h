@@ -25,7 +25,7 @@
 
 #define XPU_INLINE XPU __forceinline
 
-#define GPU_INLINE __forceinline GPU
+#define GPU_INLINE GPU __forceinline
 
 #define NDSC [[nodiscard]]
 

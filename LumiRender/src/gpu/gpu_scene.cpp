@@ -61,6 +61,10 @@ namespace luminous {
             build_accel();
         }
 
+        void GPUScene::build_emission_distribute() {
+
+        }
+
         void GPUScene::init(const SP<SceneGraph> &scene_graph) {
             convert_data(scene_graph);
             create_device_memory();
@@ -103,5 +107,6 @@ namespace luminous {
                                  _inst_vertices_num,
                                  _lights.size());
         }
+
     } // luminous::gpu
 } // luminous

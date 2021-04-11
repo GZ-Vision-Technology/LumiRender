@@ -29,6 +29,7 @@ namespace luminous {
             Managed<TriangleHandle> _triangles;
 
             Managed<Light> _lights;
+            Buffer<Distribute1D> _emission_distributes{nullptr};
 
             float3 _bg_color = make_float3(0.f);
 
@@ -43,6 +44,8 @@ namespace luminous {
             void init(const SP<SceneGraph> &scene_graph) override;
 
             void init_accel() override;
+
+            void build_emission_distribute() override;
 
             size_t size_in_bytes() const override;
 
