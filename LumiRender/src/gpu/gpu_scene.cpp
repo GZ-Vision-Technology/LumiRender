@@ -72,7 +72,7 @@ namespace luminous {
 //                _emission_distribute_data.push_back(data);
 //            }
 //            _emission_distributes.reset(move(distributes), _device);
-//            cout << "adfa" << endl;
+            cout << "adfa" << endl;
         }
 
         void GPUScene::init(const SP<SceneGraph> &scene_graph) {

@@ -74,6 +74,7 @@ namespace luminous {
             for (auto &shape : shapes) {
                 ShapeConfig shape_config;
                 shape_config.type = string(shape["type"]);
+                shape_config.name = shape["name"];
                 ParameterSet param(shape["param"]);
                 if (shape_config.type == "model"){
                     shape_config.subdiv_level = param["subdiv_level"].as_uint(0u);

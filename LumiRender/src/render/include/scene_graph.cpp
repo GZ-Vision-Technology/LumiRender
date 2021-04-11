@@ -12,6 +12,14 @@ namespace luminous {
             return string_printf("%s_subdiv_%u", fn.c_str(), subdiv_level);
         }
 
+        string gen_key(const ShapeConfig sc) {
+            if (sc.type == "model") {
+                return string_printf("%s_subdiv_%u", sc.fn.c_str(), sc.subdiv_level);
+            } else {
+                return sc.name;
+            }
+        }
+
         SP<Model> SceneGraph::create_shape(const ShapeConfig &config) {
             if (config.type == "model") {
                 auto path = _context->scene_path() / config.fn;
@@ -50,7 +58,7 @@ namespace luminous {
         }
 
         void SceneGraph::create_shape_instance(const ShapeConfig &config) {
-            auto key = gen_key(config.fn, config.subdiv_level);
+            auto key = gen_key(config);
             if (!is_contain(key)) {
                 auto mp = create_shape(config);
                 mp->key = key;

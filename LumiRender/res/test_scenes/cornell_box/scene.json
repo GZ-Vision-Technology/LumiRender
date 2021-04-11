@@ -36,7 +36,7 @@
 			}
 		},
 		{
-			"name" : "c_box",
+			"name" : "quad1",
 			"type": "quad",
 			"param" : {
 				"width": 1,
@@ -53,7 +53,7 @@
 			}
 		},
 		{
-			"name" : "c_box",
+			"name" : "quad2",
 			"type": "quad",
 			"param" : {
 				"width": 1,
