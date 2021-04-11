@@ -14,7 +14,7 @@ namespace luminous {
 
         template<typename T>
         auto append(vector<T> &a, const vector<T> &b) {
-            return a.insert(a.end(), b.begin(), b.end());
+            return a.insert(a.cend(), b.cbegin(), b.cend());
         }
 
         void Scene::load_lights(const vector<LightConfig> &light_configs) {

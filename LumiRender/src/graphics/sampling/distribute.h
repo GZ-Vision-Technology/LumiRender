@@ -25,35 +25,6 @@ namespace luminous {
                     : func(move(func)), CDF(move(CDF)), func_integral(integral) {}
         };
 
-        struct Distribute1DData {
-            Managed<float> func;
-            Managed<float> CDF;
-            float func_integral;
-
-            Distribute1DData() = default;
-
-            Distribute1DData(vector<float> func, vector<float> CDF, float integral)
-                    : func_integral(integral) {
-                this->func.reset(move(func));
-                this->CDF.reset(move(CDF));
-            }
-
-            void allocate_device(const SP<Device> device) {
-                func.allocate_device(device);
-                CDF.allocate_device(device);
-            }
-
-            void synchronize_to_gpu() {
-                func.synchronize_to_gpu();
-                CDF.synchronize_to_gpu();
-            }
-
-            void allocate_synchronize(const SP<Device> &device) {
-                allocate_device(device);
-                synchronize_to_gpu();
-            }
-        };
-
         class Distribute1D {
         public:
             using value_type = float;
@@ -135,18 +106,6 @@ namespace luminous {
                 }
                 return Distribute1DBuilder(move(func), move(CDF), integral);
             }
-
-            static auto create_data(Distribute1DBuilder builder) {
-                return Distribute1DData(move(builder.func), move(builder.CDF), builder.func_integral);
-            }
-
-//            static Distribute1D create_on_host(const Distribute1DData &data) {
-//                return Distribute1D(data.func.host_buffer_view(), data.CDF.host_buffer_view(), data.func_integral);
-//            }
-//
-//            static Distribute1D create_on_device(const Distribute1DData &data) {
-//                return Distribute1D(data.func.device_buffer_view(), data.CDF.device_buffer_view(), data.func_integral);
-//            }
         };
 
     } // luminous::sampling

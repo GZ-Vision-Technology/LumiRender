@@ -63,6 +63,10 @@ namespace luminous {
             _host = std::move(v);
         }
 
+        void append(const std::vector<THost> &v) {
+            _host.insert(_host.cend(), v.cbegin(), v.cend());
+        }
+
         void reset(std::vector<THost> v, const SP <Device> &device) {
             _n_elements = v.size();
             _host = std::move(v);

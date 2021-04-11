@@ -12,37 +12,10 @@
 #include "framework/optix_accel.h"
 #include "render/include/scene.h"
 #include "core/backend/managed.h"
+#include "render/include/emission_distribute.h"
 
 namespace luminous {
     inline namespace gpu {
-
-        struct EmissionDistributeData {
-            struct DistributeHandle {
-                DistributeHandle() = default;
-
-                DistributeHandle(uint func_offset,
-                                 uint func_count,
-                                 uint CDF_offset,
-                                 uint CDF_count,
-                                 uint integral)
-                        : func_offset(func_offset),
-                          func_count(func_count),
-                          CDF_offset(CDF_offset),
-                          CDF_count(CDF_count),
-                          integral(integral) {}
-
-                uint func_offset;
-                uint func_count;
-                uint CDF_offset;
-                uint CDF_count;
-                uint integral;
-            };
-
-            Managed<float> func;
-            Managed<float> CDF;
-            vector<DistributeHandle> handles;
-        };
-
 
         class GPUScene : public Scene {
         private:
@@ -60,7 +33,7 @@ namespace luminous {
 
             // light data
             Managed<Light> _lights;
-            Managed<Distribute1D> _emission_distributes;
+
             EmissionDistributeData _emission_distribute_data;
 
             float3 _bg_color = make_float3(0.f);
