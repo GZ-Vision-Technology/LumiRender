@@ -249,8 +249,8 @@ namespace luminous {
             _sbt.hitgroupRecordCount = _device_ptr_table.hit_record.size();
         }
 
-        OptixBuildInput OptixAccel::get_mesh_build_input(const Buffer<float3> &positions,
-                                                         const Buffer<TriangleHandle> &triangles,
+        OptixBuildInput OptixAccel::get_mesh_build_input(const Buffer<const float3> &positions,
+                                                         const Buffer<const TriangleHandle> &triangles,
                                                          const MeshHandle &mesh,
                                                          std::list<CUdeviceptr> &vert_buffer_ptr) {
             OptixBuildInput input = {};
@@ -279,8 +279,8 @@ namespace luminous {
             return input;
         }
 
-        OptixTraversableHandle OptixAccel::build_mesh_bvh(const Buffer<float3> &positions,
-                                                          const Buffer<TriangleHandle> &triangles,
+        OptixTraversableHandle OptixAccel::build_mesh_bvh(const Buffer<const float3> &positions,
+                                                          const Buffer<const TriangleHandle> &triangles,
                                                           const MeshHandle &mesh,
                                                           std::list<CUdeviceptr> &vert_buffer_ptr) {
 
@@ -333,7 +333,7 @@ namespace luminous {
             return traversable_handle;
         }
 
-        void OptixAccel::build_bvh(const Buffer<float3> &positions, const Buffer<TriangleHandle> &triangles,
+        void OptixAccel::build_bvh(const Buffer<const float3> &positions, const Buffer<const TriangleHandle> &triangles,
                                    const vector<MeshHandle> &meshes, const vector<uint> &instance_list,
                                    const vector<float4x4> &transform_list, const vector<uint> &inst_to_transform) {
             TASK_TAG("build optix bvh");

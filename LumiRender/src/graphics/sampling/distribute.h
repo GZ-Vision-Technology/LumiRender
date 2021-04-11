@@ -140,13 +140,13 @@ namespace luminous {
                 return Distribute1DData(move(builder.func), move(builder.CDF), builder.func_integral);
             }
 
-            static Distribute1D create_on_host(const Distribute1DData &data) {
-                return Distribute1D(data.func.host_buffer_view(), data.CDF.host_buffer_view(), data.func_integral);
-            }
-
-            static Distribute1D create_on_device(const Distribute1DData &data) {
-                return Distribute1D(data.func.device_buffer_view(), data.CDF.device_buffer_view(), data.func_integral);
-            }
+//            static Distribute1D create_on_host(const Distribute1DData &data) {
+//                return Distribute1D(data.func.host_buffer_view(), data.CDF.host_buffer_view(), data.func_integral);
+//            }
+//
+//            static Distribute1D create_on_device(const Distribute1DData &data) {
+//                return Distribute1D(data.func.device_buffer_view(), data.CDF.device_buffer_view(), data.func_integral);
+//            }
         };
 
     } // luminous::sampling

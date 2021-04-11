@@ -57,15 +57,15 @@ namespace luminous {
 
         struct HitGroupData {
             // instance data
-            uint *inst_to_mesh_idx;
-            uint *inst_to_transform_idx;
-            float4x4 *transforms;
+            const uint *inst_to_mesh_idx;
+            const uint *inst_to_transform_idx;
+            const float4x4 *transforms;
             // mesh data
-            MeshHandle *meshes;
-            float3 *positions;
-            float3 *normals;
-            float2 *tex_coords;
-            TriangleHandle *triangles;
+            const MeshHandle *meshes;
+            const float3 *positions;
+            const float3 *normals;
+            const float2 *tex_coords;
+            const TriangleHandle *triangles;
         };
     }
 }

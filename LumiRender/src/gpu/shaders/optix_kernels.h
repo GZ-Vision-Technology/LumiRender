@@ -123,9 +123,9 @@ static GPU_INLINE luminous::Interaction getInteraction(uint32_t instance_id, uin
     Transform o2w(mat4x4);
     MeshHandle mesh = data.meshes[mesh_idx];
     TriangleHandle tri = data.triangles[mesh.triangle_offset + prim_idx];
-    luminous::float3 *positions = &data.positions[mesh.vertex_offset];
-    luminous::float3 *normals = &data.normals[mesh.vertex_offset];
-    luminous::float2 *tex_coords = &data.tex_coords[mesh.vertex_offset];
+    const luminous::float3 *positions = &data.positions[mesh.vertex_offset];
+    const luminous::float3 *normals = &data.normals[mesh.vertex_offset];
+    const luminous::float2 *tex_coords = &data.tex_coords[mesh.vertex_offset];
 
     auto n0 = normals[tri.i];
     auto n1 = normals[tri.j];

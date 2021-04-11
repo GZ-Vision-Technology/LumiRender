@@ -70,13 +70,13 @@ namespace luminous {
 
             void fill_hit_group_data(HitGroupRecord *p, const GPUScene *gpu_scene);
 
-            OptixBuildInput get_mesh_build_input(const Buffer<float3> &positions,
-                                                 const Buffer<TriangleHandle> &triangles,
+            OptixBuildInput get_mesh_build_input(const Buffer<const float3> &positions,
+                                                 const Buffer<const TriangleHandle> &triangles,
                                                  const MeshHandle &mesh,
                                                  std::list<CUdeviceptr> &vert_buffer_ptr);
 
-            OptixTraversableHandle build_mesh_bvh(const Buffer<float3> &positions,
-                                                  const Buffer<TriangleHandle> &triangles,
+            OptixTraversableHandle build_mesh_bvh(const Buffer<const float3> &positions,
+                                                  const Buffer<const TriangleHandle> &triangles,
                                                   const MeshHandle &mesh,
                                                   std::list<CUdeviceptr> &_vert_buffer_ptr);
 
@@ -89,7 +89,7 @@ namespace luminous {
 
             NDSC std::string description() const;
 
-            void build_bvh(const Buffer<float3> &positions, const Buffer<TriangleHandle> &triangles,
+            void build_bvh(const Buffer<const float3> &positions, const Buffer<const TriangleHandle> &triangles,
                            const vector<MeshHandle> &meshes, const vector<uint> &instance_list,
                            const vector<float4x4> &transform_list, const vector<uint> &inst_to_transform);
         };

@@ -18,7 +18,7 @@ namespace luminous {
 
             Buffer<float4> _accumulate_buffer{nullptr};
 
-            Managed<FrameBufferType> _frame_buffer;
+            Managed<FrameBufferType, FrameBufferType> _frame_buffer;
 
             UP<Integrator> _integrator;
 
