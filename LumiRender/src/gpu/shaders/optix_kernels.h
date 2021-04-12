@@ -130,6 +130,9 @@ static GPU_INLINE luminous::Interaction getInteraction(uint32_t instance_id, uin
     auto tex_coords = data.tex_coords.sub_view(mesh.vertex_offset);
     auto light_sampler = data.light_sampler;
 
+    auto distrib = data.emission_distributions;
+
+
     auto n0 = normals[tri.i];
     auto n1 = normals[tri.j];
     auto n2 = normals[tri.k];

@@ -7,6 +7,7 @@
 
 #include "graphics/math/common.h"
 #include "core/backend/buffer_view.h"
+#include "graphics/sampling/distribution.h"
 
 namespace luminous {
     inline namespace render {
@@ -36,6 +37,7 @@ namespace luminous {
 
             // light data
             const LightSampler *light_sampler;
+            BufferView<const Distribution1D> emission_distributions;
         };
     }
 }
