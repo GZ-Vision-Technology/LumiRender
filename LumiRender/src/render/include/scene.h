@@ -34,7 +34,7 @@ namespace luminous {
             Managed<TriangleHandle> _triangles;
 
             // light data
-            vector<Distribution1DBuilder> _emission_distribution_builders;
+//            vector<Distribution1DBuilder> _emission_distribution_builders;
             Managed<Light> _lights;
             EmissionDistribution _emission_distrib;
 
@@ -51,8 +51,6 @@ namespace luminous {
             virtual void init(const SP<SceneGraph> &scene_graph) = 0;
 
             virtual void init_accel() = 0;
-
-            virtual void build_emission_distribute();
 
             void convert_data(const SP<SceneGraph> &scene_graph);
 

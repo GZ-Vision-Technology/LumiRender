@@ -7,12 +7,6 @@
 namespace luminous {
     inline namespace render {
 
-        void Scene::build_emission_distribute() {
-            for (const auto & builder : _emission_distribution_builders) {
-                _emission_distrib.add_distribute(builder);
-            }
-        }
-
         void Scene::load_lights(const vector<LightConfig> &light_configs) {
             _lights.reserve(light_configs.size());
             for (const auto &lc : light_configs) {
@@ -21,6 +15,7 @@ namespace luminous {
         }
 
         void Scene::preprocess_meshes() {
+            vector<Distribution1DBuilder> builders;
             auto process_mesh = [&](MeshHandle mesh) {
                 if (mesh.distribute_idx == -1) {
                     return;
@@ -39,11 +34,14 @@ namespace luminous {
                     areas.push_back(area);
                 }
                 auto builder = Distribution1D::create_builder(move(areas));
-                _emission_distribution_builders.push_back(builder);
+                builders.push_back(builder);
             };
 
             for (const auto &mesh : _meshes.c_vector()) {
                 process_mesh(mesh);
+            }
+            for (const auto & builder : builders) {
+                _emission_distrib.add_distribute(builder);
             }
         }
 
@@ -93,7 +91,6 @@ namespace luminous {
             }
             load_lights(scene_graph->light_configs);
             preprocess_meshes();
-            build_emission_distribute();
             shrink_to_fit();
         }
 

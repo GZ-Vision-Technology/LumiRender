@@ -82,17 +82,7 @@ namespace luminous {
         }
 
         size_t GPUScene::size_in_bytes() const {
-            size_t ret = 0u;
-            ret += _inst_to_mesh_idx.size_in_bytes();
-            ret += _inst_to_transform_idx.size_in_bytes();
-            ret += _transforms.size_in_bytes();
-            ret += _meshes.size_in_bytes();
-            ret += _positions.size_in_bytes();
-            ret += _normals.size_in_bytes();
-            ret += _tex_coords.size_in_bytes();
-            ret += _triangles.size_in_bytes();
-            ret += _lights.size_in_bytes();
-            return ret;
+            return Scene::size_in_bytes();
         }
 
         std::string GPUScene::description() const {
