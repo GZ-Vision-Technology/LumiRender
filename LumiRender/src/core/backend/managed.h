@@ -54,12 +54,7 @@ namespace luminous {
         }
 
         void reset(std::vector<THost> v) {
-            _n_elements = v.size();
             _host = std::move(v);
-        }
-
-        void append(const std::vector<THost> &v) {
-            _host.insert(_host.cend(), v.cbegin(), v.cend());
         }
 
         void reset(std::vector<THost> v, const SP <Device> &device) {
@@ -82,6 +77,20 @@ namespace luminous {
         void reset_all(Args &&...args) {
             reset(std::forward<Args>(args)...);
             synchronize_to_gpu();
+        }
+
+        void append(const std::vector<THost> &v) {
+            _host.insert(_host.cend(), v.cbegin(), v.cend());
+        }
+
+        template<typename... Args>
+        void push_back(Args &&...args) {
+            _host.push_back(std::forward<Args>(args)...);
+        }
+
+        template<typename... Args>
+        void emplace_back(Args &&...args) {
+            _host.emplace_back(std::forward<Args>(args)...);
         }
 
         void allocate_device(const SP <Device> device) {

@@ -6,6 +6,7 @@
 #pragma once
 
 #include "graphics/sampling/distribution.h"
+#include "core/backend/device.h"
 
 namespace luminous {
     inline namespace render {
@@ -13,34 +14,34 @@ namespace luminous {
             struct DistributionHandle {
                 DistributionHandle() = default;
 
-                DistributionHandle(uint func_offset,
-                                   uint func_count,
-                                   uint CDF_offset,
-                                   uint CDF_count,
-                                   uint integral)
+                DistributionHandle(size_t func_offset,
+                                   size_t func_size,
+                                   size_t CDF_offset,
+                                   size_t CDF_size,
+                                   float integral)
                         : func_offset(func_offset),
-                          func_count(func_count),
+                          func_size(func_size),
                           CDF_offset(CDF_offset),
-                          CDF_count(CDF_count),
+                          CDF_size(CDF_size),
                           integral(integral) {}
 
-                uint func_offset;
-                uint func_count;
-                uint CDF_offset;
-                uint CDF_count;
-                uint integral;
+                size_t func_offset;
+                size_t func_size;
+                size_t CDF_offset;
+                size_t CDF_size;
+                float integral;
             };
 
-            Managed<float> func;
-            Managed<float> CDF;
+            Managed<float> func_buffer;
+            Managed<float> CDF_buffer;
             std::vector<DistributionHandle> handles;
-            Managed<Distribution1D> emission_distributes;
+            Managed<Distribution1D> emission_distributions;
 
             void add_distribute(const Distribution1DBuilder &builder);
 
             void init_on_host();
 
-            void init_on_device();
+            void init_on_device(const SP<Device> &device);
 
             void synchronize_to_gpu();
         };

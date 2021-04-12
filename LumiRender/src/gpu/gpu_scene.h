@@ -33,8 +33,7 @@ namespace luminous {
 
             // light data
             Managed<Light> _lights;
-
-            EmissionDistribution _emission_distribute;
+            EmissionDistribution _emission_distrib;
 
             float3 _bg_color = make_float3(0.f);
 

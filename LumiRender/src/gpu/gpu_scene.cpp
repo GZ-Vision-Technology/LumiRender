@@ -62,17 +62,10 @@ namespace luminous {
         }
 
         void GPUScene::build_emission_distribute() {
-//            vector<Distribute1D> distributes(_emission_distribute_builders.size());
-//            for (auto &builder : _emission_distribute_builders) {
-//                auto data = Distribute1D::create_data(move(builder));
-//                data.allocate_device(_device);
-//                data.synchronize_to_gpu();
-//                auto distribute = Distribute1D::create_on_device(data);
-//                distributes.push_back(distribute);
-//                _emission_distribute_data.push_back(data);
-//            }
-//            _emission_distributes.reset(move(distributes), _device);
-            cout << "adfa" << endl;
+            for (const auto & builder : _emission_distribution_builders) {
+                _emission_distrib.add_distribute(builder);
+            }
+            _emission_distrib.init_on_device(_device);
         }
 
         void GPUScene::init(const SP<SceneGraph> &scene_graph) {
