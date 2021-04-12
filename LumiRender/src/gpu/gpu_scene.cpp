@@ -17,21 +17,22 @@ namespace luminous {
         void GPUScene::create_device_memory() {
             {
                 // instance data
-                _inst_to_mesh_idx.reset(move(_cpu_inst_to_mesh_idx), _device);
-                _inst_to_transform_idx.reset(move(_cpu_inst_to_transform_idx), _device);
-                _transforms.reset(move(_cpu_transforms), _device);
+                _inst_to_mesh_idx.allocate_device( _device);
+                _inst_to_transform_idx.allocate_device( _device);
+                _transforms.allocate_device( _device);
             }
             {
                 // mesh data
-                _meshes.reset(move(_cpu_meshes), _device);
-                _positions.reset(move(_cpu_positions), _device);
-                _tex_coords.reset(move(_cpu_tex_coords), _device);
-                _triangles.reset(move(_cpu_triangles), _device);
-                _normals.reset(move(_cpu_normals), _device);
+                _meshes.allocate_device( _device);
+                _positions.allocate_device( _device);
+                _tex_coords.allocate_device( _device);
+                _triangles.allocate_device(_device);
+                _normals.allocate_device(_device);
             }
             {
-                // other
-                _lights.reset(move(_cpu_lights), _device);
+                // light data
+                _lights.allocate_device( _device);
+                _emission_distrib.init_on_device(_device);
             }
         }
 
@@ -51,7 +52,7 @@ namespace luminous {
                 _normals.synchronize_to_gpu();
             }
             {
-                // other data
+                // light data
                 _lights.synchronize_to_gpu();
                 _emission_distrib.synchronize_to_gpu();
             }
@@ -62,20 +63,11 @@ namespace luminous {
             build_accel();
         }
 
-        void GPUScene::build_emission_distribute() {
-            for (const auto & builder : _emission_distribution_builders) {
-                _emission_distrib.add_distribute(builder);
-            }
-            _emission_distrib.init_on_device(_device);
-        }
-
         void GPUScene::init(const SP<SceneGraph> &scene_graph) {
             convert_data(scene_graph);
-            build_emission_distribute();
             create_device_memory();
             synchronize_to_gpu();
             init_accel();
-
         }
 
         void GPUScene::build_accel() {
@@ -104,14 +96,7 @@ namespace luminous {
         }
 
         std::string GPUScene::description() const {
-            float size_in_MB = float(size_in_bytes()) / sqr(1024);
-
-            return string_printf("scene data occupy %f MB, instance triangle is %u,"
-                                 " instance vertices is %u, light num is %u",
-                                 size_in_MB,
-                                 _inst_triangle_num,
-                                 _inst_vertices_num,
-                                 _lights.size());
+            return Scene::description();
         }
 
     } // luminous::gpu

@@ -44,6 +44,12 @@ namespace luminous {
             void init_on_device(const SP<Device> &device);
 
             void synchronize_to_gpu();
+
+            void shrink_to_fit();
+
+            void clear();
+
+            size_t size_in_bytes() const;
         };
     }
 }

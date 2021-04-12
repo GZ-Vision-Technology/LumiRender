@@ -41,5 +41,27 @@ namespace luminous {
         void EmissionDistribution::synchronize_to_gpu() {
             emission_distributions.synchronize_to_gpu();
         }
+
+        void EmissionDistribution::shrink_to_fit() {
+            func_buffer.shrink_to_fit();
+            CDF_buffer.shrink_to_fit();
+            handles.shrink_to_fit();
+            emission_distributions.shrink_to_fit();
+        }
+
+        void EmissionDistribution::clear() {
+            func_buffer.clear();
+            CDF_buffer.clear();
+            handles.clear();
+            emission_distributions.clear();
+        }
+
+        size_t EmissionDistribution::size_in_bytes() const {
+            size_t ret = func_buffer.size_in_bytes();
+            ret += CDF_buffer.size_in_bytes();
+            ret += handles.size() * sizeof(DistributionHandle);
+            ret += emission_distributions.size_in_bytes();
+            return ret;
+        }
     } // luminous::render
 } // luminous

@@ -7,20 +7,16 @@
 namespace luminous {
     inline namespace render {
 
-        template<typename T>
-        size_t _size_in_bytes(const vector<T> &v) {
-            return v.size() * sizeof(T);
-        }
-
-        template<typename T>
-        auto append(vector<T> &a, const vector<T> &b) {
-            return a.insert(a.cend(), b.cbegin(), b.cend());
+        void Scene::build_emission_distribute() {
+            for (const auto & builder : _emission_distribution_builders) {
+                _emission_distrib.add_distribute(builder);
+            }
         }
 
         void Scene::load_lights(const vector<LightConfig> &light_configs) {
-            _cpu_lights.reserve(light_configs.size());
+            _lights.reserve(light_configs.size());
             for (const auto &lc : light_configs) {
-                _cpu_lights.push_back(Light::create(lc));
+                _lights.push_back(Light::create(lc));
             }
         }
 
@@ -33,9 +29,9 @@ namespace luminous {
                 uint end = start + mesh.triangle_count;
                 vector<float> areas;
                 areas.reserve(mesh.triangle_count);
-                const float3 *pos = &_cpu_positions[mesh.vertex_offset];
+                const float3 *pos = &_positions[mesh.vertex_offset];
                 for (int i = start; i < end; ++i) {
-                    TriangleHandle tri = _cpu_triangles[i];
+                    TriangleHandle tri = _triangles[i];
                     float3 p0 = pos[tri.i];
                     float3 p1 = pos[tri.j];
                     float3 p2 = pos[tri.k];
@@ -46,7 +42,7 @@ namespace luminous {
                 _emission_distribution_builders.push_back(builder);
             };
 
-            for (const auto &mesh : _cpu_meshes) {
+            for (const auto &mesh : _meshes.c_vector()) {
                 process_mesh(mesh);
             }
         }
@@ -57,15 +53,15 @@ namespace luminous {
             uint tri_offset = 0u;
             for (const SP<const Model> &model : scene_graph->model_list) {
                 for (const SP<const Mesh> &mesh : model->meshes) {
-                    append(_cpu_positions, mesh->positions);
-                    append(_cpu_normals, mesh->normals);
-                    append(_cpu_tex_coords, mesh->tex_coords);
-                    append(_cpu_triangles, mesh->triangles);
+                    _positions.append(mesh->positions);
+                    _normals.append(mesh->normals);
+                    _tex_coords.append(mesh->tex_coords);
+                    _triangles.append(mesh->triangles);
 
                     uint vert_count = mesh->positions.size();
                     uint tri_count = mesh->triangles.size();
-                    mesh->idx_in_meshes = _cpu_meshes.size();
-                    _cpu_meshes.emplace_back(vert_offset, tri_offset, vert_count, tri_count);
+                    mesh->idx_in_meshes = _meshes.size();
+                    _meshes.emplace_back(vert_offset, tri_offset, vert_count, tri_count);
                     vert_offset += vert_count;
                     tri_offset += tri_count;
                 }
@@ -75,79 +71,96 @@ namespace luminous {
             for (const SP<const ModelInstance> &instance : scene_graph->instance_list) {
                 const SP<const Model> &model = scene_graph->model_list[instance->model_idx];
                 for (const SP<const Mesh> &mesh : model->meshes) {
-                    _cpu_inst_to_transform_idx.push_back(_cpu_transforms.size());
+                    _inst_to_transform_idx.push_back(_transforms.size());
+
                     if (!instance->emission.is_zero()) {
                         LightConfig lc;
                         lc.emission = instance->emission;
                         lc.type = "AreaLight";
-                        lc.instance_idx = _cpu_inst_to_mesh_idx.size();
+                        lc.instance_idx = _inst_to_mesh_idx.size();
                         scene_graph->light_configs.push_back(lc);
-                        MeshHandle &mesh_handle = _cpu_meshes[mesh->idx_in_meshes];
+                        MeshHandle &mesh_handle = _meshes[mesh->idx_in_meshes];
                         if (mesh_handle.distribute_idx == -1) {
                             mesh_handle.distribute_idx = distribute_idx++;
                         }
                     }
-                    _cpu_inst_to_mesh_idx.push_back(mesh->idx_in_meshes);
+                    _inst_to_mesh_idx.push_back(mesh->idx_in_meshes);
 
                     _inst_triangle_num += mesh->triangles.size();
                     _inst_vertices_num += mesh->positions.size();
                 }
-                _cpu_transforms.push_back(instance->o2w.mat4x4());
+                _transforms.push_back(instance->o2w.mat4x4());
             }
             load_lights(scene_graph->light_configs);
             preprocess_meshes();
+            build_emission_distribute();
             shrink_to_fit();
         }
 
         size_t Scene::size_in_bytes() const {
-            size_t ret = _size_in_bytes(_cpu_triangles);
-            ret += _size_in_bytes(_cpu_tex_coords);
-            ret += _size_in_bytes(_cpu_positions);
-            ret += _size_in_bytes(_cpu_normals);
+            size_t ret = _triangles.size_in_bytes();
+            ret += _tex_coords.size_in_bytes();
+            ret += _positions.size_in_bytes();
+            ret += _normals.size_in_bytes();
 
-            ret += _size_in_bytes(_cpu_meshes);
-            ret += _size_in_bytes(_cpu_transforms);
-            ret += _size_in_bytes(_cpu_inst_to_mesh_idx);
-            ret += _size_in_bytes(_cpu_inst_to_transform_idx);
+            ret += _meshes.size_in_bytes();
+            ret += _transforms.size_in_bytes();
+            ret += _inst_to_mesh_idx.size_in_bytes();
+            ret += _inst_to_transform_idx.size_in_bytes();
 
-            ret += _size_in_bytes(_cpu_lights);
+            ret += _lights.size_in_bytes();
+            ret += _emission_distrib.size_in_bytes();
 
             return ret;
         }
 
         void Scene::clear() {
-            _cpu_triangles.clear();
-            _cpu_tex_coords.clear();
-            _cpu_positions.clear();
-            _cpu_normals.clear();
-            _cpu_meshes.clear();
-            _cpu_transforms.clear();
-            _cpu_inst_to_mesh_idx.clear();
-            _cpu_inst_to_transform_idx.clear();
-            _cpu_lights.clear();
+            {
+                _triangles.clear();
+                _tex_coords.clear();
+                _positions.clear();
+                _normals.clear();
+                _meshes.clear();
+            }
+            {
+                _transforms.clear();
+                _inst_to_mesh_idx.clear();
+                _inst_to_transform_idx.clear();
+            }
+            {
+                _lights.clear();
+                _emission_distrib.clear();
+            }
         }
 
         void Scene::shrink_to_fit() {
-            _cpu_triangles.shrink_to_fit();
-            _cpu_tex_coords.shrink_to_fit();
-            _cpu_positions.shrink_to_fit();
-            _cpu_normals.shrink_to_fit();
-            _cpu_meshes.shrink_to_fit();
-            _cpu_transforms.shrink_to_fit();
-            _cpu_inst_to_mesh_idx.shrink_to_fit();
-            _cpu_inst_to_transform_idx.shrink_to_fit();
-            _cpu_lights.shrink_to_fit();
+            {
+                _triangles.shrink_to_fit();
+                _tex_coords.shrink_to_fit();
+                _positions.shrink_to_fit();
+                _normals.shrink_to_fit();
+                _meshes.shrink_to_fit();
+            }
+            {
+                _transforms.shrink_to_fit();
+                _inst_to_mesh_idx.shrink_to_fit();
+                _inst_to_transform_idx.shrink_to_fit();
+            }
+            {
+                _lights.shrink_to_fit();
+                _emission_distrib.shrink_to_fit();
+            }
         }
 
         std::string Scene::description() const {
-            float size_in_MB = size_in_bytes() / sqr(1024);
+            float size_in_MB = size_in_bytes() / sqr(1024.f);
 
             return string_printf("scene data occupy %f MB, instance triangle is %u,"
                                  " instance vertices is %u, light num is %u",
                                  size_in_MB,
                                  _inst_triangle_num,
                                  _inst_vertices_num,
-                                 _cpu_lights.size());
+                                 _lights.size());
         }
     }
 }

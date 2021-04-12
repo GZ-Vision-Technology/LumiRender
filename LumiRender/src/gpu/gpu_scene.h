@@ -19,21 +19,6 @@ namespace luminous {
 
         class GPUScene : public Scene {
         private:
-            // instance data
-            Managed<uint> _inst_to_mesh_idx;
-            Managed<uint> _inst_to_transform_idx;
-            Managed<float4x4> _transforms;
-
-            // mesh data
-            Managed<MeshHandle> _meshes;
-            Managed<float3> _positions;
-            Managed<float3> _normals;
-            Managed<float2> _tex_coords;
-            Managed<TriangleHandle> _triangles;
-
-            // light data
-            Managed<Light> _lights;
-            EmissionDistribution _emission_distrib;
 
             float3 _bg_color = make_float3(0.f);
 
@@ -49,15 +34,9 @@ namespace luminous {
 
             void init_accel() override;
 
-            void build_emission_distribute() override;
-
             size_t size_in_bytes() const override;
 
             void create_device_memory();
-
-            inline void clear_host() {
-                Scene::clear();
-            }
 
             void synchronize_to_gpu();
 

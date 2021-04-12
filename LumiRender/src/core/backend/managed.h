@@ -93,6 +93,15 @@ namespace luminous {
             _host.emplace_back(std::forward<Args>(args)...);
         }
 
+        template<typename... Args>
+        void reserve(Args &&...args) {
+            _host.reserve(std::forward<Args>(args)...);
+        }
+
+        void shrink_to_fit() {
+            _host.shrink_to_fit();
+        }
+
         void allocate_device(const SP <Device> device) {
             _device_buffer = device->allocate_buffer<TDevice>(_host.size());
         }
@@ -146,13 +155,13 @@ namespace luminous {
 
         template<typename Index>
         THost &operator[](Index i) {
-            DCHECK(i < _device_buffer.size());
+            DCHECK(i < size());
             return _host[i];
         }
 
         template<typename Index>
         const THost &operator[](Index i) const {
-            DCHECK(i < _device_buffer.size());
+            DCHECK(i < size());
             return _host[i];
         }
 
