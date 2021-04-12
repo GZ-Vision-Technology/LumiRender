@@ -30,12 +30,12 @@ namespace luminous {
             using value_type = float;
             using const_value_type = const float;
         private:
-            BufferView <value_type> _func;
-            BufferView <value_type> _CDF;
+            BufferView <const_value_type> _func;
+            BufferView <const_value_type> _CDF;
             float _func_integral;
         public:
-            XPU Distribution1D(BufferView <value_type> func,
-                               BufferView <value_type> CDF, float integral)
+            XPU Distribution1D(BufferView <const_value_type> func,
+                               BufferView <const_value_type> CDF, float integral)
                     : _func(func), _CDF(CDF), _func_integral(integral) {}
 
             NDSC_XPU size_t size() const { return _func.size(); }
