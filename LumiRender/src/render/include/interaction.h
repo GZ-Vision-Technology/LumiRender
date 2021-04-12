@@ -10,15 +10,6 @@
 
 namespace luminous {
     inline namespace render {
-        struct Interaction {
-            float3 pos;
-            float3 ng;
-            float3 ns;
-            float2 uv;
-            float3 wo;
-            float time;
-        };
-
         struct TriangleHandle {
             uint i;
             uint j;
@@ -56,20 +47,14 @@ namespace luminous {
             }
         };
 
-        struct HitGroupData {
-            // instance data
-            BufferView<const uint> inst_to_mesh_idx;
-            BufferView<const uint> inst_to_transform_idx;
-            BufferView<const float4x4> transforms;
-            // mesh data
-            BufferView<const MeshHandle> meshes;
-            BufferView<const float3> positions;
-            BufferView<const float3> normals;
-            BufferView<const float2> tex_coords;
-            BufferView<const TriangleHandle> triangles;
-
-            // light data
-//            BufferView<const Light>
+        struct Interaction {
+            float3 pos;
+            float3 ng;
+            float3 ns;
+            float2 uv;
+            float3 wo;
+            float time;
         };
+
     }
 }

@@ -19,14 +19,7 @@ namespace luminous {
             Sampler *sampler;
         };
 
-        struct RayGenData {
 
-        };
-
-
-        struct MissData {
-            float3 bg_color;
-        };
 
         template<typename T>
         struct Record {
