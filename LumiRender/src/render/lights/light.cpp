@@ -12,7 +12,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(type);
         }
 
-        const char *Light::name() {
+        const char *Light::name() const {
             LUMINOUS_VAR_DISPATCH(name);
         }
 

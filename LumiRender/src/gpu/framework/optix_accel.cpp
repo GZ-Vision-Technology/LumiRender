@@ -7,6 +7,7 @@
 #include <optix_function_table_definition.h>
 #include <optix_stubs.h>
 #include "../gpu_scene.h"
+#include "render/include/shader_data.h"
 
 extern "C" char optix_shader_code[];
 
@@ -215,6 +216,8 @@ namespace luminous {
                 p->data.inst_to_mesh_idx = gpu_scene->_inst_to_mesh_idx.device_buffer_view();
                 p->data.inst_to_transform_idx = gpu_scene->_inst_to_transform_idx.device_buffer_view();
                 p->data.transforms = gpu_scene->_transforms.device_buffer_view();
+
+                p->data.light_sampler = gpu_scene->_light_sampler.device_data();
             };
 
             _device_ptr_table.rg_record = _device->allocate_buffer<RayGenRecord>(1);

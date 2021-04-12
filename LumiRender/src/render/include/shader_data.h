@@ -9,7 +9,7 @@
 #include "core/backend/buffer_view.h"
 
 namespace luminous {
-    inline namespace gpu {
+    inline namespace render {
 
         struct RayGenData {
 
@@ -19,6 +19,8 @@ namespace luminous {
         struct MissData {
             float3 bg_color;
         };
+
+        class LightSampler;
 
         struct HitGroupData {
             // instance data
@@ -33,6 +35,7 @@ namespace luminous {
             BufferView<const TriangleHandle> triangles;
 
             // light data
+            const LightSampler *light_sampler;
         };
     }
 }

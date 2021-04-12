@@ -9,7 +9,7 @@
 #include "graphics/optics/common.h"
 #include "render/include/interaction.h"
 #include "render/include/scene_graph.h"
-#include "gpu/shader_data.h"
+#include "render/include/shader_data.h"
 
 namespace luminous {
     inline namespace render {

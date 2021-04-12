@@ -9,6 +9,8 @@
 #include "render/films/shader_include.h"
 #include "render/samplers/shader_include.h"
 #include "render/sensors/shader_include.h"
+#include "render/light_samplers/shader_include.h"
+#include "render/lights/shader_include.h"
 #include "gpu/framework/optix_params.h"
 
 struct RadiancePRD {
@@ -126,6 +128,7 @@ static GPU_INLINE luminous::Interaction getInteraction(uint32_t instance_id, uin
     auto positions = data.positions.sub_view(mesh.vertex_offset);
     auto normals = data.normals.sub_view(mesh.vertex_offset);
     auto tex_coords = data.tex_coords.sub_view(mesh.vertex_offset);
+    auto light_sampler = data.light_sampler;
 
     auto n0 = normals[tri.i];
     auto n1 = normals[tri.j];
