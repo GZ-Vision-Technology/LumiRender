@@ -14,8 +14,6 @@ namespace luminous {
         public:
             UniformLightSampler() = default;
 
-            void init(const Light * host_lights, const Light *device_lights);
-
             GEN_CLASS_NAME(UniformLightSampler)
 
             NDSC_XPU SampledLight sample(float u) const;

@@ -7,16 +7,22 @@
 
 #include "graphics/math/common.h"
 #include "render/lights/light.h"
+#include "core/backend/buffer_view.h"
 
 namespace luminous {
     inline namespace render {
         struct SampledLight {
             Light light;
-            float PMF = -1;
+            float PMF{-1.f};
 
-            bool valid() const {
-                return PMF != -1;
+            XPU bool valid() const {
+                return PMF != -1.f;
             }
+
+            XPU SampledLight() = default;
+
+            XPU SampledLight(Light light, float PMF)
+                    : light(light), PMF(PMF) {}
 
             NDSC std::string to_string() const {
                 return string_printf("sampled light :{PMF:%s, light:%s}",
@@ -26,11 +32,18 @@ namespace luminous {
 
         class LightSamplerBase {
         protected:
-            const Light *_host_lights{nullptr};
-            const Light *_device_lights{nullptr};
-            size_t _num_lights{0};
-            const Light * lights() const {
-                return _device_lights;
+            BufferView<const Light> _lights;
+        public:
+            BufferView<const Light> lights() const {
+                return _lights;
+            }
+
+            XPU void set_lights(BufferView<const Light> lights) {
+                _lights = lights;
+            }
+
+            NDSC_XPU size_t light_num() const {
+                return _lights.size();
             }
         };
     }

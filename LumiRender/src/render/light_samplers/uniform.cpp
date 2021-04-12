@@ -7,16 +7,12 @@
 namespace luminous {
     inline namespace render {
 
-
-        void UniformLightSampler::init(const Light *host_lights,
-                                       const Light *device_lights) {
-            _host_lights = host_lights;
-            _device_lights = device_lights;
-        }
-
         SampledLight UniformLightSampler::sample(float u) const {
-            // todo
-            return SampledLight();
+            if (_lights.empty()) {
+                return SampledLight();
+            }
+            int lightIndex = std::min<int>(u * light_num(), light_num() - 1);
+            return SampledLight(_lights[lightIndex], 1.f / light_num());
         }
 
         SampledLight UniformLightSampler::sample(const LightSampleContext &ctx, float u) const {
@@ -24,7 +20,7 @@ namespace luminous {
         }
 
         float UniformLightSampler::PMF(const Light &light) const {
-            return _num_lights == 0 ? 0 : 1.f / _num_lights;
+            return light_num() == 0 ? 0 : 1.f / light_num();
         }
 
         float UniformLightSampler::PMF(const LightSampleContext &ctx, const Light &light) const {
