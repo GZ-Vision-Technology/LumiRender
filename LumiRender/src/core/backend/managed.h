@@ -10,17 +10,15 @@
 #include "core/concepts.h"
 
 namespace luminous {
-    template<typename T, typename U = const T>
+    template<typename T, typename U = const std::remove_const_t<T>>
     struct Managed : Noncopyable {
     public:
         using THost = T;
         using TDevice = U;
     private:
         static_assert(!std::is_pointer_v<std::remove_pointer_t<THost>>, "THost can not be the secondary pointer!");
-        size_t _n_elements{0};
         std::vector<THost> _host{};
         Buffer <TDevice> _device_buffer{nullptr};
-
     public:
         Managed() = default;
 
@@ -32,7 +30,6 @@ namespace luminous {
         Managed(Managed<THost, TDevice> &&other) {
             _host = move(other._host);
             _device_buffer = move(other._device_buffer);
-            _n_elements = other._n_elements;
         }
 
         size_t size_in_bytes() const {
@@ -40,22 +37,20 @@ namespace luminous {
         }
 
         size_t size() const {
-            return _n_elements;
+            return _host.size();
         }
 
         void reset(THost *host, const SP <Device> &device, int n = 1) {
-            _n_elements = n;
-            _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
-            _host.reserve(_n_elements);
-            _host.resize(_n_elements);
-            std::memcpy(_host.data(), host, sizeof(THost) * _n_elements);
+            _device_buffer = device->allocate_buffer<TDevice>(n);
+            _host.reserve(n);
+            _host.resize(n);
+            std::memcpy(_host.data(), host, sizeof(THost) * n);
         }
 
         void reset(THost *host, int n = 1) {
-            _n_elements = n;
-            _host.reserve(_n_elements);
-            _host.resize(_n_elements);
-            std::memcpy(_host.data(), host, sizeof(THost) * _n_elements);
+            _host.reserve(n);
+            _host.resize(n);
+            std::memcpy(_host.data(), host, sizeof(THost) * n);
         }
 
         void reset(std::vector<THost> v) {
@@ -68,22 +63,19 @@ namespace luminous {
         }
 
         void reset(std::vector<THost> v, const SP <Device> &device) {
-            _n_elements = v.size();
             _host = std::move(v);
-            _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
+            _device_buffer = device->allocate_buffer<TDevice>(_host.size());
         }
 
         void reset(size_t n) {
-            _n_elements = n;
             _host.resize(n);
-            std::memset(_host.data(), 0, sizeof(THost) * _n_elements);
+            std::memset(_host.data(), 0, sizeof(THost) * n);
         }
 
         void reset(const SP <Device> &device, size_t n) {
-            _n_elements = n;
             _host.resize(n);
-            _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
-            std::memset(_host.data(), 0, sizeof(THost) * _n_elements);
+            _device_buffer = device->allocate_buffer<TDevice>(n);
+            std::memset(_host.data(), 0, sizeof(THost) * n);
         }
 
         template<typename... Args>
@@ -93,7 +85,7 @@ namespace luminous {
         }
 
         void allocate_device(const SP <Device> device) {
-            _device_buffer = device->allocate_buffer<TDevice>(_n_elements);
+            _device_buffer = device->allocate_buffer<TDevice>(_host.size());
         }
 
         BufferView <TDevice> host_buffer_view(size_t offset = 0, size_t count = 0) const {
