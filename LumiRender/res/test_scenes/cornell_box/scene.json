@@ -164,6 +164,9 @@
 			"spp" : 16
 		}
 	},
+	"light_sampler": {
+		"type": "UniformLightSampler"
+	},
 	"camera" : {
 		"type" : "PinholeCamera",
 		"param" : {

@@ -7,11 +7,13 @@
 namespace luminous {
     inline namespace render {
 
-        void Scene::load_lights(const vector<LightConfig> &light_configs) {
+        void Scene::load_lights(const vector<LightConfig> &light_configs,const LightSamplerConfig &lsc) {
             _lights.reserve(light_configs.size());
             for (const auto &lc : light_configs) {
                 _lights.push_back(Light::create(lc));
             }
+            auto light_sampler = LightSampler::create(lsc);
+            _light_sampler.reset(&light_sampler);
         }
 
         void Scene::preprocess_meshes() {
@@ -89,7 +91,7 @@ namespace luminous {
                 }
                 _transforms.push_back(instance->o2w.mat4x4());
             }
-            load_lights(scene_graph->light_configs);
+            load_lights(scene_graph->light_configs, scene_graph->light_sampler_config);
             preprocess_meshes();
             shrink_to_fit();
         }

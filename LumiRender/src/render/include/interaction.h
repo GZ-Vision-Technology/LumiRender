@@ -67,6 +67,9 @@ namespace luminous {
             BufferView<const float3> normals;
             BufferView<const float2> tex_coords;
             BufferView<const TriangleHandle> triangles;
+
+            // light data
+//            BufferView<const Light>
         };
     }
 }

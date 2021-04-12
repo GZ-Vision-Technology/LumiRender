@@ -170,6 +170,12 @@ namespace luminous {
             return ret;
         }
 
+        LightSamplerConfig parse_light_sampler(const ParameterSet &ps) {
+            LightSamplerConfig ret;
+            ret.type = ps["type"].as_string("UniformLightSampler");
+            return ret;
+        }
+
         void Parser::load_from_json(const std::filesystem::path &fn) {
             _data = create_json_from_file(fn);
         }
@@ -181,6 +187,7 @@ namespace luminous {
             scene_graph->sensor_config = parse_sensor(ParameterSet(_data["camera"]));
             scene_graph->sampler_config = parse_sampler(ParameterSet(_data["sampler"]));
             scene_graph->light_configs = parse_lights(_data.value("lights", DataWrap()));
+            scene_graph->light_sampler_config = parse_light_sampler(ParameterSet(_data["light_sampler"]));
             return scene_graph;
         }
     }

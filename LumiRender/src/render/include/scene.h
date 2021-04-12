@@ -12,6 +12,7 @@
 #include "render/lights/light.h"
 #include "graphics/sampling/common.h"
 #include "render/include/emission_distribution.h"
+#include "render/light_samplers/light_sampler.h"
 
 namespace luminous {
     inline namespace render {
@@ -34,9 +35,9 @@ namespace luminous {
             Managed<TriangleHandle> _triangles;
 
             // light data
-//            vector<Distribution1DBuilder> _emission_distribution_builders;
             Managed<Light> _lights;
             EmissionDistribution _emission_distrib;
+            Managed<LightSampler> _light_sampler;
 
         public:
 
@@ -54,7 +55,7 @@ namespace luminous {
 
             void convert_data(const SP<SceneGraph> &scene_graph);
 
-            void load_lights(const vector<LightConfig> &lc);
+            void load_lights(const vector<LightConfig> &lc, const LightSamplerConfig &lsc);
 
             void preprocess_meshes();
         };
