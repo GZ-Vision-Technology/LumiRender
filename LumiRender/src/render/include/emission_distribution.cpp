@@ -35,6 +35,7 @@ namespace luminous {
                 BufferView<const float> CDF = CDF_buffer.device_buffer_view(handle.CDF_offset, handle.CDF_size);
                 emission_distributions.emplace_back(func, CDF, handle.integral);
             }
+            emission_distributions.allocate_device(device);
         }
 
         void EmissionDistribution::synchronize_to_gpu() {

@@ -53,6 +53,7 @@ namespace luminous {
             {
                 // other data
                 _lights.synchronize_to_gpu();
+                _emission_distrib.synchronize_to_gpu();
             }
         }
 
@@ -70,10 +71,11 @@ namespace luminous {
 
         void GPUScene::init(const SP<SceneGraph> &scene_graph) {
             convert_data(scene_graph);
+            build_emission_distribute();
             create_device_memory();
             synchronize_to_gpu();
             init_accel();
-            build_emission_distribute();
+
         }
 
         void GPUScene::build_accel() {
