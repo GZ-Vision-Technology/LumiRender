@@ -68,8 +68,6 @@ namespace luminous {
 
             void create_sbt(ProgramGroupTable program_group_table, const GPUScene *gpu_scene);
 
-            void fill_hit_group_data(HitGroupRecord *p, const GPUScene *gpu_scene);
-
             OptixBuildInput get_mesh_build_input(const Buffer<const float3> &positions,
                                                  const Buffer<const TriangleHandle> &triangles,
                                                  const MeshHandle &mesh,

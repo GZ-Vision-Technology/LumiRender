@@ -6,6 +6,7 @@
 #pragma once
 
 #include "graphics/math/common.h"
+#include "core/backend/buffer_view.h"
 
 namespace luminous {
     inline namespace render {
@@ -57,15 +58,15 @@ namespace luminous {
 
         struct HitGroupData {
             // instance data
-            const uint *inst_to_mesh_idx;
-            const uint *inst_to_transform_idx;
-            const float4x4 *transforms;
+            BufferView<const uint> inst_to_mesh_idx;
+            BufferView<const uint> inst_to_transform_idx;
+            BufferView<const float4x4> transforms;
             // mesh data
-            const MeshHandle *meshes;
-            const float3 *positions;
-            const float3 *normals;
-            const float2 *tex_coords;
-            const TriangleHandle *triangles;
+            BufferView<const MeshHandle> meshes;
+            BufferView<const float3> positions;
+            BufferView<const float3> normals;
+            BufferView<const float2> tex_coords;
+            BufferView<const TriangleHandle> triangles;
         };
     }
 }

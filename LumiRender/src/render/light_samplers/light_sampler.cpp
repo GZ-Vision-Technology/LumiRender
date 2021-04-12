@@ -8,6 +8,10 @@
 namespace luminous {
     inline namespace render {
 
+        const char *LightSampler::name() {
+            LUMINOUS_VAR_DISPATCH(name);
+        }
+
         void LightSampler::set_lights(BufferView<const Light> lights) {
             LUMINOUS_VAR_DISPATCH(set_lights, lights);
         }
@@ -39,5 +43,6 @@ namespace luminous {
         LightSampler LightSampler::create(const LightSamplerConfig &config) {
             return detail::create<LightSampler>(config);
         }
+
     } // luminous::render
 } // luminous

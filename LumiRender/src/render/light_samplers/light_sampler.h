@@ -21,6 +21,8 @@ namespace luminous {
 
             GEN_BASE_NAME(LightSampler)
 
+            NDSC_XPU const char *name();
+
             void set_lights(BufferView<const Light> lights);
 
             NDSC_XPU size_t light_num();
