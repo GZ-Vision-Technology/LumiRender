@@ -10,7 +10,6 @@
 namespace luminous {
 
     NDSC_XPU_INLINE size_t fix_count(size_t offset, size_t count, size_t size) {
-        count = count == 0 ? size : count;
         count = count < (size - offset) ? count : (size - offset);
         return count;
     }
@@ -58,7 +57,7 @@ namespace luminous {
 
         NDSC_XPU T back() const { return _ptr[_num - 1]; }
 
-        NDSC_XPU BufferView sub_view(size_t offset = 0, size_t count = 0) {
+        NDSC_XPU BufferView sub_view(size_t offset = 0, size_t count = -1) {
             count = fix_count(offset, count, size());
             return BufferView(_ptr + offset, count);
         }

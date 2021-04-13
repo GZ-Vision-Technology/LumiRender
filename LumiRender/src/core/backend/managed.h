@@ -106,12 +106,12 @@ namespace luminous {
             _device_buffer = device->allocate_buffer<TDevice>(_host.size());
         }
 
-        BufferView <TDevice> host_buffer_view(size_t offset = 0, size_t count = 0) const {
+        BufferView <TDevice> host_buffer_view(size_t offset = 0, size_t count = -1) const {
             count = fix_count(offset, count, size());
             return BufferView<TDevice>(((TDevice *) _host.data()) + offset, count);
         }
 
-        BufferView <TDevice> device_buffer_view(size_t offset = 0, size_t count = 0) const {
+        BufferView <TDevice> device_buffer_view(size_t offset = 0, size_t count = -1) const {
             return _device_buffer.view(offset, count);
         }
 

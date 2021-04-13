@@ -79,7 +79,7 @@ namespace luminous {
             return (U) _impl->ptr();
         }
 
-        BufferView<value_type> view(size_t offset = 0, size_t count = 0) const {
+        BufferView<value_type> view(size_t offset = 0, size_t count = -1) const {
             count = fix_count(offset, count, size());
             return BufferView<value_type>(data() + offset, count);
         }
