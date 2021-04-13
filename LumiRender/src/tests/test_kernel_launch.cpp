@@ -11,9 +11,7 @@
 #include <string>
 #include <vector>
 #include <driver_types.h>
-#include "gpu/framework/cuda_device.h"
-#include "gpu/framework/cuda_kernel.h"
-#include "gpu/framework/cuda_module.h"
+#include "gpu/framework/cuda_impl.h"
 #include "core/backend/managed.h"
 
 #include "render/samplers/sampler.h"
@@ -89,7 +87,7 @@ void test_managed() {
     auto kernel = cudaModule->get_kernel("test_sampler2");
 
     auto config = SamplerConfig();
-    config.type = "LCGSampler";
+    config.type = "PCGSampler";
     config.spp = 9;
     auto sampler = Sampler::create(config);
     auto buffer = device->allocate_buffer<Sampler>(1);
