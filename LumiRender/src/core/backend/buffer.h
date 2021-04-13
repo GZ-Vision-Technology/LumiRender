@@ -42,7 +42,7 @@ namespace luminous {
         RawBuffer(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
 
         Impl *impl_mut() const {
-            assert(valid());
+            DCHECK(valid());
             return _impl.get();
         }
 

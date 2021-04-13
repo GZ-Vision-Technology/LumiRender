@@ -7,7 +7,6 @@
 
 #include "shape.h"
 #include "material.h"
-#include "render/lights/light_base.h"
 #include "core/concepts.h"
 #include <memory>
 #include "core/context.h"
