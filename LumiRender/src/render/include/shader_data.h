@@ -7,7 +7,6 @@
 
 #include "graphics/math/common.h"
 #include "core/backend/buffer_view.h"
-#include "graphics/sampling/distribution.h"
 
 namespace luminous {
     inline namespace render {
@@ -22,6 +21,7 @@ namespace luminous {
         };
 
         class LightSampler;
+        class Distribution1D;
 
         struct HitGroupData {
             // instance data

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "graphics/sampling/distribution.h"
+#include "distribution.h"
 #include "core/backend/device.h"
 
 namespace luminous {
