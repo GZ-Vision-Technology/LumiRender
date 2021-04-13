@@ -47,6 +47,7 @@ namespace luminous {
         }
 
         bool valid() const {
+
 #ifdef DEBUG_BUILD
             if (_impl == nullptr)
                 std::cerr << "invalid buffer !!!" << std::endl;
@@ -79,7 +80,7 @@ namespace luminous {
             return (U) _impl->ptr();
         }
 
-        BufferView<value_type> view(size_t offset = 0, size_t count = -1) const {
+        BufferView <value_type> view(size_t offset = 0, size_t count = -1) const {
             count = fix_count(offset, count, size());
             return BufferView<value_type>(data() + offset, count);
         }
@@ -107,7 +108,8 @@ namespace luminous {
             _impl->download(host_ptr, n_elements * sizeof(T), offset * sizeof(T));
         }
 
-        void download_async(Dispatcher &dispatcher, std::remove_const_t<T> *host_ptr, size_t n_elements = 0, size_t offset = 0) {
+        void download_async(Dispatcher &dispatcher, std::remove_const_t<T> *host_ptr,
+                            size_t n_elements = 0, size_t offset = 0) {
             DCHECK(valid());
             n_elements = n_elements == 0 ? _impl->size() / sizeof(T) : n_elements;
             DCHECK(offset * sizeof(T) + n_elements * sizeof(T) <= _impl->size());
