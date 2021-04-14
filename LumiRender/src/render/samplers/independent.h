@@ -6,7 +6,7 @@
 #pragma once
 
 #include "graphics/math/rng.h"
-#include "../include/scene_graph.h"
+#include "../include/config.h"
 #include "sampler_base.h"
 
 namespace luminous {

@@ -6,7 +6,7 @@
 
 #include "graphics/math/common.h"
 #include "graphics/lstd/lstd.h"
-#include "scene_graph.h"
+#include "config.h"
 
 namespace luminous {
     inline namespace render {

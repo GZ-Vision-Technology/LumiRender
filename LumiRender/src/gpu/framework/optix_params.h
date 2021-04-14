@@ -9,6 +9,7 @@
 #include "graphics/math/common.h"
 #include "render/sensors/sensor.h"
 #include "render/samplers/sampler.h"
+#include "render/include/shader_data.h"
 
 namespace luminous {
     inline namespace gpu {

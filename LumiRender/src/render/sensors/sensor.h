@@ -8,7 +8,7 @@
 
 #include "graphics/math/common.h"
 #include "graphics/lstd/lstd.h"
-#include "../include/scene_graph.h"
+#include "../include/config.h"
 #include "pinhole_camera.h"
 #include "perspective_camera.h"
 

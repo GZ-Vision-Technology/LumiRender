@@ -3,6 +3,7 @@
 //
 
 #include "scene.h"
+#include "render/include/distribution.h"
 
 namespace luminous {
     inline namespace render {

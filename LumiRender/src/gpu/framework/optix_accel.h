@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "cuda_device.h"
+#include "cuda_impl.h"
 #include "graphics/geometry/common.h"
 #include "render/include/scene_graph.h"
 #include "optix_params.h"

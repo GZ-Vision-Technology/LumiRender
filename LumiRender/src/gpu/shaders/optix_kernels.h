@@ -11,6 +11,7 @@
 #include "render/sensors/shader_include.h"
 #include "render/light_samplers/shader_include.h"
 #include "render/lights/shader_include.h"
+#include "render/include/distribution.h"
 #include "gpu/framework/optix_params.h"
 
 struct RadiancePRD {
@@ -125,13 +126,12 @@ static GPU_INLINE luminous::Interaction getInteraction(uint32_t instance_id, uin
     Transform o2w(mat4x4);
     MeshHandle mesh = data.meshes[mesh_idx];
     TriangleHandle tri = data.triangles[mesh.triangle_offset + prim_idx];
-    auto positions = data.positions.sub_view(mesh.vertex_offset);
-    auto normals = data.normals.sub_view(mesh.vertex_offset);
-    auto tex_coords = data.tex_coords.sub_view(mesh.vertex_offset);
+    auto positions = data.positions.sub_view(mesh.vertex_offset, mesh.vertex_count);
+    auto normals = data.normals.sub_view(mesh.vertex_offset, mesh.vertex_count);
+    auto tex_coords = data.tex_coords.sub_view(mesh.vertex_offset, mesh.vertex_count);
     auto light_sampler = data.light_sampler;
 
     auto distrib = data.emission_distributions;
-
 
     auto n0 = normals[tri.i];
     auto n1 = normals[tri.j];

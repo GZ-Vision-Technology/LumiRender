@@ -7,7 +7,7 @@
 
 #include "graphics/math/common.h"
 #include "graphics/lstd/lstd.h"
-#include "../include/scene_graph.h"
+#include "render//include/config.h"
 #include "core/backend/buffer_view.h"
 
 namespace luminous {

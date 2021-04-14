@@ -231,17 +231,17 @@ void piecewise_construct_test() {
 
 }
 
-void piecewise2d_test() {
-    float arr[] = {0, 1, 1, 2};
-    using ::lstd::span;
-    auto sp = span<float>(arr, 4);
-    auto dis = PiecewiseConstant2D(sp, 2, 2);
-
-    auto u = make_float2(0.5, 0.5);
-    float pdf;
-    cout << dis.Sample(u, &pdf).to_string() << endl;
-    cout << pdf;
-}
+//void piecewise2d_test() {
+//    float arr[] = {0, 1, 1, 2};
+//    using ::lstd::span;
+//    auto sp = span<float>(arr, 4);
+//    auto dis = PiecewiseConstant2D(sp, 2, 2);
+//
+//    auto u = make_float2(0.5, 0.5);
+//    float pdf;
+//    cout << dis.Sample(u, &pdf).to_string() << endl;
+//    cout << pdf;
+//}
 
 void test_matrix_to_Euler_angle() {
 

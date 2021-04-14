@@ -8,7 +8,7 @@
 #include "graphics/geometry/common.h"
 #include "graphics/optics/common.h"
 #include "render/include/interaction.h"
-#include "render/include/scene_graph.h"
+#include "render/include/config.h"
 #include "render/include/shader_data.h"
 
 namespace luminous {
