@@ -11,7 +11,7 @@
 
 namespace luminous {
     template<typename T, typename U = const std::remove_const_t<T>>
-    struct Managed : public Noncopyable , public std::vector<T> {
+    struct Managed : public Noncopyable, public std::vector<T> {
     public:
         using BaseClass = std::vector<T>;
         using THost = T;
@@ -26,13 +26,13 @@ namespace luminous {
             return BaseClass::size() * sizeof(T);
         }
 
-        void reset(const vector<THost> &v) {
+        void reset(const vector <THost> &v) {
             BaseClass::reserve(v.capacity());
             BaseClass::resize(v.size());
             std::memcpy(BaseClass::data(), v.data(), sizeof(THost) * v.size());
         }
 
-        void reset(const vector<THost> &v,const SP <Device> &device) {
+        void reset(const vector <THost> &v, const SP <Device> &device) {
             _device_buffer = device->allocate_buffer<TDevice>(v.size());
             reset(v);
         }

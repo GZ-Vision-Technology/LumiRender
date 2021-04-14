@@ -34,7 +34,7 @@ namespace luminous {
         protected:
             BufferView<const Light> _lights;
         public:
-            BufferView<const Light> lights() const {
+            NDSC_XPU BufferView<const Light> lights() const {
                 return _lights;
             }
 
