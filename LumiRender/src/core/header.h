@@ -19,7 +19,7 @@
 
 #define F_INLINE __forceinline
 
-#if defined(__CUDA_ARCH__)
+#if defined(__CUDACC__)
     #define IS_GPU_CODE
 #endif
 
