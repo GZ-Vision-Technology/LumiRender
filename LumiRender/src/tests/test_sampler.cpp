@@ -9,7 +9,7 @@ using namespace luminous;
 using namespace std;
 
 void test_sampler() {
-    TASK_TAG("test_sampler");
+//    TASK_TAG("test_sampler");
     auto config = SamplerConfig();
     config.type = "PCGSampler";
     config.spp = 9;

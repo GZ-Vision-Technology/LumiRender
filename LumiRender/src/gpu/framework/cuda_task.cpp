@@ -86,7 +86,7 @@ namespace luminous {
 
         FrameBufferType *CUDATask::download_frame_buffer() {
             _frame_buffer.synchronize_to_cpu();
-            return _frame_buffer.get();
+            return _frame_buffer.data();
         }
 
         Sensor *CUDATask::camera() {

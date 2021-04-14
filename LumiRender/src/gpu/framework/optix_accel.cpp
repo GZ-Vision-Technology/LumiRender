@@ -339,8 +339,8 @@ namespace luminous {
         }
 
         void OptixAccel::build_bvh(const Buffer<const float3> &positions, const Buffer<const TriangleHandle> &triangles,
-                                   const vector<MeshHandle> &meshes, const vector<uint> &instance_list,
-                                   const vector<float4x4> &transform_list, const vector<uint> &inst_to_transform) {
+                                   const Managed<MeshHandle> &meshes, const Managed<uint> &instance_list,
+                                   const Managed<float4x4> &transform_list, const Managed<uint> &inst_to_transform) {
             TASK_TAG("build optix bvh");
             std::list<CUdeviceptr> vert_buffer_ptr;
             vector<OptixTraversableHandle> traversable_handles;
