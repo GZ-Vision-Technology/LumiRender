@@ -23,24 +23,13 @@ namespace luminous {
         public:
             CUstream stream;
 
-            CUDADispatcher() {
-                CU_CHECK(cuStreamCreate(&stream, CU_STREAM_DEFAULT));
-            }
+            CUDADispatcher();
 
-            void wait() override {CU_CHECK(cuStreamSynchronize(stream)); }
+            void wait() override;
 
-            void then(std::function<void(void)> F) override {
-                using Func = std::function<void(void)>;
-                Func *f = new Func(std::move(F));
-                auto wrapper = [](void *p) {
-                    auto f = reinterpret_cast<Func *>(p);
-                    (*f)();
-                    delete f;
-                };
-                CU_CHECK(cuLaunchHostFunc(stream, wrapper, (void *) f));
-            }
+            void then(std::function<void(void)> F) override;
 
-            ~CUDADispatcher() {CU_CHECK(cuStreamDestroy(stream)); }
+            ~CUDADispatcher();
         };
 
         class CUDABuffer : public RawBuffer::Impl {
@@ -49,38 +38,24 @@ namespace luminous {
             size_t _size_in_bytes;
 
         public:
-            void *ptr() override { return (void *)_ptr; }
+            void *ptr() override;
 
-            CUDABuffer(size_t bytes) : _size_in_bytes(bytes) {
-                CU_CHECK(cuMemAlloc(&_ptr, bytes));
-            }
+            CUDABuffer(size_t bytes);
 
-            ~CUDABuffer() { CU_CHECK(cuMemFree(_ptr)); }
+            ~CUDABuffer();
 
-            size_t size() const override { return _size_in_bytes; }
+            size_t size() const override;
 
-            void *address(size_t offset = 0) const override { return (void *)(_ptr + offset); }
+            void *address(size_t offset = 0) const override;
 
-            void download_async(Dispatcher &dispatcher, void *host_ptr, size_t size = 0, size_t offset = 0) override {
-                auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CU_CHECK(cuMemcpyDtoHAsync(host_ptr, _ptr + offset, size, stream));
-            }
+            void download_async(Dispatcher &dispatcher, void *host_ptr, size_t size = 0, size_t offset = 0) override;
 
-            void upload_async(Dispatcher &dispatcher, const void *host_ptr, size_t size = 0, size_t offset = 0) override {
-                auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CU_CHECK(cuMemcpyHtoDAsync(_ptr + offset, host_ptr, size, stream));
-            }
+            void upload_async(Dispatcher &dispatcher, const void *host_ptr, size_t size = 0, size_t offset = 0) override;
 
-            void download(void *host_ptr, size_t size = 0, size_t offset = 0) override {
-                CU_CHECK(cuMemcpyDtoH(host_ptr, _ptr + offset, size));
-            }
+            void download(void *host_ptr, size_t size = 0, size_t offset = 0) override;
 
-            void upload(const void *host_ptr, size_t size = 0, size_t offset = 0) override {
-                CU_CHECK(cuMemcpyHtoD(_ptr + offset, host_ptr, size));
-            }
+            void upload(const void *host_ptr, size_t size = 0, size_t offset = 0) override;
         };
-
-
 
         class CUDAKernel : public Kernel::Impl {
         private:
@@ -91,35 +66,16 @@ namespace luminous {
             int _min_grid_size = 0;
             size_t _shared_mem = 1024;
         public:
-            CUDAKernel(CUfunction func) : _func(func) {
-                compute_fit_size();
-            }
+            CUDAKernel(CUfunction func);
 
-            void compute_fit_size() {
-                cuOccupancyMaxPotentialBlockSize(&_min_grid_size, &_auto_block_size, _func, 0, _shared_mem, 0);
-            }
+            void compute_fit_size();
 
-            void configure(uint3 grid_size, uint3 local_size, size_t sm = 0) override {
-                _shared_mem = sm == 0 ? _shared_mem : sm;
-                _grid_size = grid_size;
-                _block_size = local_size;
-            }
+            void configure(uint3 grid_size, uint3 local_size, size_t sm = 0) override;
 
             void launch(Dispatcher &dispatcher, int n_items,
-                        std::vector<void *> &args) override {
-                auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                int grid_size = (n_items + _auto_block_size - 1) / _auto_block_size;
-                CU_CHECK(cuLaunchKernel(_func, grid_size, 1, 1,
-                                        _auto_block_size, 1, 1,
-                                        _shared_mem, stream, args.data(), nullptr));
-            }
+                        std::vector<void *> &args) override;
 
-            void launch(Dispatcher &dispatcher, std::vector<void *> &args) override {
-                auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CU_CHECK(cuLaunchKernel(_func, _grid_size.x, _grid_size.y, _grid_size.z,
-                                        _block_size.x, _block_size.y,_block_size.z,
-                                        _shared_mem, stream, args.data(), nullptr));
-            }
+            void launch(Dispatcher &dispatcher, std::vector<void *> &args) override;
         };
 
         inline std::shared_ptr<Kernel> create_cuda_kernel(CUfunction func) {
@@ -131,24 +87,13 @@ namespace luminous {
             CUdevice  _cu_device{};
             CUcontext _cu_context{};
         public:
-            CUDADevice() {
-                CU_CHECK(cuInit(0));
-                CU_CHECK(cuDeviceGet(&_cu_device, 0));
-                CU_CHECK(cuCtxCreate(&_cu_context, 0, _cu_device));
-                CU_CHECK(cuCtxSetCurrent(_cu_context));
-            }
+            CUDADevice();
 
-            RawBuffer allocate_buffer(size_t bytes) override {
-                return RawBuffer(std::make_unique<CUDABuffer>(bytes));
-            }
+            RawBuffer allocate_buffer(size_t bytes) override;
 
-            Dispatcher new_dispatcher() override {
-                return Dispatcher(std::make_unique<CUDADispatcher>());
-            }
+            Dispatcher new_dispatcher() override;
 
-            ~CUDADevice() {
-                CU_CHECK(cuCtxDestroy(_cu_context));
-            }
+            ~CUDADevice();
         };
 
         inline std::shared_ptr<Device> create_cuda_device() {
@@ -159,15 +104,9 @@ namespace luminous {
         private:
             CUmodule _module;
         public:
-            explicit CUDAModule(const std::string &ptx_code) {
-                CU_CHECK(cuModuleLoadData(&_module, ptx_code.c_str()));
-            }
+            explicit CUDAModule(const std::string &ptx_code);
 
-            SP<Kernel> get_kernel(const std::string &name) {
-                CUfunction func;
-                CU_CHECK(cuModuleGetFunction(&func, _module, name.c_str()));
-                return create_cuda_kernel(func);
-            }
+            SP<Kernel> get_kernel(const std::string &name);
         };
 
         inline SP<Module> create_cuda_module(const std::string &ptx_code) {

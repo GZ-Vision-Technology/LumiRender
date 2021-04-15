@@ -76,10 +76,10 @@ namespace luminous {
         void GPUScene::build_accel() {
             _optix_accel->build_bvh(_positions.device_buffer(),
                                     _triangles.device_buffer(),
-                                    _meshes.vector(),
-                                    _inst_to_mesh_idx.vector(),
-                                    _transforms.vector(),
-                                    _inst_to_transform_idx.vector());
+                                    _meshes,
+                                    _inst_to_mesh_idx,
+                                    _transforms,
+                                    _inst_to_transform_idx);
             cout << _optix_accel->description() << endl;
             cout << description() << endl;
         }

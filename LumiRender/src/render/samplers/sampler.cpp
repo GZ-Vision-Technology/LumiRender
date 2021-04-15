@@ -38,7 +38,11 @@ namespace luminous {
         }
 
         std::string Sampler::to_string() const {
-            LUMINOUS_VAR_DISPATCH(to_string)
+#ifdef IS_GPU_CODE
+            LUMINOUS_ERROR("device disable to_string");
+#else
+            LUMINOUS_VAR_DISPATCH(to_string);
+#endif
         }
 
         Sampler Sampler::create(const SamplerConfig &config) {

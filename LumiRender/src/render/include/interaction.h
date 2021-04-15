@@ -10,10 +10,12 @@
 
 namespace luminous {
     inline namespace render {
+        using index_t = uint32_t;
+
         struct TriangleHandle {
-            uint i;
-            uint j;
-            uint k;
+            index_t i;
+            index_t j;
+            index_t k;
             XPU void print() const {
                 printf("i:%u, j:%u, k:%u \n", i, j, k);
             }
@@ -22,8 +24,8 @@ namespace luminous {
         struct MeshHandle {
             MeshHandle() = default;
 
-            MeshHandle(uint vert_ofs, uint tri_ofs,
-                       uint vert_count, uint tri_count,
+            MeshHandle(index_t vert_ofs, index_t tri_ofs,
+                       index_t vert_count, index_t tri_count,
                        int distribute_idx = -1)
                     : vertex_offset(vert_ofs),
                       triangle_offset(tri_ofs),
@@ -31,10 +33,10 @@ namespace luminous {
                       triangle_count(tri_count),
                       distribute_idx(distribute_idx) {}
 
-            uint vertex_offset;
-            uint triangle_offset;
-            uint vertex_count;
-            uint triangle_count;
+            index_t vertex_offset;
+            index_t triangle_offset;
+            index_t vertex_count;
+            index_t triangle_count;
             int distribute_idx;
 
             XPU void print() const {

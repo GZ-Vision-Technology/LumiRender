@@ -23,9 +23,6 @@ namespace luminous {
         protected:
             uint2 _resolution;
             Box2f _screen_window;
-//            float4 *_d_accumulate_buffer{nullptr};
-//            FrameBufferType *_d_frame_buffer{nullptr};
-
             BufferView<float4> _accumulate_buffer_view;
             BufferView<FrameBufferType> _frame_buffer_view;
 
@@ -50,11 +47,11 @@ namespace luminous {
                 update();
             }
 
-            void set_accumulate_buffer_view(BufferView<float4> buffer_view) {
+            XPU void set_accumulate_buffer_view(BufferView<float4> buffer_view) {
                 _accumulate_buffer_view = buffer_view;
             }
 
-            void set_frame_buffer_view(BufferView<FrameBufferType> buffer_view) {
+            XPU void set_frame_buffer_view(BufferView<FrameBufferType> buffer_view) {
                 _frame_buffer_view = buffer_view;
             }
 

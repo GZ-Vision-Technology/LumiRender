@@ -57,7 +57,7 @@ namespace luminous {
         }
 
         Sensor *MegaKernelPT::camera() {
-            return _camera.get();
+            return _camera.data();
         }
     }
 }

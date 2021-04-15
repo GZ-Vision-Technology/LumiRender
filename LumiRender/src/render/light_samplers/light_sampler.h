@@ -23,7 +23,7 @@ namespace luminous {
 
             NDSC_XPU const char *name() const;
 
-            void set_lights(BufferView<const Light> lights);
+            XPU void set_lights(BufferView<const Light> lights);
 
             NDSC_XPU BufferView<const Light> lights() const;
 

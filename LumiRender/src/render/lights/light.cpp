@@ -37,7 +37,11 @@ namespace luminous {
         }
 
         std::string Light::to_string() const {
+#ifdef IS_GPU_CODE
+            LUMINOUS_ERROR("device disable to_string");
+#else
             LUMINOUS_VAR_DISPATCH(to_string);
+#endif
         }
 
         Light Light::create(const LightConfig &config) {
