@@ -16,6 +16,9 @@
 namespace luminous {
     inline namespace gpu {
         class CUDATexture : Texture::Impl {
+        private:
+            CUtexObject _handle;
+        public:
 
         };
 
