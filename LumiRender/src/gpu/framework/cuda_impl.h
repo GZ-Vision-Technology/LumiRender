@@ -48,13 +48,13 @@ namespace luminous {
 
             void *address(size_t offset = 0) const override;
 
-            void download_async(Dispatcher &dispatcher, void *host_ptr, size_t size = 0, size_t offset = 0) override;
+            void download_async(Dispatcher &dispatcher, void *host_ptr, size_t size, size_t offset) override;
 
-            void upload_async(Dispatcher &dispatcher, const void *host_ptr, size_t size = 0, size_t offset = 0) override;
+            void upload_async(Dispatcher &dispatcher, const void *host_ptr, size_t size, size_t offset) override;
 
-            void download(void *host_ptr, size_t size = 0, size_t offset = 0) override;
+            void download(void *host_ptr, size_t size, size_t offset) override;
 
-            void upload(const void *host_ptr, size_t size = 0, size_t offset = 0) override;
+            void upload(const void *host_ptr, size_t size, size_t offset) override;
         };
 
         class CUDAKernel : public Kernel::Impl {

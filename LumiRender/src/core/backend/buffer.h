@@ -21,16 +21,16 @@ namespace luminous {
     public:
         class Impl {
         public:
-            virtual void download(void *host_ptr, size_t size = 0, size_t offset = 0) = 0;
+            virtual void download(void *host_ptr, size_t size, size_t offset) = 0;
 
-            virtual void download_async(Dispatcher &dispatcher, void *host_ptr, size_t size = 0, size_t offset = 0) = 0;
+            virtual void download_async(Dispatcher &dispatcher, void *host_ptr, size_t size, size_t offset) = 0;
 
-            virtual void upload(const void *host_ptr, size_t size = 0, size_t offset = 0) = 0;
+            virtual void upload(const void *host_ptr, size_t size, size_t offset) = 0;
 
             virtual void upload_async(Dispatcher &dispatcher, const void *host_ptr,
-                                      size_t size = 0, size_t offset = 0) = 0;
+                                      size_t size, size_t offset) = 0;
 
-            virtual void *address(size_t offset = 0) const = 0;
+            virtual void *address(size_t offset) const = 0;
 
             virtual size_t size() const = 0;
 
