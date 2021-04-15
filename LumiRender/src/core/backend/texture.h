@@ -42,7 +42,7 @@ namespace luminous {
 #undef MAKE_PIXEL_FORMAT_OF_TYPE
     }
 
-    class Texture {
+    class DeviceTexture {
     public:
         class Impl {
         public:
@@ -59,7 +59,7 @@ namespace luminous {
             virtual ~Impl() = default;
         };
 
-        Texture(std::unique_ptr<Impl> impl)
+        DeviceTexture(std::unique_ptr<Impl> impl)
                 : _impl(move(impl)) {}
 
         uint32_t width() const { return _impl->width(); };
