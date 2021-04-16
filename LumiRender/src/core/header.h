@@ -5,7 +5,7 @@
 #pragma once
 
 #include "macro.h"
-#include "ext/nlohmann/json.hpp"
+
 #include "logging.h"
 
 #if defined(_MSC_VER)
@@ -19,11 +19,10 @@
 
 #define F_INLINE __forceinline
 
-#if defined(__CUDA_ARCH__)
+#if defined(__CUDACC__)
     #define IS_GPU_CODE
 #endif
 
 #define HAVE_POSIX_MEMALIGN
 
 
-using DataWrap = nlohmann::json ;

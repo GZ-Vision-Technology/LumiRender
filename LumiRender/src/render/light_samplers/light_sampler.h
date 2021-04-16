@@ -21,9 +21,9 @@ namespace luminous {
 
             GEN_BASE_NAME(LightSampler)
 
-            NDSC_XPU const char *name() const;
+            GEN_NAME_AND_TO_STRING_FUNC
 
-            void set_lights(BufferView<const Light> lights);
+            XPU void set_lights(BufferView<const Light> lights);
 
             NDSC_XPU BufferView<const Light> lights() const;
 
@@ -36,8 +36,6 @@ namespace luminous {
             NDSC_XPU float PMF(const Light &light) const;
 
             NDSC_XPU float PMF(const LightSampleContext &ctx, const Light &light) const;
-
-            NDSC std::string to_string() const;
 
             static LightSampler create(const LightSamplerConfig &config);
         };

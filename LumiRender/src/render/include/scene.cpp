@@ -40,7 +40,7 @@ namespace luminous {
                 builders.push_back(builder);
             };
 
-            for (const auto &mesh : _meshes.c_vector()) {
+            for (const auto &mesh : _meshes) {
                 process_mesh(mesh);
             }
             for (const auto & builder : builders) {

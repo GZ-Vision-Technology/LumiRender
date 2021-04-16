@@ -113,14 +113,6 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(right)
         }
 
-        const char *Sensor::name() {
-            LUMINOUS_VAR_DISPATCH(name)
-        }
-
-        std::string Sensor::to_string() const {
-            LUMINOUS_VAR_DISPATCH(to_string)
-        }
-
         Sensor Sensor::create(const SensorConfig &config) {
             auto ret = detail::create<Sensor>(config);
             ret.set_film(Film::create(config.film_config));

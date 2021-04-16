@@ -12,10 +12,6 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(type);
         }
 
-        const char *Light::name() const {
-            LUMINOUS_VAR_DISPATCH(name);
-        }
-
         Interaction Light::sample(float u, const HitGroupData * hit_group_data) const {
             LUMINOUS_VAR_DISPATCH(sample, u,hit_group_data);
         }
@@ -34,10 +30,6 @@ namespace luminous {
 
         float3 Light::power() const {
             LUMINOUS_VAR_DISPATCH(power);
-        }
-
-        std::string Light::to_string() const {
-            LUMINOUS_VAR_DISPATCH(to_string);
         }
 
         Light Light::create(const LightConfig &config) {

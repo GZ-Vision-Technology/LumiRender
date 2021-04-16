@@ -13,6 +13,7 @@
 #include "graphics/sampling/common.h"
 #include "render/include/emission_distribution.h"
 #include "render/light_samplers/light_sampler.h"
+#include "render/textures/texture_mapping.h"
 
 namespace luminous {
     inline namespace render {

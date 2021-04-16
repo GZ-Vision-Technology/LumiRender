@@ -11,104 +11,60 @@
 
 namespace luminous {
     template<typename T, typename U = const std::remove_const_t<T>>
-    struct Managed : Noncopyable {
+    struct Managed : public Noncopyable, public std::vector<T> {
     public:
+        using BaseClass = std::vector<T>;
         using THost = T;
         using TDevice = U;
     private:
         static_assert(!std::is_pointer_v<std::remove_pointer_t<THost>>, "THost can not be the secondary pointer!");
-        std::vector<THost> _host{};
         Buffer <TDevice> _device_buffer{nullptr};
     public:
         Managed() = default;
 
-        Managed(THost *host, const SP <Device> &device, int n = 1)
-                : _host(host) {
-            _device_buffer = device->allocate_buffer<TDevice>(n);
-        }
-
-        Managed(Managed<THost, TDevice> &&other) {
-            _host = move(other._host);
-            _device_buffer = move(other._device_buffer);
-        }
-
         size_t size_in_bytes() const {
-            return _device_buffer.size_in_bytes();
+            return BaseClass::size() * sizeof(T);
         }
 
-        size_t size() const {
-            return _host.size();
+        void reset(const vector <THost> &v) {
+            BaseClass::reserve(v.capacity());
+            BaseClass::resize(v.size());
+            std::memcpy(BaseClass::data(), v.data(), sizeof(THost) * v.size());
+        }
+
+        void reset(const vector <THost> &v, const SP <Device> &device) {
+            _device_buffer = device->allocate_buffer<TDevice>(v.size());
+            reset(v);
+        }
+
+        void reset(THost *host, int n = 1) {
+            BaseClass::reserve(n);
+            BaseClass::resize(n);
+            std::memcpy(BaseClass::data(), host, sizeof(THost) * n);
         }
 
         void reset(THost *host, const SP <Device> &device, int n = 1) {
             _device_buffer = device->allocate_buffer<TDevice>(n);
-            _host.reserve(n);
-            _host.resize(n);
-            std::memcpy(_host.data(), host, sizeof(THost) * n);
-        }
-
-        void reset(THost *host, int n = 1) {
-            _host.reserve(n);
-            _host.resize(n);
-            std::memcpy(_host.data(), host, sizeof(THost) * n);
-        }
-
-        void reset(std::vector<THost> v) {
-            _host = std::move(v);
-        }
-
-        void reset(std::vector<THost> v, const SP <Device> &device) {
-            _host = std::move(v);
-            _device_buffer = device->allocate_buffer<TDevice>(_host.size());
-        }
-
-        void reset(size_t n) {
-            _host.resize(n);
-            std::memset(_host.data(), 0, sizeof(THost) * n);
+            reset(host, n);
         }
 
         void reset(const SP <Device> &device, size_t n) {
-            _host.resize(n);
+            BaseClass::resize(n);
             _device_buffer = device->allocate_buffer<TDevice>(n);
-            std::memset(_host.data(), 0, sizeof(THost) * n);
-        }
-
-        template<typename... Args>
-        void reset_all(Args &&...args) {
-            reset(std::forward<Args>(args)...);
-            synchronize_to_gpu();
+            std::memset(BaseClass::data(), 0, sizeof(THost) * n);
         }
 
         void append(const std::vector<THost> &v) {
-            _host.insert(_host.cend(), v.cbegin(), v.cend());
-        }
-
-        template<typename... Args>
-        void push_back(Args &&...args) {
-            _host.push_back(std::forward<Args>(args)...);
-        }
-
-        template<typename... Args>
-        void emplace_back(Args &&...args) {
-            _host.emplace_back(std::forward<Args>(args)...);
-        }
-
-        template<typename... Args>
-        void reserve(Args &&...args) {
-            _host.reserve(std::forward<Args>(args)...);
-        }
-
-        void shrink_to_fit() {
-            _host.shrink_to_fit();
+            BaseClass::insert(BaseClass::cend(), v.cbegin(), v.cend());
         }
 
         void allocate_device(const SP <Device> device) {
-            _device_buffer = device->allocate_buffer<TDevice>(_host.size());
+            _device_buffer = device->allocate_buffer<TDevice>(BaseClass::size());
         }
 
         BufferView <TDevice> host_buffer_view(size_t offset = 0, size_t count = -1) const {
-            count = fix_count(offset, count, size());
-            return BufferView<TDevice>(((TDevice *) _host.data()) + offset, count);
+            count = fix_count(offset, count, BaseClass::size());
+            return BufferView<TDevice>(((TDevice *) BaseClass::data()) + offset, count);
         }
 
         BufferView <TDevice> device_buffer_view(size_t offset = 0, size_t count = -1) const {
@@ -120,28 +76,16 @@ namespace luminous {
         }
 
         void clear() {
-            _device_buffer.clear();
-            _host.clear();
+            clear_device();
+            clear_host();
         }
 
         void clear_host() {
-            _host.clear();
+            BaseClass::clear();
         }
 
         void clear_device() {
             _device_buffer.clear();
-        }
-
-        const std::vector<THost> &c_vector() const {
-            return _host;
-        }
-
-        std::vector<THost> &vector() {
-            return _host;
-        }
-
-        THost *get() {
-            return reinterpret_cast<THost *>(_host.data());
         }
 
         template<typename pointer_type = void *>
@@ -153,28 +97,16 @@ namespace luminous {
             return _device_buffer.data();
         }
 
-        template<typename Index>
-        THost &operator[](Index i) {
-            DCHECK(i < size());
-            return _host[i];
-        }
-
-        template<typename Index>
-        const THost &operator[](Index i) const {
-            DCHECK(i < size());
-            return _host[i];
-        }
-
         THost *operator->() {
-            return _host.data();
+            return BaseClass::data();
         }
 
         void synchronize_to_gpu() {
-            _device_buffer.upload(_host.data());
+            _device_buffer.upload(BaseClass::data());
         }
 
         void synchronize_to_cpu() {
-            _device_buffer.download(_host.data());
+            _device_buffer.download(BaseClass::data());
         }
     };
 }

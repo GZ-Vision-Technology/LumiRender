@@ -29,7 +29,7 @@ namespace luminous {
         public:
             XPU explicit SamplerBase(int spp = 1) : _spp(spp) {}
 
-            NDSC int spp() const { return _spp; }
+            NDSC_XPU int spp() const { return _spp; }
         };
     }
 }
