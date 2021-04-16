@@ -25,24 +25,12 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(start_pixel_sample, pixel, sample_index, dimension)
         }
 
-        const char *Sampler::name() {
-            LUMINOUS_VAR_DISPATCH(name)
-        }
-
         float Sampler::next_1d() {
             LUMINOUS_VAR_DISPATCH(next_1d)
         }
 
         float2 Sampler::next_2d() {
             LUMINOUS_VAR_DISPATCH(next_2d)
-        }
-
-        std::string Sampler::to_string() const {
-#ifdef IS_GPU_CODE
-            LUMINOUS_ERROR("device disable to_string");
-#else
-            LUMINOUS_VAR_DISPATCH(to_string);
-#endif
         }
 
         Sampler Sampler::create(const SamplerConfig &config) {

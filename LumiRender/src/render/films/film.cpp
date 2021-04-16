@@ -7,9 +7,6 @@
 
 namespace luminous {
     inline namespace render {
-        const char *Film::name() {
-            LUMINOUS_VAR_DISPATCH(name);
-        }
 
         uint2 Film::resolution() const {
             LUMINOUS_VAR_DISPATCH(resolution);
@@ -33,14 +30,6 @@ namespace luminous {
 
         void Film::set_frame_buffer_view(BufferView<FrameBufferType> buffer_view) {
             LUMINOUS_VAR_DISPATCH(set_frame_buffer_view, buffer_view);
-        }
-
-        std::string Film::to_string() const {
-#if defined(__CUDACC__)
-            LUMINOUS_ERROR("device disable to_string");
-#else
-            LUMINOUS_VAR_DISPATCH(to_string);
-#endif
         }
 
         Film Film::create(const FilmConfig &config) {

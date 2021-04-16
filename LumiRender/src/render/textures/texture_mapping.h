@@ -8,6 +8,7 @@
 #include "graphics/math/common.h"
 #include "render/include/interaction.h"
 #include "graphics/lstd/variant.h"
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
@@ -34,26 +35,29 @@ namespace luminous {
         };
 
         class UVMapping2D {
+        private:
+            float _su, _sv, _du, _dv;
         public:
             UVMapping2D(float su = 1, float sv = 1, float du = 0, float dv = 0)
-                    : su(su), sv(sv), du(du), dv(dv) {}
+                    : _su(su), _sv(sv), _du(du), _dv(dv) {}
 
             GEN_CLASS_NAME(UVMapping2D)
 
             std::string to_string() const {
                 return string_printf("%s,su:%f, sv:%f,du:%f,dv:%f",
-                                     name(), su, sv, du, dv);
+                                     name(), _su, _sv, _du, _dv);
             }
 
             XPU float2 map(TextureEvalContext ctx, float2 *dst_dx, float2 *dst_dy) const {
-                *dst_dx = float2(su * ctx.du_dx, sv * ctx.dv_dx);
-                *dst_dy = float2(su * ctx.du_dy, sv * ctx.dv_dy);
+                *dst_dx = float2(_su * ctx.du_dx, _sv * ctx.dv_dx);
+                *dst_dy = float2(_su * ctx.du_dy, _sv * ctx.dv_dy);
 
-                return make_float2(su * ctx.uv[0] + du, sv * ctx.uv[1] + dv);
+                return make_float2(_su * ctx.uv[0] + _du, _sv * ctx.uv[1] + _dv);
             }
 
-        private:
-            float su, sv, du, dv;
+            static UVMapping2D create(const TextureMappingConfig tmc) {
+                return UVMapping2D(tmc.su, tmc.sv, tmc.du, tmc.dv);
+            }
         };
 
         using lstd::Variant;
@@ -67,11 +71,11 @@ namespace luminous {
                 LUMINOUS_VAR_DISPATCH(map, ctx, dst_dx, dst_dy)
             }
 
-            std::string to_string() const {
-                LUMINOUS_VAR_DISPATCH(to_string)
+            GEN_NAME_AND_TO_STRING_FUNC
+
+            static TextureMapping2D create(const TextureMappingConfig &tmc) {
+                return detail::create<TextureMapping2D>(tmc);
             }
-
-
         };
 
     } //luminous::render

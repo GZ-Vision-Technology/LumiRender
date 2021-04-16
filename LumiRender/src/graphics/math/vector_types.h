@@ -80,9 +80,9 @@ namespace luminous {
                 if constexpr (N == 2) {
                     return is_nan(Storage::x) || is_nan(Storage::y);
                 } else if constexpr (N == 3) {
-                    return is_nan(Storage::x) || is_nan(Storage::y) || is_nan(Storage::z);;
+                    return is_nan(Storage::x) || is_nan(Storage::y) || is_nan(Storage::z);
                 } else {
-                    return is_nan(Storage::x) || is_nan(Storage::y) || is_nan(Storage::z) || is_nan(Storage::w);;
+                    return is_nan(Storage::x) || is_nan(Storage::y) || is_nan(Storage::z) || is_nan(Storage::w);
                 }
             }
 
@@ -91,9 +91,9 @@ namespace luminous {
                 if constexpr (N == 2) {
                     return is_inf(Storage::x) || is_inf(Storage::y);
                 } else if constexpr (N == 3) {
-                    return is_inf(Storage::x) || is_inf(Storage::y) || is_inf(Storage::z);;
+                    return is_inf(Storage::x) || is_inf(Storage::y) || is_inf(Storage::z);
                 } else {
-                    return is_inf(Storage::x) || is_inf(Storage::y) || is_inf(Storage::z) || is_inf(Storage::w);;
+                    return is_inf(Storage::x) || is_inf(Storage::y) || is_inf(Storage::z) || is_inf(Storage::w);
                 }
             }
 
@@ -102,9 +102,9 @@ namespace luminous {
                 if constexpr (N == 2) {
                     return Storage::x == 0 && Storage::y == 0;
                 } else if constexpr (N == 3) {
-                    return Storage::x == 0 && Storage::y == 0 && Storage::z == 0;;
+                    return Storage::x == 0 && Storage::y == 0 && Storage::z == 0;
                 } else {
-                    return Storage::x == 0 && Storage::y == 0 && Storage::z == 0 && Storage::w == 0;;
+                    return Storage::x == 0 && Storage::y == 0 && Storage::z == 0 && Storage::w == 0;
                 }
             }
 

@@ -19,10 +19,30 @@
     #define CPU
 #endif
 
+#if defined(__CUDA_ARCH__)
+    #define IS_GPU_CODE
+#endif
+
 #define GEN_CLASS_NAME(arg)  XPU static constexpr const char *name() { return #arg; }
 
 #define GEN_BASE_NAME(arg)  XPU static constexpr const char *base_name() { return #arg; }
 
+#define GEN_NAME_FUNC NDSC_XPU const char *name() {             \
+                                    LUMINOUS_VAR_DISPATCH(name);\
+                               }
+
+#ifdef IS_GPU_CODE
+#define GEN_TO_STRING_FUNC NDSC std::string to_string() const { \
+                LUMINOUS_ERROR("device not support to string")  \
+        }
+#else
+#define GEN_TO_STRING_FUNC NDSC std::string to_string() const { \
+                LUMINOUS_VAR_DISPATCH(to_string);               \
+        }
+#endif
+
+#define GEN_NAME_AND_TO_STRING_FUNC GEN_NAME_FUNC \
+                                    GEN_TO_STRING_FUNC
 #define XPU_INLINE XPU __forceinline
 
 #define GPU_INLINE GPU __forceinline
@@ -32,9 +52,7 @@
 #define NDSC_XPU NDSC XPU
 #define NDSC_XPU_INLINE NDSC XPU_INLINE
 
-#if defined(__CUDA_ARCH__)
-    #define IS_GPU_CODE
-#endif
+
 
 #ifdef __GNUC__
 #define MAYBE_UNUSED __attribute__((unused))
