@@ -8,10 +8,6 @@
 namespace luminous {
     inline namespace render {
 
-        const char *LightSampler::name() const {
-            LUMINOUS_VAR_DISPATCH(name);
-        }
-
         void LightSampler::set_lights(BufferView<const Light> lights) {
             LUMINOUS_VAR_DISPATCH(set_lights, lights);
         }
@@ -34,14 +30,6 @@ namespace luminous {
 
         float LightSampler::PMF(const LightSampleContext &ctx, const Light &light) const {
             LUMINOUS_VAR_DISPATCH(PMF, ctx, light);
-        }
-
-        std::string LightSampler::to_string() const {
-#ifdef IS_GPU_CODE
-            LUMINOUS_ERROR("device disable to_string");
-#else
-            LUMINOUS_VAR_DISPATCH(to_string);
-#endif
         }
 
         LightSampler LightSampler::create(const LightSamplerConfig &config) {

@@ -87,6 +87,10 @@ namespace luminous {
 //            };
         };
 
+        struct TextureMappingConfig : Config {
+            float su, sv, du, dv;
+        };
+
         struct FilterConfig {
             float2 radius;
         };

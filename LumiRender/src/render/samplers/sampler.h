@@ -26,13 +26,11 @@ namespace luminous {
 
             XPU SensorSample sensor_sample(uint2 p_raster);
 
-            NDSC_XPU const char *name();
+            GEN_NAME_AND_TO_STRING_FUNC
 
             NDSC_XPU float next_1d();
 
             NDSC_XPU float2 next_2d();
-
-            NDSC std::string to_string() const;
 
             static Sampler create(const SamplerConfig &config);
         };

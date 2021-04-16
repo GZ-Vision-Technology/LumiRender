@@ -12,12 +12,12 @@ luminous_render_add_application(test-sampler SOURCES test_sampler.cpp)
 luminous_render_add_application(test-camera SOURCES test_camera.cpp)
 
 
-set(CMAKE_CUDA_STANDARD 17)
-project(cuda_test CUDA)
-
-luminous_render_add_application(cuda_test SOURCES test_cuda.cu)
-
-set_target_properties(
-        cuda_test
-        PROPERTIES
-        CUDA_SEPARABLE_COMPILATION ON)
+#set(CMAKE_CUDA_STANDARD 17)
+#project(cuda_test CUDA)
+#
+#luminous_render_add_application(cuda_test SOURCES test_cuda.cu)
+#
+#set_target_properties(
+#        cuda_test
+#        PROPERTIES
+#        CUDA_SEPARABLE_COMPILATION ON)

@@ -23,8 +23,6 @@ namespace luminous {
 
             NDSC_XPU Box2f screen_window() const;
 
-            NDSC_XPU const char *name();
-
             XPU void add_sample(uint2 pixel, float3 color, float weight, uint frame_index = 0u);
 
             XPU void set_resolution(uint2 res);
@@ -33,7 +31,7 @@ namespace luminous {
 
             XPU void set_frame_buffer_view(BufferView<FrameBufferType> buffer_view);
 
-            NDSC std::string to_string() const;
+            GEN_NAME_AND_TO_STRING_FUNC
 
             static Film create(const FilmConfig &fc);
         };

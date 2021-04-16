@@ -25,7 +25,7 @@ namespace luminous {
 
             NDSC_XPU LightType type() const;
 
-            NDSC_XPU const char *name() const;
+            GEN_NAME_AND_TO_STRING_FUNC
 
             NDSC_XPU bool is_delta() const;
 
@@ -36,8 +36,6 @@ namespace luminous {
             NDSC_XPU float PDF_Li(const Interaction &ref_p, const Interaction &p_light) const;
 
             NDSC_XPU float3 power() const;
-
-            NDSC std::string to_string() const;
 
             static Light create(const LightConfig &config);
         };
