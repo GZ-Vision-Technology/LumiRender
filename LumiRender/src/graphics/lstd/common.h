@@ -162,31 +162,14 @@ namespace lstd {
         XPU bool has_value() const { return set; }
 
     private:
-        // #ifdef __NVCC__
-        // Work-around NVCC bug
-        XPU T *ptr() { return reinterpret_cast<T *>(&optionalValue); }
 
-        XPU const T *ptr() const { return reinterpret_cast<const T *>(&optionalValue); }
-        // #else
-        //         XPU
-        //         T *ptr() { return std::launder(reinterpret_cast<T *>(&optionalValue)); }
-        //         XPU
-        //         const T *ptr() const { return std::launder(reinterpret_cast<const T *>(&optionalValue)); }
-        // #endif
+        XPU T *ptr() { return reinterpret_cast<T *>(&_optional_value); }
 
-        std::aligned_storage_t<sizeof(T), alignof(T)> optionalValue;
+        XPU const T *ptr() const { return reinterpret_cast<const T *>(&_optional_value); }
+
+        std::aligned_storage_t<sizeof(T), alignof(T)> _optional_value;
         bool set = false;
     };
-
-//    template<typename T>
-//    inline std::ostream &operator<<(std::ostream &os, const optional<T> &opt) {
-//        if (opt.has_value())
-//            return os << "[ lstd::optional<" << typeid(T).name() << "> set: true "
-//                      << "value: " << opt.value() << " ]";
-//        else
-//            return os << "[ lstd::optional<" << typeid(T).name()
-//                      << "> set: false value: n/a ]";
-//    }
 
     template<typename T, int N>
     class array;
@@ -201,7 +184,7 @@ namespace lstd {
 
         array() = default;
 
-        XPU void fill(const T &v) { assert(!"should never be called"); }
+        XPU void fill(const T &v) { DCHECK(!"should never be called"); }
 
         XPU bool operator==(const array<T, 0> &a) const { return true; }
 
@@ -218,13 +201,13 @@ namespace lstd {
         XPU size_t size() const { return 0; }
 
         XPU T &operator[](size_t i) {
-            assert(!"should never be called");
+            DCHECK(!"should never be called");
             static T t;
             return t;
         }
 
         XPU const T &operator[](size_t i) const {
-            assert(!"should never be called");
+            DCHECK(!"should never be called");
             static T t;
             return t;
         }
