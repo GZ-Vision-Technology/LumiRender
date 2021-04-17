@@ -21,8 +21,10 @@ namespace luminous {
 
     inline namespace utility {
 
-        Image::Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res)
-                : _pixel_format(pixel_format), _resolution(res) {
+        Image::Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res, const std::filesystem::path &path)
+                : _pixel_format(pixel_format),
+                _resolution(res),
+                _path(path) {
             _pixel.reset(pixel);
         }
 
@@ -38,6 +40,16 @@ namespace luminous {
 
         PixelFormat Image::pixel_format() const {
             return _pixel_format;
+        }
+
+        size_t Image::pixel_num() const {
+            return _resolution.x * _resolution.y;
+        }
+
+        int Image::channels() const {
+            if (_pixel_format == PixelFormat::R8U || _pixel_format == PixelFormat::R32F) { return 1u; }
+            if (_pixel_format == PixelFormat::RG8U || _pixel_format == PixelFormat::RG32F) { return 2u; }
+            return 4u;
         }
 
         Image Image::load(const filesystem::path &path, ColorSpace color_space) {
@@ -64,16 +76,20 @@ namespace luminous {
             float *src = rgb;
             auto dest = (float *) pixel;
             if (color_space == SRGB) {
-                for (int i = 0; i < pixel_num; ++i, src += 3, dest += 3) {
+                for (int i = 0; i < pixel_num; ++i, src += 3, dest += 4) {
                     dest[0] = Spectrum::srgb_to_linear(src[0]);
                     dest[1] = Spectrum::srgb_to_linear(src[1]);
                     dest[2] = Spectrum::srgb_to_linear(src[2]);
                 }
             } else {
-                std::memcpy(pixel, rgb, size_in_bytes);
+                for (int i = 0; i < pixel_num; ++i, src += 3, dest += 4) {
+                    dest[0] = src[0];
+                    dest[1] = src[1];
+                    dest[2] = src[2];
+                }
             }
             free(rgb);
-            return Image(pixel_format, pixel, make_uint2(w, h));
+            return Image(pixel_format, pixel, make_uint2(w, h), path);
         }
 
         Image Image::load_exr(const filesystem::path &fn, ColorSpace color_space) {
@@ -117,22 +133,69 @@ namespace luminous {
                 LUMINOUS_EXCEPTION("Failed to load ", fn.string(), ": ", err);
             }
             size_t pixel_num = exr_image.width * exr_image.height;
+            uint2 resolution = make_uint2(exr_image.width, exr_image.height);
             switch (exr_image.num_channels) {
                 case 1: {
-                    PixelFormat pixel_format = detail::PixelFormatImpl<float>::format;
-                    float *pixel = new float[pixel_num];
-                    size_t size_in_bytes = pixel_num * detail::PixelFormatImpl<float>::pixel_size;
+                    using PixelType = float;
+                    PixelFormat pixel_format = detail::PixelFormatImpl<PixelType>::format;
+                    PixelType *pixel = new PixelType[pixel_num];
+                    size_t size_in_bytes = pixel_num * detail::PixelFormatImpl<PixelType>::pixel_size;
                     if (color_space == SRGB) {
                         for (int i = 0; i < pixel_num; ++i) {
-                            float val = reinterpret_cast<float *>(exr_image.images[0])[i];
+                            PixelType val = reinterpret_cast<PixelType *>(exr_image.images[0])[i];
                             pixel[i] = Spectrum::srgb_to_linear(val);
                         }
                     } else {
                         std::memcpy(pixel, exr_image.images[0], size_in_bytes);
                     }
-                    return Image(pixel_format, (std::byte *) pixel, make_uint2(exr_image.width, exr_image.height));
+                    return Image(pixel_format, (std::byte *) pixel, resolution, fn);
                 }
-
+                case 2: {
+                    using PixelType = float2;
+                    PixelFormat pixel_format = detail::PixelFormatImpl<PixelType>::format;
+                    PixelType *pixel = new PixelType[pixel_num];
+                    size_t size_in_bytes = pixel_num * detail::PixelFormatImpl<PixelType>::pixel_size;
+                    if (color_space == SRGB) {
+                        for (int i = 0; i < pixel_num; ++i) {
+                            pixel[i] = make_float2(
+                                    Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[1])[i]),
+                                    Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[0])[i]));
+                        }
+                    } else {
+                        for (int i = 0; i < pixel_num; ++i) {
+                            pixel[i] = make_float2(
+                                    reinterpret_cast<float *>(exr_image.images[1])[i],
+                                    reinterpret_cast<float *>(exr_image.images[0])[i]);
+                        }
+                    }
+                    return Image(pixel_format, (std::byte *) pixel, resolution, fn);
+                }
+                case 3:
+                case 4: {
+                    PixelFormat pixel_format = detail::PixelFormatImpl<float4>::format;
+                    auto pixel = new float4[pixel_num];
+                    size_t size_in_bytes = pixel_num * detail::PixelFormatImpl<float4>::pixel_size;
+                    if (color_space == SRGB) {
+                        for (int i = 0; i < pixel_num; ++i) {
+                            pixel[i] = make_float4(
+                                    Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[3])[i]),
+                                    Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[2])[i]),
+                                    Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[1])[i]),
+                                    1.f);
+                        }
+                    } else {
+                        for (int i = 0; i < pixel_num; ++i) {
+                            pixel[i] = make_float4(
+                                    (reinterpret_cast<float *>(exr_image.images[3])[i]),
+                                    (reinterpret_cast<float *>(exr_image.images[2])[i]),
+                                    (reinterpret_cast<float *>(exr_image.images[1])[i]),
+                                    1.f);
+                        }
+                    }
+                    return Image(pixel_format, (std::byte *)pixel, resolution, fn);
+                }
+                default:
+                    LUMINOUS_ERROR("unknown")
             }
         }
 
@@ -167,14 +230,21 @@ namespace luminous {
                 std::memcpy(pixel, rgba, size_in_bytes);
             }
             free(rgba);
-            return Image(pixel_format, pixel, resolution);
+            return Image(pixel_format, pixel, resolution, path);
         }
 
-        void Image::save_image(const filesystem::path &fn) {
-
+        void Image::save_image(const filesystem::path &path) {
+            auto extension = to_lower(path.extension().string());
+            if (extension == ".exr") {
+                save_exr(path);
+            } else if (extension == ".hdr") {
+                save_hdr(path);
+            } else {
+                save_other(path);
+            }
         }
 
-        void Image::save_hdr(const filesystem::path &fn) {
+        void Image::save_hdr(const filesystem::path &path) {
 
         }
 
@@ -182,9 +252,14 @@ namespace luminous {
 
         }
 
-        void Image::save_other(const filesystem::path &fn) {
+        void Image::save_other(const filesystem::path &path) {
 
         }
+
+        void Image::convert_to(PixelFormat pixel_format) {
+            
+        }
+
     }
 
 } // luminous

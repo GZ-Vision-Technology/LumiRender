@@ -38,8 +38,8 @@ namespace luminous {
             static constexpr auto pixel_size = sizeof(Type);\
         };                                                  \
 
-            MAKE_PIXEL_FORMAT_OF_TYPE(uchar, R8U)
-            MAKE_PIXEL_FORMAT_OF_TYPE(uchar2, RG8U)
+//            MAKE_PIXEL_FORMAT_OF_TYPE(uchar, R8U)
+//            MAKE_PIXEL_FORMAT_OF_TYPE(uchar2, RG8U)
             MAKE_PIXEL_FORMAT_OF_TYPE(uchar4, RGBA8U)
             MAKE_PIXEL_FORMAT_OF_TYPE(float, R32F)
             MAKE_PIXEL_FORMAT_OF_TYPE(float2, RG32F)
@@ -52,17 +52,22 @@ namespace luminous {
         private:
             PixelFormat _pixel_format;
             uint2 _resolution;
+            std::filesystem::path _path;
             std::unique_ptr<const std::byte[]> _pixel;
         public:
             Image() = default;
 
-            Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res);
+            Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res, const std::filesystem::path& path);
 
             Image(Image &&other) noexcept;
 
             uint2 resolution() const;
 
+            size_t pixel_num() const;
+
             PixelFormat pixel_format() const;
+
+            int channels() const;
 
             static Image load(const filesystem::path &fn, ColorSpace color_space);
 
@@ -74,6 +79,8 @@ namespace luminous {
              * ".bmp" or ".png" or ".tga" or ".jpg" or ".jpeg"
              */
             static Image load_other(const filesystem::path &fn, ColorSpace color_space);
+
+            void convert_to(PixelFormat pixel_format);
 
             void save_image(const filesystem::path &fn);
 
