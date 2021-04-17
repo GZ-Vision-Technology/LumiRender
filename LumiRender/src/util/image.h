@@ -65,6 +65,10 @@ namespace luminous {
 
             size_t pixel_num() const;
 
+            bool is_8bit() const;
+
+            bool is_32bit() const;
+
             PixelFormat pixel_format() const;
 
             int channels() const;
@@ -80,7 +84,9 @@ namespace luminous {
              */
             static Image load_other(const filesystem::path &fn, ColorSpace color_space);
 
-            void convert_to(PixelFormat pixel_format);
+            void convert_to_32bit();
+
+            void convert_to_8bit();
 
             void save_image(const filesystem::path &fn);
 

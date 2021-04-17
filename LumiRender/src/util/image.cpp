@@ -21,10 +21,16 @@ namespace luminous {
 
     inline namespace utility {
 
+        int channel_num(PixelFormat pixel_format) {
+            if (pixel_format == PixelFormat::R8U || pixel_format == PixelFormat::R32F) { return 1u; }
+            if (pixel_format == PixelFormat::RG8U || pixel_format == PixelFormat::RG32F) { return 2u; }
+            return 4u;
+        }
+
         Image::Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res, const std::filesystem::path &path)
                 : _pixel_format(pixel_format),
-                _resolution(res),
-                _path(path) {
+                  _resolution(res),
+                  _path(path) {
             _pixel.reset(pixel);
         }
 
@@ -47,9 +53,7 @@ namespace luminous {
         }
 
         int Image::channels() const {
-            if (_pixel_format == PixelFormat::R8U || _pixel_format == PixelFormat::R32F) { return 1u; }
-            if (_pixel_format == PixelFormat::RG8U || _pixel_format == PixelFormat::RG32F) { return 2u; }
-            return 4u;
+            return channel_num(_pixel_format);
         }
 
         Image Image::load(const filesystem::path &path, ColorSpace color_space) {
@@ -192,7 +196,7 @@ namespace luminous {
                                     1.f);
                         }
                     }
-                    return Image(pixel_format, (std::byte *)pixel, resolution, fn);
+                    return Image(pixel_format, (std::byte *) pixel, resolution, fn);
                 }
                 default:
                     LUMINOUS_ERROR("unknown")
@@ -245,21 +249,179 @@ namespace luminous {
         }
 
         void Image::save_hdr(const filesystem::path &path) {
-
+            convert_to_32bit();
+            auto path_str = std::filesystem::absolute(path).string();
+            stbi_write_hdr(path_str.c_str(), _resolution.x, _resolution.y, 4, reinterpret_cast<const float *>(_pixel.get()));
         }
 
         void Image::save_exr(const filesystem::path &fn) {
+            convert_to_32bit();
+            EXRHeader header;
+            InitEXRHeader(&header);
 
+            EXRImage image;
+            int c = 4;
+            InitEXRImage(&image);
+            int count = _resolution.x * _resolution.y;
+            std::array<float *, 4> image_ptr{nullptr, nullptr, nullptr, nullptr};
+            image.num_channels = 4;
+            image.width = _resolution.x;
+            image.height = _resolution.y;
+            image.images = reinterpret_cast<uint8_t **>(image_ptr.data());
+
+            std::array<int, 4> pixel_types{TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT,
+                                           TINYEXR_PIXELTYPE_FLOAT};
+            std::array<EXRChannelInfo, 4> channels{};
+            header.num_channels = c;
+            header.channels = channels.data();
+            header.pixel_types = pixel_types.data();
+            header.requested_pixel_types = pixel_types.data();
+
+            std::vector<float> images;
+            images.resize(c * count);
+            image_ptr[0] = images.data();
+            image_ptr[1] = image_ptr[0] + count;
+            image_ptr[2] = image_ptr[1] + count;
+            image_ptr[3] = image_ptr[2] + count;
+            auto rgba = reinterpret_cast<const float4 *>(_pixel.get());
+            for (int i = 0u; i < count; i++) {
+                image_ptr[3][i] = rgba[i].x;
+                image_ptr[2][i] = rgba[i].y;
+                image_ptr[1][i] = rgba[i].z;
+                image_ptr[0][i] = rgba[i].w;
+            }
+            strcpy_s(header.channels[0].name, "A");
+            strcpy_s(header.channels[1].name, "B");
+            strcpy_s(header.channels[2].name, "G");
+            strcpy_s(header.channels[3].name, "R");
+            const char *err = nullptr;
+            if (auto ret = SaveEXRImageToFile(&image, &header, fn.string().c_str(), &err); ret != TINYEXR_SUCCESS) {
+                LUMINOUS_EXCEPTION_IF("Failed to save texture as OpenEXR image: ", fn.string());
+            }
         }
 
         void Image::save_other(const filesystem::path &path) {
-
+            auto path_str = std::filesystem::absolute(path).string();
+            auto extension = to_lower(path.extension().string());
+            convert_to_8bit();
+            if (extension == ".png") {
+                stbi_write_png(path_str.c_str(), _resolution.x, _resolution.y, 4, _pixel.get(), 0);
+            }else if (extension == ".bmp") {
+                stbi_write_bmp(path_str.c_str(), _resolution.x, _resolution.y, 4, _pixel.get());
+            } else if (extension == ".tga") {
+                stbi_write_tga(path_str.c_str(), _resolution.x, _resolution.y, 4, _pixel.get());
+            } else {
+                // jpg or jpeg
+                stbi_write_jpg(path_str.c_str(), _resolution.x, _resolution.y, 4, _pixel.get(), 100);
+            }
         }
 
-        void Image::convert_to(PixelFormat pixel_format) {
-            
+        void Image::convert_to_32bit() {
+            if (is_32bit()) {
+                return;
+            }
+            switch (_pixel_format) {
+                case PixelFormat::R8U: {
+                    using TargetType = float;
+                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType)];
+                    auto dest = (TargetType *) pixel;
+                    for (int i = 0; i < pixel_num(); ++i, ++dest) {
+                        *dest = float(_pixel[i]) / 255.f;
+                    }
+                    _pixel.reset(pixel);
+                    _pixel_format = PixelFormat::R8U;
+                    break;
+                }
+                case PixelFormat::RG8U: {
+                    using TargetType = float2;
+                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType)];
+                    auto src = (uint8_t *) _pixel.get();
+                    auto dest = (TargetType *) pixel;
+                    for (int i = 0; i < pixel_num(); ++i, ++dest, src += 2) {
+                        *dest = make_float2(float(src[0]) / 255.f, float(src[1]) / 255.f);
+                    }
+                    _pixel.reset(pixel);
+                    _pixel_format = PixelFormat::RG32F;
+                    break;
+                }
+                case PixelFormat::RGBA8U: {
+                    using TargetType = float4;
+                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType)];
+                    auto src = (uint8_t *) _pixel.get();
+                    auto dest = (TargetType *) pixel;
+                    for (int i = 0; i < pixel_num(); ++i, ++dest, src += 4) {
+                        *dest = make_float4(float(src[0]) / 255.f,
+                                            float(src[1]) / 255.f,
+                                            float(src[2]) / 255.f,
+                                            float(src[3]) / 255.f);
+                    }
+                    _pixel.reset(pixel);
+                    _pixel_format = PixelFormat::RGBA32F;
+                    break;
+                }
+                default:
+                    LUMINOUS_EXCEPTION("unknown pixel type");
+            }
         }
 
+        void Image::convert_to_8bit() {
+            if (is_8bit()) {
+                return;
+            }
+            switch (_pixel_format) {
+                case PixelFormat::R32F: {
+                    using TargetType = uint8_t;
+                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType)];
+                    auto dest = (TargetType *) pixel;
+                    auto src = (float *) _pixel.get();
+                    for (int i = 0; i < pixel_num(); ++i, ++dest, ++src) {
+                        *dest = make_8bit(src[0]);
+                    }
+                    _pixel.reset(pixel);
+                    _pixel_format = PixelFormat::R8U;
+                    break;
+                }
+                case PixelFormat::RG32F: {
+                    using TargetType = uint16_t;
+                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType)];
+                    auto dest = (uint8_t *) pixel;
+                    auto src = (float *) _pixel.get();
+                    for (int i = 0; i < pixel_num(); ++i, dest += 2, src += 2) {
+                        dest[0] = make_8bit(src[0]);
+                        dest[1] = make_8bit(src[1]);
+                    }
+                    _pixel.reset(pixel);
+                    _pixel_format = PixelFormat::RG8U;
+                    break;
+                }
+                case PixelFormat::RGBA32F: {
+                    using TargetType = uint32_t;
+                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType)];
+                    auto dest = (TargetType *) pixel;
+                    auto src = (float4 *) _pixel.get();
+                    for (int i = 0; i < pixel_num(); ++i, ++dest, ++src) {
+                        *dest = make_rgba(make_float3(*src));
+                    }
+                    _pixel.reset(pixel);
+                    _pixel_format = PixelFormat::RGBA8U;
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+        bool Image::is_8bit() const {
+            return _pixel_format == PixelFormat::R8U
+                   || _pixel_format == PixelFormat::RG8U
+                   || _pixel_format == PixelFormat::RGBA8U;
+        }
+
+        bool Image::is_32bit() const {
+            return _pixel_format == PixelFormat::R32F
+                   || _pixel_format == PixelFormat::RG32F
+                   || _pixel_format == PixelFormat::RGBA32F;
+        }
     }
 
 } // luminous
