@@ -84,12 +84,14 @@ namespace luminous {
                     dest[0] = Spectrum::srgb_to_linear(src[0]);
                     dest[1] = Spectrum::srgb_to_linear(src[1]);
                     dest[2] = Spectrum::srgb_to_linear(src[2]);
+                    dest[3] = 1.f;
                 }
             } else {
                 for (int i = 0; i < pixel_num; ++i, src += 3, dest += 4) {
                     dest[0] = src[0];
                     dest[1] = src[1];
                     dest[2] = src[2];
+                    dest[3] = 1.f;
                 }
             }
             free(rgb);
@@ -178,7 +180,6 @@ namespace luminous {
                 case 4: {
                     PixelFormat pixel_format = detail::PixelFormatImpl<float4>::format;
                     auto pixel = new float4[pixel_num];
-                    size_t size_in_bytes = pixel_num * detail::PixelFormatImpl<float4>::pixel_size;
                     if (color_space == SRGB) {
                         for (int i = 0; i < pixel_num; ++i) {
                             pixel[i] = make_float4(
@@ -400,7 +401,7 @@ namespace luminous {
                     auto dest = (TargetType *) pixel;
                     auto src = (float4 *) _pixel.get();
                     for (int i = 0; i < pixel_num(); ++i, ++dest, ++src) {
-                        *dest = make_rgba(make_float3(*src));
+                        *dest = make_rgba(*src);
                     }
                     _pixel.reset(pixel);
                     _pixel_format = PixelFormat::RGBA8U;
