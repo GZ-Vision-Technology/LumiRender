@@ -17,9 +17,23 @@ namespace luminous {
     inline namespace gpu {
         class CUDATexture : DeviceTexture::Impl {
         private:
-            CUtexObject _handle;
+            CUtexObject _tex_handle;
+            CUarray _array_handle;
+            CUsurfObject _surf_handle;
         public:
+            CUDATexture(PixelFormat pixel_format, uint2 resolution);
 
+            void init();
+
+            void copy_to(Dispatcher &dispatcher, const Image &image) const = 0;
+
+            void copy_to(Dispatcher &dispatcher, Buffer<> &buffer) const = 0;
+
+            void copy_from(Dispatcher &dispatcher, const Buffer<> &buffer) = 0;
+
+            void copy_from(Dispatcher &dispatcher, const Image &image) = 0;
+
+            ~CUDATexture();
         };
 
         class CUDADispatcher : public Dispatcher::Impl {
@@ -37,7 +51,7 @@ namespace luminous {
 
         class CUDABuffer : public RawBuffer::Impl {
         private:
-            CUdeviceptr _ptr;
+            CUdeviceptr _ptr{};
             size_t _size_in_bytes;
 
         public:
@@ -93,6 +107,8 @@ namespace luminous {
             CUDADevice();
 
             RawBuffer allocate_buffer(size_t bytes) override;
+
+            DeviceTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
 
             Dispatcher new_dispatcher() override;
 

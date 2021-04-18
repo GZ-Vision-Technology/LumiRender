@@ -5,7 +5,6 @@
 
 #include "application.h"
 #include <iostream>
-#include "util/image_io.h"
 
 using namespace std;
 

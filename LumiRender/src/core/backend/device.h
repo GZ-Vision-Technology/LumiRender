@@ -7,6 +7,7 @@
 
 #include "dispatcher.h"
 #include "buffer.h"
+#include "texture.h"
 #include "core/context.h"
 
 namespace luminous {
@@ -17,6 +18,8 @@ namespace luminous {
         public:
             virtual RawBuffer allocate_buffer(size_t bytes) = 0;
 
+            virtual DeviceTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) = 0;
+
             virtual Dispatcher new_dispatcher() = 0;
 
             virtual ~Impl() = default;
@@ -25,6 +28,10 @@ namespace luminous {
         template<typename T = std::byte>
         Buffer<T> allocate_buffer(size_t n_elements) {
             return Buffer<T>(_impl->allocate_buffer(n_elements * sizeof(T)));
+        }
+
+        DeviceTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) {
+            return _impl->allocate_texture(pixel_format, resolution);
         }
 
         Dispatcher new_dispatcher() { return _impl->new_dispatcher(); }
