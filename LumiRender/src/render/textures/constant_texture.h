@@ -6,16 +6,16 @@
 #pragma once
 
 #include "graphics/math/common.h"
-#include "util/pixel_format.h"
+
 #include "texture_base.h"
 
 namespace luminous {
     inline namespace render {
-        template<typename T>
-        class ConstantTexture {
+        template<typename T, uint8_t N = 1>
+        class ConstantTexture : public TextureBase {
         public:
             using value_type = T;
-            using hight_type = HighPrecision<T>::type;
+            using hight_type = typename HighPrecision<T>::type;
         private:
             const T val;
         public:
