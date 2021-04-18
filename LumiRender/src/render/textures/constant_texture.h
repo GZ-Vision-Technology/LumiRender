@@ -6,6 +6,7 @@
 #pragma once
 
 #include "graphics/math/common.h"
+#include "util/pixel_format.h"
 #include "texture_base.h"
 
 namespace luminous {
@@ -14,6 +15,7 @@ namespace luminous {
         class ConstantTexture {
         public:
             using value_type = T;
+            using hight_type = HighPrecision<T>::type;
         private:
             const T val;
         public:
@@ -27,9 +29,6 @@ namespace luminous {
                 return string_printf("ConstantTexture val%g", val);
             }
 
-            static ConstantTexture create(const TextureConfig &config) {
-                return
-            }
         };
     }
 }
