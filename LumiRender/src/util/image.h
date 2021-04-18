@@ -38,8 +38,8 @@ namespace luminous {
             static constexpr auto pixel_size = sizeof(Type);\
         };                                                  \
 
-//            MAKE_PIXEL_FORMAT_OF_TYPE(uchar, R8U)
-//            MAKE_PIXEL_FORMAT_OF_TYPE(uchar2, RG8U)
+            MAKE_PIXEL_FORMAT_OF_TYPE(uchar, R8U)
+            MAKE_PIXEL_FORMAT_OF_TYPE(uchar2, RG8U)
             MAKE_PIXEL_FORMAT_OF_TYPE(uchar4, RGBA8U)
             MAKE_PIXEL_FORMAT_OF_TYPE(float, R32F)
             MAKE_PIXEL_FORMAT_OF_TYPE(float2, RG32F)
@@ -99,6 +99,5 @@ namespace luminous {
              */
             void save_other(const filesystem::path &fn);
         };
-
     } // luminous::utility
 } // luminous
