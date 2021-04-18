@@ -78,5 +78,15 @@ namespace luminous {
             }
         };
 
+        template<typename T>
+        class TextureBase {
+        protected:
+            TextureMapping2D _mapping;
+        public:
+            void set_mapping(const TextureMapping2D &mapping) {
+                _mapping = mapping;
+            }
+        };
+
     } //luminous::render
 } //luminous

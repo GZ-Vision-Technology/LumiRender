@@ -121,7 +121,7 @@ namespace luminous {
 
         class CUDAModule : public Module::Impl {
         private:
-            CUmodule _module;
+            CUmodule _module{};
         public:
             explicit CUDAModule(const std::string &ptx_code);
 
