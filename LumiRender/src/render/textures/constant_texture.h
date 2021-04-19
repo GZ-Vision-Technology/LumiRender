@@ -28,7 +28,6 @@ namespace luminous {
             std::string to_string() const {
                 return string_printf("ConstantTexture val%g", val);
             }
-
         };
     }
 }

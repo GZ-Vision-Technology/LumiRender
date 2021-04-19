@@ -23,13 +23,25 @@
     #define IS_GPU_CODE
 #endif
 
-#define GEN_CLASS_NAME(...)  XPU static constexpr const char *name() { return #__VA_ARGS__; }
-
-#define GEN_BASE_NAME(arg)  XPU static constexpr const char *base_name() { return #arg; }
-
+#ifdef IS_GPU_CODE
+#define GEN_CLASS_NAME(...) XPU static constexpr const char *name() { return #__VA_ARGS__; }
 #define GEN_NAME_FUNC NDSC_XPU const char *name() {             \
                                     LUMINOUS_VAR_DISPATCH(name);\
                                }
+#else
+#define GEN_CLASS_NAME(...)  XPU static std::string name() { \
+    std::string name = typeid(__VA_ARGS__).name();           \
+    return name.substr(name.find_last_of("::") + 1).c_str(); \
+}
+
+#define GEN_NAME_FUNC NDSC_XPU const std::string name() {       \
+                                    LUMINOUS_VAR_DISPATCH(name);\
+                               }
+#endif
+
+#define GEN_BASE_NAME(arg) XPU static constexpr const char *base_name() { return #arg; }
+
+
 
 #ifdef IS_GPU_CODE
 #define GEN_TO_STRING_FUNC NDSC std::string to_string() const { \
@@ -41,7 +53,7 @@
         }
 #endif
 
-#define GEN_NAME_AND_TO_STRING_FUNC GEN_NAME_FUNC \
+#define GEN_NAME_AND_TO_STRING_FUNC GEN_NAME_FUNC\
                                     GEN_TO_STRING_FUNC
 #define XPU_INLINE XPU __forceinline
 
