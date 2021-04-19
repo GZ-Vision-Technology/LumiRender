@@ -11,7 +11,7 @@
 
 namespace luminous {
     inline namespace render {
-        template<typename T, uint8_t N = 1>
+        template<typename T>
         class ConstantTexture : public TextureBase {
         public:
             using value_type = T;

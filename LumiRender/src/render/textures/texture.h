@@ -30,8 +30,5 @@ namespace luminous {
 
 
         };
-
-//        using TextureScalar = Texture<float>;
-//        using TextureVec4 = Texture<float4>;
     }
 }

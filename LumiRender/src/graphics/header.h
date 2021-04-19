@@ -23,7 +23,7 @@
     #define IS_GPU_CODE
 #endif
 
-#define GEN_CLASS_NAME(arg)  XPU static constexpr const char *name() { return #arg; }
+#define GEN_CLASS_NAME(...)  XPU static constexpr const char *name() { return #__VA_ARGS__; }
 
 #define GEN_BASE_NAME(arg)  XPU static constexpr const char *base_name() { return #arg; }
 
