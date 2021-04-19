@@ -5,7 +5,6 @@
 
 #include "application.h"
 #include <iostream>
-#include "util/image_io.h"
 
 using namespace std;
 
@@ -110,13 +109,13 @@ namespace luminous {
     }
 
     void App::init_gl_context() {
-        auto path = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\HelloWorld.png)";
-        auto[rgb, res] = load_image(path);
-        test_color = new uint32_t[res.y * res.x];
-        for (int i = 0; i < res.y * res.x; ++i) {
-            test_color[i] = make_rgba(rgb[i]);
-        }
-
+//        auto path = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\HelloWorld.png)";
+//        auto[rgb, res] = load_image(path);
+//        test_color = new uint32_t[res.y * res.x];
+//        for (int i = 0; i < res.y * res.x; ++i) {
+//            test_color[i] = make_rgba(rgb[i]);
+//        }
+        auto res = make_int2(_size);
         glGenTextures(1, &_gl_ctx.fb_texture);
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, res.x, res.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, test_color);
