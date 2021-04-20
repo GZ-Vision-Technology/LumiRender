@@ -180,6 +180,35 @@ namespace luminous {
             _data = create_json_from_file(fn);
         }
 
+        template<typename T>
+        TextureConfig<T> parse_texture(const ParameterSet &ps) {
+            std::string type;
+            type = ps["type"].as_string("ConstantTexture");
+            TextureConfig<T> tc;
+            tc.type = type;
+            auto param = ps["param"];
+            if (type == "ConstantTexture") {
+                tc.val = param["val"].template as<T>();
+            } else {
+                tc.path = param["path"].as_string();
+            }
+            if constexpr (std::is_same_v<T, float>) {
+                tc.type = tc.type + "<float>";
+            } else {
+                tc.type = tc.type + "<float4>";
+            }
+            return tc;
+        }
+
+        template<typename T>
+        std::vector<TextureConfig<T>> parse_textures(const DataWrap &textures) {
+            std::vector<TextureConfig<T>> ret;
+            for (const auto &texture : textures) {
+                ret.push_back(parse_texture<T>(ParameterSet(texture)));
+            }
+            return ret;
+        }
+
         SP<SceneGraph> Parser::parse() const {
             auto shapes = _data["shapes"];
             auto scene_graph = make_shared<SceneGraph>(_context);
@@ -188,6 +217,8 @@ namespace luminous {
             scene_graph->sampler_config = parse_sampler(ParameterSet(_data["sampler"]));
             scene_graph->light_configs = parse_lights(_data.value("lights", DataWrap()));
             scene_graph->light_sampler_config = parse_light_sampler(ParameterSet(_data["light_sampler"]));
+            scene_graph->tex_scalar_configs = parse_textures<float>(_data["tex_scalars"]);
+            scene_graph->tex_vector_configs = parse_textures<float4>(_data["tex_vectors"]);
             return scene_graph;
         }
     }

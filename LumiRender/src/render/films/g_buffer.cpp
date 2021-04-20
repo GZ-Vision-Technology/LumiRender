@@ -12,7 +12,7 @@ namespace luminous {
         }
 
         std::string GBufferFilm::to_string() const {
-            return string_printf("%s : {resolution :%s}", name(),
+            LUMINOUS_TO_STRING("%s : {resolution :%s}", name().c_str(),
                                  _resolution.to_string().c_str());
         }
     }

@@ -1,4 +1,20 @@
 {
+	"tex_scalars" : [
+		{
+			"type" :"ConstantTexture",
+			"param": {
+				"val": 2
+			}
+		}
+	],
+	"tex_vectors" : [
+		{
+			"type" :"ConstantTexture",
+			"param": {
+				"val": [1,2,1,0]
+			}
+		}
+	],
 	"shapes" : [
 //		{
 //			"name" : "c_box",

@@ -91,8 +91,10 @@ namespace luminous {
             float su, sv, du, dv;
         };
 
+        template<typename T>
         struct TextureConfig : Config {
-
+            std::string path;
+            T val;
         };
 
         struct FilterConfig {
