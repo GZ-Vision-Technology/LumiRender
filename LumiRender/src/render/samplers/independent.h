@@ -26,9 +26,7 @@ namespace luminous {
 
             NDSC XPU float2 next_2d();
 
-            NDSC std::string to_string() const {
-                return string_printf("%s:{spp=%d}", "LCGSampler", spp());
-            }
+            NDSC std::string to_string() const;
 
             static LCGSampler create(const SamplerConfig &config);
         };
@@ -48,9 +46,7 @@ namespace luminous {
 
             NDSC XPU float2 next_2d();
 
-            NDSC std::string to_string() const {
-                return string_printf("%s:{spp=%d}", "PCGSampler", spp());
-            }
+            NDSC std::string to_string() const;
 
             static PCGSampler create(const SamplerConfig &config);
         };

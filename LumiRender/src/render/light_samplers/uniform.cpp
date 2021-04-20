@@ -28,7 +28,7 @@ namespace luminous {
         }
 
         std::string UniformLightSampler::to_string() const {
-            return string_printf("light sampler : %s",name());
+            LUMINOUS_TO_STRING("light sampler : %s",name().c_str());
         }
 
         UniformLightSampler UniformLightSampler::create(const LightSamplerConfig &config) {

@@ -22,8 +22,9 @@ namespace luminous {
         }
 
         std::string PointLight::to_string() const {
-            return string_printf("light Base : %s, intensity : %s",
+            LUMINOUS_TO_STRING("light Base : %s, name : %s ,intensity : %s",
                                  _to_string().c_str(),
+                                 name().c_str(),
                                  _intensity.to_string().c_str());
         }
 

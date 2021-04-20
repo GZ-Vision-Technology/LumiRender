@@ -19,14 +19,14 @@ namespace luminous {
         private:
             const T val;
         public:
-            GEN_CLASS_NAME(ConstantTexture)
+            GEN_CLASS_NAME(ConstantTexture<T>)
 
             XPU T eval(const TextureEvalContext &tec) {
                 return val;
             }
 
             std::string to_string() const {
-                return string_printf("ConstantTexture val%g", val);
+                LUMINOUS_TO_STRING("name: %s", name().c_str());
             }
         };
     }

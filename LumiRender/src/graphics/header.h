@@ -39,6 +39,12 @@
                                }
 #endif
 
+#ifdef IS_GPU_CODE
+    #define LUMINOUS_TO_STRING(...) LUMINOUS_ERROR("device not support to string");
+#else
+    #define LUMINOUS_TO_STRING(...) return string_printf(__VA_ARGS__);
+#endif
+
 #define GEN_BASE_NAME(arg) XPU static constexpr const char *base_name() { return #arg; }
 
 

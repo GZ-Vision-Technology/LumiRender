@@ -52,8 +52,9 @@ namespace luminous {
         }
 
         std::string AreaLight::to_string() const {
-            return string_printf("light Base : %s, L : %s",
+            LUMINOUS_TO_STRING("light Base : %s,name:%s, L : %s",
                                  _to_string().c_str(),
+                                 name().c_str(),
                                  _L.to_string().c_str());
         }
 

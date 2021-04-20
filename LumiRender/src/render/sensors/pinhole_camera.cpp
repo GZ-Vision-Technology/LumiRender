@@ -25,7 +25,7 @@ namespace luminous {
         }
 
         std::string PinholeCamera::to_string() const {
-            return string_printf("%s:%s", name(), _to_string().c_str());
+            LUMINOUS_TO_STRING("%s:%s", name().c_str(), _to_string().c_str());
         }
 
         PinholeCamera PinholeCamera::create(const SensorConfig &config) {

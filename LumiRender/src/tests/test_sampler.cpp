@@ -13,15 +13,9 @@ class Test {
 
 };
 
-const auto name() {
-    std::string name = typeid(PCGSampler).name();
-    return (name.substr(name.find_last_of("::") + 1));
-}
-
 void test_sampler() {
 //    TASK_TAG("test_sampler");
     auto config = SamplerConfig();
-    cout << name().c_str() << endl;
     cout << string(typeid(PCGSampler).name()).c_str();
     config.type = "PCGSampler";
     config.spp = 9;
@@ -33,10 +27,7 @@ void test_sampler() {
     for (int i = 0; i < 10000000; ++i) {
         f = f + sampler.next_1d();
     }
-    std::string name = typeid(sampler).name();
-    cout << name.substr(name.find_last_of("::") + 1);
-
-    cout << typeid(Test<float>).name();
+    cout << sampler.to_string();
 }
 
 void test_sensor() {

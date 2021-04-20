@@ -21,8 +21,8 @@ namespace luminous {
         }
 
         std::string RGBFilm::to_string() const {
-            return string_printf("%s : {resolution :%s}", name(),
-                                 _resolution.to_string().c_str());
+            LUMINOUS_TO_STRING("%s : {resolution :%s}", name().c_str(),
+                               _resolution.to_string().c_str());
         }
 
         RGBFilm RGBFilm::create(const FilmConfig &config) {
