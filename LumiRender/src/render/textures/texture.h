@@ -28,7 +28,12 @@ namespace luminous {
                 LUMINOUS_VAR_DISPATCH(set_mapping, mapping)
             }
 
-
+            static Texture<T> create(const TextureConfig<T> config);
         };
+
+        template<typename T>
+        Texture<T> Texture<T>::create(const TextureConfig<T> config) {
+            return detail::create<Texture<T>>(config);
+        }
     }
 }

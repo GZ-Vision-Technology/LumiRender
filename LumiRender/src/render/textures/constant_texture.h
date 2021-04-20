@@ -17,16 +17,23 @@ namespace luminous {
             using value_type = T;
             using hight_type = typename HighPrecision<T>::type;
         private:
-            const T val;
+            const T _val;
         public:
+            ConstantTexture(T val)
+                :_val(val){}
+
             GEN_CLASS_NAME(ConstantTexture<T>)
 
             XPU T eval(const TextureEvalContext &tec) {
-                return val;
+                return _val;
             }
 
             std::string to_string() const {
                 LUMINOUS_TO_STRING("name: %s", name().c_str());
+            }
+
+            static ConstantTexture<T> create(const TextureConfig<T> &config) {
+                return ConstantTexture(config.val);
             }
         };
     }

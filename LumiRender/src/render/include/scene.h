@@ -40,6 +40,10 @@ namespace luminous {
             EmissionDistribution _emission_distrib;
             Managed<LightSampler> _light_sampler;
 
+            // texture data
+            Managed<Texture<float>> _texture_scalars;
+            Managed<Texture<float4>> _texture_vectors;
+
         public:
 
             void shrink_to_fit();

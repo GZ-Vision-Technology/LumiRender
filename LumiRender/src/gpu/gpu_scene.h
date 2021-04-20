@@ -32,6 +32,8 @@ namespace luminous {
 
             void init(const SP<SceneGraph> &scene_graph) override;
 
+            void init_textures(const SP<SceneGraph> &scene_graph);
+
             void init_accel() override;
 
             size_t size_in_bytes() const override;

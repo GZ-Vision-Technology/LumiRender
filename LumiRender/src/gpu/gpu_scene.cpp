@@ -66,8 +66,13 @@ namespace luminous {
             build_accel();
         }
 
+        void GPUScene::init_textures(const SP<SceneGraph> &scene_graph) {
+
+        }
+
         void GPUScene::init(const SP<SceneGraph> &scene_graph) {
             convert_data(scene_graph);
+            init_textures(scene_graph);
             create_device_memory();
             synchronize_to_gpu();
             init_accel();
