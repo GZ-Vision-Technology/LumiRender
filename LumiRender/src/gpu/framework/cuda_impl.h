@@ -25,13 +25,13 @@ namespace luminous {
 
             void init();
 
-            void copy_to(Dispatcher &dispatcher, const Image &image) const = 0;
+            void copy_to(Dispatcher &dispatcher, const Image &image) const;
 
-            void copy_to(Dispatcher &dispatcher, Buffer<> &buffer) const = 0;
+            void copy_to(Dispatcher &dispatcher, Buffer<> &buffer) const;
 
-            void copy_from(Dispatcher &dispatcher, const Buffer<> &buffer) = 0;
+            void copy_from(Dispatcher &dispatcher, const Buffer<> &buffer);
 
-            void copy_from(Dispatcher &dispatcher, const Image &image) = 0;
+            void copy_from(Dispatcher &dispatcher, const Image &image);
 
             ~CUDATexture();
         };

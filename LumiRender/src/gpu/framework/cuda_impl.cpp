@@ -96,6 +96,22 @@ namespace luminous {
             CUDA_CHECK(cuSurfObjectDestroy(_surf_handle));
         }
 
+        void CUDATexture::copy_to(Dispatcher &dispatcher, const Image &image) const {
+
+        }
+
+        void CUDATexture::copy_to(Dispatcher &dispatcher, Buffer<> &buffer) const {
+
+        }
+
+        void CUDATexture::copy_from(Dispatcher &dispatcher, const Buffer<> &buffer) {
+
+        }
+
+        void CUDATexture::copy_from(Dispatcher &dispatcher, const Image &image) {
+
+        }
+
         // CUDADispatcher
         CUDADispatcher::CUDADispatcher() {
             CU_CHECK(cuStreamCreate(&stream, CU_STREAM_DEFAULT));

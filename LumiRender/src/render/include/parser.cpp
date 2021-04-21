@@ -190,7 +190,7 @@ namespace luminous {
             if (type == "ConstantTexture") {
                 tc.val = param["val"].template as<T>();
             } else {
-                tc.path = param["path"].as_string();
+                tc.fn = param["fn"].as_string();
             }
             if constexpr (std::is_same_v<T, float>) {
                 tc.type = tc.type + "<float>";

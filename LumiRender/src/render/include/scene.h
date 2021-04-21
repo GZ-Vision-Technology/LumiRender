@@ -20,6 +20,8 @@ namespace luminous {
         using namespace std;
         class Scene : public Noncopyable {
         protected:
+            Context * _context{nullptr};
+
             size_t _inst_vertices_num{0};
             size_t _inst_triangle_num{0};
 
@@ -44,7 +46,11 @@ namespace luminous {
             Managed<Texture<float>> _texture_scalars;
             Managed<Texture<float4>> _texture_vectors;
 
+            // texture manage
+            vector<DeviceTexture> _texture_mgr;
+
         public:
+            Scene(Context * context) : _context(context) {}
 
             void shrink_to_fit();
 

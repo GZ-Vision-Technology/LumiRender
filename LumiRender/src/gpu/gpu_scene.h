@@ -28,11 +28,11 @@ namespace luminous {
             friend class OptixAccel;
 
         public:
-            GPUScene(const SP<Device> &device);
+            GPUScene(const SP<Device> &device, Context *context);
 
             void init(const SP<SceneGraph> &scene_graph) override;
 
-            void init_textures(const SP<SceneGraph> &scene_graph);
+            void preload_textures(const SP<SceneGraph> &scene_graph);
 
             void init_accel() override;
 

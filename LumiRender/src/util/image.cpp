@@ -383,8 +383,8 @@ namespace luminous {
                     break;
                 }
                 case PixelFormat::RG32F: {
-                    using TargetType = uint16_t;
-                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType)];
+                    using TargetType = uint8_t;
+                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType) * channels()];
                     auto dest = (uint8_t *) pixel;
                     auto src = (float *) _pixel.get();
                     for (int i = 0; i < pixel_num(); ++i, dest += 2, src += 2) {

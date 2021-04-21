@@ -16,6 +16,7 @@ namespace luminous {
     inline namespace gpu {
         class MegaKernelPT : public Integrator {
         private:
+            Context * _context{};
             Managed<Sampler, Sampler> _sampler;
             Managed<Sensor, Sensor> _camera;
             UP<GPUScene> _scene{nullptr};
@@ -23,8 +24,8 @@ namespace luminous {
             Managed<LaunchParams> _launch_params;
         public:
 
-            MegaKernelPT(const SP<Device> &device)
-                    : _device(device) {}
+            MegaKernelPT(const SP<Device> &device, Context *context)
+                    : _device(device),_context(context) {}
 
             void init(const SP<SceneGraph> &scene_graph) override;
 

@@ -93,8 +93,11 @@ namespace luminous {
 
         template<typename T>
         struct TextureConfig : Config {
-            std::string path;
+            // for constant texture
             T val;
+            // for image texture
+            std::string fn;
+            void * handle;
         };
 
         struct FilterConfig {

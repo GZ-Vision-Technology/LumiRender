@@ -11,8 +11,8 @@
 namespace luminous {
     inline namespace gpu {
 
-        GPUScene::GPUScene(const SP<Device> &device)
-                : _device(device) {}
+        GPUScene::GPUScene(const SP<Device> &device, Context *context)
+                : Scene(context),_device(device) {}
 
         void GPUScene::create_device_memory() {
             {
@@ -66,13 +66,18 @@ namespace luminous {
             build_accel();
         }
 
-        void GPUScene::init_textures(const SP<SceneGraph> &scene_graph) {
+        void GPUScene::preload_textures(const SP<SceneGraph> &scene_graph) {
+            for (const auto &tc : scene_graph->tex_vector_configs) {
+                if (tc.type == "ImageTexture<float4>") {
+                    auto path = _context->scene_path() / tc.fn;
 
+                }
+            }
         }
 
         void GPUScene::init(const SP<SceneGraph> &scene_graph) {
             convert_data(scene_graph);
-            init_textures(scene_graph);
+            preload_textures(scene_graph);
             create_device_memory();
             synchronize_to_gpu();
             init_accel();
