@@ -96,6 +96,22 @@ namespace luminous {
             CUDA_CHECK(cuSurfObjectDestroy(_surf_handle));
         }
 
+        CUDA_MEMCPY2D CUDATexture::memcpy_desc(const Image &image) const {
+            CUDA_MEMCPY2D memcpy_desc{};
+            memcpy_desc.srcMemoryType = CU_MEMORYTYPE_UNIFIED;
+            memcpy_desc.srcHost = image.ptr();
+            memcpy_desc.srcXInBytes = 0;
+            memcpy_desc.srcY = 0;
+            memcpy_desc.srcPitch = pitch_byte_size();
+            memcpy_desc.dstMemoryType = CU_MEMORYTYPE_ARRAY;
+            memcpy_desc.dstArray = _array_handle;
+            memcpy_desc.dstXInBytes = 0;
+            memcpy_desc.dstY = 0;
+            memcpy_desc.WidthInBytes = pitch_byte_size();
+            memcpy_desc.Height = height();
+            return memcpy_desc;
+        }
+
         void CUDATexture::copy_to(Dispatcher &dispatcher, const Image &image) const {
 
         }
@@ -108,8 +124,27 @@ namespace luminous {
 
         }
 
-        void CUDATexture::copy_from(Dispatcher &dispatcher, const Image &image) {
+        void CUDATexture::copy_to(const Image &image) const {
 
+        }
+
+        void CUDATexture::copy_to(Buffer<> &buffer) const {
+
+        }
+
+        void CUDATexture::copy_from(const Buffer<> &buffer) {
+
+        }
+
+        void CUDATexture::copy_from(Dispatcher &dispatcher, const Image &image) {
+            auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
+            CUDA_MEMCPY2D desc = memcpy_desc(image);
+            CU_CHECK(cuMemcpy2DAsync(&desc, stream));
+        }
+
+        void CUDATexture::copy_from(const Image &image) {
+            CUDA_MEMCPY2D desc = memcpy_desc(image);
+            CU_CHECK(cuMemcpy2D(&desc));
         }
 
         // CUDADispatcher
@@ -217,7 +252,7 @@ namespace luminous {
         }
 
         DeviceTexture CUDADevice::allocate_texture(PixelFormat pixel_format, uint2 resolution) {
-            return DeviceTexture(nullptr);
+            return DeviceTexture(std::make_unique<CUDATexture>(pixel_format, resolution));
         }
 
         Dispatcher CUDADevice::new_dispatcher() {

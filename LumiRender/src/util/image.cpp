@@ -21,12 +21,6 @@ namespace luminous {
 
     inline namespace utility {
 
-        int channel_num(PixelFormat pixel_format) {
-            if (pixel_format == PixelFormat::R8U || pixel_format == PixelFormat::R32F) { return 1u; }
-            if (pixel_format == PixelFormat::RG8U || pixel_format == PixelFormat::RG32F) { return 2u; }
-            return 4u;
-        }
-
         Image::Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res, const std::filesystem::path &path)
                 : _pixel_format(pixel_format),
                   _resolution(res),
@@ -38,22 +32,6 @@ namespace luminous {
             _pixel_format = other._pixel_format;
             _resolution = other._resolution;
             _pixel = move(other._pixel);
-        }
-
-        uint2 Image::resolution() const {
-            return _resolution;
-        }
-
-        PixelFormat Image::pixel_format() const {
-            return _pixel_format;
-        }
-
-        size_t Image::pixel_num() const {
-            return _resolution.x * _resolution.y;
-        }
-
-        int Image::channels() const {
-            return channel_num(_pixel_format);
         }
 
         Image Image::load(const filesystem::path &path, ColorSpace color_space) {
@@ -423,6 +401,7 @@ namespace luminous {
                    || _pixel_format == PixelFormat::RG32F
                    || _pixel_format == PixelFormat::RGBA32F;
         }
+
     }
 
 } // luminous

@@ -15,11 +15,14 @@
 
 namespace luminous {
     inline namespace gpu {
-        class CUDATexture : DeviceTexture::Impl {
+        class CUDATexture : public DeviceTexture::Impl {
         private:
             CUtexObject _tex_handle;
             CUarray _array_handle;
             CUsurfObject _surf_handle;
+
+            CUDA_MEMCPY2D memcpy_desc(const Image &image) const;
+
         public:
             CUDATexture(PixelFormat pixel_format, uint2 resolution);
 
@@ -33,12 +36,20 @@ namespace luminous {
 
             void copy_from(Dispatcher &dispatcher, const Image &image);
 
+            void copy_to(const Image &image) const;
+
+            void copy_to(Buffer<> &buffer) const;
+
+            void copy_from(const Buffer<> &buffer);
+
+            void copy_from(const Image &image);
+
             ~CUDATexture();
         };
 
         class CUDADispatcher : public Dispatcher::Impl {
         public:
-            CUstream stream;
+            CUstream stream{};
 
             CUDADispatcher();
 
@@ -101,7 +112,7 @@ namespace luminous {
 
         class CUDADevice : public Device::Impl {
         private:
-            CUdevice  _cu_device{};
+            CUdevice _cu_device{};
             CUcontext _cu_context{};
         public:
             CUDADevice();

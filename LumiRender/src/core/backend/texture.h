@@ -23,6 +23,10 @@ namespace luminous {
             Impl(PixelFormat pixel_format, uint2 resolution)
                     : _pixel_format(pixel_format), _resolution(resolution) {}
 
+            size_t pitch_byte_size() const {
+                return _resolution.x * pixel_size(_pixel_format);
+            }
+
             uint32_t width() const {
                 return _resolution.x;
             }
@@ -50,6 +54,14 @@ namespace luminous {
             virtual void copy_from(Dispatcher &dispatcher, const Buffer<> &buffer) = 0;
 
             virtual void copy_from(Dispatcher &dispatcher, const Image &image) = 0;
+
+            virtual void copy_to(const Image &image) const = 0;
+
+            virtual void copy_to(Buffer<> &buffer) const = 0;
+
+            virtual void copy_from(const Buffer<> &buffer) = 0;
+
+            virtual void copy_from(const Image &image) = 0;
 
             virtual ~Impl() = default;
         };
@@ -79,6 +91,22 @@ namespace luminous {
 
         void copy_from(Dispatcher &dispatcher, const Buffer<> &buffer) {
             _impl->copy_from(dispatcher, buffer);
+        }
+
+        void copy_to(Image &image) const {
+            _impl->copy_to(image);
+        }
+
+        void copy_from(const Image &image) {
+            _impl->copy_from(image);
+        }
+
+        void copy_to(Buffer<> &buffer) const {
+            _impl->copy_to(buffer);
+        }
+
+        void copy_from(const Buffer<> &buffer) {
+            _impl->copy_from(buffer);
         }
 
     private:

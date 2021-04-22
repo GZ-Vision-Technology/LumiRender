@@ -7,6 +7,8 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include "framework/cuda_impl.h"
+#include "util/image.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -67,10 +69,14 @@ namespace luminous {
         }
 
         void GPUScene::preload_textures(const SP<SceneGraph> &scene_graph) {
-            for (const auto &tc : scene_graph->tex_vector_configs) {
+            for (auto &tc : scene_graph->tex_vector_configs) {
                 if (tc.type == "ImageTexture<float4>") {
                     auto path = _context->scene_path() / tc.fn;
-
+                    tc.fn = path.string();
+                    auto image = Image::load(tc.fn, SRGB);
+                    auto texture = _device->allocate_texture(image.pixel_format(), image.resolution());
+                    texture.copy_from(image);
+                    _texture_mgr.push_back(move(texture));
                 }
             }
         }

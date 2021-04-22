@@ -43,27 +43,28 @@ namespace luminous {
 #undef MAKE_PIXEL_FORMAT_OF_TYPE
         }
 
-        template<typename T>
-        struct HighPrecision {
-            template<typename U>
-            static constexpr auto always_false = false;
+        NDSC_XPU_INLINE size_t pixel_size(PixelFormat pixel_format) {
+            switch (pixel_format) {
+                case PixelFormat::R8U:
+                    return sizeof(uchar);
+                case PixelFormat::RG8U:
+                    return sizeof(uchar2);
+                case PixelFormat::RGBA8U:
+                    return sizeof(uchar4);
+                case PixelFormat::R32F:
+                    return sizeof(float);
+                case PixelFormat::RG32F:
+                    return sizeof(float2);
+                case PixelFormat::RGBA32F:
+                    return sizeof(float4);
+            }
+        }
 
-            static_assert(always_false<T>, "Unsupported type for pixel format.");
-        };
-#define MAKE_HIGH_PRECISION(Type, HighType)                                                \
-            template<>                                                                     \
-            struct HighPrecision<Type>{                                                    \
-                using type = HighType;                                                     \
-                static constexpr auto format = detail::PixelFormatImpl<HighType>::format;  \
-                                                                                           \
-            };
-        MAKE_HIGH_PRECISION(uint8_t, float)
-        MAKE_HIGH_PRECISION(float, float)
-        MAKE_HIGH_PRECISION(uint16_t , float2)
-        MAKE_HIGH_PRECISION(float2 , float2)
-        MAKE_HIGH_PRECISION(uint32_t, float4)
-        MAKE_HIGH_PRECISION(float4, float4)
-#undef MAKE_HIGH_PRECISION
+        NDSC_XPU_INLINE int channel_num(PixelFormat pixel_format) {
+            if (pixel_format == PixelFormat::R8U || pixel_format == PixelFormat::R32F) { return 1u; }
+            if (pixel_format == PixelFormat::RG8U || pixel_format == PixelFormat::RG32F) { return 2u; }
+            return 4u;
+        }
 
         template<typename T>
         using PixelFormatImpl = detail::PixelFormatImpl<T>;

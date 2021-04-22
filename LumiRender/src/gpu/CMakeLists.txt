@@ -17,6 +17,7 @@ target_link_libraries(luminous-gpu
         CUDA::cudart
         luminous-graphics
         luminous-core
+        luminous-util
         luminous-render
         )
 

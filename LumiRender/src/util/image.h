@@ -12,7 +12,6 @@
 #include <utility>
 
 
-
 namespace luminous {
     inline namespace utility {
         using namespace std;
@@ -26,21 +25,25 @@ namespace luminous {
         public:
             Image() = default;
 
-            Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res, const std::filesystem::path& path);
+            Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res, const std::filesystem::path &path);
 
             Image(Image &&other) noexcept;
 
-            uint2 resolution() const;
+            uint2 resolution() const { return _resolution; }
 
-            size_t pixel_num() const;
+            const std::byte *ptr() const { return _pixel.get(); }
+
+            size_t size_in_bytes() const { return pixel_size(_pixel_format) * pixel_num() * channels(); }
+
+            size_t pixel_num() const { return _resolution.x * _resolution.y; }
 
             bool is_8bit() const;
 
             bool is_32bit() const;
 
-            PixelFormat pixel_format() const;
+            PixelFormat pixel_format() const { return _pixel_format; }
 
-            int channels() const;
+            int channels() const { return channel_num(_pixel_format); }
 
             static Image load(const filesystem::path &fn, ColorSpace color_space);
 

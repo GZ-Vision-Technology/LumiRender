@@ -15,7 +15,6 @@ namespace luminous {
         class ConstantTexture : public TextureBase {
         public:
             using value_type = T;
-            using hight_type = typename HighPrecision<T>::type;
         private:
             const T _val;
         public:
