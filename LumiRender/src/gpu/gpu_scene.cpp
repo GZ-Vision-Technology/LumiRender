@@ -14,28 +14,33 @@ namespace luminous {
     inline namespace gpu {
 
         GPUScene::GPUScene(const SP<Device> &device, Context *context)
-                : Scene(context),_device(device) {}
+                : Scene(context), _device(device) {}
 
         void GPUScene::create_device_memory() {
             {
                 // instance data
-                _inst_to_mesh_idx.allocate_device( _device);
-                _inst_to_transform_idx.allocate_device( _device);
-                _transforms.allocate_device( _device);
+                _inst_to_mesh_idx.allocate_device(_device);
+                _inst_to_transform_idx.allocate_device(_device);
+                _transforms.allocate_device(_device);
             }
             {
                 // mesh data
-                _meshes.allocate_device( _device);
-                _positions.allocate_device( _device);
-                _tex_coords.allocate_device( _device);
+                _meshes.allocate_device(_device);
+                _positions.allocate_device(_device);
+                _tex_coords.allocate_device(_device);
                 _triangles.allocate_device(_device);
                 _normals.allocate_device(_device);
             }
             {
                 // light data
-                _lights.allocate_device( _device);
+                _lights.allocate_device(_device);
                 _emission_distrib.init_on_device(_device);
                 _light_sampler.allocate_device(_device);
+            }
+            {
+                // texture data
+                _texture_scalars.allocate_device(_device);
+                _texture_vectors.allocate_device(_device);
             }
         }
 
@@ -79,6 +84,21 @@ namespace luminous {
                     tc.handle = texture.tex_handle();
                     _texture_mgr.push_back(move(texture));
                 }
+//                luminous::render::detail::create<Texture<float4>,TextureConfig<float4>,0>(tc);
+//                Texture<float4>::create(tc);
+//                _texture_vectors.push_back(Texture<float4>::create(tc));
+            }
+            for (auto &tc : scene_graph->tex_scalar_configs) {
+                if (tc.type == "ImageTexture<float>") {
+                    auto path = _context->scene_path() / tc.fn;
+                    tc.fn = path.string();
+                    auto image = Image::load(tc.fn, tc.color_space);
+                    auto texture = _device->allocate_texture(image.pixel_format(), image.resolution());
+                    texture.copy_from(image);
+                    tc.handle = texture.tex_handle();
+                    _texture_mgr.push_back(move(texture));
+                }
+//                _texture_scalars.push_back(Texture<float>::create(tc));
             }
         }
 

@@ -59,6 +59,9 @@ namespace luminous {
         }
 
         void allocate_device(const SP <Device> device) {
+            if (BaseClass::size() == 0) {
+                return;
+            }
             _device_buffer = device->allocate_buffer<TDevice>(BaseClass::size());
         }
 
@@ -102,10 +105,16 @@ namespace luminous {
         }
 
         void synchronize_to_gpu() {
+            if (BaseClass::size() == 0) {
+                return;
+            }
             _device_buffer.upload(BaseClass::data());
         }
 
         void synchronize_to_cpu() {
+            if (BaseClass::size() == 0) {
+                return;
+            }
             _device_buffer.download(BaseClass::data());
         }
     };

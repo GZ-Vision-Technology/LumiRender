@@ -32,7 +32,7 @@ namespace luminous {
             }
 
             static ConstantTexture<T> create(const TextureConfig<T> &config) {
-                return ConstantTexture(config.val);
+                return ConstantTexture<T>(config.val);
             }
         };
     }
