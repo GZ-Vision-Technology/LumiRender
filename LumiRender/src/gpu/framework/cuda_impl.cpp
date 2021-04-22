@@ -15,91 +15,73 @@ namespace luminous {
 
         void CUDATexture::init() {
             CUDA_ARRAY_DESCRIPTOR array_desc{};
+            CUDA_RESOURCE_DESC res_desc{};
+            CUDA_RESOURCE_VIEW_DESC res_view_desc{};
+            CUDA_TEXTURE_DESC tex_desc{};
             array_desc.Width = _resolution.x;
             array_desc.Height = _resolution.y;
             switch (_pixel_format) {
                 case PixelFormat::R8U:
                     array_desc.Format = CU_AD_FORMAT_UNSIGNED_INT8;
                     array_desc.NumChannels = 1;
+                    res_view_desc.format = CU_RES_VIEW_FORMAT_UINT_1X8;
                     break;
                 case PixelFormat::RG8U:
                     array_desc.Format = CU_AD_FORMAT_UNSIGNED_INT8;
                     array_desc.NumChannels = 2;
+                    res_view_desc.format = CU_RES_VIEW_FORMAT_UINT_2X8;
                     break;
                 case PixelFormat::RGBA8U:
                     array_desc.Format = CU_AD_FORMAT_UNSIGNED_INT8;
                     array_desc.NumChannels = 4;
+                    res_view_desc.format = CU_RES_VIEW_FORMAT_UINT_4X8;
                     break;
                 case PixelFormat::R32F:
                     array_desc.Format = CU_AD_FORMAT_FLOAT;
                     array_desc.NumChannels = 1;
+                    res_view_desc.format = CU_RES_VIEW_FORMAT_FLOAT_1X32;
                     break;
                 case PixelFormat::RG32F:
                     array_desc.Format = CU_AD_FORMAT_FLOAT;
                     array_desc.NumChannels = 2;
+                    res_view_desc.format = CU_RES_VIEW_FORMAT_FLOAT_2X32;
                     break;
                 case PixelFormat::RGBA32F:
                     array_desc.Format = CU_AD_FORMAT_FLOAT;
                     array_desc.NumChannels = 4;
+                    res_view_desc.format = CU_RES_VIEW_FORMAT_FLOAT_4X32;
                     break;
                 default:
                     break;
             }
 
-            CUDA_CHECK(cuArrayCreate(&_array_handle, &array_desc));
+            CU_CHECK(cuArrayCreate(&_array_handle, &array_desc));
 
-            CUDA_RESOURCE_DESC res_desc{};
             res_desc.resType = CU_RESOURCE_TYPE_ARRAY;
             res_desc.res.array.hArray = _array_handle;
             res_desc.flags = 0;
 
-            CUDA_TEXTURE_DESC tex_desc{};
             tex_desc.addressMode[0] = CU_TR_ADDRESS_MODE_CLAMP;
             tex_desc.addressMode[1] = CU_TR_ADDRESS_MODE_CLAMP;
             tex_desc.addressMode[2] = CU_TR_ADDRESS_MODE_CLAMP;
             tex_desc.filterMode =  CU_TR_FILTER_MODE_LINEAR;
             tex_desc.flags = CU_TRSF_NORMALIZED_COORDINATES;
 
-            CUDA_RESOURCE_VIEW_DESC res_view_desc{};
-            switch (_pixel_format) {
-                case PixelFormat::R8U:
-                    res_view_desc.format = CU_RES_VIEW_FORMAT_UINT_1X8;
-                    break;
-                case PixelFormat::RG8U:
-                    res_view_desc.format = CU_RES_VIEW_FORMAT_UINT_2X8;
-                    break;
-                case PixelFormat::RGBA8U:
-                    res_view_desc.format = CU_RES_VIEW_FORMAT_UINT_4X8;
-                    break;
-                case PixelFormat::R32F:
-                    res_view_desc.format = CU_RES_VIEW_FORMAT_FLOAT_1X32;
-                    break;
-                case PixelFormat::RG32F:
-                    res_view_desc.format = CU_RES_VIEW_FORMAT_FLOAT_2X32;
-                    break;
-                case PixelFormat::RGBA32F:
-                    res_view_desc.format = CU_RES_VIEW_FORMAT_FLOAT_4X32;
-                    break;
-                default:
-                    break;
-            }
             res_view_desc.width = width();
             res_view_desc.height = height();
 
-            CUDA_CHECK(cuTexObjectCreate(&_tex_handle, &res_desc, &tex_desc, &res_view_desc));
-            CUDA_CHECK(cuSurfObjectCreate(&_surf_handle, &res_desc));
+            CU_CHECK(cuTexObjectCreate(&_tex_handle, &res_desc, &tex_desc, &res_view_desc));
+            CU_CHECK(cuSurfObjectCreate(&_surf_handle, &res_desc));
         }
 
         CUDATexture::~CUDATexture() {
-            CUDA_CHECK(cuArrayDestroy(_array_handle));
-            CUDA_CHECK(cuTexObjectDestroy(_tex_handle));
-            CUDA_CHECK(cuSurfObjectDestroy(_surf_handle));
+            CU_CHECK(cuArrayDestroy(_array_handle));
+            CU_CHECK(cuTexObjectDestroy(_tex_handle));
+            CU_CHECK(cuSurfObjectDestroy(_surf_handle));
         }
 
-        CUDA_MEMCPY2D CUDATexture::memcpy_desc(const Image &image) const {
+        CUDA_MEMCPY2D CUDATexture::common_memcpy_desc() const {
             CUDA_MEMCPY2D memcpy_desc{};
-            memcpy_desc.srcMemoryType = CU_MEMORYTYPE_UNIFIED;
-            memcpy_desc.srcHost = image.ptr();
             memcpy_desc.srcXInBytes = 0;
             memcpy_desc.srcY = 0;
             memcpy_desc.srcPitch = pitch_byte_size();
@@ -112,38 +94,45 @@ namespace luminous {
             return memcpy_desc;
         }
 
-        void CUDATexture::copy_to(Dispatcher &dispatcher, const Image &image) const {
+        CUDA_MEMCPY2D CUDATexture::host_src_memcpy_desc(const Image &image) const {
+            auto memcpy_desc = common_memcpy_desc();
+            memcpy_desc.srcMemoryType = CU_MEMORYTYPE_HOST;
+            memcpy_desc.srcHost = image.ptr();
+            return memcpy_desc;
+        }
 
+        void CUDATexture::copy_to(Dispatcher &dispatcher, const Image &image) const {
+            //todo
         }
 
         void CUDATexture::copy_to(Dispatcher &dispatcher, Buffer<> &buffer) const {
-
+            //todo
         }
 
         void CUDATexture::copy_from(Dispatcher &dispatcher, const Buffer<> &buffer) {
-
+            //todo
         }
 
         void CUDATexture::copy_to(const Image &image) const {
-
+            //todo
         }
 
         void CUDATexture::copy_to(Buffer<> &buffer) const {
-
+            //todo
         }
 
         void CUDATexture::copy_from(const Buffer<> &buffer) {
-
+            //todo
         }
 
         void CUDATexture::copy_from(Dispatcher &dispatcher, const Image &image) {
             auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-            CUDA_MEMCPY2D desc = memcpy_desc(image);
+            CUDA_MEMCPY2D desc = host_src_memcpy_desc(image);
             CU_CHECK(cuMemcpy2DAsync(&desc, stream));
         }
 
         void CUDATexture::copy_from(const Image &image) {
-            CUDA_MEMCPY2D desc = memcpy_desc(image);
+            CUDA_MEMCPY2D desc = host_src_memcpy_desc(image);
             CU_CHECK(cuMemcpy2D(&desc));
         }
 

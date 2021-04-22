@@ -57,6 +57,8 @@ namespace luminous {
                     return sizeof(float2);
                 case PixelFormat::RGBA32F:
                     return sizeof(float4);
+                default:
+                    return 0;
             }
         }
 

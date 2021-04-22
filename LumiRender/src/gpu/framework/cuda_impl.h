@@ -21,7 +21,9 @@ namespace luminous {
             CUarray _array_handle;
             CUsurfObject _surf_handle;
 
-            CUDA_MEMCPY2D memcpy_desc(const Image &image) const;
+            CUDA_MEMCPY2D common_memcpy_desc() const;
+
+            CUDA_MEMCPY2D host_src_memcpy_desc(const Image &image) const;
 
         public:
             CUDATexture(PixelFormat pixel_format, uint2 resolution);
