@@ -30,6 +30,8 @@ namespace luminous {
             virtual void upload_async(Dispatcher &dispatcher, const void *host_ptr,
                                       size_t size, size_t offset) = 0;
 
+            virtual void memset(uint32_t val) = 0;
+
             virtual void *address(size_t offset) const = 0;
 
             virtual size_t size() const = 0;
@@ -89,6 +91,11 @@ namespace luminous {
         auto address(size_t offset = 0) const {
             DCHECK(valid());
             return (U) _impl->address(offset * sizeof(value_type));
+        }
+
+        void memset(uint32_t val = 0) {
+            DCHECK(valid());
+            _impl->memset(val);
         }
 
         size_t size() const {

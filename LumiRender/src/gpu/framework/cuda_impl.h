@@ -30,6 +30,8 @@ namespace luminous {
 
             void init();
 
+            void * tex_handle() const;
+
             void copy_to(Dispatcher &dispatcher, const Image &image) const;
 
             void copy_to(Dispatcher &dispatcher, Buffer<> &buffer) const;
@@ -77,6 +79,8 @@ namespace luminous {
             size_t size() const override;
 
             void *address(size_t offset = 0) const override;
+
+            void memset(uint32_t val) override;
 
             void download_async(Dispatcher &dispatcher, void *host_ptr, size_t size, size_t offset) override;
 

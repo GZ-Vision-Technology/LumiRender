@@ -64,7 +64,7 @@ namespace luminous {
             tex_desc.addressMode[0] = CU_TR_ADDRESS_MODE_CLAMP;
             tex_desc.addressMode[1] = CU_TR_ADDRESS_MODE_CLAMP;
             tex_desc.addressMode[2] = CU_TR_ADDRESS_MODE_CLAMP;
-            tex_desc.filterMode =  CU_TR_FILTER_MODE_LINEAR;
+            tex_desc.filterMode = CU_TR_FILTER_MODE_LINEAR;
             tex_desc.flags = CU_TRSF_NORMALIZED_COORDINATES;
 
             res_view_desc.width = width();
@@ -125,6 +125,10 @@ namespace luminous {
             //todo
         }
 
+        void *CUDATexture::tex_handle() const {
+            return (void *) _tex_handle;
+        }
+
         void CUDATexture::copy_from(Dispatcher &dispatcher, const Image &image) {
             auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
             CUDA_MEMCPY2D desc = host_src_memcpy_desc(image);
@@ -179,6 +183,10 @@ namespace luminous {
 
         void *CUDABuffer::address(size_t offset) const {
             return (void *) (_ptr + offset);
+        }
+
+        void CUDABuffer::memset(uint32_t val) {
+            CU_CHECK(cuMemsetD32(_ptr, val, _size_in_bytes));
         }
 
         void CUDABuffer::download_async(Dispatcher &dispatcher, void *host_ptr, size_t size, size_t offset) {

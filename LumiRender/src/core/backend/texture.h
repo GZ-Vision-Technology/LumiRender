@@ -63,6 +63,8 @@ namespace luminous {
 
             virtual void copy_from(const Image &image) = 0;
 
+            virtual void *tex_handle() const = 0;
+
             virtual ~Impl() = default;
         };
 
@@ -107,6 +109,11 @@ namespace luminous {
 
         void copy_from(const Buffer<> &buffer) {
             _impl->copy_from(buffer);
+        }
+
+        template<typename T = void *>
+        T tex_handle() const {
+            return (T) _impl->tex_handle();
         }
 
     private:

@@ -73,9 +73,10 @@ namespace luminous {
                 if (tc.type == "ImageTexture<float4>") {
                     auto path = _context->scene_path() / tc.fn;
                     tc.fn = path.string();
-                    auto image = Image::load(tc.fn, SRGB);
+                    auto image = Image::load(tc.fn, tc.color_space);
                     auto texture = _device->allocate_texture(image.pixel_format(), image.resolution());
                     texture.copy_from(image);
+                    tc.handle = texture.tex_handle();
                     _texture_mgr.push_back(move(texture));
                 }
             }

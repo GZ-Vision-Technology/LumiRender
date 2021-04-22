@@ -192,6 +192,12 @@ namespace luminous {
             } else {
                 tc.fn = param["fn"].as_string();
             }
+            string color_space = param["color_space"].as_string("SRGB");
+            if (color_space == "SRGB") {
+                tc.color_space = SRGB;
+            } else {
+                tc.color_space = LINEAR;
+            }
             if constexpr (std::is_same_v<T, float>) {
                 tc.type = tc.type + "<float>";
             } else {

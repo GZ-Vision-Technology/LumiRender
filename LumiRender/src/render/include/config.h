@@ -7,6 +7,7 @@
 
 #include "graphics/math/common.h"
 #include "graphics/geometry/common.h"
+#include "graphics/optics/rgb.h"
 #include <string>
 #include "core/logging.h"
 
@@ -93,11 +94,12 @@ namespace luminous {
 
         template<typename T>
         struct TextureConfig : Config {
+            ColorSpace color_space;
             // for constant texture
             T val;
             // for image texture
             std::string fn;
-            void * handle;
+            void * handle{nullptr};
         };
 
         struct FilterConfig {
