@@ -4,6 +4,7 @@
 
 #include "parser.h"
 #include "parameter_set.h"
+#include "render/textures/texture.h"
 #include <iomanip>
 
 namespace luminous {
@@ -185,11 +186,12 @@ namespace luminous {
             std::string type;
             type = ps["type"].as_string("ConstantTexture");
             TextureConfig<T> tc;
-            tc.set_full_type(type);
             auto param = ps["param"];
             if (type == "ConstantTexture") {
+                tc.set_type(type_name<ConstantTexture<T>>());
                 tc.val = param["val"].template as<T>();
             } else {
+                tc.set_type(type_name<ImageTexture<T>>());
                 tc.fn = param["fn"].as_string();
             }
             string color_space = param["color_space"].as_string("SRGB");

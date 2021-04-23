@@ -3,7 +3,8 @@
 		{
 			"type" :"ConstantTexture",
 			"param": {
-				"val": 2
+				"val": 2,
+				"color_space": "LINEAR"
 			}
 		}
 	],

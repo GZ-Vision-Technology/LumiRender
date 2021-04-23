@@ -34,6 +34,14 @@
                                }
 #endif
 
+template<typename T>
+constexpr const char * type_name(T * ptr = nullptr) {
+    if (ptr == nullptr)
+        return typeid(T).name();
+    else
+        return typeid(*ptr).name();
+}
+
 #ifdef IS_GPU_CODE
     #define LUMINOUS_TO_STRING(...) LUMINOUS_ERROR("device not support to string");
 #else
