@@ -6,7 +6,8 @@
 #pragma once
 
 #include "distribution.h"
-#include "core/backend/device.h"
+#include "core/backend/managed.h"
+
 
 namespace luminous {
     inline namespace render {

@@ -49,7 +49,6 @@ namespace luminous {
         }
 
         bool valid() const {
-
 #ifdef DEBUG_BUILD
             if (_impl == nullptr)
                 std::cerr << "invalid buffer !!!" << std::endl;

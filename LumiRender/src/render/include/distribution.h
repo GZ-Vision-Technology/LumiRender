@@ -7,7 +7,6 @@
 
 #include "graphics/math/common.h"
 #include "core/backend/buffer_view.h"
-#include "core/backend/managed.h"
 
 
 namespace luminous {
