@@ -8,6 +8,7 @@
 #include "cuda.h"
 #include "graphics/math/common.h"
 #include "texture_base.h"
+#include "vector_types.h"
 
 namespace luminous {
     inline namespace render {
@@ -20,15 +21,19 @@ namespace luminous {
                     : _handle(handle) {}
 
             XPU T eval(const TextureEvalContext &tec) {
-                return T();
+                if constexpr (std::is_same_v<T, ::float4>) {
+                    return tex2D<::float4>(_handle, tec.uv[0], 1 - tec.uv[1]);
+                } else if constexpr (std::is_same_v<T, float>) {
+                    return tex2D<T>(_handle, tec.uv[0], 1 - tec.uv[1]);
+                }
             }
 
             std::string to_string() const {
-                LUMINOUS_TO_STRING("name: %s", name().c_str());
+                LUMINOUS_TO_STRING("name: %s", type_name(this));
             }
 
-            static ImageTexture <T> create(const TextureConfig <T> &config) {
-                return ImageTexture<T>((CUtexObject)config.handle);
+            static ImageTexture<T> create(const TextureConfig <T> &config) {
+                return ImageTexture<T>((CUtexObject) config.handle);
             }
         };
     }

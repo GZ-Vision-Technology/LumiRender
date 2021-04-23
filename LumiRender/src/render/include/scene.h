@@ -14,6 +14,7 @@
 #include "render/include/emission_distribution.h"
 #include "render/light_samplers/light_sampler.h"
 #include "render/textures/texture.h"
+#include "vector_types.h"
 
 namespace luminous {
     inline namespace render {
@@ -44,7 +45,7 @@ namespace luminous {
 
             // texture data
             Managed<Texture<float>> _texture_scalars;
-            Managed<Texture<float4>> _texture_vectors;
+            Managed<Texture<::float4>> _texture_vectors;
 
             // texture manage
             vector<DeviceTexture> _texture_mgr;

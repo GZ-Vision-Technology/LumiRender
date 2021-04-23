@@ -189,7 +189,7 @@ namespace luminous {
             auto param = ps["param"];
             if (type == "ConstantTexture") {
                 tc.set_type(type_name<ConstantTexture<T>>());
-                tc.val = param["val"].template as<T>();
+//                tc.val = param["val"].template as<T>();
             } else {
                 tc.set_type(type_name<ImageTexture<T>>());
                 tc.fn = param["fn"].as_string();
@@ -222,7 +222,7 @@ namespace luminous {
             scene_graph->light_configs = parse_lights(_data.value("lights", DataWrap()));
             scene_graph->light_sampler_config = parse_light_sampler(ParameterSet(_data["light_sampler"]));
             scene_graph->tex_scalar_configs = parse_textures<float>(_data["tex_scalars"]);
-            scene_graph->tex_vector_configs = parse_textures<float4>(_data["tex_vectors"]);
+            scene_graph->tex_vector_configs = parse_textures<::float4>(_data["tex_vectors"]);
             return scene_graph;
         }
     }

@@ -15,8 +15,8 @@ params;
 GLOBAL __raygen__rg() {
     using namespace luminous;
     luminous::uint2 pixel = getPixelCoords();
-    Sensor* camera = params.camera;
-    Film * film = camera->film();
+    Sensor *camera = params.camera;
+    Film *film = camera->film();
     Sampler sampler = *params.sampler;
     sampler.start_pixel_sample(pixel, params.frame_index, 0);
     auto ss = sampler.sensor_sample(pixel);
@@ -45,13 +45,21 @@ GLOBAL __miss__shadow() {
 }
 
 GLOBAL __closesthit__radiance() {
-
+    using namespace luminous;
     RadiancePRD *prd = getPRD();
     auto interaction = getInteraction(getInstanceId(), getPrimIdx(), getTriangleBarycentric());
     auto n = interaction.ns;
     n = (n + 1.f) / 2.f;
+    HitGroupData data = getSbtData<HitGroupData>();
+    auto tex = data.texture_vectors[0];
+
+    TextureEvalContext ctx;
+    ctx.uv = interaction.uv;
+
+
     prd->radiance = luminous::make_float3(1);
     prd->radiance = n;
+    prd->radiance = luminous::make_float3(1-tex.eval(ctx).x);
 
 }
 

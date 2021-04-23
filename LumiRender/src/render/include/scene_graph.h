@@ -11,6 +11,7 @@
 #include <memory>
 #include "core/context.h"
 #include "render/include/config.h"
+#include "vector_types.h"
 
 namespace luminous {
     using namespace std;
@@ -31,7 +32,7 @@ namespace luminous {
             vector<SP<const ModelInstance>> instance_list;
 
             vector<TextureConfig<float>> tex_scalar_configs;
-            vector<TextureConfig<float4>> tex_vector_configs;
+            vector<TextureConfig<::float4>> tex_vector_configs;
         private:
             bool is_contain(const string &key) {
                 return _key_to_idx.find(key) != _key_to_idx.end();

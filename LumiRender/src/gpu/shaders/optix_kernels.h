@@ -13,6 +13,7 @@
 #include "render/lights/shader_include.h"
 #include "render/include/distribution.h"
 #include "gpu/framework/optix_params.h"
+#include "render/textures/shader_include.h"
 
 struct RadiancePRD {
     luminous::Interaction interaction;

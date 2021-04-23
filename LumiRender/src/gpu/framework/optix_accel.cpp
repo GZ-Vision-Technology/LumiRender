@@ -221,6 +221,7 @@ namespace luminous {
                 p->data.emission_distributions = gpu_scene->_emission_distrib.emission_distributions.device_buffer_view();
 
                 p->data.texture_vectors = gpu_scene->_texture_vectors.device_buffer_view();
+                p->data.texture_scalars = gpu_scene->_texture_scalars.device_buffer_view();
             };
 
             _device_ptr_table.rg_record = _device->allocate_buffer<RayGenRecord>(1);
