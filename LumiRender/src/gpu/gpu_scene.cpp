@@ -74,6 +74,8 @@ namespace luminous {
         }
 
         void GPUScene::preload_textures(const SP<SceneGraph> &scene_graph) {
+            cout << "00000======= " << typeid(ConstantTexture<float4>).name()<< endl;
+            cout << "00000======= " << ConstantTexture<float4>::name()<< endl;
             for (auto &tc : scene_graph->tex_vector_configs) {
                 if (tc.type == "ImageTexture<float4>") {
                     auto path = _context->scene_path() / tc.fn;
@@ -84,7 +86,6 @@ namespace luminous {
                     tc.handle = texture.tex_handle();
                     _texture_mgr.push_back(move(texture));
                 }
-//                luminous::render::detail::create<Texture<float4>,TextureConfig<float4>,0>(tc);
 //                Texture<float4>::create(tc);
 //                _texture_vectors.push_back(Texture<float4>::create(tc));
             }

@@ -14,9 +14,9 @@ namespace luminous {
     inline namespace render {
         using lstd::Variant;
         template<typename T>
-        class Texture : public Variant<ConstantTexture<T>, GPUImageTexture<T>> {
-//        private:
-//            using Variant::Variant;
+        class Texture : public Variant<ConstantTexture<T>, ImageTexture<T>> {
+        private:
+            using Variant<ConstantTexture<T>, ImageTexture<T>>::Variant;
         public:
             using value_type = T;
 

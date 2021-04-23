@@ -12,14 +12,14 @@
 namespace luminous {
     inline namespace render {
         template<typename T>
-        class GPUImageTexture : public TextureBase {
+        class ImageTexture : public TextureBase {
         private:
             CUtexObject _handle{0};
         public:
-            GPUImageTexture(CUtexObject handle)
+            ImageTexture(CUtexObject handle)
                     : _handle(handle) {}
 
-            GEN_CLASS_NAME(GPUImageTexture<T>)
+            GEN_CLASS_NAME(ImageTexture<T>)
 
             XPU T eval(const TextureEvalContext &tec) {
                 return T();
@@ -29,8 +29,8 @@ namespace luminous {
                 LUMINOUS_TO_STRING("name: %s", name().c_str());
             }
 
-            static GPUImageTexture <T> create(const TextureConfig <T> &config) {
-                return GPUImageTexture<T>((CUtexObject)config.handle);
+            static ImageTexture <T> create(const TextureConfig <T> &config) {
+                return ImageTexture<T>((CUtexObject)config.handle);
             }
         };
     }
