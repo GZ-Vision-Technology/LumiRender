@@ -7,6 +7,7 @@
 
 #include "graphics/math/common.h"
 #include "core/backend/buffer_view.h"
+#include "render/textures/texture.h"
 
 namespace luminous {
     inline namespace render {
@@ -34,6 +35,7 @@ namespace luminous {
             BufferView<const float3> normals;
             BufferView<const float2> tex_coords;
             BufferView<const TriangleHandle> triangles;
+            BufferView<const Texture<float4>> texture_vectors;
 
             // light data
             const LightSampler *light_sampler;

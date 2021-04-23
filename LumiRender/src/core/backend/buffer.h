@@ -78,8 +78,7 @@ namespace luminous {
 
         template<typename U = void *>
         auto ptr() const {
-            DCHECK(valid());
-            return (U) _impl->ptr();
+            return (U) (_impl == nullptr ? nullptr: _impl->ptr());
         }
 
         BufferView <value_type> view(size_t offset = 0, size_t count = -1) const {
@@ -99,13 +98,11 @@ namespace luminous {
         }
 
         size_t size() const {
-            DCHECK(valid());
-            return _impl->size() / sizeof(value_type);
+            return size_in_bytes() / sizeof(value_type);
         }
 
         size_t size_in_bytes() const {
-            DCHECK(valid());
-            return _impl->size();
+            return _impl == nullptr ? 0 : _impl->size();
         }
 
         void download(std::remove_const_t<T> *host_ptr, size_t n_elements = -1, size_t offset = 0) {

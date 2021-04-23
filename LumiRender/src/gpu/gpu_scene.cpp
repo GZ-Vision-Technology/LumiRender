@@ -66,6 +66,11 @@ namespace luminous {
                 _light_sampler->set_lights(_lights.device_buffer_view());
                 _light_sampler.synchronize_to_gpu();
             }
+            {
+                // texture data
+                _texture_scalars.synchronize_to_gpu();
+                _texture_vectors.synchronize_to_gpu();
+            }
         }
 
         void GPUScene::init_accel() {
@@ -85,7 +90,7 @@ namespace luminous {
                     _texture_mgr.push_back(move(texture));
                 }
                 Texture<float4>::create(tc);
-                _texture_vectors.push_back(Texture<float4>::create(tc));
+//                _texture_vectors.push_back(Texture<float4>::create(tc));
             }
             for (auto &tc : scene_graph->tex_scalar_configs) {
                 if (tc.type() == type_name<ImageTexture<float>>()) {
