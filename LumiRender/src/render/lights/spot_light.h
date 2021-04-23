@@ -26,8 +26,6 @@
 //                      _cos_theta_i(cos(radians(theta_i))),
 //                      _cos_theta_o(cos(radians(theta_o))) {}
 //
-//            GEN_CLASS_NAME(SpotLight)
-//
 //            NDSC_XPU Interaction sample(float u, const HitGroupData *hit_group_data) const;
 //
 //            NDSC_XPU LightLiSample Li(LightLiSample lls) const;

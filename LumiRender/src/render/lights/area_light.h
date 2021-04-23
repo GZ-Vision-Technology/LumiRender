@@ -24,8 +24,6 @@ namespace luminous {
 
             NDSC_XPU float3 L(const Interaction &p_light, float3 w) const;
 
-            GEN_CLASS_NAME(AreaLight)
-
             NDSC_XPU LightLiSample Li(LightLiSample lls) const;
 
             NDSC_XPU Interaction sample(float u, const HitGroupData * hit_group_data) const;

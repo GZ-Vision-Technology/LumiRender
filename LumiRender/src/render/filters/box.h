@@ -15,8 +15,6 @@ namespace luminous {
         public:
             explicit BoxFilter(float2 r):FilterBase(r) {}
 
-            GEN_CLASS_NAME(BoxFilter)
-
             NDSC_XPU float evaluate(const float2 &p) const {
                 return (std::abs(p.x) <= _radius.x && std::abs(p.y) <= _radius.y) ? 1 : 0;
             }

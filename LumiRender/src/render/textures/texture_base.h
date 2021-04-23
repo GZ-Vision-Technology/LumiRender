@@ -42,11 +42,9 @@ namespace luminous {
             UVMapping2D(float su = 1, float sv = 1, float du = 0, float dv = 0)
                     : _su(su), _sv(sv), _du(du), _dv(dv) {}
 
-            GEN_CLASS_NAME(UVMapping2D)
-
             std::string to_string() const {
                 return string_printf("%s,su:%f, sv:%f,du:%f,dv:%f",
-                                     name(), _su, _sv, _du, _dv);
+                                     type_name(this), _su, _sv, _du, _dv);
             }
 
             XPU float2 map(TextureEvalContext ctx, float2 *dst_dx, float2 *dst_dy) const {

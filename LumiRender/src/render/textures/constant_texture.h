@@ -21,8 +21,6 @@ namespace luminous {
             ConstantTexture(T val)
                 :_val(val){}
 
-            GEN_CLASS_NAME(ConstantTexture<T>)
-
             XPU T eval(const TextureEvalContext &tec) {
                 return _val;
             }

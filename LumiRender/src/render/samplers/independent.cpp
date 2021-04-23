@@ -5,7 +5,7 @@
 
 #include "sampler.h"
 #include "independent.h"
-
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
@@ -27,7 +27,7 @@ namespace luminous {
         }
 
         std::string LCGSampler::to_string() const {
-            LUMINOUS_TO_STRING("%s:{spp=%d}", name().c_str(), spp())
+            LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
         }
 
         void PCGSampler::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
@@ -48,7 +48,7 @@ namespace luminous {
         }
 
         std::string PCGSampler::to_string() const {
-            LUMINOUS_TO_STRING("%s:{spp=%d}", name().c_str(), spp())
+            LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
         }
     }
 }

@@ -14,7 +14,20 @@
 namespace luminous {
     inline namespace render {
         struct Config {
-            std::string type;
+        protected:
+            std::string _type;
+        public:
+            void set_type(const std::string &type) {
+                _type = type;
+            }
+
+            void set_full_type(const std::string &type) {
+                _type = "class luminous::render::" + type;
+            }
+
+            const std::string &type() const {
+                return _type;
+            }
         };
 
         struct IntegratorConfig : Config {
@@ -50,20 +63,20 @@ namespace luminous {
             };
 
             Transform create() const {
-                if (type == "matrix4x4") {
+                if (type() == "matrix4x4") {
                     return Transform(mat4x4);
-                } else if (type == "trs") {
+                } else if (type() == "trs") {
                     auto tt = Transform::translation(t);
                     auto rr = Transform::rotation(make_float3(r), r.w);
                     auto ss = Transform::scale(s);
                     return tt * rr * ss;
-                } else if (type == "yaw_pitch") {
+                } else if (type() == "yaw_pitch") {
                     auto yaw_t = Transform::rotation_y(yaw);
                     auto pitch_t = Transform::rotation_x(pitch);
                     auto tt = Transform::translation(position);
                     return tt * pitch_t * yaw_t;
                 }
-                LUMINOUS_ERROR("unknown transform type ", type);
+                LUMINOUS_ERROR("unknown transform type ", type());
             }
         };
 
@@ -99,7 +112,7 @@ namespace luminous {
             T val;
             // for image texture
             std::string fn;
-            void * handle{nullptr};
+            void *handle{nullptr};
         };
 
         struct FilterConfig {

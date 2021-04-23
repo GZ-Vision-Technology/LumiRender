@@ -3,6 +3,7 @@
 //
 
 #include "point_light.h"
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
@@ -24,7 +25,7 @@ namespace luminous {
         std::string PointLight::to_string() const {
             LUMINOUS_TO_STRING("light Base : %s, name : %s ,intensity : %s",
                                  _to_string().c_str(),
-                                 name().c_str(),
+                                 type_name(this),
                                  _intensity.to_string().c_str());
         }
 

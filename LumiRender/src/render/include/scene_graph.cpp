@@ -13,7 +13,7 @@ namespace luminous {
         }
 
         string gen_key(const ShapeConfig sc) {
-            if (sc.type == "model") {
+            if (sc.type() == "model") {
                 return string_printf("%s_subdiv_%u", sc.fn.c_str(), sc.subdiv_level);
             } else {
                 return sc.name;
@@ -21,10 +21,10 @@ namespace luminous {
         }
 
         SP<Model> SceneGraph::create_shape(const ShapeConfig &config) {
-            if (config.type == "model") {
+            if (config.type() == "model") {
                 auto path = _context->scene_path() / config.fn;
                 return make_shared<Model>(path, config.subdiv_level);
-            } else if (config.type == "quad") {
+            } else if (config.type() == "quad") {
                 auto model = make_shared<Model>();
                 auto x = config.width / 2;
                 auto y = config.height / 2;

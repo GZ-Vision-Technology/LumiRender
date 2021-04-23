@@ -17,7 +17,7 @@ void test_sampler() {
 //    TASK_TAG("test_sampler");
     auto config = SamplerConfig();
     cout << string(typeid(PCGSampler).name()).c_str();
-    config.type = "PCGSampler";
+    config.set_full_type("PCGSampler");
     config.spp = 9;
     auto sampler = Sampler::create(config);
     cout << sampler.to_string() << endl;
@@ -32,21 +32,21 @@ void test_sampler() {
 
 void test_sensor() {
     SensorConfig config;
-    config.type = "PinholeCamera";
+    config.set_full_type("PinholeCamera");
     config.fov_y = 30;
     config.velocity = 20;
 
     TransformConfig tc;
-    tc.type = "yaw_pitch";
+    tc.set_type("yaw_pitch");
 
     tc.yaw = 20;
     tc.pitch = 15.6;
     tc.position = make_float3(2,3,5);
 
-//    cout <<tc.create().mat4x4().to_string() << endl;
 
     tc.mat4x4 = make_float4x4(1);
     config.transform_config = tc;
+    config.film_config.set_full_type("RGBFilm");
 
     auto camera = Sensor::create(config);
 
@@ -54,5 +54,5 @@ void test_sensor() {
 }
 
 int main() {
-    test_sampler();
+    test_sensor();
 }

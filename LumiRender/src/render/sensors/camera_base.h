@@ -9,6 +9,7 @@
 #include "graphics/geometry/common.h"
 #include "../films/film.h"
 #include "../samplers/sampler_base.h"
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {

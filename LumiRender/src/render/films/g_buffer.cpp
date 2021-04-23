@@ -3,6 +3,7 @@
 //
 
 #include "g_buffer.h"
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
@@ -12,7 +13,7 @@ namespace luminous {
         }
 
         std::string GBufferFilm::to_string() const {
-            LUMINOUS_TO_STRING("%s : {resolution :%s}", name().c_str(),
+            LUMINOUS_TO_STRING("%s : {resolution :%s}", type_name<GBufferFilm>(),
                                  _resolution.to_string().c_str());
         }
     }

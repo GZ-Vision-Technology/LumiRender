@@ -15,8 +15,6 @@ namespace luminous {
         public:
             explicit TriangleFilter(float2 r):FilterBase(r) {}
 
-            GEN_CLASS_NAME(TriangleFilter)
-
             // NDSC_XPU float evaluate(const float2 &p) const {
             //     return (std::abs(p.x) <= _radius.x && std::abs(p.y) <= _radius.y) ? 1 : 0;
             // }

@@ -13,7 +13,6 @@ namespace luminous {
 
         class PinholeCamera : public CameraBase {
         public:
-            GEN_CLASS_NAME(PinholeCamera)
 
             PinholeCamera(const float4x4 m, float fov_y, float velocity);
 

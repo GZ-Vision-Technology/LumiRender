@@ -19,8 +19,6 @@ namespace luminous {
             ImageTexture(CUtexObject handle)
                     : _handle(handle) {}
 
-            GEN_CLASS_NAME(ImageTexture<T>)
-
             XPU T eval(const TextureEvalContext &tec) {
                 return T();
             }

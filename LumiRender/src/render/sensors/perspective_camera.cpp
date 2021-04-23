@@ -6,6 +6,7 @@
 #pragma once
 
 #include "perspective_camera.h"
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
@@ -25,7 +26,7 @@ namespace luminous {
         }
 
         std::string PerspectiveCamera::to_string() const {
-            LUMINOUS_TO_STRING("%s:%s", name().c_str(), _to_string().c_str());
+            LUMINOUS_TO_STRING("%s:%s", type_name(this), _to_string().c_str());
         }
 
         PerspectiveCamera PerspectiveCamera::create(const SensorConfig &config) {

@@ -24,18 +24,13 @@
 #endif
 
 #ifdef IS_GPU_CODE
-#define GEN_CLASS_NAME(...) XPU static constexpr const char *name() { return #__VA_ARGS__; }
 #define GEN_NAME_FUNC NDSC_XPU const char *name() {             \
                                     LUMINOUS_VAR_DISPATCH(name);\
                                }
 #else
-#define GEN_CLASS_NAME(...)  XPU static std::string name() { \
-    std::string name = typeid(__VA_ARGS__).name();           \
-    return name.substr(name.find_last_of("::") + 1).c_str(); \
-}
 
 #define GEN_NAME_FUNC NDSC_XPU const std::string name() {       \
-                                    LUMINOUS_VAR_DISPATCH(name);\
+                                    return this->dispatch([&, this](auto &&self) { return type_name(&self); });\
                                }
 #endif
 
@@ -59,8 +54,8 @@
         }
 #endif
 
-#define GEN_NAME_AND_TO_STRING_FUNC GEN_NAME_FUNC\
-                                    GEN_TO_STRING_FUNC
+#define GEN_NAME_AND_TO_STRING_FUNC GEN_TO_STRING_FUNC
+
 #define XPU_INLINE XPU __forceinline
 
 #define GPU_INLINE GPU __forceinline

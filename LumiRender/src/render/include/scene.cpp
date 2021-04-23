@@ -77,7 +77,7 @@ namespace luminous {
                     if (!instance->emission.is_zero()) {
                         LightConfig lc;
                         lc.emission = instance->emission;
-                        lc.type = "AreaLight";
+                        lc.set_full_type("AreaLight");
                         lc.instance_idx = _inst_to_mesh_idx.size();
                         scene_graph->light_configs.push_back(lc);
                         MeshHandle &mesh_handle = _meshes[mesh->idx_in_meshes];

@@ -19,8 +19,6 @@ namespace luminous {
         public:
             PerspectiveCamera(const float4x4 m, float fov_y, float velocity);
 
-            GEN_CLASS_NAME(PerspectiveCamera)
-
             XPU float generate_ray(const SensorSample &ss, Ray *ray);
 
             NDSC std::string to_string() const;

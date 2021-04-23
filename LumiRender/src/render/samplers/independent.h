@@ -20,8 +20,6 @@ namespace luminous {
 
             XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
-            GEN_CLASS_NAME(LCGSampler)
-
             NDSC XPU float next_1d();
 
             NDSC XPU float2 next_2d();
@@ -37,8 +35,6 @@ namespace luminous {
             int _seed;
         public:
             XPU explicit PCGSampler(int spp = 1) : SamplerBase(spp) {}
-
-            GEN_CLASS_NAME(PCGSampler)
 
             XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 

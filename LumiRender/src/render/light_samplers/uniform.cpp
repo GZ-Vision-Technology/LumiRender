@@ -3,6 +3,7 @@
 //
 
 #include "uniform.h"
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
@@ -28,7 +29,7 @@ namespace luminous {
         }
 
         std::string UniformLightSampler::to_string() const {
-            LUMINOUS_TO_STRING("light sampler : %s",name().c_str());
+            LUMINOUS_TO_STRING("light sampler : %s",type_name(this));
         }
 
         UniformLightSampler UniformLightSampler::create(const LightSamplerConfig &config) {

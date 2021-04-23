@@ -3,6 +3,7 @@
 //
 
 #include "area_light.h"
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
@@ -54,7 +55,7 @@ namespace luminous {
         std::string AreaLight::to_string() const {
             LUMINOUS_TO_STRING("light Base : %s,name:%s, L : %s",
                                  _to_string().c_str(),
-                                 name().c_str(),
+                                 type_name(this),
                                  _L.to_string().c_str());
         }
 

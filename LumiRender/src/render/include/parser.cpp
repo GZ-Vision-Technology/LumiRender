@@ -36,11 +36,11 @@ namespace luminous {
         //				}
         TransformConfig parse_transform(const ParameterSet &ps) {
             TransformConfig ret;
-            ret.type = ps["type"].as_string("matrix4x4");
+            ret.set_type(ps["type"].as_string("matrix4x4"));
             auto param = ps["param"];
-            if (ret.type == "matrix4x4") {
+            if (ret.type() == "matrix4x4") {
                 ret.mat4x4 = param["matrix4x4"].as_float4x4();
-            } else if (ret.type == "trs") {
+            } else if (ret.type() == "trs") {
                 ret.t = param["t"].as_float3();
                 ret.r = param["r"].as_float4();
                 ret.s = param["s"].as_float3();
@@ -73,13 +73,13 @@ namespace luminous {
             ret.reserve(shapes.size());
             for (auto &shape : shapes) {
                 ShapeConfig shape_config;
-                shape_config.type = string(shape["type"]);
+                shape_config.set_type(string(shape["type"]));
                 shape_config.name = shape["name"];
                 ParameterSet param(shape["param"]);
-                if (shape_config.type == "model"){
+                if (shape_config.type() == "model"){
                     shape_config.subdiv_level = param["subdiv_level"].as_uint(0u);
                     shape_config.fn = param["fn"].as_string();
-                } else if (shape_config.type == "quad") {
+                } else if (shape_config.type() == "quad") {
                     shape_config.width = param["width"].as_float(1);
                     shape_config.height = param["height"].as_float(1);
                 }
@@ -101,14 +101,14 @@ namespace luminous {
         //	}
         SamplerConfig parse_sampler(const ParameterSet &ps) {
             SamplerConfig ret;
-            ret.type = ps["type"].as_string();
+            ret.set_full_type(ps["type"].as_string());
             ret.spp = ps["param"]["spp"].as_uint();
             return ret;
         }
 
         FilmConfig parse_film(const ParameterSet &ps) {
             FilmConfig fc;
-            fc.type = "RGBFilm";
+            fc.set_full_type("RGBFilm");
             ParameterSet param(ps["param"]);
             fc.resolution = param["resolution"].as_uint2(make_uint2(500, 500));
             fc.file_name = param["file_name"].as_string("luminous.png");
@@ -132,7 +132,7 @@ namespace luminous {
         //	},
         SensorConfig parse_sensor(const ParameterSet &ps) {
             SensorConfig ret;
-            ret.type = ps["type"].as_string();
+            ret.set_full_type(ps["type"].as_string());
             ParameterSet param(ps["param"]);
             ret.fov_y = param["fov_y"].as_float();
             ret.velocity = param["velocity"].as_float();
@@ -150,7 +150,7 @@ namespace luminous {
         //    }
         LightConfig parse_light(const ParameterSet &ps) {
             LightConfig ret;
-            ret.type = ps["type"].as_string("PointLight");
+            ret.set_full_type(ps["type"].as_string("PointLight"));
             ParameterSet param = ps["param"];
             ret.position = param["pos"].as_float3(make_float3(0.f));
             ret.intensity = param["intensity"].as_float3(make_float3(0.f));
@@ -172,7 +172,7 @@ namespace luminous {
 
         LightSamplerConfig parse_light_sampler(const ParameterSet &ps) {
             LightSamplerConfig ret;
-            ret.type = ps["type"].as_string("UniformLightSampler");
+            ret.set_full_type(ps["type"].as_string("UniformLightSampler"));
             return ret;
         }
 
@@ -185,7 +185,7 @@ namespace luminous {
             std::string type;
             type = ps["type"].as_string("ConstantTexture");
             TextureConfig<T> tc;
-            tc.type = type;
+            tc.set_full_type(type);
             auto param = ps["param"];
             if (type == "ConstantTexture") {
                 tc.val = param["val"].template as<T>();
@@ -198,11 +198,7 @@ namespace luminous {
             } else {
                 tc.color_space = LINEAR;
             }
-            if constexpr (std::is_same_v<T, float>) {
-                tc.type = tc.type + "<float>";
-            } else {
-                tc.type = tc.type + "<float4>";
-            }
+
             return tc;
         }
 
