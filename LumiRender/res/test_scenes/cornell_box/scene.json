@@ -19,7 +19,7 @@
 		{
 			"type" :"ImageTexture",
 			"param": {
-				"fn": "HelloWorld.png",
+				"fn": "png2exr.exr",
 				"color_space": "SRGB"
 			}
 		}

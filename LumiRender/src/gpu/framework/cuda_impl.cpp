@@ -15,9 +15,7 @@ namespace luminous {
 
         void CUDATexture::init() {
             CUDA_ARRAY_DESCRIPTOR array_desc{};
-            CUDA_RESOURCE_DESC res_desc{};
             CUDA_RESOURCE_VIEW_DESC res_view_desc{};
-            CUDA_TEXTURE_DESC tex_desc{};
             array_desc.Width = _resolution.x;
             array_desc.Height = _resolution.y;
             switch (_pixel_format) {
@@ -57,13 +55,16 @@ namespace luminous {
 
             CU_CHECK(cuArrayCreate(&_array_handle, &array_desc));
 
+            CUDA_RESOURCE_DESC res_desc{};
             res_desc.resType = CU_RESOURCE_TYPE_ARRAY;
             res_desc.res.array.hArray = _array_handle;
             res_desc.flags = 0;
-
+            CUDA_TEXTURE_DESC tex_desc{};
             tex_desc.addressMode[0] = CU_TR_ADDRESS_MODE_CLAMP;
             tex_desc.addressMode[1] = CU_TR_ADDRESS_MODE_CLAMP;
             tex_desc.addressMode[2] = CU_TR_ADDRESS_MODE_CLAMP;
+            tex_desc.maxAnisotropy = 2;
+            tex_desc.maxMipmapLevelClamp = 9;
             tex_desc.filterMode = CU_TR_FILTER_MODE_LINEAR;
             tex_desc.flags = CU_TRSF_NORMALIZED_COORDINATES;
 
@@ -71,13 +72,11 @@ namespace luminous {
             res_view_desc.height = height();
 
             CU_CHECK(cuTexObjectCreate(&_tex_handle, &res_desc, &tex_desc, &res_view_desc));
-            CU_CHECK(cuSurfObjectCreate(&_surf_handle, &res_desc));
         }
 
         CUDATexture::~CUDATexture() {
             CU_CHECK(cuArrayDestroy(_array_handle));
             CU_CHECK(cuTexObjectDestroy(_tex_handle));
-            CU_CHECK(cuSurfObjectDestroy(_surf_handle));
         }
 
         CUDA_MEMCPY2D CUDATexture::common_memcpy_desc() const {
