@@ -19,7 +19,7 @@ namespace luminous {
         private:
             CUtexObject _tex_handle;
             CUarray _array_handle;
-            CUDA_MEMCPY2D common_memcpy_desc() const;
+            CUDA_MEMCPY2D common_memcpy_from_desc() const;
 
             CUDA_MEMCPY2D host_src_memcpy_desc(const Image &image) const;
 
@@ -30,17 +30,11 @@ namespace luminous {
 
             void * tex_handle() const;
 
-            void copy_to(Dispatcher &dispatcher, const Image &image) const;
-
-            void copy_to(Dispatcher &dispatcher, Buffer<> &buffer) const;
-
             void copy_from(Dispatcher &dispatcher, const Buffer<> &buffer);
 
             void copy_from(Dispatcher &dispatcher, const Image &image);
 
-            void copy_to(const Image &image) const;
-
-            void copy_to(Buffer<> &buffer) const;
+            Image download() const;
 
             void copy_from(const Buffer<> &buffer);
 

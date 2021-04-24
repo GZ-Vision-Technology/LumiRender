@@ -59,8 +59,8 @@ GLOBAL __closesthit__radiance() {
 
     prd->radiance = luminous::make_float3(1);
     prd->radiance = n;
-    prd->radiance = luminous::make_float3(1-tex.eval(ctx).x);
-
+    prd->radiance = luminous::make_float3(tex.eval(ctx).x,tex.eval(ctx).y,tex.eval(ctx).z);
+    prd->radiance.print();
 }
 
 GLOBAL __closesthit__occlusion() {

@@ -80,7 +80,6 @@ namespace luminous {
 
         void GPUScene::preload_textures(const SP<SceneGraph> &scene_graph) {
             for (auto &tc : scene_graph->tex_vector_configs) {
-                cout << tc.type() << "----------------" << endl;
                 if (tc.type() == type_name<ImageTexture<::float4>>()) {
                     auto path = _context->scene_path() / tc.fn;
                     tc.fn = path.string();

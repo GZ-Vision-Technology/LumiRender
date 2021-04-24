@@ -14,8 +14,8 @@ int main() {
     auto path = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\HelloWorld.png)";
     auto path2 = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\png2exr.hdr)";
 
-    auto image = Image::load(path2, LINEAR);
-    image.save_image(path);
+    auto image = Image::load(path, LINEAR);
+    image.save_image(path2);
 
 //    auto [rgb, res] = load_image(path);
 //

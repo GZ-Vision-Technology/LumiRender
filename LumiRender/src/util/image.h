@@ -27,6 +27,8 @@ namespace luminous {
 
             Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res, const std::filesystem::path &path);
 
+            Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res);
+
             Image(Image &&other) noexcept;
 
             uint2 resolution() const { return _resolution; }

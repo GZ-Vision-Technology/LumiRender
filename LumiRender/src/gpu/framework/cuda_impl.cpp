@@ -79,7 +79,7 @@ namespace luminous {
             CU_CHECK(cuTexObjectDestroy(_tex_handle));
         }
 
-        CUDA_MEMCPY2D CUDATexture::common_memcpy_desc() const {
+        CUDA_MEMCPY2D CUDATexture::common_memcpy_from_desc() const {
             CUDA_MEMCPY2D memcpy_desc{};
             memcpy_desc.srcXInBytes = 0;
             memcpy_desc.srcY = 0;
@@ -94,38 +94,32 @@ namespace luminous {
         }
 
         CUDA_MEMCPY2D CUDATexture::host_src_memcpy_desc(const Image &image) const {
-            auto memcpy_desc = common_memcpy_desc();
+            auto memcpy_desc = common_memcpy_from_desc();
             memcpy_desc.srcMemoryType = CU_MEMORYTYPE_HOST;
             memcpy_desc.srcHost = image.ptr();
             return memcpy_desc;
         }
 
-        void CUDATexture::copy_to(Dispatcher &dispatcher, const Image &image) const {
-            //todo
-        }
-
-        void CUDATexture::copy_to(Dispatcher &dispatcher, Buffer<> &buffer) const {
-            //todo
-        }
-
-        void CUDATexture::copy_from(Dispatcher &dispatcher, const Buffer<> &buffer) {
-            //todo
-        }
-
-        void CUDATexture::copy_to(const Image &image) const {
-            //todo
-        }
-
-        void CUDATexture::copy_to(Buffer<> &buffer) const {
-            //todo
-        }
-
-        void CUDATexture::copy_from(const Buffer<> &buffer) {
-            //todo
-        }
-
         void *CUDATexture::tex_handle() const {
             return (void *) _tex_handle;
+        }
+
+        Image CUDATexture::download() const {
+            CUDA_MEMCPY2D memcpy_desc{};
+            std::byte *dest = new std::byte[size_in_bytes()];
+            memcpy_desc.srcMemoryType = CU_MEMORYTYPE_ARRAY;
+            memcpy_desc.srcArray = _array_handle;
+            memcpy_desc.srcXInBytes = 0;
+            memcpy_desc.srcY = 0;
+            memcpy_desc.dstMemoryType = CU_MEMORYTYPE_HOST;
+            memcpy_desc.dstHost = dest;
+            memcpy_desc.dstXInBytes = 0;
+            memcpy_desc.dstY = 0;
+            memcpy_desc.dstPitch = pitch_byte_size();
+            memcpy_desc.WidthInBytes = pitch_byte_size();
+            memcpy_desc.Height = height();
+            CU_CHECK(cuMemcpy2D(&memcpy_desc));
+            return Image(_pixel_format, dest, _resolution);
         }
 
         void CUDATexture::copy_from(Dispatcher &dispatcher, const Image &image) {

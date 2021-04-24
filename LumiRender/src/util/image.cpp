@@ -28,6 +28,12 @@ namespace luminous {
             _pixel.reset(pixel);
         }
 
+        Image::Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res)
+                : _pixel_format(pixel_format),
+                  _resolution(res) {
+            _pixel.reset(pixel);
+        }
+
         Image::Image(Image &&other) noexcept {
             _pixel_format = other._pixel_format;
             _resolution = other._resolution;
@@ -230,7 +236,8 @@ namespace luminous {
         void Image::save_hdr(const filesystem::path &path) {
             convert_to_32bit();
             auto path_str = std::filesystem::absolute(path).string();
-            stbi_write_hdr(path_str.c_str(), _resolution.x, _resolution.y, 4, reinterpret_cast<const float *>(_pixel.get()));
+            stbi_write_hdr(path_str.c_str(), _resolution.x, _resolution.y, 4,
+                           reinterpret_cast<const float *>(_pixel.get()));
         }
 
         void Image::save_exr(const filesystem::path &fn) {
@@ -285,7 +292,7 @@ namespace luminous {
             convert_to_8bit();
             if (extension == ".png") {
                 stbi_write_png(path_str.c_str(), _resolution.x, _resolution.y, 4, _pixel.get(), 0);
-            }else if (extension == ".bmp") {
+            } else if (extension == ".bmp") {
                 stbi_write_bmp(path_str.c_str(), _resolution.x, _resolution.y, 4, _pixel.get());
             } else if (extension == ".tga") {
                 stbi_write_tga(path_str.c_str(), _resolution.x, _resolution.y, 4, _pixel.get());
@@ -401,6 +408,7 @@ namespace luminous {
                    || _pixel_format == PixelFormat::RG32F
                    || _pixel_format == PixelFormat::RGBA32F;
         }
+
 
     }
 
