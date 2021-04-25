@@ -113,9 +113,9 @@ namespace luminous {
                 if constexpr (N == 2) {
                     if constexpr (std::is_same_v<T, float>) {
                         printf("%f,%f \n", Storage::x, Storage::y);
-                    } else if (std::is_same_v<T, int>) {
+                    } else if constexpr(std::is_same_v<T, int>) {
                         printf("%d,%d \n", Storage::x, Storage::y);
-                    } else if (std::is_same_v<T, uint>) {
+                    } else if constexpr(std::is_same_v<T, uint>) {
                         printf("%u,%u \n", Storage::x, Storage::y);
                     } else {
                         assert(0);
@@ -123,9 +123,9 @@ namespace luminous {
                 } else if constexpr (N == 3) {
                     if constexpr (std::is_same_v<T, float>) {
                         printf("%f,%f,%f \n", Storage::x, Storage::y, Storage::z);
-                    } else if (std::is_same_v<T, int>) {
+                    } else if constexpr(std::is_same_v<T, int>) {
                         printf("%d,%d,%d \n", Storage::x, Storage::y, Storage::z);
-                    } else if (std::is_same_v<T, uint>) {
+                    } else if constexpr(std::is_same_v<T, uint>) {
                         printf("%u,%u,%u \n", Storage::x, Storage::y, Storage::z);
                     } else {
                         assert(0);
@@ -133,9 +133,9 @@ namespace luminous {
                 } else {
                     if constexpr (std::is_same_v<T, float>) {
                         printf("%f,%f,%f,%f \n", Storage::x, Storage::y, Storage::z, Storage::w);
-                    } else if (std::is_same_v<T, int>) {
+                    } else if constexpr(std::is_same_v<T, int>) {
                         printf("%d,%d,%d,%d \n", Storage::x, Storage::y, Storage::z, Storage::w);
-                    } else if (std::is_same_v<T, uint>) {
+                    } else if constexpr(std::is_same_v<T, uint>) {
                         printf("%u,%u,%u,%u \n", Storage::x, Storage::y, Storage::z, Storage::w);
                     } else {
                         assert(0);
