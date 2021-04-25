@@ -10,6 +10,7 @@
 #include "graphics/optics/rgb.h"
 #include <string>
 #include "core/logging.h"
+#include "util/image_base.h"
 
 namespace luminous {
     inline namespace render {
@@ -112,6 +113,7 @@ namespace luminous {
             T val;
             // for image texture
             std::string fn;
+            PixelFormat pixel_format;
             void *handle{nullptr};
         };
 

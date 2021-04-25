@@ -79,7 +79,6 @@ namespace luminous {
         class TextureBase {
         protected:
             TextureMapping2D _mapping;
-            PixelFormat _pixel_format;
         public:
             void set_mapping(const TextureMapping2D &mapping) {
                 _mapping = mapping;

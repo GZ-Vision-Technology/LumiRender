@@ -42,6 +42,8 @@ namespace luminous {
 
         size_t pixel_num() const { return _impl->pixel_num(); }
 
+        PixelFormat pixel_format() const { return _impl->pixel_format(); }
+
         void copy_from(Dispatcher &dispatcher, const Image &image) {
             _impl->copy_from(dispatcher, image);
         }

@@ -87,6 +87,7 @@ namespace luminous {
                     auto texture = _device->allocate_texture(image.pixel_format(), image.resolution());
                     texture.copy_from(image);
                     tc.handle = texture.tex_handle();
+                    tc.pixel_format = texture.pixel_format();
                     _texture_mgr.push_back(move(texture));
                 }
                 _texture_vectors.push_back(Texture<float4>::create(tc));

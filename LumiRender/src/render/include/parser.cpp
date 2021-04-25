@@ -189,7 +189,7 @@ namespace luminous {
             auto param = ps["param"];
             if (type == "ConstantTexture") {
                 tc.set_type(type_name<ConstantTexture<T>>());
-//                tc.val = param["val"].template as<T>();
+                tc.val = param["val"].template as<T>();
             } else {
                 tc.set_type(type_name<ImageTexture<T>>());
                 tc.fn = param["fn"].as_string();
