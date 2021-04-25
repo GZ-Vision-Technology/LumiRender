@@ -22,21 +22,18 @@ namespace luminous {
     inline namespace utility {
 
         Image::Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res, const std::filesystem::path &path)
-                : _pixel_format(pixel_format),
-                  _resolution(res),
+                : ImageBase(pixel_format, res),
                   _path(path) {
             _pixel.reset(pixel);
         }
 
         Image::Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res)
-                : _pixel_format(pixel_format),
-                  _resolution(res) {
+                : ImageBase(pixel_format, res) {
             _pixel.reset(pixel);
         }
 
-        Image::Image(Image &&other) noexcept {
-            _pixel_format = other._pixel_format;
-            _resolution = other._resolution;
+        Image::Image(Image &&other) noexcept
+                : ImageBase(other._pixel_format, other._resolution) {
             _pixel = move(other._pixel);
         }
 
@@ -369,7 +366,7 @@ namespace luminous {
                 }
                 case PixelFormat::RG32F: {
                     using TargetType = uint8_t;
-                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType) * channels()];
+                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType) * channel_num()];
                     auto dest = (uint8_t *) pixel;
                     auto src = (float *) _pixel.get();
                     for (int i = 0; i < pixel_num(); ++i, dest += 2, src += 2) {

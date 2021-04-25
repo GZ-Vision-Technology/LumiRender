@@ -16,10 +16,8 @@ namespace luminous {
     inline namespace utility {
         using namespace std;
 
-        class Image : public Noncopyable {
+        class Image : public Noncopyable, public ImageBase {
         private:
-            PixelFormat _pixel_format;
-            uint2 _resolution;
             std::filesystem::path _path;
             std::unique_ptr<const std::byte[]> _pixel;
         public:
@@ -31,21 +29,11 @@ namespace luminous {
 
             Image(Image &&other) noexcept;
 
-            uint2 resolution() const { return _resolution; }
-
             const std::byte *ptr() const { return _pixel.get(); }
-
-            size_t size_in_bytes() const { return pixel_size(_pixel_format) * pixel_num() * channels(); }
-
-            size_t pixel_num() const { return _resolution.x * _resolution.y; }
 
             bool is_8bit() const;
 
             bool is_32bit() const;
-
-            PixelFormat pixel_format() const { return _pixel_format; }
-
-            int channels() const { return channel_num(_pixel_format); }
 
             static Image load(const filesystem::path &fn, ColorSpace color_space);
 

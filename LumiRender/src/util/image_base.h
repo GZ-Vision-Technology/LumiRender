@@ -72,10 +72,22 @@ namespace luminous {
         using PixelFormatImpl = detail::PixelFormatImpl<T>;
 
         class ImageBase {
-        private:
+        protected:
             PixelFormat _pixel_format;
             uint2 _resolution;
         public:
+            ImageBase(PixelFormat pixel_format, uint2 resolution)
+                    : _pixel_format(pixel_format),
+                      _resolution(resolution) {}
+
+
+            ImageBase(ImageBase &&other) noexcept {
+                _pixel_format = other._pixel_format;
+                _resolution = other._resolution;
+            }
+
+            ImageBase() = default;
+
             NDSC_XPU int channel_num() const { return utility::channel_num(_pixel_format); }
 
             uint2 resolution() const { return _resolution; }
