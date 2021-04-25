@@ -106,7 +106,7 @@ namespace luminous {
 
         Image CUDATexture::download() const {
             CUDA_MEMCPY2D memcpy_desc{};
-            std::byte *dest = new std::byte[size_in_bytes()];
+            auto dest = new std::byte[size_in_bytes()];
             memcpy_desc.srcMemoryType = CU_MEMORYTYPE_ARRAY;
             memcpy_desc.srcArray = _array_handle;
             memcpy_desc.srcXInBytes = 0;

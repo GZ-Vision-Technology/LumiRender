@@ -15,29 +15,10 @@ namespace luminous {
 
     class DeviceTexture {
     public:
-        class Impl {
-        protected:
-            PixelFormat _pixel_format;
-            uint2 _resolution;
+        class Impl : public ImageBase {
         public:
             Impl(PixelFormat pixel_format, uint2 resolution)
-                    : _pixel_format(pixel_format), _resolution(resolution) {}
-
-            size_t pitch_byte_size() const { return _resolution.x * pixel_size(_pixel_format); }
-
-            uint32_t width() const { return _resolution.x; }
-
-            uint32_t height() const { return _resolution.y; }
-
-            PixelFormat format() const { return _pixel_format; }
-
-            uint2 resolution() const { return _resolution; }
-
-            size_t pixel_num() const { return width() * height(); }
-
-            size_t size_in_bytes() const { return pixel_size(_pixel_format) * pixel_num() * channels(); }
-
-            int channels() const { return channel_num(_pixel_format); }
+                    : ImageBase(pixel_format, resolution) {}
 
             virtual void copy_from(Dispatcher &dispatcher, const Image &image) = 0;
 

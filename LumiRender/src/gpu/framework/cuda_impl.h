@@ -17,8 +17,8 @@ namespace luminous {
     inline namespace gpu {
         class CUDATexture : public DeviceTexture::Impl {
         private:
-            CUtexObject _tex_handle;
-            CUarray _array_handle;
+            CUtexObject _tex_handle{};
+            CUarray _array_handle{};
             CUDA_MEMCPY2D common_memcpy_from_desc() const;
 
             CUDA_MEMCPY2D host_src_memcpy_desc(const Image &image) const;
