@@ -201,9 +201,9 @@ namespace luminous {
             uint2 resolution = make_uint2(w, h);
             auto pixel = new std::byte[size_in_bytes];
             uint8_t *src = rgba;
-            auto dest = (uint8_t *) pixel;
+            auto dest = (uint32_t *) pixel;
             if (color_space == SRGB) {
-                for (int i = 0; i < pixel_num; ++i, src += 4, dest += 4) {
+                for (int i = 0; i < pixel_num; ++i, src += 4, dest += 1) {
                     float r = (float) src[0] / 255;
                     float g = (float) src[1] / 255;
                     float b = (float) src[2] / 255;

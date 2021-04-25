@@ -20,7 +20,7 @@
 			"type" :"ImageTexture",
 			"param": {
 				"fn": "HelloWorld.png",
-				"color_space": "SRGB"
+				"color_space": "LINEAR"
 			}
 		}
 	],
