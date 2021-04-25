@@ -9,7 +9,7 @@
 #include "render/include/interaction.h"
 #include "graphics/lstd/variant.h"
 #include "render/include/creator.h"
-#include "util/pixel_format.h"
+#include "util/image_base.h"
 
 namespace luminous {
     inline namespace render {

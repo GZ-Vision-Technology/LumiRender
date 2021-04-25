@@ -8,7 +8,7 @@
 #include "graphics/math/common.h"
 #include "graphics/optics/rgb.h"
 #include "core/concepts.h"
-#include "pixel_format.h"
+#include "image_base.h"
 #include <utility>
 
 
