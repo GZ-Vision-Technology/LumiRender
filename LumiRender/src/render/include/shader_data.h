@@ -38,7 +38,7 @@ namespace luminous {
             BufferView<const TriangleHandle> triangles;
 
             // texture data
-            BufferView<const Texture<::float4>> texture_vectors;
+            BufferView<const Texture<float4>> texture_vectors;
             BufferView<const Texture<float>> texture_scalars;
 
             // light data

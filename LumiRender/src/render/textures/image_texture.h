@@ -21,8 +21,9 @@ namespace luminous {
                     : _handle(handle) {}
 
             XPU T eval(const TextureEvalContext &tec) {
-                if constexpr (std::is_same_v<T, ::float4>) {
-                    return tex2D<::float4>(_handle, tec.uv[0], 1 - tec.uv[1]);
+                if constexpr (std::is_same_v<T, luminous::math::float4>) {
+                    ::float4 ret = tex2D<::float4>(_handle, tec.uv[0], 1 - tec.uv[1]);
+                    return make_float4(ret.x,ret.y,ret.z,ret.w);
                 } else if constexpr (std::is_same_v<T, float>) {
                     return tex2D<T>(_handle, tec.uv[0], 1 - tec.uv[1]);
                 }

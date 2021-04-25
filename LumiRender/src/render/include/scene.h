@@ -45,7 +45,7 @@ namespace luminous {
 
             // texture data
             Managed<Texture<float>> _texture_scalars;
-            Managed<Texture<::float4>> _texture_vectors;
+            Managed<Texture<float4>> _texture_vectors;
 
             // texture manage
             vector<DeviceTexture> _texture_mgr;
