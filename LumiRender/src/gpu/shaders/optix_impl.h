@@ -51,7 +51,7 @@ GLOBAL __closesthit__radiance() {
     auto n = interaction.ns;
     n = (n + 1.f) / 2.f;
     HitGroupData data = getSbtData<HitGroupData>();
-    auto tex = data.texture_vectors[0];
+    auto tex = data.texture_vectors[1];
 
     TextureEvalContext ctx;
     ctx.uv = interaction.uv;
@@ -60,7 +60,7 @@ GLOBAL __closesthit__radiance() {
     prd->radiance = luminous::make_float3(1);
     prd->radiance = n;
     prd->radiance = luminous::make_float3(tex.eval(ctx).x,tex.eval(ctx).y,tex.eval(ctx).z);
-    prd->radiance.print();
+//    prd->radiance.print();
 }
 
 GLOBAL __closesthit__occlusion() {

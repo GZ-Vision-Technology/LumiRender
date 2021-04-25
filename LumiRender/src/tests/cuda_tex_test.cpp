@@ -25,7 +25,7 @@ void test_tex_load() {
     auto device = create_cuda_device();
     auto dispatcher = device->new_dispatcher();
     auto path2 = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\png2exr.hdr)";
-    auto path3 = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\png2exr222.hdr)";
+    auto path3 = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\png2exr222.png)";
 
     auto image = Image::load(path2, LINEAR);
 
