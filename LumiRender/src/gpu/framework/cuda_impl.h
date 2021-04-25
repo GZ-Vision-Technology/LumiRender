@@ -30,13 +30,9 @@ namespace luminous {
 
             void * tex_handle() const;
 
-            void copy_from(Dispatcher &dispatcher, const Buffer<> &buffer);
-
             void copy_from(Dispatcher &dispatcher, const Image &image);
 
             Image download() const;
-
-            void copy_from(const Buffer<> &buffer);
 
             void copy_from(const Image &image);
 
