@@ -29,7 +29,7 @@ namespace luminous {
                             return make_float4(val.x, val.y, val.z, val.w);
                         }
                         case PixelFormat::RGBA8U: {
-                            ::uint4 val = tex2D<::uint4>(_handle, tec.uv[0], 1 - tec.uv[1]);
+                            ::uchar4 val = tex2D<::uchar4>(_handle, tec.uv[0], 1 - tec.uv[1]);
                             float4 ret = make_float4(val.x, val.y, val.z, val.w);
                             return ret / 255.f;
                         }
