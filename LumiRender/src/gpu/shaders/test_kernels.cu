@@ -129,8 +129,9 @@ extern "C" {
     }
 
     __global__ void test_tex_sample(CUtexObject handle, float u, float v) {
-        auto val = tex2D<::uchar4>(handle, u, v);
-        printf("%d,%d,%d,%d\n", (uint32_t)val.x,(uint32_t)val.y,(uint32_t)val.z,(uint32_t)val.w);
+        auto val = tex2D<::uchar>(handle, u, v);
+//        printf("%d,%d,%d,%d\n", (uint32_t)val.x,(uint32_t)val.y,(uint32_t)val.z,(uint32_t)val.w);
+        printf("tex2D :%u\n",(uint32_t)val);
     }
 
     __global__ void test_sampler2(Sampler *sh) {

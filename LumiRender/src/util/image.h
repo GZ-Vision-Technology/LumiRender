@@ -29,7 +29,8 @@ namespace luminous {
 
             Image(Image &&other) noexcept;
 
-            const std::byte *ptr() const { return _pixel.get(); }
+            template<typename T = std::byte>
+            const T *pixel_ptr() const { return reinterpret_cast<const T *>(_pixel.get()); }
 
             bool is_8bit() const;
 

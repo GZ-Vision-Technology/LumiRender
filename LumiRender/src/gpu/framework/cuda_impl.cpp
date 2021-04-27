@@ -15,39 +15,32 @@ namespace luminous {
 
         void CUDATexture::init() {
             CUDA_ARRAY_DESCRIPTOR array_desc{};
-            CUDA_RESOURCE_VIEW_DESC res_view_desc{};
             array_desc.Width = _resolution.x;
             array_desc.Height = _resolution.y;
             switch (_pixel_format) {
                 case PixelFormat::R8U:
                     array_desc.Format = CU_AD_FORMAT_UNSIGNED_INT8;
                     array_desc.NumChannels = 1;
-                    res_view_desc.format = CU_RES_VIEW_FORMAT_UINT_1X8;
                     break;
                 case PixelFormat::RG8U:
                     array_desc.Format = CU_AD_FORMAT_UNSIGNED_INT8;
                     array_desc.NumChannels = 2;
-                    res_view_desc.format = CU_RES_VIEW_FORMAT_UINT_2X8;
                     break;
                 case PixelFormat::RGBA8U:
                     array_desc.Format = CU_AD_FORMAT_UNSIGNED_INT8;
                     array_desc.NumChannels = 4;
-                    res_view_desc.format = CU_RES_VIEW_FORMAT_UINT_4X8;
                     break;
                 case PixelFormat::R32F:
                     array_desc.Format = CU_AD_FORMAT_FLOAT;
                     array_desc.NumChannels = 1;
-                    res_view_desc.format = CU_RES_VIEW_FORMAT_FLOAT_1X32;
                     break;
                 case PixelFormat::RG32F:
                     array_desc.Format = CU_AD_FORMAT_FLOAT;
                     array_desc.NumChannels = 2;
-                    res_view_desc.format = CU_RES_VIEW_FORMAT_FLOAT_2X32;
                     break;
                 case PixelFormat::RGBA32F:
                     array_desc.Format = CU_AD_FORMAT_FLOAT;
                     array_desc.NumChannels = 4;
-                    res_view_desc.format = CU_RES_VIEW_FORMAT_FLOAT_4X32;
                     break;
                 default:
                     break;
@@ -67,9 +60,6 @@ namespace luminous {
             tex_desc.maxMipmapLevelClamp = 9;
             tex_desc.filterMode = CU_TR_FILTER_MODE_POINT;
             tex_desc.flags = CU_TRSF_NORMALIZED_COORDINATES;
-
-            res_view_desc.width = width();
-            res_view_desc.height = height();
 
             CU_CHECK(cuTexObjectCreate(&_tex_handle, &res_desc, &tex_desc, nullptr));
         }
@@ -96,7 +86,7 @@ namespace luminous {
         CUDA_MEMCPY2D CUDATexture::host_src_memcpy_desc(const Image &image) const {
             auto memcpy_desc = common_memcpy_from_desc();
             memcpy_desc.srcMemoryType = CU_MEMORYTYPE_HOST;
-            memcpy_desc.srcHost = image.ptr();
+            memcpy_desc.srcHost = image.pixel_ptr();
             return memcpy_desc;
         }
 

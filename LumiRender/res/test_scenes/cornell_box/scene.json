@@ -19,7 +19,7 @@
 		{
 			"type" :"ImageTexture",
 			"param": {
-				"fn": "red.png",
+				"fn": "png2exr.exr",
 				"color_space": "LINEAR"
 			}
 		}
