@@ -13,13 +13,13 @@
 			"type" :"ConstantTexture",
 			"param": {
 				"val": [1,0,1,0],
-				"color_space": "LINEAR"
+				"color_space": "SRGB"
 			}
 		},
 		{
 			"type" :"ImageTexture",
 			"param": {
-				"fn": "HelloWorld.png",
+				"fn": "red.png",
 				"color_space": "LINEAR"
 			}
 		}

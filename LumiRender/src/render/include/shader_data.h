@@ -7,7 +7,6 @@
 
 #include "graphics/math/common.h"
 #include "core/backend/buffer_view.h"
-#include "render/textures/texture.h"
 #include "vector_types.h"
 
 namespace luminous {
@@ -23,6 +22,9 @@ namespace luminous {
 
         class LightSampler;
         class Distribution1D;
+
+        template<typename T>
+        class Texture;
 
         struct HitGroupData {
             // instance data

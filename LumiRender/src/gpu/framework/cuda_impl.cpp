@@ -65,13 +65,13 @@ namespace luminous {
             tex_desc.addressMode[2] = CU_TR_ADDRESS_MODE_CLAMP;
             tex_desc.maxAnisotropy = 2;
             tex_desc.maxMipmapLevelClamp = 9;
-            tex_desc.filterMode = CU_TR_FILTER_MODE_LINEAR;
+            tex_desc.filterMode = CU_TR_FILTER_MODE_POINT;
             tex_desc.flags = CU_TRSF_NORMALIZED_COORDINATES;
 
             res_view_desc.width = width();
             res_view_desc.height = height();
 
-            CU_CHECK(cuTexObjectCreate(&_tex_handle, &res_desc, &tex_desc, &res_view_desc));
+            CU_CHECK(cuTexObjectCreate(&_tex_handle, &res_desc, &tex_desc, nullptr));
         }
 
         CUDATexture::~CUDATexture() {

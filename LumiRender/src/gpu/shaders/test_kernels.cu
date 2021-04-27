@@ -11,6 +11,7 @@
 #include <iostream>
 #include "render/samplers/sampler.cpp"
 #include "render/samplers/independent.cpp"
+#include <cuda.h>
 //#include "render/samplers/sampler_handle.cpp"
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
@@ -125,6 +126,11 @@ extern "C" {
 //        printf("%f \n", s.next_1d());
 
         printf("%f \n", sh.next_1d());
+    }
+
+    __global__ void test_tex_sample(CUtexObject handle, float u, float v) {
+        auto val = tex2D<::uchar4>(handle, u, v);
+        printf("%d,%d,%d,%d\n", (uint32_t)val.x,(uint32_t)val.y,(uint32_t)val.z,(uint32_t)val.w);
     }
 
     __global__ void test_sampler2(Sampler *sh) {

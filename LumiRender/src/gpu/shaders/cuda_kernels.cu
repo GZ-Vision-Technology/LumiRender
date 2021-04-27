@@ -5,10 +5,10 @@
 
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-
+#include <cuda.h>
 #include <stdio.h>
 #include <iostream>
-
+test_tex_sample
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
 
@@ -21,6 +21,7 @@ __global__ void addKernel(int *c, const int *a, const int *b)
     c[i] = a[i] + b[i];
     printf("%d\n", c[i]);
 }
+
 
 // Helper function for using CUDA to add vectors in parallel.
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)

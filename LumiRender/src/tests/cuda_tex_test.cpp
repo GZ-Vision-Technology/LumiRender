@@ -21,24 +21,31 @@ using namespace std;
 
 extern "C" char ptxCode[];
 using namespace luminous;
-void test_tex_load() {
+void test_tex_load(luminous::uchar uc) {
     auto device = create_cuda_device();
     auto dispatcher = device->new_dispatcher();
-    auto path3 = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\png2exr.hdr)";
-    auto path2 = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\png2exr222.png)";
+    auto cudaModule = create_cuda_module(ptxCode);
+    auto kernel = cudaModule->get_kernel("test_tex_sample");
+    auto pixel = new luminous::uchar4[1];
+    *pixel = make_uchar4(uc);
+    printf("%d ", uint32_t(uc));
+    auto image2 = Image(luminous::utility::PixelFormat::RGBA8U, (byte*)pixel, make_uint2(1));
 
-    auto image = Image::load(path2, LINEAR);
+    auto texture = device->allocate_texture(image2.pixel_format(), image2.resolution());
+    texture.copy_from(image2);
 
-    auto texture = device->allocate_texture(image.pixel_format(), image.resolution());
-    texture.copy_from(image);
-
-    auto image2 = texture.download();
-
-    image2.save_image(path3);
-
+    auto handle = texture.tex_handle<CUtexObject>();
+    float u = 0;
+    float v = 0;
+    kernel->configure(make_uint3(1),make_uint3(1));
+    kernel->launch(dispatcher, {&handle,&u,&v});
+    dispatcher.wait();
 }
 
 int main() {
-    test_tex_load();
+    for (int i = 0; i < 256; ++i) {
+        test_tex_load(i);
+    }
+    
     return 0;
 }
