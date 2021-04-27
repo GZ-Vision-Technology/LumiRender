@@ -19,6 +19,7 @@ namespace luminous {
         private:
             CUtexObject _tex_handle{};
             CUarray _array_handle{};
+            CUsurfObject _surface_handle{};
             CUDA_MEMCPY2D common_memcpy_from_desc() const;
 
             CUDA_MEMCPY2D host_src_memcpy_desc(const Image &image) const;

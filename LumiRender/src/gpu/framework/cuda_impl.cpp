@@ -60,13 +60,14 @@ namespace luminous {
             tex_desc.maxMipmapLevelClamp = 9;
             tex_desc.filterMode = CU_TR_FILTER_MODE_POINT;
             tex_desc.flags = CU_TRSF_NORMALIZED_COORDINATES;
-
+            CU_CHECK(cuSurfObjectCreate(&_surface_handle, &res_desc));
             CU_CHECK(cuTexObjectCreate(&_tex_handle, &res_desc, &tex_desc, nullptr));
         }
 
         CUDATexture::~CUDATexture() {
             CU_CHECK(cuArrayDestroy(_array_handle));
             CU_CHECK(cuTexObjectDestroy(_tex_handle));
+            CU_CHECK(cuSurfObjectDestroy(_surface_handle));
         }
 
         CUDA_MEMCPY2D CUDATexture::common_memcpy_from_desc() const {
