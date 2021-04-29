@@ -14,9 +14,9 @@ namespace luminous {
         public:
             UniformLightSampler() = default;
 
-            NDSC_XPU SampledLight sample(float u) const;
+            NDSC_XPU lstd::optional<SampledLight> sample(float u) const;
 
-            NDSC_XPU SampledLight sample(const LightSampleContext &ctx, float u) const;
+            NDSC_XPU lstd::optional<SampledLight> sample(const LightSampleContext &ctx, float u) const;
 
             NDSC_XPU float PMF(const Light &light) const;
 

@@ -14,21 +14,50 @@ namespace luminous {
 
         class IdealDiffuse {
         private:
-            float4 _R;
+            float4 _R = make_float4(-1.f);
+            NDSC_XPU float4 _eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const {
+                return _R * constant::invPi;
+            }
+
+            NDSC_XPU bool valid() const {
+                return any(_R != make_float4(-1.f));
+            }
+
         public:
             IdealDiffuse() = default;
 
             IdealDiffuse(float4 R) : _R(R) {}
 
-            XPU float4 eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const {
-                return same_hemisphere(wo, wi) ? _R * constant::invPi : make_float4(0.f);
+            NDSC_XPU float4 eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const {
+                return same_hemisphere(wo, wi) ? _eval(wo, wi) : make_float4(0.f);
             }
 
-            XPU float PDF(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance,
-                          BxDFReflTransFlags sampleFlags = BxDFReflTransFlags::All) const {
+            NDSC_XPU float PDF(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance,
+                          BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
                 return cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
             }
-        };
 
+            NDSC_XPU lstd::optional<BSDFSample> sample(float3 wo, float2 u, TransportMode mode = TransportMode::Radiance,
+                                                  BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
+                if (!(sample_flags & BxDFReflTransFlags::Reflection)) {
+                    return {};
+                }
+                float3 wi = square_to_cosine_hemisphere(u);
+                if (wo.z < 0) {
+                    wi.z *= -1;
+                }
+                float PDF = cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
+                float4 f = _eval(wo,wi,mode);
+                return BSDFSample(f, wi, PDF, BxDFFlags::Reflection);
+            }
+
+            NDSC_XPU BxDFFlags flags() const {
+                return valid() ? BxDFFlags::DiffuseReflection : BxDFFlags::Unset;
+            }
+
+            NDSC std::string to_string() const {
+                LUMINOUS_TO_STRING("IdealDiffuse R : %s", _R.to_string().c_str());
+            }
+        };
     } // luminous::render
 } //luminous

@@ -8,6 +8,7 @@
 #include "graphics/math/common.h"
 #include "graphics/sampling/warp.h"
 #include "graphics/geometry/common.h"
+#include "graphics/lstd/lstd.h"
 
 namespace luminous {
     inline namespace render {
@@ -53,6 +54,14 @@ namespace luminous {
             return ((int) a & (int) b);
         }
 
+        NDSC_XPU_INLINE int operator&(BxDFReflTransFlags a, BxDFFlags b) {
+            return ((int) a & (int) b);
+        }
+
+        NDSC_XPU_INLINE int operator&(BxDFReflTransFlags a, BxDFReflTransFlags b) {
+            return ((int) a & (int) b);
+        }
+
         NDSC_XPU_INLINE BxDFFlags &operator|=(BxDFFlags &a, BxDFFlags b) {
             (int &) a |= int(b);
             return a;
@@ -79,11 +88,16 @@ namespace luminous {
         }
 
         struct BSDFSample {
-            float4 val;
+            float4 f_val;
             float3 wi;
             float PDF;
             BxDFFlags flags;
             float eta = 1;
+
+            BSDFSample() = default;
+
+            BSDFSample(float4 val, float3 wi_, float PDF_, BxDFFlags flags_, float eta_ = 1)
+                    : f_val(val), wi(wi_), PDF(PDF_), flags(flags_), eta(eta_) {}
 
             NDSC_XPU bool is_reflective(BxDFFlags f) {
                 return luminous::is_reflective(f);

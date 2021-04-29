@@ -16,11 +16,11 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(light_num);
         }
 
-        SampledLight LightSampler::sample(float u) const {
+        lstd::optional<SampledLight> LightSampler::sample(float u) const {
             LUMINOUS_VAR_DISPATCH(sample, u);
         }
 
-        SampledLight LightSampler::sample(const LightSampleContext &ctx, float u) const {
+        lstd::optional<SampledLight> LightSampler::sample(const LightSampleContext &ctx, float u) const {
             LUMINOUS_VAR_DISPATCH(sample, ctx, u);
         }
 

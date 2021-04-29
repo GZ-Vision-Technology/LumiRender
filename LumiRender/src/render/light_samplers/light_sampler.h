@@ -9,12 +9,12 @@
 #include "power.h"
 #include "bvh.h"
 #include "graphics/lstd/lstd.h"
-
+#include "render/bxdfs/bxdf.h"
 namespace luminous {
     inline namespace render {
 
         using lstd::Variant;
-
+        using lstd::optional;
         class LightSampler : public Variant<UniformLightSampler> {
         public:
             using Variant::Variant;
@@ -29,9 +29,9 @@ namespace luminous {
 
             NDSC_XPU size_t light_num();
 
-            NDSC_XPU SampledLight sample(float u) const;
+            NDSC_XPU lstd::optional<SampledLight> sample(float u) const;
 
-            NDSC_XPU SampledLight sample(const LightSampleContext &ctx, float u) const;
+            NDSC_XPU lstd::optional<SampledLight> sample(const LightSampleContext &ctx, float u) const;
 
             NDSC_XPU float PMF(const Light &light) const;
 

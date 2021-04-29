@@ -14,7 +14,8 @@ namespace luminous {
     inline namespace render {
         template<typename T>
         class ImageTexture : public TextureBase {
-            static_assert(std::is_same_v<T, luminous::math::float4> || std::is_same_v<T, float>, "T must be float4 or float!");
+            static_assert(std::is_same_v<T, luminous::math::float4> || std::is_same_v<T, float>,
+                          "T must be float4 or float!");
         private:
             PixelFormat _pixel_format;
             CUtexObject _handle{0};
@@ -24,21 +25,8 @@ namespace luminous {
 
             XPU T eval(const TextureEvalContext &tec) {
                 if constexpr (std::is_same_v<T, luminous::math::float4>) {
-                    switch (_pixel_format) {
-                        case PixelFormat::RGBA32F: {
-                            ::float4 val = tex2D<::float4>(_handle, tec.uv[0], 1 - tec.uv[1]);
-                            return make_float4(val.x, val.y, val.z, val.w);
-                        }
-                        case PixelFormat::RGBA8U: {
-                            // todo
-                            ::float4 val = tex2D<::float4>(_handle, tec.uv[0], 1 - tec.uv[1]);
-                            return make_float4(val.x, val.y, val.z, val.w);
-                        }
-                        default:
-                            break;
-                    }
-                    DCHECK(false);
-                    return T();
+                    ::float4 val = tex2D<::float4>(_handle, tec.uv[0], 1 - tec.uv[1]);
+                    return make_float4(val.x, val.y, val.z, val.w);
                 } else if constexpr (std::is_same_v<T, float>) {
                     return tex2D<T>(_handle, tec.uv[0], 1 - tec.uv[1]);
                 } else {
