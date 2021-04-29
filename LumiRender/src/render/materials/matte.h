@@ -4,3 +4,14 @@
 
 
 #pragma once
+
+#include "render/textures/texture.h"
+
+namespace luminous {
+    inline namespace render {
+        class MatteMaterial {
+        private:
+            Texture<float4> 
+        };
+    }
+}
