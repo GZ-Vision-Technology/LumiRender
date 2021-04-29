@@ -29,11 +29,12 @@ void test_tex_load() {
     auto kernel = cudaModule->get_kernel("test_tex_sample");
 
     for (int i = 0; i < 255; ++i) {
-        auto pixel = new luminous::uchar[1];
+        auto pixel = new luminous::uchar[2];
         uchar uc = i;
-        *pixel = uc;
+        pixel[0] = uc;
+        pixel[1] = 1;
         printf("origin val :%d, ", uint32_t(uc));
-        auto image2 = Image(luminous::utility::PixelFormat::R8U, (byte *) pixel, make_uint2(1));
+        auto image2 = Image(luminous::utility::PixelFormat::R8U, (byte *) pixel, luminous::make_uint2(2u,1u));
 
         auto texture = device->allocate_texture(image2.pixel_format(), image2.resolution());
         texture.copy_from(image2);
@@ -41,7 +42,7 @@ void test_tex_load() {
         auto img = texture.download();
         cout << " download val:" << uint(*img.pixel_ptr<decltype(uc)>()) << "  ";
         auto handle = texture.tex_handle<CUtexObject>();
-        float u = 0;
+        float u = 1;
         float v = 0;
         kernel->configure(make_uint3(1), make_uint3(1));
         kernel->launch(dispatcher, {&handle, &u, &v});
