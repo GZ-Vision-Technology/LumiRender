@@ -33,15 +33,16 @@ namespace lstd {
     }
 
     inline constexpr size_t max(size_t a, size_t b) { return a < b ? b : a; }
-    template <typename T1, typename T2>
+
+    template<typename T1, typename T2>
     struct alignas(max(alignof(T1), alignof(T2))) pair {
         T1 first;
         T2 second;
     };
-    template <typename T1, typename T2>
+    template<typename T1, typename T2>
     pair(T1 &&, T2 &&) -> pair<T1, T2>;
 
-    template <typename T1, typename T2>
+    template<typename T1, typename T2>
     XPU pair<T1, T2> make_pair(T1 a, T2 b) {
         return pair<T1, T2>{a, b};
     }
@@ -66,6 +67,13 @@ namespace lstd {
 
     template<typename T>
     class optional {
+    private:
+        XPU T *ptr() { return reinterpret_cast<T *>(&_optional_value); }
+
+        XPU const T *ptr() const { return reinterpret_cast<const T *>(&_optional_value); }
+
+        std::aligned_storage_t<sizeof(T), alignof(T)> _optional_value;
+        bool set = false;
     public:
         using value_type = T;
         XPU optional(nullopt_t) : optional() {}
@@ -77,8 +85,7 @@ namespace lstd {
         XPU optional(T &&v) : set(true) { new(ptr()) T(std::move(v)); }
 
         XPU optional(const optional &v) : set(v.has_value()) {
-            if (v.has_value())
-                new(ptr()) T(v.value());
+            if (v.has_value()) { new(ptr()) T(v.value()); }
         }
 
         XPU optional(optional &&v) : set(v.has_value()) {
@@ -112,7 +119,7 @@ namespace lstd {
         }
 
         template<typename... Ts>
-        CPU void emplace(Ts &&...args) {
+        XPU void emplace(Ts &&...args) {
             reset();
             new(ptr()) T(std::forward<Ts>(args)...);
             set = true;
@@ -160,15 +167,6 @@ namespace lstd {
         }
 
         XPU bool has_value() const { return set; }
-
-    private:
-
-        XPU T *ptr() { return reinterpret_cast<T *>(&_optional_value); }
-
-        XPU const T *ptr() const { return reinterpret_cast<const T *>(&_optional_value); }
-
-        std::aligned_storage_t<sizeof(T), alignof(T)> _optional_value;
-        bool set = false;
     };
 
     template<typename T, int N>
@@ -219,6 +217,8 @@ namespace lstd {
 
     template<typename T, int N>
     class array {
+    private:
+        T values[N] = {};
     public:
         using value_type = T;
         using iterator = value_type *;
@@ -234,14 +234,15 @@ namespace lstd {
         }
 
         XPU void fill(const T &v) {
-            for (int i = 0; i < N; ++i)
-                values[i] = v;
+            for (int i = 0; i < N; ++i) { values[i] = v; }
         }
 
         XPU bool operator==(const array<T, N> &a) const {
-            for (int i = 0; i < N; ++i)
-                if (values[i] != a.values[i])
+            for (int i = 0; i < N; ++i) {
+                if (values[i] != a.values[i]) {
                     return false;
+                }
+            }
             return true;
         }
 
@@ -265,8 +266,6 @@ namespace lstd {
 
         XPU const T *data() const { return values; }
 
-    private:
-        T values[N] = {};
     };
 
 } // lstd

@@ -12,9 +12,10 @@ namespace luminous {
     inline namespace render {
 
         using lstd::Variant;
-        class BXDF : public Variant<IdealDiffuse> {
+        class BxDF : public Variant<IdealDiffuse> {
             using Variant::Variant;
         public:
+
         };
 
     }

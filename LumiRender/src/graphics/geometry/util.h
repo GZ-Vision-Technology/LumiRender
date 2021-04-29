@@ -9,6 +9,11 @@
 
 namespace luminous {
     inline namespace geometry {
+
+        NDSC_XPU_INLINE bool same_hemisphere(float3 w1, float3 w2) {
+            return w1.z * w2.z > 0;
+        }
+
         struct alignas(16) Ray {
         public:
             float org_x{0.f};

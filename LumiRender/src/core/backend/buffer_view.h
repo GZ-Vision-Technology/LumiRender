@@ -35,9 +35,9 @@ namespace luminous {
 
         NDSC_XPU iterator end() { return _ptr + _num; }
 
-        NDSC_XPU const_iterator c_begin() const { return _ptr; }
+        NDSC_XPU const_iterator cbegin() const { return _ptr; }
 
-        NDSC_XPU const_iterator c_end() const { return _ptr + _num; }
+        NDSC_XPU const_iterator cend() const { return _ptr + _num; }
 
         template<typename Index>
         NDSC_XPU T &operator[](Index i) {
