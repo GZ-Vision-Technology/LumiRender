@@ -32,17 +32,18 @@ void test_tex_load() {
         auto pixel = new luminous::uchar[2];
         uchar uc = i;
         pixel[0] = uc;
-        pixel[1] = 1;
-        printf("origin val :%d, ", uint32_t(uc));
+        pixel[1] = 256 - uc;
+        printf("origin val :%d, con f %f", uint32_t(uc));
         auto image2 = Image(luminous::utility::PixelFormat::R8U, (byte *) pixel, luminous::make_uint2(2u,1u));
 
         auto texture = device->allocate_texture(image2.pixel_format(), image2.resolution());
         texture.copy_from(image2);
 
         auto img = texture.download();
-        cout << " download val:" << uint(*img.pixel_ptr<decltype(uc)>()) << "  ";
+        cout << " download val0:" << uint(img.pixel_ptr<decltype(uc)>()[0]) << "  ";
+        cout << " download val1:" << uint(img.pixel_ptr<decltype(uc)>()[1]) << "  ";
         auto handle = texture.tex_handle<CUtexObject>();
-        float u = 1;
+        float u = 0.499;
         float v = 0;
         kernel->configure(make_uint3(1), make_uint3(1));
         kernel->launch(dispatcher, {&handle, &u, &v});

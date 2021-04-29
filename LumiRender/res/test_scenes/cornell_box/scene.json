@@ -19,7 +19,8 @@
 		{
 			"type" :"ImageTexture",
 			"param": {
-				"fn": "png2exr.exr",
+//				"fn": "png2exr.exr",
+				"fn": "HelloWorld.png",
 				"color_space": "LINEAR"
 			}
 		}
