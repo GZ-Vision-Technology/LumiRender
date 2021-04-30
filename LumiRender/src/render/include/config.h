@@ -38,10 +38,6 @@ namespace luminous {
             uint spp{};
         };
 
-        struct MaterialConfig : Config {
-
-        };
-
         struct TransformConfig : Config {
             TransformConfig() {}
 
@@ -117,7 +113,11 @@ namespace luminous {
             void *handle{nullptr};
         };
 
-        struct FilterConfig {
+        struct MaterialConfig : Config {
+            TextureConfig<float4> tex1;
+        };
+
+        struct FilterConfig : Config {
             float2 radius;
         };
 

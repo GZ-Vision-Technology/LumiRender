@@ -9,6 +9,7 @@
 #include <vector>
 #include "core/concepts.h"
 #include "interaction.h"
+#include "config.h"
 
 namespace luminous {
 
@@ -46,6 +47,7 @@ namespace luminous {
             Model() {}
 
             vector<std::shared_ptr<const Mesh>> meshes;
+            vector<MaterialConfig> materials;
             string key;
         };
 

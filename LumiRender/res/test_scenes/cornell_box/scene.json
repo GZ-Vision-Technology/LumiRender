@@ -115,7 +115,7 @@
 			"name" : "c_box",
 			"type": "model",
 			"param" : {
-				"fn": "teapot.obj",
+				"fn": "nanosuit/nanosuit.obj",
 				"subdiv_level": 0,
 				"transform" : {
 					"type" : "matrix4x4",

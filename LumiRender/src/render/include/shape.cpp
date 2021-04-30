@@ -43,6 +43,9 @@ namespace luminous {
             } else {
                 std::copy(ai_scene->mMeshes, ai_scene->mMeshes + ai_scene->mNumMeshes, ai_meshes.begin());
             }
+            vector<aiMaterial*> ai_materials(ai_scene->mNumMaterials);
+            std::copy(ai_scene->mMaterials, ai_scene->mMaterials + ai_scene->mNumMaterials, ai_materials.begin());
+
 
             meshes.reserve(ai_meshes.size());
             for (auto ai_mesh : ai_meshes) {
