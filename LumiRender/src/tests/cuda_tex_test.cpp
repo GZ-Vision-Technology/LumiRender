@@ -13,7 +13,7 @@
 #include <driver_types.h>
 #include "gpu/framework/cuda_impl.h"
 #include "core/backend/managed.h"
-
+#include "util/clock.h"
 #include "render/samplers/sampler.h"
 #include "util/image.h"
 
@@ -52,7 +52,9 @@ void test_tex_load() {
 }
 
 int main() {
-    test_tex_load();
 
+    Clock clock;
+    test_tex_load();
+    std::cout<< clock.toc();
     return 0;
 }

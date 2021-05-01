@@ -4,7 +4,7 @@
 
 #include "scene.h"
 #include "render/include/distribution.h"
-
+#include "util/stats.h"
 namespace luminous {
     inline namespace render {
 

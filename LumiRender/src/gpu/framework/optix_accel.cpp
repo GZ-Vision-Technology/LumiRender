@@ -8,6 +8,7 @@
 #include <optix_stubs.h>
 #include "../gpu_scene.h"
 #include "render/include/shader_data.h"
+#include "util/stats.h"
 
 extern "C" char optix_shader_code[];
 

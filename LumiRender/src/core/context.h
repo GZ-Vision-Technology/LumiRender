@@ -8,7 +8,6 @@
 #include <map>
 
 #include <cxxopts.hpp>
-#include "stats.h"
 #include <core/concepts.h>
 #include <core/platform.h>
 
