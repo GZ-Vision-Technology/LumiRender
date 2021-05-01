@@ -11,6 +11,10 @@
 namespace luminous {
     inline namespace render {
 
+        void process_materials(const aiScene *ai_scene, Model *model) {
+
+        }
+
         Model::Model(const std::filesystem::path &path, uint subdiv_level) {
             Assimp::Importer ai_importer;
             ai_importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
@@ -46,6 +50,8 @@ namespace luminous {
             }
             vector<aiMaterial*> ai_materials(ai_scene->mNumMaterials);
             std::copy(ai_scene->mMaterials, ai_scene->mMaterials + ai_scene->mNumMaterials, ai_materials.begin());
+
+            process_materials(ai_scene, this);
 
             meshes.reserve(ai_meshes.size());
             for (auto ai_mesh : ai_meshes) {

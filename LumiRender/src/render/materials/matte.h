@@ -11,7 +11,7 @@ namespace luminous {
     inline namespace render {
         class MatteMaterial {
         private:
-            Texture<float4> _reflectance;
+            index_t _R;
         public:
 
         };
