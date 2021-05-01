@@ -16,7 +16,9 @@ namespace luminous {
         class Material : public Variant<MatteMaterial, AssimpMaterial> {
             using Variant::Variant;
         public:
-
+            NDSC_XPU BSDF get_BSDF(TextureEvalContext tec, const HitGroupData* hit_group_data) {
+                LUMINOUS_VAR_DISPATCH(get_BSDF, tec, hit_group_data)
+            }
         };
 
     } // luminous::render

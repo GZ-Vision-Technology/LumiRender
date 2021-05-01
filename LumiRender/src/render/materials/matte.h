@@ -6,6 +6,7 @@
 #pragma once
 
 #include "render/textures/texture.h"
+#include "render/bxdfs/bsdf.h"
 
 namespace luminous {
     inline namespace render {
@@ -13,7 +14,9 @@ namespace luminous {
         private:
             index_t _R;
         public:
+            NDSC_XPU BSDF get_BSDF(TextureEvalContext tec, const HitGroupData* hit_group_data) {
 
+            }
         };
     }
 }

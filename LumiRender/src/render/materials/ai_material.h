@@ -19,6 +19,10 @@ namespace luminous {
                 : _diffuse_idx(diffuse_idx),
                 _specular_idx(specular_idx),
                 _normal_idx(normal_idx) {}
+
+            NDSC_XPU BSDF get_BSDF(TextureEvalContext tec, const HitGroupData* hit_group_data) {
+
+            }
         };
     }
 }
