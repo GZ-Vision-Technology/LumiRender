@@ -11,6 +11,7 @@
 #include "interaction.h"
 #include "config.h"
 
+
 namespace luminous {
 
     inline namespace render {
@@ -22,10 +23,10 @@ namespace luminous {
         };
 
         struct Mesh : public Shape {
-            Mesh(vector<float3> P,
-                 vector<float3> N,
-                 vector<float2> uv,
-                 vector<TriangleHandle> T,
+            Mesh(vector <float3> P,
+                 vector <float3> N,
+                 vector <float2> uv,
+                 vector <TriangleHandle> T,
                  Box3f aabb) :
                     positions(std::move(P)),
                     normals(std::move(N)),
@@ -33,10 +34,10 @@ namespace luminous {
                     triangles(std::move(T)),
                     aabb(aabb) {}
 
-            vector<float3> normals;
-            vector<float3> positions;
-            vector<float2> tex_coords;
-            vector<TriangleHandle> triangles;
+            vector <float3> normals;
+            vector <float3> positions;
+            vector <float2> tex_coords;
+            vector <TriangleHandle> triangles;
             Box3f aabb;
             mutable uint idx_in_meshes;
         };
@@ -44,10 +45,10 @@ namespace luminous {
         struct Model {
             Model(const std::filesystem::path &fn, uint subdiv_level = 0);
 
-            Model() {}
+            Model() = default;
 
-            vector<std::shared_ptr<const Mesh>> meshes;
-            vector<MaterialConfig> materials;
+            vector <std::shared_ptr<const Mesh>> meshes;
+            vector <MaterialConfig> materials;
             string key;
         };
 
@@ -65,5 +66,4 @@ namespace luminous {
             float3 emission = make_float3(0.f);
         };
     }
-
 }

@@ -7,6 +7,7 @@
 #include <assimp/postprocess.h>
 #include <assimp/Subdivision.h>
 #include <assimp/scene.h>
+
 namespace luminous {
     inline namespace render {
 
@@ -45,7 +46,6 @@ namespace luminous {
             }
             vector<aiMaterial*> ai_materials(ai_scene->mNumMaterials);
             std::copy(ai_scene->mMaterials, ai_scene->mMaterials + ai_scene->mNumMaterials, ai_materials.begin());
-
 
             meshes.reserve(ai_meshes.size());
             for (auto ai_mesh : ai_meshes) {
@@ -104,6 +104,9 @@ namespace luminous {
                 meshes.push_back(mesh);
             }
 
-        } // luminous::Model
+        }
+
+
+
     } // luminous::render
 } // luminous

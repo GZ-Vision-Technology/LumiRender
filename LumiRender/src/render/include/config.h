@@ -14,6 +14,11 @@
 
 namespace luminous {
     inline namespace render {
+
+        NDSC_INLINE std::string full_type(const std::string &type) {
+            return "class luminous::render::" + type;
+        }
+
         struct Config {
         protected:
             std::string _type;
@@ -23,7 +28,7 @@ namespace luminous {
             }
 
             void set_full_type(const std::string &type) {
-                _type = "class luminous::render::" + type;
+                _type = full_type(type);
             }
 
             const std::string &type() const {
@@ -104,17 +109,21 @@ namespace luminous {
 
         template<typename T>
         struct TextureConfig : Config {
+            bool is_image() const {
+                return fn != "";
+            }
+
             ColorSpace color_space;
             // for constant texture
             T val;
             // for image texture
-            std::string fn;
+            std::string fn = "";
             PixelFormat pixel_format;
             void *handle{nullptr};
         };
 
         struct MaterialConfig : Config {
-            TextureConfig<float4> tex1;
+
         };
 
         struct FilterConfig : Config {

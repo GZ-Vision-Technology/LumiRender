@@ -64,13 +64,16 @@ constexpr const char * type_name(T * ptr = nullptr) {
 
 #define GEN_NAME_AND_TO_STRING_FUNC GEN_TO_STRING_FUNC
 
-#define XPU_INLINE XPU __forceinline
+#define INLINE __forceinline
 
-#define GPU_INLINE GPU __forceinline
+#define XPU_INLINE XPU INLINE
+
+#define GPU_INLINE GPU INLINE
 
 #define NDSC [[nodiscard]]
 
 #define NDSC_XPU NDSC XPU
+#define NDSC_INLINE NDSC INLINE
 #define NDSC_XPU_INLINE NDSC XPU_INLINE
 
 
