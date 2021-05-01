@@ -105,16 +105,11 @@ namespace luminous {
         init_event_cb();
         init_imgui();
         init_gl_context();
-        update_time();
+        _clock.start();
     }
 
     void App::init_gl_context() {
-//        auto path = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\HelloWorld.png)";
-//        auto[rgb, res] = load_image(path);
-//        test_color = new uint32_t[res.y * res.x];
-//        for (int i = 0; i < res.y * res.x; ++i) {
-//            test_color[i] = make_rgba(rgb[i]);
-//        }
+
         auto res = make_int2(_size);
         glGenTextures(1, &_gl_ctx.fb_texture);
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
@@ -160,10 +155,6 @@ namespace luminous {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
-    void App::update_time() {
-        _last_frame_t = get_cur_time();
-    }
-
     void App::check_and_update() {
         if (_need_update) {
             _task->update();
@@ -172,16 +163,10 @@ namespace luminous {
     }
 
     void App::render() {
-        auto dt = compute_dt();
-        update_time();
+        auto dt = _clock.elapse_s();
+        _clock.start();
         check_and_update();
         _task->render_gui(dt);
-    }
-
-    double App::compute_dt() {
-        auto cur_time = get_cur_time();
-        auto duration = duration_cast<microseconds>(cur_time - _last_frame_t);
-        return double(duration.count()) * microseconds::period::num / microseconds::period::den;
     }
 
     int App::run() {

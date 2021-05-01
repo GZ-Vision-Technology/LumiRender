@@ -14,7 +14,8 @@
 #include "graphics/math/common.h"
 #include "gl_helper.h"
 #include "gpu/framework/cuda_task.h"
-#include <chrono>
+#include "util/clock.h"
+
 
 namespace luminous {
     using namespace std::chrono;
@@ -36,7 +37,7 @@ namespace luminous {
 
         unique_ptr<CUDATask> _task;
 
-        system_clock::time_point _last_frame_t;
+        Clock _clock;
 
         bool _left_key_press{false};
 
@@ -70,10 +71,6 @@ namespace luminous {
         void render();
 
         void check_and_update();
-
-        void update_time();
-
-        double compute_dt();
 
         void draw() const;
 

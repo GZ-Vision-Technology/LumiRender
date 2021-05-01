@@ -23,8 +23,7 @@ namespace luminous {
         }
 
         ~TaskTag() {
-            auto dt = clock.toc();
-            LUMINOUS_INFO(string_printf("%s complete, elapsed time is %g s", task_name, dt / 1000));
+            LUMINOUS_INFO(string_printf("%s complete, elapsed time is %g s", task_name, clock.elapse_s()));
         }
     };
 }

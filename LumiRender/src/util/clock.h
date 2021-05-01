@@ -23,6 +23,18 @@ namespace luminous {
 
             void tic() noexcept { _last = SystemClock::now(); }
 
+            void start() noexcept { tic(); }
+
+            [[nodiscard]] auto elapse_ms() const noexcept {
+                auto curr = SystemClock::now();
+                using namespace std::chrono_literals;
+                return (curr - _last) / 1ns * 1e-6;
+            }
+
+            [[nodiscard]] auto elapse_s() const noexcept {
+                return elapse_ms() / 1000;
+            }
+
             [[nodiscard]] auto toc() const noexcept {
                 auto curr = SystemClock::now();
                 using namespace std::chrono_literals;
