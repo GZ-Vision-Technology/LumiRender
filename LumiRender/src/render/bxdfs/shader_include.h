@@ -8,6 +8,7 @@
 // this file just for cuda shader include
 #if defined(__CUDACC__)
     #include "bxdf.h"
+    #include "bsdf.h"
 #else
     #error "this file just for cuda shader include"
 #endif

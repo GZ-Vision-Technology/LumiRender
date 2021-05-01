@@ -87,6 +87,10 @@ namespace luminous {
             return f & BxDFFlags::Specular;
         }
 
+        NDSC_XPU_INLINE bool is_non_specular(BxDFFlags f) {
+            return (f & (BxDFFlags::Diffuse | BxDFFlags::Glossy));
+        }
+
         struct BSDFSample {
             float4 f_val;
             float3 wi;
@@ -99,24 +103,28 @@ namespace luminous {
             BSDFSample(float4 val, float3 wi_, float PDF_, BxDFFlags flags_, float eta_ = 1)
                     : f_val(val), wi(wi_), PDF(PDF_), flags(flags_), eta(eta_) {}
 
-            NDSC_XPU bool is_reflective(BxDFFlags f) {
-                return luminous::is_reflective(f);
+            NDSC_XPU bool is_non_specular() const {
+                return luminous::is_non_specular(flags);
             }
 
-            NDSC_XPU bool is_transmissive(BxDFFlags f) {
-                return luminous::is_transmissive(f);
+            NDSC_XPU bool is_reflective() const {
+                return luminous::is_reflective(flags);
             }
 
-            NDSC_XPU bool is_diffuse(BxDFFlags f) {
-                return luminous::is_diffuse(f);
+            NDSC_XPU bool is_transmissive() const {
+                return luminous::is_transmissive(flags);
             }
 
-            NDSC_XPU bool is_glossy(BxDFFlags f) {
-                return luminous::is_glossy(f);
+            NDSC_XPU bool is_diffuse() const {
+                return luminous::is_diffuse(flags);
             }
 
-            NDSC_XPU bool is_specular(BxDFFlags f) {
-                return luminous::is_specular(f);
+            NDSC_XPU bool is_glossy() const {
+                return luminous::is_glossy(flags);
+            }
+
+            NDSC_XPU bool is_specular() const {
+                return luminous::is_specular(flags);
             }
         };
     }

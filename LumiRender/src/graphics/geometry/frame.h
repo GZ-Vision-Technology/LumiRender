@@ -16,8 +16,15 @@ namespace luminous {
             vector_t n;
             vector_t s, t;
 
+            XPU TFrame() = default;
+
             XPU TFrame(vector_t normal)
                     : n(normal) {
+                coordinateSystem(n, &s, &t);
+            }
+
+            XPU void init(vector_t normal) {
+                n = normal;
                 coordinateSystem(n, &s, &t);
             }
 

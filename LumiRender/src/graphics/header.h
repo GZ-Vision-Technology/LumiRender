@@ -76,7 +76,14 @@ constexpr const char * type_name(T * ptr = nullptr) {
 #define NDSC_INLINE NDSC INLINE
 #define NDSC_XPU_INLINE NDSC XPU_INLINE
 
+#define TO_STRING(x) TO_STRING2(x)
+#define TO_STRING2(x) #x
 
+#ifdef IS_GPU_CODE
+#define LUMINOUS_DBG(...) printf(__FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
+#else
+#define LUMINOUS_DBG(...) fprintf(stderr, __FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
+#endif  // IS_GPU_CODE
 
 #ifdef __GNUC__
 #define MAYBE_UNUSED __attribute__((unused))
