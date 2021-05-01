@@ -15,6 +15,7 @@ namespace luminous {
         class IdealDiffuse {
         private:
             float4 _R = make_float4(-1.f);
+
             NDSC_XPU float4 _eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const {
                 return _R * constant::invPi;
             }
@@ -33,12 +34,13 @@ namespace luminous {
             }
 
             NDSC_XPU float PDF(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance,
-                          BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
+                               BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
                 return cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
             }
 
-            NDSC_XPU lstd::optional<BSDFSample> sample(float3 wo, float2 u, TransportMode mode = TransportMode::Radiance,
-                                                  BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
+            NDSC_XPU lstd::optional<BSDFSample>
+            sample(float3 wo, float uc, float2 u, TransportMode mode = TransportMode::Radiance,
+                   BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
                 if (!(sample_flags & BxDFReflTransFlags::Reflection)) {
                     return {};
                 }
@@ -47,7 +49,7 @@ namespace luminous {
                     wi.z *= -1;
                 }
                 float PDF = cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
-                float4 f = _eval(wo,wi,mode);
+                float4 f = _eval(wo, wi, mode);
                 return BSDFSample(f, wi, PDF, BxDFFlags::Reflection);
             }
 

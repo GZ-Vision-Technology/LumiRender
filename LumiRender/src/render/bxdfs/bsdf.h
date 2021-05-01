@@ -19,6 +19,35 @@ namespace luminous {
         public:
             XPU BSDF() = default;
 
+            NDSC_XPU float4 eval(float3 wo_world, float3 wi_world,
+                                 TransportMode mode = TransportMode::Radiance) const {
+                float3 wo = _shading_frame.to_local(wo_world);
+                float3 wi = _shading_frame.to_local(wi_world);
+                if (wo.z == 0) {
+                    return make_float4(0);
+                }
+                return _bxdf.eval(wo, wi, mode);
+            }
+
+            NDSC_XPU float4 rho_hd(float3 wo_world, BufferView<const float> uc,
+                                   BufferView<const float2> u2) const {
+                float3 wo = to_local(wo_world);
+                return _bxdf.rho_hd(wo, uc, u2);
+            }
+
+            NDSC_XPU float4 rho_hh(BufferView<const float2> u1, BufferView<const float> uc,
+                                   BufferView<const float2> u2) const {
+                return _bxdf.rho_hh(u1, uc, u2);
+            }
+
+            NDSC_XPU float3 to_local(float3 val) const {
+                return _shading_frame.to_local(val);
+            }
+
+            NDSC_XPU float3 to_world(float3 val) const {
+                return _shading_frame.to_world(val);
+            }
+
             NDSC_XPU bool is_non_specular() const {
                 return luminous::is_non_specular(_bxdf.flags());
             }
