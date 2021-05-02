@@ -37,25 +37,31 @@ namespace luminous {
 
         MaterialConfig process_material(const aiMaterial *ai_material, Model *model) {
             MaterialConfig mc;
-            // process diffuse
-            auto [diffuse_fn, diffuse] = load_texture(ai_material, aiTextureType_DIFFUSE);
-            mc.diffuse = diffuse;
-            mc.diffuse_tex.set_type(type_name<ImageTexture>());
-            mc.diffuse_tex.fn = model->full_path(diffuse_fn);
-            mc.diffuse_tex.color_space = SRGB;
-
-            // process specular
-            auto [specular_fn, specular] = load_texture(ai_material, aiTextureType_SPECULAR);
-            mc.specular = specular;
-            mc.specular_tex.set_type(type_name<ImageTexture>());
-            mc.specular_tex.fn = model->full_path(specular_fn);
-            mc.specular_tex.color_space = SRGB;
-
-            // process normal map
-            auto [normal_fn, _] = load_texture(ai_material, aiTextureType_HEIGHT);
-            mc.normal_tex.set_type(type_name<ImageTexture>());
-            mc.normal_tex.fn = model->full_path(normal_fn);
-            mc.normal_tex.color_space = LINEAR;
+            {
+                // process diffuse
+                auto[diffuse_fn, diffuse] = load_texture(ai_material, aiTextureType_DIFFUSE);
+                mc.diffuse_tex.fn = model->full_path(diffuse_fn);
+                auto tex_type = mc.diffuse_tex.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
+                mc.diffuse_tex.val = diffuse;
+                mc.diffuse_tex.set_type(tex_type);
+                mc.diffuse_tex.color_space = SRGB;
+            }
+            {
+                // process specular
+                auto[specular_fn, specular] = load_texture(ai_material, aiTextureType_SPECULAR);
+                mc.specular_tex.fn = model->full_path(specular_fn);
+                mc.specular_tex.val = specular;
+                auto tex_type = mc.specular_tex.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
+                mc.specular_tex.set_type(tex_type);
+                mc.specular_tex.color_space = SRGB;
+            }
+            {
+                // process normal map
+                auto[normal_fn, _] = load_texture(ai_material, aiTextureType_HEIGHT);
+                mc.normal_tex.set_type(type_name<ImageTexture>());
+                mc.normal_tex.fn = model->full_path(normal_fn);
+                mc.normal_tex.color_space = LINEAR;
+            }
             return mc;
         }
 

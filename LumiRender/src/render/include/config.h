@@ -137,19 +137,17 @@ namespace luminous {
             // Assimp or matte
 
             // common
-            float4 diffuse;
             TextureConfig diffuse_tex;
             index_t diffuse_idx{index_t(-1)};
 
             // assimp material
-            float4 specular;
             TextureConfig specular_tex;
             index_t specular_idx{index_t(-1)};
             TextureConfig normal_tex;
             index_t normal_idx{index_t(-1)};
 
-            vector<TextureConfig> tex_configs() const {
-                vector<TextureConfig> ret{diffuse_tex,specular_tex,normal_tex};
+            vector <TextureConfig> tex_configs() const {
+                vector <TextureConfig> ret{diffuse_tex, specular_tex, normal_tex};
                 return ret;
             }
         };

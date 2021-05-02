@@ -9,6 +9,7 @@
 #include <iostream>
 #include "framework/cuda_impl.h"
 #include "util/image.h"
+#include "util/stats.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -77,11 +78,17 @@ namespace luminous {
         }
 
         void GPUScene::preload_textures(const SP<SceneGraph> &scene_graph) {
+            TASK_TAG("preload_textures")
             append(_tex_configs, scene_graph->tex_configs);
             for (auto &tc : _tex_configs) {
                 if (tc.type() == type_name<ImageTexture>()) {
-                    auto path = _context->scene_path() / tc.fn;
-                    tc.fn = path.string();
+                    if (tc.fn.empty()) {
+                        continue;
+                    }
+                    if (filesystem::path(tc.fn).is_relative()) {
+                        auto path = _context->scene_path() / tc.fn;
+                        tc.fn = path.string();
+                    }
                     auto image = Image::load(tc.fn, tc.color_space);
                     auto texture = _device->allocate_texture(image.pixel_format(), image.resolution());
                     texture.copy_from(image);

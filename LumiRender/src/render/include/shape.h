@@ -50,7 +50,7 @@ namespace luminous {
 
             Model() = default;
 
-            string full_path(string fn) const { return fn == "" ? fn :(directory / fn).string(); }
+            string full_path(string fn) const { return fn.empty() ? fn : (directory / fn).string(); }
 
             filesystem::path directory;
             vector <std::shared_ptr<const Mesh>> meshes;
