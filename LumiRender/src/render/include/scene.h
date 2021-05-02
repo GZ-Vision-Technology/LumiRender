@@ -50,6 +50,7 @@ namespace luminous {
 
             // material data
             Managed<Material> _materials;
+            vector<MaterialConfig> _material_configs;
 
             // texture manager, manage the texture on video memory
             vector <DeviceTexture> _texture_mgr;

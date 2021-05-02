@@ -8,6 +8,11 @@
 namespace luminous {
     inline namespace render {
 
+        template<typename T>
+        void append(std::vector<T> &v1, const std::vector<T> &v2) {
+            v1.insert(v1.cend(), v2.cbegin(), v2.cend());
+        }
+
         void Scene::load_lights(const vector<LightConfig> &light_configs,const LightSamplerConfig &lsc) {
             _lights.reserve(light_configs.size());
             for (const auto &lc : light_configs) {
@@ -50,8 +55,10 @@ namespace luminous {
 
         void Scene::convert_data(const SP<SceneGraph> &scene_graph) {
             TASK_TAG("convert scene data start!")
-            uint vert_offset = 0u;
-            uint tri_offset = 0u;
+            index_t vert_offset = 0u;
+            index_t tri_offset = 0u;
+
+            index_t material_count = 0u;
             for (const SP<const Model> &model : scene_graph->model_list) {
                 for (const SP<const Mesh> &mesh : model->meshes) {
                     _positions.append(mesh->positions);
@@ -59,13 +66,16 @@ namespace luminous {
                     _tex_coords.append(mesh->tex_coords);
                     _triangles.append(mesh->triangles);
 
-                    uint vert_count = mesh->positions.size();
-                    uint tri_count = mesh->triangles.size();
+                    index_t vert_count = mesh->positions.size();
+                    index_t tri_count = mesh->triangles.size();
                     mesh->idx_in_meshes = _meshes.size();
-                    _meshes.emplace_back(vert_offset, tri_offset, vert_count, tri_count);
+                    _meshes.emplace_back(vert_offset, tri_offset, vert_count, tri_count,
+                                         mesh->mat_idx + material_count);
                     vert_offset += vert_count;
                     tri_offset += tri_count;
                 }
+                material_count += model->materials.size();
+                append(_material_configs, model->materials);
             }
 
             int distribute_idx = 0;
@@ -81,7 +91,7 @@ namespace luminous {
                         lc.instance_idx = _inst_to_mesh_idx.size();
                         scene_graph->light_configs.push_back(lc);
                         MeshHandle &mesh_handle = _meshes[mesh->idx_in_meshes];
-                        if (mesh_handle.distribute_idx == -1) {
+                        if (mesh_handle.distribute_idx == index_t(-1)) {
                             mesh_handle.distribute_idx = distribute_idx++;
                         }
                     }

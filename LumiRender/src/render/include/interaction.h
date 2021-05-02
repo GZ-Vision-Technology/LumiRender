@@ -25,18 +25,21 @@ namespace luminous {
 
             MeshHandle(index_t vert_ofs, index_t tri_ofs,
                        index_t vert_count, index_t tri_count,
-                       int distribute_idx = -1)
+                       index_t material_idx = -1,
+                       index_t distribute_idx = -1)
                     : vertex_offset(vert_ofs),
                       triangle_offset(tri_ofs),
                       vertex_count(vert_count),
                       triangle_count(tri_count),
+                      material_idx(material_idx),
                       distribute_idx(distribute_idx) {}
 
             index_t vertex_offset;
             index_t triangle_offset;
             index_t vertex_count;
             index_t triangle_count;
-            int distribute_idx;
+            index_t distribute_idx;
+            index_t material_idx;
 
             XPU void print() const {
                 printf("vert offset:%u, tri offset:%u, vert num:%u, tri num:%u, distribute idx: %d\n",
@@ -55,11 +58,12 @@ namespace luminous {
             float2 uv;
             float3 wo;
             float time;
+
             Interaction() = default;
         };
 
         struct SurfaceInteraction : public Interaction {
-            float3 dp_dx, dp_dy;
+            float3 dp_dx, dp_dy, dp_du, dp_dv;
             float du_dx = 0, dv_dx = 0, du_dy = 0, dv_dy = 0;
         };
     }
