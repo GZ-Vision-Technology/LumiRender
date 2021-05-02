@@ -39,8 +39,7 @@ namespace luminous {
             }
             {
                 // texture data
-                _texture_scalars.allocate_device(_device);
-                _texture_vectors.allocate_device(_device);
+                _textures.allocate_device(_device);
             }
         }
 
@@ -68,8 +67,7 @@ namespace luminous {
             }
             {
                 // texture data
-                _texture_scalars.synchronize_to_gpu();
-                _texture_vectors.synchronize_to_gpu();
+                _textures.synchronize_to_gpu();
             }
         }
 
@@ -79,8 +77,8 @@ namespace luminous {
         }
 
         void GPUScene::preload_textures(const SP<SceneGraph> &scene_graph) {
-            for (auto &tc : scene_graph->tex_vector_configs) {
-                if (tc.type() == type_name<ImageTexture<float4>>()) {
+            for (auto &tc : scene_graph->tex_configs) {
+                if (tc.type() == type_name<ImageTexture>()) {
                     auto path = _context->scene_path() / tc.fn;
                     tc.fn = path.string();
                     auto image = Image::load(tc.fn, tc.color_space);
@@ -90,19 +88,7 @@ namespace luminous {
                     tc.pixel_format = texture.pixel_format();
                     _texture_mgr.push_back(move(texture));
                 }
-                _texture_vectors.push_back(Texture<float4>::create(tc));
-            }
-            for (auto &tc : scene_graph->tex_scalar_configs) {
-                if (tc.type() == type_name<ImageTexture<float>>()) {
-                    auto path = _context->scene_path() / tc.fn;
-                    tc.fn = path.string();
-                    auto image = Image::load(tc.fn, tc.color_space);
-                    auto texture = _device->allocate_texture(image.pixel_format(), image.resolution());
-                    texture.copy_from(image);
-                    tc.handle = texture.tex_handle();
-                    _texture_mgr.push_back(move(texture));
-                }
-                _texture_scalars.push_back(Texture<float>::create(tc));
+                _textures.push_back(Texture::create(tc));
             }
         }
 

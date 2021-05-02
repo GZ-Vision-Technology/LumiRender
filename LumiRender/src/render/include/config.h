@@ -107,7 +107,6 @@ namespace luminous {
             float su, sv, du, dv;
         };
 
-        template<typename T>
         struct TextureConfig : Config {
             bool is_image() const {
                 return fn != "";
@@ -117,7 +116,7 @@ namespace luminous {
 
             ColorSpace color_space;
             // for constant texture
-            T val;
+            float4 val;
             // for image texture
             std::string fn = "";
             PixelFormat pixel_format;

@@ -13,18 +13,17 @@
 namespace luminous {
     inline namespace render {
         using lstd::Variant;
-        template<typename T>
-        class Texture : public Variant<ConstantTexture<T>, ImageTexture<T>> {
+        class Texture : public Variant<ConstantTexture, ImageTexture> {
         private:
-            using Variant<ConstantTexture<T>, ImageTexture<T>>::Variant;
+            using Variant<ConstantTexture, ImageTexture>::Variant;
         public:
-            using value_type = T;
+            GEN_BASE_NAME(Texture)
 
-            GEN_BASE_NAME(Texture<T>)
+            Texture() {}
 
             GEN_NAME_AND_TO_STRING_FUNC
 
-            XPU T eval(const TextureEvalContext &tec) {
+            XPU float4 eval(const TextureEvalContext &tec) {
                 LUMINOUS_VAR_DISPATCH(eval, tec)
             }
 
@@ -32,12 +31,9 @@ namespace luminous {
                 LUMINOUS_VAR_DISPATCH(set_mapping, mapping)
             }
 
-            static Texture<T> create(const TextureConfig<T> &config);
+            static Texture create(const TextureConfig &config) {
+                return detail::create<Texture>(config);
+            }
         };
-
-        template<typename T>
-        Texture<T> Texture<T>::create(const TextureConfig<T> &config) {
-            return detail::create<Texture<T>>(config);
-        }
     }
 }

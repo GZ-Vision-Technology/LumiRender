@@ -23,7 +23,6 @@ namespace luminous {
         class LightSampler;
         class Distribution1D;
 
-        template<typename T>
         class Texture;
 
         struct HitGroupData {
@@ -40,8 +39,7 @@ namespace luminous {
             BufferView<const TriangleHandle> triangles;
 
             // texture data
-            BufferView<const Texture<float4>> texture_vectors;
-            BufferView<const Texture<float>> texture_scalars;
+            BufferView<const Texture> textures;
 
             // light data
             const LightSampler *light_sampler;

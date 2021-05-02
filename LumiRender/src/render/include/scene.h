@@ -44,8 +44,7 @@ namespace luminous {
             Managed<LightSampler> _light_sampler;
 
             // texture data
-            Managed<Texture<float>> _texture_scalars;
-            Managed<Texture<float4>> _texture_vectors;
+            Managed<Texture> _textures;
 
             // texture manage
             vector<DeviceTexture> _texture_mgr;

@@ -11,26 +11,23 @@
 
 namespace luminous {
     inline namespace render {
-        template<typename T>
         class ConstantTexture : public TextureBase {
-        public:
-            using value_type = T;
         private:
-            const T _val;
+            const float4 _val;
         public:
-            ConstantTexture(T val)
-                :_val(val){}
+            ConstantTexture(PixelFormat pixel_format, float4 val)
+                : TextureBase(pixel_format), _val(val) {}
 
-            XPU T eval(const TextureEvalContext &tec) {
+            XPU float4 eval(const TextureEvalContext &tec) {
                 return _val;
             }
 
             std::string to_string() const {
-                LUMINOUS_TO_STRING("name: %s", name().c_str());
+                LUMINOUS_TO_STRING("name: %s", type_name(this));
             }
 
-            static ConstantTexture<T> create(const TextureConfig<T> &config) {
-                return ConstantTexture<T>(config.val);
+            static ConstantTexture create(const TextureConfig &config) {
+                return ConstantTexture(config.pixel_format, config.val);
             }
         };
     }

@@ -181,17 +181,16 @@ namespace luminous {
             _data = create_json_from_file(fn);
         }
 
-        template<typename T>
-        TextureConfig<T> parse_texture(const ParameterSet &ps) {
+        TextureConfig parse_texture(const ParameterSet &ps) {
             std::string type;
             type = ps["type"].as_string("ConstantTexture");
-            TextureConfig<T> tc;
+            TextureConfig tc;
             auto param = ps["param"];
             if (type == "ConstantTexture") {
-                tc.set_type(type_name<ConstantTexture<T>>());
-                tc.val = param["val"].template as<T>();
+                tc.set_type(type_name<ConstantTexture>());
+                tc.val = param["val"].as_float4(make_float4(1.f));
             } else {
-                tc.set_type(type_name<ImageTexture<T>>());
+                tc.set_type(type_name<ImageTexture>());
                 tc.fn = param["fn"].as_string();
             }
             string color_space = param["color_space"].as_string("SRGB");
@@ -204,11 +203,10 @@ namespace luminous {
             return tc;
         }
 
-        template<typename T>
-        std::vector<TextureConfig<T>> parse_textures(const DataWrap &textures) {
-            std::vector<TextureConfig<T>> ret;
+        std::vector<TextureConfig> parse_textures(const DataWrap &textures) {
+            std::vector<TextureConfig> ret;
             for (const auto &texture : textures) {
-                ret.push_back(parse_texture<T>(ParameterSet(texture)));
+                ret.push_back(parse_texture(ParameterSet(texture)));
             }
             return ret;
         }
@@ -221,8 +219,7 @@ namespace luminous {
             scene_graph->sampler_config = parse_sampler(ParameterSet(_data["sampler"]));
             scene_graph->light_configs = parse_lights(_data.value("lights", DataWrap()));
             scene_graph->light_sampler_config = parse_light_sampler(ParameterSet(_data["light_sampler"]));
-            scene_graph->tex_scalar_configs = parse_textures<float>(_data["tex_scalars"]);
-            scene_graph->tex_vector_configs = parse_textures<float4>(_data["tex_vectors"]);
+            scene_graph->tex_configs = parse_textures(_data["tex_vectors"]);
             return scene_graph;
         }
     }

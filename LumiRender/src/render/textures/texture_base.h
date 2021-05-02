@@ -59,6 +59,7 @@ namespace luminous {
         };
 
         using lstd::Variant;
+
         class TextureMapping2D : public Variant<UVMapping2D> {
         private:
             using Variant::Variant;
@@ -78,8 +79,18 @@ namespace luminous {
 
         class TextureBase {
         protected:
+            PixelFormat _pixel_format;
             TextureMapping2D _mapping;
         public:
+            TextureBase() = default;
+
+            TextureBase(PixelFormat pixel_format)
+                    : _pixel_format(pixel_format) {}
+
+            PixelFormat pixel_format() const {
+                return _pixel_format;
+            }
+
             void set_mapping(const TextureMapping2D &mapping) {
                 _mapping = mapping;
             }
