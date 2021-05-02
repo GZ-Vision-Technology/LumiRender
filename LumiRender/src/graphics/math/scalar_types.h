@@ -17,6 +17,8 @@ namespace luminous {
         using ushort = uint16_t;
         using uint = uint32_t;
 
+        using index_t = uint32_t;
+
         template<typename T>
         struct IsScalar : std::false_type {};
 

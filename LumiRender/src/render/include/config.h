@@ -125,6 +125,17 @@ namespace luminous {
 
         struct MaterialConfig : Config {
 
+            // common
+            float4 diffuse;
+            string diffuse_fn;
+            index_t diffuse_idx{index_t(-1)};
+
+            // assimp material
+            float4 specular;
+            string specular_fn;
+            index_t specular_idx{index_t(-1)};
+            string normal_fn;
+            index_t normal_idx{index_t(-1)};
         };
 
         struct FilterConfig : Config {

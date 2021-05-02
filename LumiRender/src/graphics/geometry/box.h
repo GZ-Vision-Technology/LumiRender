@@ -4,6 +4,7 @@
 
 
 #pragma once
+#include "graphics/math/common.h"
 
 namespace luminous {
     inline namespace geometry {

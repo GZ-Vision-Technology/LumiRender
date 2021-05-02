@@ -11,16 +11,56 @@
 namespace luminous {
     inline namespace render {
 
+        std::pair<string, float4> load_texture(const aiMaterial *mat, aiTextureType type) {
+            string fn = "";
+            for(size_t i = 0; i < mat->GetTextureCount(type); i++) {
+                aiString str;
+                mat->GetTexture(type, i, &str);
+                fn = str.C_Str();
+                break;
+            }
+            aiColor3D ai_color;
+            switch (type) {
+                case aiTextureType_DIFFUSE:
+                    mat->Get(AI_MATKEY_COLOR_DIFFUSE, ai_color);
+                    break;
+                case aiTextureType_SPECULAR:
+                    mat->Get(AI_MATKEY_COLOR_SPECULAR, ai_color);
+                    break;
+                default:
+                    break;
+            }
+            float4 color = make_float4(ai_color.r, ai_color.g, ai_color.b, 0);
+            return make_pair(fn, color);
+        }
+
+        MaterialConfig process_material(const aiMaterial *ai_material, Model *model) {
+            MaterialConfig mc;
+            // process diffuse
+            auto [diffuse_fn, diffuse] = load_texture(ai_material, aiTextureType_DIFFUSE);
+            mc.diffuse = diffuse;
+            mc.diffuse_fn = model->full_path(diffuse_fn);
+            // process specular
+            auto [specular_fn, specular] = load_texture(ai_material, aiTextureType_SPECULAR);
+            mc.specular = specular;
+            mc.specular_fn = model->full_path(specular_fn);
+            return mc;
+        }
+
         void process_materials(const aiScene *ai_scene, Model *model) {
             vector<aiMaterial*> ai_materials(ai_scene->mNumMaterials);
+            model->materials.reserve(ai_materials.size());
             std::copy(ai_scene->mMaterials, ai_scene->mMaterials + ai_scene->mNumMaterials, ai_materials.begin());
             for(const auto &ai_material : ai_materials) {
-
+                MaterialConfig mc = process_material(ai_material, model);
+                mc.set_type("AssimpMaterial");
+                model->materials.push_back(mc);
             }
         }
 
         Model::Model(const std::filesystem::path &path, uint subdiv_level) {
             Assimp::Importer ai_importer;
+            directory = path.parent_path();
             ai_importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
                                            aiComponent_COLORS |
                                            aiComponent_BONEWEIGHTS |
@@ -108,7 +148,8 @@ namespace luminous {
                                                     move(normals),
                                                     move(tex_coords),
                                                     move(indices),
-                                                    aabb);
+                                                    aabb,
+                                                    ai_mesh->mMaterialIndex - 1);
                 meshes.push_back(mesh);
             }
         }

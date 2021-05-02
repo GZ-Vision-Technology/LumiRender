@@ -10,7 +10,6 @@
 
 namespace luminous {
     inline namespace render {
-        using index_t = uint32_t;
 
         struct TriangleHandle {
             index_t i;

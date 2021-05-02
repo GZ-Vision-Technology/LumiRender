@@ -27,17 +27,20 @@ namespace luminous {
                  vector <float3> N,
                  vector <float2> uv,
                  vector <TriangleHandle> T,
-                 Box3f aabb) :
+                 Box3f aabb,
+                 index_t mat_idx = -1) :
                     positions(std::move(P)),
                     normals(std::move(N)),
                     tex_coords(std::move(uv)),
                     triangles(std::move(T)),
-                    aabb(aabb) {}
+                    aabb(aabb),
+                    mat_idx(mat_idx) {}
 
             vector <float3> normals;
             vector <float3> positions;
             vector <float2> tex_coords;
             vector <TriangleHandle> triangles;
+            index_t mat_idx{index_t(-1)};
             Box3f aabb;
             mutable uint idx_in_meshes;
         };
@@ -47,6 +50,9 @@ namespace luminous {
 
             Model() = default;
 
+            string full_path(string fn) const { return fn == "" ? fn :(directory / fn).string(); }
+
+            filesystem::path directory;
             vector <std::shared_ptr<const Mesh>> meshes;
             vector <MaterialConfig> materials;
             vector <TextureConfig> textures;
