@@ -13,7 +13,7 @@ namespace luminous {
 
         std::pair<string, float4> load_texture(const aiMaterial *mat, aiTextureType type) {
             string fn = "";
-            for(size_t i = 0; i < mat->GetTextureCount(type); i++) {
+            for(size_t i = 0; i < mat->GetTextureCount(type); ++i) {
                 aiString str;
                 mat->GetTexture(type, i, &str);
                 fn = str.C_Str();
@@ -44,6 +44,8 @@ namespace luminous {
             auto [specular_fn, specular] = load_texture(ai_material, aiTextureType_SPECULAR);
             mc.specular = specular;
             mc.specular_fn = model->full_path(specular_fn);
+            auto [normal_fn, __] = load_texture(ai_material, aiTextureType_HEIGHT);
+            mc.normal_fn = model->full_path(normal_fn);
             return mc;
         }
 
@@ -58,7 +60,7 @@ namespace luminous {
             }
         }
 
-        Model::Model(const std::filesystem::path &path, uint subdiv_level) {
+        Model::Model(const std::filesystem::path &path, uint subdiv_level, bool smooth) {
             Assimp::Importer ai_importer;
             directory = path.parent_path();
             ai_importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
@@ -70,9 +72,10 @@ namespace luminous {
                                            aiComponent_TEXTURES |
                                            aiComponent_MATERIALS);
             LUMINOUS_INFO("Loading triangle mesh: ", path);
+            aiPostProcessSteps smooth_flag = smooth ? aiProcess_GenSmoothNormals : aiProcess_GenNormals;
             auto ai_scene = ai_importer.ReadFile(path.string().c_str(),
                                                  aiProcess_JoinIdenticalVertices |
-                                                 aiProcess_GenSmoothNormals |
+                                                 smooth_flag |
                                                  aiProcess_PreTransformVertices |
                                                  aiProcess_ImproveCacheLocality |
                                                  aiProcess_FixInfacingNormals |

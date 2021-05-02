@@ -97,6 +97,8 @@ namespace luminous {
 
             LUMINOUS_MAKE_AS_TYPE_FUNC(uint)
 
+            LUMINOUS_MAKE_AS_TYPE_FUNC(bool)
+
             LUMINOUS_MAKE_AS_TYPE_FUNC(float)
 
             LUMINOUS_MAKE_AS_TYPE_FUNC(string)
@@ -226,6 +228,8 @@ namespace luminous {
             LUMINOUS_MAKE_AS_TYPE_SCALAR(float)
 
             LUMINOUS_MAKE_AS_TYPE_SCALAR(uint)
+
+            LUMINOUS_MAKE_AS_TYPE_SCALAR(bool)
 
             LUMINOUS_MAKE_AS_TYPE_SCALAR(int)
 

@@ -43,8 +43,8 @@ namespace luminous {
                 ret.mat4x4 = param["matrix4x4"].as_float4x4();
             } else if (ret.type() == "trs") {
                 ret.t = param["t"].as_float3();
-                ret.r = param["r"].as_float4();
-                ret.s = param["s"].as_float3();
+                ret.r = param["r"].as_float4(make_float4(1, 0, 0, 0));
+                ret.s = param["s"].as_float3(make_float3(1, 1, 1));
             } else {
                 // yaw pitch position
                 ret.yaw = param["yaw"].as_float();
@@ -77,9 +77,10 @@ namespace luminous {
                 shape_config.set_type(string(shape["type"]));
                 shape_config.name = shape["name"];
                 ParameterSet param(shape["param"]);
-                if (shape_config.type() == "model"){
+                if (shape_config.type() == "model") {
                     shape_config.subdiv_level = param["subdiv_level"].as_uint(0u);
                     shape_config.fn = param["fn"].as_string();
+                    shape_config.smooth = param["smooth"].as_bool(true);
                 } else if (shape_config.type() == "quad") {
                     shape_config.width = param["width"].as_float(1);
                     shape_config.height = param["height"].as_float(1);

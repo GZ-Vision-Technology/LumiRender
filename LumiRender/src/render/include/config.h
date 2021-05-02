@@ -93,6 +93,7 @@ namespace luminous {
 //                // model param
 //                struct {
             std::string fn;
+            bool smooth;
             uint subdiv_level;
 //                };
 //                // quad param

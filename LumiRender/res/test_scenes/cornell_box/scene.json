@@ -116,17 +116,15 @@
 			"type": "model",
 			"param" : {
 				"fn": "cornell_box.obj",
+				"smooth": false,
 //				"fn": "nanosuit/nanosuit.obj",
 				"subdiv_level": 0,
 				"transform" : {
-					"type" : "matrix4x4",
+					"type" : "trs",
 					"param" : {
-						"matrix4x4" : [
-							1,0,0,0,
-							0,1,0,0,
-							0,0,1,0,
-							0,0,0,1
-						]
+						"t": [0,0,0],
+						"r": [1,0,0,0],
+						"s": [0.1,0.1,0.1]
 					}
 				}
 			}

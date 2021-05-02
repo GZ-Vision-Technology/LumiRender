@@ -23,7 +23,7 @@ namespace luminous {
         SP<Model> SceneGraph::create_shape(const ShapeConfig &config) {
             if (config.type() == "model") {
                 auto path = _context->scene_path() / config.fn;
-                return make_shared<Model>(path, config.subdiv_level);
+                return make_shared<Model>(path, config.subdiv_level, config.smooth);
             } else if (config.type() == "quad") {
                 auto model = make_shared<Model>();
                 auto x = config.width / 2;
