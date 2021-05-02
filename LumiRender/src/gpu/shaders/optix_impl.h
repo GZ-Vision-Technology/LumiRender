@@ -55,10 +55,11 @@ GLOBAL __closesthit__radiance() {
     TextureEvalContext ctx;
     ctx.uv = interaction.uv;
 
+    auto tex = data.textures[1];
 
     prd->radiance = luminous::make_float3(1);
     prd->radiance = n;
-//    prd->radiance = luminous::make_float3(tex.eval(ctx));
+    prd->radiance = luminous::make_float3(tex.eval(ctx));
 //    prd->radiance.print();
 }
 

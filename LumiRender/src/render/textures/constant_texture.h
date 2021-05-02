@@ -18,7 +18,7 @@ namespace luminous {
             ConstantTexture(PixelFormat pixel_format, float4 val)
                 : TextureBase(pixel_format), _val(val) {}
 
-            XPU float4 eval(const TextureEvalContext &tec) {
+            XPU float4 eval(const TextureEvalContext &tec) const {
                 return _val;
             }
 
