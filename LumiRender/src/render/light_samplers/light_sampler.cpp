@@ -28,6 +28,10 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(PMF, light);
         }
 
+        BufferView<const Light> LightSampler::lights() const {
+            LUMINOUS_VAR_DISPATCH(lights);
+        }
+
         float LightSampler::PMF(const LightSampleContext &ctx, const Light &light) const {
             LUMINOUS_VAR_DISPATCH(PMF, ctx, light);
         }
@@ -35,10 +39,5 @@ namespace luminous {
         LightSampler LightSampler::create(const LightSamplerConfig &config) {
             return detail::create<LightSampler>(config);
         }
-
-        BufferView<const Light> LightSampler::lights() const {
-            LUMINOUS_VAR_DISPATCH(lights);
-        }
-
     } // luminous::render
 } // luminous

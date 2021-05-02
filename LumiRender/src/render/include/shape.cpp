@@ -44,7 +44,7 @@ namespace luminous {
             auto [specular_fn, specular] = load_texture(ai_material, aiTextureType_SPECULAR);
             mc.specular = specular;
             mc.specular_fn = model->full_path(specular_fn);
-            auto [normal_fn, __] = load_texture(ai_material, aiTextureType_HEIGHT);
+            auto [normal_fn, _] = load_texture(ai_material, aiTextureType_HEIGHT);
             mc.normal_fn = model->full_path(normal_fn);
             return mc;
         }
@@ -72,10 +72,10 @@ namespace luminous {
                                            aiComponent_TEXTURES |
                                            aiComponent_MATERIALS);
             LUMINOUS_INFO("Loading triangle mesh: ", path);
-            aiPostProcessSteps smooth_flag = smooth ? aiProcess_GenSmoothNormals : aiProcess_GenNormals;
+            aiPostProcessSteps normal_flag = smooth ? aiProcess_GenSmoothNormals : aiProcess_GenNormals;
             auto ai_scene = ai_importer.ReadFile(path.string().c_str(),
                                                  aiProcess_JoinIdenticalVertices |
-                                                 smooth_flag |
+                                                 normal_flag |
                                                  aiProcess_PreTransformVertices |
                                                  aiProcess_ImproveCacheLocality |
                                                  aiProcess_FixInfacingNormals |

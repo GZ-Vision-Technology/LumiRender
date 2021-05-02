@@ -15,13 +15,15 @@
 #include "render/light_samplers/light_sampler.h"
 #include "render/textures/texture.h"
 #include "vector_types.h"
+#include "render/materials/material.h"
 
 namespace luminous {
     inline namespace render {
         using namespace std;
+
         class Scene : public Noncopyable {
         protected:
-            Context * _context{nullptr};
+            Context *_context{nullptr};
 
             size_t _inst_vertices_num{0};
             size_t _inst_triangle_num{0};
@@ -46,11 +48,17 @@ namespace luminous {
             // texture data
             Managed<Texture> _textures;
 
-            // texture manage
-            vector<DeviceTexture> _texture_mgr;
+            // material data
+            Managed<Material> _materials;
+
+            // texture manager, manage the texture on video memory
+            vector <DeviceTexture> _texture_mgr;
+
+            // prepare for texture out of core render
+            vector<TextureConfig> _tex_configs;
 
         public:
-            Scene(Context * context) : _context(context) {}
+            Scene(Context *context) : _context(context) {}
 
             void shrink_to_fit();
 
@@ -66,7 +74,7 @@ namespace luminous {
 
             void convert_data(const SP<SceneGraph> &scene_graph);
 
-            void load_lights(const vector<LightConfig> &lc, const LightSamplerConfig &lsc);
+            void load_lights(const vector <LightConfig> &lc, const LightSamplerConfig &lsc);
 
             void preprocess_meshes();
         };
