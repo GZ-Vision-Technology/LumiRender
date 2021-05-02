@@ -21,6 +21,11 @@ namespace luminous {
     inline namespace render {
         using namespace std;
 
+        template<typename T>
+        void append(std::vector<T> &v1, const std::vector<T> &v2) {
+            v1.insert(v1.cend(), v2.cbegin(), v2.cend());
+        }
+
         class Scene : public Noncopyable {
         protected:
             Context *_context{nullptr};
@@ -74,6 +79,8 @@ namespace luminous {
             virtual void init_accel() = 0;
 
             void convert_data(const SP<SceneGraph> &scene_graph);
+
+            void init_texture_configs(const vector<MaterialConfig> &material_configs);
 
             void load_lights(const vector <LightConfig> &lc, const LightSamplerConfig &lsc);
 

@@ -5,15 +5,11 @@
 #include "scene.h"
 #include "render/include/distribution.h"
 #include "util/stats.h"
+
 namespace luminous {
     inline namespace render {
 
-        template<typename T>
-        void append(std::vector<T> &v1, const std::vector<T> &v2) {
-            v1.insert(v1.cend(), v2.cbegin(), v2.cend());
-        }
-
-        void Scene::load_lights(const vector<LightConfig> &light_configs,const LightSamplerConfig &lsc) {
+        void Scene::load_lights(const vector <LightConfig> &light_configs, const LightSamplerConfig &lsc) {
             _lights.reserve(light_configs.size());
             for (const auto &lc : light_configs) {
                 _lights.push_back(Light::create(lc));
@@ -23,7 +19,7 @@ namespace luminous {
         }
 
         void Scene::preprocess_meshes() {
-            vector<Distribution1DBuilder> builders;
+            vector <Distribution1DBuilder> builders;
             auto process_mesh = [&](MeshHandle mesh) {
                 if (mesh.distribute_idx == -1) {
                     return;
@@ -48,8 +44,26 @@ namespace luminous {
             for (const auto &mesh : _meshes) {
                 process_mesh(mesh);
             }
-            for (const auto & builder : builders) {
+            for (const auto &builder : builders) {
                 _emission_distrib.add_distribute(builder);
+            }
+        }
+
+        bool is_contain(const vector <TextureConfig> &tex_configs, const TextureConfig &texture_config) {
+            return std::any_of(tex_configs.cbegin(), tex_configs.cend(), [&](const auto &config) {
+                return config == texture_config;
+            });
+        }
+
+        void Scene::init_texture_configs(const vector <MaterialConfig> &material_configs) {
+            for (const auto &mat_config : material_configs) {
+                auto tex_configs = mat_config.tex_configs();
+                for (const auto &tex_config : tex_configs) {
+                    if (is_contain(_tex_configs, tex_config)) {
+                        continue;
+                    }
+                    _tex_configs.push_back(tex_config);
+                }
             }
         }
 
@@ -58,6 +72,7 @@ namespace luminous {
             index_t vert_offset = 0u;
             index_t tri_offset = 0u;
 
+            vector <TextureConfig> tex_configs;
             index_t material_count = 0u;
             for (const SP<const Model> &model : scene_graph->model_list) {
                 for (const SP<const Mesh> &mesh : model->meshes) {
@@ -76,9 +91,12 @@ namespace luminous {
                 }
                 material_count += model->materials.size();
                 append(_material_configs, model->materials);
+                append(tex_configs, model->textures);
             }
 
-            int distribute_idx = 0;
+            init_texture_configs(_material_configs);
+
+            index_t distribute_idx = 0;
             for (const SP<const ModelInstance> &instance : scene_graph->instance_list) {
                 const SP<const Model> &model = scene_graph->model_list[instance->model_idx];
                 for (const SP<const Mesh> &mesh : model->meshes) {
@@ -172,5 +190,6 @@ namespace luminous {
                                  _inst_vertices_num,
                                  _lights.size());
         }
+
     }
 }

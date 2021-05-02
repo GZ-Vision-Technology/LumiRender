@@ -113,30 +113,45 @@ namespace luminous {
                 return fn != "";
             }
 
-            std::string name;
+            std::string name = "";
 
-            ColorSpace color_space;
+            ColorSpace color_space = LINEAR;
             // for constant texture
-            float4 val;
+            float4 val = make_float4(0.f);
             // for image texture
             std::string fn = "";
-            PixelFormat pixel_format;
+            PixelFormat pixel_format = PixelFormat::UNKNOWN;
             void *handle{nullptr};
         };
 
+        NDSC_INLINE bool operator==(const TextureConfig &t1, const TextureConfig &t2) {
+            return t1.type() == t2.type()
+                   && t1.fn == t2.fn
+                   && t1.color_space == t2.color_space
+                   && all(t1.val == t2.val)
+                   && t1.pixel_format == t2.pixel_format;
+        }
+
         struct MaterialConfig : Config {
+
+            // Assimp or matte
 
             // common
             float4 diffuse;
-            string diffuse_fn;
+            TextureConfig diffuse_tex;
             index_t diffuse_idx{index_t(-1)};
 
             // assimp material
             float4 specular;
-            string specular_fn;
+            TextureConfig specular_tex;
             index_t specular_idx{index_t(-1)};
-            string normal_fn;
+            TextureConfig normal_tex;
             index_t normal_idx{index_t(-1)};
+
+            vector<TextureConfig> tex_configs() const {
+                vector<TextureConfig> ret{diffuse_tex,specular_tex,normal_tex};
+                return ret;
+            }
         };
 
         struct FilterConfig : Config {
