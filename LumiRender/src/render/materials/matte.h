@@ -14,7 +14,7 @@ namespace luminous {
         private:
             index_t _R;
         public:
-            NDSC_XPU BSDF get_BSDF(TextureEvalContext tec, const HitGroupData* hit_group_data) {
+            NDSC_XPU BSDF get_BSDF(TextureEvalContext tec, const HitGroupData* hit_group_data, BxDF *bxdf) {
 
             }
         };

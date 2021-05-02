@@ -49,6 +49,7 @@ namespace luminous {
 
             vector <std::shared_ptr<const Mesh>> meshes;
             vector <MaterialConfig> materials;
+            vector <TextureConfig<float4>> textures;
             string key;
         };
 

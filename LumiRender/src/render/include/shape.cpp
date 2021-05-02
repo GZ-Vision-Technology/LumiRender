@@ -12,7 +12,11 @@ namespace luminous {
     inline namespace render {
 
         void process_materials(const aiScene *ai_scene, Model *model) {
+            vector<aiMaterial*> ai_materials(ai_scene->mNumMaterials);
+            std::copy(ai_scene->mMaterials, ai_scene->mMaterials + ai_scene->mNumMaterials, ai_materials.begin());
+            for(const auto &ai_material : ai_materials) {
 
+            }
         }
 
         Model::Model(const std::filesystem::path &path, uint subdiv_level) {
@@ -48,8 +52,6 @@ namespace luminous {
             } else {
                 std::copy(ai_scene->mMeshes, ai_scene->mMeshes + ai_scene->mNumMeshes, ai_meshes.begin());
             }
-            vector<aiMaterial*> ai_materials(ai_scene->mNumMaterials);
-            std::copy(ai_scene->mMaterials, ai_scene->mMaterials + ai_scene->mNumMaterials, ai_materials.begin());
 
             process_materials(ai_scene, this);
 
@@ -109,10 +111,6 @@ namespace luminous {
                                                     aabb);
                 meshes.push_back(mesh);
             }
-
         }
-
-
-
     } // luminous::render
 } // luminous

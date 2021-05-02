@@ -16,11 +16,11 @@ namespace luminous {
             index_t _normal_idx;
         public:
             AssimpMaterial(index_t diffuse_idx, index_t specular_idx, index_t normal_idx)
-                : _diffuse_idx(diffuse_idx),
-                _specular_idx(specular_idx),
-                _normal_idx(normal_idx) {}
+                    : _diffuse_idx(diffuse_idx),
+                      _specular_idx(specular_idx),
+                      _normal_idx(normal_idx) {}
 
-            NDSC_XPU BSDF get_BSDF(TextureEvalContext tec, const HitGroupData* hit_group_data) {
+            NDSC_XPU BSDF get_BSDF(TextureEvalContext tec, const HitGroupData *hit_group_data, BxDF *bxdf) {
 
             }
         };

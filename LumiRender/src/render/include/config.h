@@ -113,6 +113,8 @@ namespace luminous {
                 return fn != "";
             }
 
+            std::string name;
+
             ColorSpace color_space;
             // for constant texture
             T val;
