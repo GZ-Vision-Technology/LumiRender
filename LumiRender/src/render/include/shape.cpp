@@ -171,7 +171,7 @@ namespace luminous {
                                                     move(tex_coords),
                                                     move(indices),
                                                     aabb,
-                                                    ai_mesh->mMaterialIndex - 1);
+                                                    ai_mesh->mMaterialIndex);
                 meshes.push_back(mesh);
             }
         }
