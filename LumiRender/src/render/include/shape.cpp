@@ -45,7 +45,7 @@ namespace luminous {
                 mc.diffuse_tex.val = diffuse;
                 mc.diffuse_tex.name = "diffuse";
                 mc.diffuse_tex.set_type(tex_type);
-                mc.diffuse_tex.color_space = SRGB;
+                mc.diffuse_tex.color_space = LINEAR;
             }
             {
                 // process specular

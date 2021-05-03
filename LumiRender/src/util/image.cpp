@@ -39,6 +39,7 @@ namespace luminous {
 
         Image Image::load(const filesystem::path &path, ColorSpace color_space) {
             auto extension = to_lower(path.extension().string());
+            LUMINOUS_INFO("load picture ", path.string());
             if (extension == ".exr") {
                 return load_exr(path, color_space);
             } else if (extension == ".hdr") {

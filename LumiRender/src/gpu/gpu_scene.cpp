@@ -82,10 +82,7 @@ namespace luminous {
         void GPUScene::preload_textures(const SP<SceneGraph> &scene_graph) {
             TASK_TAG("preload_textures")
             for (auto &tc : _tex_configs) {
-                if (tc.type() == type_name<ImageTexture>()) {
-                    if (tc.fn.empty()) {
-                        continue;
-                    }
+                if (tc.type() == type_name<ImageTexture>() && !tc.fn.empty()) {
                     if (filesystem::path(tc.fn).is_relative()) {
                         auto path = _context->scene_path() / tc.fn;
                         tc.fn = path.string();
