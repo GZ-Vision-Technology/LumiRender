@@ -132,6 +132,12 @@ namespace luminous {
                    && t1.pixel_format == t2.pixel_format;
         }
 
+        inline bool is_contain(const vector <TextureConfig> &tex_configs, const TextureConfig &texture_config) {
+            return std::any_of(tex_configs.cbegin(), tex_configs.cend(), [&](const auto &config) {
+                return config == texture_config;
+            });
+        }
+
         struct MaterialConfig : Config {
 
             // Assimp or matte
@@ -146,9 +152,19 @@ namespace luminous {
             TextureConfig normal_tex;
             index_t normal_idx{index_t(-1)};
 
-            vector <TextureConfig> tex_configs() const {
-                vector <TextureConfig> ret{diffuse_tex, specular_tex, normal_tex};
-                return ret;
+            void fill_tex_configs(vector <TextureConfig> &tex_configs) {
+                if (!is_contain(tex_configs, diffuse_tex)) {
+                    diffuse_idx = tex_configs.size();
+                    tex_configs.push_back(diffuse_tex);
+                }
+                if (!is_contain(tex_configs, specular_tex)) {
+                    specular_idx = tex_configs.size();
+                    tex_configs.push_back(specular_tex);
+                }
+                if (!is_contain(tex_configs, normal_tex)) {
+                    normal_idx = tex_configs.size();
+                    tex_configs.push_back(normal_tex);
+                }
             }
         };
 

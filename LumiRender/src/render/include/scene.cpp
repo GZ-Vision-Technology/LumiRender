@@ -49,21 +49,9 @@ namespace luminous {
             }
         }
 
-        bool is_contain(const vector <TextureConfig> &tex_configs, const TextureConfig &texture_config) {
-            return std::any_of(tex_configs.cbegin(), tex_configs.cend(), [&](const auto &config) {
-                return config == texture_config;
-            });
-        }
-
-        void Scene::init_texture_configs(const vector <MaterialConfig> &material_configs) {
-            for (const auto &mat_config : material_configs) {
-                auto tex_configs = mat_config.tex_configs();
-                for (const auto &tex_config : tex_configs) {
-                    if (is_contain(_tex_configs, tex_config)) {
-                        continue;
-                    }
-                    _tex_configs.push_back(tex_config);
-                }
+        void Scene::update_materials_and_textures(vector <MaterialConfig> &material_configs) {
+            for (auto &mat_config : material_configs) {
+                mat_config.fill_tex_configs(_tex_configs);
             }
         }
 
@@ -94,7 +82,7 @@ namespace luminous {
                 append(tex_configs, model->textures);
             }
 
-            init_texture_configs(_material_configs);
+            update_materials_and_textures(_material_configs);
 
             index_t distribute_idx = 0;
             for (const SP<const ModelInstance> &instance : scene_graph->instance_list) {
@@ -185,11 +173,12 @@ namespace luminous {
             float size_in_MB = size_in_bytes() / sqr(1024.f);
 
             return string_printf("all scene data occupy %f MB,\n"
-                                 "texture size is %f MB,\n"
+                                 "texture num is %u, texture size is %f MB,\n"
                                  "instance triangle is %u,\n"
                                  "instance vertices is %u,\n"
                                  "light num is %u",
                                  size_in_MB,
+                                 _texture_num,
                                  _texture_size_in_byte / sqr(1024.f),
                                  _inst_triangle_num,
                                  _inst_vertices_num,

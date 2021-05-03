@@ -33,6 +33,7 @@ namespace luminous {
             size_t _inst_vertices_num{0};
             size_t _inst_triangle_num{0};
             size_t _texture_size_in_byte{0};
+            size_t _texture_num{0};
 
             // instance data
             Managed<uint> _inst_to_mesh_idx;
@@ -81,7 +82,7 @@ namespace luminous {
 
             void convert_data(const SP<SceneGraph> &scene_graph);
 
-            void init_texture_configs(const vector<MaterialConfig> &material_configs);
+            void update_materials_and_textures(vector<MaterialConfig> &material_configs);
 
             void load_lights(const vector <LightConfig> &lc, const LightSamplerConfig &lsc);
 
