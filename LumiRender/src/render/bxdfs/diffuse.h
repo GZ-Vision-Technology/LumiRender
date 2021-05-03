@@ -29,6 +29,10 @@ namespace luminous {
 
             IdealDiffuse(float4 R) : _R(R) {}
 
+            NDSC_XPU float4 base_color() const {
+                return _R;
+            }
+
             NDSC_XPU float4 eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? _eval(wo, wi) : make_float4(0.f);
             }

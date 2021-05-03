@@ -19,6 +19,10 @@ namespace luminous {
 
             GEN_NAME_AND_TO_STRING_FUNC
 
+            NDSC_XPU float4 base_color() const {
+                LUMINOUS_VAR_DISPATCH(base_color);
+            }
+
             NDSC_XPU float4 eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const {
                 LUMINOUS_VAR_DISPATCH(eval, wo, wi, mode);
             }

@@ -47,18 +47,22 @@ GLOBAL __miss__shadow() {
 GLOBAL __closesthit__radiance() {
     using namespace luminous;
     RadiancePRD *prd = getPRD();
-    auto interaction = getSurfaceInteraction(getClosestHit());
-    auto n = interaction.s_uvn.normal;
+    auto si = getSurfaceInteraction(getClosestHit());
+    auto n = si.s_uvn.normal;
     n = (n + 1.f) / 2.f;
-    HitGroupData data = getSbtData<HitGroupData>();
+    const HitGroupData &data = getSbtData<HitGroupData>();
 
     TextureEvalContext ctx;
-    ctx.uv = interaction.uv;
+    ctx.uv = si.uv;
 
     auto tex = data.textures[1];
 
     prd->radiance = luminous::make_float3(1);
     prd->radiance = n;
+
+    BSDF bsdf = si.material->get_BSDF(si, &data);
+    auto color = bsdf.base_color();
+    prd->radiance = make_float3(color);
 //    prd->radiance = luminous::make_float3(tex.eval(ctx));
 //    prd->radiance.print();
 }

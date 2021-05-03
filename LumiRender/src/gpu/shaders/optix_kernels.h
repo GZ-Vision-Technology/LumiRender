@@ -50,7 +50,7 @@ static GPU_INLINE luminous::uint2 getPixelCoords() {
 }
 
 template<typename T>
-static GPU_INLINE T getSbtData() {
+static GPU_INLINE const T &getSbtData() {
     return *reinterpret_cast<T *>(optixGetSbtDataPointer());
 }
 
@@ -210,5 +210,7 @@ static GPU_INLINE luminous::SurfaceInteraction getSurfaceInteraction(luminous::C
     auto positions = data.positions.sub_view(mesh.vertex_offset, mesh.vertex_count);
     auto normals = data.normals.sub_view(mesh.vertex_offset, mesh.vertex_count);
     auto tex_coords = data.tex_coords.sub_view(mesh.vertex_offset, mesh.vertex_count);
-    return computeSurfaceInteraction(positions, normals, tex_coords, tri, closest_hit.bary, o2w);
+    auto si = computeSurfaceInteraction(positions, normals, tex_coords, tri, closest_hit.bary, o2w);
+    si.material = &data.materials[mesh.material_idx];
+    return si;
 }

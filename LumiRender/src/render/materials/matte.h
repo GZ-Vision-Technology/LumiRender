@@ -17,7 +17,7 @@ namespace luminous {
         public:
             MatteMaterial(index_t r) : _R(r) {}
 
-            NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const HitGroupData* hit_group_data) {
+            NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const HitGroupData* hit_group_data) const {
                 Texture tex = hit_group_data->textures[_R];
                 BxDF bxdf = BxDF(IdealDiffuse(tex.eval(ctx)));
 

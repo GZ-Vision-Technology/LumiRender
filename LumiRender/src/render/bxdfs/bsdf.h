@@ -32,6 +32,10 @@ namespace luminous {
                 return _bxdf.eval(wo, wi, mode);
             }
 
+            NDSC_XPU float4 base_color() const {
+                return _bxdf.base_color();
+            }
+
             NDSC_XPU float4 rho_hd(float3 wo_world, BufferView<const float> uc,
                                    BufferView<const float2> u2) const {
                 float3 wo = to_local(wo_world);

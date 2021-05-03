@@ -72,12 +72,15 @@ namespace luminous {
             }
         };
 
+        class Material;
+        class Light;
+
         struct SurfaceInteraction : public Interaction {
             float2 uv;
             UVN s_uvn;
             UVN g_uvn;
-            float3 dp_dx;
-            float3 dp_dy;
+            const Light *light = nullptr;
+            const Material *material = nullptr;
             float du_dx = 0, dv_dx = 0, du_dy = 0, dv_dy = 0;
         };
 
@@ -86,8 +89,6 @@ namespace luminous {
 
             XPU TextureEvalContext(const SurfaceInteraction &si)
                     : p(si.pos),
-                      dp_dx(si.dp_dx),
-                      dp_dy(si.dp_dy),
                       uv(si.uv),
                       du_dx(si.du_dx),
                       du_dy(si.du_dy),
@@ -97,8 +98,6 @@ namespace luminous {
             float3 p;
             float2 uv;
             float du_dx = 0, du_dy = 0, dv_dx = 0, dv_dy = 0;
-            float3 dp_dx;
-            float3 dp_dy;
         };
 
         struct MaterialEvalContext : public TextureEvalContext {
