@@ -54,6 +54,28 @@ namespace luminous {
             return ret;
         }
 
+        ShapeConfig parse_shape(const DataWrap &shape) {
+            ShapeConfig shape_config;
+            shape_config.set_type(string(shape["type"]));
+            shape_config.name = shape["name"];
+            ParameterSet param(shape["param"]);
+            if (shape_config.type() == "model") {
+                shape_config.subdiv_level = param["subdiv_level"].as_uint(0u);
+                shape_config.fn = param["fn"].as_string();
+                shape_config.smooth = param["smooth"].as_bool(true);
+            } else if (shape_config.type() == "quad") {
+                shape_config.width = param["width"].as_float(1);
+                shape_config.height = param["height"].as_float(1);
+            }
+            shape_config.material_name = param["material"].as_string();
+            shape_config.name = string(shape["name"]);
+            shape_config.o2w = parse_transform(param["transform"]);
+            if (param.contains("emission")) {
+                shape_config.emission = param["emission"].as_float3(make_float3(0.f));
+            }
+            return shape_config;
+        }
+
         //		{
         //			"name" : "c_box",
         //			"type": "model", or "quad"
@@ -73,24 +95,7 @@ namespace luminous {
             std::vector<ShapeConfig> ret;
             ret.reserve(shapes.size());
             for (auto &shape : shapes) {
-                ShapeConfig shape_config;
-                shape_config.set_type(string(shape["type"]));
-                shape_config.name = shape["name"];
-                ParameterSet param(shape["param"]);
-                if (shape_config.type() == "model") {
-                    shape_config.subdiv_level = param["subdiv_level"].as_uint(0u);
-                    shape_config.fn = param["fn"].as_string();
-                    shape_config.smooth = param["smooth"].as_bool(true);
-                } else if (shape_config.type() == "quad") {
-                    shape_config.width = param["width"].as_float(1);
-                    shape_config.height = param["height"].as_float(1);
-                }
-                shape_config.material_name = param["material"].as_string();
-                shape_config.name = string(shape["name"]);
-                shape_config.o2w = parse_transform(param["transform"]);
-                if (param.contains("emission")) {
-                    shape_config.emission = param["emission"].as_float3(make_float3(0.f));
-                }
+                ShapeConfig shape_config = parse_shape(shape);
                 ret.push_back(shape_config);
             }
             return move(ret);
@@ -201,7 +206,6 @@ namespace luminous {
             } else {
                 tc.color_space = LINEAR;
             }
-
             return tc;
         }
 
@@ -221,6 +225,7 @@ namespace luminous {
             if (type == "MatteMaterial") {
                 ret.diffuse_tex.name = ps["param"]["diffuse"].as_string();
             }
+            ret.name = ps["name"].as_string();
             return ret;
         }
 

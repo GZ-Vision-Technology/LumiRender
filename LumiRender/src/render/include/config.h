@@ -11,6 +11,7 @@
 #include <string>
 #include "core/logging.h"
 #include "util/image_base.h"
+#include "graphics/lstd/lstd.h"
 
 namespace luminous {
     inline namespace render {
@@ -23,6 +24,7 @@ namespace luminous {
         protected:
             std::string _type;
         public:
+            std::string name = "";
             void set_type(const std::string &type) {
                 _type = type;
             }
@@ -86,7 +88,6 @@ namespace luminous {
             ShapeConfig() {
             }
 
-            std::string name;
             TransformConfig o2w;
             float3 emission = make_float3(0.f);
 
@@ -115,8 +116,6 @@ namespace luminous {
                 return fn != "";
             }
 
-            std::string name = "";
-
             ColorSpace color_space = LINEAR;
             // for constant texture
             float4 val = make_float4(0.f);
@@ -140,14 +139,7 @@ namespace luminous {
             });
         }
 
-        template<typename T, typename Predict>
-        int find_idx(const T& v, Predict predict) {
-            auto iter = std::find_if(v.cbegin(), v.cend(), predict);
-            if (iter == v.cend()) {
-                return -1;
-            }
-            return iter - v.cbegin();
-        }
+
 
         struct MaterialConfig : Config {
 
@@ -178,7 +170,7 @@ namespace luminous {
                         tex_configs.push_back(normal_tex);
                     }
                 } else if (type() == full_type("MatteMaterial")) {
-                    int idx = find_idx(tex_configs, [&](TextureConfig tex_config){
+                    int idx = lstd::find_index_if(tex_configs, [&](TextureConfig tex_config){
                         return tex_config.name == diffuse_tex.name;
                     });
                     DCHECK(idx != -1);

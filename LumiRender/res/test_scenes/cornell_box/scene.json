@@ -12,7 +12,6 @@
 			"name": "picture",
 			"type" :"ImageTexture",
 			"param": {
-//				"fn": "png2exr.exr",
 				"fn": "HelloWorld.png",
 				"color_space": "LINEAR"
 			}
@@ -85,7 +84,8 @@
 						"pitch": 0,
 						"position": [5,5,5]
 					}
-				}
+				},
+				"material" : "quad"
 			}
 		},
 		{
@@ -102,9 +102,10 @@
 						"pitch": 0,
 						"position": [5,7,5]
 					}
-				}
+				},
+				"material": "quad2"
 			}
-		}
+		},
 //		{
 //			"name" : "c_box",
 //			"type": "model",
@@ -127,7 +128,6 @@
 //			"param" : {
 //				"fn": "cornell_box.obj",
 //				"smooth": false,
-////				"fn": "nanosuit/nanosuit.obj",
 //				"subdiv_level": 0,
 //				"transform" : {
 //					"type" : "trs",
@@ -139,62 +139,22 @@
 //				}
 //			}
 //		},
-//		{
-//			"name" : "c_box",
-//			"type": "model",
-//			"param" : {
-////				"fn": "cornell_box.obj",
-//				"fn": "nanosuit/nanosuit.obj",
-//				"subdiv_level": 0,
-//				"transform" : {
-//					"type" : "matrix4x4",
-//					"param" : {
-//						"matrix4x4" : [
-//							1,0,0,0,
-//							0,1,0,0,
-//							0,0,1,0,
-//							0,0,0,1
-//						]
-//					}
-//				}
-//			}
-//		}
-//	,
-//		{
-//			"name" : "c_box",
-//			"type": "model",
-//			"param" : {
-//				"fn": "teapot.obj",
-//				"subdiv_level": 0,
-//				"transform" : {
-//					"type" : "matrix4x4",
-//					"param" : {
-//						"matrix4x4" : [
-//							1,0,0,0,
-//							0,1,0,0,
-//							0,0,1,0,
-//							2,3,5,1
-//						]
-//					}
-//				}
-//			}
-//		}
-//		{
-//			"name" : "c_box",
-//			"type": "model",
-//			"param" : {
-//				"fn": "cbox_smallbox.obj",
-//				"subdiv_level": 0,
-//				"transform" : {
-//					"type" : "trs",
-//					"param": {
-//						"t": [1,1,1],
-//						"r": [1,1,1,60],
-//						"s": [2,2,2]
-//					}
-//				}
-//			}
-//		}
+		{
+			"name" : "c_box",
+			"type": "model",
+			"param" : {
+				"fn": "nanosuit/nanosuit.obj",
+				"subdiv_level": 0,
+				"transform" : {
+					"type" : "trs",
+					"param" : {
+						"t" : [0, 0, 1],
+						"r" : [1, 0, 0, 0],
+						"s" : [0.1,0.1,0.1]
+					}
+				}
+			}
+		}
 	],
 	"lights" : [
 		{

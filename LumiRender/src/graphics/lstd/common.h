@@ -26,13 +26,33 @@
 namespace lstd {
 
     template<typename T>
-    XPU inline void swap(T &a, T &b) {
+    NDSC_XPU inline void swap(T &a, T &b) {
         T tmp = std::move(a);
         a = std::move(b);
         b = std::move(tmp);
     }
 
-    inline constexpr size_t max(size_t a, size_t b) { return a < b ? b : a; }
+    template<typename Iter, typename Predict>
+    NDSC_XPU Iter find_if(const Iter begin, const Iter end, Predict predict) {
+        Iter iter;
+        for(iter = begin; iter != end; ++iter) {
+            if (predict(*iter)) {
+                break;
+            }
+        }
+        return iter;
+    }
+
+    template<typename T, typename Predict>
+    NDSC_XPU int64_t find_index_if(const T& v, Predict predict) {
+        auto iter = std::find_if(v.cbegin(), v.cend(), predict);
+        if (iter == v.cend()) {
+            return -1;
+        }
+        return iter - v.cbegin();
+    }
+
+    NDSC_XPU inline constexpr size_t max(size_t a, size_t b) { return a < b ? b : a; }
 
     template<typename T1, typename T2>
     struct alignas(max(alignof(T1), alignof(T2))) pair {

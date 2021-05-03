@@ -59,9 +59,9 @@ namespace luminous {
             TASK_TAG("convert scene data start!")
             index_t vert_offset = 0u;
             index_t tri_offset = 0u;
-
+            append(_material_configs, scene_graph->material_configs);
             vector <TextureConfig> tex_configs;
-            index_t material_count = 0u;
+            index_t material_count = _material_configs.size();
             for (const SP<const Model> &model : scene_graph->model_list) {
                 for (const SP<const Mesh> &mesh : model->meshes) {
                     _positions.append(mesh->positions);
@@ -81,7 +81,7 @@ namespace luminous {
                 append(_material_configs, model->materials);
                 append(tex_configs, model->textures);
             }
-            append(_material_configs, scene_graph->material_configs);
+
             append(_tex_configs, scene_graph->tex_configs);
             relevance_material_and_texture(_material_configs);
 
