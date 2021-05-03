@@ -31,13 +31,13 @@ namespace luminous {
             float3 L{};
             float3 wi{};
             float PDF_dir{-1.f};
-            Interaction p_light{};
+            SurfaceInteraction p_light{};
             Interaction p_ref{};
             XPU LightLiSample() = default;
 
             XPU LightLiSample(const float3 &L, float3 wi,
-                              float PDF, const Interaction &i)
-                    : L(L), wi(wi), PDF_dir(PDF), p_light(i) {}
+                              float PDF, const SurfaceInteraction &si)
+                    : L(L), wi(wi), PDF_dir(PDF), p_light(si) {}
         };
 
         struct LightSampleContext {

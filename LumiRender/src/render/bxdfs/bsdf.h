@@ -19,6 +19,8 @@ namespace luminous {
         public:
             XPU BSDF() = default;
 
+//            XPU BSDF(float3 ng, F)
+
             NDSC_XPU float4 eval(float3 wo_world, float3 wi_world,
                                  TransportMode mode = TransportMode::Radiance) const {
                 float3 wo = _shading_frame.to_local(wo_world);

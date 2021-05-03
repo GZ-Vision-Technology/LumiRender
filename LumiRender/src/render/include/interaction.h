@@ -53,17 +53,24 @@ namespace luminous {
 
         struct Interaction {
             float3 pos;
-            float3 ng;
-            float3 ns;
-            float2 uv;
             float3 wo;
             float time;
 
             Interaction() = default;
         };
 
+        struct UVN {
+            float3 dp_du;
+            float3 dp_dv;
+            float3 normal;
+        };
+
         struct SurfaceInteraction : public Interaction {
-            float3 dp_dx, dp_dy, dp_du, dp_dv;
+            float2 uv;
+            UVN s_uvn;
+            UVN g_uvn;
+            float3 dp_dx;
+            float3 dp_dy;
             float du_dx = 0, dv_dx = 0, du_dy = 0, dv_dy = 0;
         };
     }

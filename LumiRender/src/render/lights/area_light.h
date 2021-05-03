@@ -22,13 +22,13 @@ namespace luminous {
                       _L(L),
                       _two_sided(two_sided) {}
 
-            NDSC_XPU float3 L(const Interaction &p_light, float3 w) const;
+            NDSC_XPU float3 L(const SurfaceInteraction &p_light, float3 w) const;
 
             NDSC_XPU LightLiSample Li(LightLiSample lls) const;
 
             NDSC_XPU Interaction sample(float u, const HitGroupData * hit_group_data) const;
 
-            NDSC_XPU float PDF_Li(const Interaction &p_ref, const Interaction &p_light) const;
+            NDSC_XPU float PDF_Li(const Interaction &p_ref, const SurfaceInteraction &p_light) const;
 
             NDSC_XPU float3 power() const;
 

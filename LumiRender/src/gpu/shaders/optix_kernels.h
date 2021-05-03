@@ -132,7 +132,7 @@ static GPU_INLINE luminous::SurfaceInteraction getSurfaceInteraction(luminous::C
     uint32_t instance_id = closest_hit.instance_id;
     uint32_t prim_idx = closest_hit.triangle_id;
     luminous::float2 uv = closest_hit.bary;
-    SurfaceInteraction interaction;
+    SurfaceInteraction si;
     HitGroupData data = getSbtData<HitGroupData>();
     uint mesh_idx = data.inst_to_mesh_idx[instance_id];
     luminous::float4x4 mat4x4 = data.transforms[data.inst_to_transform_idx[instance_id]];
@@ -142,22 +142,19 @@ static GPU_INLINE luminous::SurfaceInteraction getSurfaceInteraction(luminous::C
     auto positions = data.positions.sub_view(mesh.vertex_offset, mesh.vertex_count);
     auto normals = data.normals.sub_view(mesh.vertex_offset, mesh.vertex_count);
     auto tex_coords = data.tex_coords.sub_view(mesh.vertex_offset, mesh.vertex_count);
-    auto light_sampler = data.light_sampler;
-
-    auto distrib = data.emission_distributions;
 
     auto n0 = normals[tri.i];
     auto n1 = normals[tri.j];
     auto n2 = normals[tri.k];
-    interaction.ns = normalize(o2w.apply_normal(triangle_lerp(uv, n0, n1, n2)));
+    si.s_uvn.normal = normalize(o2w.apply_normal(triangle_lerp(uv, n0, n1, n2)));
 
     auto p0 = positions[tri.i];
     auto p1 = positions[tri.j];
     auto p2 = positions[tri.k];
     auto v01 = p1 - p0;
     auto v02 = p2 - p0;
-    interaction.pos = o2w.apply_point(triangle_lerp(uv, p0, p1, p2));
-    interaction.ng = normalize(o2w.apply_normal(cross(v01, v02)));
+    si.pos = o2w.apply_point(triangle_lerp(uv, p0, p1, p2));
+    si.g_uvn.normal = normalize(o2w.apply_normal(cross(v01, v02)));
 
     auto tex_coord0 = tex_coords[tri.i];
     auto tex_coord1 = tex_coords[tri.j];
@@ -168,7 +165,7 @@ static GPU_INLINE luminous::SurfaceInteraction getSurfaceInteraction(luminous::C
         tex_coord1 = luminous::make_float2(1,0);
         tex_coord2 = luminous::make_float2(1,1);
     }
-    interaction.uv = triangle_lerp(uv, tex_coord0, tex_coord1, tex_coord2);
+    si.uv = triangle_lerp(uv, tex_coord0, tex_coord1, tex_coord2);
 
-    return interaction;
+    return si;
 }

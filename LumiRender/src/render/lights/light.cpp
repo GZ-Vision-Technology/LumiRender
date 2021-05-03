@@ -24,7 +24,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(is_delta);
         }
 
-        float Light::PDF_Li(const Interaction &ref_p, const Interaction &p_light) const {
+        float Light::PDF_Li(const Interaction &ref_p, const SurfaceInteraction &p_light) const {
             LUMINOUS_VAR_DISPATCH(PDF_Li, ref_p, p_light);
         }
 

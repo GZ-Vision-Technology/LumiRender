@@ -18,7 +18,7 @@ namespace luminous {
             lls.wi = normalize(lls.p_light.pos - lls.p_ref.pos);
             lls.L = L(lls.p_light, -lls.wi);
             float PDF_pos = _inv_area;
-            float cos_theta = abs_dot(lls.p_light.ng, normalize(-lls.wi));
+            float cos_theta = abs_dot(lls.p_light.g_uvn.normal, normalize(-lls.wi));
             float PDF_dir = PDF_pos * length_squared(lls.wi) / cos_theta;
             if (is_inf(PDF_dir)) {
                 PDF_dir = 0;
@@ -33,10 +33,10 @@ namespace luminous {
          * @param p_light
          * @return
          */
-        float AreaLight::PDF_Li(const Interaction &p_ref, const Interaction &p_light) const {
+        float AreaLight::PDF_Li(const Interaction &p_ref, const SurfaceInteraction &p_light) const {
             float PDF_pos = _inv_area;
             float3 wi = p_ref.pos - p_light.pos;
-            float cos_theta = abs_dot(p_light.ng, normalize(wi));
+            float cos_theta = abs_dot(p_light.g_uvn.normal, normalize(wi));
             float PDF_dir = PDF_pos * length_squared(wi) / cos_theta;
             if (is_inf(PDF_dir)) {
                 return 0;
@@ -48,8 +48,8 @@ namespace luminous {
             return (_two_sided ? _2Pi : Pi) * _L / _inv_area;
         }
 
-        float3 AreaLight::L(const Interaction &p_light, float3 w) const {
-            return (_two_sided || dot(w, p_light.ng)) ? _L : make_float3(0.f);
+        float3 AreaLight::L(const SurfaceInteraction &p_light, float3 w) const {
+            return (_two_sided || dot(w, p_light.g_uvn.normal)) ? _L : make_float3(0.f);
         }
 
         std::string AreaLight::to_string() const {

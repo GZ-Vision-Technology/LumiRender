@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "graphics/math/common.h"
+
 namespace luminous {
     inline namespace geometry {
 
@@ -13,27 +15,41 @@ namespace luminous {
             using scalar_t = T;
             using vector_t = Vector<T, 3>;
 
-            vector_t n;
-            vector_t s, t;
+            vector_t z;
+            vector_t x, y;
 
-            XPU TFrame() = default;
+            XPU TFrame() : x(1, 0, 0), y(0, 1, 0), z(0, 0, 1) {}
+
+            XPU TFrame(vector_t x, vector_t y, vector_t z) : x(x), y(y), z(z) {}
 
             XPU TFrame(vector_t normal)
-                    : n(normal) {
-                coordinateSystem(n, &s, &t);
+                    : z(normal) {
+                coordinateSystem(z, &x, &y);
+            }
+
+            NDSC_XPU static TFrame from_xy(vector_t x, vector_t y) {
+                return TFrame(x, y, cross(x, y));
+            }
+
+            NDSC_XPU static TFrame from_xz(vector_t x, vector_t z) {
+                return TFrame(x, cross(x, z), z);
+            }
+
+            NDSC_XPU static TFrame from_z(vector_t z) {
+                return TFrame(z);
             }
 
             XPU void init(vector_t normal) {
-                n = normal;
-                coordinateSystem(n, &s, &t);
+                z = normal;
+                coordinateSystem(z, &x, &y);
             }
 
             XPU vector_t to_local(vector_t world_v) const {
-                return vector_t(dot(world_v, s), dot(world_v, t), dot(world_v, n));
+                return vector_t(dot(world_v, x), dot(world_v, y), dot(world_v, z));
             }
 
             XPU vector_t to_world(vector_t local_v) const {
-                return s * local_v.x + t * local_v.y + n * local_v.z;
+                return x * local_v.x + y * local_v.y + z * local_v.z;
             }
 
             XPU static scalar_t cos_theta_2(vector_t v) {
@@ -102,7 +118,7 @@ namespace luminous {
             }
 
             XPU bool operator==(const TFrame &frame) const {
-                return frame.s == s && frame.t == t && frame.n == n;
+                return frame.x == x && frame.y == y && frame.z == z;
             }
 
             XPU bool operator!=(const TFrame &frame) const {
@@ -110,14 +126,14 @@ namespace luminous {
             }
 
             XPU bool has_nan() const {
-                return s.has_nan() || t.has_nan() || n.has_nan();
+                return x.has_nan() || y.has_nan() || z.has_nan();
             }
 
             [[nodiscard]] std::string to_string() const {
                 return string_printf("frame : {x:%s,y:%s,z:%s}",
-                                     s.to_string().c_str(),
-                                     t.to_string().c_str(),
-                                     n.to_string().c_str());
+                                     x.to_string().c_str(),
+                                     y.to_string().c_str(),
+                                     z.to_string().c_str());
             }
         };
 

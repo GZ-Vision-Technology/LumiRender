@@ -48,7 +48,7 @@ GLOBAL __closesthit__radiance() {
     using namespace luminous;
     RadiancePRD *prd = getPRD();
     auto interaction = getSurfaceInteraction(getClosestHit());
-    auto n = interaction.ns;
+    auto n = interaction.s_uvn.normal;
     n = (n + 1.f) / 2.f;
     HitGroupData data = getSbtData<HitGroupData>();
 
