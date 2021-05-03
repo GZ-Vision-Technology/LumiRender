@@ -139,8 +139,8 @@ static GPU_INLINE luminous::float3 computeShadingNormal(luminous::BufferView<con
 }
 
 static GPU_INLINE luminous::float2 computeTexCoord(luminous::BufferView<const luminous::float2> tex_coords,
-                                                        luminous::TriangleHandle tri,
-                                                        luminous::float2 uv) {
+                                                   luminous::TriangleHandle tri,
+                                                   luminous::float2 uv) {
     using namespace luminous;
     auto tex_coord0 = tex_coords[tri.i];
     auto tex_coord1 = tex_coords[tri.j];
@@ -162,34 +162,70 @@ static GPU_INLINE auto computePosition(luminous::BufferView<const luminous::floa
     auto p1 = positions[tri.j];
     auto p2 = positions[tri.k];
     auto pos = triangle_lerp(uv, p0, p1, p2);
-    auto v01 = p1 - p0;
-    auto v02 = p2 - p0;
-    return lstd::make_pair(pos, cross(v01, v02));
+    auto dp02 = p0 - p2;
+    auto dp12 = p1 - p2;
+    return lstd::make_pair(pos, cross(dp02, dp12));
+}
+
+static GPU_INLINE luminous::SurfaceInteraction
+computeSurfaceInteraction(luminous::BufferView<const luminous::float3> positions,
+                          luminous::BufferView<const luminous::float3> normals,
+                          luminous::BufferView<const luminous::float2> tex_coords,
+                          luminous::TriangleHandle tri,
+                          luminous::float2 uv,
+                          luminous::Transform o2w) {
+    using namespace luminous;
+    SurfaceInteraction si;
+
+    luminous::float2 tex_coord0 = tex_coords[tri.i];
+    luminous::float2 tex_coord1 = tex_coords[tri.j];
+    luminous::float2 tex_coord2 = tex_coords[tri.k];
+    if (tex_coord0.is_zero() && tex_coord1.is_zero() && tex_coord2.is_zero()) {
+        tex_coord0 = luminous::make_float2(0, 0);
+        tex_coord1 = luminous::make_float2(1, 0);
+        tex_coord2 = luminous::make_float2(1, 1);
+    }
+    si.uv = triangle_lerp(uv, tex_coord0, tex_coord1, tex_coord2);
+
+    luminous::float3 p0 = o2w.apply_point(positions[tri.i]);
+    luminous::float3 p1 = o2w.apply_point(positions[tri.j]);
+    luminous::float3 p2 = o2w.apply_point(positions[tri.k]);
+    luminous::float3 pos = triangle_lerp(uv, p0, p1, p2);
+    si.pos = pos;
+
+    // compute geometry uvn
+    luminous::float3 dp02 = p0 - p2;
+    luminous::float3 dp12 = p1 - p2;
+    luminous::float3 ng = cross(dp02, dp12);
+
+    luminous::float2 duv02 = tex_coord0 - tex_coord2;
+    luminous::float2 duv12 = tex_coord1 - tex_coord2;
+    float det = duv02[0] * duv12[1] - duv02[1] * duv12[0];
+    float inv_det = 1 / det;
+
+    luminous::float3 dp_du = (duv12[1] * dp02 - duv02[1] * dp12) * inv_det;
+    luminous::float3 dp_dv = (-duv12[0] * dp02 + duv02[0] * dp12) * inv_det;
+    si.g_uvn.set(normalize(dp_du), normalize(dp_dv), normalize(ng));
+
+    // compute shading uvn
+    luminous::float3 ns = normalize(o2w.apply_normal(computeShadingNormal(normals, tri, uv)));
+    luminous::float3 ss = si.g_uvn.dp_du;
+    luminous::float3 st = normalize(cross(ns, ss));
+    si.s_uvn.set(ss, st, ns);
+
+    return si;
 }
 
 static GPU_INLINE luminous::SurfaceInteraction getSurfaceInteraction(luminous::ClosestHit closest_hit) {
     using namespace luminous;
-    uint32_t instance_id = closest_hit.instance_id;
-    uint32_t prim_idx = closest_hit.triangle_id;
-    luminous::float2 uv = closest_hit.bary;
-    SurfaceInteraction si;
     HitGroupData data = getSbtData<HitGroupData>();
-    uint mesh_idx = data.inst_to_mesh_idx[instance_id];
-    luminous::float4x4 mat4x4 = data.transforms[data.inst_to_transform_idx[instance_id]];
+    uint mesh_idx = data.inst_to_mesh_idx[closest_hit.instance_id];
+    luminous::float4x4 mat4x4 = data.transforms[data.inst_to_transform_idx[closest_hit.instance_id]];
     Transform o2w(mat4x4);
     MeshHandle mesh = data.meshes[mesh_idx];
-    TriangleHandle tri = data.triangles[mesh.triangle_offset + prim_idx];
+    TriangleHandle tri = data.triangles[mesh.triangle_offset + closest_hit.triangle_id];
     auto positions = data.positions.sub_view(mesh.vertex_offset, mesh.vertex_count);
     auto normals = data.normals.sub_view(mesh.vertex_offset, mesh.vertex_count);
     auto tex_coords = data.tex_coords.sub_view(mesh.vertex_offset, mesh.vertex_count);
-
-    si.s_uvn.normal = normalize(o2w.apply_normal(computeShadingNormal(normals, tri, uv)));
-
-    auto[pos, ng] = computePosition(positions, tri, uv);
-    si.pos = o2w.apply_point(pos);
-    si.g_uvn.normal = normalize(o2w.apply_normal(ng));
-
-    si.uv = computeTexCoord(tex_coords, tri, uv);
-
-    return si;
+    return computeSurfaceInteraction(positions, normals, tex_coords, tri, closest_hit.bary, o2w);
 }
