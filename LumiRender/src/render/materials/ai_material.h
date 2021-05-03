@@ -6,6 +6,8 @@
 #pragma once
 
 #include "render/textures/texture.h"
+#include "render/include/config.h"
+#include "render/bxdfs/bsdf.h"
 
 namespace luminous {
     inline namespace render {
@@ -28,6 +30,11 @@ namespace luminous {
 
             NDSC_XPU BSDF get_BSDF(TextureEvalContext tec, const HitGroupData *hit_group_data, BxDF *bxdf) {
 
+            }
+
+            static AssimpMaterial create(const MaterialConfig &mc) {
+                return AssimpMaterial(mc.diffuse_idx, mc.specular_idx, mc.normal_idx,
+                                      mc.diffuse_tex.val, mc.specular_tex.val);
             }
         };
     }

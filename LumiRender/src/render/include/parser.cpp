@@ -85,6 +85,7 @@ namespace luminous {
                     shape_config.width = param["width"].as_float(1);
                     shape_config.height = param["height"].as_float(1);
                 }
+                shape_config.material_name = param["material"].as_string();
                 shape_config.name = string(shape["name"]);
                 shape_config.o2w = parse_transform(param["transform"]);
                 if (param.contains("emission")) {
@@ -187,13 +188,13 @@ namespace luminous {
             type = ps["type"].as_string("ConstantTexture");
             TextureConfig tc;
             auto param = ps["param"];
+            tc.set_full_type(type);
             if (type == "ConstantTexture") {
-                tc.set_type(type_name<ConstantTexture>());
                 tc.val = param["val"].as_float4(make_float4(1.f));
             } else {
-                tc.set_type(type_name<ImageTexture>());
                 tc.fn = param["fn"].as_string();
             }
+            tc.name = ps["name"].as_string();
             string color_space = param["color_space"].as_string("SRGB");
             if (color_space == "SRGB") {
                 tc.color_space = SRGB;
@@ -212,6 +213,25 @@ namespace luminous {
             return ret;
         }
 
+        MaterialConfig parse_material(const ParameterSet &ps) {
+            std::string type;
+            type = ps["type"].as_string("MatteMaterial");
+            MaterialConfig ret;
+            ret.set_full_type(type);
+            if (type == "MatteMaterial") {
+                ret.diffuse_tex.name = ps["param"]["diffuse"].as_string();
+            }
+            return ret;
+        }
+
+        std::vector<MaterialConfig> parse_materials(const DataWrap &materials) {
+            std::vector<MaterialConfig> ret;
+            for (const auto &material : materials) {
+                ret.push_back(parse_material(ParameterSet(material)));
+            }
+            return ret;
+        }
+
         SP<SceneGraph> Parser::parse() const {
             auto shapes = _data["shapes"];
             auto scene_graph = make_shared<SceneGraph>(_context);
@@ -220,7 +240,8 @@ namespace luminous {
             scene_graph->sampler_config = parse_sampler(ParameterSet(_data["sampler"]));
             scene_graph->light_configs = parse_lights(_data.value("lights", DataWrap()));
             scene_graph->light_sampler_config = parse_light_sampler(ParameterSet(_data["light_sampler"]));
-            scene_graph->tex_configs = parse_textures(_data["tex_vectors"]);
+            scene_graph->tex_configs = parse_textures(_data["textures"]);
+            scene_graph->material_configs = parse_materials(_data["materials"]);
             return scene_graph;
         }
     }

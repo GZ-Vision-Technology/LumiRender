@@ -1,27 +1,36 @@
 {
-	"tex_scalars" : [
+	"textures" : [
 		{
 			"type" :"ConstantTexture",
-			"param": {
-				"val": 2,
-				"color_space": "LINEAR"
-			}
-		}
-	],
-	"tex_vectors" : [
-		{
-			"type" :"ConstantTexture",
+			"name" : "constant",
 			"param": {
 				"val": [1,0,1,0],
 				"color_space": "SRGB"
 			}
 		},
 		{
+			"name": "picture",
 			"type" :"ImageTexture",
 			"param": {
 //				"fn": "png2exr.exr",
 				"fn": "HelloWorld.png",
 				"color_space": "LINEAR"
+			}
+		}
+	],
+	"materials": [
+		{
+			"type": "MatteMaterial",
+			"name": "quad",
+			"param": {
+				"diffuse": "picture"
+			}
+		},
+		{
+			"type": "MatteMaterial",
+			"name": "quad2",
+			"param": {
+				"diffuse": "constant"
 			}
 		}
 	],
@@ -58,7 +67,8 @@
 						"pitch": 0,
 						"position": [0,0,0]
 					}
-				}
+				},
+				"material": "quad"
 			}
 		},
 		{
@@ -94,7 +104,7 @@
 					}
 				}
 			}
-		},
+		}
 //		{
 //			"name" : "c_box",
 //			"type": "model",
@@ -111,44 +121,44 @@
 //				}
 //			}
 //		},
-		{
-			"name" : "c_box",
-			"type": "model",
-			"param" : {
-				"fn": "cornell_box.obj",
-				"smooth": false,
-//				"fn": "nanosuit/nanosuit.obj",
-				"subdiv_level": 0,
-				"transform" : {
-					"type" : "trs",
-					"param" : {
-						"t": [0,0,0],
-						"r": [1,0,0,0],
-						"s": [0.1,0.1,0.1]
-					}
-				}
-			}
-		},
-		{
-			"name" : "c_box",
-			"type": "model",
-			"param" : {
+//		{
+//			"name" : "c_box",
+//			"type": "model",
+//			"param" : {
 //				"fn": "cornell_box.obj",
-				"fn": "nanosuit/nanosuit.obj",
-				"subdiv_level": 0,
-				"transform" : {
-					"type" : "matrix4x4",
-					"param" : {
-						"matrix4x4" : [
-							1,0,0,0,
-							0,1,0,0,
-							0,0,1,0,
-							0,0,0,1
-						]
-					}
-				}
-			}
-		}
+//				"smooth": false,
+////				"fn": "nanosuit/nanosuit.obj",
+//				"subdiv_level": 0,
+//				"transform" : {
+//					"type" : "trs",
+//					"param" : {
+//						"t": [0,0,0],
+//						"r": [1,0,0,0],
+//						"s": [0.1,0.1,0.1]
+//					}
+//				}
+//			}
+//		},
+//		{
+//			"name" : "c_box",
+//			"type": "model",
+//			"param" : {
+////				"fn": "cornell_box.obj",
+//				"fn": "nanosuit/nanosuit.obj",
+//				"subdiv_level": 0,
+//				"transform" : {
+//					"type" : "matrix4x4",
+//					"param" : {
+//						"matrix4x4" : [
+//							1,0,0,0,
+//							0,1,0,0,
+//							0,0,1,0,
+//							0,0,0,1
+//						]
+//					}
+//				}
+//			}
+//		}
 //	,
 //		{
 //			"name" : "c_box",

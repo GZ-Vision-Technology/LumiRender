@@ -89,6 +89,8 @@ namespace luminous {
             std::string name;
             TransformConfig o2w;
             float3 emission = make_float3(0.f);
+
+            std::string material_name;
 //            union {
 //                // model param
 //                struct {
@@ -138,6 +140,15 @@ namespace luminous {
             });
         }
 
+        template<typename T, typename Predict>
+        int find_idx(const T& v, Predict predict) {
+            auto iter = std::find_if(v.cbegin(), v.cend(), predict);
+            if (iter == v.cend()) {
+                return -1;
+            }
+            return iter - v.cbegin();
+        }
+
         struct MaterialConfig : Config {
 
             // Assimp or matte
@@ -153,17 +164,25 @@ namespace luminous {
             index_t normal_idx{index_t(-1)};
 
             void fill_tex_configs(vector <TextureConfig> &tex_configs) {
-                if (!is_contain(tex_configs, diffuse_tex)) {
-                    diffuse_idx = tex_configs.size();
-                    tex_configs.push_back(diffuse_tex);
-                }
-                if (!is_contain(tex_configs, specular_tex)) {
-                    specular_idx = tex_configs.size();
-                    tex_configs.push_back(specular_tex);
-                }
-                if (!is_contain(tex_configs, normal_tex)) {
-                    normal_idx = tex_configs.size();
-                    tex_configs.push_back(normal_tex);
+                if (type() == full_type("AssimpMaterial")) {
+                    if (!is_contain(tex_configs, diffuse_tex)) {
+                        diffuse_idx = tex_configs.size();
+                        tex_configs.push_back(diffuse_tex);
+                    }
+                    if (!is_contain(tex_configs, specular_tex)) {
+                        specular_idx = tex_configs.size();
+                        tex_configs.push_back(specular_tex);
+                    }
+                    if (!is_contain(tex_configs, normal_tex)) {
+                        normal_idx = tex_configs.size();
+                        tex_configs.push_back(normal_tex);
+                    }
+                } else if (type() == full_type("MatteMaterial")) {
+                    int idx = find_idx(tex_configs, [&](TextureConfig tex_config){
+                        return tex_config.name == diffuse_tex.name;
+                    });
+                    DCHECK(idx != -1);
+                    diffuse_idx = idx;
                 }
             }
         };

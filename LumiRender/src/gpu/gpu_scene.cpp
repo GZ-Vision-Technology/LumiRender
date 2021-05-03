@@ -79,7 +79,6 @@ namespace luminous {
 
         void GPUScene::preload_textures(const SP<SceneGraph> &scene_graph) {
             TASK_TAG("preload_textures")
-            append(_tex_configs, scene_graph->tex_configs);
             for (auto &tc : _tex_configs) {
                 if (tc.type() == type_name<ImageTexture>()) {
                     if (tc.fn.empty()) {

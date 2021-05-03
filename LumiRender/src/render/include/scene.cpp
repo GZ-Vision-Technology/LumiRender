@@ -49,7 +49,7 @@ namespace luminous {
             }
         }
 
-        void Scene::update_materials_and_textures(vector <MaterialConfig> &material_configs) {
+        void Scene::relevance_material_and_texture(vector <MaterialConfig> &material_configs) {
             for (auto &mat_config : material_configs) {
                 mat_config.fill_tex_configs(_tex_configs);
             }
@@ -81,8 +81,9 @@ namespace luminous {
                 append(_material_configs, model->materials);
                 append(tex_configs, model->textures);
             }
-
-            update_materials_and_textures(_material_configs);
+            append(_material_configs, scene_graph->material_configs);
+            append(_tex_configs, scene_graph->tex_configs);
+            relevance_material_and_texture(_material_configs);
 
             index_t distribute_idx = 0;
             for (const SP<const ModelInstance> &instance : scene_graph->instance_list) {

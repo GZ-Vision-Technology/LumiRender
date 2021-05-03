@@ -30,8 +30,8 @@ namespace luminous {
             LightSamplerConfig light_sampler_config;
             vector<SP<const Model>> model_list;
             vector<SP<const ModelInstance>> instance_list;
-
             vector<TextureConfig> tex_configs;
+            vector<MaterialConfig> material_configs;
         private:
             bool is_contain(const string &key) {
                 return _key_to_idx.find(key) != _key_to_idx.end();

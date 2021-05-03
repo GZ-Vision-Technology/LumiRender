@@ -82,7 +82,7 @@ namespace luminous {
 
             void convert_data(const SP<SceneGraph> &scene_graph);
 
-            void update_materials_and_textures(vector<MaterialConfig> &material_configs);
+            void relevance_material_and_texture(vector<MaterialConfig> &material_configs);
 
             void load_lights(const vector <LightConfig> &lc, const LightSamplerConfig &lsc);
 
