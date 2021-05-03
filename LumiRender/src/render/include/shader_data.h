@@ -30,7 +30,7 @@ namespace luminous {
             // instance data
             BufferView<const uint> inst_to_mesh_idx;
             BufferView<const uint> inst_to_transform_idx;
-            BufferView<const float4x4> transforms;
+            BufferView<const Transform> transforms;
 
             // mesh data
             BufferView<const MeshHandle> meshes;

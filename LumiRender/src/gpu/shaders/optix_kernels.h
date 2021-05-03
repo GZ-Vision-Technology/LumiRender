@@ -138,22 +138,6 @@ static GPU_INLINE luminous::float3 computeShadingNormal(luminous::BufferView<con
     return triangle_lerp(uv, n0, n1, n2);
 }
 
-static GPU_INLINE luminous::float2 computeTexCoord(luminous::BufferView<const luminous::float2> tex_coords,
-                                                   luminous::TriangleHandle tri,
-                                                   luminous::float2 uv) {
-    using namespace luminous;
-    auto tex_coord0 = tex_coords[tri.i];
-    auto tex_coord1 = tex_coords[tri.j];
-    auto tex_coord2 = tex_coords[tri.k];
-
-    if (tex_coord0.is_zero() && tex_coord1.is_zero() && tex_coord2.is_zero()) {
-        tex_coord0 = luminous::make_float2(0, 0);
-        tex_coord1 = luminous::make_float2(1, 0);
-        tex_coord2 = luminous::make_float2(1, 1);
-    }
-    return triangle_lerp(uv, tex_coord0, tex_coord1, tex_coord2);
-}
-
 static GPU_INLINE auto computePosition(luminous::BufferView<const luminous::float3> positions,
                                        luminous::TriangleHandle tri,
                                        luminous::float2 uv) {
@@ -220,8 +204,7 @@ static GPU_INLINE luminous::SurfaceInteraction getSurfaceInteraction(luminous::C
     using namespace luminous;
     HitGroupData data = getSbtData<HitGroupData>();
     uint mesh_idx = data.inst_to_mesh_idx[closest_hit.instance_id];
-    luminous::float4x4 mat4x4 = data.transforms[data.inst_to_transform_idx[closest_hit.instance_id]];
-    Transform o2w(mat4x4);
+    Transform o2w = data.transforms[data.inst_to_transform_idx[closest_hit.instance_id]];
     MeshHandle mesh = data.meshes[mesh_idx];
     TriangleHandle tri = data.triangles[mesh.triangle_offset + closest_hit.triangle_id];
     auto positions = data.positions.sub_view(mesh.vertex_offset, mesh.vertex_count);

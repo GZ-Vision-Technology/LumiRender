@@ -38,7 +38,7 @@ namespace luminous {
             // instance data
             Managed<uint> _inst_to_mesh_idx;
             Managed<uint> _inst_to_transform_idx;
-            Managed<float4x4> _transforms;
+            Managed<Transform> _transforms;
 
             // mesh data
             Managed<MeshHandle> _meshes;

@@ -115,7 +115,7 @@ namespace luminous {
                     _inst_triangle_num += mesh->triangles.size();
                     _inst_vertices_num += mesh->positions.size();
                 }
-                _transforms.push_back(instance->o2w.mat4x4());
+                _transforms.push_back(instance->o2w);
             }
             load_lights(scene_graph->light_configs, scene_graph->light_sampler_config);
             preprocess_meshes();

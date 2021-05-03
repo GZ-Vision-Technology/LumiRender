@@ -89,7 +89,7 @@ namespace luminous {
 
             void build_bvh(const Buffer<const float3> &positions, const Buffer<const TriangleHandle> &triangles,
                            const Managed<MeshHandle> &meshes, const Managed<uint> &instance_list,
-                           const Managed<float4x4> &transform_list, const Managed<uint> &inst_to_transform);
+                           const Managed<Transform> &transform_list, const Managed<uint> &inst_to_transform);
         };
     }
 }
