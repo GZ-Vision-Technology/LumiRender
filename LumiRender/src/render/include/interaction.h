@@ -42,12 +42,13 @@ namespace luminous {
             index_t material_idx;
 
             XPU void print() const {
-                printf("vert offset:%u, tri offset:%u, vert num:%u, tri num:%u, distribute idx: %d\n",
+                printf("vert offset:%u, tri offset:%u, vert num:%u, tri num:%u, distribute idx: %u, mat idx %u\n",
                        vertex_offset,
                        triangle_offset,
                        vertex_count,
                        triangle_count,
-                       distribute_idx);
+                       distribute_idx,
+                       material_idx);
             }
         };
 
@@ -63,6 +64,12 @@ namespace luminous {
             float3 dp_du;
             float3 dp_dv;
             float3 normal;
+
+            XPU void set(float3 u, float3 v, float3 n) {
+                dp_du = u;
+                dp_dv = v;
+                normal = n;
+            }
         };
 
         struct SurfaceInteraction : public Interaction {

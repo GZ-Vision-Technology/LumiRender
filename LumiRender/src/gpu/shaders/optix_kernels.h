@@ -16,6 +16,7 @@
 #include "render/textures/shader_include.h"
 #include "render/materials/shader_include.h"
 #include "render/bxdfs/shader_include.h"
+#include "graphics/lstd/lstd.h"
 
 struct RadiancePRD {
     luminous::Interaction interaction;
@@ -127,6 +128,45 @@ static GPU_INLINE luminous::ClosestHit getClosestHit() {
     return ret;
 }
 
+static GPU_INLINE luminous::float3 computeShadingNormal(luminous::BufferView<const luminous::float3> normals,
+                                                        luminous::TriangleHandle tri,
+                                                        luminous::float2 uv) {
+    using namespace luminous;
+    auto n0 = normals[tri.i];
+    auto n1 = normals[tri.j];
+    auto n2 = normals[tri.k];
+    return triangle_lerp(uv, n0, n1, n2);
+}
+
+static GPU_INLINE luminous::float2 computeTexCoord(luminous::BufferView<const luminous::float2> tex_coords,
+                                                        luminous::TriangleHandle tri,
+                                                        luminous::float2 uv) {
+    using namespace luminous;
+    auto tex_coord0 = tex_coords[tri.i];
+    auto tex_coord1 = tex_coords[tri.j];
+    auto tex_coord2 = tex_coords[tri.k];
+
+    if (tex_coord0.is_zero() && tex_coord1.is_zero() && tex_coord2.is_zero()) {
+        tex_coord0 = luminous::make_float2(0, 0);
+        tex_coord1 = luminous::make_float2(1, 0);
+        tex_coord2 = luminous::make_float2(1, 1);
+    }
+    return triangle_lerp(uv, tex_coord0, tex_coord1, tex_coord2);
+}
+
+static GPU_INLINE auto computePosition(luminous::BufferView<const luminous::float3> positions,
+                                       luminous::TriangleHandle tri,
+                                       luminous::float2 uv) {
+    using namespace luminous;
+    auto p0 = positions[tri.i];
+    auto p1 = positions[tri.j];
+    auto p2 = positions[tri.k];
+    auto pos = triangle_lerp(uv, p0, p1, p2);
+    auto v01 = p1 - p0;
+    auto v02 = p2 - p0;
+    return lstd::make_pair(pos, cross(v01, v02));
+}
+
 static GPU_INLINE luminous::SurfaceInteraction getSurfaceInteraction(luminous::ClosestHit closest_hit) {
     using namespace luminous;
     uint32_t instance_id = closest_hit.instance_id;
@@ -143,29 +183,13 @@ static GPU_INLINE luminous::SurfaceInteraction getSurfaceInteraction(luminous::C
     auto normals = data.normals.sub_view(mesh.vertex_offset, mesh.vertex_count);
     auto tex_coords = data.tex_coords.sub_view(mesh.vertex_offset, mesh.vertex_count);
 
-    auto n0 = normals[tri.i];
-    auto n1 = normals[tri.j];
-    auto n2 = normals[tri.k];
-    si.s_uvn.normal = normalize(o2w.apply_normal(triangle_lerp(uv, n0, n1, n2)));
+    si.s_uvn.normal = normalize(o2w.apply_normal(computeShadingNormal(normals, tri, uv)));
 
-    auto p0 = positions[tri.i];
-    auto p1 = positions[tri.j];
-    auto p2 = positions[tri.k];
-    auto v01 = p1 - p0;
-    auto v02 = p2 - p0;
-    si.pos = o2w.apply_point(triangle_lerp(uv, p0, p1, p2));
-    si.g_uvn.normal = normalize(o2w.apply_normal(cross(v01, v02)));
+    auto[pos, ng] = computePosition(positions, tri, uv);
+    si.pos = o2w.apply_point(pos);
+    si.g_uvn.normal = normalize(o2w.apply_normal(ng));
 
-    auto tex_coord0 = tex_coords[tri.i];
-    auto tex_coord1 = tex_coords[tri.j];
-    auto tex_coord2 = tex_coords[tri.k];
-
-    if (tex_coord0.is_zero() && tex_coord1.is_zero() && tex_coord2.is_zero()) {
-        tex_coord0 = luminous::make_float2(0,0);
-        tex_coord1 = luminous::make_float2(1,0);
-        tex_coord2 = luminous::make_float2(1,1);
-    }
-    si.uv = triangle_lerp(uv, tex_coord0, tex_coord1, tex_coord2);
+    si.uv = computeTexCoord(tex_coords, tri, uv);
 
     return si;
 }
