@@ -28,8 +28,10 @@ namespace luminous {
                       _Kd(diffuse),
                       _Ks(specular) {}
 
-            NDSC_XPU BSDF get_BSDF(TextureEvalContext tec, const HitGroupData *hit_group_data, BxDF *bxdf) {
-
+            NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const HitGroupData *hit_group_data) {
+                Texture tex = hit_group_data->textures[_Kd_idx];
+                BxDF bxdf = BxDF(IdealDiffuse(tex.eval(ctx)));
+                return BSDF(ctx.ng, ctx.ns, ctx.dp_dus, bxdf);
             }
 
             static AssimpMaterial create(const MaterialConfig &mc) {

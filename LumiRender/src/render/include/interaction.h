@@ -80,5 +80,40 @@ namespace luminous {
             float3 dp_dy;
             float du_dx = 0, dv_dx = 0, du_dy = 0, dv_dy = 0;
         };
+
+        struct TextureEvalContext {
+            XPU TextureEvalContext() = default;
+
+            XPU TextureEvalContext(const SurfaceInteraction &si)
+                    : p(si.pos),
+                      dp_dx(si.dp_dx),
+                      dp_dy(si.dp_dy),
+                      uv(si.uv),
+                      du_dx(si.du_dx),
+                      du_dy(si.du_dy),
+                      dv_dx(si.dv_dx),
+                      dv_dy(si.dv_dy) {}
+
+            float3 p;
+            float2 uv;
+            float du_dx = 0, du_dy = 0, dv_dx = 0, dv_dy = 0;
+            float3 dp_dx;
+            float3 dp_dy;
+        };
+
+        struct MaterialEvalContext : public TextureEvalContext {
+            XPU MaterialEvalContext() = default;
+
+            XPU MaterialEvalContext(const SurfaceInteraction &si)
+                    : TextureEvalContext(si),
+                      wo(si.wo),
+                      ng(si.g_uvn.normal),
+                      ns(si.s_uvn.normal),
+                      dp_dus(si.s_uvn.dp_du) {}
+
+            float3 wo;
+            float3 ng, ns;
+            float3 dp_dus;
+        };
     }
 }
