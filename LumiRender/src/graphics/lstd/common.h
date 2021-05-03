@@ -26,7 +26,7 @@
 namespace lstd {
 
     template<typename T>
-    NDSC_XPU inline void swap(T &a, T &b) {
+    XPU inline void swap(T &a, T &b) {
         T tmp = std::move(a);
         a = std::move(b);
         b = std::move(tmp);
@@ -43,6 +43,13 @@ namespace lstd {
         return iter;
     }
 
+    /**
+     * @tparam T iterator
+     * @tparam Predict
+     * @param v
+     * @param predict
+     * @return element index , if not found return -1
+     */
     template<typename T, typename Predict>
     NDSC_XPU int64_t find_index_if(const T& v, Predict predict) {
         auto iter = std::find_if(v.cbegin(), v.cend(), predict);

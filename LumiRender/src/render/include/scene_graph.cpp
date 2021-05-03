@@ -23,7 +23,9 @@ namespace luminous {
         SP<Model> SceneGraph::create_shape(const ShapeConfig &config) {
             if (config.type() == "model") {
                 auto path = _context->scene_path() / config.fn;
-                return make_shared<Model>(path, config.subdiv_level, config.smooth);
+                auto model = make_shared<Model>(path, config.subdiv_level, config.smooth);
+                model->material_name = config.material_name;
+                return model;
             } else if (config.type() == "quad") {
                 auto model = make_shared<Model>();
                 auto x = config.width / 2;
@@ -50,7 +52,7 @@ namespace luminous {
 
                 auto mesh = make_shared<Mesh>(move(P),move(N), move(UV), move(triangles), aabb);
                 model->meshes.push_back(mesh);
-
+                model->material_name = config.material_name;
                 return model;
             } else {
                 LUMINOUS_ERROR("unknown shape type !")

@@ -43,6 +43,10 @@ namespace luminous {
             index_t mat_idx{index_t(-1)};
             Box3f aabb;
             mutable uint idx_in_meshes;
+
+            bool has_material() const {
+                return mat_idx != index_t(-1);
+            }
         };
 
         struct Model {
@@ -52,6 +56,7 @@ namespace luminous {
 
             string full_path(string fn) const { return fn.empty() ? fn : (directory / fn).string(); }
 
+            string material_name;
             filesystem::path directory;
             vector <std::shared_ptr<const Mesh>> meshes;
             vector <MaterialConfig> materials;

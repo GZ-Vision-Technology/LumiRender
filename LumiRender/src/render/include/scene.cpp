@@ -5,6 +5,7 @@
 #include "scene.h"
 #include "render/include/distribution.h"
 #include "util/stats.h"
+#include "graphics/lstd/lstd.h"
 
 namespace luminous {
     inline namespace render {
@@ -63,6 +64,9 @@ namespace luminous {
             vector <TextureConfig> tex_configs;
             index_t material_count = _material_configs.size();
             for (const SP<const Model> &model : scene_graph->model_list) {
+                int64_t model_mat_idx = lstd::find_index_if(_material_configs, [&](const MaterialConfig &val){
+                    return val.name == model->material_name;
+                });
                 for (const SP<const Mesh> &mesh : model->meshes) {
                     _positions.append(mesh->positions);
                     _normals.append(mesh->normals);
@@ -72,8 +76,11 @@ namespace luminous {
                     index_t vert_count = mesh->positions.size();
                     index_t tri_count = mesh->triangles.size();
                     mesh->idx_in_meshes = _meshes.size();
+
+                    int mesh_mat_idx = model_mat_idx == -1 ? mesh->mat_idx + material_count : model_mat_idx;
+
                     _meshes.emplace_back(vert_offset, tri_offset, vert_count, tri_count,
-                                         mesh->mat_idx + material_count);
+                                         mesh_mat_idx);
                     vert_offset += vert_count;
                     tri_offset += tri_count;
                 }
