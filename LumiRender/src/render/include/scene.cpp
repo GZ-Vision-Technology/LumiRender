@@ -57,14 +57,13 @@ namespace luminous {
         }
 
         void Scene::convert_data(const SP<SceneGraph> &scene_graph) {
-            TASK_TAG("convert scene data start!")
+            TASK_TAG("convert scene data")
             index_t vert_offset = 0u;
             index_t tri_offset = 0u;
-            append(_material_configs, scene_graph->material_configs);
             vector <TextureConfig> tex_configs;
-            index_t material_count = _material_configs.size();
+            index_t material_count = scene_graph->material_configs.size();
             for (const SP<const Model> &model : scene_graph->model_list) {
-                int64_t model_mat_idx = lstd::find_index_if(_material_configs, [&](const MaterialConfig &val){
+                int64_t model_mat_idx = lstd::find_index_if(scene_graph->material_configs, [&](const MaterialConfig &val){
                     return val.name == model->material_name;
                 });
                 for (const SP<const Mesh> &mesh : model->meshes) {
@@ -79,18 +78,20 @@ namespace luminous {
 
                     int mesh_mat_idx = model_mat_idx == -1 ? mesh->mat_idx + material_count : model_mat_idx;
 
+                    CONTINUE_IF_TIPS(mesh_mat_idx == -1, "warning :mesh have no material\n")
                     _meshes.emplace_back(vert_offset, tri_offset, vert_count, tri_count,
                                          mesh_mat_idx);
                     vert_offset += vert_count;
                     tri_offset += tri_count;
                 }
                 material_count += model->materials.size();
-                append(_material_configs, model->materials);
+                append(scene_graph->material_configs, model->materials);
                 append(tex_configs, model->textures);
             }
 
             append(_tex_configs, scene_graph->tex_configs);
-            relevance_material_and_texture(_material_configs);
+            relevance_material_and_texture(scene_graph->material_configs);
+            init_materials(scene_graph);
 
             index_t distribute_idx = 0;
             for (const SP<const ModelInstance> &instance : scene_graph->instance_list) {
@@ -119,6 +120,12 @@ namespace luminous {
             load_lights(scene_graph->light_configs, scene_graph->light_sampler_config);
             preprocess_meshes();
             shrink_to_fit();
+        }
+
+        void Scene::init_materials(const SP<SceneGraph> &scene_graph) {
+            for (const auto& mat_config : scene_graph->material_configs) {
+                _materials.push_back(Material::create(mat_config));
+            }
         }
 
         size_t Scene::size_in_bytes() const {
@@ -156,6 +163,10 @@ namespace luminous {
                 _lights.clear();
                 _emission_distrib.clear();
             }
+            {
+                _materials.clear();
+                _textures.clear();
+            }
         }
 
         void Scene::shrink_to_fit() {
@@ -175,6 +186,10 @@ namespace luminous {
                 _lights.shrink_to_fit();
                 _emission_distrib.shrink_to_fit();
             }
+            {
+                _materials.shrink_to_fit();
+                _textures.shrink_to_fit();
+            }
         }
 
         std::string Scene::description() const {
@@ -192,6 +207,5 @@ namespace luminous {
                                  _inst_vertices_num,
                                  _lights.size());
         }
-
     }
 }

@@ -24,6 +24,7 @@ namespace luminous {
         class Distribution1D;
 
         class Texture;
+        class Material;
 
         struct HitGroupData {
             // instance data
@@ -40,6 +41,9 @@ namespace luminous {
 
             // texture data
             BufferView<const Texture> textures;
+
+            // material data
+            BufferView<const Material> materials;
 
             // light data
             const LightSampler *light_sampler;

@@ -74,7 +74,7 @@ namespace luminous {
             std::copy(ai_scene->mMaterials, ai_scene->mMaterials + ai_scene->mNumMaterials, ai_materials.begin());
             for(const auto &ai_material : ai_materials) {
                 MaterialConfig mc = process_material(ai_material, model);
-                mc.set_type("AssimpMaterial");
+                mc.set_full_type("AssimpMaterial");
                 model->materials.push_back(mc);
             }
         }

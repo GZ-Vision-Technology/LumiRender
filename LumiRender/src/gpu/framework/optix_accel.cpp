@@ -179,7 +179,6 @@ namespace luminous {
             return program_group_table;
         }
 
-
         OptixPipeline OptixAccel::create_pipeline(OptixAccel::ProgramGroupTable program_group_table) {
             OptixPipeline pipeline = 0;
             OptixPipelineLinkOptions pipeline_link_options = {};
@@ -222,6 +221,7 @@ namespace luminous {
                 p->data.emission_distributions = gpu_scene->_emission_distrib.emission_distributions.device_buffer_view();
 
                 p->data.textures = gpu_scene->_textures.device_buffer_view();
+                p->data.materials = gpu_scene->_materials.device_buffer_view();
             };
 
             _device_ptr_table.rg_record = _device->allocate_buffer<RayGenRecord>(1);

@@ -41,6 +41,7 @@ namespace luminous {
             {
                 // texture data
                 _textures.allocate_device(_device);
+                _materials.allocate_device(_device);
             }
         }
 
@@ -69,6 +70,7 @@ namespace luminous {
             {
                 // texture data
                 _textures.synchronize_to_gpu();
+                _materials.synchronize_to_gpu();
             }
         }
 

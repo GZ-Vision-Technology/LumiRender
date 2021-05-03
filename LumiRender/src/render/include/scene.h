@@ -57,7 +57,6 @@ namespace luminous {
 
             // material data
             Managed<Material> _materials;
-            vector<MaterialConfig> _material_configs;
 
             // texture manager, manage the texture on video memory
             vector <DeviceTexture> _texture_mgr;
@@ -75,6 +74,8 @@ namespace luminous {
             virtual size_t size_in_bytes() const;
 
             void clear();
+
+            void init_materials(const SP<SceneGraph> &scene_graph);
 
             virtual void init(const SP<SceneGraph> &scene_graph) = 0;
 
