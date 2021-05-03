@@ -47,7 +47,7 @@ GLOBAL __miss__shadow() {
 GLOBAL __closesthit__radiance() {
     using namespace luminous;
     RadiancePRD *prd = getPRD();
-    auto interaction = getInteraction(getInstanceId(), getPrimIdx(), getTriangleBarycentric());
+    auto interaction = getSurfaceInteraction(getClosestHit());
     auto n = interaction.ns;
     n = (n + 1.f) / 2.f;
     HitGroupData data = getSbtData<HitGroupData>();

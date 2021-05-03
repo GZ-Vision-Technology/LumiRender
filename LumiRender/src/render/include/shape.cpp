@@ -43,6 +43,7 @@ namespace luminous {
                 mc.diffuse_tex.fn = model->full_path(diffuse_fn);
                 auto tex_type = mc.diffuse_tex.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
                 mc.diffuse_tex.val = diffuse;
+                mc.diffuse_tex.name = "diffuse";
                 mc.diffuse_tex.set_type(tex_type);
                 mc.diffuse_tex.color_space = SRGB;
             }
@@ -51,6 +52,7 @@ namespace luminous {
                 auto[specular_fn, specular] = load_texture(ai_material, aiTextureType_SPECULAR);
                 mc.specular_tex.fn = model->full_path(specular_fn);
                 mc.specular_tex.val = specular;
+                mc.specular_tex.name = "specular";
                 auto tex_type = mc.specular_tex.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
                 mc.specular_tex.set_type(tex_type);
                 mc.specular_tex.color_space = SRGB;
@@ -59,6 +61,7 @@ namespace luminous {
                 // process normal map
                 auto[normal_fn, _] = load_texture(ai_material, aiTextureType_HEIGHT);
                 mc.normal_tex.set_type(type_name<ImageTexture>());
+                mc.normal_tex.name = "normal";
                 mc.normal_tex.fn = model->full_path(normal_fn);
                 mc.normal_tex.color_space = LINEAR;
             }

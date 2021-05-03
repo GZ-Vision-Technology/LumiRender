@@ -32,6 +32,7 @@ namespace luminous {
 
             size_t _inst_vertices_num{0};
             size_t _inst_triangle_num{0};
+            size_t _texture_size_in_byte{0};
 
             // instance data
             Managed<uint> _inst_to_mesh_idx;

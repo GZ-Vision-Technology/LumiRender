@@ -138,6 +138,7 @@ namespace luminous {
 
             ret += _lights.size_in_bytes();
             ret += _emission_distrib.size_in_bytes();
+            ret += _texture_size_in_byte;
 
             return ret;
         }
@@ -183,9 +184,13 @@ namespace luminous {
         std::string Scene::description() const {
             float size_in_MB = size_in_bytes() / sqr(1024.f);
 
-            return string_printf("scene data occupy %f MB, instance triangle is %u,"
-                                 " instance vertices is %u, light num is %u",
+            return string_printf("all scene data occupy %f MB,\n"
+                                 "texture size is %f MB,\n"
+                                 "instance triangle is %u,\n"
+                                 "instance vertices is %u,\n"
+                                 "light num is %u",
                                  size_in_MB,
+                                 _texture_size_in_byte / sqr(1024.f),
                                  _inst_triangle_num,
                                  _inst_vertices_num,
                                  _lights.size());

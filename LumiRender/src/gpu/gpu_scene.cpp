@@ -95,6 +95,7 @@ namespace luminous {
                     tc.handle = texture.tex_handle();
                     tc.pixel_format = texture.pixel_format();
                     _texture_mgr.push_back(move(texture));
+                    _texture_size_in_byte += image.size_in_bytes();
                 }
                 _textures.push_back(Texture::create(tc));
             }

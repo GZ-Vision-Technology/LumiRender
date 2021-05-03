@@ -119,10 +119,20 @@ static GPU_INLINE uint32_t getPrimIdx() {
     return optixGetPrimitiveIndex();
 }
 
-static GPU_INLINE luminous::Interaction getInteraction(uint32_t instance_id, uint32_t prim_idx,
-                                                       luminous::float2 uv) {
+static GPU_INLINE luminous::ClosestHit getClosestHit() {
+    luminous::ClosestHit ret;
+    ret.instance_id = getInstanceId();
+    ret.triangle_id = getPrimIdx();
+    ret.bary = getTriangleBarycentric();
+    return ret;
+}
+
+static GPU_INLINE luminous::SurfaceInteraction getSurfaceInteraction(luminous::ClosestHit closest_hit) {
     using namespace luminous;
-    Interaction interaction;
+    uint32_t instance_id = closest_hit.instance_id;
+    uint32_t prim_idx = closest_hit.triangle_id;
+    luminous::float2 uv = closest_hit.bary;
+    SurfaceInteraction interaction;
     HitGroupData data = getSbtData<HitGroupData>();
     uint mesh_idx = data.inst_to_mesh_idx[instance_id];
     luminous::float4x4 mat4x4 = data.transforms[data.inst_to_transform_idx[instance_id]];
