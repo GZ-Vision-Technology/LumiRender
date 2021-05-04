@@ -35,6 +35,8 @@ namespace luminous {
             size_t _texture_size_in_byte{0};
             size_t _texture_num{0};
 
+            Box3f _scene_box;
+
             // instance data
             Managed<uint> _inst_to_mesh_idx;
             Managed<uint> _inst_to_transform_idx;

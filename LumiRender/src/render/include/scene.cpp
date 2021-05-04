@@ -98,7 +98,7 @@ namespace luminous {
                 const SP<const Model> &model = scene_graph->model_list[instance->model_idx];
                 for (const SP<const Mesh> &mesh : model->meshes) {
                     _inst_to_transform_idx.push_back(_transforms.size());
-
+                    _scene_box.extend(instance->o2w.apply_box(mesh->aabb));
                     if (!instance->emission.is_zero()) {
                         LightConfig lc;
                         lc.emission = instance->emission;
@@ -167,6 +167,9 @@ namespace luminous {
                 _materials.clear();
                 _textures.clear();
             }
+            _tex_configs.clear();
+            _texture_mgr.clear();
+            _scene_box = Box3f();
         }
 
         void Scene::shrink_to_fit() {
@@ -199,12 +202,14 @@ namespace luminous {
                                  "texture num is %u, texture size is %f MB,\n"
                                  "instance triangle is %u,\n"
                                  "instance vertices is %u,\n"
+                                 "scene box is %s, \n"
                                  "light num is %u",
                                  size_in_MB,
                                  _texture_num,
                                  _texture_size_in_byte / sqr(1024.f),
                                  _inst_triangle_num,
                                  _inst_vertices_num,
+                                 _scene_box.to_string().c_str(),
                                  _lights.size());
         }
     }

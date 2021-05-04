@@ -170,7 +170,7 @@ namespace luminous {
                 return transpose(inv_mat3x3()) * normal;
             }
 
-            NDSC_XPU Box3f apply_box(const Box3f &b) {
+            NDSC_XPU Box3f apply_box(const Box3f &b) const {
                 const auto &mat = mat4x4();
                 float3 minPoint = make_float3(mat[3][0], mat[3][1], mat[3][2]);
                 float3 maxPoint = minPoint;
