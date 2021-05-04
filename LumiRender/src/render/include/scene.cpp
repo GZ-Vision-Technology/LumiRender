@@ -10,6 +10,18 @@
 namespace luminous {
     inline namespace render {
 
+        void Scene::append_light_material(vector <MaterialConfig> &material_configs) {
+            TextureConfig tc;
+            tc.set_full_type("ConstantTexture");
+            tc.val = make_float4(0.f);
+            _tex_configs.push_back(tc);
+
+            MaterialConfig mc;
+            mc.set_full_type("MatteMaterial");
+            mc.diffuse_idx = _tex_configs.size() - 1;
+            material_configs.push_back(mc);
+        }
+
         void Scene::load_lights(const vector <LightConfig> &light_configs, const LightSamplerConfig &lsc) {
             _lights.reserve(light_configs.size());
             for (const auto &lc : light_configs) {
@@ -91,6 +103,7 @@ namespace luminous {
 
             append(_tex_configs, scene_graph->tex_configs);
             relevance_material_and_texture(scene_graph->material_configs);
+            append_light_material(scene_graph->material_configs);
             init_materials(scene_graph);
 
             index_t distribute_idx = 0;
@@ -106,6 +119,7 @@ namespace luminous {
                         lc.instance_idx = _inst_to_mesh_idx.size();
                         scene_graph->light_configs.push_back(lc);
                         MeshHandle &mesh_handle = _meshes[mesh->idx_in_meshes];
+                        mesh_handle.material_idx = _materials.size() - 1;
                         if (mesh_handle.distribute_idx == index_t(-1)) {
                             mesh_handle.distribute_idx = distribute_idx++;
                         }
@@ -212,5 +226,6 @@ namespace luminous {
                                  _scene_box.to_string().c_str(),
                                  _lights.size());
         }
+
     }
 }

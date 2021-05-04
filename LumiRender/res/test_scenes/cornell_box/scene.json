@@ -94,12 +94,13 @@
 			"param" : {
 				"width": 0.5,
 				"height": 0.5,
-				"emission": [0,0,5],
+				"emission": [17,12,4],
+				"scale": 0.8,
 				"transform" : {
 					"type" : "yaw_pitch",
 					"param" : {
 						"yaw" : 0,
-						"pitch": 90,
+						"pitch": -90,
 						"position": [-0.83,1.6,0.83]
 					}
 				},

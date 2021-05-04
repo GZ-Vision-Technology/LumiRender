@@ -72,7 +72,8 @@ namespace luminous {
             shape_config.name = string(shape["name"]);
             shape_config.o2w = parse_transform(param["transform"]);
             if (param.contains("emission")) {
-                shape_config.emission = param["emission"].as_float3(make_float3(0.f));
+                auto scale = param["scale"].as_float(1);
+                shape_config.emission = param["emission"].as_float3(make_float3(0.f)) * scale;
             }
             return shape_config;
         }

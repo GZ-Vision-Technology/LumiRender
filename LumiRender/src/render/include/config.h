@@ -140,8 +140,6 @@ namespace luminous {
             });
         }
 
-
-
         struct MaterialConfig : Config {
 
             // Assimp or matte

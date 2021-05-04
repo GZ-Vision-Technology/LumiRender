@@ -57,7 +57,7 @@ namespace luminous {
             // texture data
             Managed<Texture> _textures;
 
-            // material data
+            // material data, the last element is light material, black diffuse
             Managed<Material> _materials;
 
             // texture manager, manage the texture on video memory
@@ -82,6 +82,8 @@ namespace luminous {
             virtual void init(const SP<SceneGraph> &scene_graph) = 0;
 
             virtual void init_accel() = 0;
+
+            void append_light_material(vector <MaterialConfig> &material_configs);
 
             void convert_data(const SP<SceneGraph> &scene_graph);
 
