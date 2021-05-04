@@ -4,13 +4,18 @@
 
 #include "area_light.h"
 #include "render/include/creator.h"
+#include "render/include/distribution.h"
 
 namespace luminous {
     inline namespace render {
 
         SurfaceInteraction AreaLight::sample(float2 u, const HitGroupData *hit_group_data) const {
             SurfaceInteraction ret;
-            // todo
+            auto mesh_idx = hit_group_data->inst_to_mesh_idx[_inst_idx];
+            MeshHandle mesh = hit_group_data->meshes[mesh_idx];
+            const Distribution1D &distrib = hit_group_data->emission_distributions[mesh.distribute_idx];
+            size_t idx = distrib.sample_discrete(u.x, nullptr, &u.x);
+
             return ret;
         }
 

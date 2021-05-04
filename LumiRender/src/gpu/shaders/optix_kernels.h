@@ -202,14 +202,14 @@ computeSurfaceInteraction(luminous::BufferView<const luminous::float3> positions
 
 static GPU_INLINE luminous::SurfaceInteraction getSurfaceInteraction(luminous::ClosestHit closest_hit) {
     using namespace luminous;
-    HitGroupData data = getSbtData<HitGroupData>();
+    const HitGroupData &data = getSbtData<HitGroupData>();
     uint mesh_idx = data.inst_to_mesh_idx[closest_hit.instance_id];
     Transform o2w = data.transforms[data.inst_to_transform_idx[closest_hit.instance_id]];
     MeshHandle mesh = data.meshes[mesh_idx];
     TriangleHandle tri = data.triangles[mesh.triangle_offset + closest_hit.triangle_id];
-    auto positions = data.positions.sub_view(mesh.vertex_offset, mesh.vertex_count);
-    auto normals = data.normals.sub_view(mesh.vertex_offset, mesh.vertex_count);
-    auto tex_coords = data.tex_coords.sub_view(mesh.vertex_offset, mesh.vertex_count);
+    const auto& positions = data.get_positions(closest_hit.instance_id);
+    const auto& normals = data.get_normals(closest_hit.instance_id);
+    const auto& tex_coords = data.get_tex_coords(closest_hit.instance_id);
     auto si = computeSurfaceInteraction(positions, normals, tex_coords, tri, closest_hit.bary, o2w);
     si.material = &data.materials[mesh.material_idx];
     return si;
