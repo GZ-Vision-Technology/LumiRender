@@ -8,8 +8,8 @@
 namespace luminous {
     inline namespace render {
 
-        Interaction PointLight::sample(float u, const HitGroupData *hit_group_data) const {
-            Interaction ret;
+        SurfaceInteraction PointLight::sample(float2 u, const HitGroupData *hit_group_data) const {
+            SurfaceInteraction ret;
             ret.pos = _pos;
             return ret;
         }

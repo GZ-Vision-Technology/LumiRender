@@ -41,6 +41,14 @@ namespace luminous {
             index_t distribute_idx;
             index_t material_idx;
 
+            NDSC_XPU bool has_material() const {
+                return material_idx != index_t(-1);
+            }
+
+            NDSC_XPU bool has_distribute() const {
+                return distribute_idx != index_t(-1);
+            }
+
             XPU void print() const {
                 printf("vert offset:%u, tri offset:%u, vert num:%u, tri num:%u, distribute idx: %u, mat idx %u\n",
                        vertex_offset,
@@ -73,6 +81,7 @@ namespace luminous {
         };
 
         class Material;
+
         class Light;
 
         struct SurfaceInteraction : public Interaction {

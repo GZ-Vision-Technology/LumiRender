@@ -29,7 +29,7 @@ namespace luminous {
 
             NDSC_XPU bool is_delta() const;
 
-            NDSC_XPU Interaction sample(float u, const HitGroupData *hit_group_data) const;
+            NDSC_XPU SurfaceInteraction sample(float2 u, const HitGroupData *hit_group_data) const;
 
             NDSC_XPU LightLiSample Li(LightLiSample lls) const;
 

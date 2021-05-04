@@ -34,7 +34,7 @@ namespace luminous {
         void Scene::preprocess_meshes() {
             vector <Distribution1DBuilder> builders;
             auto process_mesh = [&](MeshHandle mesh) {
-                if (mesh.distribute_idx == -1) {
+                if (!mesh.has_distribute()) {
                     return;
                 }
                 uint start = mesh.triangle_offset;
@@ -120,7 +120,7 @@ namespace luminous {
                         scene_graph->light_configs.push_back(lc);
                         MeshHandle &mesh_handle = _meshes[mesh->idx_in_meshes];
                         mesh_handle.material_idx = _materials.size() - 1;
-                        if (mesh_handle.distribute_idx == index_t(-1)) {
+                        if (!mesh_handle.has_distribute()) {
                             mesh_handle.distribute_idx = distribute_idx++;
                         }
                     }

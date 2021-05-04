@@ -12,7 +12,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(type);
         }
 
-        Interaction Light::sample(float u, const HitGroupData * hit_group_data) const {
+        SurfaceInteraction Light::sample(float2 u, const HitGroupData * hit_group_data) const {
             LUMINOUS_VAR_DISPATCH(sample, u,hit_group_data);
         }
 
