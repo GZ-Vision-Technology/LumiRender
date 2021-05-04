@@ -95,8 +95,9 @@ namespace luminous {
 //            union {
 //                // model param
 //                struct {
-            std::string fn;
+            mutable std::string fn;
             bool smooth;
+            bool swap_handed;
             uint subdiv_level;
 //                };
 //                // quad param

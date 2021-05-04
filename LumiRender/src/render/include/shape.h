@@ -50,7 +50,7 @@ namespace luminous {
         };
 
         struct Model {
-            Model(const std::filesystem::path &fn, uint subdiv_level = 0, bool smooth = true);
+            Model(const ShapeConfig &sc);
 
             Model() = default;
 

@@ -14,7 +14,7 @@ namespace luminous {
 
         std::pair<string, float4> load_texture(const aiMaterial *mat, aiTextureType type) {
             string fn = "";
-            for(size_t i = 0; i < mat->GetTextureCount(type); ++i) {
+            for (size_t i = 0; i < mat->GetTextureCount(type); ++i) {
                 aiString str;
                 mat->GetTexture(type, i, &str);
                 fn = str.C_Str();
@@ -55,7 +55,7 @@ namespace luminous {
                 mc.specular_tex.name = "specular";
                 auto tex_type = mc.specular_tex.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
                 mc.specular_tex.set_type(tex_type);
-                mc.specular_tex.color_space = SRGB;
+                mc.specular_tex.color_space = LINEAR;
             }
             {
                 // process normal map
@@ -69,18 +69,19 @@ namespace luminous {
         }
 
         void process_materials(const aiScene *ai_scene, Model *model) {
-            vector<aiMaterial*> ai_materials(ai_scene->mNumMaterials);
+            vector < aiMaterial * > ai_materials(ai_scene->mNumMaterials);
             model->materials.reserve(ai_materials.size());
             std::copy(ai_scene->mMaterials, ai_scene->mMaterials + ai_scene->mNumMaterials, ai_materials.begin());
-            for(const auto &ai_material : ai_materials) {
+            for (const auto &ai_material : ai_materials) {
                 MaterialConfig mc = process_material(ai_material, model);
                 mc.set_full_type("AssimpMaterial");
                 model->materials.push_back(mc);
             }
         }
 
-        Model::Model(const std::filesystem::path &path, uint subdiv_level, bool smooth) {
+        Model::Model(const ShapeConfig &sc) {
             Assimp::Importer ai_importer;
+            filesystem::path path = sc.fn;
             directory = path.parent_path();
             ai_importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
                                            aiComponent_COLORS |
@@ -91,26 +92,32 @@ namespace luminous {
                                            aiComponent_TEXTURES |
                                            aiComponent_MATERIALS);
             LUMINOUS_INFO("Loading triangle mesh: ", path);
-            aiPostProcessSteps normal_flag = smooth ? aiProcess_GenSmoothNormals : aiProcess_GenNormals;
+            aiPostProcessSteps normal_flag = sc.smooth ? aiProcess_GenSmoothNormals : aiProcess_GenNormals;
+            auto post_process_steps = aiProcess_JoinIdenticalVertices |
+                                      normal_flag |
+                                      aiProcess_PreTransformVertices |
+                                      aiProcess_ImproveCacheLocality |
+                                      aiProcess_FixInfacingNormals |
+                                      aiProcess_FindInvalidData |
+                                      aiProcess_GenUVCoords |
+                                      aiProcess_TransformUVCoords |
+                                      aiProcess_OptimizeMeshes |
+                                      aiProcess_FlipUVs;
+            post_process_steps = sc.swap_handed ?
+                                 post_process_steps | aiProcess_ConvertToLeftHanded :
+                                 post_process_steps;
             auto ai_scene = ai_importer.ReadFile(path.string().c_str(),
-                                                 aiProcess_JoinIdenticalVertices |
-                                                 normal_flag |
-                                                 aiProcess_PreTransformVertices |
-                                                 aiProcess_ImproveCacheLocality |
-                                                 aiProcess_FixInfacingNormals |
-                                                 aiProcess_FindInvalidData |
-                                                 aiProcess_GenUVCoords |
-                                                 aiProcess_TransformUVCoords |
-                                                 aiProcess_OptimizeMeshes |
-                                                 aiProcess_FlipUVs);
+                                                 post_process_steps);
 
-            LUMINOUS_EXCEPTION_IF(ai_scene == nullptr || (ai_scene->mFlags & static_cast<uint>(AI_SCENE_FLAGS_INCOMPLETE)) || ai_scene->mRootNode == nullptr,
-                                  "Failed to load triangle mesh: ", ai_importer.GetErrorString());
+            LUMINOUS_EXCEPTION_IF(
+                    ai_scene == nullptr || (ai_scene->mFlags & static_cast<uint>(AI_SCENE_FLAGS_INCOMPLETE)) ||
+                    ai_scene->mRootNode == nullptr,
+                    "Failed to load triangle mesh: ", ai_importer.GetErrorString());
 
-            vector<aiMesh *> ai_meshes(ai_scene->mNumMeshes);
-            if (subdiv_level != 0u) {
+            vector < aiMesh * > ai_meshes(ai_scene->mNumMeshes);
+            if (sc.subdiv_level != 0u) {
                 auto subdiv = Assimp::Subdivider::Create(Assimp::Subdivider::CATMULL_CLARKE);
-                subdiv->Subdivide(ai_scene->mMeshes, ai_scene->mNumMeshes, ai_meshes.data(), subdiv_level);
+                subdiv->Subdivide(ai_scene->mMeshes, ai_scene->mNumMeshes, ai_meshes.data(), sc.subdiv_level);
             } else {
                 std::copy(ai_scene->mMeshes, ai_scene->mMeshes + ai_scene->mNumMeshes, ai_meshes.begin());
             }
@@ -120,13 +127,13 @@ namespace luminous {
             meshes.reserve(ai_meshes.size());
             for (auto ai_mesh : ai_meshes) {
                 Box3f aabb;
-                vector<float3> positions;
-                vector<float3> normals;
-                vector<float2> tex_coords;
+                vector <float3> positions;
+                vector <float3> normals;
+                vector <float2> tex_coords;
                 positions.reserve(ai_mesh->mNumVertices);
                 normals.reserve(ai_mesh->mNumVertices);
                 tex_coords.reserve(ai_mesh->mNumVertices);
-                vector<TriangleHandle> indices;
+                vector <TriangleHandle> indices;
                 indices.reserve(ai_mesh->mNumFaces);
 
                 for (auto i = 0u; i < ai_mesh->mNumVertices; i++) {
@@ -140,7 +147,7 @@ namespace luminous {
                         auto uv = make_float2(ai_tex_coord.x, ai_tex_coord.y);
                         tex_coords.push_back(uv);
                     } else {
-                        tex_coords.emplace_back(0,0);
+                        tex_coords.emplace_back(0, 0);
                     }
                     positions.push_back(position);
                     normals.push_back(normal);
@@ -167,11 +174,11 @@ namespace luminous {
                     }
                 }
                 auto mesh = std::make_shared<const Mesh>(move(positions),
-                                                    move(normals),
-                                                    move(tex_coords),
-                                                    move(indices),
-                                                    aabb,
-                                                    ai_mesh->mMaterialIndex);
+                                                         move(normals),
+                                                         move(tex_coords),
+                                                         move(indices),
+                                                         aabb,
+                                                         ai_mesh->mMaterialIndex);
                 meshes.push_back(mesh);
             }
         }

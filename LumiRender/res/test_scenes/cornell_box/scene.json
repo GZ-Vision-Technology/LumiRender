@@ -122,39 +122,41 @@
 //				}
 //			}
 //		},
-//		{
-//			"name" : "c_box",
-//			"type": "model",
-//			"param" : {
-//				"fn": "cornell_box.obj",
-//				"smooth": false,
-//				"subdiv_level": 0,
-//				"transform" : {
-//					"type" : "trs",
-//					"param" : {
-//						"t": [0,0,0],
-//						"r": [1,0,0,0],
-//						"s": [0.1,0.1,0.1]
-//					}
-//				}
-//			}
-//		},
 		{
 			"name" : "c_box",
 			"type": "model",
 			"param" : {
-				"fn": "nanosuit/nanosuit.obj",
+				"fn": "cornell_box.obj",
+				"smooth": false,
+				"swap_handed": true,
 				"subdiv_level": 0,
 				"transform" : {
 					"type" : "trs",
 					"param" : {
-						"t" : [0, 0, 1],
-						"r" : [0, 1, 0, 180],
-						"s" : [0.3,0.3,0.3]
+						"t": [0,0,0],
+						"r": [0,1,0,180],
+						"s": [0.01,0.01,0.01]
 					}
 				}
 			}
 		}
+//	,
+//		{
+//			"name" : "c_box",
+//			"type": "model",
+//			"param" : {
+//				"fn": "nanosuit/nanosuit.obj",
+//				"subdiv_level": 0,
+//				"transform" : {
+//					"type" : "trs",
+//					"param" : {
+//						"t" : [0, 0, 1],
+//						"r" : [0, 1, 0, 180],
+//						"s" : [0.3,0.3,0.3]
+//					}
+//				}
+//			}
+//		}
 	],
 	"lights" : [
 		{
