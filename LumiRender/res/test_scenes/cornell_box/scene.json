@@ -53,54 +53,54 @@
 //				}
 //			}
 //		},
-		{
-			"name" : "c_box",
-			"type": "quad",
-			"param" : {
-				"width": 1,
-				"height": 1,
-				"transform" : {
-					"type" : "yaw_pitch",
-					"param" : {
-						"yaw" : 0,
-						"pitch": 0,
-						"position": [0,0,0]
-					}
-				},
-				"material": "quad"
-			}
-		},
-		{
-			"name" : "quad1",
-			"type": "quad",
-			"param" : {
-				"width": 1,
-				"height": 1,
-				"emission": [5,5,5],
-				"transform" : {
-					"type" : "yaw_pitch",
-					"param" : {
-						"yaw" : 0,
-						"pitch": 0,
-						"position": [5,5,5]
-					}
-				},
-				"material" : "quad"
-			}
-		},
+//		{
+//			"name" : "c_box",
+//			"type": "quad",
+//			"param" : {
+//				"width": 1,
+//				"height": 1,
+//				"transform" : {
+//					"type" : "yaw_pitch",
+//					"param" : {
+//						"yaw" : 0,
+//						"pitch": 0,
+//						"position": [0,0,0]
+//					}
+//				},
+//				"material": "quad"
+//			}
+//		},
+//		{
+//			"name" : "quad1",
+//			"type": "quad",
+//			"param" : {
+//				"width": 1,
+//				"height": 1,
+//				"emission": [5,5,5],
+//				"transform" : {
+//					"type" : "yaw_pitch",
+//					"param" : {
+//						"yaw" : 0,
+//						"pitch": 0,
+//						"position": [5,5,5]
+//					}
+//				},
+//				"material" : "quad"
+//			}
+//		},
 		{
 			"name" : "quad2",
 			"type": "quad",
 			"param" : {
-				"width": 1,
-				"height": 1,
+				"width": 0.5,
+				"height": 0.5,
 				"emission": [0,0,5],
 				"transform" : {
 					"type" : "yaw_pitch",
 					"param" : {
 						"yaw" : 0,
-						"pitch": 0,
-						"position": [5,7,5]
+						"pitch": 90,
+						"position": [-0.83,1.6,0.83]
 					}
 				},
 				"material": "quad2"
@@ -135,7 +135,7 @@
 					"param" : {
 						"t": [0,0,0],
 						"r": [0,1,0,180],
-						"s": [0.01,0.01,0.01]
+						"s": [0.003,0.003,0.003]
 					}
 				}
 			}
@@ -159,20 +159,19 @@
 //		}
 	],
 	"lights" : [
-		{
-			"type": "PointLight",
-			"param": {
-				"pos": [10,10,10],
-				"intensity": [10,1,6]
-			}
-		}
+//		{
+//			"type": "PointLight",
+//			"param": {
+//				"pos": [10,10,10],
+//				"intensity": [10,1,6]
+//			}
+//		}
 	],
 	"integrator" : {
 		"type" : "pt",
 		"param" : {
 			"maxBounce" : 5,
-			"rrThreshold" : 1,
-			"lightSampleStrategy" : "power"
+			"rrThreshold" : 1
 		}
 	},
 	"sampler" : {
@@ -187,14 +186,14 @@
 	"camera" : {
 		"type" : "PinholeCamera",
 		"param" : {
-			"fov_y" : 90,
+			"fov_y" : 35,
 			"velocity" : 20,
 			"transform" : {
 				"type" : "yaw_pitch",
 				"param" : {
 					"yaw" : 0,
 					"pitch": 0,
-					"position": [0,0,-3]
+					"position": [-0.83,0.83,-2.5]
 				}
 			},
 			"film" : {
