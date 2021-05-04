@@ -88,25 +88,25 @@
 //				"material" : "quad"
 //			}
 //		},
-		{
-			"name" : "quad2",
-			"type": "quad",
-			"param" : {
-				"width": 0.5,
-				"height": 0.5,
-				"emission": [17,12,4],
-				"scale": 0.8,
-				"transform" : {
-					"type" : "yaw_pitch",
-					"param" : {
-						"yaw" : 0,
-						"pitch": -90,
-						"position": [-0.83,1.6,0.83]
-					}
-				},
-				"material": "quad2"
-			}
-		},
+//		{
+//			"name" : "quad2",
+//			"type": "quad",
+//			"param" : {
+//				"width": 0.5,
+//				"height": 0.5,
+//				"emission": [17,12,4],
+//				"scale": 0.8,
+//				"transform" : {
+//					"type" : "yaw_pitch",
+//					"param" : {
+//						"yaw" : 0,
+//						"pitch": -90,
+//						"position": [-0.83,1.6,0.83]
+//					}
+//				},
+//				"material": "quad2"
+//			}
+//		},
 //		{
 //			"name" : "c_box",
 //			"type": "model",
@@ -123,41 +123,41 @@
 //				}
 //			}
 //		},
-		{
-			"name" : "c_box",
-			"type": "model",
-			"param" : {
-				"fn": "cornell_box.obj",
-				"smooth": false,
-				"swap_handed": true,
-				"subdiv_level": 0,
-				"transform" : {
-					"type" : "trs",
-					"param" : {
-						"t": [0,0,0],
-						"r": [0,1,0,180],
-						"s": [0.003,0.003,0.003]
-					}
-				}
-			}
-		}
-//	,
 //		{
 //			"name" : "c_box",
 //			"type": "model",
 //			"param" : {
-//				"fn": "nanosuit/nanosuit.obj",
+//				"fn": "cornell_box.obj",
+//				"smooth": false,
+//				"swap_handed": true,
 //				"subdiv_level": 0,
 //				"transform" : {
 //					"type" : "trs",
 //					"param" : {
-//						"t" : [0, 0, 1],
-//						"r" : [0, 1, 0, 180],
-//						"s" : [0.3,0.3,0.3]
+//						"t": [0,0,0],
+//						"r": [0,1,0,180],
+//						"s": [0.003,0.003,0.003]
 //					}
 //				}
 //			}
 //		}
+//	,
+		{
+			"name" : "c_box",
+			"type": "model",
+			"param" : {
+				"fn": "nanosuit/nanosuit.obj",
+				"subdiv_level": 0,
+				"transform" : {
+					"type" : "trs",
+					"param" : {
+						"t" : [0, 0, 1],
+						"r" : [0, 1, 0, 180],
+						"s" : [0.3,0.3,0.3]
+					}
+				}
+			}
+		}
 	],
 	"lights" : [
 //		{

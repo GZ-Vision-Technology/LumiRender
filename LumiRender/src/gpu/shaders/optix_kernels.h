@@ -12,6 +12,7 @@
 #include "render/light_samplers/shader_include.h"
 #include "render/lights/shader_include.h"
 #include "render/include/distribution.h"
+#include "render/include/shader_include.h"
 #include "gpu/framework/optix_params.h"
 #include "render/textures/shader_include.h"
 #include "render/materials/shader_include.h"
