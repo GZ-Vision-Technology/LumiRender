@@ -174,6 +174,17 @@ void test_transform() {
     cout << tsf.to_string_detail();
 }
 
+void test_transform_box() {
+    auto t = make_float3(1, 1, 1);
+    auto tsf = Transform::rotation_x(45);
+    Box3f b(make_float3(-1),make_float3(1));
+    cout << b.to_string() << endl;
+    b = tsf.apply_box(b);
+    cout << b.to_string() << endl;
+    b = tsf.apply_box(b);
+    cout << b.to_string() << endl;
+}
+
 void test_transform_order() {
     auto p = make_float3(0,0,1);
     auto t = Transform::translation(1,0,0);
@@ -299,7 +310,8 @@ int main() {
 
 //    test_math();
 //    test_transform();
-    test_transform_order();
+    test_transform_box();
+//    test_transform_order();
 //    test_matrix_to_Euler_angle();
 
 //    test_yaw_pitch();

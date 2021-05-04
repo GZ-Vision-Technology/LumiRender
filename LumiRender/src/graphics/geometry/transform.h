@@ -144,30 +144,51 @@ namespace luminous {
                     : _mat(mat),
                       _inv_mat(inv) {}
 
-            XPU [[nodiscard]] auto mat4x4() const {
+            NDSC_XPU auto mat4x4() const {
                 return _mat;
             }
 
-            XPU [[nodiscard]] auto mat3x3() const {
+            NDSC_XPU auto mat3x3() const {
                 return make_float3x3(_mat);
             }
 
-            XPU [[nodiscard]] auto inv_mat3x3() const {
+            NDSC_XPU auto inv_mat3x3() const {
                 return luminous::inverse(mat3x3());
             }
 
-            XPU [[nodiscard]] float3 apply_point(float3 point) const {
+            NDSC_XPU float3 apply_point(float3 point) const {
                 float4 homo_point = make_float4(point, 1.f);
                 homo_point = _mat * homo_point;
                 return make_float3(homo_point);
             }
 
-            XPU [[nodiscard]] float3 apply_vector(float3 vec) const {
+            NDSC_XPU float3 apply_vector(float3 vec) const {
                 return mat3x3() * vec;
             }
 
-            XPU [[nodiscard]] float3 apply_normal(float3 normal) const {
+            NDSC_XPU float3 apply_normal(float3 normal) const {
                 return transpose(inv_mat3x3()) * normal;
+            }
+
+            NDSC_XPU Box3f apply_box(const Box3f &b) {
+                const auto &mat = mat4x4();
+                float3 minPoint = make_float3(mat[3][0], mat[3][1], mat[3][2]);
+                float3 maxPoint = minPoint;
+                for (int i = 0; i < 3; ++i) {
+                    for (int j = 0; j < 3; ++j) {
+                        float e = mat[j][i];
+                        float p1 = e * b.lower[j];
+                        float p2 = e * b.upper[j];
+                        if (p1 > p2) {
+                            minPoint[i] += p2;
+                            maxPoint[i] += p1;
+                        } else {
+                            minPoint[i] += p1;
+                            maxPoint[i] += p2;
+                        }
+                    }
+                }
+                return Box3f(minPoint, maxPoint);
             }
 
             XPU Ray apply_ray(Ray ray) const {
@@ -176,19 +197,19 @@ namespace luminous {
                 return ray;
             }
 
-            XPU Transform operator*(const Transform &t) const {
+            NDSC_XPU Transform operator*(const Transform &t) const {
                 return Transform(_mat * t.mat4x4());
             }
 
-            XPU [[nodiscard]] Transform inverse() const {
+            NDSC_XPU Transform inverse() const {
                 return Transform(_inv_mat, _mat);
             }
 
-            [[nodiscard]] std::string to_string() const {
+            NDSC std::string to_string() const {
                 return string_printf("transform:%s", _mat.to_string().c_str());
             }
 
-            [[nodiscard]] std::string to_string_detail() const {
+            NDSC std::string to_string_detail() const {
                 float3 tt;
                 Quaternion rr;
                 float3 ss;
@@ -199,7 +220,7 @@ namespace luminous {
                                      ss.to_string().c_str());
             }
 
-            XPU static Transform translation(float3 t) {
+            NDSC_XPU static Transform translation(float3 t) {
                 auto mat = make_float4x4(
                         1.f, 0.f, 0.f, 0.f,
                         0.f, 1.f, 0.f, 0.f,
@@ -213,11 +234,11 @@ namespace luminous {
                 return Transform(mat, inv);
             }
 
-            XPU static Transform translation(float x, float y, float z) {
+            NDSC_XPU static Transform translation(float x, float y, float z) {
                 return translation(make_float3(x, y, z));
             }
 
-            XPU static Transform scale(float3 s) {
+            NDSC_XPU static Transform scale(float3 s) {
                 auto mat = make_float4x4(
                         s.x, 0.f, 0.f, 0.f,
                         0.f, s.y, 0.f, 0.f,
@@ -231,11 +252,11 @@ namespace luminous {
                 return Transform(mat, inv);
             }
 
-            XPU static Transform scale(float x, float y, float z) {
+            NDSC_XPU static Transform scale(float x, float y, float z) {
                 return scale(make_float3(x, y, z));
             }
 
-            [[nodiscard]] XPU static Transform scale(float s) {
+            NDSC_XPU static Transform scale(float s) {
                 return scale(make_float3(s));
             }
 
@@ -250,7 +271,7 @@ namespace luminous {
                 return Transform(mat);
             }
 
-            XPU static Transform rotation(const float3 axis, float angle, bool radian = false) noexcept {
+            NDSC_XPU static Transform rotation(const float3 axis, float angle, bool radian = false) noexcept {
                 angle = radian ? angle : radians(angle);
 
                 auto c = cos(angle);
@@ -267,22 +288,22 @@ namespace luminous {
                 return Transform(mat, transpose(mat));
             }
 
-            XPU static Transform trs(float3 t, float4 r, float3 s) {
+            NDSC_XPU static Transform trs(float3 t, float4 r, float3 s) {
                 auto T = translation(t);
                 auto R = rotation(make_float3(r), r.w);
                 auto S = scale(s);
                 return T * R * S;
             }
 
-            XPU static Transform rotation_x(float angle, bool radian = false) noexcept {
+            NDSC_XPU static Transform rotation_x(float angle, bool radian = false) noexcept {
                 return rotation(make_float3(1, 0, 0), angle, radian);
             }
 
-            XPU static Transform rotation_y(float angle, bool radian = false) noexcept {
+            NDSC_XPU static Transform rotation_y(float angle, bool radian = false) noexcept {
                 return rotation(make_float3(0, 1, 0), angle, radian);
             }
 
-            XPU static Transform rotation_z(float angle, bool radian = false) noexcept {
+            NDSC_XPU static Transform rotation_z(float angle, bool radian = false) noexcept {
                 return rotation(make_float3(0, 0, 1), angle, radian);
             }
         };
