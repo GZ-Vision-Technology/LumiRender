@@ -8,6 +8,8 @@
 #include "graphics/math/common.h"
 #include "core/backend/buffer_view.h"
 #include "vector_types.h"
+#include "graphics/geometry/common.h"
+#include "render/include/interaction.h"
 
 namespace luminous {
     inline namespace render {
@@ -51,50 +53,17 @@ namespace luminous {
             const LightSampler *light_sampler;
             BufferView<const Distribution1D> emission_distributions;
 
-            NDSC_XPU_INLINE const MeshHandle &get_mesh(index_t inst_idx) const {
-                index_t mesh_idx = inst_to_mesh_idx[inst_idx];
-                return meshes[mesh_idx];
-            }
-
-            NDSC_XPU_INLINE const Transform &get_transform(index_t inst_id) const {
-                index_t transform_idx = inst_to_transform_idx[inst_id];
-                return transforms[transform_idx];
-            }
-
-#ifdef IS_GPU_CODE
-
-            NDSC_XPU_INLINE const Texture &get_texture(index_t idx) const {
-                return textures[idx];
-            }
-
-            NDSC_XPU_INLINE const Material &get_material(index_t inst_id) const {
-                MeshHandle mesh = get_mesh(inst_id);
-                return materials[mesh.material_idx];
-            }
-
-            NDSC_XPU_INLINE const Distribution1D &get_distrib(index_t inst_id) const {
-                MeshHandle mesh = get_mesh(inst_id);
-                return emission_distributions[mesh.distribute_idx];
-            }
-#else
-            NDSC_XPU_INLINE const Texture &get_texture(index_t idx) const;
-
-            NDSC_XPU_INLINE const Material &get_material(index_t inst_id) const;
-
-            NDSC_XPU_INLINE const Distribution1D &get_distrib(index_t inst_id) const;
-#endif
-
 #define GEN_GET_FUNCTION(attribute)                                                     \
             NDSC_XPU_INLINE auto get_##attribute(const MeshHandle &mesh) const {        \
                 return attribute.sub_view(mesh.vertex_offset, mesh.vertex_count);       \
             }                                                                           \
             NDSC_XPU_INLINE auto get_##attribute##_by_mesh_idx(index_t mesh_idx) const {\
                 MeshHandle mesh = meshes[mesh_idx];                                     \
-                return get_##attribute(mesh);                                             \
+                return get_##attribute(mesh);                                           \
             }                                                                           \
             NDSC_XPU_INLINE auto get_##attribute(index_t inst_idx) const {              \
                 auto mesh_idx = inst_to_mesh_idx[inst_idx];                             \
-                return get_##attribute##_by_mesh_idx(mesh_idx);                             \
+                return get_##attribute##_by_mesh_idx(mesh_idx);                         \
             }
 
             GEN_GET_FUNCTION(positions)
@@ -105,6 +74,37 @@ namespace luminous {
 
 #undef GEN_GET_FUNCTION
 
+            NDSC_XPU_INLINE const MeshHandle &get_mesh(index_t inst_idx) const {
+                index_t mesh_idx = inst_to_mesh_idx[inst_idx];
+                return meshes[mesh_idx];
+            }
+
+            NDSC_XPU_INLINE const Transform &get_transform(index_t inst_id) const {
+                index_t transform_idx = inst_to_transform_idx[inst_id];
+                return transforms[transform_idx];
+            }
+
+            NDSC_XPU_INLINE const TriangleHandle &get_triangle(const MeshHandle &mesh, index_t triangle_id) const {
+                return triangles[mesh.triangle_offset + triangle_id];
+            }
+
+            NDSC_XPU_INLINE const TriangleHandle &get_triangle(const ClosestHit &closest_hit) const {
+                auto mesh = get_mesh(closest_hit.instance_id);
+                return get_triangle(mesh, closest_hit.triangle_id);
+            }
+
+            XPU SurfaceInteraction compute_surface_interaction(index_t inst_id,
+                                                                      index_t tri_id, float2 bary) const;
+
+            XPU_INLINE SurfaceInteraction compute_surface_interaction(const ClosestHit &closest_hit) const {
+                return compute_surface_interaction(closest_hit.instance_id, closest_hit.triangle_id, closest_hit.bary);
+            }
+
+            NDSC_XPU_INLINE const Material &get_material(index_t inst_id) const;
+
+            NDSC_XPU_INLINE const Texture &get_texture(index_t idx) const;
+
+            NDSC_XPU_INLINE const Distribution1D &get_distrib(index_t inst_id) const;
         };
     }
 }

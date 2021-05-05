@@ -78,6 +78,10 @@ namespace luminous {
                 dp_dv = v;
                 normal = n;
             }
+
+            NDSC_XPU_INLINE bool valid() const {
+                return !normal.is_zero();
+            }
         };
 
         class Material;

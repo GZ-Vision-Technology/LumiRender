@@ -75,9 +75,11 @@ namespace luminous {
             vector <TextureConfig> tex_configs;
             index_t material_count = scene_graph->material_configs.size();
             for (const SP<const Model> &model : scene_graph->model_list) {
-                int64_t model_mat_idx = lstd::find_index_if(scene_graph->material_configs, [&](const MaterialConfig &val){
-                    return model->has_custom_material() && val.name == model->custom_material_name;
-                });
+                int64_t model_mat_idx = lstd::find_index_if(scene_graph->material_configs,
+                                                            [&](const MaterialConfig &val) {
+                                                                return model->has_custom_material() &&
+                                                                       val.name == model->custom_material_name;
+                                                            });
                 for (const SP<const Mesh> &mesh : model->meshes) {
                     _positions.append(mesh->positions);
                     _normals.append(mesh->normals);
@@ -137,7 +139,7 @@ namespace luminous {
         }
 
         void Scene::init_materials(const SP<SceneGraph> &scene_graph) {
-            for (const auto& mat_config : scene_graph->material_configs) {
+            for (const auto &mat_config : scene_graph->material_configs) {
                 _materials.push_back(Material::create(mat_config));
             }
         }
@@ -181,9 +183,11 @@ namespace luminous {
                 _materials.clear();
                 _textures.clear();
             }
-            _tex_configs.clear();
-            _texture_mgr.clear();
-            _scene_box = Box3f();
+            {
+                _tex_configs.clear();
+                _texture_mgr.clear();
+                _scene_box = Box3f();
+            }
         }
 
         void Scene::shrink_to_fit() {
@@ -206,6 +210,10 @@ namespace luminous {
             {
                 _materials.shrink_to_fit();
                 _textures.shrink_to_fit();
+            }
+            {
+                _tex_configs.shrink_to_fit();
+                _texture_mgr.shrink_to_fit();
             }
         }
 

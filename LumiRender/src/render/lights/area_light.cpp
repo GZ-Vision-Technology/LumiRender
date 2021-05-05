@@ -5,16 +5,19 @@
 #include "area_light.h"
 #include "render/include/creator.h"
 #include "render/include/distribution.h"
+#include "graphics/sampling/warp.h"
 
 namespace luminous {
     inline namespace render {
 
         SurfaceInteraction AreaLight::sample(float2 u, const HitGroupData *hit_group_data) const {
             SurfaceInteraction ret;
-            auto mesh_idx = hit_group_data->inst_to_mesh_idx[_inst_idx];
-            MeshHandle mesh = hit_group_data->meshes[mesh_idx];
+            MeshHandle mesh = hit_group_data->get_mesh(_inst_idx);
             const Distribution1D &distrib = hit_group_data->emission_distributions[mesh.distribute_idx];
-            size_t idx = distrib.sample_discrete(u.x, nullptr, &u.x);
+            size_t triangle_id = distrib.sample_discrete(u.x, nullptr, &u.x);
+            TriangleHandle triangle = hit_group_data->get_triangle(mesh, triangle_id);
+            float2 uv = square_to_triangle(u);
+
 
             return ret;
         }

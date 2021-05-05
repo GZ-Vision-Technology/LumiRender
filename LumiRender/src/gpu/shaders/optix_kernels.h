@@ -12,6 +12,7 @@
 #include "render/light_samplers/shader_include.h"
 #include "render/lights/shader_include.h"
 #include "render/include/distribution.h"
+#include "render/include/shader_include.h"
 #include "gpu/framework/optix_params.h"
 #include "render/textures/shader_include.h"
 #include "render/materials/shader_include.h"
@@ -203,13 +204,6 @@ computeSurfaceInteraction(luminous::BufferView<const luminous::float3> positions
 static GPU_INLINE luminous::SurfaceInteraction getSurfaceInteraction(luminous::ClosestHit closest_hit) {
     using namespace luminous;
     const HitGroupData &data = getSbtData<HitGroupData>();
-    Transform o2w = data.get_transform(closest_hit.instance_id);
-    MeshHandle mesh = data.get_mesh(closest_hit.instance_id);
-    TriangleHandle tri = data.triangles[mesh.triangle_offset + closest_hit.triangle_id];
-    const auto& positions = data.get_positions(mesh);
-    const auto& normals = data.get_normals(mesh);
-    const auto& tex_coords = data.get_tex_coords(mesh);
-    auto si = computeSurfaceInteraction(positions, normals, tex_coords, tri, closest_hit.bary, o2w);
-    si.material = &data.materials[mesh.material_idx];
+    auto si = data.compute_surface_interaction(closest_hit);
     return si;
 }

@@ -6,7 +6,7 @@
 #pragma once
 
 #include "graphics/lstd/lstd.h"
-
+#include "core/logging.h"
 namespace luminous {
     inline namespace render {
 
