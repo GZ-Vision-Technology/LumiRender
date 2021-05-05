@@ -12,6 +12,17 @@ __constant__ luminous::LaunchParams
 params;
 }
 
+GPU_INLINE float3 Li(luminous::Ray ray, luminous::Sampler &sampler) {
+    using namespace luminous;
+    RadiancePRD prd(true, false,
+                    luminous::make_float3(0.f),
+                    luminous::make_float3(1.f),
+                    luminous::make_float3(0.f));
+    luminous::float3 radiance = make_float3(0.f);
+    traceRadiance(params.traversable_handle, ray, &prd);
+    return radiance;
+}
+
 GLOBAL __raygen__rg() {
     using namespace luminous;
     luminous::uint2 pixel = getPixelCoords();
@@ -24,20 +35,27 @@ GLOBAL __raygen__rg() {
     Ray ray;
     camera->generate_ray(ss, &ray);
     RadiancePRD prd;
+    prd.done = false;
+    prd.count_emitted = true;
+
+    int i = sampler.spp();
+
+    do {
+
+
+
+    } while (--i);
 
     traceRadiance(params.traversable_handle, ray, &prd);
     film->add_sample(pixel, prd.radiance, 1, params.frame_index);
 
-    auto result = luminous::make_float3(0.f);
-    for (int i = 0; i < sampler.spp(); ++i) {
-
-    }
 }
 
 GLOBAL __miss__radiance() {
     RadiancePRD *prd = getPRD();
     auto data = getSbtData<luminous::MissData>();
     prd->radiance = data.bg_color;
+    prd->done = true;
 }
 
 GLOBAL __miss__shadow() {

@@ -10,7 +10,7 @@ namespace luminous {
 
         void EmissionDistribution::add_distribute(const Distribution1DBuilder &builder) {
 
-            handles.emplace_back(func_buffer.size(),builder.func.size(),
+            handles.emplace_back(func_buffer.size(), builder.func.size(),
                                  CDF_buffer.size(), builder.CDF.size(),
                                  builder.func_integral);
             func_buffer.append(builder.func);

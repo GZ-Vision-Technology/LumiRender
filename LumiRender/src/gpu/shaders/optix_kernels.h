@@ -20,8 +20,25 @@
 #include "graphics/lstd/lstd.h"
 
 struct RadiancePRD {
+    RadiancePRD() = default;
+
+    RadiancePRD(bool count_emitted, bool done,
+                luminous::float3 radiance,
+                luminous::float3 throughput,
+                luminous::float3 emission)
+            : count_emitted(count_emitted),
+              done(done),
+              radiance(radiance),
+              throughput(throughput),
+              emission(emission) {}
+
     luminous::SurfaceInteraction interaction;
+    bool count_emitted{true};
+    bool done{false};
     luminous::float3 radiance;
+    luminous::float3 throughput;
+    luminous::float3 emission;
+
 };
 
 static GPU_INLINE void *unpackPointer(unsigned int i0, unsigned int i1) {
