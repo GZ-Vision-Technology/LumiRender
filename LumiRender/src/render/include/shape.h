@@ -56,7 +56,11 @@ namespace luminous {
 
             string full_path(string fn) const { return fn.empty() ? fn : (directory / fn).string(); }
 
-            string material_name;
+            bool has_custom_material() const {
+                return !custom_material_name.empty();
+            }
+
+            string custom_material_name;
             filesystem::path directory;
             vector <std::shared_ptr<const Mesh>> meshes;
             vector <MaterialConfig> materials;

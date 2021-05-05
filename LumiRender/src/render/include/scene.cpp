@@ -76,7 +76,7 @@ namespace luminous {
             index_t material_count = scene_graph->material_configs.size();
             for (const SP<const Model> &model : scene_graph->model_list) {
                 int64_t model_mat_idx = lstd::find_index_if(scene_graph->material_configs, [&](const MaterialConfig &val){
-                    return val.name == model->material_name;
+                    return model->has_custom_material() && val.name == model->custom_material_name;
                 });
                 for (const SP<const Mesh> &mesh : model->meshes) {
                     _positions.append(mesh->positions);
