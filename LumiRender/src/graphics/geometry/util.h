@@ -14,6 +14,26 @@ namespace luminous {
             return w1.z * w2.z > 0;
         }
 
+        XPU inline float3 offset_ray_origin(const float3 &p_in, const float3 &n_in) noexcept {
+
+            constexpr auto origin = 1.0f / 32.0f;
+            constexpr auto float_scale = 1.0f / 65536.0f;
+            constexpr auto int_scale = 256.0f;
+
+            float3 n = n_in;
+            auto of_i = make_int3(static_cast<int>(int_scale * n.x),
+                                  static_cast<int>(int_scale * n.y),
+                                  static_cast<int>(int_scale * n.z));
+
+            float3 p = p_in;
+            float3 p_i = make_float3(
+                    bit_cast<float>(bit_cast<int>(p.x) + select(p.x < 0, -of_i.x, of_i.x)),
+                    bit_cast<float>(bit_cast<int>(p.y) + select(p.y < 0, -of_i.y, of_i.y)),
+                    bit_cast<float>(bit_cast<int>(p.z) + select(p.z < 0, -of_i.z, of_i.z)));
+
+            return select(functor::abs(p) < origin, p + float_scale * n, p_i);
+        }
+
         struct alignas(16) Ray {
         public:
             float org_x{0.f};
@@ -71,6 +91,24 @@ namespace luminous {
                        org_x, org_y, org_z, dir_x, dir_y, dir_z);
             }
 
+            NDSC_XPU static Ray spawn_ray(float3 pos, float3 normal, float3 dir) {
+                float3 org = offset_ray_origin(pos, normal);
+                return Ray(org, dir);
+            }
+
+            NDSC_XPU static Ray spawn_ray_to(float3 p_start, float3 n_start, float3 p_target) {
+                float3 org = offset_ray_origin(p_start, n_start);
+                float3 dir = p_target - p_start;
+                return Ray(org, dir, 1 - shadow_epsilon);
+            }
+
+            NDSC_XPU static Ray spawn_ray_to(float3 p_start, float3 n_start, float3 p_target, float3 n_target) {
+                float3 org = offset_ray_origin(p_start, n_start);
+                p_target = offset_ray_origin(p_target, n_target);
+                float3 dir = p_target - p_start;
+                return Ray(org, dir, 1 - shadow_epsilon);
+            }
+
             [[nodiscard]] std::string to_string() const {
                 return string_printf("ray:{origin:%s,direction:%s,tmin:%f,tmax:%f}",
                                      origin().to_string().c_str(),
@@ -78,26 +116,6 @@ namespace luminous {
                                      t_min, t_max);
             }
         };
-
-        XPU inline float3 offset_ray_origin(const float3 &p_in, const float3 &n_in) noexcept {
-
-            constexpr auto origin = 1.0f / 32.0f;
-            constexpr auto float_scale = 1.0f / 65536.0f;
-            constexpr auto int_scale = 256.0f;
-
-            float3 n = n_in;
-            auto of_i = make_int3(static_cast<int>(int_scale * n.x),
-                                  static_cast<int>(int_scale * n.y),
-                                  static_cast<int>(int_scale * n.z));
-
-            float3 p = p_in;
-            float3 p_i = make_float3(
-                    bit_cast<float>(bit_cast<int>(p.x) + select(p.x < 0, -of_i.x, of_i.x)),
-                    bit_cast<float>(bit_cast<int>(p.y) + select(p.y < 0, -of_i.y, of_i.y)),
-                    bit_cast<float>(bit_cast<int>(p.z) + select(p.z < 0, -of_i.z, of_i.z)));
-
-            return select(functor::abs(p) < origin, p + float_scale * n, p_i);
-        }
 
         template<typename T>
         NDSC_XPU T triangle_lerp(float2 barycentric, T v0, T v1, T v2) {

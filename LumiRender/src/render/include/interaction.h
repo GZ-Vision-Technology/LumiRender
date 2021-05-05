@@ -7,6 +7,7 @@
 
 #include "graphics/math/common.h"
 #include "core/backend/buffer_view.h"
+#include "graphics/geometry/util.h"
 
 namespace luminous {
     inline namespace render {
@@ -82,13 +83,24 @@ namespace luminous {
             float time;
             UVN g_uvn;
 
+            XPU Interaction() = default;
+
             NDSC_XPU_INLINE bool is_on_surface() const {
                 return g_uvn.valid();
             }
 
-            XPU Interaction() = default;
-        };
+            NDSC_XPU_INLINE Ray spawn_ray(float3 dir) const {
+                return Ray::spawn_ray(pos, g_uvn.normal, dir);
+            }
 
+            NDSC_XPU_INLINE Ray spawn_ray_to(float3 p) const {
+                return Ray::spawn_ray_to(pos, g_uvn.normal, p);
+            }
+
+            NDSC_XPU_INLINE Ray spawn_ray_to(const Interaction &it) const {
+                return Ray::spawn_ray_to(pos, g_uvn.normal, it.pos, it.g_uvn.normal);
+            }
+        };
 
 
         class Material;

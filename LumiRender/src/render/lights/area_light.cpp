@@ -34,6 +34,11 @@ namespace luminous {
             return lls;
         }
 
+        LightLiSample AreaLight::sample_Li(float2 u, LightLiSample lls, const HitGroupData *hit_group_data) const {
+//            SurfaceInteraction si =
+            return lls;
+        }
+
         /**
          * p(dir) = p(pos) * r^2 / cos¦È
          * @param p_ref
@@ -68,5 +73,7 @@ namespace luminous {
         AreaLight AreaLight::create(const LightConfig &config) {
             return AreaLight(config.instance_idx, config.emission, config.surface_area);
         }
+
+
     } //luminous::render
 } // luminous::render

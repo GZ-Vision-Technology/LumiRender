@@ -98,9 +98,9 @@ namespace luminous {
             BxDFFlags flags;
             float eta = 1;
 
-            BSDFSample() = default;
+            NDSC_XPU BSDFSample() = default;
 
-            BSDFSample(float4 val, float3 wi_, float PDF_, BxDFFlags flags_, float eta_ = 1)
+            NDSC_XPU BSDFSample(float4 val, float3 wi_, float PDF_, BxDFFlags flags_, float eta_ = 1)
                     : f_val(val), wi(wi_), PDF(PDF_), flags(flags_), eta(eta_) {}
 
             NDSC_XPU bool is_non_specular() const {

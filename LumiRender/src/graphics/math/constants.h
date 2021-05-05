@@ -30,6 +30,7 @@ namespace luminous {
         constexpr float float_one_minus_epsilon = 0x1.fffffep-1;
         constexpr float one_minus_epsilon = float_one_minus_epsilon;
         constexpr float ray_t_max = 1e16f;
+        constexpr float shadow_epsilon = 0.0001f;
 
         static struct ZeroTy {
             XPU operator double() const { return 0; }
