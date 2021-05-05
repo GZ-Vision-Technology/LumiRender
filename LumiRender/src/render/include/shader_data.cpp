@@ -68,6 +68,48 @@ namespace luminous {
             return si;
         }
 
+        void HitGroupData::fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
+                                          float3 *world_p, float3 *world_ng,
+                                          float3 *world_ns, float2 *tex_coord) const {
+            auto mesh = get_mesh(inst_id);
+            TriangleHandle tri = get_triangle(mesh, tri_id);
+
+            const auto &o2w = get_transform(inst_id);
+            // compute pos
+            const auto &mesh_positions = get_positions(mesh);
+            luminous::float3 p0 = mesh_positions[tri.i];
+            luminous::float3 p1 = mesh_positions[tri.j];
+            luminous::float3 p2 = mesh_positions[tri.k];
+            *world_p = o2w.apply_point(triangle_lerp(bary, p0, p1, p2));
+
+            if (world_ng) {
+                luminous::float3 dp02 = p0 - p2;
+                luminous::float3 dp12 = p1 - p2;
+                *world_ng = o2w.apply_normal(cross(dp02, dp12));
+            }
+
+            if (world_ns) {
+                const auto &mesh_normals = get_normals(mesh);
+                auto n0 = mesh_normals[tri.i];
+                auto n1 = mesh_normals[tri.j];
+                auto n2 = mesh_normals[tri.k];
+                *world_ns = o2w.apply_normal(triangle_lerp(bary, n0, n1, n2));
+            }
+
+            if (tex_coord) {
+                const auto &mesh_tex_coords = get_tex_coords(mesh);
+                luminous::float2 tex_coord0 = mesh_tex_coords[tri.i];
+                luminous::float2 tex_coord1 = mesh_tex_coords[tri.j];
+                luminous::float2 tex_coord2 = mesh_tex_coords[tri.k];
+                if (tex_coord0.is_zero() && tex_coord1.is_zero() && tex_coord2.is_zero()) {
+                    tex_coord0 = luminous::make_float2(0, 0);
+                    tex_coord1 = luminous::make_float2(1, 0);
+                    tex_coord2 = luminous::make_float2(1, 1);
+                }
+                *tex_coord = triangle_lerp(bary, tex_coord0, tex_coord1, tex_coord2);
+            }
+        }
+
         const Distribution1D &HitGroupData::get_distrib(index_t inst_id) const {
             auto mesh = get_mesh(inst_id);
             return emission_distributions[mesh.distribute_idx];
@@ -81,5 +123,6 @@ namespace luminous {
             auto mesh = get_mesh(inst_id);
             return materials[mesh.material_idx];
         }
+
     } // luminous::render
 } // luminous

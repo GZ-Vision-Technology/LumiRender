@@ -101,6 +101,17 @@ namespace luminous {
                 return compute_surface_interaction(closest_hit.instance_id, closest_hit.triangle_id, closest_hit.bary);
             }
 
+            XPU void fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
+                                    float3 *world_p, float3 *world_ng = nullptr,
+                                    float3 *world_ns = nullptr, float2 * tex_coord = nullptr) const;
+
+            XPU_INLINE void fill_attribute(const ClosestHit &closest_hit,
+                                    float3 *world_p, float3 *world_ng = nullptr,
+                                    float3 *world_ns = nullptr, float2 * tex_coord = nullptr) const {
+                fill_attribute(closest_hit.instance_id, closest_hit.triangle_id, closest_hit.bary,
+                               world_p, world_ng, world_ns, tex_coord);
+            }
+
             NDSC_XPU_INLINE const Material &get_material(index_t inst_id) const;
 
             NDSC_XPU_INLINE const Texture &get_texture(index_t idx) const;
