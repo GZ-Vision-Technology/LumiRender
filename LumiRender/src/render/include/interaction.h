@@ -60,14 +60,6 @@ namespace luminous {
             }
         };
 
-        struct Interaction {
-            float3 pos;
-            float3 wo;
-            float time;
-
-            Interaction() = default;
-        };
-
         struct UVN {
             float3 dp_du;
             float3 dp_dv;
@@ -84,6 +76,21 @@ namespace luminous {
             }
         };
 
+        struct Interaction {
+            float3 pos;
+            float3 wo;
+            float time;
+            UVN g_uvn;
+
+            NDSC_XPU_INLINE bool is_on_surface() const {
+                return g_uvn.valid();
+            }
+
+            XPU Interaction() = default;
+        };
+
+
+
         class Material;
 
         class Light;
@@ -91,7 +98,6 @@ namespace luminous {
         struct SurfaceInteraction : public Interaction {
             float2 uv;
             UVN s_uvn;
-            UVN g_uvn;
             float PDF_pos = 0;
             const Light *light = nullptr;
             const Material *material = nullptr;

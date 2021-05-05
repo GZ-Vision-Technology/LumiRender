@@ -20,18 +20,18 @@ namespace luminous {
         struct SceneGraph {
         private:
             Context *_context;
-            std::map<string, uint32_t> _key_to_idx;
+            std::map <string, uint32_t> _key_to_idx;
         public:
             SamplerConfig sampler_config;
             SensorConfig sensor_config;
-            std::vector<ShapeConfig> shape_configs;
-            mutable std::vector<LightConfig> light_configs;
+            std::vector <ShapeConfig> shape_configs;
+            mutable std::vector <LightConfig> light_configs;
             IntegratorConfig integrator_config;
             LightSamplerConfig light_sampler_config;
-            vector<SP<const Model>> model_list;
-            vector<SP<const ModelInstance>> instance_list;
-            vector<TextureConfig> tex_configs;
-            vector<MaterialConfig> material_configs;
+            vector <SP<const Model>> model_list;
+            vector <SP<const ModelInstance>> instance_list;
+            vector <TextureConfig> tex_configs;
+            vector <MaterialConfig> material_configs;
         private:
             bool is_contain(const string &key) {
                 return _key_to_idx.find(key) != _key_to_idx.end();

@@ -239,6 +239,14 @@ namespace luminous {
             return ret;
         }
 
+        IntegratorConfig parse_integrator(const ParameterSet &ps) {
+            IntegratorConfig ret;
+            auto param = ps["param"];
+            ret.max_depth = param["max_depth"].as_uint(10);
+            ret.rr_threshold = param["rr_threshold"].as_float(1);
+            return ret;
+        }
+
         SP<SceneGraph> Parser::parse() const {
             auto shapes = _data["shapes"];
             auto scene_graph = make_shared<SceneGraph>(_context);
@@ -249,6 +257,7 @@ namespace luminous {
             scene_graph->light_sampler_config = parse_light_sampler(ParameterSet(_data["light_sampler"]));
             scene_graph->tex_configs = parse_textures(_data["textures"]);
             scene_graph->material_configs = parse_materials(_data["materials"]);
+            scene_graph->integrator_config = parse_integrator(ParameterSet(_data["integrator"]));
             return scene_graph;
         }
     }

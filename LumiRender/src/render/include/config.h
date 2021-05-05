@@ -39,6 +39,8 @@ namespace luminous {
         };
 
         struct IntegratorConfig : Config {
+            uint32_t max_depth = 10;
+            float rr_threshold = 1;
         };
 
         struct SamplerConfig : Config {

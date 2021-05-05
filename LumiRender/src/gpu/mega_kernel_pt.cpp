@@ -12,12 +12,14 @@ namespace luminous {
             lp.sampler = _sampler.device_data();
             lp.camera = _camera.device_data();
             lp.frame_index = 0u;
+            lp.max_depth = _max_depth;
             _launch_params.reset(&lp, _device);
             _launch_params.synchronize_to_gpu();
         }
 
         void MegaKernelPT::init(const std::shared_ptr<SceneGraph> &scene_graph) {
             _scene = make_unique<GPUScene>(_device, _context);
+            init_with_config(scene_graph->integrator_config);
             _scene->init(scene_graph);
             auto camera = Sensor::create(scene_graph->sensor_config);
             _camera.reset(&camera, _device);

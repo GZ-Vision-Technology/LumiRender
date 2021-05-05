@@ -16,12 +16,11 @@ namespace luminous {
         struct LaunchParams {
             OptixTraversableHandle traversable_handle;
             uint frame_index;
+            uint max_depth;
             Sensor *camera;
-            Sampler *sampler;
+            const Sampler *sampler;
         };
-
-
-
+        
         template<typename T>
         struct Record {
             __align__(OPTIX_SBT_RECORD_ALIGNMENT) char header[OPTIX_SBT_RECORD_HEADER_SIZE];

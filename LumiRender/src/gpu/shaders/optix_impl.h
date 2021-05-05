@@ -62,7 +62,8 @@ GLOBAL __closesthit__radiance() {
 
     BSDF bsdf = si.material->get_BSDF(si, &data);
     auto color = bsdf.base_color();
-//    prd->radiance = make_float3(color);
+    prd->radiance = make_float3(color);
+
 //    prd->radiance.print();
 }
 

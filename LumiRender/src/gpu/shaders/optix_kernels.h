@@ -20,7 +20,7 @@
 #include "graphics/lstd/lstd.h"
 
 struct RadiancePRD {
-    luminous::Interaction interaction;
+    luminous::SurfaceInteraction interaction;
     luminous::float3 radiance;
 };
 
