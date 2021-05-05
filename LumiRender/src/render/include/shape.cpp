@@ -69,6 +69,9 @@ namespace luminous {
         }
 
         void process_materials(const aiScene *ai_scene, Model *model) {
+            if (model->has_custom_material()) {
+                return;
+            }
             vector < aiMaterial * > ai_materials(ai_scene->mNumMaterials);
             model->materials.reserve(ai_materials.size());
             std::copy(ai_scene->mMaterials, ai_scene->mMaterials + ai_scene->mNumMaterials, ai_materials.begin());
@@ -121,7 +124,7 @@ namespace luminous {
             } else {
                 std::copy(ai_scene->mMeshes, ai_scene->mMeshes + ai_scene->mNumMeshes, ai_meshes.begin());
             }
-
+            custom_material_name = sc.material_name;
             process_materials(ai_scene, this);
 
             meshes.reserve(ai_meshes.size());

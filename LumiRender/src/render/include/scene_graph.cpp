@@ -24,7 +24,6 @@ namespace luminous {
             if (config.type() == "model") {
                 config.fn = (_context->scene_path() / config.fn).string();
                 auto model = make_shared<Model>(config);
-                model->custom_material_name = config.material_name;
                 return model;
             } else if (config.type() == "quad") {
                 auto model = make_shared<Model>();

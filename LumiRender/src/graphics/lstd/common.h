@@ -52,7 +52,7 @@ namespace lstd {
      */
     template<typename T, typename Predict>
     NDSC_XPU int64_t find_index_if(const T& v, Predict predict) {
-        auto iter = std::find_if(v.cbegin(), v.cend(), predict);
+        auto iter = lstd::find_if(v.cbegin(), v.cend(), predict);
         if (iter == v.cend()) {
             return -1;
         }
