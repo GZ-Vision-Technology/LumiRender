@@ -19,8 +19,8 @@ namespace luminous {
 
         void EmissionDistribution::init_on_host() {
             for (const auto &handle : handles) {
-                BufferView<const float> func = func_buffer.host_buffer_view(handle.func_offset, handle.func_size);
-                BufferView<const float> CDF = CDF_buffer.host_buffer_view(handle.CDF_offset, handle.CDF_size);
+                BufferView<const float> func = func_buffer.const_host_buffer_view(handle.func_offset, handle.func_size);
+                BufferView<const float> CDF = CDF_buffer.const_host_buffer_view(handle.CDF_offset, handle.CDF_size);
                 emission_distributions.emplace_back(func, CDF, handle.integral);
             }
         }

@@ -17,17 +17,16 @@ namespace luminous {
             size_t triangle_id = distrib.sample_discrete(u.x, nullptr, &u.x);
             TriangleHandle triangle = hit_group_data->get_triangle(mesh, triangle_id);
             float2 uv = square_to_triangle(u);
-
-
+            ret = hit_group_data->compute_surface_interaction(_inst_idx, triangle_id, uv);
+            ret.PDF_pos = PDF_pos();
             return ret;
         }
 
         LightLiSample AreaLight::Li(LightLiSample lls) const {
             lls.wi = normalize(lls.p_light.pos - lls.p_ref.pos);
             lls.L = L(lls.p_light, -lls.wi);
-            float PDF_pos = _inv_area;
             float cos_theta = abs_dot(lls.p_light.g_uvn.normal, normalize(-lls.wi));
-            float PDF_dir = PDF_pos * length_squared(lls.wi) / cos_theta;
+            float PDF_dir = PDF_pos() * length_squared(lls.wi) / cos_theta;
             if (is_inf(PDF_dir)) {
                 PDF_dir = 0;
             }
@@ -41,15 +40,14 @@ namespace luminous {
          * @param p_light
          * @return
          */
-        float AreaLight::PDF_Li(const Interaction &p_ref, const SurfaceInteraction &p_light) const {
-            float PDF_pos = _inv_area;
+        float AreaLight::PDF_dir(const Interaction &p_ref, const SurfaceInteraction &p_light) const {
             float3 wi = p_ref.pos - p_light.pos;
             float cos_theta = abs_dot(p_light.g_uvn.normal, normalize(wi));
-            float PDF_dir = PDF_pos * length_squared(wi) / cos_theta;
-            if (is_inf(PDF_dir)) {
+            float PDF = PDF_pos() * length_squared(wi) / cos_theta;
+            if (is_inf(PDF)) {
                 return 0;
             }
-            return PDF_dir;
+            return PDF;
         }
 
         float3 AreaLight::power() const {
@@ -68,7 +66,7 @@ namespace luminous {
         }
 
         AreaLight AreaLight::create(const LightConfig &config) {
-            return AreaLight(config.instance_idx, config.emission);
+            return AreaLight(config.instance_idx, config.emission, config.surface_area);
         }
     } //luminous::render
 } // luminous::render

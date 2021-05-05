@@ -94,7 +94,8 @@ namespace luminous {
             }
 
             XPU SurfaceInteraction compute_surface_interaction(index_t inst_id,
-                                                                      index_t tri_id, float2 bary) const;
+                                                               index_t tri_id,
+                                                               float2 bary) const;
 
             XPU_INLINE SurfaceInteraction compute_surface_interaction(const ClosestHit &closest_hit) const {
                 return compute_surface_interaction(closest_hit.instance_id, closest_hit.triangle_id, closest_hit.bary);

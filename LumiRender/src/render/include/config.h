@@ -206,6 +206,7 @@ namespace luminous {
                 struct {
                     uint instance_idx;
                     float3 emission;
+                    float surface_area;
                 };
                 struct {
                     float3 intensity;

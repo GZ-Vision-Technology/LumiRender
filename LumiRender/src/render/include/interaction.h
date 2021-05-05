@@ -92,6 +92,7 @@ namespace luminous {
             float2 uv;
             UVN s_uvn;
             UVN g_uvn;
+            float PDF_pos = 0;
             const Light *light = nullptr;
             const Material *material = nullptr;
             float du_dx = 0, dv_dx = 0, du_dy = 0, dv_dy = 0;
