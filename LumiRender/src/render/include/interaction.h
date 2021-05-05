@@ -104,6 +104,29 @@ namespace luminous {
             float du_dx = 0, dv_dx = 0, du_dy = 0, dv_dy = 0;
         };
 
+        struct RadiancePRD {
+            RadiancePRD() = default;
+
+            RadiancePRD(bool count_emitted, bool done, bool hit,
+                        luminous::float3 radiance,
+                        luminous::float3 throughput,
+                        luminous::float3 emission)
+                    : count_emitted(count_emitted),
+                      done(done),
+                      hit(hit),
+                      radiance(radiance),
+                      throughput(throughput),
+                      emission(emission) {}
+
+            luminous::SurfaceInteraction interaction;
+            bool count_emitted{true};
+            bool done{false};
+            bool hit{false};
+            luminous::float3 radiance;
+            luminous::float3 throughput;
+            luminous::float3 emission;
+        };
+
         struct TextureEvalContext {
             XPU TextureEvalContext() = default;
 

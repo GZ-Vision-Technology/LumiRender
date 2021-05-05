@@ -19,27 +19,7 @@
 #include "render/bxdfs/shader_include.h"
 #include "graphics/lstd/lstd.h"
 
-struct RadiancePRD {
-    RadiancePRD() = default;
 
-    RadiancePRD(bool count_emitted, bool done,
-                luminous::float3 radiance,
-                luminous::float3 throughput,
-                luminous::float3 emission)
-            : count_emitted(count_emitted),
-              done(done),
-              radiance(radiance),
-              throughput(throughput),
-              emission(emission) {}
-
-    luminous::SurfaceInteraction interaction;
-    bool count_emitted{true};
-    bool done{false};
-    luminous::float3 radiance;
-    luminous::float3 throughput;
-    luminous::float3 emission;
-
-};
 
 static GPU_INLINE void *unpackPointer(unsigned int i0, unsigned int i1) {
     const unsigned long long uptr = static_cast<unsigned long long>( i0 ) << 32 | i1;
@@ -72,10 +52,10 @@ static GPU_INLINE const T &getSbtData() {
     return *reinterpret_cast<T *>(optixGetSbtDataPointer());
 }
 
-static GPU_INLINE RadiancePRD *getPRD() {
+static GPU_INLINE luminous::RadiancePRD *getPRD() {
     const unsigned int u0 = optixGetPayload_0();
     const unsigned int u1 = optixGetPayload_1();
-    return reinterpret_cast<RadiancePRD *>(unpackPointer(u0, u1));
+    return reinterpret_cast<luminous::RadiancePRD *>(unpackPointer(u0, u1));
 }
 
 template<typename... Args>
@@ -104,8 +84,8 @@ static GPU_INLINE void trace(OptixTraversableHandle handle,
             std::forward<Args>(payload)...);
 }
 
-static GPU_INLINE void traceRadiance(OptixTraversableHandle handle,
-                                     luminous::Ray ray, RadiancePRD *prd) {
+static GPU_INLINE bool traceRadiance(OptixTraversableHandle handle,
+                                     luminous::Ray ray, luminous::RadiancePRD *prd) {
     unsigned int u0, u1;
     packPointer(prd, u0, u1);
     trace(handle, ray, OPTIX_RAY_FLAG_NONE,
@@ -113,6 +93,7 @@ static GPU_INLINE void traceRadiance(OptixTraversableHandle handle,
           luminous::RayType::Count,           // SBT stride
           luminous::RayType::Radiance,        // missSBTIndex
           u0, u1);
+    return prd->hit;
 }
 
 static GPU_INLINE bool traceOcclusion(OptixTraversableHandle handle, luminous::Ray ray) {
