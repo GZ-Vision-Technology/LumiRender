@@ -12,10 +12,9 @@ namespace luminous {
 
         SurfaceInteraction AreaLight::sample(float2 u, const HitGroupData *hit_group_data) const {
             SurfaceInteraction ret;
-            MeshHandle mesh = hit_group_data->get_mesh(_inst_idx);
+            auto mesh = hit_group_data->get_mesh(_inst_idx);
             const Distribution1D &distrib = hit_group_data->emission_distributions[mesh.distribute_idx];
             size_t triangle_id = distrib.sample_discrete(u.x, nullptr, &u.x);
-            TriangleHandle triangle = hit_group_data->get_triangle(mesh, triangle_id);
             float2 uv = square_to_triangle(u);
             ret = hit_group_data->compute_surface_interaction(_inst_idx, triangle_id, uv);
             ret.PDF_pos = PDF_pos();
@@ -34,8 +33,16 @@ namespace luminous {
             return lls;
         }
 
-        LightLiSample AreaLight::sample_Li(float2 u, LightLiSample lls, const HitGroupData *hit_group_data) const {
-//            SurfaceInteraction si =
+        lstd::optional<LightLiSample> AreaLight::sample_Li(float2 u, LightLiSample lls,
+                                                           uint64_t traversable_handle,
+                                                           const HitGroupData *hit_group_data) const {
+            lls.p_light = sample(u, hit_group_data);
+            Ray ray = lls.p_ref.spawn_ray_to(lls.p_light);
+            bool occluded = ray_occluded(traversable_handle, ray);
+            if (occluded) {
+                return {};
+            }
+            lls = Li(lls);
             return lls;
         }
 
@@ -65,9 +72,9 @@ namespace luminous {
 
         std::string AreaLight::to_string() const {
             LUMINOUS_TO_STRING("light Base : %s,name:%s, L : %s",
-                                 _to_string().c_str(),
-                                 type_name(this),
-                                 _L.to_string().c_str());
+                               _to_string().c_str(),
+                               type_name(this),
+                               _L.to_string().c_str());
         }
 
         AreaLight AreaLight::create(const LightConfig &config) {

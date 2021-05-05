@@ -20,6 +20,11 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(Li, lls);
         }
 
+        lstd::optional<LightLiSample> Light::sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
+                                                       const HitGroupData *hit_group_data) const {
+            LUMINOUS_VAR_DISPATCH(sample_Li, u ,lls ,traversable_handle, hit_group_data);
+        }
+
         bool Light::is_delta() const {
             LUMINOUS_VAR_DISPATCH(is_delta);
         }
@@ -35,5 +40,6 @@ namespace luminous {
         Light Light::create(const LightConfig &config) {
             return detail::create<Light>(config);
         }
+
     } // luminous::render
 } // luminous

@@ -4,6 +4,7 @@
 
 #include "point_light.h"
 #include "render/include/creator.h"
+#include "render/include/trace.h"
 
 namespace luminous {
     inline namespace render {
@@ -16,6 +17,18 @@ namespace luminous {
 
         float PointLight::PDF_dir(const Interaction &ref_p, const SurfaceInteraction &p_light) const {
             return 0;
+        }
+
+        lstd::optional<LightLiSample> PointLight::sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
+                                                            const HitGroupData *hit_group_data) const {
+            lls.p_light = sample(u, hit_group_data);
+            Ray ray = lls.p_ref.spawn_ray_to(lls.p_light);
+            bool occluded = ray_occluded(traversable_handle, ray);
+            if (occluded) {
+                return {};
+            }
+            lls = Li(lls);
+            return lls;
         }
 
         float3 PointLight::power() const {
@@ -40,5 +53,7 @@ namespace luminous {
         PointLight PointLight::create(const LightConfig &config) {
             return PointLight(config.position, config.intensity);
         }
+
+
     } // luminous::render
 } // luminous
