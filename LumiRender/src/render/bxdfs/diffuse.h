@@ -25,9 +25,9 @@ namespace luminous {
             }
 
         public:
-            IdealDiffuse() = default;
+            XPU IdealDiffuse() = default;
 
-            IdealDiffuse(float4 R) : _R(R) {}
+            XPU IdealDiffuse(float4 R) : _R(R) {}
 
             NDSC_XPU float4 base_color() const {
                 return _R;

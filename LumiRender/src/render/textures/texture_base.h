@@ -62,16 +62,16 @@ namespace luminous {
             PixelFormat _pixel_format;
             TextureMapping2D _mapping;
         public:
-            TextureBase() = default;
+            XPU TextureBase() = default;
 
-            TextureBase(PixelFormat pixel_format)
+            XPU TextureBase(PixelFormat pixel_format)
                     : _pixel_format(pixel_format) {}
 
-            PixelFormat pixel_format() const {
+            NDSC_XPU_INLINE PixelFormat pixel_format() const {
                 return _pixel_format;
             }
 
-            void set_mapping(const TextureMapping2D &mapping) {
+            XPU_INLINE void set_mapping(const TextureMapping2D &mapping) {
                 _mapping = mapping;
             }
         };

@@ -35,66 +35,66 @@ namespace luminous {
 
             }
 
-            XPU Quaternion conj() {
+            NDSC_XPU_INLINE Quaternion conj() {
                 return Quaternion(-v, w);
             }
 
-            XPU Quaternion &operator += (const Quaternion &q) {
+            NDSC_XPU_INLINE Quaternion &operator += (const Quaternion &q) {
                 v += q.v;
                 w += q.w;
                 return *this;
             }
 
-            XPU friend Quaternion operator + (const Quaternion &q1, const Quaternion &q2) {
+            NDSC_XPU_INLINE friend Quaternion operator + (const Quaternion &q1, const Quaternion &q2) {
                 Quaternion ret = q1;
                 return ret += q2;
             }
 
-            Quaternion &operator -= (const Quaternion &q) {
+            NDSC_XPU_INLINE Quaternion &operator -= (const Quaternion &q) {
                 v -= q.v;
                 w -= q.w;
                 return *this;
             }
 
-            XPU Quaternion operator - () const {
+            NDSC_XPU_INLINE Quaternion operator - () const {
                 Quaternion ret;
                 ret.v = -v;
                 ret.w = -w;
                 return ret;
             }
 
-            XPU friend Quaternion operator - (const Quaternion &q1, const Quaternion &q2) {
+            NDSC_XPU_INLINE friend Quaternion operator - (const Quaternion &q1, const Quaternion &q2) {
                 Quaternion ret = q1;
                 return ret -= q2;
             }
 
-            XPU Quaternion &operator *= (float f) {
+            NDSC_XPU_INLINE Quaternion &operator *= (float f) {
                 v *= f;
                 w *= f;
                 return *this;
             }
 
-            XPU Quaternion operator * (float f) const {
+            NDSC_XPU_INLINE Quaternion operator * (float f) const {
                 Quaternion ret = *this;
                 ret.v *= f;
                 ret.w *= f;
                 return ret;
             }
 
-            XPU Quaternion &operator/=(float f) {
+            NDSC_XPU_INLINE Quaternion &operator/=(float f) {
                 v /= f;
                 w /= f;
                 return *this;
             }
 
-            XPU Quaternion operator / (float f) const {
+            NDSC_XPU_INLINE Quaternion operator / (float f) const {
                 Quaternion ret = *this;
                 ret.v /= f;
                 ret.w /= f;
                 return ret;
             }
 
-            XPU bool has_nan() const {
+            NDSC_XPU_INLINE bool has_nan() const {
                 return v.has_nan() || is_nan(w);
             }
 
@@ -104,7 +104,7 @@ namespace luminous {
             }
         };
 
-        [[nodiscard]] XPU_INLINE Quaternion operator*(float f, const Quaternion &q) {
+        NDSC_XPU_INLINE Quaternion operator*(float f, const Quaternion &q) {
             return q * f;
         }
     }

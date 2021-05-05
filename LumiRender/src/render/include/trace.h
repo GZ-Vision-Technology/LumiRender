@@ -7,8 +7,11 @@
 
 #include "graphics/math/common.h"
 #include "interaction.h"
-#include "gpu/shaders/optix_kernels.h"
+#ifdef IS_GPU_CODE
+    #include "gpu/shaders/optix_kernels.h"
+#else
 
+#endif
 namespace luminous {
     inline namespace render {
 
