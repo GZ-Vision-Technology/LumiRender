@@ -46,6 +46,9 @@ namespace luminous {
             float3 ns;
             XPU LightSampleContext() = default;
 
+            XPU LightSampleContext(const SurfaceInteraction &si)
+                    : pos(si.pos), ng(si.g_uvn.normal), ns(si.s_uvn.normal) {}
+
             XPU LightSampleContext(float3 p, float3 ng, float3 ns)
                     : pos(p), ng(ng), ns(ns) {}
         };

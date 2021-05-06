@@ -86,15 +86,15 @@ namespace luminous {
             return (f * f) / (f * f + g * g);
         }
 
-        NDSC_XPU_INLINE float mis_weight(int nf,
+        NDSC_XPU_INLINE float MIS_weight(int nf,
                                     float f_PDF,
                                     int ng,
                                     float g_PDF) {
             return balance_heuristic(nf, f_PDF, ng, g_PDF);
         }
 
-        NDSC_XPU_INLINE float mis_weight(float f_PDF, float g_PDF) {
-            return mis_weight(1, f_PDF, 1, g_PDF);
+        NDSC_XPU_INLINE float MIS_weight(float f_PDF, float g_PDF) {
+            return MIS_weight(1, f_PDF, 1, g_PDF);
         }
     }
 }

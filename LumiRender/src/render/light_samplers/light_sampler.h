@@ -33,6 +33,10 @@ namespace luminous {
 
             NDSC_XPU lstd::optional<SampledLight> sample(const LightSampleContext &ctx, float u) const;
 
+            NDSC_XPU float3 estimate_direct_lighting(const LightSampleContext &ctx, const BxDF &bxdf,
+                                                    Sample &sampler, uint64_t traversable_handle,
+                                                    const HitGroupData *hit_group_data) const;
+
             NDSC_XPU float PMF(const Light &light) const;
 
             NDSC_XPU float PMF(const LightSampleContext &ctx, const Light &light) const;
