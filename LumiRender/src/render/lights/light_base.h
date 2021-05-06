@@ -30,7 +30,7 @@ namespace luminous {
         struct LightLiSample {
             float3 L{};
             float3 wi{};
-            float PDF_dir{-1.f};
+            float PDF_dir{0.f};
             SurfaceInteraction p_light{};
             Interaction p_ref{};
             XPU LightLiSample() = default;
@@ -38,6 +38,10 @@ namespace luminous {
             XPU LightLiSample(const float3 &L, float3 wi,
                               float PDF, const SurfaceInteraction &si)
                     : L(L), wi(wi), PDF_dir(PDF), p_light(si) {}
+
+            NDSC_XPU bool has_contribution() const {
+                return L.nonzero() && PDF_dir != 0;
+            }
         };
 
         struct LightSampleContext {

@@ -25,10 +25,16 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(sample_Li, u, lls, traversable_handle, hit_group_data);
         }
 
-        float3 Light::estimate_direct_lighting(const LightSampleContext &ctx, const BSDF &bsdf, Sampler &sampler,
+        float3 Light::estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
                                                uint64_t traversable_handle, const HitGroupData *hit_group_data,
                                                float3 *wi) const {
-            // todo
+            float light_PDF = 0, bsdf_PDF = 0;
+            LightLiSample lls;
+            lls.p_ref = (const Interaction &)si;
+            auto op_lls = sample_Li(sampler.next_2d(), lls, traversable_handle, hit_group_data);
+            if (op_lls && op_lls->has_contribution()) {
+
+            }
             return float3();
         }
 

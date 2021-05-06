@@ -70,12 +70,12 @@ namespace luminous {
             XPU explicit constexpr Vector(U... u) noexcept : detail::VectorStorage<T, N>{u...} {}
 
             template<typename Index>
-            XPU [[nodiscard]] T &operator[](Index i) noexcept { return reinterpret_cast<T(&)[N]>(*this)[i]; }
+            NDSC_XPU T &operator[](Index i) noexcept { return reinterpret_cast<T(&)[N]>(*this)[i]; }
 
             template<typename Index>
-            XPU [[nodiscard]] T operator[](Index i) const noexcept { return reinterpret_cast<const T(&)[N]>(*this)[i]; }
+            NDSC_XPU T operator[](Index i) const noexcept { return reinterpret_cast<const T(&)[N]>(*this)[i]; }
 
-            XPU [[nodiscard]] bool has_nan() const noexcept {
+            NDSC_XPU bool has_nan() const noexcept {
                 static_assert(N == 2 || N == 3 || N == 4);
                 if constexpr (N == 2) {
                     return is_nan(Storage::x) || is_nan(Storage::y);
@@ -86,7 +86,7 @@ namespace luminous {
                 }
             }
 
-            XPU [[nodiscard]] bool has_inf() const noexcept {
+            NDSC_XPU bool has_inf() const noexcept {
                 static_assert(N == 2 || N == 3 || N == 4);
                 if constexpr (N == 2) {
                     return is_inf(Storage::x) || is_inf(Storage::y);
@@ -97,16 +97,9 @@ namespace luminous {
                 }
             }
 
-            XPU [[nodiscard]] bool is_zero() const noexcept {
-                static_assert(N == 2 || N == 3 || N == 4);
-                if constexpr (N == 2) {
-                    return Storage::x == 0 && Storage::y == 0;
-                } else if constexpr (N == 3) {
-                    return Storage::x == 0 && Storage::y == 0 && Storage::z == 0;
-                } else {
-                    return Storage::x == 0 && Storage::y == 0 && Storage::z == 0 && Storage::w == 0;
-                }
-            }
+            NDSC_XPU bool is_zero() const noexcept;
+
+            NDSC_XPU bool nonzero() const noexcept;
 
             XPU void print() const noexcept {
                 static_assert(N == 2 || N == 3 || N == 4);
@@ -202,6 +195,7 @@ namespace luminous {
 
 #undef MAKE_ASSIGN_OP
         };
+
 
 #define MAKE_VECTOR_UNARY_OP(op)                                                         \
     template<typename T, uint N>                                                         \
@@ -461,6 +455,16 @@ namespace luminous {
         constexpr bool none(bool3 v) noexcept { return !any(v); }
 
         constexpr bool none(bool4 v) noexcept { return !any(v); }
+
+        template<typename T, uint32_t N>
+        bool Vector<T, N>::is_zero() const noexcept {
+            return all(*this == T(0));
+        }
+
+        template<typename T, uint32_t N>
+        bool Vector<T, N>::nonzero() const noexcept {
+            return any(*this != T(0));
+        }
 
     } // luminous::vector
 }// namespace luminous

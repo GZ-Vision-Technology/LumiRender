@@ -117,14 +117,6 @@ namespace luminous {
             }
         };
 
-        template<typename T>
-        NDSC_XPU T triangle_lerp(float2 barycentric, T v0, T v1, T v2) {
-            auto u = barycentric.x;
-            auto v = barycentric.y;
-            auto w = 1 - barycentric.x - barycentric.y;
-            return u * v0 + v * v1 + w * v2;
-        }
-
         struct alignas(8) ClosestHit {
             float distance;
             uint triangle_id;

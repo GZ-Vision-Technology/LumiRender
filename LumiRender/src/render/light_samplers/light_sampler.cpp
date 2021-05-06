@@ -24,12 +24,12 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(sample, ctx, u);
         }
 
-        float3 LightSampler::estimate_direct_lighting(const LightSampleContext &ctx, const BSDF &bsdf, Sampler &sampler,
+        float3 LightSampler::estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
                                                       uint64_t traversable_handle, const HitGroupData *hit_group_data,
                                                       float3 *wi) const {
-            auto sampled_light = sample(ctx, sampler.next_1d());
+            auto sampled_light = sample(si, sampler.next_1d());
             if (sampled_light) {
-                return sampled_light->light.estimate_direct_lighting(ctx, bsdf, sampler,
+                return sampled_light->light.estimate_direct_lighting(si, bsdf, sampler,
                                                                      traversable_handle,
                                                                      hit_group_data, wi) / sampled_light->PMF;
             }

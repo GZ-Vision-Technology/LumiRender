@@ -49,8 +49,7 @@ namespace luminous {
 #undef MAKE_VECTOR_UNARY_FUNC
 
         template<typename T, uint N, std::enable_if_t<scalar::is_scalar < T>, int> = 0>
-
-        [[nodiscard]] XPU constexpr auto select(Vector<bool, N> pred, Vector <T, N> t, Vector <T, N> f) noexcept {
+        NDSC_XPU constexpr auto select(Vector<bool, N> pred, Vector <T, N> t, Vector <T, N> f) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
                 return Vector < T, N > {select(pred.x, t.x, f.x), select(pred.y, t.y, f.y)};
@@ -64,7 +63,7 @@ namespace luminous {
 
 #define MAKE_VECTOR_BINARY_FUNC(func)                                                             \
     template<typename T, uint N>                                                                  \
-    [[nodiscard]] constexpr auto func(Vector<T, N> v, Vector<T, N> u) noexcept {                  \
+    NDSC_XPU constexpr auto func(Vector<T, N> v, Vector<T, N> u) noexcept {                       \
         static_assert(N == 2 || N == 3 || N == 4);                                                \
         if constexpr (N == 2) {                                                                   \
             return Vector<T, 2>{func(v.x, u.x), func(v.y, u.y)};                                  \
@@ -75,7 +74,7 @@ namespace luminous {
         }                                                                                         \
     }                                                                                             \
     template<typename T, uint N>                                                                  \
-    [[nodiscard]] constexpr auto func(T v, Vector<T, N> u) noexcept {                             \
+    NDSC_XPU constexpr auto func(T v, Vector<T, N> u) noexcept {                                  \
         static_assert(N == 2 || N == 3 || N == 4);                                                \
         if constexpr (N == 2) {                                                                   \
             return Vector<T, 2>{func(v, u.x), func(v, u.y)};                                      \
@@ -86,7 +85,7 @@ namespace luminous {
         }                                                                                         \
     }                                                                                             \
     template<typename T, uint N>                                                                  \
-    [[nodiscard]] constexpr auto func(Vector<T, N> v, T u) noexcept {                             \
+    NDSC_XPU constexpr auto func(Vector<T, N> v, T u) noexcept {                                  \
         static_assert(N == 2 || N == 3 || N == 4);                                                \
         if constexpr (N == 2) {                                                                   \
             return Vector<T, 2>{func(v.x, u), func(v.y, u)};                                      \
@@ -108,7 +107,7 @@ namespace luminous {
 #undef MAKE_VECTOR_UNARY_FUNC
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto volume(Vector <T, N> v) noexcept {
+        NDSC_XPU constexpr auto volume(Vector <T, N> v) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
                 return v.x * v.y;
@@ -120,7 +119,7 @@ namespace luminous {
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto dot(Vector <T, N> u, Vector <T, N> v) noexcept {
+        NDSC_XPU constexpr auto dot(Vector <T, N> u, Vector <T, N> v) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
                 return u.x * v.x + u.y * v.y;
@@ -132,37 +131,37 @@ namespace luminous {
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto abs_dot(Vector <T, N> u, Vector <T, N> v) noexcept {
+        NDSC_XPU constexpr auto abs_dot(Vector <T, N> u, Vector <T, N> v) noexcept {
             return abs(dot(u, v));
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto length(Vector <T, N> u) noexcept {
+        NDSC_XPU constexpr auto length(Vector <T, N> u) noexcept {
             return sqrt(dot(u, u));
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto length_squared(Vector <T, N> u) noexcept {
+        NDSC_XPU constexpr auto length_squared(Vector <T, N> u) noexcept {
             return dot(u, u);
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto normalize(Vector <T, N> u) noexcept {
+        NDSC_XPU constexpr auto normalize(Vector <T, N> u) noexcept {
             return u * (1.0f / length(u));
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto distance(Vector <T, N> u, Vector <T, N> v) noexcept {
+        NDSC_XPU constexpr auto distance(Vector <T, N> u, Vector <T, N> v) noexcept {
             return length(u - v);
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU constexpr auto distance_squared(Vector <T, N> u, Vector <T, N> v) noexcept {
+        NDSC_XPU constexpr auto distance_squared(Vector <T, N> u, Vector <T, N> v) noexcept {
             return length_squared(u - v);
         }
 
         template<typename T>
-        [[nodiscard]] XPU constexpr auto cross(Vector<T, 3> u, Vector<T, 3> v) noexcept {
+        NDSC_XPU constexpr auto cross(Vector<T, 3> u, Vector<T, 3> v) noexcept {
             return Vector<T, 3>(u.y * v.z - v.y * u.z,
                                 u.z * v.x - v.z * u.x,
                                 u.x * v.y - v.x * u.y);
@@ -179,6 +178,14 @@ namespace luminous {
             } else {
                 return 0.5 * length(cross(p1 - p0, p2 - p0));
             }
+        }
+
+        template<typename T>
+        NDSC_XPU T triangle_lerp(float2 barycentric, T v0, T v1, T v2) {
+            auto u = barycentric.x;
+            auto v = barycentric.y;
+            auto w = 1 - barycentric.x - barycentric.y;
+            return u * v0 + v * v1 + w * v2;
         }
 
         template<typename T>
