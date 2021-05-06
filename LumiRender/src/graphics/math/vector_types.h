@@ -75,28 +75,6 @@ namespace luminous {
             template<typename Index>
             NDSC_XPU T operator[](Index i) const noexcept { return reinterpret_cast<const T(&)[N]>(*this)[i]; }
 
-            NDSC_XPU bool has_nan() const noexcept {
-                static_assert(N == 2 || N == 3 || N == 4);
-                if constexpr (N == 2) {
-                    return is_nan(Storage::x) || is_nan(Storage::y);
-                } else if constexpr (N == 3) {
-                    return is_nan(Storage::x) || is_nan(Storage::y) || is_nan(Storage::z);
-                } else {
-                    return is_nan(Storage::x) || is_nan(Storage::y) || is_nan(Storage::z) || is_nan(Storage::w);
-                }
-            }
-
-            NDSC_XPU bool has_inf() const noexcept {
-                static_assert(N == 2 || N == 3 || N == 4);
-                if constexpr (N == 2) {
-                    return is_inf(Storage::x) || is_inf(Storage::y);
-                } else if constexpr (N == 3) {
-                    return is_inf(Storage::x) || is_inf(Storage::y) || is_inf(Storage::z);
-                } else {
-                    return is_inf(Storage::x) || is_inf(Storage::y) || is_inf(Storage::z) || is_inf(Storage::w);
-                }
-            }
-
             XPU void print() const noexcept {
                 static_assert(N == 2 || N == 3 || N == 4);
                 if constexpr (N == 2) {

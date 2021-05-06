@@ -126,7 +126,7 @@ namespace luminous {
             }
 
             XPU bool has_nan() const {
-                return x.has_nan() || y.has_nan() || z.has_nan();
+                return luminous::has_nan(x) || luminous::has_nan(y) || luminous::has_nan(z);
             }
 
             [[nodiscard]] std::string to_string() const {

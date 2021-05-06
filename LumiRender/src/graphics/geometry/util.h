@@ -79,11 +79,11 @@ namespace luminous {
             }
 
             NDSC_XPU bool has_nan() const noexcept {
-                return origin().has_nan() || direction().has_nan();
+                return luminous::has_nan(origin()) || luminous::has_nan(direction());
             }
 
             NDSC_XPU bool has_inf() const noexcept {
-                return origin().has_inf() || direction().has_inf();
+                return luminous::has_inf(origin()) || luminous::has_inf(direction());
             }
 
             XPU void print() const noexcept {

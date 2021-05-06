@@ -49,14 +49,6 @@ namespace luminous {
                 return cols[i];
             }
 
-            XPU [[nodiscard]] bool has_nan() const noexcept {
-                return cols[0].has_nan() || cols[1].has_nan() || cols[2].has_nan();
-            }
-
-            XPU [[nodiscard]] bool has_inf() const noexcept {
-                return cols[0].has_inf() || cols[1].has_inf() || cols[2].has_inf();
-            }
-
             XPU void print() const noexcept {
                 printf("[%f,%f,%f]\n[%f,%f,%f]\n[%f,%f,%f]\n",
                        cols[0].x, cols[0].y, cols[0].z,
@@ -104,14 +96,6 @@ namespace luminous {
             template<typename Index>
             XPU [[nodiscard]] constexpr vector_t operator[](Index i) const noexcept {
                 return cols[i];
-            }
-
-            XPU [[nodiscard]] bool has_nan() const noexcept {
-                return cols[0].has_nan() || cols[1].has_nan() || cols[2].has_nan() || cols[3].has_nan();
-            }
-
-            XPU [[nodiscard]] bool has_inf() const noexcept {
-                return cols[0].has_inf() || cols[1].has_inf() || cols[2].has_inf() || cols[3].has_inf();
             }
 
             XPU void print() const noexcept {

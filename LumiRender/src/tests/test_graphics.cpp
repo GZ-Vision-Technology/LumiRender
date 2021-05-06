@@ -310,7 +310,7 @@ int main() {
 
 //    test_math();
 //    test_transform();
-    test_transform_box();
+//    test_transform_box();
 //    test_transform_order();
 //    test_matrix_to_Euler_angle();
 
@@ -321,5 +321,9 @@ int main() {
 //    piecewise_construct_test();
 
 //    piecewise2d_test();
+    auto f4 = make_float2(5);
+
+//    cout << is_nan(f4);
+
     return 0;
 }

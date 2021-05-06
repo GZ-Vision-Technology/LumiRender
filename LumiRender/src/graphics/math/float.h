@@ -19,9 +19,8 @@ namespace luminous {
         static constexpr float OneMinusEpsilon = FloatOneMinusEpsilon;
 #endif
 
-        template <typename T>
-        inline XPU typename std::enable_if_t<std::is_floating_point<T>::value, bool>
-        is_nan(T v) {
+        template <typename T, std::enable_if_t<std::is_floating_point<T>::value, bool> = false>
+        inline XPU bool is_nan(T v) {
 #if defined(__CUDACC__)
             return ::isnan(v);
 #else
@@ -29,15 +28,13 @@ namespace luminous {
 #endif
         }
 
-        template <typename T>
-        inline XPU typename std::enable_if_t<std::is_integral<T>::value, bool> is_nan(
-                T v) {
+        template <typename T, std::enable_if_t<std::is_integral<T>::value, bool> = false>
+        inline XPU bool is_nan(T v) {
             return false;
         }
 
-        template <typename T>
-        inline XPU typename std::enable_if_t<std::is_floating_point<T>::value, bool>
-        is_inf(T v) {
+        template <typename T, std::enable_if_t<std::is_floating_point<T>::value, bool> = false>
+        inline XPU bool is_inf(T v) {
 #if defined(__CUDACC__)
             return ::isinf(v);
 #else
@@ -45,9 +42,8 @@ namespace luminous {
 #endif
         }
 
-        template <typename T>
-        inline XPU typename std::enable_if_t<std::is_integral<T>::value, bool>
-                is_inf(T v) {
+        template <typename T, std::enable_if_t<std::is_integral<T>::value, bool> = false>
+        inline XPU bool is_inf(T v) {
             return false;
         }
 
