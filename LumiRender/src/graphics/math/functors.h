@@ -48,6 +48,43 @@ namespace luminous {
 
 #undef MAKE_VECTOR_UNARY_FUNC
 
+#define MAKE_VECTOR_UNARY_FUNC_BOOL(func)                                      \
+    template<typename T, uint N>                                               \
+    [[nodiscard]] constexpr auto func(Vector<T, N> v) noexcept {               \
+        static_assert(N == 2 || N == 3 || N == 4);                             \
+        if constexpr (N == 2) {                                                \
+            return Vector<bool, 2>{func(v.x), func(v.y)};                      \
+        } else if constexpr (N == 3) {                                         \
+            return Vector<bool, 3>(func(v.x), func(v.y), func(v.z));           \
+        } else {                                                               \
+            return Vector<bool, 4>(func(v.x), func(v.y), func(v.z), func(v.w));\
+        }                                                                      \
+    }
+        MAKE_VECTOR_UNARY_FUNC_BOOL(is_inf)
+        MAKE_VECTOR_UNARY_FUNC_BOOL(is_nan)
+
+        template<typename T, uint32_t N>
+        NDSC_XPU_INLINE bool is_zero(Vector<T, N> v) noexcept {
+            return all(v == T(0));
+        }
+
+        template<typename T, uint32_t N>
+        NDSC_XPU_INLINE bool nonzero(Vector<T, N> v) noexcept {
+            return any(v != T(0));
+        }
+
+        template<typename T, uint32_t N>
+        NDSC_XPU_INLINE bool has_nan(Vector<T, N> v) noexcept {
+            return any(is_nan(v));
+        }
+
+        template<typename T, uint32_t N>
+        NDSC_XPU_INLINE bool has_inf(Vector<T, N> v) noexcept {
+            return any(is_inf(v));
+        }
+
+#undef MAKE_VECTOR_UNARY_FUNC_BOOL
+
         template<typename T, uint N, std::enable_if_t<scalar::is_scalar < T>, int> = 0>
         NDSC_XPU constexpr auto select(Vector<bool, N> pred, Vector <T, N> t, Vector <T, N> f) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
