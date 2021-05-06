@@ -32,6 +32,14 @@ namespace luminous {
                 return _bxdf.eval(wo, wi, mode);
             }
 
+            NDSC_XPU float PDF(float3 wo_world, float3 wi_world,
+                               TransportMode mode = TransportMode::Radiance,
+                               BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
+                float3 wo = to_local(wo_world);
+                float3 wi = to_local(wi_world);
+                return _bxdf.PDF(wo, wi, mode, sample_flags);
+            }
+
             NDSC_XPU lstd::optional<BSDFSample> sample_f(float3 world_wo, float uc, float2 u,
                                                          TransportMode mode = TransportMode::Radiance,
                                                          BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {

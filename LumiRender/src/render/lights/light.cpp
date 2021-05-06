@@ -33,7 +33,7 @@ namespace luminous {
             lls.p_ref = (const Interaction &)si;
             auto op_lls = sample_Li(sampler.next_2d(), lls, traversable_handle, hit_group_data);
             if (op_lls && op_lls->has_contribution()) {
-
+//                float3 bsdf_val = bsdf.eval(si.wo, op_lls->wi);
             }
             return float3();
         }
