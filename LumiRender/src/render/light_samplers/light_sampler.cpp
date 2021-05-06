@@ -24,6 +24,12 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(sample, ctx, u);
         }
 
+        float3 LightSampler::estimate_direct_lighting(const LightSampleContext &ctx, const BSDF &bsdf, Sampler &sampler,
+                                                      uint64_t traversable_handle, const HitGroupData *hit_group_data,
+                                                      float3 *wi) const {
+            return float3();
+        }
+
         float LightSampler::PMF(const Light &light) const {
             LUMINOUS_VAR_DISPATCH(PMF, light);
         }
@@ -39,5 +45,6 @@ namespace luminous {
         LightSampler LightSampler::create(const LightSamplerConfig &config) {
             return detail::create<LightSampler>(config);
         }
+
     } // luminous::render
 } // luminous

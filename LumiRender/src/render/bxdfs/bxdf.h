@@ -40,7 +40,7 @@ namespace luminous {
                 float4 r = make_float4(0.);
                 DCHECK_EQ(uc.size(), u2.size());
                 for (size_t i = 0; i < uc.size(); ++i) {
-                    lstd::optional<BSDFSample> bs = sample(wo, uc[i], u2[i]);
+                    lstd::optional<BSDFSample> bs = sample_f(wo, uc[i], u2[i]);
                     if (bs) {
                         r += bs->f_val * Frame::abs_cos_theta(bs->wi) / bs->PDF;
                     }
@@ -59,7 +59,7 @@ namespace luminous {
                         continue;
                     }
                     float PDF_wo = uniform_hemisphere_PDF();
-                    lstd::optional<BSDFSample> bs = sample(wo, uc[i], u2[i]);
+                    lstd::optional<BSDFSample> bs = sample_f(wo, uc[i], u2[i]);
                     if (bs) {
                         r = bs->f_val * Frame::abs_cos_theta(bs->wi) * Frame::abs_cos_theta(wo) / (PDF_wo * bs->PDF);
                     }
@@ -67,9 +67,9 @@ namespace luminous {
                 return r / (constant::Pi * uc.size());
             }
 
-            NDSC_XPU lstd::optional<BSDFSample> sample(float3 wo, float uc, float2 u, TransportMode mode = TransportMode::Radiance,
+            NDSC_XPU lstd::optional<BSDFSample> sample_f(float3 wo, float uc, float2 u, TransportMode mode = TransportMode::Radiance,
                                                   BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
-                LUMINOUS_VAR_DISPATCH(sample, wo, uc, u, mode, sample_flags);
+                LUMINOUS_VAR_DISPATCH(sample_f, wo, uc, u, mode, sample_flags);
             }
 
             NDSC_XPU BxDFFlags flags() const {

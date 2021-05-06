@@ -42,9 +42,9 @@ namespace luminous {
                 return cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
             }
 
-            NDSC_XPU lstd::optional<BSDFSample>
-            sample(float3 wo, float uc, float2 u, TransportMode mode = TransportMode::Radiance,
-                   BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
+            NDSC_XPU lstd::optional<BSDFSample> sample_f(float3 wo, float uc, float2 u,
+                                                         TransportMode mode = TransportMode::Radiance,
+                                                         BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
                 if (!(sample_flags & BxDFReflTransFlags::Reflection)) {
                     return {};
                 }

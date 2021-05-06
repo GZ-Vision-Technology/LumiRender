@@ -12,8 +12,8 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(type);
         }
 
-        SurfaceInteraction Light::sample(float2 u, const HitGroupData * hit_group_data) const {
-            LUMINOUS_VAR_DISPATCH(sample, u,hit_group_data);
+        SurfaceInteraction Light::sample(float2 u, const HitGroupData *hit_group_data) const {
+            LUMINOUS_VAR_DISPATCH(sample, u, hit_group_data);
         }
 
         LightLiSample Light::Li(LightLiSample lls) const {
@@ -22,7 +22,7 @@ namespace luminous {
 
         lstd::optional<LightLiSample> Light::sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
                                                        const HitGroupData *hit_group_data) const {
-            LUMINOUS_VAR_DISPATCH(sample_Li, u ,lls ,traversable_handle, hit_group_data);
+            LUMINOUS_VAR_DISPATCH(sample_Li, u, lls, traversable_handle, hit_group_data);
         }
 
         bool Light::is_delta() const {
@@ -39,6 +39,13 @@ namespace luminous {
 
         Light Light::create(const LightConfig &config) {
             return detail::create<Light>(config);
+        }
+
+        float3 Light::estimate_direct_lighting(const LightSampleContext &ctx, const BSDF &bsdf, Sampler &sampler,
+                                               uint64_t traversable_handle, const HitGroupData *hit_group_data,
+                                               float3 *wi) const {
+            // todo
+            return float3();
         }
 
     } // luminous::render

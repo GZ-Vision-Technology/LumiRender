@@ -9,8 +9,10 @@
 #include "point_light.h"
 #include "spot_light.h"
 #include "area_light.h"
+#include "render/samplers/sampler.h"
 #include "graphics/lstd/lstd.h"
 #include "render/include/config.h"
+#include "render/bxdfs/bsdf.h"
 
 namespace luminous {
     inline namespace render {
@@ -35,6 +37,10 @@ namespace luminous {
 
             NDSC_XPU lstd::optional<LightLiSample> sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
                                                              const HitGroupData *hit_group_data) const;
+
+            NDSC_XPU float3 estimate_direct_lighting(const LightSampleContext &ctx, const BSDF &bsdf,
+                                                     Sampler &sampler, uint64_t traversable_handle,
+                                                     const HitGroupData *hit_group_data, float3 *wi) const;
 
             NDSC_XPU float PDF_dir(const Interaction &ref_p, const SurfaceInteraction &p_light) const;
 

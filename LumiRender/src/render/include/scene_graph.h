@@ -6,7 +6,6 @@
 #pragma once
 
 #include "shape.h"
-#include "material.h"
 #include "core/concepts.h"
 #include <memory>
 #include "core/context.h"

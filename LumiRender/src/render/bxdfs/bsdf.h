@@ -24,12 +24,23 @@ namespace luminous {
 
             NDSC_XPU float4 eval(float3 wo_world, float3 wi_world,
                                  TransportMode mode = TransportMode::Radiance) const {
-                float3 wo = _shading_frame.to_local(wo_world);
-                float3 wi = _shading_frame.to_local(wi_world);
+                float3 wo = to_local(wo_world);
+                float3 wi = to_local(wi_world);
                 if (wo.z == 0) {
                     return make_float4(0);
                 }
                 return _bxdf.eval(wo, wi, mode);
+            }
+
+            NDSC_XPU lstd::optional<BSDFSample> sample_f(float3 world_wo, float uc, float2 u,
+                                                         TransportMode mode = TransportMode::Radiance,
+                                                         BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
+                float3 local_wo = to_local(world_wo);
+                auto ret = _bxdf.sample_f(local_wo, uc, u, mode, sample_flags);
+                if (ret) {
+                    ret->wi = to_world(ret->wi);
+                }
+                return ret;
             }
 
             NDSC_XPU float4 base_color() const {
