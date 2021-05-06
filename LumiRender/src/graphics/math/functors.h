@@ -7,6 +7,7 @@
 
 #include "matrix_types.h"
 #include "quaternion.h"
+#include "float.h"
 
 namespace luminous {
     inline namespace functor {
@@ -25,7 +26,7 @@ namespace luminous {
         // Vector Functions
 #define MAKE_VECTOR_UNARY_FUNC(func)                                          \
     template<typename T, uint N>                                              \
-    [[nodiscard]] constexpr auto func(Vector<T, N> v) noexcept {              \
+    NDSC_XPU constexpr auto func(Vector<T, N> v) noexcept {                   \
         static_assert(N == 2 || N == 3 || N == 4);                            \
         if constexpr (N == 2) {                                               \
             return Vector<T, 2>{func(v.x), func(v.y)};                        \
@@ -50,7 +51,7 @@ namespace luminous {
 
 #define MAKE_VECTOR_UNARY_FUNC_BOOL(func)                                      \
     template<typename T, uint N>                                               \
-    [[nodiscard]] constexpr auto func(Vector<T, N> v) noexcept {               \
+        NDSC_XPU constexpr auto func(Vector<T, N> v) noexcept {                \
         static_assert(N == 2 || N == 3 || N == 4);                             \
         if constexpr (N == 2) {                                                \
             return Vector<bool, 2>{func(v.x), func(v.y)};                      \

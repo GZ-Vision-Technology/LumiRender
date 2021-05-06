@@ -94,15 +94,19 @@ namespace luminous {
                 return ret;
             }
 
-            NDSC_XPU_INLINE bool has_nan() const {
-                return v.has_nan() || is_nan(w);
-            }
-
             [[nodiscard]] std::string to_string() const {
                 auto theta = degrees(acos(w));
                 return string_printf("quaternion:{ v:%s, angle:%f}", v.to_string().c_str(), (theta * 2));
             }
         };
+
+        NDSC_XPU_INLINE bool has_nan(Quaternion q) noexcept {
+            return has_nan(q.v) || is_nan(q.w);
+        }
+
+        NDSC_XPU_INLINE bool has_inf(Quaternion q) noexcept {
+            return has_inf(q.v) || is_inf(q.w);
+        }
 
         NDSC_XPU_INLINE Quaternion operator*(float f, const Quaternion &q) {
             return q * f;
