@@ -97,10 +97,6 @@ namespace luminous {
                 }
             }
 
-            NDSC_XPU bool is_zero() const noexcept;
-
-            NDSC_XPU bool nonzero() const noexcept;
-
             XPU void print() const noexcept {
                 static_assert(N == 2 || N == 3 || N == 4);
                 if constexpr (N == 2) {
@@ -455,16 +451,6 @@ namespace luminous {
         constexpr bool none(bool3 v) noexcept { return !any(v); }
 
         constexpr bool none(bool4 v) noexcept { return !any(v); }
-
-        template<typename T, uint32_t N>
-        bool Vector<T, N>::is_zero() const noexcept {
-            return all(*this == T(0));
-        }
-
-        template<typename T, uint32_t N>
-        bool Vector<T, N>::nonzero() const noexcept {
-            return any(*this != T(0));
-        }
 
     } // luminous::vector
 }// namespace luminous

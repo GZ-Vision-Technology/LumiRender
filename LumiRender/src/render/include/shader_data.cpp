@@ -23,7 +23,7 @@ namespace luminous {
             luminous::float2 tex_coord0 = mesh_tex_coords[tri.i];
             luminous::float2 tex_coord1 = mesh_tex_coords[tri.j];
             luminous::float2 tex_coord2 = mesh_tex_coords[tri.k];
-            if (tex_coord0.is_zero() && tex_coord1.is_zero() && tex_coord2.is_zero()) {
+            if (is_zero(tex_coord0) && is_zero(tex_coord1) && is_zero(tex_coord2)) {
                 tex_coord0 = luminous::make_float2(0, 0);
                 tex_coord1 = luminous::make_float2(1, 0);
                 tex_coord2 = luminous::make_float2(1, 1);
@@ -102,7 +102,7 @@ namespace luminous {
                 luminous::float2 tex_coord0 = mesh_tex_coords[tri.i];
                 luminous::float2 tex_coord1 = mesh_tex_coords[tri.j];
                 luminous::float2 tex_coord2 = mesh_tex_coords[tri.k];
-                if (tex_coord0.is_zero() && tex_coord1.is_zero() && tex_coord2.is_zero()) {
+                if (is_zero(tex_coord0) && is_zero(tex_coord1) && is_zero(tex_coord2)) {
                     tex_coord0 = luminous::make_float2(0, 0);
                     tex_coord1 = luminous::make_float2(1, 0);
                     tex_coord2 = luminous::make_float2(1, 1);

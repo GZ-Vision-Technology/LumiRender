@@ -73,7 +73,7 @@ namespace luminous {
             }
 
             NDSC_XPU_INLINE bool valid() const {
-                return !normal.is_zero();
+                return nonzero(normal);
             }
         };
 

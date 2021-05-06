@@ -85,7 +85,7 @@ namespace luminous {
             }
 
             XPU [[nodiscard]] bool is_black() const noexcept {
-                return is_zero();
+                return is_zero(*this);
             }
 
         };

@@ -130,7 +130,7 @@ namespace luminous {
                 for (const SP<const Mesh> &mesh : model->meshes) {
                     _inst_to_transform_idx.push_back(_transforms.size());
                     _scene_box.extend(instance->o2w.apply_box(mesh->aabb));
-                    if (!instance->emission.is_zero()) {
+                    if (nonzero(instance->emission)) {
                         LightConfig lc;
                         lc.emission = instance->emission;
                         lc.set_full_type("AreaLight");

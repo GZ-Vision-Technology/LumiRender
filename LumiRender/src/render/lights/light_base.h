@@ -40,7 +40,7 @@ namespace luminous {
                     : L(L), wi(wi), PDF_dir(PDF), p_light(si) {}
 
             NDSC_XPU bool has_contribution() const {
-                return L.nonzero() && PDF_dir != 0;
+                return nonzero(L) && PDF_dir != 0;
             }
         };
 
