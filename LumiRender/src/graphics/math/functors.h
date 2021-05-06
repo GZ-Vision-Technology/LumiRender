@@ -51,18 +51,35 @@ namespace luminous {
 
 #define MAKE_VECTOR_UNARY_FUNC_BOOL(func)                                      \
     template<typename T, uint N>                                               \
-        NDSC_XPU constexpr auto func##_v(Vector<T, N> v) noexcept {            \
+        NDSC_XPU constexpr auto is_##func##_v(Vector<T, N> v) noexcept {       \
         static_assert(N == 2 || N == 3 || N == 4);                             \
         if constexpr (N == 2) {                                                \
-            return Vector<bool, 2>{func(v.x), func(v.y)};                      \
+            return Vector<bool, 2>{is_##func(v.x), is_##func(v.y)};            \
         } else if constexpr (N == 3) {                                         \
-            return Vector<bool, 3>(func(v.x), func(v.y), func(v.z));           \
+            return Vector<bool, 3>(is_##func(v.x), is_##func(v.y),             \
+                                    is_##func(v.z));                           \
         } else {                                                               \
-            return Vector<bool, 4>(func(v.x), func(v.y), func(v.z), func(v.w));\
+            return Vector<bool, 4>(is_##func(v.x), is_##func(v.y),             \
+                                    is_##func(v.z), is_##func(v.w));           \
         }                                                                      \
+    }                                                                          \
+    template<typename T, uint32_t N>                                           \
+    NDSC_XPU_INLINE bool has_##func(Vector<T, N> v) noexcept {                 \
+        return any(is_##func##_v(v));                                          \
+    }                                                                          \
+    template<typename T>                                                       \
+    NDSC_XPU_INLINE bool has_##func(Matrix3x3<T> mat) noexcept {               \
+        return has_##func(mat.cols[0]) || has_##func(mat.cols[1])              \
+            || has_##func(mat.cols[2]);                                        \
+    }                                                                          \
+    template<typename T>                                                       \
+    NDSC_XPU_INLINE bool has_##func(Matrix4x4<T> mat) noexcept {               \
+        return has_##func(mat.cols[0]) || has_##func(mat.cols[1])              \
+            || has_##func(mat.cols[2]) || has_##func(mat.cols[3]);             \
     }
-        MAKE_VECTOR_UNARY_FUNC_BOOL(is_inf)
-        MAKE_VECTOR_UNARY_FUNC_BOOL(is_nan)
+
+        MAKE_VECTOR_UNARY_FUNC_BOOL(inf)
+        MAKE_VECTOR_UNARY_FUNC_BOOL(nan)
 
         template<typename T, uint32_t N>
         NDSC_XPU_INLINE bool is_zero(Vector<T, N> v) noexcept {
@@ -72,36 +89,6 @@ namespace luminous {
         template<typename T, uint32_t N>
         NDSC_XPU_INLINE bool nonzero(Vector<T, N> v) noexcept {
             return any(v != T(0));
-        }
-
-        template<typename T, uint32_t N>
-        NDSC_XPU_INLINE bool has_nan(Vector<T, N> v) noexcept {
-            return any(is_nan_v(v));
-        }
-
-        template<typename T, uint32_t N>
-        NDSC_XPU_INLINE bool has_inf(Vector<T, N> v) noexcept {
-            return any(is_inf_v(v));
-        }
-
-        template<typename T>
-        NDSC_XPU_INLINE bool has_nan(Matrix3x3<T> mat) noexcept {
-            return has_nan(mat.cols[0]) || has_nan(mat.cols[1]) || has_nan(mat.cols[2]);
-        }
-
-        template<typename T>
-        NDSC_XPU_INLINE bool has_inf(Matrix3x3<T> mat) noexcept {
-            return has_inf(mat.cols[0]) || has_inf(mat.cols[1]) || has_inf(mat.cols[2]);
-        }
-
-        template<typename T>
-        NDSC_XPU_INLINE bool has_nan(Matrix4x4<T> mat) noexcept {
-            return has_nan(mat.cols[0]) || has_nan(mat.cols[1]) || has_nan(mat.cols[2]) || has_nan(mat.cols[3]);
-        }
-
-        template<typename T>
-        NDSC_XPU_INLINE bool has_inf(Matrix4x4<T> mat) noexcept {
-            return has_inf(mat.cols[0]) || has_inf(mat.cols[1]) || has_inf(mat.cols[2]) || has_inf(mat.cols[3]);
         }
 
 #undef MAKE_VECTOR_UNARY_FUNC_BOOL

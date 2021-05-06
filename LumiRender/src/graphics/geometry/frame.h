@@ -129,6 +129,10 @@ namespace luminous {
                 return luminous::has_nan(x) || luminous::has_nan(y) || luminous::has_nan(z);
             }
 
+            XPU bool has_inf() const {
+                return luminous::has_inf(x) || luminous::has_inf(y) || luminous::has_inf(z);
+            }
+
             [[nodiscard]] std::string to_string() const {
                 return string_printf("frame : {x:%s,y:%s,z:%s}",
                                      x.to_string().c_str(),
