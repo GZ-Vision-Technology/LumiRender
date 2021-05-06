@@ -15,13 +15,13 @@ namespace luminous {
             uint _inst_idx;
             float3 _L;
             bool _two_sided;
-            float _inv_area;
+            float _area;
         public:
             AreaLight(uint inst_idx, float3 L, float area, bool two_sided = false)
                     : LightBase(LightType::Area),
                       _inst_idx(inst_idx),
                       _L(L),
-                      _inv_area(1.f / area),
+                      _area(area),
                       _two_sided(two_sided) {}
 
             NDSC_XPU float3 L(const SurfaceInteraction &p_light, float3 w) const;
@@ -32,10 +32,6 @@ namespace luminous {
 
             NDSC_XPU lstd::optional<LightLiSample> sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
                                              const HitGroupData *hit_group_data) const;
-
-            NDSC_XPU float PDF_pos() const {
-                return _inv_area;
-            }
 
             NDSC_XPU float PDF_dir(const Interaction &p_ref, const SurfaceInteraction &p_light) const;
 

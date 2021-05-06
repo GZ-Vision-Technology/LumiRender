@@ -27,7 +27,13 @@ namespace luminous {
         float3 LightSampler::estimate_direct_lighting(const LightSampleContext &ctx, const BSDF &bsdf, Sampler &sampler,
                                                       uint64_t traversable_handle, const HitGroupData *hit_group_data,
                                                       float3 *wi) const {
-            return float3();
+            auto sampled_light = sample(ctx, sampler.next_1d());
+            if (sampled_light) {
+                return sampled_light->light.estimate_direct_lighting(ctx, bsdf, sampler,
+                                                                     traversable_handle,
+                                                                     hit_group_data, wi) / sampled_light->PMF;
+            }
+            return make_float3(0.f);
         }
 
         float LightSampler::PMF(const Light &light) const {

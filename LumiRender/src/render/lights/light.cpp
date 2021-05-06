@@ -25,6 +25,13 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(sample_Li, u, lls, traversable_handle, hit_group_data);
         }
 
+        float3 Light::estimate_direct_lighting(const LightSampleContext &ctx, const BSDF &bsdf, Sampler &sampler,
+                                               uint64_t traversable_handle, const HitGroupData *hit_group_data,
+                                               float3 *wi) const {
+            // todo
+            return float3();
+        }
+
         bool Light::is_delta() const {
             LUMINOUS_VAR_DISPATCH(is_delta);
         }
@@ -39,13 +46,6 @@ namespace luminous {
 
         Light Light::create(const LightConfig &config) {
             return detail::create<Light>(config);
-        }
-
-        float3 Light::estimate_direct_lighting(const LightSampleContext &ctx, const BSDF &bsdf, Sampler &sampler,
-                                               uint64_t traversable_handle, const HitGroupData *hit_group_data,
-                                               float3 *wi) const {
-            // todo
-            return float3();
         }
 
     } // luminous::render
