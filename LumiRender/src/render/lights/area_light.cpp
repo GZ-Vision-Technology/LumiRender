@@ -14,10 +14,11 @@ namespace luminous {
             SurfaceInteraction ret;
             auto mesh = hit_group_data->get_mesh(_inst_idx);
             const Distribution1D &distrib = hit_group_data->emission_distributions[mesh.distribute_idx];
-            size_t triangle_id = distrib.sample_discrete(u.x, nullptr, &u.x);
+            float PMF = 0;
+            size_t triangle_id = distrib.sample_discrete(u.x, &PMF, &u.x);
             float2 uv = square_to_triangle(u);
             ret = hit_group_data->compute_surface_interaction(_inst_idx, triangle_id, uv);
-            ret.PDF_pos = PDF_pos();
+            ret.PDF_pos = ret.prim_area / 1.f * PMF;
             return ret;
         }
 
@@ -47,7 +48,7 @@ namespace luminous {
         }
 
         /**
-         * p(dir) = p(pos) * r^2 / cos¦È
+         * p(dir) = p(pos) * r^2 / cosï¿½ï¿½
          * @param p_ref
          * @param p_light
          * @return

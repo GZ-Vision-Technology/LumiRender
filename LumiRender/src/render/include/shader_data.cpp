@@ -42,6 +42,7 @@ namespace luminous {
                 luminous::float3 dp02 = p0 - p2;
                 luminous::float3 dp12 = p1 - p2;
                 luminous::float3 ng = cross(dp02, dp12);
+                si.prim_area = 0.5 * length(ng);
 
                 luminous::float2 duv02 = tex_coord0 - tex_coord2;
                 luminous::float2 duv12 = tex_coord1 - tex_coord2;
