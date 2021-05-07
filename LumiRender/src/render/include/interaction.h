@@ -8,6 +8,7 @@
 #include "graphics/math/common.h"
 #include "core/backend/buffer_view.h"
 #include "graphics/geometry/util.h"
+#include "graphics/optics/rgb.h"
 
 namespace luminous {
     inline namespace render {
@@ -135,9 +136,9 @@ namespace luminous {
             bool count_emitted{true};
             bool done{false};
             bool hit{false};
-            luminous::float3 radiance;
-            luminous::float3 throughput;
-            luminous::float3 emission;
+            Spectrum radiance;
+            Spectrum throughput;
+            Spectrum emission;
         };
 
         struct TextureEvalContext {

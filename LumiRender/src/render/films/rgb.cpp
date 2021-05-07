@@ -9,7 +9,7 @@
 namespace luminous {
     inline namespace render {
 
-        void RGBFilm::add_sample(uint2 pixel, float3 color, float weight, uint frame_index) {
+        void RGBFilm::add_sample(uint2 pixel, Spectrum color, float weight, uint frame_index) {
             uint pixel_index = pixel.y * _resolution.x + pixel.x;
             color *= weight;
             if (frame_index > 0) {

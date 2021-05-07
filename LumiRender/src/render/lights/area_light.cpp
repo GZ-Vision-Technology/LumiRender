@@ -26,11 +26,7 @@ namespace luminous {
             float3 wi = lls.p_light.pos - lls.p_ref.pos;
             lls.wi = normalize(wi);
             lls.L = L(lls.p_light, -lls.wi);
-            float PDF = PDF_dir(lls.p_light.PDF_pos, lls.p_light.g_uvn.normal, -wi);
-            if (is_inf(PDF)) {
-                PDF = 0;
-            }
-            lls.PDF_dir = PDF;
+            lls.PDF_dir = PDF_dir(lls.p_ref, lls.p_light);
             return lls;
         }
 
@@ -49,7 +45,7 @@ namespace luminous {
 
         float AreaLight::PDF_dir(const Interaction &p_ref, const SurfaceInteraction &p_light) const {
             float3 wo = p_ref.pos - p_light.pos;
-            float PDF = PDF_dir(p_light.PDF_pos, p_light.g_uvn.normal, wo);
+            float PDF = luminous::PDF_dir(p_light.PDF_pos, p_light.g_uvn.normal, wo);
             if (is_inf(PDF)) {
                 return 0;
             }

@@ -20,8 +20,11 @@ namespace luminous {
             using scalar_t = float;
             using vector_t = float3;
 
-            XPU RGBSpectrum(scalar_t r = 0, scalar_t g = 0, scalar_t b = 0)
+            XPU RGBSpectrum(scalar_t r, scalar_t g, scalar_t b)
                     : vector_t(r, g, b) {}
+
+            XPU RGBSpectrum(scalar_t c = 0.f)
+                    : vector_t(c, c, c) {}
 
             XPU RGBSpectrum(vector_t vec)
                     : vector_t(vec) {}

@@ -27,9 +27,9 @@ params;
 GPU_INLINE luminous::float3 Li(luminous::Ray ray, luminous::Sampler &sampler) {
     using namespace luminous;
     RadiancePRD prd(true, false, false,
-                    luminous::make_float3(0.f),
-                    luminous::make_float3(1.f),
-                    luminous::make_float3(0.f));
+                    Spectrum(0.f),
+                    Spectrum(1.f),
+                    Spectrum(0.f));
     luminous::float3 radiance = make_float3(0.f);
     traceRadiance(params.traversable_handle, ray, &prd);
     return radiance;
@@ -86,7 +86,7 @@ GLOBAL __closesthit__radiance() {
 
     BSDF bsdf = si.material->get_BSDF(si, &data);
     auto color = bsdf.base_color();
-    prd->radiance = make_float3(color);
+    prd->radiance = color;
     prd->hit = true;
 
 //    prd->radiance.print();

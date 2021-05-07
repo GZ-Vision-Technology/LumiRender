@@ -20,7 +20,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(set_resolution, res);
         }
 
-        void Film::add_sample(uint2 pixel, float3 color, float weight, uint frame_index) {
+        void Film::add_sample(uint2 pixel, Spectrum color, float weight, uint frame_index) {
             LUMINOUS_VAR_DISPATCH(add_sample, pixel, color, weight, frame_index);
         }
 

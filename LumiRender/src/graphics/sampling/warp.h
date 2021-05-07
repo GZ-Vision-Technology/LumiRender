@@ -58,7 +58,7 @@ namespace luminous {
         }
 
         /**
-         * p(dir) = p(pos) * r^2 / cos��
+         * p(dir) = p(pos) * r^2 / cosθ
          * @return
          */
         NDSC_XPU_INLINE float PDF_dir(float PDF_pos, float3 normal, float3 wo) {
