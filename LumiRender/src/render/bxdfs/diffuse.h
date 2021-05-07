@@ -52,9 +52,9 @@ namespace luminous {
                 if (wo.z < 0) {
                     wi.z *= -1;
                 }
-                float PDF = cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
+                float PDF_val = PDF(wo, wi, mode, sample_flags);
                 Spectrum f = _eval(wo, wi, mode);
-                return BSDFSample(f, wi, PDF, BxDFFlags::Reflection);
+                return BSDFSample(f, wi, PDF_val, BxDFFlags::Reflection);
             }
 
             NDSC_XPU BxDFFlags flags() const {

@@ -29,7 +29,7 @@ namespace luminous {
                 if (wo.z == 0) {
                     return make_float4(0);
                 }
-                return _bxdf.eval(wo, wi, mode);
+                return _bxdf.eval(wo, wi, mode) * abs_dot(_shading_frame.z, wi_world);
             }
 
             NDSC_XPU float PDF(float3 wo_world, float3 wi_world,
@@ -47,6 +47,7 @@ namespace luminous {
                 auto ret = _bxdf.sample_f(local_wo, uc, u, mode, sample_flags);
                 if (ret) {
                     ret->wi = to_world(ret->wi);
+                    ret->f_val *= abs_dot(_shading_frame.z, ret->wi);
                 }
                 return ret;
             }

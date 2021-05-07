@@ -26,16 +26,55 @@ namespace luminous {
         }
 
         Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
-                                               uint64_t traversable_handle, const HitGroupData *hit_group_data,
-                                               float3 *wi) const {
+                                                 uint64_t traversable_handle, const HitGroupData *hit_group_data,
+                                                 float3 *wi, Spectrum *bsdf_v) const {
+            *wi = make_float3(0.f);
+            *bsdf_v = Spectrum(0.f);
             float light_PDF = 0, bsdf_PDF = 0;
+            Spectrum bsdf_val(0.f), Li(0.f);
+            Spectrum Ld(0.f);
             LightLiSample lls;
-            lls.p_ref = (const Interaction &)si;
+            lls.p_ref = (const Interaction &) si;
             auto op_lls = sample_Li(sampler.next_2d(), lls, traversable_handle, hit_group_data);
             if (op_lls && op_lls->has_contribution()) {
-//                float3 bsdf_val = bsdf.eval(si.wo, op_lls->wi);
+                bsdf_val = bsdf.eval(si.wo, op_lls->wi);
+                bsdf_PDF = bsdf.PDF(si.wo, op_lls->wi);
+                Li = lls.L;
+                light_PDF = lls.PDF_dir;
+                if (bsdf_val.not_black() && bsdf_PDF != 0) {
+                    Ray ray = si.spawn_ray_to(lls.p_light);
+                    bool occluded = ray_occluded(traversable_handle, ray);
+                    if (occluded) {
+                        Li = 0;
+                    }
+                    if (Li.not_black()) {
+                        if (is_delta()) {
+                            Ld += bsdf_val * Li / light_PDF;
+                        } else {
+                            float weight = MIS_weight(light_PDF, bsdf_PDF);
+                            Ld += bsdf_val * Li * weight / light_PDF;
+                        }
+                    }
+                }
             }
-            return float3();
+
+            auto bsdf_sample = bsdf.sample_f(si.wo, sampler.next_1d(), sampler.next_2d());
+
+            if (bsdf_sample) {
+                *wi = bsdf_sample->wi;
+                *bsdf_v = bsdf_sample->f_val / bsdf_sample->PDF;
+
+                if (!is_delta()) {
+                    bsdf_PDF = bsdf_sample->PDF;
+                    bsdf_val = bsdf_sample->f_val;
+
+                    if (!bsdf.is_specular()) {
+                        
+                    }
+                }
+            }
+
+            return Ld;
         }
 
         bool Light::is_delta() const {

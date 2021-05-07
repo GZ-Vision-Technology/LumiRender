@@ -17,6 +17,7 @@ namespace luminous {
 
         using lstd::Variant;
         using lstd::optional;
+
         class LightSampler : public Variant<UniformLightSampler> {
         public:
             using Variant::Variant;
@@ -35,9 +36,10 @@ namespace luminous {
 
             NDSC_XPU lstd::optional<SampledLight> sample(const LightSampleContext &ctx, float u) const;
 
-            NDSC_XPU float3 estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf,
-                                                    Sampler &sampler, uint64_t traversable_handle,
-                                                    const HitGroupData *hit_group_data, float3 *wi) const;
+            NDSC_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf,
+                                                     Sampler &sampler, uint64_t traversable_handle,
+                                                     const HitGroupData *hit_group_data, float3 *wi,
+                                                     Spectrum *bsdf_v) const;
 
             NDSC_XPU float PMF(const Light &light) const;
 
