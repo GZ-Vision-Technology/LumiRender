@@ -23,14 +23,14 @@ namespace luminous {
         }
 
         LightLiSample AreaLight::Li(LightLiSample lls) const {
-            lls.wi = normalize(lls.p_light.pos - lls.p_ref.pos);
+            float3 wi = lls.p_light.pos - lls.p_ref.pos;
+            lls.wi = normalize(wi);
             lls.L = L(lls.p_light, -lls.wi);
-            float cos_theta = abs_dot(lls.p_light.g_uvn.normal, normalize(-lls.wi));
-            float PDF_dir = lls.p_light.PDF_pos * length_squared(lls.wi) / cos_theta;
-            if (is_inf(PDF_dir)) {
-                PDF_dir = 0;
+            float PDF = PDF_dir(lls.p_light.PDF_pos, lls.p_light.g_uvn.normal, -wi);
+            if (is_inf(PDF)) {
+                PDF = 0;
             }
-            lls.PDF_dir = PDF_dir;
+            lls.PDF_dir = PDF;
             return lls;
         }
 
@@ -47,16 +47,9 @@ namespace luminous {
             return lls;
         }
 
-        /**
-         * p(dir) = p(pos) * r^2 / cos��
-         * @param p_ref
-         * @param p_light
-         * @return
-         */
         float AreaLight::PDF_dir(const Interaction &p_ref, const SurfaceInteraction &p_light) const {
-            float3 wi = p_ref.pos - p_light.pos;
-            float cos_theta = abs_dot(p_light.g_uvn.normal, normalize(wi));
-            float PDF = p_light.PDF_pos * length_squared(wi) / cos_theta;
+            float3 wo = p_ref.pos - p_light.pos;
+            float PDF = PDF_dir(p_light.PDF_pos, p_light.g_uvn.normal, wo);
             if (is_inf(PDF)) {
                 return 0;
             }
