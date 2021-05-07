@@ -22,7 +22,7 @@ namespace luminous {
             XPU BSDF(float3 ng, float3 ns, float3 dp_dus, BxDF bxdf)
                     : _ng(ng), _shading_frame(Frame::from_xz(dp_dus, ns)), _bxdf(bxdf) {}
 
-            NDSC_XPU float4 eval(float3 wo_world, float3 wi_world,
+            NDSC_XPU Spectrum eval(float3 wo_world, float3 wi_world,
                                  TransportMode mode = TransportMode::Radiance) const {
                 float3 wo = to_local(wo_world);
                 float3 wi = to_local(wi_world);
@@ -55,13 +55,13 @@ namespace luminous {
                 return _bxdf.base_color();
             }
 
-            NDSC_XPU float4 rho_hd(float3 wo_world, BufferView<const float> uc,
+            NDSC_XPU Spectrum rho_hd(float3 wo_world, BufferView<const float> uc,
                                    BufferView<const float2> u2) const {
                 float3 wo = to_local(wo_world);
                 return _bxdf.rho_hd(wo, uc, u2);
             }
 
-            NDSC_XPU float4 rho_hh(BufferView<const float2> u1, BufferView<const float> uc,
+            NDSC_XPU Spectrum rho_hh(BufferView<const float2> u1, BufferView<const float> uc,
                                    BufferView<const float2> u2) const {
                 return _bxdf.rho_hh(u1, uc, u2);
             }

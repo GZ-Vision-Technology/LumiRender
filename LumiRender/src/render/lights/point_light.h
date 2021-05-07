@@ -13,7 +13,7 @@ namespace luminous {
         class PointLight : public LightBase {
         private:
             float3 _pos;
-            float3 _intensity;
+            Spectrum _intensity;
         public:
             PointLight(float3 pos, float3 intensity)
                     : LightBase(LightType::DeltaPosition),
@@ -29,7 +29,7 @@ namespace luminous {
 
             NDSC_XPU float PDF_dir(const Interaction &ref_p, const SurfaceInteraction &p_light) const;
 
-            NDSC_XPU float3 power() const;
+            NDSC_XPU Spectrum power() const;
 
             NDSC std::string to_string() const;
 

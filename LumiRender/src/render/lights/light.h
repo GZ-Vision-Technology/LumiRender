@@ -38,13 +38,13 @@ namespace luminous {
             NDSC_XPU lstd::optional<LightLiSample> sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
                                                              const HitGroupData *hit_group_data) const;
 
-            NDSC_XPU float3 estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf,
+            NDSC_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf,
                                                      Sampler &sampler, uint64_t traversable_handle,
                                                      const HitGroupData *hit_group_data, float3 *wi) const;
 
             NDSC_XPU float PDF_dir(const Interaction &ref_p, const SurfaceInteraction &p_light) const;
 
-            NDSC_XPU float3 power() const;
+            NDSC_XPU Spectrum power() const;
 
             static Light create(const LightConfig &config);
         };

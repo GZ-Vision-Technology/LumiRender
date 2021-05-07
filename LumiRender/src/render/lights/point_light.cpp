@@ -31,7 +31,7 @@ namespace luminous {
             return lls;
         }
 
-        float3 PointLight::power() const {
+        Spectrum PointLight::power() const {
             return 4 * Pi * _intensity;
         }
 

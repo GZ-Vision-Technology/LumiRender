@@ -63,11 +63,11 @@ namespace luminous {
             return PDF;
         }
 
-        float3 AreaLight::power() const {
+        Spectrum AreaLight::power() const {
             return (_two_sided ? _2Pi : Pi) * _L * _area;
         }
 
-        float3 AreaLight::L(const SurfaceInteraction &p_light, float3 w) const {
+        Spectrum AreaLight::L(const SurfaceInteraction &p_light, float3 w) const {
             return (_two_sided || dot(w, p_light.g_uvn.normal)) ? _L : make_float3(0.f);
         }
 

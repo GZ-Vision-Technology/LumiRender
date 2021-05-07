@@ -20,11 +20,14 @@ namespace luminous {
             using scalar_t = float;
             using vector_t = float3;
 
-            XPU explicit RGBSpectrum(scalar_t r = 0, scalar_t g = 0, scalar_t b = 0)
+            XPU RGBSpectrum(scalar_t r = 0, scalar_t g = 0, scalar_t b = 0)
                     : vector_t(r, g, b) {}
 
-            XPU explicit RGBSpectrum(vector_t vec)
+            XPU RGBSpectrum(vector_t vec)
                     : vector_t(vec) {}
+
+            XPU RGBSpectrum(float4 vec)
+                    : RGBSpectrum(make_float3(vec)) {}
 
             XPU [[nodiscard]] scalar_t R() const noexcept { return x; }
 
@@ -33,7 +36,7 @@ namespace luminous {
             XPU [[nodiscard]] scalar_t B() const noexcept { return z; }
 
             XPU [[nodiscard]] vector_t vec() const noexcept {
-                return make_float3(x,y,z);
+                return make_float3(x, y, z);
             }
 
             XPU [[nodiscard]] scalar_t X() const noexcept {

@@ -24,7 +24,7 @@ namespace luminous {
                       _area(area),
                       _two_sided(two_sided) {}
 
-            NDSC_XPU float3 L(const SurfaceInteraction &p_light, float3 w) const;
+            NDSC_XPU Spectrum L(const SurfaceInteraction &p_light, float3 w) const;
 
             NDSC_XPU LightLiSample Li(LightLiSample lls) const;
 
@@ -35,7 +35,7 @@ namespace luminous {
 
             NDSC_XPU float PDF_dir(const Interaction &p_ref, const SurfaceInteraction &p_light) const;
 
-            NDSC_XPU float3 power() const;
+            NDSC_XPU Spectrum power() const;
 
             NDSC std::string to_string() const;
 

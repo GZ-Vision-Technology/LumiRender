@@ -16,7 +16,7 @@ namespace luminous {
         private:
             float4 _R = make_float4(-1.f);
 
-            NDSC_XPU float4 _eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const {
+            NDSC_XPU Spectrum _eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const {
                 return _R * constant::invPi;
             }
 
@@ -33,7 +33,7 @@ namespace luminous {
                 return _R;
             }
 
-            NDSC_XPU float4 eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const {
+            NDSC_XPU Spectrum eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? _eval(wo, wi) : make_float4(0.f);
             }
 
@@ -53,7 +53,7 @@ namespace luminous {
                     wi.z *= -1;
                 }
                 float PDF = cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
-                float4 f = _eval(wo, wi, mode);
+                Spectrum f = _eval(wo, wi, mode);
                 return BSDFSample(f, wi, PDF, BxDFFlags::Reflection);
             }
 

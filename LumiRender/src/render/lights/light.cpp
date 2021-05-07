@@ -25,7 +25,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(sample_Li, u, lls, traversable_handle, hit_group_data);
         }
 
-        float3 Light::estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
+        Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
                                                uint64_t traversable_handle, const HitGroupData *hit_group_data,
                                                float3 *wi) const {
             float light_PDF = 0, bsdf_PDF = 0;
@@ -46,7 +46,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(PDF_dir, ref_p, p_light);
         }
 
-        float3 Light::power() const {
+        Spectrum Light::power() const {
             LUMINOUS_VAR_DISPATCH(power);
         }
 

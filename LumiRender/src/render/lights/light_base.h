@@ -28,7 +28,7 @@ namespace luminous {
         };
 
         struct LightLiSample {
-            float3 L{};
+            Spectrum L{};
             float3 wi{};
             float PDF_dir{0.f};
             SurfaceInteraction p_light{};
