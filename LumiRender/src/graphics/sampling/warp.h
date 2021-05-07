@@ -57,6 +57,15 @@ namespace luminous {
             return constant::inv4Pi;
         }
 
+        /**
+         * p(dir) = p(pos) * r^2 / cos��
+         * @return
+         */
+        NDSC_XPU_INLINE float PDF_dir(float PDF_pos, float3 normal, float3 wo) {
+            float cos_theta = abs_dot(normal, normalize(wo));
+            return PDF_pos * length_squared(wo) / cos_theta;
+        }
+
         NDSC_XPU_INLINE float3 square_to_hemisphere(const float2 sample) {
             float z = sample.x;
             float tmp = safe_sqrt(1.0f - z*z);
