@@ -30,6 +30,8 @@ namespace luminous {
 
             NDSC_XPU BufferView<const Light> lights() const;
 
+            NDSC_XPU const Light& light_at(uint idx) const;
+
             NDSC_XPU size_t light_num();
 
             NDSC_XPU lstd::optional<SampledLight> sample(float u) const;

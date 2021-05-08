@@ -4,6 +4,7 @@
 
 #include "shader_data.h"
 #include "render/materials/material.h"
+#include "render/light_samplers/light_sampler.h"
 #include "render/include/distribution.h"
 
 namespace luminous {
@@ -42,7 +43,7 @@ namespace luminous {
                 luminous::float3 dp02 = p0 - p2;
                 luminous::float3 dp12 = p1 - p2;
                 luminous::float3 ng = cross(dp02, dp12);
-                si.prim_area = 0.5 * length(ng);
+                si.prim_area = 0.5f * length(ng);
 
                 luminous::float2 duv02 = tex_coord0 - tex_coord2;
                 luminous::float2 duv12 = tex_coord1 - tex_coord2;
@@ -64,6 +65,9 @@ namespace luminous {
                 luminous::float3 ss = si.g_uvn.dp_du;
                 luminous::float3 st = normalize(cross(ns, ss));
                 si.s_uvn.set(ss, st, ns);
+            }
+            if (mesh.has_light()) {
+                si.light = &light_sampler->light_at(mesh.light_idx);
             }
             si.material = &materials[mesh.material_idx];
             return si;

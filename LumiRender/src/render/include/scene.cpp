@@ -135,9 +135,10 @@ namespace luminous {
                         lc.emission = instance->emission;
                         lc.set_full_type("AreaLight");
                         lc.instance_idx = _inst_to_mesh_idx.size();
-                        scene_graph->light_configs.push_back(lc);
                         MeshHandle &mesh_handle = _meshes[mesh->idx_in_meshes];
+                        mesh_handle.light_idx = scene_graph->light_configs.size();
                         lc.surface_area = compute_surface_area(mesh_handle, instance->o2w);
+                        scene_graph->light_configs.push_back(lc);
                         mesh_handle.material_idx = _materials.size() - 1;
                         if (!mesh_handle.has_distribute()) {
                             mesh_handle.distribute_idx = distribute_idx++;

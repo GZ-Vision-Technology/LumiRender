@@ -36,6 +36,10 @@ namespace luminous {
             return Spectrum(0.f);
         }
 
+        const Light &LightSampler::light_at(uint idx) const {
+            LUMINOUS_VAR_DISPATCH(light_at,idx);
+        }
+
         float LightSampler::PMF(const Light &light) const {
             LUMINOUS_VAR_DISPATCH(PMF, light);
         }
@@ -51,6 +55,7 @@ namespace luminous {
         LightSampler LightSampler::create(const LightSamplerConfig &config) {
             return detail::create<LightSampler>(config);
         }
+
 
     } // luminous::render
 } // luminous

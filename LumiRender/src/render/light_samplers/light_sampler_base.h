@@ -38,6 +38,10 @@ namespace luminous {
                 return _lights;
             }
 
+            NDSC_XPU const Light& light_at(uint idx) const {
+                return _lights[idx];
+            }
+
             XPU void set_lights(BufferView<const Light> lights) {
                 _lights = lights;
             }

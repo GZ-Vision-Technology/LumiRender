@@ -28,13 +28,15 @@ namespace luminous {
             MeshHandle(index_t vert_ofs, index_t tri_ofs,
                        index_t vert_count, index_t tri_count,
                        index_t material_idx = -1,
-                       index_t distribute_idx = -1)
+                       index_t distribute_idx = -1,
+                       index_t light_idx = -1)
                     : vertex_offset(vert_ofs),
                       triangle_offset(tri_ofs),
                       vertex_count(vert_count),
                       triangle_count(tri_count),
                       material_idx(material_idx),
-                      distribute_idx(distribute_idx) {}
+                      distribute_idx(distribute_idx),
+                      light_idx(light_idx) {}
 
             index_t vertex_offset;
             index_t triangle_offset;
@@ -42,13 +44,18 @@ namespace luminous {
             index_t triangle_count;
             index_t distribute_idx;
             index_t material_idx;
+            index_t light_idx;
 
-            NDSC_XPU bool has_material() const {
+            NDSC_XPU_INLINE bool has_material() const {
                 return material_idx != index_t(-1);
             }
 
-            NDSC_XPU bool has_distribute() const {
+            NDSC_XPU_INLINE bool has_distribute() const {
                 return distribute_idx != index_t(-1);
+            }
+
+            NDSC_XPU_INLINE bool has_light() const {
+                return light_idx != index_t(-1);
             }
 
             XPU void print() const {
@@ -122,9 +129,9 @@ namespace luminous {
             RadiancePRD() = default;
 
             RadiancePRD(bool count_emitted, bool done, bool hit,
-                        luminous::float3 radiance,
-                        luminous::float3 throughput,
-                        luminous::float3 emission)
+                        Spectrum radiance,
+                        Spectrum throughput,
+                        Spectrum emission)
                     : count_emitted(count_emitted),
                       done(done),
                       hit(hit),
