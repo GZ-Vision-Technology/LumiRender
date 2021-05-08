@@ -57,7 +57,7 @@ GLOBAL __raygen__rg() {
 
 
     } while (--i);
-    luminous::ray_intersect(params.traversable_handle, ray, &prd);
+    luminous::intersect_closest(params.traversable_handle, ray, &prd);
     film->add_sample(pixel, prd.radiance, 1, params.frame_index);
 
 }

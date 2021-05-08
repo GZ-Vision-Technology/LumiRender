@@ -27,9 +27,9 @@ namespace luminous {
 
         Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
                                                  uint64_t traversable_handle, const HitGroupData *hit_group_data,
-                                                 float3 *wi, Spectrum *bsdf_v) const {
+                                                 float3 *wi, Spectrum *bsdf_ei) const {
             *wi = make_float3(0.f);
-            *bsdf_v = Spectrum(0.f);
+            *bsdf_ei = Spectrum(0.f);
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
             Spectrum Ld(0.f);
@@ -43,7 +43,7 @@ namespace luminous {
                 light_PDF = lls.PDF_dir;
                 if (bsdf_val.not_black() && bsdf_PDF != 0) {
                     Ray ray = si.spawn_ray_to(lls.p_light);
-                    bool occluded = ray_occluded(traversable_handle, ray);
+                    bool occluded = intersect_any(traversable_handle, ray);
                     if (occluded) {
                         Li = 0;
                     }
@@ -62,14 +62,24 @@ namespace luminous {
 
             if (bsdf_sample) {
                 *wi = bsdf_sample->wi;
-                *bsdf_v = bsdf_sample->f_val / bsdf_sample->PDF;
+                *bsdf_ei = bsdf_sample->f_val / bsdf_sample->PDF;
 
                 if (!is_delta()) {
                     bsdf_PDF = bsdf_sample->PDF;
                     bsdf_val = bsdf_sample->f_val;
-
-                    if (!bsdf.is_specular()) {
-                        
+                    Ray ray = si.spawn_ray(*wi);
+                    RadiancePRD prd;
+                    prd.done = true;
+                    intersect_closest(traversable_handle, ray, &prd);
+                    float weight = 1;
+                    if (prd.hit && prd.interaction.light == this) {
+                        light_PDF = PDF_dir(si, prd.interaction);
+                        weight = MIS_weight(bsdf_PDF, light_PDF);
+                        Li = prd.interaction.Le(-*wi);
+                        Ld += bsdf_val * Li * weight / bsdf_PDF;
+                    } else {
+                        light_PDF = 0;
+                        return Ld;
                     }
                 }
             }

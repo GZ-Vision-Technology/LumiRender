@@ -17,7 +17,7 @@ namespace luminous {
     inline namespace render {
 
 
-        XPU_INLINE bool ray_intersect(uint64_t traversable_handle, Ray ray, RadiancePRD *prd) {
+        XPU_INLINE bool intersect_closest(uint64_t traversable_handle, Ray ray, RadiancePRD *prd) {
 #ifdef IS_GPU_CODE
             return traceRadiance((OptixTraversableHandle)traversable_handle, ray, prd);
 #else
@@ -27,7 +27,7 @@ namespace luminous {
 #endif
         }
 
-        XPU_INLINE bool ray_occluded(uint64_t traversable_handle, Ray ray) {
+        XPU_INLINE bool intersect_any(uint64_t traversable_handle, Ray ray) {
 #ifdef IS_GPU_CODE
             return traceOcclusion((OptixTraversableHandle)traversable_handle, ray);
 #else
@@ -53,7 +53,7 @@ namespace luminous {
 
             NDSC_XPU bool occluded(uint64_t traversable_handle) const {
                 auto ray = _p0.spawn_ray_to(_p1);
-                return ray_occluded(traversable_handle, ray);
+                return intersect_any(traversable_handle, ray);
             }
         };
 

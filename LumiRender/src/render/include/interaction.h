@@ -123,6 +123,8 @@ namespace luminous {
             const Light *light = nullptr;
             const Material *material = nullptr;
             float du_dx = 0, dv_dx = 0, du_dy = 0, dv_dy = 0;
+
+            NDSC_XPU_INLINE Spectrum Le(float3 w) const;
         };
 
         struct RadiancePRD {

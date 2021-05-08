@@ -23,7 +23,7 @@ namespace luminous {
                                                             const HitGroupData *hit_group_data) const {
             lls.p_light = sample(u, hit_group_data);
             Ray ray = lls.p_ref.spawn_ray_to(lls.p_light);
-            bool occluded = ray_occluded(traversable_handle, ray);
+            bool occluded = intersect_any(traversable_handle, ray);
             if (occluded) {
                 return {};
             }
