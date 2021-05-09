@@ -55,7 +55,7 @@ namespace luminous {
         void CUDATask::init(const Parser &parser) {
             auto scene_graph = parser.parse();
             scene_graph->create_shapes();
-            _integrator = make_unique<MegaKernelPT>(_device, _context);
+            _integrator = make_unique<MegakernelPT>(_device, _context);
             _integrator->init(scene_graph);
             update_device_buffer();
         }

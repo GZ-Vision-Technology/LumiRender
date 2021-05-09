@@ -16,23 +16,24 @@
 #include "render/bxdfs/shader_include.h"
 #include "graphics/lstd/lstd.h"
 #include "render/include/trace.h"
+#include "render/integrators/shader_include.h"
 
 extern "C" {
 __constant__ luminous::LaunchParams
 params;
 }
 
-GPU_INLINE luminous::Spectrum Li(luminous::Ray ray, luminous::Sampler &sampler) {
-    using namespace luminous;
-    RadiancePRD prd;
-    Spectrum radiance(0.f);
-//    for (int bounce = 0; ; ++bounce) {
+//GPU_INLINE luminous::Spectrum Li(luminous::Ray ray, luminous::Sampler &sampler) {
+//    using namespace luminous;
+//    RadiancePRD prd;
+//    Spectrum radiance(0.f);
+////    for (int bounce = 0; ; ++bounce) {
+////
+////    }
 //
-//    }
-
-    traceRadiance(params.traversable_handle, ray, &prd);
-    return radiance;
-}
+//    traceRadiance(params.traversable_handle, ray, &prd);
+//    return radiance;
+//}
 
 GLOBAL __raygen__rg() {
     using namespace luminous;
@@ -47,11 +48,11 @@ GLOBAL __raygen__rg() {
     camera->generate_ray(ss, &ray);
     RadiancePRD prd;
 
-    int i = sampler.spp();
-
     luminous::intersect_closest(params.traversable_handle, ray, &prd);
 
-    film->add_sample(pixel, prd.is_hit() ? 1 : 0, 1, params.frame_index);
+    Spectrum L = Li(ray, params.traversable_handle, sampler, 0,0);
+
+    film->add_sample(pixel, L, 1, params.frame_index);
 
 }
 

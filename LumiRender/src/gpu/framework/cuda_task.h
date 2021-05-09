@@ -8,7 +8,7 @@
 #include "core/backend/task.h"
 #include "cuda_impl.h"
 #include "render/films/film.h"
-#include "../mega_kernel_pt.h"
+#include "../megakernel_pt.h"
 #include "core/backend/managed.h"
 
 namespace luminous {

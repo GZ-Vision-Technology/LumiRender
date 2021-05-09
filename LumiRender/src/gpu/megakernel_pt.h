@@ -6,7 +6,6 @@
 #pragma once
 
 #include "render/include/integrator.h"
-
 #include "framework/optix_accel.h"
 #include "gpu_scene.h"
 #include "render/samplers/sampler.h"
@@ -14,7 +13,7 @@
 namespace luminous {
 
     inline namespace gpu {
-        class MegaKernelPT : public Integrator {
+        class MegakernelPT : public Integrator {
         private:
             Context * _context{};
             Managed<Sampler, Sampler> _sampler;
@@ -24,7 +23,7 @@ namespace luminous {
             Managed<LaunchParams> _launch_params;
         public:
 
-            MegaKernelPT(const SP<Device> &device, Context *context)
+            MegakernelPT(const SP<Device> &device, Context *context)
                     : _device(device),_context(context) {}
 
             void init(const SP<SceneGraph> &scene_graph) override;
