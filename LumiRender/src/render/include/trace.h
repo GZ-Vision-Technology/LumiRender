@@ -18,6 +18,7 @@ namespace luminous {
 
 
         XPU_INLINE bool intersect_closest(uint64_t traversable_handle, Ray ray, PerRayData *prd) {
+            prd->ray_dir = ray.direction();
 #if defined(__CUDACC__)
             return traceRadiance((OptixTraversableHandle)traversable_handle, ray, prd);
 #else

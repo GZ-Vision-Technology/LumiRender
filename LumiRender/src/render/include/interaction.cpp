@@ -15,7 +15,9 @@ namespace luminous {
         }
 
         SurfaceInteraction PerRayData::get_surface_interaction() const {
-            return hit_group_data->compute_surface_interaction(closest_hit);
+            auto si = hit_group_data->compute_surface_interaction(closest_hit);
+            si.wo = normalize(-ray_dir);
+            return si;
         }
 
         lstd::optional<BSDF> SurfaceInteraction::get_BSDF(const HitGroupData * hit_group_data) const {
