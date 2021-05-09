@@ -38,7 +38,7 @@ GLOBAL __raygen__rg() {
     PerRayData prd;
 
     Spectrum L = Li(ray, params.traversable_handle, sampler,
-                    params.max_depth , params.rr_threshold, pixel.x == 62 && pixel.y == 140);
+                    params.max_depth , params.rr_threshold);
 
     film->add_sample(pixel, L, weight, frame_index);
 }
