@@ -127,6 +127,8 @@ namespace luminous {
             NDSC_XPU Spectrum Le(float3 w) const;
         };
 
+        class HitGroupData;
+
         struct RadiancePRD {
             RadiancePRD() = default;
 
@@ -145,9 +147,10 @@ namespace luminous {
             bool count_emitted{true};
             bool done{false};
             bool hit{false};
-            Spectrum radiance;
-            Spectrum throughput;
-            Spectrum emission;
+            Spectrum radiance{0.f};
+            Spectrum throughput{1.f};
+            Spectrum emission{0.f};
+            const HitGroupData *data{nullptr};
         };
 
         struct TextureEvalContext {
