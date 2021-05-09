@@ -8,8 +8,8 @@
 #include "graphics/math/common.h"
 #include "interaction.h"
 
-#ifdef IS_GPU_CODE
-#include "gpu/shaders/optix_kernels.h"
+#if defined(__CUDACC__)
+#include "gpu/shaders/optix_util.h"
 #else
 
 #endif
@@ -17,8 +17,8 @@ namespace luminous {
     inline namespace render {
 
 
-        XPU_INLINE bool intersect_closest(uint64_t traversable_handle, Ray ray, RadiancePRD *prd) {
-#ifdef IS_GPU_CODE
+        XPU_INLINE bool intersect_closest(uint64_t traversable_handle, Ray ray, PerRayData *prd) {
+#if defined(__CUDACC__)
             return traceRadiance((OptixTraversableHandle)traversable_handle, ray, prd);
 #else
             // CPU is not implemented
@@ -28,7 +28,7 @@ namespace luminous {
         }
 
         XPU_INLINE bool intersect_any(uint64_t traversable_handle, Ray ray) {
-#ifdef IS_GPU_CODE
+#if defined(__CUDACC__)
             return traceOcclusion((OptixTraversableHandle)traversable_handle, ray);
 #else
             // CPU is not implemented

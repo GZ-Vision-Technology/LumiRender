@@ -36,9 +36,6 @@
     #define CPU
 #endif
 
-#if defined(__CUDA_ARCH__)
-    #define IS_GPU_CODE
-#endif
 
 #ifdef IS_GPU_CODE
 #define GEN_NAME_FUNC NDSC_XPU const char *name() {             \

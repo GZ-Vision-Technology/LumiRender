@@ -4,7 +4,7 @@ include_directories(${OptiX_INCLUDE})
 
 
 #add_subdirectory(framework)
-cuda_compile_and_embed(optix_shader_code ${PROJECT_SOURCE_DIR}/src/gpu/shaders/optix_kernels.cu)
+cuda_compile_and_embed(optix_shader_code ${PROJECT_SOURCE_DIR}/src/gpu/shaders/megakernel_pt.cu)
 
 file(GLOB_RECURSE HEADER_FILES *.h*)
 file(GLOB_RECURSE SOURCE_FILES *.cpp)

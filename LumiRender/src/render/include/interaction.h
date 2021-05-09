@@ -131,12 +131,12 @@ namespace luminous {
 
         class MissData;
 
-        struct RadiancePRD {
+        struct PerRayData {
             ClosestHit closest_hit;
             const HitGroupData *hit_group_data{nullptr};
             const MissData *miss_data{nullptr};
 
-            RadiancePRD() = default;
+            PerRayData() = default;
 
             NDSC_XPU bool is_hit() const {
                 return hit_group_data != nullptr;

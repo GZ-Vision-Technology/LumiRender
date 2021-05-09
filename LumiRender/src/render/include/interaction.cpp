@@ -13,7 +13,7 @@ namespace luminous {
             return light != nullptr ? light->get<AreaLight>()->L(*this, w) : 0.f;
         }
 
-        SurfaceInteraction RadiancePRD::get_surface_interaction() const {
+        SurfaceInteraction PerRayData::get_surface_interaction() const {
             return hit_group_data->compute_surface_interaction(closest_hit);
         }
     } // luminous::render

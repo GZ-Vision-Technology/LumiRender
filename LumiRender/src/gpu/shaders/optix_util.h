@@ -39,10 +39,10 @@ static GPU_INLINE const T &getSbtData() {
     return *reinterpret_cast<T *>(optixGetSbtDataPointer());
 }
 
-static GPU_INLINE luminous::RadiancePRD *getPRD() {
+static GPU_INLINE luminous::PerRayData *getPRD() {
     const unsigned int u0 = optixGetPayload_0();
     const unsigned int u1 = optixGetPayload_1();
-    return reinterpret_cast<luminous::RadiancePRD *>(unpackPointer(u0, u1));
+    return reinterpret_cast<luminous::PerRayData *>(unpackPointer(u0, u1));
 }
 
 template<typename... Args>
@@ -72,7 +72,7 @@ static GPU_INLINE void trace(OptixTraversableHandle handle,
 }
 
 static GPU_INLINE bool traceRadiance(OptixTraversableHandle handle,
-                                     luminous::Ray ray, luminous::RadiancePRD *prd) {
+                                     luminous::Ray ray, luminous::PerRayData *prd) {
     unsigned int u0, u1;
     packPointer(prd, u0, u1);
     trace(handle, ray, OPTIX_RAY_FLAG_NONE,

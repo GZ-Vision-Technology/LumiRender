@@ -70,7 +70,7 @@ namespace luminous {
                     bsdf_PDF = bsdf_sample->PDF;
                     bsdf_val = bsdf_sample->f_val;
                     Ray ray = si.spawn_ray(*wi);
-                    RadiancePRD prd;
+                    PerRayData prd;
                     intersect_closest(traversable_handle, ray, &prd);
                     SurfaceInteraction light_si;
                     if (prd.is_hit() && (light_si = prd.get_surface_interaction()).light == this) {
