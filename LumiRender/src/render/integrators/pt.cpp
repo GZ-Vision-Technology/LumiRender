@@ -66,13 +66,13 @@ namespace luminous {
                 ray = si.spawn_ray(NEE_data.wi);
                 si = NEE_data.next_si;
                 float max_comp = throughput.max_comp();
-//                if (max_comp < rr_threshold) {
-//                    float q = max((float).05f, 1 - max_comp);
-//                    if (q < sampler.next_1d()) {
-//                        break;
-//                    }
-//                    throughput /= 1 - q;
-//                }
+                if (max_comp < rr_threshold) {
+                    float q = min(0.95f, max_comp);
+                    if (q < sampler.next_1d()) {
+                        break;
+                    }
+                    throughput /= q;
+                }
             }
 
             return L;
