@@ -17,6 +17,7 @@ namespace luminous {
             OptixTraversableHandle traversable_handle;
             uint frame_index;
             uint max_depth;
+            float rr_threshold;
             Sensor *camera;
             const Sampler *sampler;
         };

@@ -76,6 +76,10 @@ namespace luminous {
             NDSC_XPU BxDFFlags flags() const {
                 LUMINOUS_VAR_DISPATCH(flags);
             }
+
+            NDSC_XPU void print() const {
+                LUMINOUS_VAR_DISPATCH(print);
+            }
         };
 
     }

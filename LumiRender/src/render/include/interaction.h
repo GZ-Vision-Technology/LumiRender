@@ -149,6 +149,7 @@ namespace luminous {
             float bsdf_PDF;
             float3 wi{0.f};
             bool found_intersection{false};
+            bool debug = false;
         };
 
         struct PerRayData {

@@ -13,6 +13,7 @@ namespace luminous {
             lp.camera = _camera.device_data();
             lp.frame_index = 0u;
             lp.max_depth = _max_depth;
+            lp.rr_threshold = _rr_threshold;
             _launch_params.reset(&lp, _device);
             _launch_params.synchronize_to_gpu();
         }

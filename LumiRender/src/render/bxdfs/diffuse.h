@@ -61,6 +61,10 @@ namespace luminous {
                 return valid() ? BxDFFlags::DiffuseReflection : BxDFFlags::Unset;
             }
 
+            XPU void print() const {
+                printf("ideal diffuse r(%f,%f,%f,%f)", _R.x, _R.y, _R.z, _R.w);
+            }
+
             NDSC std::string to_string() const {
                 LUMINOUS_TO_STRING("IdealDiffuse R : %s", _R.to_string().c_str());
             }

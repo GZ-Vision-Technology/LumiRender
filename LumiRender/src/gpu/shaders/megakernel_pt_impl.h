@@ -36,7 +36,8 @@ GLOBAL __raygen__rg() {
     camera->generate_ray(ss, &ray);
     PerRayData prd;
 
-    Spectrum L = Li(ray, params.traversable_handle, sampler, 0,0);
+    Spectrum L = Li(ray, params.traversable_handle, sampler,
+                    params.max_depth , params.rr_threshold, pixel.x == 62 && pixel.y == 140);
 
     film->add_sample(pixel, L, 1, params.frame_index);
 

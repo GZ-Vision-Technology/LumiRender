@@ -58,6 +58,7 @@ namespace luminous {
                 }
             }
 
+
             auto bsdf_sample = bsdf.sample_f(si.wo, sampler.next_1d(), sampler.next_2d());
 
             if (bsdf_sample) {
