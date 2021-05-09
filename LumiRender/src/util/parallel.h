@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "core/header.h"
 #include <atomic>
 #include <functional>
 #include <future>

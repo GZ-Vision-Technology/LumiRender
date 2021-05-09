@@ -6,7 +6,6 @@
 
 #include <list>
 #include <cstddef>
-#include "core/header.h"
 #include "core/concepts.h"
 
 

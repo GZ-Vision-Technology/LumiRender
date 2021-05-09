@@ -3,27 +3,26 @@
 //
 #pragma once
 
-#include "header.h"
+#include "graphics/header.h"
 
-LUMINOUS_BEGIN
 
-inline namespace utility {
+namespace luminous {
+    inline namespace utility {
 
-    class IObject {
+        class IObject {
+
+        };
+
+        struct Noncopyable {
+            Noncopyable() = default;
+
+            Noncopyable(const Noncopyable &) = delete;
+
+            Noncopyable &operator=(const Noncopyable &) = delete;
+        };
+
+
 
     };
-
-    struct Noncopyable {
-        Noncopyable() = default;
-
-        Noncopyable(const Noncopyable &) = delete;
-
-        Noncopyable &operator=(const Noncopyable &) = delete;
-    };
-
-
-
-};
-
-LUMINOUS_END
+}
 

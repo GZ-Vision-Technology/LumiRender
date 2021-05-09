@@ -9,6 +9,23 @@
 
 #include <assert.h>
 
+#if defined(_MSC_VER)
+#define HAVE_ALIGNED_MALLOC
+#endif
+
+#ifndef L1_CACHE_LINE_SIZE
+#define L1_CACHE_LINE_SIZE 64
+#endif
+
+
+#define F_INLINE __forceinline
+
+#if defined(__CUDACC__)
+#define IS_GPU_CODE
+#endif
+
+#define HAVE_POSIX_MEMALIGN
+
 #if defined(__CUDACC__)
     #define XPU __host__ __device__
     #define GPU __device__

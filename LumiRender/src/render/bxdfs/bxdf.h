@@ -7,6 +7,7 @@
 
 #include "diffuse.h"
 #include "graphics/lstd/variant.h"
+#include "render/include/shader_data.h"
 
 namespace luminous {
     inline namespace render {

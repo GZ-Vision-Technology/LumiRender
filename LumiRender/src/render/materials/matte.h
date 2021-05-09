@@ -9,6 +9,7 @@
 #include "render/bxdfs/bsdf.h"
 #include "render/include/config.h"
 
+
 namespace luminous {
     inline namespace render {
         class MatteMaterial {
