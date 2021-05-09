@@ -73,18 +73,16 @@ namespace luminous {
                 NEE_data->wi = bsdf_sample->wi;
                 NEE_data->bsdf_val = bsdf_sample->f_val;
                 NEE_data->bsdf_PDF = bsdf_sample->PDF;
-
                 if (!is_delta()) {
                     bsdf_PDF = bsdf_sample->PDF;
                     bsdf_val = bsdf_sample->f_val;
                     Ray ray = si.spawn_ray(NEE_data->wi);
                     PerRayData prd;
                     NEE_data->found_intersection = intersect_closest(traversable_handle, ray, &prd);
-                    SurfaceInteraction light_si;
-                    if (prd.is_hit() && (light_si = prd.get_surface_interaction()).light == this) {
-                        light_PDF = PDF_dir(si, light_si);
+                    if (prd.is_hit() && (NEE_data->next_si = prd.get_surface_interaction()).light == this) {
+                        light_PDF = PDF_dir(si, NEE_data->next_si);
                         float weight = MIS_weight(bsdf_PDF, light_PDF);
-                        Li = light_si.Le(-NEE_data->wi);
+                        Li = NEE_data->next_si.Le(-NEE_data->wi);
                         Ld += bsdf_val * Li * weight / bsdf_PDF;
                     }
                 }

@@ -15,16 +15,16 @@ namespace luminous {
         NDSC_XPU Spectrum Li(Ray ray, uint64_t scene_handle, Sampler &sampler,
                              uint max_depth, float rr_threshold, bool debug) {
             PerRayData prd;
-            luminous::intersect_closest(scene_handle, ray, &prd);
-
-            if (prd.is_hit()) {
-                auto si = prd.get_surface_interaction();
-                const Material *mat = si.material;
-                auto bsdf = mat->get_BSDF(si, prd.hit_group_data);
-                auto color = bsdf.base_color();
-                return color;
-            }
-            return 0;
+//            luminous::intersect_closest(scene_handle, ray, &prd);
+//
+//            if (prd.is_hit()) {
+//                auto si = prd.get_surface_interaction();
+//                const Material *mat = si.material;
+//                auto bsdf = mat->get_BSDF(si, prd.hit_group_data);
+//                auto color = bsdf.base_color();
+//                return color;
+//            }
+//            return 0;
 
             Spectrum L(0.f);
             Spectrum throughput(1.f);
@@ -32,7 +32,7 @@ namespace luminous {
             int bounces;
             bool found_intersection = luminous::intersect_closest(scene_handle, ray, &prd);
 
-            for (bounces = 0;; ++bounces) {
+            for (bounces = 0; bounces < max_depth; ++bounces) {
                 if (bounces == 0) {
                     if (found_intersection) {
                         si = prd.get_surface_interaction();
@@ -42,7 +42,7 @@ namespace luminous {
                     }
                 }
 
-                BREAK_IF(!found_intersection || bounces >= max_depth)
+                BREAK_IF(!found_intersection)
 
                 const LightSampler *light_sampler = prd.hit_group_data->light_sampler;
 
@@ -64,6 +64,15 @@ namespace luminous {
                 throughput *= bsdf_ei;
                 L += Ld * throughput;
                 ray = si.spawn_ray(NEE_data.wi);
+                si = NEE_data.next_si;
+                float max_comp = throughput.max_comp();
+//                if (max_comp < rr_threshold) {
+//                    float q = max((float).05f, 1 - max_comp);
+//                    if (q < sampler.next_1d()) {
+//                        break;
+//                    }
+//                    throughput /= 1 - q;
+//                }
             }
 
             return L;

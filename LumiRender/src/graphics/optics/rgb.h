@@ -58,6 +58,10 @@ namespace luminous {
                 return Y();
             };
 
+            NDSC_XPU_INLINE scalar_t max_comp() const noexcept {
+                return max({x, y, z});
+            }
+
             NDSC_XPU_INLINE vector_t XYZ() const noexcept {
                 return vector_t(X(), Y(), Z());
             }

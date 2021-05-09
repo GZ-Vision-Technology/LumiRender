@@ -95,7 +95,7 @@
 				"width": 0.5,
 				"height": 0.5,
 				"emission": [17,12,4],
-				"scale": 0.8,
+				"scale": 1.2,
 				"transform" : {
 					"type" : "yaw_pitch",
 					"param" : {
@@ -170,10 +170,10 @@
 //		}
 	],
 	"integrator" : {
-		"type" : "MegaKernelPT",
+		"type" : "MegakernelPT",
 		"param" : {
-			"maxBounce" : 5,
-			"rrThreshold" : 1
+			"max_depth" : 5,
+			"rr_threshold" : 1
 		}
 	},
 	"sampler" : {
