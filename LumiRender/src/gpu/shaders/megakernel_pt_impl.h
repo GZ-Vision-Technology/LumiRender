@@ -32,14 +32,11 @@ GLOBAL __raygen__rg() {
     auto frame_index = params.frame_index;
     sampler.start_pixel_sample(pixel, frame_index, 0);
     auto ss = sampler.sensor_sample(pixel);
-
+    bool debug = false;
     Ray ray;
     float weight = camera->generate_ray(ss, &ray);
-    PerRayData prd;
-
     Spectrum L = Li(ray, params.traversable_handle, sampler,
-                    params.max_depth , params.rr_threshold);
-
+                    params.max_depth , params.rr_threshold, debug);
     film->add_sample(pixel, L, weight, frame_index);
 }
 

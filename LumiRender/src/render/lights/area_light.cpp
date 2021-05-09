@@ -44,7 +44,7 @@ namespace luminous {
         }
 
         Spectrum AreaLight::L(const SurfaceInteraction &p_light, float3 w) const {
-            return (_two_sided || dot(w, p_light.g_uvn.normal)) ? _L : make_float3(0.f);
+            return (_two_sided || dot(w, p_light.g_uvn.normal) > 0) ? _L : make_float3(0.f);
         }
 
         std::string AreaLight::to_string() const {
