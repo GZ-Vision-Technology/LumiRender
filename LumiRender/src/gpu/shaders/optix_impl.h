@@ -24,10 +24,7 @@ params;
 
 GPU_INLINE luminous::Spectrum Li(luminous::Ray ray, luminous::Sampler &sampler) {
     using namespace luminous;
-    RadiancePRD prd(true, false, false,
-                    Spectrum(0.f),
-                    Spectrum(1.f),
-                    Spectrum(0.f));
+    RadiancePRD prd;
     Spectrum radiance(0.f);
 //    for (int bounce = 0; ; ++bounce) {
 //
@@ -49,27 +46,19 @@ GLOBAL __raygen__rg() {
     Ray ray;
     camera->generate_ray(ss, &ray);
     RadiancePRD prd;
-    prd.done = false;
-    prd.count_emitted = true;
 
     int i = sampler.spp();
 
-    do {
-
-
-
-    } while (--i);
     luminous::intersect_closest(params.traversable_handle, ray, &prd);
 
-    film->add_sample(pixel, prd.radiance, 1, params.frame_index);
+    film->add_sample(pixel, prd.is_hit() ? 1 : 0, 1, params.frame_index);
 
 }
 
 GLOBAL __miss__radiance() {
     luminous::RadiancePRD *prd = getPRD();
-    auto data = getSbtData<luminous::MissData>();
-    prd->radiance = data.bg_color;
-    prd->done = true;
+    const auto &data = getSbtData<luminous::MissData>();
+    prd->miss_data = &data;
 }
 
 GLOBAL __miss__shadow() {
@@ -79,14 +68,9 @@ GLOBAL __miss__shadow() {
 GLOBAL __closesthit__radiance() {
     using namespace luminous;
     RadiancePRD *prd = getPRD();
-    SurfaceInteraction si = getSurfaceInteraction(getClosestHit());
     const HitGroupData &data = getSbtData<HitGroupData>();
-    prd->interaction = si;
-    prd->data = &data;
-    BSDF bsdf = si.material->get_BSDF(si, &data);
-    auto color = bsdf.base_color();
-    prd->radiance = color;
-    prd->hit = true;
+    prd->hit_group_data = &data;
+    prd->closest_hit = getClosestHit();
 }
 
 GLOBAL __closesthit__occlusion() {

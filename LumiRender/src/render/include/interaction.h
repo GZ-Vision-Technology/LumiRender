@@ -129,28 +129,20 @@ namespace luminous {
 
         class HitGroupData;
 
+        class MissData;
+
         struct RadiancePRD {
+            ClosestHit closest_hit;
+            const HitGroupData *hit_group_data{nullptr};
+            const MissData *miss_data{nullptr};
+
             RadiancePRD() = default;
 
-            RadiancePRD(bool count_emitted, bool done, bool hit,
-                        Spectrum radiance,
-                        Spectrum throughput,
-                        Spectrum emission)
-                    : count_emitted(count_emitted),
-                      done(done),
-                      hit(hit),
-                      radiance(radiance),
-                      throughput(throughput),
-                      emission(emission) {}
+            NDSC_XPU bool is_hit() const {
+                return hit_group_data != nullptr;
+            }
 
-            luminous::SurfaceInteraction interaction;
-            bool count_emitted{true};
-            bool done{false};
-            bool hit{false};
-            Spectrum radiance{0.f};
-            Spectrum throughput{1.f};
-            Spectrum emission{0.f};
-            const HitGroupData *data{nullptr};
+            NDSC_XPU SurfaceInteraction get_surface_interaction() const;
         };
 
         struct TextureEvalContext {

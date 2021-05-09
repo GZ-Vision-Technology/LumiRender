@@ -80,7 +80,7 @@ static GPU_INLINE bool traceRadiance(OptixTraversableHandle handle,
           luminous::RayType::Count,           // SBT stride
           luminous::RayType::Radiance,        // missSBTIndex
           u0, u1);
-    return prd->hit;
+    return prd->is_hit();
 }
 
 static GPU_INLINE bool traceOcclusion(OptixTraversableHandle handle, luminous::Ray ray) {
@@ -112,11 +112,4 @@ static GPU_INLINE luminous::ClosestHit getClosestHit() {
     ret.triangle_id = getPrimIdx();
     ret.bary = getTriangleBarycentric();
     return ret;
-}
-
-static GPU_INLINE luminous::SurfaceInteraction getSurfaceInteraction(luminous::ClosestHit closest_hit) {
-    using namespace luminous;
-    const HitGroupData &data = getSbtData<HitGroupData>();
-    auto si = data.compute_surface_interaction(closest_hit);
-    return si;
 }

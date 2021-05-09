@@ -71,12 +71,12 @@ namespace luminous {
                     bsdf_val = bsdf_sample->f_val;
                     Ray ray = si.spawn_ray(*wi);
                     RadiancePRD prd;
-                    prd.done = true;
                     intersect_closest(traversable_handle, ray, &prd);
-                    if (prd.hit && prd.interaction.light == this) {
-                        light_PDF = PDF_dir(si, prd.interaction);
+                    SurfaceInteraction light_si;
+                    if (prd.is_hit() && (light_si = prd.get_surface_interaction()).light == this) {
+                        light_PDF = PDF_dir(si, light_si);
                         float weight = MIS_weight(bsdf_PDF, light_PDF);
-                        Li = prd.interaction.Le(-*wi);
+                        Li = light_si.Le(-*wi);
                         Ld += bsdf_val * Li * weight / bsdf_PDF;
                     }
                 }
