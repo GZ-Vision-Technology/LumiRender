@@ -4,9 +4,11 @@
 
 #include "light.h"
 #include "render/include/creator.h"
+//#include "render/include/interaction.cpp"
 
 namespace luminous {
     inline namespace render {
+
 
         LightType Light::type() const {
             LUMINOUS_VAR_DISPATCH(type);
@@ -71,19 +73,14 @@ namespace luminous {
                     RadiancePRD prd;
                     prd.done = true;
                     intersect_closest(traversable_handle, ray, &prd);
-                    float weight = 1;
                     if (prd.hit && prd.interaction.light == this) {
                         light_PDF = PDF_dir(si, prd.interaction);
-                        weight = MIS_weight(bsdf_PDF, light_PDF);
+                        float weight = MIS_weight(bsdf_PDF, light_PDF);
                         Li = prd.interaction.Le(-*wi);
                         Ld += bsdf_val * Li * weight / bsdf_PDF;
-                    } else {
-                        light_PDF = 0;
-                        return Ld;
                     }
                 }
             }
-
             return Ld;
         }
 

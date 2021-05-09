@@ -5,14 +5,12 @@
 #define GLOBAL extern "C" __global__ void
 
 #include "render/include/shader_include.h"
-#include "render/include/interaction.h"
 #include "render/films/shader_include.h"
 #include "render/samplers/shader_include.h"
 #include "render/sensors/shader_include.h"
 #include "render/light_samplers/shader_include.h"
 #include "render/lights/shader_include.h"
 #include "render/include/distribution.h"
-
 #include "render/textures/shader_include.h"
 #include "render/materials/shader_include.h"
 #include "render/bxdfs/shader_include.h"
