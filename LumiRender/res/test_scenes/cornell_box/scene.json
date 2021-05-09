@@ -101,7 +101,7 @@
 					"param" : {
 						"yaw" : 0,
 						"pitch": -90,
-						"position": [-0.83,1.6,0.7]
+						"position": [-0.83,1.62,0.8]
 					}
 				},
 				"material": "quad2"
@@ -195,7 +195,7 @@
 				"param" : {
 					"yaw" : 0,
 					"pitch": 0,
-					"position": [-0.83,0.83,-2.5]
+					"position": [-0.83,0.819,-2.5]
 				}
 			},
 			"film" : {
