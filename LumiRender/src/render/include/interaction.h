@@ -9,6 +9,7 @@
 #include "core/backend/buffer_view.h"
 #include "graphics/geometry/util.h"
 #include "graphics/optics/rgb.h"
+#include "graphics/lstd/lstd.h"
 
 namespace luminous {
     inline namespace render {
@@ -115,6 +116,12 @@ namespace luminous {
 
         class Light;
 
+        class BSDF;
+
+        class HitGroupData;
+
+        class MissData;
+
         struct SurfaceInteraction : public Interaction {
             float2 uv;
             UVN s_uvn;
@@ -124,12 +131,25 @@ namespace luminous {
             const Material *material = nullptr;
             float du_dx = 0, dv_dx = 0, du_dy = 0, dv_dy = 0;
 
+            NDSC_XPU_INLINE bool has_material() const {
+                return material != nullptr;
+            }
+
+            NDSC_XPU_INLINE bool has_emission() const {
+                return light != nullptr;
+            }
+
             NDSC_XPU Spectrum Le(float3 w) const;
+
+            NDSC_XPU lstd::optional<BSDF> get_BSDF(const HitGroupData * hit_group_data) const;
         };
 
-        class HitGroupData;
-
-        class MissData;
+        struct NEEData {
+            Spectrum bsdf_val{0.f};
+            float bsdf_PDF;
+            float3 wi{0.f};
+            bool found_intersection{false};
+        };
 
         struct PerRayData {
             ClosestHit closest_hit;
@@ -138,7 +158,7 @@ namespace luminous {
 
             PerRayData() = default;
 
-            NDSC_XPU bool is_hit() const {
+            NDSC_XPU_INLINE bool is_hit() const {
                 return hit_group_data != nullptr;
             }
 

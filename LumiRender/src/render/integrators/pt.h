@@ -10,8 +10,10 @@
 
 namespace luminous {
     inline namespace render {
+
         class Sampler;
-        NDSC_XPU Spectrum Li(Ray ray, uint64_t scene_handle, Sampler &sampler ,uint max_depth, float rr_threshold);
+
+        NDSC_XPU Spectrum Li(Ray ray, uint64_t scene_handle, Sampler &sampler, uint max_depth, float rr_threshold);
 
     }
 }

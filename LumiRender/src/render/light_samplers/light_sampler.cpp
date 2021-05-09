@@ -28,12 +28,12 @@ namespace luminous {
                                                         const BSDF &bsdf, Sampler &sampler,
                                                         uint64_t traversable_handle,
                                                         const HitGroupData *hit_group_data,
-                                                        float3 *wi, Spectrum *bsdf_ei) const {
+                                                        NEEData *NEE_data) const {
             auto sampled_light = sample(si, sampler.next_1d());
             if (sampled_light) {
                 return sampled_light->light.estimate_direct_lighting(si, bsdf, sampler,
                                                                      traversable_handle, hit_group_data,
-                                                                     wi, bsdf_ei) / sampled_light->PMF;
+                                                                     NEE_data) / sampled_light->PMF;
             }
             return Spectrum(0.f);
         }

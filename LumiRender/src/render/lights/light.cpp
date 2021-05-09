@@ -29,9 +29,7 @@ namespace luminous {
 
         Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
                                                  uint64_t traversable_handle, const HitGroupData *hit_group_data,
-                                                 float3 *wi, Spectrum *bsdf_ei) const {
-            *wi = make_float3(0.f);
-            *bsdf_ei = Spectrum(0.f);
+                                                 NEEData *NEE_data) const {
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
             Spectrum Ld(0.f);
@@ -63,20 +61,21 @@ namespace luminous {
             auto bsdf_sample = bsdf.sample_f(si.wo, sampler.next_1d(), sampler.next_2d());
 
             if (bsdf_sample) {
-                *wi = bsdf_sample->wi;
-                *bsdf_ei = bsdf_sample->f_val / bsdf_sample->PDF;
+                NEE_data->wi = bsdf_sample->wi;
+                NEE_data->bsdf_val = bsdf_sample->f_val;
+                NEE_data->bsdf_PDF = bsdf_sample->PDF;
 
                 if (!is_delta()) {
                     bsdf_PDF = bsdf_sample->PDF;
                     bsdf_val = bsdf_sample->f_val;
-                    Ray ray = si.spawn_ray(*wi);
+                    Ray ray = si.spawn_ray(NEE_data->wi);
                     PerRayData prd;
-                    intersect_closest(traversable_handle, ray, &prd);
+                    NEE_data->found_intersection = intersect_closest(traversable_handle, ray, &prd);
                     SurfaceInteraction light_si;
                     if (prd.is_hit() && (light_si = prd.get_surface_interaction()).light == this) {
                         light_PDF = PDF_dir(si, light_si);
                         float weight = MIS_weight(bsdf_PDF, light_PDF);
-                        Li = light_si.Le(-*wi);
+                        Li = light_si.Le(-NEE_data->wi);
                         Ld += bsdf_val * Li * weight / bsdf_PDF;
                     }
                 }

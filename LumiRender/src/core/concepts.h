@@ -7,22 +7,17 @@
 
 
 namespace luminous {
-    inline namespace utility {
 
-        class IObject {
+    class IObject {
 
-        };
+    };
 
-        struct Noncopyable {
-            Noncopyable() = default;
+    struct Noncopyable {
+        Noncopyable() = default;
 
-            Noncopyable(const Noncopyable &) = delete;
+        Noncopyable(const Noncopyable &) = delete;
 
-            Noncopyable &operator=(const Noncopyable &) = delete;
-        };
-
-
-
+        Noncopyable &operator=(const Noncopyable &) = delete;
     };
 }
 

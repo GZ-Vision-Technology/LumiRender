@@ -67,7 +67,7 @@ void test_kernel_sampler() {
     auto kernel = cudaModule->get_kernel("test_sampler2");
 
     auto config = SamplerConfig();
-    config.type = "LCGSampler";
+    config.set_full_type("LCGSampler");
     config.spp = 9;
     auto sampler = Sampler::create(config);
     auto buffer = device->allocate_buffer<Sampler>(1);
