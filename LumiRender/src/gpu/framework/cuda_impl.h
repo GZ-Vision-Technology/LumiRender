@@ -67,7 +67,7 @@ namespace luminous {
 
             size_t size() const override;
 
-            void *address(size_t offset = 0) const override;
+            void *address(size_t offset) const override;
 
             void memset(uint32_t val) override;
 
