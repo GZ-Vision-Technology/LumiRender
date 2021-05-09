@@ -45,8 +45,8 @@ namespace luminous {
 
         void MegakernelPT::render() {
             auto res = _camera->resolution();
-            _launch_params->frame_index += 1;
             _scene->launch(res, _launch_params);
+            _launch_params->frame_index += 1;
         }
 
         void MegakernelPT::synchronize_to_gpu() {

@@ -29,18 +29,18 @@ GLOBAL __raygen__rg() {
     Sensor *camera = params.camera;
     Film *film = camera->film();
     Sampler sampler = *params.sampler;
-    sampler.start_pixel_sample(pixel, params.frame_index, 0);
+    auto frame_index = params.frame_index;
+    sampler.start_pixel_sample(pixel, frame_index, 0);
     auto ss = sampler.sensor_sample(pixel);
 
     Ray ray;
-    camera->generate_ray(ss, &ray);
+    float weight = camera->generate_ray(ss, &ray);
     PerRayData prd;
 
     Spectrum L = Li(ray, params.traversable_handle, sampler,
                     params.max_depth , params.rr_threshold, pixel.x == 62 && pixel.y == 140);
 
-    film->add_sample(pixel, L, 1, params.frame_index);
-
+    film->add_sample(pixel, L, weight, frame_index);
 }
 
 GLOBAL __miss__radiance() {
