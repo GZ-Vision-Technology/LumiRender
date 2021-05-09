@@ -30,19 +30,6 @@ namespace luminous {
             return lls;
         }
 
-        lstd::optional<LightLiSample> AreaLight::sample_Li(float2 u, LightLiSample lls,
-                                                           uint64_t traversable_handle,
-                                                           const HitGroupData *hit_group_data) const {
-            lls.p_light = sample(u, hit_group_data);
-            Ray ray = lls.p_ref.spawn_ray_to(lls.p_light);
-            bool occluded = intersect_any(traversable_handle, ray);
-            if (occluded) {
-                return {};
-            }
-            lls = Li(lls);
-            return lls;
-        }
-
         float AreaLight::PDF_dir(const Interaction &p_ref, const SurfaceInteraction &p_light) const {
             float3 wo = p_ref.pos - p_light.pos;
             float PDF = luminous::PDF_dir(p_light.PDF_pos, p_light.g_uvn.normal, wo);

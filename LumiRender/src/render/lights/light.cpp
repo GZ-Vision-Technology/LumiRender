@@ -24,7 +24,14 @@ namespace luminous {
 
         lstd::optional<LightLiSample> Light::sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
                                                        const HitGroupData *hit_group_data) const {
-            LUMINOUS_VAR_DISPATCH(sample_Li, u, lls, traversable_handle, hit_group_data);
+            lls.p_light = sample(u, hit_group_data);
+            Ray ray = lls.p_ref.spawn_ray_to(lls.p_light);
+            bool occluded = intersect_any(traversable_handle, ray);
+            if (occluded) {
+                return {};
+            }
+            lls = Li(lls);
+            return lls;
         }
 
         Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
