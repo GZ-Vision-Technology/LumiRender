@@ -39,10 +39,10 @@ namespace luminous {
             if (op_lls && op_lls->has_contribution()) {
                 bsdf_val = bsdf.eval(si.wo, op_lls->wi);
                 bsdf_PDF = bsdf.PDF(si.wo, op_lls->wi);
-                Li = lls.L;
-                light_PDF = lls.PDF_dir;
+                Li = op_lls->L;
+                light_PDF = op_lls->PDF_dir;
                 if (bsdf_val.not_black() && bsdf_PDF != 0) {
-                    Ray ray = si.spawn_ray_to(lls.p_light);
+                    Ray ray = si.spawn_ray_to(op_lls->p_light);
                     bool occluded = intersect_any(traversable_handle, ray);
                     if (occluded) {
                         Li = 0;
