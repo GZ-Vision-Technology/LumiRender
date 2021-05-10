@@ -87,7 +87,7 @@ void test_managed() {
     auto kernel = cudaModule->get_kernel("test_sampler2");
 
     auto config = SamplerConfig();
-    config.type = "PCGSampler";
+    config.set_full_type("PCGSampler");
     config.spp = 9;
     auto sampler = Sampler::create(config);
     auto buffer = device->allocate_buffer<Sampler>(1);

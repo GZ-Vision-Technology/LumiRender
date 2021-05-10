@@ -69,9 +69,14 @@ namespace luminous {
             _pipeline_compile_options.numPayloadValues = 3;
             _pipeline_compile_options.numAttributeValues = 4;
             // OPTIX_EXCEPTION_FLAG_NONE;
+#ifndef NDEBUG
             _pipeline_compile_options.exceptionFlags =
                     (OPTIX_EXCEPTION_FLAG_STACK_OVERFLOW | OPTIX_EXCEPTION_FLAG_TRACE_DEPTH |
                      OPTIX_EXCEPTION_FLAG_DEBUG);
+#else
+            _pipeline_compile_options.exceptionFlags =
+                    (OPTIX_EXCEPTION_FLAG_STACK_OVERFLOW | OPTIX_EXCEPTION_FLAG_TRACE_DEPTH);
+#endif
             _pipeline_compile_options.pipelineLaunchParamsVariableName = "params";
 
             char log[2048];
