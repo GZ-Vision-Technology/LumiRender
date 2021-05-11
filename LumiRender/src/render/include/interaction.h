@@ -164,9 +164,9 @@ namespace luminous {
                 return closest_hit.is_hit();
             }
 
-            NDSC_XPU const HitGroupData *get_hit_group_data() const;
+            NDSC_XPU const HitGroupData *hit_group_data() const;
 
-            NDSC_XPU const MissData *get_miss_data() const;
+            NDSC_XPU const MissData *miss_data() const;
 
             NDSC_XPU SurfaceInteraction get_surface_interaction() const;
         };

@@ -35,9 +35,9 @@ namespace luminous {
             return lls;
         }
 
-        Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
-                                                 uint64_t traversable_handle, const HitGroupData *hit_group_data,
-                                                 NEEData *NEE_data) const {
+
+        Spectrum Light::MIS_sample_light(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
+                                         uint64_t traversable_handle, const HitGroupData *hit_group_data) const {
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
             Spectrum Ld(0.f);
@@ -52,18 +52,26 @@ namespace luminous {
                 if (bsdf_val.not_black() && bsdf_PDF != 0) {
                     if (Li.not_black()) {
                         if (is_delta()) {
-                            Ld += bsdf_val * Li / light_PDF;
+                            Ld = bsdf_val * Li / light_PDF;
                         } else {
                             float weight = MIS_weight(light_PDF, bsdf_PDF);
-                            Ld += bsdf_val * Li * weight / light_PDF;
+                            Ld = bsdf_val * Li * weight / light_PDF;
                         }
                     }
                 }
             }
+            return Ld;
+        }
 
-
+        Spectrum Light::MIS_sample_BSDF(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
+                                        uint64_t traversable_handle, const HitGroupData *hit_group_data,
+                                        NEEData *NEE_data) const {
+            Spectrum Ld(0.f);
+            float light_PDF = 0, bsdf_PDF = 0;
+            Spectrum bsdf_val(0.f), Li(0.f);
+            LightLiSample lls;
+            lls.p_ref = (const Interaction &) si;
             auto bsdf_sample = bsdf.sample_f(si.wo, sampler.next_1d(), sampler.next_2d());
-
             if (bsdf_sample) {
                 NEE_data->wi = bsdf_sample->wi;
                 NEE_data->bsdf_val = bsdf_sample->f_val;
@@ -78,11 +86,19 @@ namespace luminous {
                         light_PDF = PDF_dir(si, NEE_data->next_si);
                         float weight = MIS_weight(bsdf_PDF, light_PDF);
                         Li = NEE_data->next_si.Le(-NEE_data->wi);
-                        Ld += bsdf_val * Li * weight / bsdf_PDF;
+                        Ld = bsdf_val * Li * weight / bsdf_PDF;
                     }
                 }
             }
             return Ld;
+        }
+
+        Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
+                                                 uint64_t traversable_handle, const HitGroupData *hit_group_data,
+                                                 NEEData *NEE_data) const {
+
+            Spectrum Ld = MIS_sample_light(si, bsdf, sampler, traversable_handle, hit_group_data);
+            return Ld + MIS_sample_BSDF(si, bsdf, sampler, traversable_handle, hit_group_data, NEE_data);
         }
 
         bool Light::is_delta() const {
@@ -100,6 +116,7 @@ namespace luminous {
         Light Light::create(const LightConfig &config) {
             return detail::create<Light>(config);
         }
+
 
     } // luminous::render
 } // luminous
