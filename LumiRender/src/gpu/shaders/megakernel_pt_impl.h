@@ -43,7 +43,7 @@ GLOBAL __raygen__rg() {
 GLOBAL __miss__radiance() {
     luminous::PerRayData *prd = getPRD();
     const auto &data = getSbtData<luminous::MissData>();
-    prd->miss_data = &data;
+    prd->data = &data;
 }
 
 GLOBAL __miss__shadow() {
@@ -54,7 +54,7 @@ GLOBAL __closesthit__radiance() {
     using namespace luminous;
     PerRayData *prd = getPRD();
     const HitGroupData &data = getSbtData<HitGroupData>();
-    prd->hit_group_data = &data;
+    prd->data = &data;
     prd->closest_hit = getClosestHit();
 }
 

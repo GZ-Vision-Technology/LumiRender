@@ -14,13 +14,21 @@ namespace luminous {
             return has_emission() ? light->get<AreaLight>()->L(*this, w) : 0.f;
         }
 
+        const HitGroupData *PerRayData::get_hit_group_data() const {
+            return reinterpret_cast<const HitGroupData *>(data);
+        }
+
+        const MissData *PerRayData::get_miss_data() const {
+            return reinterpret_cast<const MissData *>(data);
+        }
+
         SurfaceInteraction PerRayData::get_surface_interaction() const {
-            auto si = hit_group_data->compute_surface_interaction(closest_hit);
+            auto si = get_hit_group_data()->compute_surface_interaction(closest_hit);
             si.wo = normalize(-ray_dir);
             return si;
         }
 
-        lstd::optional<BSDF> SurfaceInteraction::get_BSDF(const HitGroupData * hit_group_data) const {
+        lstd::optional<BSDF> SurfaceInteraction::get_BSDF(const HitGroupData *hit_group_data) const {
             if (!has_material()) {
                 return {};
             }

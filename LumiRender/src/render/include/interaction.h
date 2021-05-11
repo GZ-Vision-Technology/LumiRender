@@ -141,7 +141,7 @@ namespace luminous {
 
             NDSC_XPU Spectrum Le(float3 w) const;
 
-            NDSC_XPU lstd::optional<BSDF> get_BSDF(const HitGroupData * hit_group_data) const;
+            NDSC_XPU lstd::optional<BSDF> get_BSDF(const HitGroupData *hit_group_data) const;
         };
 
         struct NEEData {
@@ -156,14 +156,17 @@ namespace luminous {
         struct PerRayData {
             ClosestHit closest_hit;
             float3 ray_dir{make_float3(0.f)};
-            const HitGroupData *hit_group_data{nullptr};
-            const MissData *miss_data{nullptr};
+            const void *data{nullptr};
 
             PerRayData() = default;
 
             NDSC_XPU_INLINE bool is_hit() const {
-                return hit_group_data != nullptr;
+                return closest_hit.is_hit();
             }
+
+            NDSC_XPU const HitGroupData *get_hit_group_data() const;
+
+            NDSC_XPU const MissData *get_miss_data() const;
 
             NDSC_XPU SurfaceInteraction get_surface_interaction() const;
         };
