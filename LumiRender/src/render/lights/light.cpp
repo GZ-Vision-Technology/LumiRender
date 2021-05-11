@@ -4,7 +4,8 @@
 
 #include "light.h"
 #include "render/include/creator.h"
-//#include "render/include/interaction.cpp"
+#include "render/include/trace.h"
+
 
 namespace luminous {
     inline namespace render {

@@ -48,7 +48,7 @@ static GPU_INLINE luminous::PerRayData *getPRD() {
 template<typename... Args>
 static GPU_INLINE void trace(OptixTraversableHandle handle,
                              luminous::Ray ray,
-                             OptixRayFlags flags,
+                             uint32_t flags,
                              uint32_t SBToffset,
                              uint32_t SBTstride,
                              uint32_t missSBTIndex,
@@ -75,7 +75,7 @@ static GPU_INLINE bool traceRadiance(OptixTraversableHandle handle,
                                      luminous::Ray ray, luminous::PerRayData *prd) {
     unsigned int u0, u1;
     packPointer(prd, u0, u1);
-    trace(handle, ray, OPTIX_RAY_FLAG_NONE,
+    trace(handle, ray, OPTIX_RAY_FLAG_DISABLE_ANYHIT,
           luminous::RayType::Radiance,        // SBT offset
           luminous::RayType::Count,           // SBT stride
           luminous::RayType::Radiance,        // missSBTIndex
@@ -84,8 +84,10 @@ static GPU_INLINE bool traceRadiance(OptixTraversableHandle handle,
 }
 
 static GPU_INLINE bool traceOcclusion(OptixTraversableHandle handle, luminous::Ray ray) {
-    unsigned int occluded = 0u;
-    trace(handle, ray, OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT,
+    unsigned int occluded = 1u;
+    trace(handle, ray, OPTIX_RAY_FLAG_DISABLE_ANYHIT
+                       | OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT
+                       | OPTIX_RAY_FLAG_DISABLE_CLOSESTHIT,
           luminous::RayType::Occlusion,        // SBT offset
           luminous::RayType::Count,           // SBT stride
           luminous::RayType::Occlusion,        // missSBTIndex

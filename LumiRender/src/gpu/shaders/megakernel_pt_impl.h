@@ -47,7 +47,7 @@ GLOBAL __miss__radiance() {
 }
 
 GLOBAL __miss__shadow() {
-
+    setPayloadOcclusion(false);
 }
 
 GLOBAL __closesthit__radiance() {

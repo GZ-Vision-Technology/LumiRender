@@ -6,7 +6,7 @@
 #pragma once
 
 #include "light_base.h"
-#include "render/include/trace.h"
+
 
 namespace luminous {
     inline namespace render {
