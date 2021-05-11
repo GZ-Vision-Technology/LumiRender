@@ -153,6 +153,10 @@ namespace luminous {
             bool debug = false;
         };
 
+        struct PRD {
+            SurfaceInteraction si;
+        };
+
         struct PerRayData {
             ClosestHit closest_hit;
             float3 ray_dir{make_float3(0.f)};
