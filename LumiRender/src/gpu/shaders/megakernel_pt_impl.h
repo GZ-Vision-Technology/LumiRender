@@ -23,6 +23,12 @@ __constant__ luminous::LaunchParams
 params;
 }
 
+XPU_INLINE luminous::Spectrum megakernel_pt_Li(luminous::Ray ray, uint64_t scene_handle,
+                                               luminous::Sampler &sampler, uint32_t max_depth,
+                                               float rr_threshold, bool debug = false) {
+
+}
+
 GLOBAL __raygen__rg() {
     using namespace luminous;
     luminous::uint2 pixel = getPixelCoords();
@@ -36,7 +42,7 @@ GLOBAL __raygen__rg() {
     Ray ray;
     float weight = camera->generate_ray(ss, &ray);
     Spectrum L = Li(ray, params.traversable_handle, sampler,
-                    params.max_depth , params.rr_threshold, debug);
+                    params.max_depth, params.rr_threshold, debug);
     film->add_sample(pixel, L, weight, frame_index);
 }
 

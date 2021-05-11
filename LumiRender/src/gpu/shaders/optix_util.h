@@ -39,10 +39,11 @@ static GPU_INLINE const T &getSbtData() {
     return *reinterpret_cast<T *>(optixGetSbtDataPointer());
 }
 
-static GPU_INLINE luminous::PerRayData *getPRD() {
+template<typename T = luminous::PerRayData>
+static GPU_INLINE T *getPRD() {
     const unsigned int u0 = optixGetPayload_0();
     const unsigned int u1 = optixGetPayload_1();
-    return reinterpret_cast<luminous::PerRayData *>(unpackPointer(u0, u1));
+    return reinterpret_cast<T *>(unpackPointer(u0, u1));
 }
 
 template<typename... Args>
