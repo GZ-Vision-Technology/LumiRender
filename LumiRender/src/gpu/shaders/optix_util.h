@@ -100,6 +100,16 @@ static GPU_INLINE luminous::float2 getTriangleBarycentric() {
     return luminous::make_float2(1 - barycentric.y - barycentric.x, barycentric.x);
 }
 
+static GPU_INLINE luminous::Ray getRayInWorld() {
+    float3 d = optixGetWorldRayDirection();
+    auto dir = luminous::make_float3(d.x, d.y, d.z);
+    float3 o = optixGetWorldRayOrigin();
+    auto org = luminous::make_float3(o.x, o.y, o.z);
+    float t_min = optixGetRayTmin();
+    float t_max = optixGetRayTmax();
+    return luminous::Ray(org, dir, t_min, t_max);
+}
+
 static GPU_INLINE uint32_t getInstanceId() {
     return optixGetInstanceId();
 }
