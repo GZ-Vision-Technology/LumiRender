@@ -65,7 +65,7 @@ namespace luminous {
         }
 
         Spectrum Light::MIS_sample_BSDF(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
-                                        uint64_t traversable_handle, const HitGroupData *hit_group_data,
+                                        uint64_t traversable_handle,
                                         NEEData *NEE_data) const {
             Spectrum Ld(0.f);
             float light_PDF = 0, bsdf_PDF = 0;
@@ -99,7 +99,7 @@ namespace luminous {
                                                  NEEData *NEE_data) const {
 
             Spectrum Ld = MIS_sample_light(si, bsdf, sampler, traversable_handle, hit_group_data);
-            return Ld + MIS_sample_BSDF(si, bsdf, sampler, traversable_handle, hit_group_data, NEE_data);
+            return Ld + MIS_sample_BSDF(si, bsdf, sampler, traversable_handle, NEE_data);
         }
 
         bool Light::is_delta() const {

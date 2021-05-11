@@ -44,11 +44,11 @@ namespace luminous {
 
             NDSC_XPU Spectrum MIS_sample_BSDF(const SurfaceInteraction &si, const BSDF &bsdf,
                                               Sampler &sampler, uint64_t traversable_handle,
-                                              const HitGroupData *hit_group_data, NEEData * NEE_data) const;
+                                              NEEData *NEE_data) const;
 
             NDSC_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf,
                                                        Sampler &sampler, uint64_t traversable_handle,
-                                                       const HitGroupData *hit_group_data, NEEData * NEE_data) const;
+                                                       const HitGroupData *hit_group_data, NEEData *NEE_data) const;
 
             NDSC_XPU float PDF_dir(const Interaction &ref_p, const SurfaceInteraction &p_light) const;
 
