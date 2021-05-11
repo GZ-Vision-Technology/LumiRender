@@ -50,11 +50,6 @@ namespace luminous {
                 Li = op_lls->L;
                 light_PDF = op_lls->PDF_dir;
                 if (bsdf_val.not_black() && bsdf_PDF != 0) {
-                    Ray ray = si.spawn_ray_to(op_lls->p_light);
-                    bool occluded = intersect_any(traversable_handle, ray);
-                    if (occluded) {
-                        Li = 0;
-                    }
                     if (Li.not_black()) {
                         if (is_delta()) {
                             Ld += bsdf_val * Li / light_PDF;
