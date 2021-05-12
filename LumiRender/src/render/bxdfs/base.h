@@ -9,6 +9,7 @@
 #include "graphics/sampling/warp.h"
 #include "graphics/geometry/common.h"
 #include "graphics/lstd/lstd.h"
+#include "graphics/optics/rgb.h"
 
 namespace luminous {
     inline namespace render {

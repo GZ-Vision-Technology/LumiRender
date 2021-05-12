@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "render/include/interaction.h"
 #include "render/bxdfs/bxdf.h"
+#include "graphics/optics/rgb.h"
 
 namespace luminous {
     inline namespace render {
@@ -23,49 +23,23 @@ namespace luminous {
                     : _ng(ng), _shading_frame(Frame::from_xz(dp_dus, ns)), _bxdf(bxdf) {}
 
             NDSC_XPU Spectrum eval(float3 wo_world, float3 wi_world,
-                                 TransportMode mode = TransportMode::Radiance) const {
-                float3 wo = to_local(wo_world);
-                float3 wi = to_local(wi_world);
-                if (wo.z == 0) {
-                    return make_float4(0);
-                }
-                return _bxdf.eval(wo, wi, mode) * abs_dot(_shading_frame.z, wi_world);
-            }
+                                 TransportMode mode = TransportMode::Radiance) const;
 
             NDSC_XPU float PDF(float3 wo_world, float3 wi_world,
                                TransportMode mode = TransportMode::Radiance,
-                               BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
-                float3 wo = to_local(wo_world);
-                float3 wi = to_local(wi_world);
-                return _bxdf.PDF(wo, wi, mode, sample_flags);
-            }
+                               BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
 
             NDSC_XPU lstd::optional<BSDFSample> sample_f(float3 world_wo, float uc, float2 u,
                                                          TransportMode mode = TransportMode::Radiance,
-                                                         BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
-                float3 local_wo = to_local(world_wo);
-                auto ret = _bxdf.sample_f(local_wo, uc, u, mode, sample_flags);
-                if (ret) {
-                    ret->wi = to_world(ret->wi);
-                    ret->f_val *= abs_dot(_shading_frame.z, ret->wi);
-                }
-                return ret;
-            }
+                                                         BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
 
-            NDSC_XPU float4 base_color() const {
-                return _bxdf.base_color();
-            }
+            NDSC_XPU float4 base_color() const;
 
             NDSC_XPU Spectrum rho_hd(float3 wo_world, BufferView<const float> uc,
-                                   BufferView<const float2> u2) const {
-                float3 wo = to_local(wo_world);
-                return _bxdf.rho_hd(wo, uc, u2);
-            }
+                                   BufferView<const float2> u2) const;
 
             NDSC_XPU Spectrum rho_hh(BufferView<const float2> u1, BufferView<const float> uc,
-                                   BufferView<const float2> u2) const {
-                return _bxdf.rho_hh(u1, uc, u2);
-            }
+                                   BufferView<const float2> u2) const;
 
             NDSC_XPU float3 to_local(float3 val) const {
                 return _shading_frame.to_local(val);
