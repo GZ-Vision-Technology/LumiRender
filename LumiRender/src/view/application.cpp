@@ -24,6 +24,9 @@ namespace luminous {
 
     /*! callback for a window resizing event */
     static void glfw_resize(GLFWwindow *window, int width, int height) {
+        if (width <= 0 || height <= 0) {
+            return;
+        }
         get_user_ptr(window)->on_resize(make_uint2(width, height));
     }
 

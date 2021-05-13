@@ -154,6 +154,7 @@ namespace luminous {
 
         CUDABuffer::CUDABuffer(size_t bytes)
                 : _size_in_bytes(bytes) {
+            DCHECK_GT(bytes, 0)
             CU_CHECK(cuMemAlloc(&_ptr, bytes));
         }
 
