@@ -8,6 +8,7 @@
 
 #include "base.h"
 #include "graphics/optics/rgb.h"
+#include "core/logging.h"
 
 namespace luminous {
     inline namespace render {

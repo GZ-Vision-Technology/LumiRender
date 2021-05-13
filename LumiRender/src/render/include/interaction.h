@@ -10,7 +10,7 @@
 #include "graphics/geometry/util.h"
 #include "graphics/optics/rgb.h"
 #include "graphics/lstd/lstd.h"
-//#include "render/bxdfs/bsdf.h"
+#include "render/bxdfs/bsdf.h"
 
 namespace luminous {
     inline namespace render {
@@ -117,8 +117,6 @@ namespace luminous {
 
         class Light;
 
-        class BSDF;
-
         class HitGroupData;
 
         class MissData;
@@ -129,6 +127,7 @@ namespace luminous {
             float PDF_pos = 0;
             float prim_area = 0;
             const Light *light = nullptr;
+            lstd::optional<BSDF> op_bsdf{};
             const Material *material = nullptr;
             float du_dx = 0, dv_dx = 0, du_dy = 0, dv_dy = 0;
 
@@ -143,6 +142,10 @@ namespace luminous {
             NDSC_XPU Spectrum Le(float3 w) const;
 
             NDSC_XPU lstd::optional<BSDF> get_BSDF(const HitGroupData *hit_group_data) const;
+
+            XPU_INLINE void init_BSDF(const HitGroupData *hit_group_data) {
+                op_bsdf = get_BSDF(hit_group_data);
+            }
         };
 
         struct NEEData {
