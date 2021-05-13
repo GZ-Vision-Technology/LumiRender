@@ -20,6 +20,7 @@ namespace luminous {
             GEN_BASE_NAME(Material)
 
             NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const HitGroupData *hit_group_data) const {
+
                 LUMINOUS_VAR_DISPATCH(get_BSDF, ctx, hit_group_data)
             }
 

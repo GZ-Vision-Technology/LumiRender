@@ -10,6 +10,7 @@
 #include "graphics/geometry/util.h"
 #include "graphics/optics/rgb.h"
 #include "graphics/lstd/lstd.h"
+//#include "render/bxdfs/bsdf.h"
 
 namespace luminous {
     inline namespace render {
