@@ -55,7 +55,6 @@ namespace luminous {
                 Spectrum Ld = light_sampler->estimate_direct_lighting(si, si.op_bsdf.value(), sampler,
                                                                       scene_handle,
                                                                       prd.hit_group_data(), &NEE_data);
-
                 found_intersection = NEE_data.found_intersection;
                 Spectrum bsdf_ei = NEE_data.bsdf_val / NEE_data.bsdf_PDF;
                 throughput *= bsdf_ei;

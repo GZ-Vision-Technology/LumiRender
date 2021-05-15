@@ -70,8 +70,6 @@ namespace luminous {
             Spectrum Ld(0.f);
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
-            LightLiSample lls;
-            lls.p_ref = (const Interaction &) si;
             auto bsdf_sample = bsdf.sample_f(si.wo, sampler.next_1d(), sampler.next_2d());
             if (bsdf_sample) {
                 NEE_data->wi = bsdf_sample->wi;
