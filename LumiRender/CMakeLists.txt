@@ -33,6 +33,15 @@ add_library(assimp_config INTERFACE)
 target_link_libraries(assimp_config INTERFACE assimp::assimp)
 set_target_properties(assimp PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/")
 
+set(EMBREE_ISPC_SUPPORT OFF CACHE BOOL "" FORCE)
+set(EMBREE_TUTORIALS OFF CACHE BOOL "" FORCE)
+#set_property(EMBREE_TUTORIALS OFF)
+
+add_subdirectory(thirdparty/embree)
+add_library(embree_config INTERFACE)
+target_link_libraries(embree_config INTERFACE embree::embree)
+set_target_properties(embree PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/")
+
 set(CMAKE_DEBUG_POSTFIX "")
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
