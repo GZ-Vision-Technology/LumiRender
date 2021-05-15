@@ -38,7 +38,7 @@ namespace luminous {
         for (bounces = 0; bounces < max_depth; ++bounces) {
             if (bounces == 0) {
                 if (found_intersection) {
-                    si = prd.get_surface_interaction();
+                    si = prd.si;
                     L += throughput * si.Le(-ray.direction());
                 } else {
                     // nothing to do

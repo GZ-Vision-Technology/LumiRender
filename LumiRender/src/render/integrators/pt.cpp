@@ -43,9 +43,8 @@ namespace luminous {
                 }
 
                 BREAK_IF(!found_intersection)
-                si.init_BSDF(prd.hit_group_data());
                 auto op_bsdf = si.op_bsdf;
-                if (!op_bsdf) {
+                if (!si.op_bsdf) {
                     ray = si.spawn_ray(ray.direction());
                     --bounces;
                     continue;

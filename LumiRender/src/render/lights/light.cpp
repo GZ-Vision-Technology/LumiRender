@@ -84,7 +84,7 @@ namespace luminous {
                     PerRayData prd;
                     prd.sampler = &sampler;
                     NEE_data->found_intersection = intersect_closest(traversable_handle, ray, &prd);
-                    if (prd.is_hit() && (NEE_data->next_si = prd.get_surface_interaction()).light == this) {
+                    if (prd.is_hit() && (NEE_data->next_si = prd.si).light == this) {
                         light_PDF = PDF_dir(si, NEE_data->next_si);
                         float weight = MIS_weight(bsdf_PDF, light_PDF);
                         Li = NEE_data->next_si.Le(-NEE_data->wi);
