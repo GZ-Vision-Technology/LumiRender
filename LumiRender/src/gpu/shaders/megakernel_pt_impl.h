@@ -86,10 +86,10 @@ GLOBAL __closesthit__radiance() {
     prd->data = &data;
     prd->closest_hit = getClosestHit();
 
-//    prd->init_surface_interaction(&data);
-//    Sampler *sampler = prd->sampler;
-//    SurfaceInteraction &si = prd->si;
-//    si.init_BSDF(&data);
+    prd->init_surface_interaction(&data);
+    Sampler *sampler = prd->sampler;
+    SurfaceInteraction &si = prd->si;
+    si.init_BSDF(&data);
 //    const LightSampler *light_sampler = data.light_sampler;
 //    auto op_sampled_light = light_sampler->sample(si, sampler->next_1d());
 //    if (op_sampled_light) {

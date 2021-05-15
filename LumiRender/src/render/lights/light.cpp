@@ -82,6 +82,7 @@ namespace luminous {
                     bsdf_val = bsdf_sample->f_val;
                     Ray ray = si.spawn_ray(NEE_data->wi);
                     PerRayData prd;
+                    prd.sampler = &sampler;
                     NEE_data->found_intersection = intersect_closest(traversable_handle, ray, &prd);
                     if (prd.is_hit() && (NEE_data->next_si = prd.get_surface_interaction()).light == this) {
                         light_PDF = PDF_dir(si, NEE_data->next_si);

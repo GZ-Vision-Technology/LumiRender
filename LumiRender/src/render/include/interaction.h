@@ -165,7 +165,7 @@ namespace luminous {
             const void *data{nullptr};
 
             SurfaceInteraction si;
-            const Sampler *sampler{nullptr};
+            Sampler *sampler{nullptr};
             Spectrum Ld_sample_light{0.f};
             float light_PMF{0.f};
 

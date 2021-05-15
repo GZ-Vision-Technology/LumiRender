@@ -35,7 +35,7 @@ namespace luminous {
             for (bounces = 0; bounces < max_depth; ++bounces) {
                 if (bounces == 0) {
                     if (found_intersection) {
-                        si = prd.get_surface_interaction();
+                        si = prd.si;
                         L += throughput * si.Le(-ray.direction());
                     } else {
                         // nothing to do
@@ -43,8 +43,8 @@ namespace luminous {
                 }
 
                 BREAK_IF(!found_intersection)
-
-                auto op_bsdf = si.get_BSDF(prd.hit_group_data());
+                si.init_BSDF(prd.hit_group_data());
+                auto op_bsdf = si.op_bsdf;
                 if (!op_bsdf) {
                     ray = si.spawn_ray(ray.direction());
                     --bounces;
