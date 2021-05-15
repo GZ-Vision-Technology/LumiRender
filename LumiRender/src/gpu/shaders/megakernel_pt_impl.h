@@ -23,11 +23,34 @@ __constant__ luminous::LaunchParams
 params;
 }
 
-XPU_INLINE luminous::Spectrum megakernel_pt_Li(luminous::Ray ray, uint64_t scene_handle,
-                                               luminous::Sampler &sampler, uint32_t max_depth,
-                                               float rr_threshold, bool debug = false) {
+namespace luminous {
 
+    XPU_INLINE Spectrum megakernel_pt_Li(luminous::Ray ray, uint64_t scene_handle,
+                                         luminous::Sampler &sampler, uint32_t max_depth,
+                                         float rr_threshold, bool debug = false) {
+        PerRayData prd;
+        prd.sampler = &sampler;
+        Spectrum L(0.f);
+        Spectrum throughput(1.f);
+        SurfaceInteraction si;
+        int bounces;
+        bool found_intersection = luminous::intersect_closest(scene_handle, ray, &prd);
+        for (bounces = 0; bounces < max_depth; ++bounces) {
+            if (bounces == 0) {
+                if (found_intersection) {
+                    si = prd.get_surface_interaction();
+                    L += throughput * si.Le(-ray.direction());
+                } else {
+                    // nothing to do
+                }
+            }
+            BREAK_IF(!found_intersection)
+
+        }
+        return L;
+    }
 }
+
 
 GLOBAL __raygen__rg() {
     using namespace luminous;
@@ -62,6 +85,18 @@ GLOBAL __closesthit__radiance() {
     const HitGroupData &data = getSbtData<HitGroupData>();
     prd->data = &data;
     prd->closest_hit = getClosestHit();
+
+//    prd->init_surface_interaction(&data);
+//    Sampler *sampler = prd->sampler;
+//    SurfaceInteraction &si = prd->si;
+//    si.init_BSDF(&data);
+//    const LightSampler *light_sampler = data.light_sampler;
+//    auto op_sampled_light = light_sampler->sample(si, sampler->next_1d());
+//    if (op_sampled_light) {
+//        auto light = op_sampled_light->light;
+//        prd->light_PMF = op_sampled_light->PMF;
+//        prd->Ld_sample_light = light.MIS_sample_light()
+//    }
 }
 
 GLOBAL __closesthit__occlusion() {

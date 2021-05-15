@@ -157,20 +157,25 @@ namespace luminous {
             bool debug = false;
         };
 
-        struct PRD {
-            SurfaceInteraction si;
-        };
+        class Sampler;
 
         struct PerRayData {
             ClosestHit closest_hit;
             float3 ray_dir{make_float3(0.f)};
             const void *data{nullptr};
 
+            SurfaceInteraction si;
+            const Sampler *sampler{nullptr};
+            Spectrum Ld_sample_light{0.f};
+            float light_PMF{0.f};
+
             PerRayData() = default;
 
             NDSC_XPU_INLINE bool is_hit() const {
                 return closest_hit.is_hit();
             }
+
+            NDSC_XPU void init_surface_interaction(const HitGroupData *data);
 
             NDSC_XPU const HitGroupData *hit_group_data() const;
 

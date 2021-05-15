@@ -28,6 +28,11 @@ namespace luminous {
             return si;
         }
 
+        void PerRayData::init_surface_interaction(const HitGroupData *data) {
+            si = hit_group_data()->compute_surface_interaction(closest_hit);
+            si.wo = normalize(-ray_dir);
+        }
+
         lstd::optional<BSDF> SurfaceInteraction::get_BSDF(const HitGroupData *hit_group_data) const {
             if (!has_material()) {
                 return {};

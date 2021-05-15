@@ -13,11 +13,7 @@ namespace luminous {
     inline namespace render {
         struct SampledLight {
             Light light;
-            float PMF{-1.f};
-
-            XPU bool valid() const {
-                return PMF != -1.f;
-            }
+            float PMF{0.f};
 
             XPU SampledLight() = default;
 
