@@ -10,3 +10,6 @@
 [submodule "LumiRender/thirdparty/assimp"]
 	path = LumiRender/thirdparty/assimp
 	url = https://github.com/assimp/assimp.git
+[submodule "LumiRender/thirdparty/embree"]
+	path = LumiRender/thirdparty/embree
+	url = https://github.com/embree/embree.git
