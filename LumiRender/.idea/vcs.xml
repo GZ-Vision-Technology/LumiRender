@@ -4,6 +4,7 @@
     <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
     <mapping directory="$PROJECT_DIR$/thirdparty/assimp" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/thirdparty/cxxopts" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/thirdparty/embree" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/thirdparty/jitify" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/thirdparty/spdlog" vcs="Git" />
   </component>

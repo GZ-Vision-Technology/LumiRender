@@ -35,7 +35,6 @@ set_target_properties(assimp PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY
 
 set(EMBREE_ISPC_SUPPORT OFF CACHE BOOL "" FORCE)
 set(EMBREE_TUTORIALS OFF CACHE BOOL "" FORCE)
-#set_property(EMBREE_TUTORIALS OFF)
 
 add_subdirectory(thirdparty/embree)
 add_library(embree_config INTERFACE)
