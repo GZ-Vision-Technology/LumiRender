@@ -38,7 +38,7 @@ namespace luminous {
 
             NDSC_XPU lstd::optional<SampledLight> sample(const LightSampleContext &ctx, float u) const;
 
-            NDSC_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf,
+            NDSC_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si,  BSDF bsdf,
                                                      Sampler &sampler, uint64_t traversable_handle,
                                                      const HitGroupData *hit_group_data, NEEData *NEE_data) const;
 

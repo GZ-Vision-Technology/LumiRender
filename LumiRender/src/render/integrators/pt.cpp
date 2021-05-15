@@ -43,16 +43,16 @@ namespace luminous {
                 }
 
                 BREAK_IF(!found_intersection)
-                auto op_bsdf = si.op_bsdf;
                 if (!si.op_bsdf) {
                     ray = si.spawn_ray(ray.direction());
                     --bounces;
                     continue;
                 }
+
                 const LightSampler *light_sampler = prd.hit_group_data()->light_sampler;
                 NEEData NEE_data;
                 NEE_data.debug = debug;
-                Spectrum Ld = light_sampler->estimate_direct_lighting(si, op_bsdf.value(), sampler,
+                Spectrum Ld = light_sampler->estimate_direct_lighting(si, si.op_bsdf.value(), sampler,
                                                                       scene_handle,
                                                                       prd.hit_group_data(), &NEE_data);
 
