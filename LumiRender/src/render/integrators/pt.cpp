@@ -29,6 +29,7 @@ namespace luminous {
             Spectrum L(0.f);
             Spectrum throughput(1.f);
             SurfaceInteraction si;
+            prd.sampler = &sampler;
             int bounces;
             bool found_intersection = luminous::intersect_closest(scene_handle, ray, &prd);
 

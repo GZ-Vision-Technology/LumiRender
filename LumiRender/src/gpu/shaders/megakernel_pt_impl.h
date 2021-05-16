@@ -36,15 +36,19 @@ namespace luminous {
         int bounces;
         bool found_intersection = luminous::intersect_closest(scene_handle, ray, &prd);
         for (bounces = 0; bounces < max_depth; ++bounces) {
+            si = prd.si;
             if (bounces == 0) {
                 if (found_intersection) {
-                    si = prd.si;
                     L += throughput * si.Le(-ray.direction());
                 } else {
                     // nothing to do
                 }
             }
             BREAK_IF(!found_intersection)
+
+            Spectrum Ld(0.f);
+            Ld = prd.Ld_sample_light;
+            NEEData NEE_data;
 
         }
         return L;
@@ -95,7 +99,9 @@ GLOBAL __closesthit__radiance() {
 //    if (op_sampled_light) {
 //        auto light = op_sampled_light->light;
 //        prd->light_PMF = op_sampled_light->PMF;
-//        prd->Ld_sample_light = light.MIS_sample_light()
+//        BSDF bsdf = si.op_bsdf.value();
+//        prd->Ld_sample_light = light->MIS_sample_light(si, bsdf, *sampler,
+//                                                      params.traversable_handle, &data);
 //    }
 }
 
