@@ -28,6 +28,8 @@ namespace luminous {
 
             NDSC_XPU Spectrum power() const;
 
+            XPU void print() const;
+
             NDSC std::string to_string() const;
 
             static PointLight create(const LightConfig &config);

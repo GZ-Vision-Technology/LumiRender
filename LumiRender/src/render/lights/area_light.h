@@ -13,10 +13,11 @@ namespace luminous {
         class AreaLight : public LightBase {
         private:
             uint _inst_idx;
-            float3 _L;
+
             bool _two_sided;
             float _area;
         public:
+            float3 _L;
             AreaLight(uint inst_idx, float3 L, float area, bool two_sided = false)
                     : LightBase(LightType::Area),
                       _inst_idx(inst_idx),
@@ -33,6 +34,8 @@ namespace luminous {
             NDSC_XPU float PDF_dir(const Interaction &p_ref, const SurfaceInteraction &p_light) const;
 
             NDSC_XPU Spectrum power() const;
+
+            XPU void print() const;
 
             NDSC std::string to_string() const;
 

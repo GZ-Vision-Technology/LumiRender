@@ -113,10 +113,13 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(power);
         }
 
+        void Light::print() const {
+            LUMINOUS_VAR_DISPATCH(print);
+        }
+
         Light Light::create(const LightConfig &config) {
             return detail::create<Light>(config);
         }
-
 
     } // luminous::render
 } // luminous

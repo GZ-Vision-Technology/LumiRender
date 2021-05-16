@@ -23,6 +23,10 @@ namespace luminous {
             return 4 * Pi * _intensity;
         }
 
+        void PointLight::print() const {
+            printf("type:PointLight,L:(%f,%f,%f)\n", _intensity.x, _intensity.y, _intensity.z);
+        }
+
         std::string PointLight::to_string() const {
             LUMINOUS_TO_STRING("light Base : %s, name : %s ,intensity : %s",
                                  _to_string().c_str(),

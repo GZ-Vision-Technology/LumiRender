@@ -54,6 +54,8 @@ namespace luminous {
 
             NDSC_XPU Spectrum power() const;
 
+            XPU void print() const;
+
             static Light create(const LightConfig &config);
         };
     } // luminous::render

@@ -47,6 +47,10 @@ namespace luminous {
             return (_two_sided || dot(w, p_light.g_uvn.normal) > 0) ? _L : make_float3(0.f);
         }
 
+        void AreaLight::print() const {
+            printf("type:AreaLight,L:(%f,%f,%f)\n", _L.x, _L.y, _L.z);
+        }
+
         std::string AreaLight::to_string() const {
             LUMINOUS_TO_STRING("light Base : %s,name:%s, L : %s",
                                _to_string().c_str(),
@@ -57,7 +61,6 @@ namespace luminous {
         AreaLight AreaLight::create(const LightConfig &config) {
             return AreaLight(config.instance_idx, config.emission, config.surface_area);
         }
-
 
     } //luminous::render
 } // luminous::render
