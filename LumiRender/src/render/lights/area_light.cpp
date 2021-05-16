@@ -39,8 +39,12 @@ namespace luminous {
             return PDF;
         }
 
+        float AreaLight::inv_area() const {
+            return _inv_area;
+        }
+
         Spectrum AreaLight::power() const {
-            return (_two_sided ? _2Pi : Pi) * _L * _area;
+            return (_two_sided ? _2Pi : Pi) * _L * (1.f / _inv_area);
         }
 
         Spectrum AreaLight::L(const SurfaceInteraction &p_light, float3 w) const {
@@ -61,6 +65,7 @@ namespace luminous {
         AreaLight AreaLight::create(const LightConfig &config) {
             return AreaLight(config.instance_idx, config.emission, config.surface_area);
         }
+
 
     } //luminous::render
 } // luminous::render

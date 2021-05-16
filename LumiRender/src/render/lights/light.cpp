@@ -83,6 +83,7 @@ namespace luminous {
                     prd.sampler = &sampler;
                     NEE_data->found_intersection = intersect_closest(traversable_handle, ray, &prd);
                     if (prd.is_hit() && (NEE_data->next_si = prd.si).light == this) {
+                        NEE_data->next_si.PDF_pos = get<AreaLight>()->inv_area();
                         light_PDF = PDF_dir(si, NEE_data->next_si);
                         float weight = MIS_weight(bsdf_PDF, light_PDF);
                         Li = NEE_data->next_si.Le(-NEE_data->wi);

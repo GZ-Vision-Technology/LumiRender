@@ -13,19 +13,20 @@ namespace luminous {
         class AreaLight : public LightBase {
         private:
             uint _inst_idx;
-
-            bool _two_sided;
-            float _area;
-        public:
             float3 _L;
+            bool _two_sided;
+            float _inv_area;
+        public:
             AreaLight(uint inst_idx, float3 L, float area, bool two_sided = false)
                     : LightBase(LightType::Area),
                       _inst_idx(inst_idx),
                       _L(L),
-                      _area(area),
+                      _inv_area(1 / area),
                       _two_sided(two_sided) {}
 
             NDSC_XPU Spectrum L(const SurfaceInteraction &p_light, float3 w) const;
+
+            NDSC_XPU float inv_area() const;
 
             NDSC_XPU LightLiSample Li(LightLiSample lls) const;
 
