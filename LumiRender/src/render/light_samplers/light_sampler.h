@@ -30,7 +30,7 @@ namespace luminous {
 
             NDSC_XPU BufferView<const Light> lights() const;
 
-            NDSC_XPU const Light& light_at(uint idx) const;
+            NDSC_XPU const Light &light_at(uint idx) const;
 
             NDSC_XPU size_t light_num();
 
@@ -38,9 +38,9 @@ namespace luminous {
 
             NDSC_XPU SampledLight sample(const LightSampleContext &ctx, float u) const;
 
-            NDSC_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si,  BSDF bsdf,
-                                                     Sampler &sampler, uint64_t traversable_handle,
-                                                     const HitGroupData *hit_group_data, NEEData *NEE_data) const;
+            NDSC_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
+                                                       uint64_t traversable_handle,
+                                                       const HitGroupData *hit_group_data, NEEData *NEE_data) const;
 
             NDSC_XPU float PMF(const Light &light) const;
 

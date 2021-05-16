@@ -37,12 +37,13 @@ namespace luminous {
         }
 
 
-        Spectrum Light::MIS_sample_light(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
+        Spectrum Light::MIS_sample_light(const SurfaceInteraction &si, Sampler &sampler,
                                          uint64_t traversable_handle, const HitGroupData *hit_group_data) const {
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
             Spectrum Ld(0.f);
             LightLiSample lls;
+            auto bsdf = si.op_bsdf.value();
             lls.p_ref = (const Interaction &) si;
             auto op_lls = sample_Li(sampler.next_2d(), lls, traversable_handle, hit_group_data);
             if (op_lls && op_lls->has_contribution()) {
@@ -64,12 +65,13 @@ namespace luminous {
             return Ld;
         }
 
-        Spectrum Light::MIS_sample_BSDF(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
+        Spectrum Light::MIS_sample_BSDF(const SurfaceInteraction &si, Sampler &sampler,
                                         uint64_t traversable_handle,
                                         NEEData *NEE_data) const {
             Spectrum Ld(0.f);
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
+            auto bsdf = si.op_bsdf.value();
             auto bsdf_sample = bsdf.sample_f(si.wo, sampler.next_1d(), sampler.next_2d());
             if (bsdf_sample) {
                 NEE_data->wi = bsdf_sample->wi;
@@ -94,12 +96,12 @@ namespace luminous {
             return Ld;
         }
 
-        Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, const BSDF &bsdf, Sampler &sampler,
+        Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
                                                  uint64_t traversable_handle, const HitGroupData *hit_group_data,
                                                  NEEData *NEE_data) const {
 
-            Spectrum Ld = MIS_sample_light(si, bsdf, sampler, traversable_handle, hit_group_data);
-            return Ld + MIS_sample_BSDF(si, bsdf, sampler, traversable_handle, NEE_data);
+            Spectrum Ld = MIS_sample_light(si, sampler, traversable_handle, hit_group_data);
+            return Ld + MIS_sample_BSDF(si, sampler, traversable_handle, NEE_data);
         }
 
         bool Light::is_delta() const {

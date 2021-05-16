@@ -51,7 +51,7 @@ namespace luminous {
                 const LightSampler *light_sampler = prd.hit_group_data()->light_sampler;
                 NEEData NEE_data;
                 NEE_data.debug = debug;
-                Spectrum Ld = light_sampler->estimate_direct_lighting(si, si.op_bsdf.value(), sampler,
+                Spectrum Ld = light_sampler->estimate_direct_lighting(si, sampler,
                                                                       scene_handle,
                                                                       prd.hit_group_data(), &NEE_data);
                 found_intersection = NEE_data.found_intersection;
