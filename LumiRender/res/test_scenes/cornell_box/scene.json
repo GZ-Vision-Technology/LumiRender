@@ -200,7 +200,7 @@
 			},
 			"film" : {
 				"param" : {
-					"resolution" : [500, 500],
+					"resolution" : [768, 768],
 					"file_name" : "cornell_box.png"
 				}
 			}
