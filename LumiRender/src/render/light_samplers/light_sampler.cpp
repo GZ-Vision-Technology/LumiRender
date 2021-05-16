@@ -31,7 +31,7 @@ namespace luminous {
                                                         NEEData *NEE_data) const {
             auto sampled_light = sample(si, sampler.next_1d());
             if (sampled_light) {
-                return sampled_light->light.estimate_direct_lighting(si, bsdf, sampler,
+                return sampled_light->light->estimate_direct_lighting(si, bsdf, sampler,
                                                                      traversable_handle, hit_group_data,
                                                                      NEE_data) / sampled_light->PMF;
             }

@@ -95,6 +95,9 @@ GLOBAL __closesthit__radiance() {
     SurfaceInteraction &si = prd->si;
     si.init_BSDF(&data);
 //    const LightSampler *light_sampler = data.light_sampler;
+//    auto p = &(light_sampler->light_at(0));
+//    auto p2 = &(light_sampler->lights()[0]);
+//    printf("%p %p\n", p, p2);
 //    auto op_sampled_light = light_sampler->sample(si, sampler->next_1d());
 //    if (op_sampled_light) {
 //        auto light = op_sampled_light->light;

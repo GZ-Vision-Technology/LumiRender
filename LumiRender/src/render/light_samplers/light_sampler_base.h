@@ -12,17 +12,17 @@
 namespace luminous {
     inline namespace render {
         struct SampledLight {
-            Light light;
+            const Light *light;
             float PMF{0.f};
 
             XPU SampledLight() = default;
 
-            XPU SampledLight(Light light, float PMF)
+            XPU SampledLight(const Light * light, float PMF)
                     : light(light), PMF(PMF) {}
 
             NDSC std::string to_string() const {
                 return string_printf("sampled light :{PMF:%s, light:%s}",
-                                     PMF, light.to_string().c_str());
+                                     PMF, light->to_string().c_str());
             }
         };
 

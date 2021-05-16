@@ -18,9 +18,8 @@ namespace luminous {
 //            luminous::intersect_closest(scene_handle, ray, &prd);
 //
 //            if (prd.is_hit()) {
-//                auto si = prd.get_surface_interaction();
-//                const Material *mat = si.material;
-//                auto bsdf = mat->get_BSDF(si, prd.hit_group_data);
+//                auto si = prd.si;
+//                auto bsdf = si.op_bsdf.value();
 //                auto color = bsdf.base_color();
 //                return color;
 //            }
@@ -42,7 +41,6 @@ namespace luminous {
                         // nothing to do
                     }
                 }
-
                 BREAK_IF(!found_intersection)
                 if (!si.op_bsdf) {
                     ray = si.spawn_ray(ray.direction());

@@ -78,6 +78,7 @@ namespace lstd {
     public:
         using TypeTuple = std::tuple<T...>;
         using Index = TypeIndex<T...>;
+        using FirstType = typename FirstOf<T...>::type;
         static constexpr size_t num_types = nTypes;
 
         Variant() = default;
@@ -218,12 +219,14 @@ namespace lstd {
     }
 
         template<class Visitor>
-        XPU auto dispatch(Visitor &&visitor) {
+        XPU decltype(auto) dispatch(Visitor &&visitor) {
             _GEN_DISPATCH_BODY()
         }
 
         template<class Visitor>
-        XPU auto dispatch(Visitor &&visitor) const { _GEN_DISPATCH_BODY()}
+        XPU decltype(auto) dispatch(Visitor &&visitor) const {
+            _GEN_DISPATCH_BODY()
+        }
 
         XPU ~Variant() {
             if (index != -1)
@@ -242,13 +245,14 @@ namespace lstd {
 #undef _GEN_CASE_N
 
 #define LUMINOUS_VAR_DISPATCH(method, ...)                                                                             \
-    return this->dispatch([&, this](auto &&self) {                                                                     \
+    return this->dispatch([&, this](auto &&self)-> decltype(auto) {                                                    \
         return self.method(__VA_ARGS__);                                                                               \
     });
 #define LUMINOUS_VAR_PTR_DISPATCH(method, ...)                                                                         \
-    return this->dispatch([&, this](auto &&self) {                                                                     \
+    return this->dispatch([&, this](auto &&self)-> decltype(auto) {                                                    \
         return self->method(__VA_ARGS__);                                                                              \
     });
+
     };
 
 

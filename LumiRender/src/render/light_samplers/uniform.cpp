@@ -13,7 +13,7 @@ namespace luminous {
                 return {};
             }
             int lightIndex = std::min<int>(u * light_num(), light_num() - 1);
-            return SampledLight(_lights[lightIndex], 1.f / light_num());
+            return SampledLight(&_lights[lightIndex], 1.f / light_num());
         }
 
         lstd::optional<SampledLight> UniformLightSampler::sample(const LightSampleContext &ctx, float u) const {

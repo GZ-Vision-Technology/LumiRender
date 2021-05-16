@@ -99,7 +99,7 @@ namespace lstd {
 
         XPU const T *ptr() const { return reinterpret_cast<const T *>(&_optional_value); }
 
-        std::aligned_storage_t<sizeof(T), alignof(T)> _optional_value;
+        T _optional_value;
         bool set = false;
     public:
         using value_type = T;
