@@ -34,9 +34,9 @@ namespace luminous {
 
             NDSC_XPU size_t light_num();
 
-            NDSC_XPU lstd::optional<SampledLight> sample(float u) const;
+            NDSC_XPU SampledLight sample(float u) const;
 
-            NDSC_XPU lstd::optional<SampledLight> sample(const LightSampleContext &ctx, float u) const;
+            NDSC_XPU SampledLight sample(const LightSampleContext &ctx, float u) const;
 
             NDSC_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si,  BSDF bsdf,
                                                      Sampler &sampler, uint64_t traversable_handle,

@@ -8,7 +8,7 @@
 namespace luminous {
     inline namespace render {
 
-        lstd::optional<SampledLight> UniformLightSampler::sample(float u) const {
+        SampledLight UniformLightSampler::sample(float u) const {
             if (_lights.empty()) {
                 return {};
             }
@@ -16,7 +16,7 @@ namespace luminous {
             return SampledLight(&_lights[lightIndex], 1.f / light_num());
         }
 
-        lstd::optional<SampledLight> UniformLightSampler::sample(const LightSampleContext &ctx, float u) const {
+        SampledLight UniformLightSampler::sample(const LightSampleContext &ctx, float u) const {
             return sample(u);
         }
 

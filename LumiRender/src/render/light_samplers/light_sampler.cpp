@@ -16,11 +16,11 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(light_num);
         }
 
-        lstd::optional<SampledLight> LightSampler::sample(float u) const {
+        SampledLight LightSampler::sample(float u) const {
             LUMINOUS_VAR_DISPATCH(sample, u);
         }
 
-        lstd::optional<SampledLight> LightSampler::sample(const LightSampleContext &ctx, float u) const {
+        SampledLight LightSampler::sample(const LightSampleContext &ctx, float u) const {
             LUMINOUS_VAR_DISPATCH(sample, ctx, u);
         }
 
@@ -30,10 +30,10 @@ namespace luminous {
                                                         const HitGroupData *hit_group_data,
                                                         NEEData *NEE_data) const {
             auto sampled_light = sample(si, sampler.next_1d());
-            if (sampled_light) {
-                return sampled_light->light->estimate_direct_lighting(si, bsdf, sampler,
+            if (sampled_light.is_valid()) {
+                return sampled_light.light->estimate_direct_lighting(si, bsdf, sampler,
                                                                      traversable_handle, hit_group_data,
-                                                                     NEE_data) / sampled_light->PMF;
+                                                                     NEE_data) / sampled_light.PMF;
             }
             return Spectrum(0.f);
         }

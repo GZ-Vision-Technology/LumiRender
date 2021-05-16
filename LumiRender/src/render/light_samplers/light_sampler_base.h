@@ -12,13 +12,17 @@
 namespace luminous {
     inline namespace render {
         struct SampledLight {
-            const Light *light;
+            const Light *light{nullptr};
             float PMF{0.f};
 
             XPU SampledLight() = default;
 
-            XPU SampledLight(const Light * light, float PMF)
+            XPU SampledLight(const Light *light, float PMF)
                     : light(light), PMF(PMF) {}
+
+            NDSC_XPU_INLINE bool is_valid() const {
+                return light != nullptr;
+            }
 
             NDSC std::string to_string() const {
                 return string_printf("sampled light :{PMF:%s, light:%s}",
@@ -34,7 +38,7 @@ namespace luminous {
                 return _lights;
             }
 
-            NDSC_XPU const Light& light_at(uint idx) const {
+            NDSC_XPU const Light &light_at(uint idx) const {
                 return _lights[idx];
             }
 
