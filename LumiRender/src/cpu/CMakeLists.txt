@@ -4,7 +4,14 @@ file(GLOB_RECURSE SOURCE_FILES *.c*)
 
 
 add_library(luminous-cpu SHARED ${HEADER_FILES} ${SOURCE_FILES})
-target_link_libraries(luminous-cpu)
+
+target_link_libraries(luminous-cpu
+        PUBLIC
+        luminous-graphics
+#        embree_config
+        luminous-core
+        luminous-util
+        luminous-render)
 
 set_target_properties(luminous-cpu PROPERTIES
         PUBLIC_HEADER "${HEADER_FILES}"

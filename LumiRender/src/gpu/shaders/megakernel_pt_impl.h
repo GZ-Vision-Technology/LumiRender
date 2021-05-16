@@ -85,8 +85,8 @@ GLOBAL __closesthit__radiance() {
     const HitGroupData &data = getSbtData<HitGroupData>();
     prd->data = &data;
     prd->closest_hit = getClosestHit();
-
-    prd->init_surface_interaction(&data);
+    Ray ray = getRayInWorld();
+    prd->init_surface_interaction(&data, ray);
     Sampler *sampler = prd->sampler;
     SurfaceInteraction &si = prd->si;
     si.init_BSDF(&data);

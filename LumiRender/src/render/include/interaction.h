@@ -161,9 +161,7 @@ namespace luminous {
 
         struct PerRayData {
             ClosestHit closest_hit;
-            float3 ray_dir{make_float3(0.f)};
             const void *data{nullptr};
-
             SurfaceInteraction si;
             Sampler *sampler{nullptr};
             Spectrum Ld_sample_light{0.f};
@@ -175,13 +173,9 @@ namespace luminous {
                 return closest_hit.is_hit();
             }
 
-            NDSC_XPU void init_surface_interaction(const HitGroupData *data);
+            XPU void init_surface_interaction(const HitGroupData *data, Ray ray);
 
             NDSC_XPU const HitGroupData *hit_group_data() const;
-
-            NDSC_XPU const MissData *miss_data() const;
-
-            NDSC_XPU SurfaceInteraction get_surface_interaction() const;
         };
 
         struct TextureEvalContext {
