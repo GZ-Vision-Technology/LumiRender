@@ -23,38 +23,6 @@ __constant__ luminous::LaunchParams
 params;
 }
 
-namespace luminous {
-
-    XPU_INLINE Spectrum megakernel_pt_Li(luminous::Ray ray, uint64_t scene_handle,
-                                         luminous::Sampler &sampler, uint32_t max_depth,
-                                         float rr_threshold, bool debug = false) {
-        PerRayData prd;
-        prd.sampler = &sampler;
-        Spectrum L(0.f);
-        Spectrum throughput(1.f);
-        SurfaceInteraction si;
-        int bounces;
-        bool found_intersection = luminous::intersect_closest(scene_handle, ray, &prd);
-        for (bounces = 0; bounces < max_depth; ++bounces) {
-            si = prd.si;
-            if (bounces == 0) {
-                if (found_intersection) {
-                    L += throughput * si.Le(-ray.direction());
-                } else {
-                    // nothing to do
-                }
-            }
-            BREAK_IF(!found_intersection)
-
-            Spectrum Ld(0.f);
-            Ld = prd.Ld_sample_light;
-            NEEData NEE_data;
-
-        }
-        return L;
-    }
-}
-
 
 GLOBAL __raygen__rg() {
     using namespace luminous;
@@ -68,7 +36,7 @@ GLOBAL __raygen__rg() {
     bool debug = false;
     Ray ray;
     float weight = camera->generate_ray(ss, &ray);
-    Spectrum L = Li(ray, params.traversable_handle, sampler,
+    Spectrum L = megakernel_pt_Li(ray, params.traversable_handle, sampler,
                     params.max_depth, params.rr_threshold, debug);
     film->add_sample(pixel, L, weight, frame_index);
 }
@@ -94,18 +62,15 @@ GLOBAL __closesthit__radiance() {
     Sampler *sampler = prd->sampler;
     SurfaceInteraction &si = prd->si;
     si.init_BSDF(&data);
-//    const LightSampler *light_sampler = data.light_sampler;
-//    auto p = &(light_sampler->light_at(0));
-//    auto p2 = &(light_sampler->lights()[0]);
-//    printf("%p %p\n", p, p2);
-//    auto op_sampled_light = light_sampler->sample(si, sampler->next_1d());
-//    if (op_sampled_light) {
-//        auto light = op_sampled_light->light;
-//        prd->light_PMF = op_sampled_light->PMF;
-//        BSDF bsdf = si.op_bsdf.value();
-//        prd->Ld_sample_light = light->MIS_sample_light(si, bsdf, *sampler,
-//                                                      params.traversable_handle, &data);
-//    }
+    const LightSampler *light_sampler = data.light_sampler;
+    SampledLight sampled_light = light_sampler->sample(si, sampler->next_1d());
+    if (sampled_light.is_valid()) {
+        auto light = sampled_light.light;
+        prd->light = light;
+        prd->light_PMF = sampled_light.PMF;
+        prd->Ld_sample_light = light->MIS_sample_light(si, *sampler,
+                                                      params.traversable_handle, &data);
+    }
 }
 
 GLOBAL __closesthit__occlusion() {

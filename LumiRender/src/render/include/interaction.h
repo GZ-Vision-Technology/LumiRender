@@ -148,15 +148,6 @@ namespace luminous {
             }
         };
 
-        struct NEEData {
-            Spectrum bsdf_val{0.f};
-            float bsdf_PDF;
-            float3 wi{0.f};
-            SurfaceInteraction next_si;
-            bool found_intersection{false};
-            bool debug = false;
-        };
-
         class Sampler;
 
         struct PerRayData {
@@ -177,6 +168,16 @@ namespace luminous {
             XPU void init_surface_interaction(const HitGroupData *data, Ray ray);
 
             NDSC_XPU const HitGroupData *hit_group_data() const;
+        };
+
+        struct NEEData {
+            Spectrum bsdf_val{0.f};
+            float bsdf_PDF;
+            float3 wi{0.f};
+            SurfaceInteraction next_si;
+            bool found_intersection{false};
+            bool debug = false;
+            PerRayData prd;
         };
 
         struct TextureEvalContext {

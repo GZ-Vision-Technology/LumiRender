@@ -58,8 +58,6 @@ namespace luminous {
                 Spectrum bsdf_ei = NEE_data.bsdf_val / NEE_data.bsdf_PDF;
                 throughput *= bsdf_ei;
                 L += Ld * throughput;
-                ray = si.spawn_ray(NEE_data.wi);
-                si = NEE_data.next_si;
                 float max_comp = throughput.max_comp();
                 if (max_comp < rr_threshold) {
                     float q = min(0.95f, max_comp);
@@ -68,8 +66,53 @@ namespace luminous {
                     }
                     throughput /= q;
                 }
+                si = NEE_data.next_si;
             }
 
+            return L;
+        }
+
+        XPU_INLINE Spectrum megakernel_pt_Li(luminous::Ray ray, uint64_t scene_handle,
+                                             luminous::Sampler &sampler, uint32_t max_depth,
+                                             float rr_threshold, bool debug) {
+            PerRayData prd;
+            prd.sampler = &sampler;
+            Spectrum L(0.f);
+            Spectrum throughput(1.f);
+            SurfaceInteraction si;
+            int bounces;
+            bool found_intersection = luminous::intersect_closest(scene_handle, ray, &prd);
+            for (bounces = 0; bounces < max_depth; ++bounces) {
+                if (bounces == 0) {
+                    if (found_intersection) {
+                        si = prd.si;
+                        L += throughput * si.Le(-ray.direction());
+                    } else {
+                        // nothing to do
+                    }
+                }
+                BREAK_IF(!found_intersection)
+
+                Spectrum Ld = prd.Ld_sample_light;
+                const Light *light = prd.light;
+                NEEData NEE_data;
+                Ld += light->MIS_sample_BSDF(si, sampler, scene_handle, &NEE_data);
+                Ld = Ld / prd.light_PMF;
+                found_intersection = NEE_data.found_intersection;
+                Spectrum bsdf_ei = NEE_data.bsdf_val / NEE_data.bsdf_PDF;
+                throughput *= bsdf_ei;
+                L += Ld * throughput;
+                float max_comp = throughput.max_comp();
+                if (max_comp < rr_threshold) {
+                    float q = min(0.95f, max_comp);
+                    if (q < sampler.next_1d()) {
+                        break;
+                    }
+                    throughput /= q;
+                }
+                prd = NEE_data.prd;
+                si = NEE_data.next_si;
+            }
             return L;
         }
 

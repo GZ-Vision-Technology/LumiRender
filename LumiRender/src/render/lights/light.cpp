@@ -91,6 +91,7 @@ namespace luminous {
                         Li = NEE_data->next_si.Le(-NEE_data->wi);
                         Ld = bsdf_val * Li * weight / bsdf_PDF;
                     }
+                    NEE_data->prd = prd;
                 }
             }
             return Ld;

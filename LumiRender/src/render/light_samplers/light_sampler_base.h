@@ -18,7 +18,9 @@ namespace luminous {
             XPU SampledLight() = default;
 
             XPU SampledLight(const Light *light, float PMF)
-                    : light(light), PMF(PMF) {}
+                    : light(light), PMF(PMF) {
+                DCHECK(PMF > 0)
+            }
 
             NDSC_XPU_INLINE bool is_valid() const {
                 return light != nullptr;
