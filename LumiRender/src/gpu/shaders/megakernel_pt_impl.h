@@ -36,7 +36,7 @@ GLOBAL __raygen__rg() {
     bool debug = false;
     Ray ray;
     float weight = camera->generate_ray(ss, &ray);
-    Spectrum L = megakernel_pt_Li(ray, params.traversable_handle, sampler,
+    Spectrum L = Li(ray, params.traversable_handle, sampler,
                     params.max_depth, params.rr_threshold, debug);
     film->add_sample(pixel, L, weight, frame_index);
 }

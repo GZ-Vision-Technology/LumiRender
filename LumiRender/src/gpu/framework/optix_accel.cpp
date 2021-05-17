@@ -437,6 +437,7 @@ namespace luminous {
                                     x,
                                     y,
                                     1u));
+            _dispatcher.wait();
         }
 
         std::string OptixAccel::description() const {

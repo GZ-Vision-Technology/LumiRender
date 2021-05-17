@@ -3,6 +3,7 @@
 //
 
 #include "cuda_task.h"
+#include "util/clock.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -77,7 +78,9 @@ namespace luminous {
 
         void CUDATask::render_gui(double dt) {
             _dt = dt;
+            Clock clock;
             _integrator->render();
+            cout << clock.elapse_s() << endl;
         }
 
         uint2 CUDATask::resolution() {
