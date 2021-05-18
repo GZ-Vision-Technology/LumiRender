@@ -19,10 +19,10 @@ namespace luminous {
             luminous::intersect_closest(scene_handle, ray, &prd);
 
             if (prd.is_hit()) {
-                auto si = prd.si;
-                auto bsdf = si.op_bsdf.value();
-                auto color = bsdf.base_color();
-                return color;
+//                auto si = prd.si;
+//                auto bsdf = si.op_bsdf.value();
+//                auto color = bsdf.base_color();
+                return 1;
             }
             return 0;
             Spectrum L(0.f);
