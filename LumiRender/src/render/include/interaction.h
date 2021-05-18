@@ -154,10 +154,6 @@ namespace luminous {
             ClosestHit closest_hit;
             const void *data{nullptr};
             SurfaceInteraction si;
-            Sampler *sampler{nullptr};
-            Spectrum Ld_sample_light{0.f};
-            float light_PMF{0.f};
-            const Light *light{nullptr};
 
             PerRayData() = default;
 

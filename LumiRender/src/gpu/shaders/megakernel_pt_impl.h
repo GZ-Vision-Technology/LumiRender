@@ -59,18 +59,8 @@ GLOBAL __closesthit__radiance() {
     prd->closest_hit = getClosestHit();
     Ray ray = getRayInWorld();
     prd->init_surface_interaction(&data, ray);
-    Sampler *sampler = prd->sampler;
     SurfaceInteraction &si = prd->si;
     si.init_BSDF(&data);
-//    const LightSampler *light_sampler = data.light_sampler;
-//    SampledLight sampled_light = light_sampler->sample(si, sampler->next_1d());
-//    if (sampled_light.is_valid()) {
-//        auto light = sampled_light.light;
-//        prd->light = light;
-//        prd->light_PMF = sampled_light.PMF;
-//        prd->Ld_sample_light = light->MIS_sample_light(si, *sampler,
-//                                                      params.traversable_handle, &data);
-//    }
 }
 
 GLOBAL __closesthit__occlusion() {
