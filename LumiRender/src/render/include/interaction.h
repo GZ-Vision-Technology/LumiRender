@@ -173,7 +173,6 @@ namespace luminous {
             SurfaceInteraction next_si;
             bool found_intersection{false};
             bool debug = false;
-            PerRayData prd;
         };
 
         struct TextureEvalContext {
