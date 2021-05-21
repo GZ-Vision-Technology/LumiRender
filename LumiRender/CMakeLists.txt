@@ -6,10 +6,17 @@ set(APP_NAME LumiRender CACHE STRING INTERNAL)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
 
-include(configure_optix)
+find_package(CUDAToolkit)
+if (CUDAToolkit_FOUND)
+    include(configure_optix)
+    include(CheckLanguage)
+    set(LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT ON)
+else ()
+    set(LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT OFF)
+    message(not find cuda !!)
+endif ()
 
 set(CMAKE_CXX_STANDARD 11)
-include(CheckLanguage)
 
 function(luminous_render_add_application name)
     cmake_parse_arguments(APP "" "" "SOURCES" ${ARGN})
@@ -62,14 +69,18 @@ execute_process (COMMAND ${CHECK_CUDA_OUTPUT_EXE}
         RESULT_VARIABLE CUDA_RETURN_CODE
         OUTPUT_VARIABLE CHECK_CUDA_OUTPUT)
 
-message(${CHECK_CUDA_OUTPUT_EXE})
-message(${CUDA_RETURN_CODE})
-message(${CHECK_CUDA_OUTPUT})
+if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
+    message(${CHECK_CUDA_OUTPUT_EXE})
+    message(${CUDA_RETURN_CODE})
+    message(${CHECK_CUDA_OUTPUT})
 
-if (NOT ${CUDA_RETURN_CODE} EQUAL 0)
-    message (SEND_ERROR ${CHECK_CUDA_OUTPUT})
-else ()
-    set(ARCH "${CHECK_CUDA_OUTPUT}")
-    message (STATUS "Detected CUDA Architecture: ${ARCH}")
-    string (APPEND CMAKE_CUDA_FLAGS " --gpu-architecture=${ARCH}")
+    if (NOT ${CUDA_RETURN_CODE} EQUAL 0)
+        message (SEND_ERROR ${CHECK_CUDA_OUTPUT})
+    else ()
+        set(ARCH "${CHECK_CUDA_OUTPUT}")
+        message (STATUS "Detected CUDA Architecture: ${ARCH}")
+        string (APPEND CMAKE_CUDA_FLAGS " --gpu-architecture=${ARCH}")
+    endif ()
 endif ()
+
+

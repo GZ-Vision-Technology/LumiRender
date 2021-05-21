@@ -274,10 +274,10 @@ namespace luminous {
                 image_ptr[1][i] = rgba[i].z;
                 image_ptr[0][i] = rgba[i].w;
             }
-            strcpy_s(header.channels[0].name, "A");
-            strcpy_s(header.channels[1].name, "B");
-            strcpy_s(header.channels[2].name, "G");
-            strcpy_s(header.channels[3].name, "R");
+//            strcpy_s(header.channels[0].name, "A");
+//            strcpy_s(header.channels[1].name, "B");
+//            strcpy_s(header.channels[2].name, "G");
+//            strcpy_s(header.channels[3].name, "R");
             const char *err = nullptr;
             if (auto ret = SaveEXRImageToFile(&image, &header, fn.string().c_str(), &err); ret != TINYEXR_SUCCESS) {
                 LUMINOUS_EXCEPTION_IF("Failed to save texture as OpenEXR image: ", fn.string());
