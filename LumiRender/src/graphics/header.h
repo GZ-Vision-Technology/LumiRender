@@ -6,7 +6,7 @@
 #pragma once
 
 
-
+#include <typeinfo>
 #include <assert.h>
 
 #if defined(_MSC_VER)

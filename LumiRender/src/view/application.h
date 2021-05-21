@@ -13,9 +13,9 @@
 #include "core/logging.h"
 #include "graphics/math/common.h"
 #include "gl_helper.h"
-#include "gpu/framework/cuda_task.h"
+#include "gpu/gpu_include.h"
 #include "util/clock.h"
-
+#include "core/backend/task.h"
 
 namespace luminous {
     using namespace std::chrono;
@@ -35,7 +35,7 @@ namespace luminous {
         uint32_t *test_color{};
         int2 _last_mouse_pos = make_int2(0);
 
-        unique_ptr<CUDATask> _task;
+        unique_ptr<Task> _task;
 
         Clock _clock;
 
