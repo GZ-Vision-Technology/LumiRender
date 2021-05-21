@@ -14,7 +14,7 @@
 #include "render/include/emission_distribution.h"
 #include "render/light_samplers/light_sampler.h"
 #include "render/textures/texture.h"
-#include "vector_types.h"
+#include "gpu/gpu_include.h"
 #include "render/materials/material.h"
 
 namespace luminous {
