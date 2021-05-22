@@ -18,7 +18,7 @@ namespace luminous {
             vector_t z;
             vector_t x, y;
 
-            XPU TFrame() : x(1, 0, 0), y(0, 1, 0), z(0, 0, 1) {}
+            XPU TFrame() : x(T(1), T(0), T(0)), y(T(0), T(1), T(0)), z(T(0), T(0), T(1)) {}
 
             XPU TFrame(vector_t x, vector_t y, vector_t z) : x(x), y(y), z(z) {}
 
