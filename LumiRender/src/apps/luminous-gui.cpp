@@ -9,7 +9,10 @@
 #include "view/application.h"
 #include <glad/glad.h>
 #include<chrono>
+#ifdef CUDA_SUPPORT
 #include "gpu/framework/cuda_task.h"
+#endif
+#include "cpu/cpu_task.h"
 
 using namespace std;
 using namespace luminous;

@@ -22,8 +22,6 @@ namespace luminous {
 
             void init(const Parser &parser) override;
 
-            void update() override;
-
             void render_gui(double dt) override;
 
             void render_cli() override;

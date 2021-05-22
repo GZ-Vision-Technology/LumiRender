@@ -12,16 +12,30 @@ include_directories("${PROJECT_SOURCE_DIR}/thirdparty/embree/include")
 include_directories("${CMAKE_BINARY_DIR}/thirdparty/assimp/include")
 include_directories("${CMAKE_BINARY_DIR}/thirdparty/embree/include")
 
-add_library(luminous-all INTERFACE)
-target_link_libraries(luminous-all INTERFACE
-        luminous-core
-        luminous-ext
-        luminous-gpu
-        luminous-cpu
-        luminous-render
-        luminous-graphics
-        luminous-view
-        luminous-util)
+if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
+    add_library(luminous-all INTERFACE)
+    target_link_libraries(luminous-all INTERFACE
+            luminous-core
+            luminous-ext
+            luminous-gpu
+            luminous-cpu
+            luminous-render
+            luminous-graphics
+            luminous-view
+            luminous-util)
+else()
+    add_library(luminous-all INTERFACE)
+    target_link_libraries(luminous-all INTERFACE
+            luminous-core
+            luminous-ext
+            luminous-cpu
+            luminous-render
+            luminous-graphics
+            luminous-view
+            luminous-util)
+endif ()
+
+
 
 add_subdirectory(core)
 add_subdirectory(util)

@@ -3,7 +3,6 @@
 //
 
 #include "cpu_task.h"
-#include ""
 
 namespace luminous {
     inline namespace cpu {
@@ -14,5 +13,22 @@ namespace luminous {
 //            _integrator->init(scene_graph);
 //            update_device_buffer();
         }
+
+        void CPUTask::render_gui(double dt) {
+
+        }
+
+        void CPUTask::render_cli() {
+
+        }
+
+        void CPUTask::update_device_buffer() {
+
+        }
+
+        FrameBufferType *CPUTask::download_frame_buffer() {
+            return nullptr;
+        }
+
     } // luminous::cpu
 } // luminous
