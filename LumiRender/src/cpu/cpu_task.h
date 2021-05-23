@@ -5,19 +5,18 @@
 #pragma once
 
 #include "core/backend/task.h"
-
+#include "core/backend/managed.h"
 
 namespace luminous {
     inline namespace cpu {
 
         class CPUTask : public Task {
         private:
+            Managed<float4, float4> _accumulate_buffer;
 
-            UP<Integrator> _integrator;
-
-            double _dt{0};
+            Managed<FrameBufferType, FrameBufferType> _frame_buffer;
         public:
-            CPUTask(Context *context)
+            explicit CPUTask(Context *context)
                 : Task(nullptr, context) {}
 
             void init(const Parser &parser) override;

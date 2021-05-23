@@ -23,7 +23,13 @@ namespace luminous {
         }
 
         void CPUTask::update_device_buffer() {
+            auto res = camera()->film()->resolution();
+            auto num = res.x * res.y;
+            _accumulate_buffer.resize(num, make_float4(0.f));
+            camera()->film()->set_accumulate_buffer_view(_accumulate_buffer.host_buffer_view());
 
+            _frame_buffer.resize(num, 0);
+            camera()->film()->set_frame_buffer_view(_frame_buffer.host_buffer_view());
         }
 
         FrameBufferType *CPUTask::download_frame_buffer() {
