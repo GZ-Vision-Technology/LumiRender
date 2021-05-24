@@ -15,11 +15,11 @@ namespace luminous {
     inline namespace utility {
 
         void *aligned_alloc(size_t alignment, size_t size) noexcept {
-//            return _aligned_malloc(size, alignment);
+            return _aligned_malloc(size, alignment);
         }
 
         void aligned_free(void *p) noexcept {
-//            _aligned_free(p);
+            _aligned_free(p);
         }
 
         template<typename T, typename... Args>
