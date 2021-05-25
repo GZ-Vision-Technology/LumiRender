@@ -7,18 +7,20 @@
 
 #include "render/include/integrator.h"
 #include "framework/optix_accel.h"
-#include "gpu_scene.h"
+
 #include "render/samplers/sampler.h"
 
 namespace luminous {
 
     inline namespace gpu {
+        class GPUScene;
+
         class MegakernelPT : public Integrator {
         private:
             Context * _context{};
             Managed<Sampler, Sampler> _sampler;
             Managed<Sensor, Sensor> _camera;
-            UP<GPUScene> _scene{nullptr};
+            SP<GPUScene> _scene{nullptr};
             SP<Device> _device{};
             Managed<LaunchParams> _launch_params;
         public:
