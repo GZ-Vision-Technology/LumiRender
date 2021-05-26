@@ -5,10 +5,7 @@
 
 #include "gpu_scene.h"
 #include <cassert>
-#include <cmath>
 #include <iostream>
-#include "framework/cuda_impl.h"
-#include "util/image.h"
 #include "util/stats.h"
 
 namespace luminous {
