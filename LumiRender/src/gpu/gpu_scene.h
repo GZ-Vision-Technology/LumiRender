@@ -5,13 +5,9 @@
 
 #pragma once
 
-#include "core/backend/buffer.h"
 #include "core/concepts.h"
-#include "graphics/math/common.h"
-#include "render/sensors/camera_base.h"
 #include "framework/optix_accel.h"
 #include "render/include/scene.h"
-#include "core/backend/managed.h"
 #include "render/include/emission_distribution.h"
 
 namespace luminous {

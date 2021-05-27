@@ -9,6 +9,7 @@
 #include "framework/optix_accel.h"
 
 #include "render/samplers/sampler.h"
+#include "gpu_scene.h"
 
 namespace luminous {
 
@@ -20,7 +21,7 @@ namespace luminous {
             Context * _context{};
             Managed<Sampler, Sampler> _sampler;
             Managed<Sensor, Sensor> _camera;
-            SP<GPUScene> _scene{nullptr};
+            UP<GPUScene> _scene{nullptr};
             SP<Device> _device{};
             Managed<LaunchParams> _launch_params;
         public:

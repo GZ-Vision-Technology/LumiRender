@@ -3,7 +3,6 @@
 //
 
 #include "megakernel_pt.h"
-#include "gpu_scene.h"
 
 namespace luminous {
     inline namespace gpu {
