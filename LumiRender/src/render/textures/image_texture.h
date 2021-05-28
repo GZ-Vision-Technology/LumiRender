@@ -5,18 +5,23 @@
 
 #pragma once
 
-#include "cuda.h"
+#include "gpu/framework/helper/cuda.h"
 #include "graphics/math/common.h"
 #include "texture_base.h"
-#include "vector_types.h"
+
 
 namespace luminous {
     inline namespace render {
         class ImageTexture : public TextureBase {
         private:
-            CUtexObject _handle{0};
+#ifdef CUDA_SUPPORT
+            using TypeHandle = CUtexObject;
+#else
+            using TypeHandle = uint64_t ;
+#endif
+            TypeHandle _handle{0};
         public:
-            ImageTexture(CUtexObject handle, PixelFormat pixel_format)
+            ImageTexture(TypeHandle handle, PixelFormat pixel_format)
                     : TextureBase(pixel_format), _handle(handle) {}
 
             XPU luminous::float4 eval(const TextureEvalContext &tec) const {
@@ -43,12 +48,12 @@ namespace luminous {
 #endif
             }
 
-            std::string to_string() const {
+            NDSC std::string to_string() const {
                 LUMINOUS_TO_STRING("name: %s", type_name(this));
             }
 
             static ImageTexture create(const TextureConfig &config) {
-                return ImageTexture ((CUtexObject) config.handle, config.pixel_format);
+                return ImageTexture ((ImageTexture::TypeHandle) config.handle, config.pixel_format);
             }
         };
     }

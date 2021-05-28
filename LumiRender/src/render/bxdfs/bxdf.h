@@ -40,7 +40,7 @@ namespace luminous {
 
             NDSC_XPU BxDFFlags flags() const;
 
-            NDSC_XPU void print() const;
+            XPU void print() const;
         };
 
     }

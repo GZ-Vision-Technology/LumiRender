@@ -3,9 +3,14 @@
 //
 
 #include "megakernel_pt.h"
+#include "gpu_scene.h"
 
 namespace luminous {
     inline namespace gpu {
+
+        MegakernelPT::MegakernelPT(const SP<Device> &device, Context *context)
+                : _device(device),
+                  _context(context) {}
 
         void MegakernelPT::init_launch_params() {
             LaunchParams lp{};
@@ -62,5 +67,6 @@ namespace luminous {
         Sensor *MegakernelPT::camera() {
             return _camera.data();
         }
+
     }
 }

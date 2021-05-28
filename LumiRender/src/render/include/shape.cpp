@@ -150,7 +150,7 @@ namespace luminous {
                         auto uv = make_float2(ai_tex_coord.x, ai_tex_coord.y);
                         tex_coords.push_back(uv);
                     } else {
-                        tex_coords.emplace_back(0, 0);
+                        tex_coords.emplace_back(0.f, 0.f);
                     }
                     positions.push_back(position);
                     normals.push_back(normal);

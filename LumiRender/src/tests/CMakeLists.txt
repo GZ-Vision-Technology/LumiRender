@@ -1,12 +1,14 @@
 
-cuda_compile_and_embed(ptxCode ${PROJECT_SOURCE_DIR}/src/gpu/shaders/test_kernels.cu)
+if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
+    cuda_compile_and_embed(ptxCode ${PROJECT_SOURCE_DIR}/src/gpu/shaders/test_kernels.cu)
 
+    luminous_render_add_application(test-kernel_launch SOURCES test_kernel_launch.cpp ${ptxCode})
+    target_link_libraries(test-kernel_launch PRIVATE CUDA::nvrtc CUDA::cuda_driver CUDA::cudart)
 
-luminous_render_add_application(test-kernel_launch SOURCES test_kernel_launch.cpp ${ptxCode})
-target_link_libraries(test-kernel_launch PRIVATE CUDA::nvrtc CUDA::cuda_driver CUDA::cudart)
+    luminous_render_add_application(test-cuda_tex_test SOURCES cuda_tex_test.cpp ${ptxCode})
+    target_link_libraries(test-cuda_tex_test PRIVATE CUDA::nvrtc CUDA::cuda_driver CUDA::cudart)
+endif ()
 
-luminous_render_add_application(test-cuda_tex_test SOURCES cuda_tex_test.cpp ${ptxCode})
-target_link_libraries(test-cuda_tex_test PRIVATE CUDA::nvrtc CUDA::cuda_driver CUDA::cudart)
 
 luminous_render_add_application(test-graphicslib SOURCES test_graphics.cpp)
 

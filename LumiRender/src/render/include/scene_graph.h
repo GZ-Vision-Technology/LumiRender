@@ -10,7 +10,6 @@
 #include <memory>
 #include "core/context.h"
 #include "render/include/config.h"
-#include "vector_types.h"
 
 namespace luminous {
     using namespace std;

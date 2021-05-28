@@ -6,7 +6,7 @@
 #pragma once
 
 
-
+#include <typeinfo>
 #include <assert.h>
 
 #if defined(_MSC_VER)
@@ -78,7 +78,7 @@ constexpr const char * type_name(T * ptr = nullptr) {
 
 #define GEN_NAME_AND_TO_STRING_FUNC GEN_TO_STRING_FUNC
 
-#define INLINE __forceinline
+#define INLINE inline
 
 #define XPU_INLINE XPU INLINE
 

@@ -6,6 +6,7 @@
 #include "application.h"
 #include <iostream>
 #include "util/stats.h"
+#include "cpu/cpu_task.h"
 
 using namespace std;
 

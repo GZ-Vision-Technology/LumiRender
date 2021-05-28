@@ -7,7 +7,6 @@
 
 #include "graphics/math/common.h"
 #include "core/backend/buffer_view.h"
-#include "vector_types.h"
 #include "graphics/geometry/common.h"
 #include "render/include/interaction.h"
 

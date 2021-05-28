@@ -12,6 +12,7 @@
 #include "core/backend/kernel.h"
 #include "core/backend/device.h"
 #include "core/backend/module.h"
+#include <cuda.h>
 
 namespace luminous {
     inline namespace gpu {

@@ -12,29 +12,38 @@ include_directories("${PROJECT_SOURCE_DIR}/thirdparty/embree/include")
 include_directories("${CMAKE_BINARY_DIR}/thirdparty/assimp/include")
 include_directories("${CMAKE_BINARY_DIR}/thirdparty/embree/include")
 
-add_library(luminous-all INTERFACE)
-target_link_libraries(luminous-all INTERFACE
-        luminous-core
-        luminous-ext
-        luminous-gpu
-        luminous-cpu
-        luminous-render
-        luminous-graphics
-        luminous-view
-        luminous-util)
-
-find_package(CUDAToolkit)
-if (CUDAToolkit_FOUND)
-    set(LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT ON)
-else ()
-    set(LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT OFF)
-    message(not find cuda !!)
+if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
+    add_library(luminous-all INTERFACE)
+    target_link_libraries(luminous-all INTERFACE
+            luminous-core
+            luminous-ext
+            luminous-gpu
+            luminous-cpu
+            luminous-render
+            luminous-graphics
+            luminous-view
+            luminous-util)
+else()
+    add_library(luminous-all INTERFACE)
+    target_link_libraries(luminous-all INTERFACE
+            luminous-core
+            luminous-ext
+            luminous-cpu
+            luminous-render
+            luminous-graphics
+            luminous-view
+            luminous-util)
 endif ()
+
+
 
 add_subdirectory(core)
 add_subdirectory(util)
 add_subdirectory(ext)
-add_subdirectory(gpu)
+if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
+    add_definitions (-D CUDA_SUPPORT)
+    add_subdirectory(gpu)
+endif ()
 add_subdirectory(cpu)
 add_subdirectory(view)
 add_subdirectory(graphics)
