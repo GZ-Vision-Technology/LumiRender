@@ -102,7 +102,7 @@ namespace luminous {
     App::App(const std::string &title, const int2 &size, Context *context, const Parser &parser)
             : _size(size) {
         TASK_TAG("launch app")
-        _task = make_unique<CPUTask>(context);
+        _task = make_unique<CUDATask>(context);
         _task->init(parser);
         using namespace std;
         using namespace chrono;
