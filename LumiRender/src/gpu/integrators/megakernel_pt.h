@@ -6,7 +6,7 @@
 #pragma once
 
 #include "render/include/integrator.h"
-#include "framework/optix_accel.h"
+#include "gpu/framework/optix_accel.h"
 #include "render/samplers/sampler.h"
 
 namespace luminous {

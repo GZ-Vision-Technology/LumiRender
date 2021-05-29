@@ -4,7 +4,7 @@
 
 #include "cuda_task.h"
 #include "util/clock.h"
-#include "gpu/megakernel_pt.h"
+#include "gpu/integrators/megakernel_pt.h"
 
 namespace luminous {
     inline namespace gpu {

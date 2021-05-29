@@ -7,8 +7,8 @@
 
 #include "render/include/integrator.h"
 #include "render/sensors/camera_base.h"
-#include "framework/optix_accel.h"
-#include "gpu_scene.h"
+#include "gpu/framework/optix_accel.h"
+#include "gpu/gpu_scene.h"
 #include "render/samplers/sampler.h"
 
 namespace luminous {
