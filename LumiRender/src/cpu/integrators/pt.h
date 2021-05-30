@@ -4,3 +4,15 @@
 
 
 #pragma once
+
+#include "render/integrators/pt_func.h"
+
+namespace luminous {
+    inline namespace cpu {
+
+        class CPUPathTracer : public Integrator {
+
+        };
+
+    } // luminous::render
+} // luminous

@@ -2,10 +2,9 @@
 // Created by Zero on 2021/1/16.
 //
 
-#include "pt.h"
+#include "pt_func.h"
 #include "render/samplers/sampler.h"
 #include "render/include/trace.h"
-#include "render/bxdfs/bsdf.h"
 #include "render/materials/material.h"
 #include "render/light_samplers/light_sampler.h"
 
@@ -15,15 +14,15 @@ namespace luminous {
         NDSC_XPU Spectrum Li(Ray ray, uint64_t scene_handle, Sampler &sampler,
                              uint max_depth, float rr_threshold, bool debug) {
             PerRayData prd;
-//            luminous::intersect_closest(scene_handle, ray, &prd);
-//
-//            if (prd.is_hit()) {
-//                auto si = prd.si;
-//                auto bsdf = si.op_bsdf.value();
-//                auto color = bsdf.base_color();
-//                return color;
-//            }
-//            return 0;
+            luminous::intersect_closest(scene_handle, ray, &prd);
+
+            if (prd.is_hit()) {
+                auto si = prd.si;
+                auto bsdf = si.op_bsdf.value();
+                auto color = bsdf.base_color();
+                return color;
+            }
+            return 0;
             Spectrum L(0.f);
             Spectrum throughput(1.f);
             SurfaceInteraction si;
