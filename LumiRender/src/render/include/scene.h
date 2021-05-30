@@ -29,7 +29,7 @@ namespace luminous {
         class Scene : public Noncopyable {
         protected:
             Context *_context{nullptr};
-
+            float3 _bg_color = make_float3(0.f);
             size_t _inst_vertices_num{0};
             size_t _inst_triangle_num{0};
             size_t _texture_size_in_byte{0};

@@ -16,8 +16,6 @@ namespace luminous {
         class GPUScene : public Scene {
         private:
 
-            float3 _bg_color = make_float3(0.f);
-
             SP<Device> _device;
             UP<OptixAccel> _optix_accel;
 
