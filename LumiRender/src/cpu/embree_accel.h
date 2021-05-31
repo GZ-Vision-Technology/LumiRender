@@ -33,9 +33,13 @@ namespace luminous {
 
             NDSC std::string description() const;
 
-            void build_bvh(const vector<const float3> &positions, const vector<const TriangleHandle> &triangles,
-                           const vector<MeshHandle> &meshes, const vector<uint> &instance_list,
-                           const vector<Transform> &transform_list, const vector<uint> &inst_to_transform);
+            RTCGeometry build_mesh(const Managed<float3> &positions,
+                                   const Managed<TriangleHandle> &triangles,
+                                   const MeshHandle &mesh);
+
+            void build_bvh(const Managed<float3> &positions, const Managed<TriangleHandle> &triangles,
+                           const Managed<MeshHandle> &meshes, const Managed<uint> &instance_list,
+                           const Managed<Transform> &transform_list, const Managed<uint> &inst_to_transform);
         };
 
     } // luminous::cpu
