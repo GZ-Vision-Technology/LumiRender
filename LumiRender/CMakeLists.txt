@@ -43,12 +43,16 @@ set_target_properties(assimp PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY
 set(EMBREE_ISPC_SUPPORT OFF CACHE BOOL "" FORCE)
 set(EMBREE_TUTORIALS OFF CACHE BOOL "" FORCE)
 
+set(CMAKE_DEBUG_POSTFIX "")
+
 add_subdirectory(thirdparty/embree)
 add_library(embree_config INTERFACE)
-target_link_libraries(embree_config INTERFACE embree::embree)
-set_target_properties(embree PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/")
-
-set(CMAKE_DEBUG_POSTFIX "")
+target_link_libraries(embree_config INTERFACE embree3)
+set_target_properties(embree PROPERTIES
+        PUBLIC_HEADER "${HEADER_FILES}"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
+        WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions (-D DEBUG_BUILD)

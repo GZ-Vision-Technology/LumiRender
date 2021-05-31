@@ -19,10 +19,15 @@ namespace luminous {
 
         class EmbreeAccel : public Noncopyable {
         private:
-            RTCDevice _rtc_device{nullptr};
+            static RTCDevice _rtc_device;
+            RTCScene _rtc_scene;
             size_t _bvh_size_in_bytes{0u};
         public:
             EmbreeAccel(const CPUScene *cpu_scene);
+
+            static void init_device();
+
+            static RTCDevice rtc_device() { return _rtc_device; }
 
             size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 

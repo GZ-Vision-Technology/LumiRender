@@ -7,10 +7,16 @@
 
 namespace luminous {
     inline namespace cpu {
+        RTCDevice EmbreeAccel::_rtc_device = nullptr;
 
+        void EmbreeAccel::init_device() {
+            _rtc_device = rtcNewDevice(nullptr);
+        }
 
         EmbreeAccel::EmbreeAccel(const CPUScene *cpu_scene) {
-
+            init_device();
+            _rtc_scene = rtcNewScene(_rtc_device);
+            
         }
 
         std::string EmbreeAccel::description() const {
@@ -23,5 +29,6 @@ namespace luminous {
                                     const vector<Transform> &transform_list, const vector<uint> &inst_to_transform) {
 
         }
+
     } // luminous::cpu
 } // luminous

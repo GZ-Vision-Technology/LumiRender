@@ -8,7 +8,7 @@ add_library(luminous-cpu SHARED ${HEADER_FILES} ${SOURCE_FILES})
 target_link_libraries(luminous-cpu
         PUBLIC
         luminous-graphics
-#        embree_config
+        embree
         luminous-core
         luminous-util
         luminous-render)
