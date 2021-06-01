@@ -14,15 +14,27 @@ include_directories("${CMAKE_BINARY_DIR}/thirdparty/embree/include")
 
 if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
     add_library(luminous-all INTERFACE)
-    target_link_libraries(luminous-all INTERFACE
-            luminous-core
-            luminous-ext
-            luminous-gpu
-            luminous-cpu
-            luminous-render
-            luminous-graphics
-            luminous-view
-            luminous-util)
+    if (LUMINOUS_CPU_BACKEND)
+        target_link_libraries(luminous-all INTERFACE
+                luminous-core
+                luminous-ext
+                luminous-gpu
+                luminous-cpu
+                luminous-render
+                luminous-graphics
+                luminous-view
+                luminous-util)
+    else()
+        target_link_libraries(luminous-all INTERFACE
+                luminous-core
+                luminous-ext
+                luminous-gpu
+                luminous-render
+                luminous-graphics
+                luminous-view
+                luminous-util)
+    endif ()
+
 else()
     add_library(luminous-all INTERFACE)
     target_link_libraries(luminous-all INTERFACE
@@ -44,7 +56,9 @@ if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
     add_definitions (-D CUDA_SUPPORT)
     add_subdirectory(gpu)
 endif ()
-add_subdirectory(cpu)
+if (LUMINOUS_CPU_BACKEND)
+    add_subdirectory(cpu)
+endif ()
 add_subdirectory(view)
 add_subdirectory(graphics)
 add_subdirectory(tests)

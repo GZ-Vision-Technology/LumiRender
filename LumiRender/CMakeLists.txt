@@ -16,6 +16,8 @@ else ()
     message(not find cuda !!)
 endif ()
 
+set(LUMINOUS_CPU_BACKEND OFF)
+
 set(CMAKE_CXX_STANDARD 11)
 
 function(luminous_render_add_application name)

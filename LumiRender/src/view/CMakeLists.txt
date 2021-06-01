@@ -4,13 +4,22 @@ file(GLOB_RECURSE SOURCE_FILES *.c*)
 add_library(luminous-view SHARED ${HEADER_FILES} ${SOURCE_FILES})
 
 if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
-    target_link_libraries(luminous-view
-            PUBLIC
-            luminous-ext
-            luminous-util
-            luminous-gpu
-            luminous-cpu
-            luminous-core)
+    if (LUMINOUS_CPU_BACKEND)
+        target_link_libraries(luminous-view
+                PUBLIC
+                luminous-ext
+                luminous-util
+                luminous-gpu
+                luminous-cpu
+                luminous-core)
+    else()
+        target_link_libraries(luminous-view
+                PUBLIC
+                luminous-ext
+                luminous-util
+                luminous-gpu
+                luminous-core)
+    endif ()
 else()
     target_link_libraries(luminous-view
             PUBLIC

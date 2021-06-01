@@ -170,7 +170,6 @@ namespace luminous {
 
     void App::render() {
         auto dt = _clock.elapse_s();
-        cout <<"dt = " << dt << endl;
         _clock.start();
         check_and_update();
         _task->render_gui(dt);
