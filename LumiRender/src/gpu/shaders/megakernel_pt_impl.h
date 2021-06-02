@@ -25,7 +25,6 @@ params;
 
 
 GLOBAL __raygen__rg() {
-    return ;
     using namespace luminous;
     luminous::uint2 pixel = getPixelCoords();
     Sensor *camera = params.camera;

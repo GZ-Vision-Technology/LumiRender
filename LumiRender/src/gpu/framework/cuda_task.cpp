@@ -36,7 +36,10 @@ namespace luminous {
             _dt = dt;
             Clock clock;
             _integrator->render();
-            cout << clock.elapse_ms() << endl;
+            double d = clock.elapse_ms();
+            acc_t += d;
+            ++test_count;
+            cout << d << "  " << acc_t / test_count << endl;
         }
 
         FrameBufferType *CUDATask::download_frame_buffer() {

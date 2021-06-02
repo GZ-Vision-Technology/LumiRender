@@ -15,6 +15,10 @@ namespace luminous {
         class CUDATask : public Task {
         private:
 
+            uint test_count = 0;
+
+            double acc_t = 0;
+
             Buffer<float4> _accumulate_buffer{nullptr};
 
             Managed<FrameBufferType, FrameBufferType> _frame_buffer;
