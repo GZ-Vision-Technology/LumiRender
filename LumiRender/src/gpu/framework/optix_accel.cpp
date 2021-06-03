@@ -3,9 +3,7 @@
 //
 
 #include "optix_accel.h"
-#include <optix.h>
 #include <optix_function_table_definition.h>
-#include <optix_stubs.h>
 #include "../gpu_scene.h"
 #include "render/include/shader_data.h"
 #include "util/stats.h"
@@ -440,9 +438,22 @@ namespace luminous {
             _dispatcher.wait();
         }
 
+        void OptixAccel::clear() {
+            optixPipelineDestroy(_optix_pipeline);
+            _device_ptr_table = {};
+            _program_group_table.clear();
+            _as_buffer_list.clear();
+            optixModuleDestroy(_optix_module);
+            optixDeviceContextDestroy(_optix_device_context);
+        }
+
         std::string OptixAccel::description() const {
             float size_in_M = (_bvh_size_in_bytes * 1.f) / (sqr(1024));
             return string_printf("bvh size is %f MB\n", size_in_M);
+        }
+
+        OptixAccel::~OptixAccel() {
+            clear();
         }
     }
 }

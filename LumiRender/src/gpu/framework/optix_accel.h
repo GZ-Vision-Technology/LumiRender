@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <optix.h>
+#include <optix_stubs.h>
 #include "cuda_impl.h"
 #include "graphics/geometry/common.h"
 #include "render/include/scene_graph.h"
@@ -27,14 +29,22 @@ namespace luminous {
             uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
 
             struct ProgramGroupTable {
-                OptixProgramGroup raygen_prog_group = 0;
-                OptixProgramGroup radiance_miss_group = 0;
-                OptixProgramGroup occlusion_miss_group = 0;
-                OptixProgramGroup radiance_hit_group = 0;
-                OptixProgramGroup occlusion_hit_group = 0;
+                OptixProgramGroup raygen_prog_group{nullptr};
+                OptixProgramGroup radiance_miss_group{nullptr};
+                OptixProgramGroup occlusion_miss_group{nullptr};
+                OptixProgramGroup radiance_hit_group{nullptr};
+                OptixProgramGroup occlusion_hit_group{nullptr};
 
                 constexpr auto size() const {
                     return sizeof(ProgramGroupTable) / sizeof(OptixProgramGroup);
+                }
+
+                void clear() {
+                    optixProgramGroupDestroy(raygen_prog_group);
+                    optixProgramGroupDestroy(radiance_miss_group);
+                    optixProgramGroupDestroy(occlusion_miss_group);
+                    optixProgramGroupDestroy(radiance_hit_group);
+                    optixProgramGroupDestroy(occlusion_hit_group);
                 }
             };
 
@@ -51,7 +61,6 @@ namespace luminous {
 
             OptixShaderBindingTable _sbt{};
             OptixTraversableHandle _root_ias_handle{};
-            OptixTraversableHandle _root_gas_handle{};
 
             size_t _bvh_size_in_bytes{0u};
 
@@ -81,9 +90,13 @@ namespace luminous {
         public:
             OptixAccel(const SP<Device> &device, const GPUScene *gpu_scene);
 
+            ~OptixAccel();
+
             size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 
             void launch(uint2 res, Managed<LaunchParams> &launch_params);
+
+            void clear();
 
             NDSC std::string description() const;
 
