@@ -41,6 +41,8 @@ namespace luminous {
                 _optix_accel->launch(std::forward<Args>(args)...);
             }
 
+            void clear() override;
+
             void build_accel();
 
             NDSC std::string description() const override;

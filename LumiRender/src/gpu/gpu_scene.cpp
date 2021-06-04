@@ -116,6 +116,11 @@ namespace luminous {
             cout << description() << endl;
         }
 
+        void GPUScene::clear() {
+            Scene::clear();
+            _optix_accel->clear();
+        }
+
         size_t GPUScene::size_in_bytes() const {
             return Scene::size_in_bytes();
         }
