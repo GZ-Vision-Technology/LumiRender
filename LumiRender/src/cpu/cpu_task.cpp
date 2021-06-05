@@ -3,15 +3,15 @@
 //
 
 #include "cpu_task.h"
+#include "integrators/pt.h"
 
 namespace luminous {
     inline namespace cpu {
         void CPUTask::init(const Parser &parser) {
             auto scene_graph = parser.parse();
             scene_graph->create_shapes();
-//            _integrator = make_unique<MegakernelPT>(_device, _context);
-//            _integrator->init(scene_graph);
-//            update_device_buffer();
+            _integrator = make_unique<CPUPathTracer>(_context);
+            _integrator->init(scene_graph);
         }
 
         void CPUTask::render_gui(double dt) {
@@ -33,7 +33,7 @@ namespace luminous {
         }
 
         FrameBufferType *CPUTask::download_frame_buffer() {
-            return nullptr;
+            return _frame_buffer.data();
         }
 
     } // luminous::cpu
