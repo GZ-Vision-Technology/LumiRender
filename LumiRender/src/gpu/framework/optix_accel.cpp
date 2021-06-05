@@ -35,7 +35,7 @@ namespace luminous {
 #ifndef NDEBUG
             ctx_options.logCallbackLevel = 4; // status/progress
 #else
-            ctx_options.logCallbackLevel     = 2; // error
+            ctx_options.logCallbackLevel = 2; // error
 #endif
             ctx_options.logCallbackFunction = context_log_cb;
 #if (OPTIX_VERSION >= 70200)
@@ -64,16 +64,15 @@ namespace luminous {
 
             _pipeline_compile_options.traversableGraphFlags = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_ANY;
             _pipeline_compile_options.usesMotionBlur = false;
-            _pipeline_compile_options.numPayloadValues = 3;
-            _pipeline_compile_options.numAttributeValues = 4;
+            _pipeline_compile_options.numPayloadValues = 2;
+            _pipeline_compile_options.numAttributeValues = 2;
             // OPTIX_EXCEPTION_FLAG_NONE;
 #ifndef NDEBUG
             _pipeline_compile_options.exceptionFlags =
                     (OPTIX_EXCEPTION_FLAG_STACK_OVERFLOW | OPTIX_EXCEPTION_FLAG_TRACE_DEPTH |
                      OPTIX_EXCEPTION_FLAG_DEBUG);
 #else
-            _pipeline_compile_options.exceptionFlags =
-                    (OPTIX_EXCEPTION_FLAG_STACK_OVERFLOW | OPTIX_EXCEPTION_FLAG_TRACE_DEPTH);
+            _pipeline_compile_options.exceptionFlags = OPTIX_EXCEPTION_FLAG_NONE;
 #endif
             _pipeline_compile_options.pipelineLaunchParamsVariableName = "params";
 
@@ -209,7 +208,7 @@ namespace luminous {
 
         void OptixAccel::create_sbt(ProgramGroupTable program_group_table, const GPUScene *gpu_scene) {
 
-            auto fill_group_data = [&] (HitGroupRecord *p, const GPUScene *gpu_scene) {
+            auto fill_group_data = [&](HitGroupRecord *p, const GPUScene *gpu_scene) {
                 p->data.positions = gpu_scene->_positions.device_buffer_view();
                 p->data.normals = gpu_scene->_normals.device_buffer_view();
                 p->data.tex_coords = gpu_scene->_tex_coords.device_buffer_view();
@@ -284,8 +283,8 @@ namespace luminous {
                 input.triangleArray.flags = &geom_flags;
                 input.triangleArray.numSbtRecords = 1;
                 input.triangleArray.sbtIndexOffsetBuffer = reinterpret_cast<CUdeviceptr>(nullptr);
-                input.triangleArray.sbtIndexOffsetSizeInBytes = 0;
-                input.triangleArray.sbtIndexOffsetStrideInBytes = 0;
+                input.triangleArray.sbtIndexOffsetSizeInBytes = sizeof( uint32_t );
+                input.triangleArray.sbtIndexOffsetStrideInBytes = sizeof( uint32_t );
             }
             return input;
         }
