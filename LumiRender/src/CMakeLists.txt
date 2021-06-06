@@ -64,3 +64,10 @@ add_subdirectory(graphics)
 add_subdirectory(tests)
 add_subdirectory(apps)
 add_subdirectory(render)
+
+if(LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
+
+add_subdirectory(sdk_pt)
+
+
+endif()
