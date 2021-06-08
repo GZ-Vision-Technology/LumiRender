@@ -1,3 +1,4 @@
+include_directories("${PROJECT_SOURCE_DIR}/src/sdk_pt")
 include_directories("${PROJECT_SOURCE_DIR}/src")
 include_directories("${PROJECT_SOURCE_DIR}/src/ext/stblib/stb")
 include_directories("${PROJECT_SOURCE_DIR}/src/ext")
@@ -65,9 +66,9 @@ add_subdirectory(tests)
 add_subdirectory(apps)
 add_subdirectory(render)
 
-if(LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
+#if(LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
 
 add_subdirectory(sdk_pt)
 
 
-endif()
+#endif()

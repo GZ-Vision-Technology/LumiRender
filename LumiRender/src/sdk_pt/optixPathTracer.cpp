@@ -26,7 +26,6 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#include <glad/glad.h>  // Needs to be included before gl_interop
 
 #include <cuda_gl_interop.h>
 #include <cuda_runtime.h>
@@ -34,8 +33,6 @@
 #include <optix.h>
 #include <optix_function_table_definition.h>
 #include <optix_stubs.h>
-
-#include <sampleConfig.h>
 
 #include <sutil/CUDAOutputBuffer.h>
 #include <sutil/Camera.h>
@@ -46,8 +43,6 @@
 #include <sutil/sutil.h>
 #include <sutil/vec_math.h>
 #include <optix_stack_size.h>
-
-#include <GLFW/glfw3.h>
 
 #include "optixPathTracer.h"
 
