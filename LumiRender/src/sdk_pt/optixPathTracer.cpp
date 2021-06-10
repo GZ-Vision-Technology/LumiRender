@@ -33,8 +33,11 @@
 #include <optix.h>
 #include <optix_function_table_definition.h>
 #include <optix_stubs.h>
+#include "gpu/framework/helper/cuda.h"
+//#include <sutil/CUDAOutputBuffer.h>
 
-#include <sutil/CUDAOutputBuffer.h>
+#include "gpu/framework/helper/optix.h"
+
 #include <sutil/Matrix.h>
 #include <sutil/sutil.h>
 #include <sutil/vec_math.h>
@@ -390,13 +393,11 @@ void handleCameraUpdate( Params& params )
 }
 
 
-void handleResize( sutil::CUDAOutputBuffer<uchar4>& output_buffer, Params& params )
+void handleResize( Params& params )
 {
     if( !resize_dirty )
         return;
     resize_dirty = false;
-
-    output_buffer.resize( params.width, params.height );
 
     // Realloc accumulation buffer
     CUDA_CHECK( cudaFree( reinterpret_cast<void*>( params.accum_buffer ) ) );
@@ -407,22 +408,21 @@ void handleResize( sutil::CUDAOutputBuffer<uchar4>& output_buffer, Params& param
 }
 
 
-void updateState( sutil::CUDAOutputBuffer<uchar4>& output_buffer, Params& params )
+void updateState( Params& params )
 {
     // Update params on device
     if( camera_changed || resize_dirty )
         params.subframe_index = 0;
 
     handleCameraUpdate( params );
-    handleResize( output_buffer, params );
+    handleResize( params );
 }
 
 
-void launchSubframe( sutil::CUDAOutputBuffer<uchar4>& output_buffer, PathTracerState& state )
+void launchSubframe(PathTracerState& state )
 {
     // Launch
-    uchar4* result_buffer_data = output_buffer.map();
-    state.params.frame_buffer  = result_buffer_data;
+//    state.params.frame_buffer  = result_buffer_data;
     CUDA_CHECK( cudaMemcpyAsync(
                 reinterpret_cast<void*>( state.d_params ),
                 &state.params, sizeof( Params ),
@@ -439,12 +439,10 @@ void launchSubframe( sutil::CUDAOutputBuffer<uchar4>& output_buffer, PathTracerS
                 state.params.height,  // launch height
                 1                     // launch depth
                 ) );
-    output_buffer.unmap();
-    CUDA_SYNC_CHECK();
 }
 
 
-void displaySubframe( sutil::CUDAOutputBuffer<uchar4>& output_buffer, GLFWwindow* window )
+void displaySubframe( GLFWwindow* window )
 {
 
 }
@@ -625,7 +623,7 @@ void createModule( PathTracerState& state )
 
     char   log[2048];
     size_t sizeof_log = sizeof( log );
-    OPTIX_CHECK_LOG( optixModuleCreateFromPTX(
+    OPTIX_CHECK( optixModuleCreateFromPTX(
                 state.context,
                 &module_compile_options,
                 &state.pipeline_compile_options,
@@ -651,7 +649,7 @@ void createProgramGroups( PathTracerState& state )
         raygen_prog_group_desc.raygen.module            = state.ptx_module;
         raygen_prog_group_desc.raygen.entryFunctionName = "__raygen__rg";
 
-        OPTIX_CHECK_LOG( optixProgramGroupCreate(
+        OPTIX_CHECK( optixProgramGroupCreate(
                     state.context, &raygen_prog_group_desc,
                     1,  // num program groups
                     &program_group_options,
@@ -667,7 +665,7 @@ void createProgramGroups( PathTracerState& state )
         miss_prog_group_desc.miss.module            = state.ptx_module;
         miss_prog_group_desc.miss.entryFunctionName = "__miss__radiance";
         sizeof_log                                  = sizeof( log );
-        OPTIX_CHECK_LOG( optixProgramGroupCreate(
+        OPTIX_CHECK( optixProgramGroupCreate(
                     state.context, &miss_prog_group_desc,
                     1,  // num program groups
                     &program_group_options,
@@ -680,7 +678,7 @@ void createProgramGroups( PathTracerState& state )
         miss_prog_group_desc.miss.module            = nullptr;  // NULL miss program for occlusion rays
         miss_prog_group_desc.miss.entryFunctionName = nullptr;
         sizeof_log                                  = sizeof( log );
-        OPTIX_CHECK_LOG( optixProgramGroupCreate(
+        OPTIX_CHECK( optixProgramGroupCreate(
                     state.context, &miss_prog_group_desc,
                     1,  // num program groups
                     &program_group_options,
@@ -696,7 +694,7 @@ void createProgramGroups( PathTracerState& state )
         hit_prog_group_desc.hitgroup.moduleCH            = state.ptx_module;
         hit_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__radiance";
         sizeof_log                                       = sizeof( log );
-        OPTIX_CHECK_LOG( optixProgramGroupCreate(
+        OPTIX_CHECK( optixProgramGroupCreate(
                     state.context,
                     &hit_prog_group_desc,
                     1,  // num program groups
@@ -741,7 +739,7 @@ void createPipeline( PathTracerState& state )
 
     char   log[2048];
     size_t sizeof_log = sizeof( log );
-    OPTIX_CHECK_LOG( optixPipelineCreate(
+    OPTIX_CHECK( optixPipelineCreate(
                 state.context,
                 &state.pipeline_compile_options,
                 &pipeline_link_options,
@@ -927,8 +925,6 @@ int main( int argc, char* argv[] )
     PathTracerState state;
     state.params.width                             = 768;
     state.params.height                            = 768;
-    sutil::CUDAOutputBufferType output_buffer_type = sutil::CUDAOutputBufferType::GL_INTEROP;
-
     //
     // Parse command line options
     //
@@ -943,7 +939,6 @@ int main( int argc, char* argv[] )
         }
         else if( arg == "--no-gl-interop" )
         {
-            output_buffer_type = sutil::CUDAOutputBufferType::CUDA_DEVICE;
         }
         else if( arg == "--file" || arg == "-f" )
         {
