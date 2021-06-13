@@ -97,6 +97,7 @@ struct Instance
     float transform[12];
 };
 
+extern "C" char sdk_ptx[];
 
 struct PathTracerState
 {
@@ -614,20 +615,20 @@ void createModule( PathTracerState& state )
 #endif
     state.pipeline_compile_options.pipelineLaunchParamsVariableName = "params";
 
-//    const std::string ptx = sutil::getPtxString( OPTIX_SAMPLE_NAME, OPTIX_SAMPLE_DIR, "optixPathTracer.cu" );
-//
-//    char   log[2048];
-//    size_t sizeof_log = sizeof( log );
-//    OPTIX_CHECK( optixModuleCreateFromPTX(
-//                state.context,
-//                &module_compile_options,
-//                &state.pipeline_compile_options,
-//                ptx.c_str(),
-//                ptx.size(),
-//                log,
-//                &sizeof_log,
-//                &state.ptx_module
-//                ) );
+    const std::string ptx(sdk_ptx);
+
+    char   log[2048];
+    size_t sizeof_log = sizeof( log );
+    OPTIX_CHECK( optixModuleCreateFromPTX(
+                state.context,
+                &module_compile_options,
+                &state.pipeline_compile_options,
+                ptx.c_str(),
+                ptx.size(),
+                log,
+                &sizeof_log,
+                &state.ptx_module
+                ) );
 }
 
 
@@ -914,7 +915,7 @@ public:
 // Main
 //
 //------------------------------------------------------------------------------
-
+using namespace std;
 int main( int argc, char* argv[] )
 {
     PathTracerState state;
