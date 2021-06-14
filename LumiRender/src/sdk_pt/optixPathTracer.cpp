@@ -47,7 +47,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-
+#include "render/sensors/sensor.h"
 
 
 bool resize_dirty = false;
@@ -55,6 +55,8 @@ bool minimized    = false;
 
 // Camera state
 bool             camera_changed = true;
+
+luminous::Sensor camera;
 
 // Mouse state
 int32_t mouse_button = -1;
@@ -452,6 +454,16 @@ static void context_log_cb( unsigned int level, const char* tag, const char* mes
 
 void initCameraState()
 {
+    using namespace luminous;
+    SensorConfig sc;
+    sc.set_full_type("PinholeCamera");
+    sc.fov_y = 35;
+    sc.transform_config.position = luminous::make_float3(278.0f, 273.0f, -900.0f);
+    sc.transform_config.yaw = 180;
+    sc.transform_config.set_type("yaw_pitch");
+    sc.film_config.set_full_type("RGBFilm");
+    sc.film_config.resolution = luminous::make_uint2(768);
+    camera = Sensor::create(sc);
 //    camera.setEye( make_float3( 278.0f, 273.0f, -900.0f ) );
 //    camera.setLookat( make_float3( 278.0f, 273.0f, 330.0f ) );
 //    camera.setUp( make_float3( 0.0f, 1.0f, 0.0f ) );
@@ -921,46 +933,6 @@ int main( int argc, char* argv[] )
     PathTracerState state;
     state.params.width                             = 768;
     state.params.height                            = 768;
-    //
-    // Parse command line options
-    //
-    std::string outfile;
-
-    for( int i = 1; i < argc; ++i )
-    {
-        const std::string arg = argv[i];
-        if( arg == "--help" || arg == "-h" )
-        {
-            printUsageAndExit( argv[0] );
-        }
-        else if( arg == "--no-gl-interop" )
-        {
-        }
-        else if( arg == "--file" || arg == "-f" )
-        {
-            if( i >= argc - 1 )
-                printUsageAndExit( argv[0] );
-            outfile = argv[++i];
-        }
-        else if( arg.substr( 0, 6 ) == "--dim=" )
-        {
-            const std::string dims_arg = arg.substr( 6 );
-            int w, h;
-            state.params.width  = w;
-            state.params.height = h;
-        }
-        else if( arg == "--launch-samples" || arg == "-s" )
-        {
-            if( i >= argc - 1 )
-                printUsageAndExit( argv[0] );
-            samples_per_launch = atoi( argv[++i] );
-        }
-        else
-        {
-            std::cerr << "Unknown option '" << argv[i] << "'\n";
-            printUsageAndExit( argv[0] );
-        }
-    }
 
     try
     {
