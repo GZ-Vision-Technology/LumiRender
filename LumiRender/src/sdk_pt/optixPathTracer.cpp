@@ -892,35 +892,11 @@ void cleanupState( PathTracerState& state )
     CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.params.accum_buffer ) ) );
     CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.d_params ) ) );
 }
-class Clock {
 
-    using SystemClock = std::chrono::high_resolution_clock;
-    using Tick = std::chrono::high_resolution_clock::time_point;
+void render(double dt) {
 
-private:
-    Tick _last;
+}
 
-public:
-    Clock() noexcept: _last{SystemClock::now()} {}
-
-    void tic() noexcept { _last = SystemClock::now(); }
-
-    void start() noexcept { tic(); }
-
-    [[nodiscard]] auto toc() const noexcept {
-        auto curr = SystemClock::now();
-        using namespace std::chrono_literals;
-        return (curr - _last) / 1ns * 1e-6;
-    }
-
-    [[nodiscard]] auto elapse_ms() const noexcept {
-        return toc();
-    }
-
-    [[nodiscard]] auto elapse_s() const noexcept {
-        return elapse_ms() / 1000;
-    }
-};
 
 //------------------------------------------------------------------------------
 //
@@ -933,6 +909,7 @@ int main( int argc, char* argv[] )
     PathTracerState state;
     state.params.width                             = 768;
     state.params.height                            = 768;
+
 
     try
     {
@@ -948,7 +925,6 @@ int main( int argc, char* argv[] )
         createPipeline( state );
         createSBT( state );
         initLaunchParams( state );
-
 
 
     }
