@@ -48,6 +48,7 @@
 #include <sstream>
 #include <string>
 #include "render/sensors/sensor.h"
+#include "util/clock.h"
 
 
 bool resize_dirty = false;
@@ -437,6 +438,7 @@ void launchSubframe(PathTracerState& state )
                 state.params.height,  // launch height
                 1                     // launch depth
                 ) );
+    cudaDeviceSynchronize();
 }
 
 
@@ -926,7 +928,7 @@ int main( int argc, char* argv[] )
         createSBT( state );
         initLaunchParams( state );
 
-
+        launchSubframe(state);
     }
     catch( std::exception& e )
     {
