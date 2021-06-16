@@ -204,6 +204,20 @@ static __forceinline__ __device__ bool traceOcclusion(
 
 extern "C" __global__ void __raygen__rg()
 {
+    RadiancePRD prd;
+    prd.emitted      = make_float3(0.f);
+    prd.radiance     = make_float3(0.f);
+    prd.attenuation  = make_float3(1.f);
+    prd.countEmitted = true;
+    prd.done         = false;
+//        prd.seed         = seed;
+    traceRadiance(
+            params.handle,
+            make_float3(0,0,0),
+            make_float3(0,0,1),
+            0.01f,  // tmin       // TODO: smarter offset
+            1e16f,  // tmax
+            &prd );
 //    const int    w   = params.width;
 //    const int    h   = params.height;
 //    const float3 eye = params.eye;
