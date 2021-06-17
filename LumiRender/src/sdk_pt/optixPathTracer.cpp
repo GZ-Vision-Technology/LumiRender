@@ -927,8 +927,12 @@ int main( int argc, char* argv[] )
         createPipeline( state );
         createSBT( state );
         initLaunchParams( state );
-
-        launchSubframe(state);
+        luminous::Clock clk;
+        while (1) {
+            clk.start();
+            launchSubframe(state);
+            cout << clk.elapse_ms() << endl;
+        }
     }
     catch( std::exception& e )
     {
