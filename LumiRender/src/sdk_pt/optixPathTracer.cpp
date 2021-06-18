@@ -38,8 +38,9 @@
 #include <sutil/vec_math.h>
 #include <optix_stack_size.h>
 
+#include "gpu/framework/optix_params.h"
 #include "optixPathTracer.h"
-
+#include "gpu/framework/cuda_impl.h"
 #include <array>
 #include <cstring>
 #include <fstream>
@@ -49,6 +50,7 @@
 #include <string>
 #include "render/sensors/sensor.h"
 #include "util/clock.h"
+#include "graphics/geometry/transform.h"
 
 
 bool resize_dirty = false;
@@ -105,8 +107,11 @@ extern "C" char sdk_ptx[];
 struct PathTracerState
 {
     OptixDeviceContext context = 0;
-
+    luminous::Buffer<OptixInstance> instances{nullptr};
+    luminous::Buffer<std::byte> ias_buffer{nullptr};
+    std::shared_ptr<luminous::Device> device = luminous::create_cuda_device();
     OptixTraversableHandle         gas_handle               = 0;  // Traversable handle for triangle AS
+    OptixTraversableHandle         ias_handle               = 0;  // Traversable handle for triangle AS
     CUdeviceptr                    d_gas_output_buffer      = 0;  // Triangle AS memory
     CUdeviceptr                    d_vertices               = 0;
 
@@ -499,6 +504,61 @@ void createContext( PathTracerState& state )
     state.context = context;
 }
 
+using namespace std;
+
+void buildInstanceAccel(PathTracerState &state) {
+
+    vector<OptixTraversableHandle> traversable_handles;
+    traversable_handles.push_back(state.gas_handle);
+
+    OptixBuildInput instance_input = {};
+    state.instances = state.device->allocate_buffer<OptixInstance>(1);
+    instance_input.type = OPTIX_BUILD_INPUT_TYPE_INSTANCES;
+    instance_input.instanceArray.numInstances = 1;
+    instance_input.instanceArray.instances = state.instances.ptr<CUdeviceptr>();
+    OptixAccelBuildOptions accel_options = {};
+    accel_options.buildFlags = (OPTIX_BUILD_FLAG_ALLOW_COMPACTION | OPTIX_BUILD_FLAG_PREFER_FAST_TRACE);
+    accel_options.operation = OPTIX_BUILD_OPERATION_BUILD;
+
+    OptixAccelBufferSizes ias_buffer_sizes;
+    OPTIX_CHECK(optixAccelComputeMemoryUsage(state.context,
+                                             &accel_options, &instance_input,
+                                             1,  // num build inputs
+                                             &ias_buffer_sizes));
+
+    state.ias_buffer = state.device->allocate_buffer(ias_buffer_sizes.outputSizeInBytes);
+    auto temp_buffer = state.device->allocate_buffer(ias_buffer_sizes.tempSizeInBytes);
+    auto compact_size_buffer = state.device->allocate_buffer<uint64_t>(1);
+    OptixAccelEmitDesc emit_desc;
+    emit_desc.type = OPTIX_PROPERTY_TYPE_COMPACTED_SIZE;
+    emit_desc.result = compact_size_buffer.ptr<uint64_t>();
+
+    vector<OptixInstance> optix_instances;
+    optix_instances.reserve(1);
+    for (int i = 0; i < 1; ++i) {
+        auto transform = luminous::Transform(luminous::make_float4x4());
+        OptixInstance optix_instance;
+        optix_instance.traversableHandle = traversable_handles[0];
+        optix_instance.flags = OPTIX_INSTANCE_FLAG_NONE;
+        optix_instance.instanceId = i;
+        optix_instance.visibilityMask = 1;
+        optix_instance.sbtOffset = 0;
+        luminous::mat4x4_to_array12(transform.mat4x4(), optix_instance.transform);
+        optix_instances.push_back(optix_instance);
+    }
+
+    state.instances.upload(optix_instances.data());
+
+    OPTIX_CHECK(optixAccelBuild(state.context,
+                                0, &accel_options,
+                                &instance_input, 1,
+                                temp_buffer.ptr<CUdeviceptr>(),
+                                ias_buffer_sizes.tempSizeInBytes,
+                                state.ias_buffer.ptr<CUdeviceptr>(),
+                                ias_buffer_sizes.outputSizeInBytes,
+                                &state.ias_handle, &emit_desc, 1));
+    CU_CHECK(cuCtxSynchronize());
+}
 
 void buildMeshAccel( PathTracerState& state )
 {
@@ -922,6 +982,7 @@ int main( int argc, char* argv[] )
         //
         createContext( state );
         buildMeshAccel( state );
+        buildInstanceAccel(state);
         createModule( state );
         createProgramGroups( state );
         createPipeline( state );
