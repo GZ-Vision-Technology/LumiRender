@@ -928,10 +928,14 @@ int main( int argc, char* argv[] )
         createSBT( state );
         initLaunchParams( state );
         luminous::Clock clk;
+        int i = 0;
+        double t = 0;
         while (1) {
             clk.start();
             launchSubframe(state);
-            cout << clk.elapse_ms() << endl;
+            double dt = clk.elapse_ms();
+            t += dt;
+            cout << "dt = "<< dt <<",count = " << ++i <<",average = " << t / i << endl;
         }
     }
     catch( std::exception& e )
