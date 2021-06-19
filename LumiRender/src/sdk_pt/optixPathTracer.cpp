@@ -90,6 +90,7 @@ struct Vertex
     float x, y, z, pad;
 };
 
+//using Vertex = luminous::float4;
 
 struct IndexedTriangle
 {
@@ -140,7 +141,7 @@ struct PathTracerState
 //------------------------------------------------------------------------------
 
 const int32_t TRIANGLE_COUNT = 32;
-const int32_t MAT_COUNT      = 4;
+const int32_t MAT_COUNT      = 1;
 
 const static std::array<Vertex, TRIANGLE_COUNT* 3> g_vertices =
 {  {
@@ -296,9 +297,9 @@ static std::array<uint32_t, TRIANGLE_COUNT> g_mat_indices = {{
 const std::array<float3, MAT_COUNT> g_emission_colors =
 { {
     {  0.0f,  0.0f,  0.0f },
-    {  0.0f,  0.0f,  0.0f },
-    {  0.0f,  0.0f,  0.0f },
-    { 15.0f, 15.0f,  5.0f }
+//    {  0.0f,  0.0f,  0.0f },
+//    {  0.0f,  0.0f,  0.0f },
+//    { 15.0f, 15.0f,  5.0f }
 
 } };
 
@@ -306,9 +307,9 @@ const std::array<float3, MAT_COUNT> g_emission_colors =
 const std::array<float3, MAT_COUNT> g_diffuse_colors =
 { {
     { 0.80f, 0.80f, 0.80f },
-    { 0.05f, 0.80f, 0.05f },
-    { 0.80f, 0.05f, 0.05f },
-    { 0.50f, 0.00f, 0.00f }
+//    { 0.05f, 0.80f, 0.05f },
+//    { 0.80f, 0.05f, 0.05f },
+//    { 0.50f, 0.00f, 0.00f }
 } };
 
 
@@ -589,9 +590,9 @@ void buildMeshAccel( PathTracerState& state )
     uint32_t triangle_input_flags[MAT_COUNT] =  // One per SBT record for this build input
     {
         OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT,
-        OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT,
-        OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT,
-        OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT
+//        OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT,
+//        OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT,
+//        OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT
     };
 
     OptixBuildInput triangle_input                           = {};
@@ -982,7 +983,7 @@ int main( int argc, char* argv[] )
         //
         createContext( state );
         buildMeshAccel( state );
-        buildInstanceAccel(state);
+//        buildInstanceAccel(state);
         createModule( state );
         createProgramGroups( state );
         createPipeline( state );
