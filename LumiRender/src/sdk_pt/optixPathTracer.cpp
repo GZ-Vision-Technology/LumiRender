@@ -85,23 +85,18 @@ typedef Record<MissData>     MissRecord;
 typedef Record<HitGroupData> HitGroupRecord;
 
 
-struct Vertex
-{
-    float x, y, z, pad;
-};
-
 //using Vertex = luminous::float4;
 
-struct IndexedTriangle
-{
-    uint32_t v1, v2, v3, pad;
-};
+//struct IndexedTriangle
+//{
+//    uint32_t v1, v2, v3, pad;
+//};
 
 
-struct Instance
-{
-    float transform[12];
-};
+//struct Instance
+//{
+//    float transform[12];
+//};
 
 extern "C" char sdk_ptx[];
 
@@ -566,7 +561,7 @@ void buildMeshAccel( PathTracerState& state )
     //
     // copy mesh data to device
     //
-    const size_t vertices_size_in_bytes = g_vertices.size() * sizeof( Vertex );
+    const size_t vertices_size_in_bytes = g_vertices.size() * sizeof( luminous::float4 );
     CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &state.d_vertices ), vertices_size_in_bytes ) );
     CUDA_CHECK( cudaMemcpy(
                 reinterpret_cast<void*>( state.d_vertices ),
@@ -574,15 +569,15 @@ void buildMeshAccel( PathTracerState& state )
                 cudaMemcpyHostToDevice
                 ) );
 
-    CUdeviceptr  d_mat_indices             = 0;
-    const size_t mat_indices_size_in_bytes = g_mat_indices.size() * sizeof( uint32_t );
-    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &d_mat_indices ), mat_indices_size_in_bytes ) );
-    CUDA_CHECK( cudaMemcpy(
-                reinterpret_cast<void*>( d_mat_indices ),
-                g_mat_indices.data(),
-                mat_indices_size_in_bytes,
-                cudaMemcpyHostToDevice
-                ) );
+//    CUdeviceptr  d_mat_indices             = 0;
+//    const size_t mat_indices_size_in_bytes = g_mat_indices.size() * sizeof( uint32_t );
+//    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &d_mat_indices ), mat_indices_size_in_bytes ) );
+//    CUDA_CHECK( cudaMemcpy(
+//                reinterpret_cast<void*>( d_mat_indices ),
+//                g_mat_indices.data(),
+//                mat_indices_size_in_bytes,
+//                cudaMemcpyHostToDevice
+//                ) );
 
     //
     // Build triangle GAS
@@ -598,14 +593,14 @@ void buildMeshAccel( PathTracerState& state )
     OptixBuildInput triangle_input                           = {};
     triangle_input.type                                      = OPTIX_BUILD_INPUT_TYPE_TRIANGLES;
     triangle_input.triangleArray.vertexFormat                = OPTIX_VERTEX_FORMAT_FLOAT3;
-    triangle_input.triangleArray.vertexStrideInBytes         = sizeof( Vertex );
+    triangle_input.triangleArray.vertexStrideInBytes         = sizeof( luminous::float4 );
     triangle_input.triangleArray.numVertices                 = static_cast<uint32_t>( g_vertices.size() );
     triangle_input.triangleArray.vertexBuffers               = &state.d_vertices;
     triangle_input.triangleArray.flags                       = triangle_input_flags;
     triangle_input.triangleArray.numSbtRecords               = MAT_COUNT;
-    triangle_input.triangleArray.sbtIndexOffsetBuffer        = d_mat_indices;
-    triangle_input.triangleArray.sbtIndexOffsetSizeInBytes   = sizeof( uint32_t );
-    triangle_input.triangleArray.sbtIndexOffsetStrideInBytes = sizeof( uint32_t );
+//    triangle_input.triangleArray.sbtIndexOffsetBuffer        = d_mat_indices;
+//    triangle_input.triangleArray.sbtIndexOffsetSizeInBytes   = sizeof( uint32_t );
+//    triangle_input.triangleArray.sbtIndexOffsetStrideInBytes = sizeof( uint32_t );
 
     OptixAccelBuildOptions accel_options = {};
     accel_options.buildFlags             = OPTIX_BUILD_FLAG_ALLOW_COMPACTION;
@@ -651,7 +646,7 @@ void buildMeshAccel( PathTracerState& state )
                 ) );
 
     CUDA_CHECK( cudaFree( reinterpret_cast<void*>( d_temp_buffer ) ) );
-    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( d_mat_indices ) ) );
+//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( d_mat_indices ) ) );
 
     size_t compacted_gas_size;
     CUDA_CHECK( cudaMemcpy( &compacted_gas_size, (void*)emitProperty.result, sizeof(size_t), cudaMemcpyDeviceToHost ) );
