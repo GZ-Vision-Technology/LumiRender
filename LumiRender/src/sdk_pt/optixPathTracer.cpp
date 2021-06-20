@@ -105,6 +105,7 @@ struct PathTracerState
     OptixDeviceContext context = 0;
     luminous::Buffer<OptixInstance> instances{nullptr};
     luminous::Buffer<std::byte> ias_buffer{nullptr};
+    luminous::Buffer<luminous::float4> pos_buffer{nullptr};
     std::shared_ptr<luminous::Device> device = luminous::create_cuda_device();
     OptixTraversableHandle         gas_handle               = 0;  // Traversable handle for triangle AS
     OptixTraversableHandle         ias_handle               = 0;  // Traversable handle for triangle AS
@@ -400,11 +401,11 @@ void handleResize( Params& params )
     resize_dirty = false;
 
     // Realloc accumulation buffer
-    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( params.accum_buffer ) ) );
-    CUDA_CHECK( cudaMalloc(
-                reinterpret_cast<void**>( &params.accum_buffer ),
-                params.width * params.height * sizeof( float4 )
-                ) );
+//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( params.accum_buffer ) ) );
+//    CUDA_CHECK( cudaMalloc(
+//                reinterpret_cast<void**>( &params.accum_buffer ),
+//                params.width * params.height * sizeof( float4 )
+//                ) );
 }
 
 
@@ -561,13 +562,19 @@ void buildMeshAccel( PathTracerState& state )
     //
     // copy mesh data to device
     //
-    const size_t vertices_size_in_bytes = g_vertices.size() * sizeof( luminous::float4 );
-    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &state.d_vertices ), vertices_size_in_bytes ) );
-    CUDA_CHECK( cudaMemcpy(
-                reinterpret_cast<void*>( state.d_vertices ),
-                g_vertices.data(), vertices_size_in_bytes,
-                cudaMemcpyHostToDevice
-                ) );
+//    const size_t vertices_size_in_bytes = g_vertices.size() * sizeof( luminous::float4 );
+//    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &state.d_vertices ), vertices_size_in_bytes ) );
+//    CUDA_CHECK( cudaMemcpy(
+//                reinterpret_cast<void*>( state.d_vertices ),
+//                g_vertices.data(), vertices_size_in_bytes,
+//                cudaMemcpyHostToDevice
+//                ) );
+
+    using namespace luminous;
+    state.pos_buffer = state.device->allocate_buffer(g_vertices.size());
+    state.pos_buffer.upload(g_vertices.data());
+    state.d_vertices = state.pos_buffer.ptr<CUdeviceptr>();
+
 
 //    CUdeviceptr  d_mat_indices             = 0;
 //    const size_t mat_indices_size_in_bytes = g_mat_indices.size() * sizeof( uint32_t );
@@ -945,7 +952,7 @@ void cleanupState( PathTracerState& state )
     CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.sbt.raygenRecord ) ) );
     CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.sbt.missRecordBase ) ) );
     CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.sbt.hitgroupRecordBase ) ) );
-    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.d_vertices ) ) );
+//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.d_vertices ) ) );
     CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.d_gas_output_buffer ) ) );
     CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.params.accum_buffer ) ) );
     CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.d_params ) ) );
