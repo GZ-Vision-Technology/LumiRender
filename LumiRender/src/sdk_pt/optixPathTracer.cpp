@@ -549,10 +549,7 @@ void buildMeshAccel( PathTracerState& state )
     //
     uint32_t triangle_input_flags[MAT_COUNT] =  // One per SBT record for this build input
     {
-        OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT,
-//        OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT,
-//        OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT,
-//        OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT
+        OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT
     };
 
     OptixBuildInput triangle_input                           = {};
@@ -563,9 +560,6 @@ void buildMeshAccel( PathTracerState& state )
     triangle_input.triangleArray.vertexBuffers               = &state.d_vertices;
     triangle_input.triangleArray.flags                       = triangle_input_flags;
     triangle_input.triangleArray.numSbtRecords               = MAT_COUNT;
-//    triangle_input.triangleArray.sbtIndexOffsetBuffer        = d_mat_indices;
-//    triangle_input.triangleArray.sbtIndexOffsetSizeInBytes   = sizeof( uint32_t );
-//    triangle_input.triangleArray.sbtIndexOffsetStrideInBytes = sizeof( uint32_t );
 
     OptixAccelBuildOptions accel_options = {};
     accel_options.buildFlags             = OPTIX_BUILD_FLAG_ALLOW_COMPACTION;
@@ -580,8 +574,7 @@ void buildMeshAccel( PathTracerState& state )
                 &gas_buffer_sizes
                 ) );
 
-    CUdeviceptr d_temp_buffer;
-    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &d_temp_buffer ), gas_buffer_sizes.tempSizeInBytes ) );
+    auto temp_buffer = state.device->allocate_buffer(gas_buffer_sizes.tempSizeInBytes);
 
     // non-compacted output
     CUdeviceptr d_buffer_temp_output_gas_and_compacted_size;
@@ -591,9 +584,12 @@ void buildMeshAccel( PathTracerState& state )
                 compactedSizeOffset + 8
                 ) );
 
+    auto compact_size_buffer = state.device->allocate_buffer<uint64_t>(1);
+
     OptixAccelEmitDesc emitProperty = {};
     emitProperty.type               = OPTIX_PROPERTY_TYPE_COMPACTED_SIZE;
-    emitProperty.result             = ( CUdeviceptr )( (char*)d_buffer_temp_output_gas_and_compacted_size + compactedSizeOffset );
+    emitProperty.result = compact_size_buffer.ptr<CUdeviceptr>();
+
 
     OPTIX_CHECK( optixAccelBuild(
                 state.context,
@@ -601,7 +597,7 @@ void buildMeshAccel( PathTracerState& state )
                 &accel_options,
                 &triangle_input,
                 1,                                  // num build inputs
-                d_temp_buffer,
+                temp_buffer.ptr<CUdeviceptr>(),
                 gas_buffer_sizes.tempSizeInBytes,
                 d_buffer_temp_output_gas_and_compacted_size,
                 gas_buffer_sizes.outputSizeInBytes,
@@ -610,8 +606,6 @@ void buildMeshAccel( PathTracerState& state )
                 1                                   // num emitted properties
                 ) );
 
-    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( d_temp_buffer ) ) );
-//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( d_mat_indices ) ) );
 
     size_t compacted_gas_size;
     CUDA_CHECK( cudaMemcpy( &compacted_gas_size, (void*)emitProperty.result, sizeof(size_t), cudaMemcpyDeviceToHost ) );
