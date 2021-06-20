@@ -366,10 +366,7 @@ void printUsageAndExit( const char* argv0 )
 
 void initLaunchParams( PathTracerState& state )
 {
-    CUDA_CHECK( cudaMalloc(
-                reinterpret_cast<void**>( &state.params.accum_buffer ),
-                state.params.width * state.params.height * sizeof( float4 )
-                ) );
+
     state.params.frame_buffer = nullptr;  // Will be set when output buffer is mapped
 
     state.params.samples_per_launch = samples_per_launch;
@@ -385,7 +382,6 @@ void initLaunchParams( PathTracerState& state )
     CUDA_CHECK( cudaStreamCreate( &state.stream ) );
 
     state.b_params = state.device->allocate_buffer<Params>(1);
-//    state.dispatcher = state.device->new_dispatcher();
 }
 
 
@@ -394,31 +390,6 @@ void handleCameraUpdate( Params& params )
 
 }
 
-
-void handleResize( Params& params )
-{
-    if( !resize_dirty )
-        return;
-    resize_dirty = false;
-
-    // Realloc accumulation buffer
-//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( params.accum_buffer ) ) );
-//    CUDA_CHECK( cudaMalloc(
-//                reinterpret_cast<void**>( &params.accum_buffer ),
-//                params.width * params.height * sizeof( float4 )
-//                ) );
-}
-
-
-void updateState( Params& params )
-{
-    // Update params on device
-    if( camera_changed || resize_dirty )
-        params.subframe_index = 0;
-
-    handleCameraUpdate( params );
-    handleResize( params );
-}
 
 
 void launchSubframe(PathTracerState& state )
@@ -567,29 +538,11 @@ void buildMeshAccel( PathTracerState& state )
     //
     // copy mesh data to device
     //
-    const size_t vertices_size_in_bytes = g_vertices.size() * sizeof( luminous::float4 );
-    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &state.d_vertices ), vertices_size_in_bytes ) );
-    CUDA_CHECK( cudaMemcpy(
-                reinterpret_cast<void*>( state.d_vertices ),
-                g_vertices.data(), vertices_size_in_bytes,
-                cudaMemcpyHostToDevice
-                ) );
 
     using namespace luminous;
     state.pos_buffer = state.device->allocate_buffer<luminous::float4>(g_vertices.size());
     state.pos_buffer.upload(g_vertices.data());
     state.d_vertices = state.pos_buffer.ptr<CUdeviceptr>();
-
-
-//    CUdeviceptr  d_mat_indices             = 0;
-//    const size_t mat_indices_size_in_bytes = g_mat_indices.size() * sizeof( uint32_t );
-//    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &d_mat_indices ), mat_indices_size_in_bytes ) );
-//    CUDA_CHECK( cudaMemcpy(
-//                reinterpret_cast<void*>( d_mat_indices ),
-//                g_mat_indices.data(),
-//                mat_indices_size_in_bytes,
-//                cudaMemcpyHostToDevice
-//                ) );
 
     //
     // Build triangle GAS
