@@ -124,8 +124,8 @@ struct PathTracerState
 
     CUstream                       stream                   = 0;
     Params                         params;
-    Params*                        d_params;
-
+    luminous::Buffer<Params>       b_params{nullptr};
+    luminous::Dispatcher dispatcher{std::make_unique<luminous::CUDADispatcher>()};
     OptixShaderBindingTable        sbt                      = {};
 };
 
@@ -383,8 +383,9 @@ void initLaunchParams( PathTracerState& state )
     state.params.handle         = state.gas_handle;
 
     CUDA_CHECK( cudaStreamCreate( &state.stream ) );
-    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &state.d_params ), sizeof( Params ) ) );
 
+    state.b_params = state.device->allocate_buffer<Params>(1);
+//    state.dispatcher = state.device->new_dispatcher();
 }
 
 
@@ -424,16 +425,20 @@ void launchSubframe(PathTracerState& state )
 {
     // Launch
 //    state.params.frame_buffer  = result_buffer_data;
-    CUDA_CHECK( cudaMemcpyAsync(
-                reinterpret_cast<void*>( state.d_params ),
-                &state.params, sizeof( Params ),
-                cudaMemcpyHostToDevice, state.stream
-                ) );
+
+    state.b_params.upload_async(state.dispatcher,&state.params);
+//    state.b_params.upload(&state.params);
+//
+//    CUDA_CHECK( cudaMemcpy(
+//                reinterpret_cast<void*>( state.d_params ),
+//                &state.params, sizeof( Params ),
+//                cudaMemcpyHostToDevice
+//                ) );
 
     OPTIX_CHECK( optixLaunch(
                 state.pipeline,
                 state.stream,
-                reinterpret_cast<CUdeviceptr>( state.d_params ),
+                state.b_params.ptr<CUdeviceptr>(),
                 sizeof( Params ),
                 &state.sbt,
                 state.params.width,   // launch width
@@ -949,13 +954,13 @@ void cleanupState( PathTracerState& state )
     OPTIX_CHECK( optixDeviceContextDestroy( state.context ) );
 
 
-    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.sbt.raygenRecord ) ) );
-    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.sbt.missRecordBase ) ) );
-    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.sbt.hitgroupRecordBase ) ) );
+//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.sbt.raygenRecord ) ) );
+//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.sbt.missRecordBase ) ) );
+//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.sbt.hitgroupRecordBase ) ) );
 //    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.d_vertices ) ) );
-    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.d_gas_output_buffer ) ) );
-    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.params.accum_buffer ) ) );
-    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.d_params ) ) );
+//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.d_gas_output_buffer ) ) );
+//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.params.accum_buffer ) ) );
+//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.d_params ) ) );
 }
 
 void render(double dt) {
