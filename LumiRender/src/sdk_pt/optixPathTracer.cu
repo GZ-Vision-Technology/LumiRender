@@ -312,6 +312,7 @@ extern "C" __global__ void __closesthit__radiance()
 //    HitGroupData* rt_data = (HitGroupData*)optixGetSbtDataPointer();
 //
 //    const int    prim_idx        = optixGetPrimitiveIndex();
+//    printf("%d \n", prim_idx);
 //    const float3 ray_dir         = optixGetWorldRayDirection();
 //    const int    vert_idx_offset = prim_idx*3;
 //

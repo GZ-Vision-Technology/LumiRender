@@ -562,16 +562,16 @@ void buildMeshAccel( PathTracerState& state )
     //
     // copy mesh data to device
     //
-//    const size_t vertices_size_in_bytes = g_vertices.size() * sizeof( luminous::float4 );
-//    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &state.d_vertices ), vertices_size_in_bytes ) );
-//    CUDA_CHECK( cudaMemcpy(
-//                reinterpret_cast<void*>( state.d_vertices ),
-//                g_vertices.data(), vertices_size_in_bytes,
-//                cudaMemcpyHostToDevice
-//                ) );
+    const size_t vertices_size_in_bytes = g_vertices.size() * sizeof( luminous::float4 );
+    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &state.d_vertices ), vertices_size_in_bytes ) );
+    CUDA_CHECK( cudaMemcpy(
+                reinterpret_cast<void*>( state.d_vertices ),
+                g_vertices.data(), vertices_size_in_bytes,
+                cudaMemcpyHostToDevice
+                ) );
 
     using namespace luminous;
-    state.pos_buffer = state.device->allocate_buffer(g_vertices.size());
+    state.pos_buffer = state.device->allocate_buffer<luminous::float4>(g_vertices.size());
     state.pos_buffer.upload(g_vertices.data());
     state.d_vertices = state.pos_buffer.ptr<CUdeviceptr>();
 
