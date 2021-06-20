@@ -105,11 +105,16 @@ struct PathTracerState
     OptixDeviceContext context = 0;
     luminous::Buffer<OptixInstance> instances{nullptr};
     luminous::Buffer<std::byte> ias_buffer{nullptr};
+    luminous::Buffer<std::byte> gas_buffer{nullptr};
     luminous::Buffer<luminous::float4> pos_buffer{nullptr};
+
+    luminous::Buffer<RayGenRecord> rg_buffer{nullptr};
+    luminous::Buffer<MissRecord> ms_rcd_buffer{nullptr};
+    luminous::Buffer<HitGroupRecord> hg_rcd_buffer{nullptr};
+
     std::shared_ptr<luminous::Device> device = luminous::create_cuda_device();
     OptixTraversableHandle         gas_handle               = 0;  // Traversable handle for triangle AS
     OptixTraversableHandle         ias_handle               = 0;  // Traversable handle for triangle AS
-    CUdeviceptr                    d_gas_output_buffer      = 0;  // Triangle AS memory
     CUdeviceptr                    d_vertices               = 0;
 
     OptixModule                    ptx_module               = 0;
@@ -398,13 +403,6 @@ void launchSubframe(PathTracerState& state )
 //    state.params.frame_buffer  = result_buffer_data;
 
     state.b_params.upload_async(state.dispatcher,&state.params);
-//    state.b_params.upload(&state.params);
-//
-//    CUDA_CHECK( cudaMemcpy(
-//                reinterpret_cast<void*>( state.d_params ),
-//                &state.params, sizeof( Params ),
-//                cudaMemcpyHostToDevice
-//                ) );
 
     OPTIX_CHECK( optixLaunch(
                 state.pipeline,
@@ -575,14 +573,7 @@ void buildMeshAccel( PathTracerState& state )
                 ) );
 
     auto temp_buffer = state.device->allocate_buffer(gas_buffer_sizes.tempSizeInBytes);
-
-    // non-compacted output
-    CUdeviceptr d_buffer_temp_output_gas_and_compacted_size;
-    size_t      compactedSizeOffset = roundUp<size_t>( gas_buffer_sizes.outputSizeInBytes, 8ull );
-    CUDA_CHECK( cudaMalloc(
-                reinterpret_cast<void**>( &d_buffer_temp_output_gas_and_compacted_size ),
-                compactedSizeOffset + 8
-                ) );
+    state.gas_buffer = state.device->allocate_buffer(gas_buffer_sizes.outputSizeInBytes);
 
     auto compact_size_buffer = state.device->allocate_buffer<uint64_t>(1);
 
@@ -599,30 +590,13 @@ void buildMeshAccel( PathTracerState& state )
                 1,                                  // num build inputs
                 temp_buffer.ptr<CUdeviceptr>(),
                 gas_buffer_sizes.tempSizeInBytes,
-                d_buffer_temp_output_gas_and_compacted_size,
+                state.gas_buffer.ptr<CUdeviceptr>(),
                 gas_buffer_sizes.outputSizeInBytes,
                 &state.gas_handle,
                 &emitProperty,                      // emitted property list
                 1                                   // num emitted properties
                 ) );
 
-
-    size_t compacted_gas_size;
-    CUDA_CHECK( cudaMemcpy( &compacted_gas_size, (void*)emitProperty.result, sizeof(size_t), cudaMemcpyDeviceToHost ) );
-
-    if( compacted_gas_size < gas_buffer_sizes.outputSizeInBytes )
-    {
-        CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &state.d_gas_output_buffer ), compacted_gas_size ) );
-
-        // use handle as input and output
-        OPTIX_CHECK( optixAccelCompact( state.context, 0, state.gas_handle, state.d_gas_output_buffer, compacted_gas_size, &state.gas_handle ) );
-
-        CUDA_CHECK( cudaFree( (void*)d_buffer_temp_output_gas_and_compacted_size ) );
-    }
-    else
-    {
-        state.d_gas_output_buffer = d_buffer_temp_output_gas_and_compacted_size;
-    }
 }
 
 
@@ -813,44 +787,25 @@ void createPipeline( PathTracerState& state )
 
 void createSBT( PathTracerState& state )
 {
-    CUdeviceptr  d_raygen_record;
-    const size_t raygen_record_size = sizeof( RayGenRecord );
-    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &d_raygen_record ), raygen_record_size ) );
+    state.rg_buffer = state.device->allocate_buffer<RayGenRecord>(1);
 
     RayGenRecord rg_sbt = {};
     OPTIX_CHECK( optixSbtRecordPackHeader( state.raygen_prog_group, &rg_sbt ) );
+    state.rg_buffer.upload(&rg_sbt);
 
-    CUDA_CHECK( cudaMemcpy(
-                reinterpret_cast<void*>( d_raygen_record ),
-                &rg_sbt,
-                raygen_record_size,
-                cudaMemcpyHostToDevice
-                ) );
-
-
-    CUdeviceptr  d_miss_records;
     const size_t miss_record_size = sizeof( MissRecord );
-    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &d_miss_records ), miss_record_size * RAY_TYPE_COUNT ) );
-
+    state.ms_rcd_buffer = state.device->allocate_buffer<MissRecord>(RAY_TYPE_COUNT);
     MissRecord ms_sbt[2];
     OPTIX_CHECK( optixSbtRecordPackHeader( state.radiance_miss_group,  &ms_sbt[0] ) );
     ms_sbt[0].data.bg_color = make_float4( 0.0f );
     OPTIX_CHECK( optixSbtRecordPackHeader( state.occlusion_miss_group, &ms_sbt[1] ) );
     ms_sbt[1].data.bg_color = make_float4( 0.0f );
+    state.ms_rcd_buffer.upload(ms_sbt);
 
-    CUDA_CHECK( cudaMemcpy(
-                reinterpret_cast<void*>( d_miss_records ),
-                ms_sbt,
-                miss_record_size*RAY_TYPE_COUNT,
-                cudaMemcpyHostToDevice
-                ) );
 
-    CUdeviceptr  d_hitgroup_records;
+    state.hg_rcd_buffer = state.device->allocate_buffer<HitGroupRecord>(RAY_TYPE_COUNT);
+
     const size_t hitgroup_record_size = sizeof( HitGroupRecord );
-    CUDA_CHECK( cudaMalloc(
-                reinterpret_cast<void**>( &d_hitgroup_records ),
-                hitgroup_record_size * RAY_TYPE_COUNT * MAT_COUNT
-                ) );
 
     HitGroupRecord hitgroup_records[RAY_TYPE_COUNT * MAT_COUNT];
     for( int i = 0; i < MAT_COUNT; ++i )
@@ -872,48 +827,17 @@ void createSBT( PathTracerState& state )
         }
     }
 
-    CUDA_CHECK( cudaMemcpy(
-                reinterpret_cast<void*>( d_hitgroup_records ),
-                hitgroup_records,
-                hitgroup_record_size*RAY_TYPE_COUNT*MAT_COUNT,
-                cudaMemcpyHostToDevice
-                ) );
+    state.hg_rcd_buffer.upload(hitgroup_records);
 
-    state.sbt.raygenRecord                = d_raygen_record;
-    state.sbt.missRecordBase              = d_miss_records;
+
+    state.sbt.raygenRecord                = state.rg_buffer.ptr<CUdeviceptr>();
+    state.sbt.missRecordBase              = state.ms_rcd_buffer.ptr<CUdeviceptr>();
     state.sbt.missRecordStrideInBytes     = static_cast<uint32_t>( miss_record_size );
     state.sbt.missRecordCount             = RAY_TYPE_COUNT;
-    state.sbt.hitgroupRecordBase          = d_hitgroup_records;
+    state.sbt.hitgroupRecordBase          = state.hg_rcd_buffer.ptr<CUdeviceptr>();
     state.sbt.hitgroupRecordStrideInBytes = static_cast<uint32_t>( hitgroup_record_size );
     state.sbt.hitgroupRecordCount         = RAY_TYPE_COUNT * MAT_COUNT;
 }
-
-
-void cleanupState( PathTracerState& state )
-{
-    OPTIX_CHECK( optixPipelineDestroy( state.pipeline ) );
-    OPTIX_CHECK( optixProgramGroupDestroy( state.raygen_prog_group ) );
-    OPTIX_CHECK( optixProgramGroupDestroy( state.radiance_miss_group ) );
-    OPTIX_CHECK( optixProgramGroupDestroy( state.radiance_hit_group ) );
-    OPTIX_CHECK( optixProgramGroupDestroy( state.occlusion_hit_group ) );
-    OPTIX_CHECK( optixProgramGroupDestroy( state.occlusion_miss_group ) );
-    OPTIX_CHECK( optixModuleDestroy( state.ptx_module ) );
-    OPTIX_CHECK( optixDeviceContextDestroy( state.context ) );
-
-
-//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.sbt.raygenRecord ) ) );
-//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.sbt.missRecordBase ) ) );
-//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.sbt.hitgroupRecordBase ) ) );
-//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.d_vertices ) ) );
-//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.d_gas_output_buffer ) ) );
-//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.params.accum_buffer ) ) );
-//    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( state.d_params ) ) );
-}
-
-void render(double dt) {
-
-}
-
 
 //------------------------------------------------------------------------------
 //
@@ -926,7 +850,6 @@ int main( int argc, char* argv[] )
     PathTracerState state;
     state.params.width                             = 768;
     state.params.height                            = 768;
-
 
     try
     {
