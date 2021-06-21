@@ -269,21 +269,6 @@ const static std::vector<luminous::float3> g_vertices =
             };
 
 
-
-
-const std::array<float3, MAT_COUNT> g_emission_colors =
-        { {
-                  {  0.0f,  0.0f,  0.0f }
-
-          } };
-
-
-const std::array<float3, MAT_COUNT> g_diffuse_colors =
-        { {
-                  { 0.80f, 0.80f, 0.80f }
-          } };
-
-
 //------------------------------------------------------------------------------
 //
 // GLFW callbacks
@@ -778,23 +763,18 @@ void createSBT( PathTracerState& state )
     const size_t hitgroup_record_size = sizeof( HitGroupRecord );
 
     HitGroupRecord hitgroup_records[RAY_TYPE_COUNT * MAT_COUNT];
-    for( int i = 0; i < MAT_COUNT; ++i )
     {
-        {
-            const int sbt_idx = i * RAY_TYPE_COUNT + 0;  // SBT for radiance ray-type for ith material
+        const int sbt_idx = 0;  // SBT for radiance ray-type for ith material
 
-            OPTIX_CHECK( optixSbtRecordPackHeader( state.radiance_hit_group, &hitgroup_records[sbt_idx] ) );
-            hitgroup_records[sbt_idx].data.emission_color = g_emission_colors[i];
-            hitgroup_records[sbt_idx].data.diffuse_color  = g_diffuse_colors[i];
-            hitgroup_records[sbt_idx].data.vertices       = reinterpret_cast<float4*>( state.d_vertices );
-        }
+        OPTIX_CHECK( optixSbtRecordPackHeader( state.radiance_hit_group, &hitgroup_records[sbt_idx] ) );
+        hitgroup_records[sbt_idx].data.vertices       = reinterpret_cast<float4*>( state.d_vertices );
+    }
 
-        {
-            const int sbt_idx = i * RAY_TYPE_COUNT + 1;  // SBT for occlusion ray-type for ith material
-            memset( &hitgroup_records[sbt_idx], 0, hitgroup_record_size );
+    {
+        const int sbt_idx = 1;  // SBT for occlusion ray-type for ith material
+        memset( &hitgroup_records[sbt_idx], 0, hitgroup_record_size );
 
-            OPTIX_CHECK( optixSbtRecordPackHeader( state.occlusion_hit_group, &hitgroup_records[sbt_idx] ) );
-        }
+        OPTIX_CHECK( optixSbtRecordPackHeader( state.occlusion_hit_group, &hitgroup_records[sbt_idx] ) );
     }
 
     state.hg_rcd_buffer.upload(hitgroup_records);
