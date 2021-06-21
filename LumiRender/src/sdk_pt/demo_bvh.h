@@ -130,8 +130,8 @@ struct PathTracerState
 const int32_t TRIANGLE_COUNT = 32;
 const int32_t MAT_COUNT      = 1;
 
-const static std::array<luminous::float3, TRIANGLE_COUNT* 3> g_vertices =
-        {  {
+const static std::vector<luminous::float3> g_vertices =
+        {
                    // Floor  -- white lambert
                    luminous::float3(    0.0f,    0.0f,    0.0f),
                    luminous::float3(    0.0f,    0.0f,  559.2f),
@@ -266,37 +266,21 @@ const static std::array<luminous::float3, TRIANGLE_COUNT* 3> g_vertices =
                    luminous::float3(  343.0f,  548.6f,  227.0f),
                    luminous::float3(  213.0f,  548.6f,  332.0f),
                    luminous::float3(  343.0f,  548.6f,  332.0f)
-           } };
+            };
 
-static std::array<uint32_t, TRIANGLE_COUNT> g_mat_indices = {{
-                                                                     0, 0,                          // Floor         -- white lambert
-                                                                     0, 0,                          // Ceiling       -- white lambert
-                                                                     0, 0,                          // Back wall     -- white lambert
-                                                                     1, 1,                          // Right wall    -- green lambert
-                                                                     2, 2,                          // Left wall     -- red lambert
-                                                                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  // Short block   -- white lambert
-                                                                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  // Tall block    -- white lambert
-                                                                     3, 3                           // Ceiling light -- emmissive
-                                                             }};
 
 
 
 const std::array<float3, MAT_COUNT> g_emission_colors =
         { {
-                  {  0.0f,  0.0f,  0.0f },
-//    {  0.0f,  0.0f,  0.0f },
-//    {  0.0f,  0.0f,  0.0f },
-//    { 15.0f, 15.0f,  5.0f }
+                  {  0.0f,  0.0f,  0.0f }
 
           } };
 
 
 const std::array<float3, MAT_COUNT> g_diffuse_colors =
         { {
-                  { 0.80f, 0.80f, 0.80f },
-//    { 0.05f, 0.80f, 0.05f },
-//    { 0.80f, 0.05f, 0.05f },
-//    { 0.50f, 0.00f, 0.00f }
+                  { 0.80f, 0.80f, 0.80f }
           } };
 
 
@@ -448,7 +432,7 @@ void initCameraState()
 void createContext( PathTracerState& state )
 {
     // Initialize CUDA
-    CUDA_CHECK( cudaFree( 0 ) );
+    CU_CHECK( cuMemFree( 0 ) );
 
     OptixDeviceContext context;
     CUcontext          cu_ctx = 0;  // zero means take the current context
@@ -582,7 +566,7 @@ void buildMeshAccel( PathTracerState& state )
             &emitProperty,                      // emitted property list
             1                                   // num emitted properties
     ) );
-
+    CU_CHECK(cuCtxSynchronize());
 }
 
 

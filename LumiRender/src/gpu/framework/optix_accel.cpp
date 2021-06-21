@@ -42,8 +42,8 @@ namespace luminous {
             ctx_options.validationMode = OPTIX_DEVICE_CONTEXT_VALIDATION_MODE_ALL;
 #endif
             // Zero means take the current context
-            CUcontext cuda_context = 0;
-            OPTIX_CHECK(optixDeviceContextCreate(cuda_context, &ctx_options, &_optix_device_context));
+            CUcontext cu_context = 0;
+            OPTIX_CHECK(optixDeviceContextCreate(cu_context, &ctx_options, &_optix_device_context));
             return _optix_device_context;
         }
 
