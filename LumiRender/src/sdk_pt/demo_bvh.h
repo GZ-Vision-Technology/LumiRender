@@ -93,6 +93,7 @@ struct PathTracerState
     luminous::Buffer<std::byte> ias_buffer{nullptr};
     luminous::Buffer<std::byte> gas_buffer{nullptr};
     luminous::Buffer<luminous::float3> pos_buffer{nullptr};
+    luminous::Buffer<luminous::TriangleHandle> index_buffer{nullptr};
 
     luminous::Buffer<RayGenRecord> rg_buffer{nullptr};
     luminous::Buffer<MissRecord> ms_rcd_buffer{nullptr};
@@ -102,6 +103,7 @@ struct PathTracerState
     OptixTraversableHandle         gas_handle               = 0;  // Traversable handle for triangle AS
     OptixTraversableHandle         ias_handle               = 0;  // Traversable handle for triangle AS
     CUdeviceptr                    d_vertices               = 0;
+    CUdeviceptr                    d_tri                    = 0;
 
     OptixModule                    ptx_module               = 0;
     OptixPipelineCompileOptions    pipeline_compile_options = {};
@@ -268,6 +270,7 @@ const static std::vector<luminous::float3> g_vertices =
                    luminous::float3(  343.0f,  548.6f,  332.0f)
             };
 
+std::vector<luminous::TriangleHandle> tri_list;
 
 //------------------------------------------------------------------------------
 //
@@ -497,6 +500,9 @@ void buildMeshAccel( PathTracerState& state )
     state.pos_buffer.upload(g_vertices.data());
     state.d_vertices = state.pos_buffer.ptr<CUdeviceptr>();
 
+    state.index_buffer = state.device->allocate_buffer<luminous::TriangleHandle>(tri_list.size());
+    state.index_buffer.upload(tri_list.data());
+    state.d_tri = state.index_buffer.ptr<CUdeviceptr>();
     //
     // Build triangle GAS
     //
@@ -513,6 +519,10 @@ void buildMeshAccel( PathTracerState& state )
     triangle_input.triangleArray.vertexBuffers               = &state.d_vertices;
     triangle_input.triangleArray.flags                       = triangle_input_flags;
     triangle_input.triangleArray.numSbtRecords               = MAT_COUNT;
+    triangle_input.triangleArray.indexBuffer = state.d_tri;
+    triangle_input.triangleArray.indexStrideInBytes = sizeof(luminous::TriangleHandle);
+    triangle_input.triangleArray.indexFormat = OPTIX_INDICES_FORMAT_UNSIGNED_INT3;
+    triangle_input.triangleArray.numIndexTriplets = tri_list.size();
 
     OptixAccelBuildOptions accel_options = {};
     accel_options.buildFlags             = OPTIX_BUILD_FLAG_ALLOW_COMPACTION;
@@ -789,6 +799,13 @@ void createSBT( PathTracerState& state )
     state.sbt.hitgroupRecordCount         = RAY_TYPE_COUNT * MAT_COUNT;
 }
 
+void init_tri_list() {
+    for (int i = 0; i < g_vertices.size() / 3; ++i) {
+        uint32_t s = 3 * i;
+        tri_list.push_back(luminous::TriangleHandle{s, s + 1, s + 2});
+    }
+}
+
 int run() {
     PathTracerState state;
     state.params.width                             = 768;
@@ -797,7 +814,7 @@ int run() {
     try
     {
         initCameraState();
-
+        init_tri_list();
         //
         // Set up OptiX state
         //
