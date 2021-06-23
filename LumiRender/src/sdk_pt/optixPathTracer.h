@@ -25,6 +25,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+#include "gpu/framework/optix_params.h"
 
 enum RayType
 {
@@ -42,24 +43,25 @@ struct ParallelogramLight
     float3 emission;
 };
 
+using Params = luminous::LaunchParams;
 
-struct Params
-{
-    unsigned int subframe_index;
-    float4*      accum_buffer;
-    uchar4*      frame_buffer;
-    unsigned int width;
-    unsigned int height;
-    unsigned int samples_per_launch;
-
-    float3       eye;
-    float3       U;
-    float3       V;
-    float3       W;
-
-    ParallelogramLight     light; // TODO: make light list
-    OptixTraversableHandle handle;
-};
+//struct Params
+//{
+//    unsigned int subframe_index;
+//    float4*      accum_buffer;
+//    uchar4*      frame_buffer;
+//    unsigned int width;
+//    unsigned int height;
+//    unsigned int samples_per_launch;
+//
+//    float3       eye;
+//    float3       U;
+//    float3       V;
+//    float3       W;
+//
+//    ParallelogramLight     light; // TODO: make light list
+//    OptixTraversableHandle handle;
+//};
 
 
 struct RayGenData

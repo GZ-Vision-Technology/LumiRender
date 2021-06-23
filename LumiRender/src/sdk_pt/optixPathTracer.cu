@@ -212,7 +212,7 @@ extern "C" __global__ void __raygen__rg()
     prd.done         = false;
 //        prd.seed         = seed;
     traceRadiance(
-            params.handle,
+            params.traversable_handle,
             make_float3(278.0f, 273.0f, -900.0f),
             make_float3(0,0,1),
             0.01f,  // tmin       // TODO: smarter offset

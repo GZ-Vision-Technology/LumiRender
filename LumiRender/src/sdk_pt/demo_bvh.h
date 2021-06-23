@@ -51,6 +51,7 @@
 #include "render/sensors/sensor.h"
 #include "util/clock.h"
 #include "graphics/geometry/transform.h"
+#include "gpu/gpu_scene.h"
 
 
 bool resize_dirty = false;
@@ -85,6 +86,8 @@ typedef Record<MissData>     MissRecord;
 typedef Record<HitGroupData> HitGroupRecord;
 
 extern "C" char sdk_ptx[];
+
+
 
 struct PathTracerState
 {
@@ -329,18 +332,7 @@ void printUsageAndExit( const char* argv0 )
 
 void initLaunchParams( PathTracerState& state )
 {
-
-    state.params.frame_buffer = nullptr;  // Will be set when output buffer is mapped
-
-    state.params.samples_per_launch = samples_per_launch;
-    state.params.subframe_index     = 0u;
-
-    state.params.light.emission = make_float3( 15.0f, 15.0f, 5.0f );
-    state.params.light.corner   = make_float3( 343.0f, 548.5f, 227.0f );
-    state.params.light.v1       = make_float3( 0.0f, 0.0f, 105.0f );
-    state.params.light.v2       = make_float3( -130.0f, 0.0f, 0.0f );
-    state.params.light.normal   = normalize( cross( state.params.light.v1, state.params.light.v2 ) );
-    state.params.handle         = state.gas_handle;
+    state.params.traversable_handle         = state.gas_handle;
 
     CUDA_CHECK( cudaStreamCreate( &state.stream ) );
 
@@ -357,9 +349,6 @@ void handleCameraUpdate( Params& params )
 
 void launchSubframe(PathTracerState& state )
 {
-    // Launch
-//    state.params.frame_buffer  = result_buffer_data;
-
     state.b_params.upload_async(state.dispatcher,&state.params);
 
     OPTIX_CHECK( optixLaunch(
@@ -368,8 +357,8 @@ void launchSubframe(PathTracerState& state )
             state.b_params.ptr<CUdeviceptr>(),
             sizeof( Params ),
             &state.sbt,
-            state.params.width,   // launch width
-            state.params.height,  // launch height
+            768,   // launch width
+            768,  // launch height
             1                     // launch depth
     ) );
     cudaDeviceSynchronize();
@@ -808,8 +797,8 @@ void init_tri_list() {
 
 int run() {
     PathTracerState state;
-    state.params.width                             = 768;
-    state.params.height                            = 768;
+//    state.params.width                             = 768;
+//    state.params.height                            = 768;
 
     try
     {
