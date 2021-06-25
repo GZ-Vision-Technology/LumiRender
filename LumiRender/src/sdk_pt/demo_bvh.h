@@ -51,7 +51,7 @@
 #include "render/sensors/sensor.h"
 #include "util/clock.h"
 #include "graphics/geometry/transform.h"
-#include "gpu/gpu_scene.h"
+//#include "gpu/gpu_scene.h"
 
 
 bool resize_dirty = false;

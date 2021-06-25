@@ -6,10 +6,12 @@ include_directories(${OptiX_INCLUDE})
 #add_subdirectory(framework)
 cuda_compile_and_embed(optix_shader_code ${PROJECT_SOURCE_DIR}/src/gpu/shaders/megakernel_pt.cu)
 
+cuda_compile_and_embed(sdk_ptx ${PROJECT_SOURCE_DIR}/src/sdk_pt/optixPathTracer.cu)
+
 file(GLOB_RECURSE HEADER_FILES *.h*)
 file(GLOB_RECURSE SOURCE_FILES *.cpp)
 
-add_library(luminous-gpu SHARED ${HEADER_FILES} ${SOURCE_FILES} ${optix_shader_code})
+add_library(luminous-gpu SHARED ${HEADER_FILES} ${SOURCE_FILES} ${optix_shader_code} ${sdk_ptx})
 
 target_link_libraries(luminous-gpu
         PUBLIC CUDA::nvrtc
