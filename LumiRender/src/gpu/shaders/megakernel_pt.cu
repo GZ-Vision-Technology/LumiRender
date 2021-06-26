@@ -76,6 +76,18 @@ struct RadiancePRD
     int          countEmitted;
     int          done;
     int          pad;
+
+    luminous::ClosestHit closest_hit;
+    const void *data{nullptr};
+//    luminous::SurfaceInteraction si;
+//
+//    NDSC_XPU_INLINE bool is_hit() const {
+//        return closest_hit.is_hit();
+//    }
+
+//    XPU void init_surface_interaction(const HitGroupData *data, Ray ray);
+//
+//    NDSC_XPU const HitGroupData *hit_group_data() const;
 };
 
 
@@ -164,20 +176,46 @@ static __forceinline__ __device__ bool traceOcclusion(
 
 extern "C" __global__ void __raygen__rg()
 {
+//    RadiancePRD prd;
+//    prd.emitted      = make_float3(0.f);
+//    prd.radiance     = make_float3(0.f);
+//    prd.attenuation  = make_float3(1.f);
+//    prd.countEmitted = true;
+//    prd.done         = false;
+//    traceRadiance(
+//            params.traversable_handle,
+//            make_float3(278.0f, 273.0f, -900.0f),
+//            make_float3(0,0,1),
+//            0.01f,  // tmin       // TODO: smarter offset
+//            1e16f,  // tmax
+//            &prd );
+//    return ;
+    using namespace luminous;
+    luminous::uint2 pixel = getPixelCoords();
+    Sensor *camera = params.camera;
+    Film *film = camera->film();
+    Sampler sampler = *params.sampler;
+    auto frame_index = params.frame_index;
+    sampler.start_pixel_sample(pixel, frame_index, 0);
+    auto ss = sampler.sensor_sample(pixel);
+    bool debug = false;
+    Ray ray;
+    float weight = camera->generate_ray(ss, &ray);
+
+
+
     RadiancePRD prd;
-    prd.emitted      = make_float3(0.f);
-    prd.radiance     = make_float3(0.f);
-    prd.attenuation  = make_float3(1.f);
-    prd.countEmitted = true;
-    prd.done         = false;
     traceRadiance(
             params.traversable_handle,
-            make_float3(278.0f, 273.0f, -900.0f),
-            make_float3(0,0,1),
+            ::make_float3(278.0f, 273.0f, -900.0f),
+            ::make_float3(0,0,1),
             0.01f,  // tmin       // TODO: smarter offset
             1e16f,  // tmax
             &prd );
-
+//    PerRayData prd;
+//    ray = luminous::Ray(luminous::make_float3(278.0f, 273.0f, -900.0f),
+//                        luminous::make_float3(0,0,1),1e16f,0.01f);
+//    luminous::intersect_closest(params.traversable_handle, ray, &prd);
 }
 
 
