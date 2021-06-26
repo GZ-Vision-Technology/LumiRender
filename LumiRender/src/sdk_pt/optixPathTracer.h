@@ -84,7 +84,7 @@ struct PathTracerState
     luminous::Buffer<MissRecord> ms_rcd_buffer{nullptr};
     luminous::Buffer<HitGroupRecord> hg_rcd_buffer{nullptr};
 
-    std::shared_ptr<luminous::Device> device = luminous::create_cuda_device();
+    std::shared_ptr<luminous::Device> device;
     OptixTraversableHandle         gas_handle               = 0;  // Traversable handle for triangle AS
     OptixTraversableHandle         ias_handle               = 0;  // Traversable handle for triangle AS
     CUdeviceptr                    d_vertices               = 0;

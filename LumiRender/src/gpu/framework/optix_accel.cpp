@@ -421,9 +421,13 @@ namespace luminous {
                 _as_buffer_list.push_back(move(ias_buffer));
             }
             CU_CHECK(cuCtxSynchronize());
+            _path_tracer_state.device = _device;
+            init(_path_tracer_state);
         }
 
         void OptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {
+//            _path_tracer_state.params.traversable_handle = _root_ias_handle;
+//            launchSubframe(_path_tracer_state);
             auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;
             auto x = res.x;
             auto y = res.y;

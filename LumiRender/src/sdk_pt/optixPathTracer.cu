@@ -208,5 +208,6 @@ extern "C" __global__ void __closesthit__occlusion()
 
 extern "C" __global__ void __closesthit__radiance()
 {
-
+//    int prim_idx = optixGetPrimitiveIndex();
+//    printf("%d \n", prim_idx);
 }

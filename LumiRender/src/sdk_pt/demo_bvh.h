@@ -237,7 +237,7 @@ void handleCameraUpdate( Params& params )
 
 
 
-void launchSubframe(PathTracerState& state )
+inline void launchSubframe(PathTracerState& state )
 {
     state.b_params.upload_async(state.dispatcher,&state.params);
 
@@ -664,7 +664,7 @@ void init_tri_list() {
     }
 }
 
-void init(PathTracerState &state) {
+inline void init(PathTracerState &state) {
     initCameraState();
     init_tri_list();
     createContext( state );
@@ -679,7 +679,7 @@ void init(PathTracerState &state) {
 
 int run() {
     PathTracerState state;
-
+    state.device = luminous::create_cuda_device();
     init(state);
 
     luminous::Clock clk;
