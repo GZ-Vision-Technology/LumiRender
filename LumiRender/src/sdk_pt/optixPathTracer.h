@@ -71,15 +71,15 @@ struct RayGenData
 
 struct MissData
 {
-    float4 bg_color;
+    luminous::float4 bg_color;
 };
 
 
 struct HitGroupData
 {
-    float3  emission_color;
-    float3  diffuse_color;
-    float4* vertices;
+    luminous::float3  emission_color;
+    luminous::float3  diffuse_color;
+    luminous::float4* vertices;
 };
 
 template <typename T>

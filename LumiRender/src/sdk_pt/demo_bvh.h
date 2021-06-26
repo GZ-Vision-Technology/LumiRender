@@ -33,12 +33,8 @@
 #include <optix_stubs.h>
 #include "gpu/framework/helper/cuda.h"
 #include "gpu/framework/helper/optix.h"
-#include <sutil/Matrix.h>
-#include <sutil/sutil.h>
-#include <sutil/vec_math.h>
 #include <optix_stack_size.h>
 
-#include "gpu/framework/optix_params.h"
 #include "optixPathTracer.h"
 
 #include <array>
@@ -224,61 +220,6 @@ const static std::vector<luminous::float3> g_vertices =
 
 std::vector<luminous::TriangleHandle> tri_list;
 
-//------------------------------------------------------------------------------
-//
-// GLFW callbacks
-//
-//------------------------------------------------------------------------------
-//
-static void mouseButtonCallback( GLFWwindow* window, int button, int action, int mods )
-{
-
-}
-
-
-static void cursorPosCallback( GLFWwindow* window, double xpos, double ypos )
-{
-
-}
-
-
-static void windowSizeCallback( GLFWwindow* window, int32_t res_x, int32_t res_y )
-{
-
-}
-
-
-static void windowIconifyCallback( GLFWwindow* window, int32_t iconified )
-{
-    minimized = ( iconified > 0 );
-}
-
-
-static void keyCallback( GLFWwindow* window, int32_t key, int32_t /*scancode*/, int32_t action, int32_t /*mods*/ )
-{
-
-}
-
-
-static void scrollCallback( GLFWwindow* window, double xscroll, double yscroll )
-{
-
-}
-
-
-//------------------------------------------------------------------------------
-//
-// Helper functions
-// TODO: some of these should move to sutil or optix util header
-//
-//------------------------------------------------------------------------------
-
-void printUsageAndExit( const char* argv0 )
-{
-
-}
-
-
 void initLaunchParams( PathTracerState& state )
 {
     state.params.traversable_handle         = state.gas_handle;
@@ -312,13 +253,6 @@ void launchSubframe(PathTracerState& state )
     ) );
     cudaDeviceSynchronize();
 }
-
-
-void displaySubframe( GLFWwindow* window )
-{
-
-}
-
 
 static void context_log_cb( unsigned int level, const char* tag, const char* message, void* /*cbdata */ )
 {
@@ -686,9 +620,9 @@ void createSBT( PathTracerState& state )
     state.ms_rcd_buffer = state.device->allocate_buffer<MissRecord>(RAY_TYPE_COUNT);
     MissRecord ms_sbt[2];
     OPTIX_CHECK( optixSbtRecordPackHeader( state.radiance_miss_group,  &ms_sbt[0] ) );
-    ms_sbt[0].data.bg_color = make_float4( 0.0f );
+    ms_sbt[0].data.bg_color = luminous::make_float4( 0.0f );
     OPTIX_CHECK( optixSbtRecordPackHeader( state.occlusion_miss_group, &ms_sbt[1] ) );
-    ms_sbt[1].data.bg_color = make_float4( 0.0f );
+    ms_sbt[1].data.bg_color = luminous::make_float4( 0.0f );
     state.ms_rcd_buffer.upload(ms_sbt);
 
 
@@ -701,7 +635,7 @@ void createSBT( PathTracerState& state )
         const int sbt_idx = 0;  // SBT for radiance ray-type for ith material
 
         OPTIX_CHECK( optixSbtRecordPackHeader( state.radiance_hit_group, &hitgroup_records[sbt_idx] ) );
-        hitgroup_records[sbt_idx].data.vertices       = reinterpret_cast<float4*>( state.d_vertices );
+        hitgroup_records[sbt_idx].data.vertices       = reinterpret_cast<luminous::float4*>( state.d_vertices );
     }
 
     {
