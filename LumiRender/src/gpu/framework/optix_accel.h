@@ -12,6 +12,7 @@
 #include "render/include/scene_graph.h"
 #include "optix_params.h"
 #include "core/backend/managed.h"
+#include "sdk_pt/optixPathTracer.h"
 
 namespace luminous {
     inline namespace gpu {
