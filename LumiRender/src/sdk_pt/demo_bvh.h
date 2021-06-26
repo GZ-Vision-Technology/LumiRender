@@ -40,7 +40,7 @@
 
 #include "gpu/framework/optix_params.h"
 #include "optixPathTracer.h"
-#include "gpu/framework/cuda_impl.h"
+
 #include <array>
 #include <cstring>
 #include <fstream>
@@ -51,8 +51,6 @@
 #include "render/sensors/sensor.h"
 #include "util/clock.h"
 #include "graphics/geometry/transform.h"
-//#include "gpu/gpu_scene.h"
-
 
 bool resize_dirty = false;
 bool minimized    = false;
@@ -74,56 +72,7 @@ int32_t samples_per_launch = 1;
 //
 //------------------------------------------------------------------------------
 
-template <typename T>
-struct Record
-{
-    __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
-    T data;
-};
 
-typedef Record<RayGenData>   RayGenRecord;
-typedef Record<MissData>     MissRecord;
-typedef Record<HitGroupData> HitGroupRecord;
-
-extern "C" char sdk_ptx[];
-
-
-
-struct PathTracerState
-{
-    OptixDeviceContext context = 0;
-    luminous::Buffer<OptixInstance> instances{nullptr};
-    luminous::Buffer<std::byte> ias_buffer{nullptr};
-    luminous::Buffer<std::byte> gas_buffer{nullptr};
-    luminous::Buffer<luminous::float3> pos_buffer{nullptr};
-    luminous::Buffer<luminous::TriangleHandle> index_buffer{nullptr};
-
-    luminous::Buffer<RayGenRecord> rg_buffer{nullptr};
-    luminous::Buffer<MissRecord> ms_rcd_buffer{nullptr};
-    luminous::Buffer<HitGroupRecord> hg_rcd_buffer{nullptr};
-
-    std::shared_ptr<luminous::Device> device = luminous::create_cuda_device();
-    OptixTraversableHandle         gas_handle               = 0;  // Traversable handle for triangle AS
-    OptixTraversableHandle         ias_handle               = 0;  // Traversable handle for triangle AS
-    CUdeviceptr                    d_vertices               = 0;
-    CUdeviceptr                    d_tri                    = 0;
-
-    OptixModule                    ptx_module               = 0;
-    OptixPipelineCompileOptions    pipeline_compile_options = {};
-    OptixPipeline                  pipeline                 = 0;
-
-    OptixProgramGroup              raygen_prog_group        = 0;
-    OptixProgramGroup              radiance_miss_group      = 0;
-    OptixProgramGroup              occlusion_miss_group     = 0;
-    OptixProgramGroup              radiance_hit_group       = 0;
-    OptixProgramGroup              occlusion_hit_group      = 0;
-
-    CUstream                       stream                   = 0;
-    Params                         params;
-    luminous::Buffer<Params>       b_params{nullptr};
-    luminous::Dispatcher dispatcher{std::make_unique<luminous::CUDADispatcher>()};
-    OptixShaderBindingTable        sbt                      = {};
-};
 
 
 //------------------------------------------------------------------------------
@@ -389,20 +338,6 @@ void initCameraState()
     sc.film_config.set_full_type("RGBFilm");
     sc.film_config.resolution = luminous::make_uint2(768);
     camera = Sensor::create(sc);
-//    camera.setEye( make_float3( 278.0f, 273.0f, -900.0f ) );
-//    camera.setLookat( make_float3( 278.0f, 273.0f, 330.0f ) );
-//    camera.setUp( make_float3( 0.0f, 1.0f, 0.0f ) );
-//    camera.setFovY( 35.0f );
-//    camera_changed = true;
-//
-//    trackball.setCamera( &camera );
-//    trackball.setMoveSpeed( 10.0f );
-//    trackball.setReferenceFrame(
-//            make_float3( 1.0f, 0.0f, 0.0f ),
-//            make_float3( 0.0f, 0.0f, 1.0f ),
-//            make_float3( 0.0f, 1.0f, 0.0f )
-//            );
-//    trackball.setGimbalLock( true );
 }
 
 
@@ -795,42 +730,33 @@ void init_tri_list() {
     }
 }
 
+void init(PathTracerState &state) {
+    initCameraState();
+    init_tri_list();
+    createContext( state );
+    buildMeshAccel( state );
+//        buildInstanceAccel(state);
+    createModule( state );
+    createProgramGroups( state );
+    createPipeline( state );
+    createSBT( state );
+    initLaunchParams( state );
+}
+
 int run() {
     PathTracerState state;
-//    state.params.width                             = 768;
-//    state.params.height                            = 768;
 
-    try
-    {
-        initCameraState();
-        init_tri_list();
-        //
-        // Set up OptiX state
-        //
-        createContext( state );
-        buildMeshAccel( state );
-//        buildInstanceAccel(state);
-        createModule( state );
-        createProgramGroups( state );
-        createPipeline( state );
-        createSBT( state );
-        initLaunchParams( state );
-        luminous::Clock clk;
-        int i = 0;
-        double t = 0;
-        while (1) {
-            clk.start();
-            launchSubframe(state);
-            double dt = clk.elapse_ms();
-            t += dt;
-            cout << "dt = "<< dt <<",count = " << ++i <<",average = " << t / i << endl;
-        }
-    }
-    catch( std::exception& e )
-    {
-        std::cerr << "Caught exception: " << e.what() << "\n";
-        return 1;
-    }
+    init(state);
 
+    luminous::Clock clk;
+    int i = 0;
+    double t = 0;
+    while (1) {
+        clk.start();
+        launchSubframe(state);
+        double dt = clk.elapse_ms();
+        t += dt;
+        cout << "dt = "<< dt <<",count = " << ++i <<",average = " << t / i << endl;
+    }
     return 0;
 }

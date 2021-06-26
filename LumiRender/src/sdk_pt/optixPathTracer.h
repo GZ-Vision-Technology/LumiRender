@@ -26,7 +26,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 #include "gpu/framework/optix_params.h"
-
+#include "gpu/framework/cuda_impl.h"
 enum RayType
 {
     RAY_TYPE_RADIANCE  = 0,
@@ -80,4 +80,55 @@ struct HitGroupData
     float3  emission_color;
     float3  diffuse_color;
     float4* vertices;
+};
+
+template <typename T>
+struct Record
+{
+    __align__( OPTIX_SBT_RECORD_ALIGNMENT ) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
+    T data;
+};
+
+typedef Record<RayGenData>   RayGenRecord;
+typedef Record<MissData>     MissRecord;
+typedef Record<HitGroupData> HitGroupRecord;
+
+extern "C" char sdk_ptx[];
+
+
+
+struct PathTracerState
+{
+    OptixDeviceContext context = 0;
+    luminous::Buffer<OptixInstance> instances{nullptr};
+    luminous::Buffer<std::byte> ias_buffer{nullptr};
+    luminous::Buffer<std::byte> gas_buffer{nullptr};
+    luminous::Buffer<luminous::float3> pos_buffer{nullptr};
+    luminous::Buffer<luminous::TriangleHandle> index_buffer{nullptr};
+
+    luminous::Buffer<RayGenRecord> rg_buffer{nullptr};
+    luminous::Buffer<MissRecord> ms_rcd_buffer{nullptr};
+    luminous::Buffer<HitGroupRecord> hg_rcd_buffer{nullptr};
+
+    std::shared_ptr<luminous::Device> device = luminous::create_cuda_device();
+    OptixTraversableHandle         gas_handle               = 0;  // Traversable handle for triangle AS
+    OptixTraversableHandle         ias_handle               = 0;  // Traversable handle for triangle AS
+    CUdeviceptr                    d_vertices               = 0;
+    CUdeviceptr                    d_tri                    = 0;
+
+    OptixModule                    ptx_module               = 0;
+    OptixPipelineCompileOptions    pipeline_compile_options = {};
+    OptixPipeline                  pipeline                 = 0;
+
+    OptixProgramGroup              raygen_prog_group        = 0;
+    OptixProgramGroup              radiance_miss_group      = 0;
+    OptixProgramGroup              occlusion_miss_group     = 0;
+    OptixProgramGroup              radiance_hit_group       = 0;
+    OptixProgramGroup              occlusion_hit_group      = 0;
+
+    CUstream                       stream                   = 0;
+    Params                         params;
+    luminous::Buffer<Params>       b_params{nullptr};
+    luminous::Dispatcher dispatcher{std::make_unique<luminous::CUDADispatcher>()};
+    OptixShaderBindingTable        sbt                      = {};
 };
