@@ -29,8 +29,6 @@ namespace luminous {
             OptixPipelineCompileOptions _pipeline_compile_options = {};
             uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
 
-            ::PathTracerState _path_tracer_state;
-
             struct ProgramGroupTable {
                 OptixProgramGroup raygen_prog_group{nullptr};
                 OptixProgramGroup radiance_miss_group{nullptr};

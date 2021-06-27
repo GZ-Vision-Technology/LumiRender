@@ -64,22 +64,49 @@ __constant__ Params params;
 //
 //------------------------------------------------------------------------------
 
+struct  vvv4 {
+    float a;
+    float a0;
+    float a1;
+    float a2;
+};
+
+//struct alignas(sizeof(float) * 4) vvv4 {
+//    float a;
+//    float a0;
+//    float a1;
+//    float a2;
+//};
+
 struct RadiancePRD
 {
     // TODO: move some state directly into payload registers?
-    float3       emitted;
-    float3       radiance;
-    float3       attenuation;
-    float3       origin;
-    float3       direction;
-    unsigned int seed;
-    int          countEmitted;
-    int          done;
-    int          pad;
+    luminous::float4       emitted;
+    luminous::float4       radiance;
+    luminous::float4       attenuation;
+    luminous::float4       origin;
+    luminous::float4       direction;
 
-    luminous::ClosestHit closest_hit;
-    const void *data{nullptr};
-//    luminous::SurfaceInteraction si;
+//    float4       emitted;
+//    float4       radiance;
+//    float4       attenuation;
+//    float4       origin;
+//    float4       direction;
+
+//    vvv4       emitted;
+//    vvv4       radiance;
+//    vvv4       attenuation;
+//    vvv4       origin;
+//    vvv4       direction;
+
+//    unsigned int seed;
+//    int          countEmitted;
+//    int          done;
+//    int          pad;
+//
+//    luminous::ClosestHit closest_hit;
+//    const void *data{nullptr};
+    luminous::SurfaceInteraction si;
 //
 //    NDSC_XPU_INLINE bool is_hit() const {
 //        return closest_hit.is_hit();
@@ -190,21 +217,19 @@ extern "C" __global__ void __raygen__rg()
 //            1e16f,  // tmax
 //            &prd );
 //    return ;
-    using namespace luminous;
-    luminous::uint2 pixel = getPixelCoords();
-    Sensor *camera = params.camera;
-    Film *film = camera->film();
-    Sampler sampler = *params.sampler;
-    auto frame_index = params.frame_index;
-    sampler.start_pixel_sample(pixel, frame_index, 0);
-    auto ss = sampler.sensor_sample(pixel);
-    bool debug = false;
-    Ray ray;
-    float weight = camera->generate_ray(ss, &ray);
+//    using namespace luminous;
+//    luminous::uint2 pixel = getPixelCoords();
+//    Sensor *camera = params.camera;
+//    Film *film = camera->film();
+//    Sampler sampler = *params.sampler;
+//    auto frame_index = params.frame_index;
+//    sampler.start_pixel_sample(pixel, frame_index, 0);
+//    auto ss = sampler.sensor_sample(pixel);
+//    bool debug = false;
+//    Ray ray;
+//    float weight = camera->generate_ray(ss, &ray);
 
-
-
-    RadiancePRD prd;
+    RadiancePRD prd{};
     traceRadiance(
             params.traversable_handle,
             ::make_float3(278.0f, 273.0f, -900.0f),
