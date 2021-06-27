@@ -153,17 +153,17 @@ namespace luminous {
         struct PerRayData {
             ClosestHit closest_hit;
             const void *data{nullptr};
-            SurfaceInteraction si;
-
             PerRayData() = default;
 
             NDSC_XPU_INLINE bool is_hit() const {
                 return closest_hit.is_hit();
             }
 
-            XPU void init_surface_interaction(const HitGroupData *data, Ray ray);
+            NDSC_XPU SurfaceInteraction compute_surface_interaction(Ray ray) const;
 
             NDSC_XPU const HitGroupData *hit_group_data() const;
+
+            NDSC_XPU const MissData *miss_data() const;
         };
 
         struct NEEData {

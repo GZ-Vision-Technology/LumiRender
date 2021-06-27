@@ -18,9 +18,15 @@ namespace luminous {
             return reinterpret_cast<const HitGroupData *>(data);
         }
 
-        void PerRayData::init_surface_interaction(const HitGroupData *data, Ray ray) {
-            si = data->compute_surface_interaction(closest_hit);
+        SurfaceInteraction PerRayData::compute_surface_interaction(Ray ray) const {
+            auto si = hit_group_data()->compute_surface_interaction(closest_hit);
+            si.init_BSDF(hit_group_data());
             si.wo = normalize(-ray.direction());
+            return si;
+        }
+
+        const MissData *PerRayData::miss_data() const {
+            return reinterpret_cast<const MissData *>(data);
         }
 
         lstd::optional<BSDF> SurfaceInteraction::get_BSDF(const HitGroupData *hit_group_data) const {
