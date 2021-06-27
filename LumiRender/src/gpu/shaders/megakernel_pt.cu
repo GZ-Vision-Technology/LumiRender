@@ -78,6 +78,8 @@ struct  vvv4 {
 //    float a2;
 //};
 
+//#include "render/bxdfs/shader_include.h"
+
 struct RadiancePRD
 {
     // TODO: move some state directly into payload registers?
@@ -106,7 +108,10 @@ struct RadiancePRD
 //
 //    luminous::ClosestHit closest_hit;
 //    const void *data{nullptr};
-    luminous::SurfaceInteraction si;
+//    luminous::SurfaceInteraction si;
+//    lstd::optional<luminous::BSDF> b;
+    luminous::BxDF b;
+    luminous::Frame f;
 //
 //    NDSC_XPU_INLINE bool is_hit() const {
 //        return closest_hit.is_hit();
