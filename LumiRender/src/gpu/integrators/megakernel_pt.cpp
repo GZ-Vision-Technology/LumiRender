@@ -19,6 +19,9 @@ namespace luminous {
             lp.U = ::make_float3(-387,0,0);
             lp.V = ::make_float3(0,387,0);
             lp.W = ::make_float3(0,0,1230);
+            lp.width = 768;
+            lp.height = 768;
+
 
             lp.sampler = _sampler.device_data();
             lp.camera = _camera.device_data();

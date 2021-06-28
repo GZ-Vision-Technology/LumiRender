@@ -58,6 +58,40 @@ struct RadiancePRD
 };
 
 
+struct Onb
+{
+    __forceinline__ __device__ Onb(const float3& normal)
+    {
+        m_normal = normal;
+
+        if( fabs(m_normal.x) > fabs(m_normal.z) )
+        {
+            m_binormal.x = -m_normal.y;
+            m_binormal.y =  m_normal.x;
+            m_binormal.z =  0;
+        }
+        else
+        {
+            m_binormal.x =  0;
+            m_binormal.y = -m_normal.z;
+            m_binormal.z =  m_normal.y;
+        }
+
+        m_binormal = normalize(m_binormal);
+        m_tangent = cross( m_binormal, m_normal );
+    }
+
+    __forceinline__ __device__ void inverse_transform(float3& p) const
+    {
+        p = p.x*m_tangent + p.y*m_binormal + p.z*m_normal;
+    }
+
+    float3 m_tangent;
+    float3 m_binormal;
+    float3 m_normal;
+};
+
+
 //------------------------------------------------------------------------------
 //
 //
@@ -79,6 +113,32 @@ static __forceinline__ __device__ void  packPointer( void* ptr, unsigned int& i0
     i1 = uptr & 0x00000000ffffffff;
 }
 
+
+static __forceinline__ __device__ RadiancePRD* getPRD()
+{
+    const unsigned int u0 = optixGetPayload_0();
+    const unsigned int u1 = optixGetPayload_1();
+    return reinterpret_cast<RadiancePRD*>( unpackPointer( u0, u1 ) );
+}
+
+
+static __forceinline__ __device__ void setPayloadOcclusion( bool occluded )
+{
+    optixSetPayload_0( static_cast<unsigned int>( occluded ) );
+}
+
+
+static __forceinline__ __device__ void cosine_sample_hemisphere(const float u1, const float u2, float3& p)
+{
+    // Uniformly sample disk.
+    const float r   = sqrtf( u1 );
+    const float phi = 2.0f*M_PIf * u2;
+    p.x = r * cosf( phi );
+    p.y = r * sinf( phi );
+
+    // Project up to hemisphere.
+    p.z = sqrtf( fmaxf( 0.0f, 1.0f - p.x*p.x - p.y*p.y ) );
+}
 
 static __forceinline__ __device__ void traceRadiance(
         OptixTraversableHandle handle,
@@ -143,21 +203,92 @@ static __forceinline__ __device__ bool traceOcclusion(
 
 extern "C" __global__ void __raygen__rg()
 {
-    RadiancePRD prd;
-    prd.emitted      = make_float3(0.f);
-    prd.radiance     = make_float3(0.f);
-    prd.attenuation  = make_float3(1.f);
-    prd.countEmitted = true;
-    prd.done         = false;
-    traceRadiance(
-            params.traversable_handle,
-            make_float3(278.0f, 273.0f, -900.0f),
-            make_float3(0,0,1),
-            0.01f,  // tmin       // TODO: smarter offset
-            1e16f,  // tmax
-            &prd );
 
+    const int    w   = params.width;
+    const int    h   = params.height;
+    const float3 eye = params.eye;
+    const float3 U   = params.U;
+    const float3 V   = params.V;
+    const float3 W   = params.W;
+    const uint3  idx = optixGetLaunchIndex();
+
+    const int    subframe_index = params.frame_index;
+
+    unsigned int seed = tea<4>( idx.y*w + idx.x, subframe_index );
+
+    float3 result = make_float3( 0.0f );
+    int i = 1;
+    do
+    {
+        // The center of each pixel is at fraction (0.5,0.5)
+        const float2 subpixel_jitter = make_float2( rnd( seed ), rnd( seed ) );
+
+        const float2 d = 2.0f * make_float2(
+                ( static_cast<float>( idx.x ) + subpixel_jitter.x ) / static_cast<float>( w ),
+                ( static_cast<float>( idx.y ) + subpixel_jitter.y ) / static_cast<float>( h )
+        ) - 1.0f;
+        float3 ray_direction = normalize(d.x*U + d.y*V + W);
+        float3 ray_origin    = eye;
+
+        RadiancePRD prd;
+        prd.emitted      = make_float3(0.f);
+        prd.radiance     = make_float3(0.f);
+        prd.attenuation  = make_float3(1.f);
+        prd.countEmitted = true;
+        prd.done         = false;
+        prd.seed         = seed;
+
+        int depth = 0;
+        for( ;; )
+        {
+            traceRadiance(
+                    params.traversable_handle,
+                    ray_origin,
+                    ray_direction,
+                    0.01f,  // tmin       // TODO: smarter offset
+                    1e16f,  // tmax
+                    &prd );
+            return ;
+            result += prd.emitted;
+            result += prd.radiance * prd.attenuation;
+
+            if( prd.done  || depth >= 3 ) // TODO RR, variable for depth
+                break;
+
+            ray_origin    = prd.origin;
+            ray_direction = prd.direction;
+
+            ++depth;
+        }
+    }
+    while( --i );
+
+//    const uint3    launch_index = optixGetLaunchIndex();
+//    const unsigned int image_index  = launch_index.y * params.width + launch_index.x;
+//    float3         accum_color  = result / static_cast<float>( params.samples_per_launch );
+//
+//    if( subframe_index > 0 )
+//    {
+//        const float                 a = 1.0f / static_cast<float>( subframe_index+1 );
+//        const float3 accum_color_prev = make_float3( params.accum_buffer[ image_index ]);
+//        accum_color = lerp( accum_color_prev, accum_color, a );
+//    }
+
+//    RadiancePRD prd;
+//    prd.emitted      = make_float3(0.f);
+//    prd.radiance     = make_float3(0.f);
+//    prd.attenuation  = make_float3(1.f);
+//    prd.countEmitted = true;
+//    prd.done         = false;
+//    traceRadiance(
+//            params.traversable_handle,
+//            make_float3(278.0f, 273.0f, -900.0f),
+//            make_float3(0,0,1),
+//            0.01f,  // tmin       // TODO: smarter offset
+//            1e16f,  // tmax
+//            &prd );
 }
+
 
 
 extern "C" __global__ void __miss__radiance()

@@ -25,6 +25,8 @@ namespace luminous {
             ::float3       U;
             ::float3       V;
             ::float3       W;
+            int width;
+            int height;
         };
         
         template<typename T>
