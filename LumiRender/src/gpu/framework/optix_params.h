@@ -20,6 +20,11 @@ namespace luminous {
             float rr_threshold;
             Sensor *camera;
             const Sampler *sampler;
+
+            ::float3       eye = ::make_float3(278,273,-900);
+            ::float3       U = ::make_float3(-387,0,0);
+            ::float3       V = ::make_float3(0,387,0);;
+            ::float3       W = ::make_float3(0,0,1230);
         };
         
         template<typename T>
