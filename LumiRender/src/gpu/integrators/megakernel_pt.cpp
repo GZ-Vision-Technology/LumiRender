@@ -14,6 +14,12 @@ namespace luminous {
 
         void MegakernelPT::init_launch_params() {
             LaunchParams lp{};
+
+            lp.eye = ::make_float3(278,273,-900);
+            lp.U = ::make_float3(-387,0,0);
+            lp.V = ::make_float3(0,387,0);
+            lp.W = ::make_float3(0,0,1230);
+
             lp.sampler = _sampler.device_data();
             lp.camera = _camera.device_data();
             lp.frame_index = 0u;
