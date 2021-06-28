@@ -204,64 +204,64 @@ static __forceinline__ __device__ bool traceOcclusion(
 extern "C" __global__ void __raygen__rg()
 {
 
-    const int    w   = params.width;
-    const int    h   = params.height;
-    const float3 eye = params.eye;
-    const float3 U   = params.U;
-    const float3 V   = params.V;
-    const float3 W   = params.W;
-    const uint3  idx = optixGetLaunchIndex();
-
-    const int    subframe_index = params.frame_index;
-
-    unsigned int seed = tea<4>( idx.y*w + idx.x, subframe_index );
-
-    float3 result = make_float3( 0.0f );
-    int i = 1;
-    do
-    {
-        // The center of each pixel is at fraction (0.5,0.5)
-        const float2 subpixel_jitter = make_float2( rnd( seed ), rnd( seed ) );
-
-        const float2 d = 2.0f * make_float2(
-                ( static_cast<float>( idx.x ) + subpixel_jitter.x ) / static_cast<float>( w ),
-                ( static_cast<float>( idx.y ) + subpixel_jitter.y ) / static_cast<float>( h )
-        ) - 1.0f;
-        float3 ray_direction = normalize(d.x*U + d.y*V + W);
-        float3 ray_origin    = eye;
-
-        RadiancePRD prd;
-        prd.emitted      = make_float3(0.f);
-        prd.radiance     = make_float3(0.f);
-        prd.attenuation  = make_float3(1.f);
-        prd.countEmitted = true;
-        prd.done         = false;
-        prd.seed         = seed;
-
-        int depth = 0;
-        for( ;; )
-        {
-            traceRadiance(
-                    params.traversable_handle,
-                    ray_origin,
-                    ray_direction,
-                    0.01f,  // tmin       // TODO: smarter offset
-                    1e16f,  // tmax
-                    &prd );
-            return ;
-            result += prd.emitted;
-            result += prd.radiance * prd.attenuation;
-
-            if( prd.done  || depth >= 3 ) // TODO RR, variable for depth
-                break;
-
-            ray_origin    = prd.origin;
-            ray_direction = prd.direction;
-
-            ++depth;
-        }
-    }
-    while( --i );
+//    const int    w   = params.width;
+//    const int    h   = params.height;
+//    const float3 eye = params.eye;
+//    const float3 U   = params.U;
+//    const float3 V   = params.V;
+//    const float3 W   = params.W;
+//    const uint3  idx = optixGetLaunchIndex();
+//
+//    const int    subframe_index = params.frame_index;
+//
+//    unsigned int seed = tea<4>( idx.y*w + idx.x, subframe_index );
+//
+//    float3 result = make_float3( 0.0f );
+//    int i = 1;
+//    do
+//    {
+//        // The center of each pixel is at fraction (0.5,0.5)
+//        const float2 subpixel_jitter = make_float2( rnd( seed ), rnd( seed ) );
+//
+//        const float2 d = 2.0f * make_float2(
+//                ( static_cast<float>( idx.x ) + subpixel_jitter.x ) / static_cast<float>( w ),
+//                ( static_cast<float>( idx.y ) + subpixel_jitter.y ) / static_cast<float>( h )
+//        ) - 1.0f;
+//        float3 ray_direction = normalize(d.x*U + d.y*V + W);
+//        float3 ray_origin    = eye;
+//
+//        RadiancePRD prd;
+//        prd.emitted      = make_float3(0.f);
+//        prd.radiance     = make_float3(0.f);
+//        prd.attenuation  = make_float3(1.f);
+//        prd.countEmitted = true;
+//        prd.done         = false;
+//        prd.seed         = seed;
+//
+//        int depth = 0;
+//        for( ;; )
+//        {
+//            traceRadiance(
+//                    params.traversable_handle,
+//                    ray_origin,
+//                    ray_direction,
+//                    0.01f,  // tmin       // TODO: smarter offset
+//                    1e16f,  // tmax
+//                    &prd );
+//            return ;
+//            result += prd.emitted;
+//            result += prd.radiance * prd.attenuation;
+//
+//            if( prd.done  || depth >= 3 ) // TODO RR, variable for depth
+//                break;
+//
+//            ray_origin    = prd.origin;
+//            ray_direction = prd.direction;
+//
+//            ++depth;
+//        }
+//    }
+//    while( --i );
 
 //    const uint3    launch_index = optixGetLaunchIndex();
 //    const unsigned int image_index  = launch_index.y * params.width + launch_index.x;
@@ -274,19 +274,19 @@ extern "C" __global__ void __raygen__rg()
 //        accum_color = lerp( accum_color_prev, accum_color, a );
 //    }
 
-//    RadiancePRD prd;
-//    prd.emitted      = make_float3(0.f);
-//    prd.radiance     = make_float3(0.f);
-//    prd.attenuation  = make_float3(1.f);
-//    prd.countEmitted = true;
-//    prd.done         = false;
-//    traceRadiance(
-//            params.traversable_handle,
-//            make_float3(278.0f, 273.0f, -900.0f),
-//            make_float3(0,0,1),
-//            0.01f,  // tmin       // TODO: smarter offset
-//            1e16f,  // tmax
-//            &prd );
+    RadiancePRD prd;
+    prd.emitted      = make_float3(0.f);
+    prd.radiance     = make_float3(0.f);
+    prd.attenuation  = make_float3(1.f);
+    prd.countEmitted = true;
+    prd.done         = false;
+    traceRadiance(
+            params.traversable_handle,
+            make_float3(278.0f, 273.0f, -900.0f),
+            make_float3(0,0,1),
+            0.01f,  // tmin       // TODO: smarter offset
+            1e16f,  // tmax
+            &prd );
 }
 
 

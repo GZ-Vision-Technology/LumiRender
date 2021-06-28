@@ -442,7 +442,7 @@ void createModule( PathTracerState& state )
     state.pipeline_compile_options.pipelineLaunchParamsVariableName = "params";
 
     const std::string ptx(sdk_ptx);
-
+//    std::cout << ptx << std::endl;
     char   log[2048];
     size_t sizeof_log = sizeof( log );
     OPTIX_CHECK( optixModuleCreateFromPTX(
