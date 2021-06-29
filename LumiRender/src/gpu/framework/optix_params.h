@@ -29,7 +29,7 @@ namespace luminous {
             int width;
             int height;
             ::float4*      accum_buffer;
-            ::uchar4*      frame_buffer;
+            FrameBufferType *      frame_buffer;
         };
         
         template<typename T>
