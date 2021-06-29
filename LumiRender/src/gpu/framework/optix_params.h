@@ -21,12 +21,15 @@ namespace luminous {
             Sensor *camera;
             const Sampler *sampler;
 
+            // just for test
             ::float3       eye;
             ::float3       U;
             ::float3       V;
             ::float3       W;
             int width;
             int height;
+            ::float4*      accum_buffer;
+            ::uchar4*      frame_buffer;
         };
         
         template<typename T>

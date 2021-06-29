@@ -20,6 +20,8 @@ namespace luminous {
 
             virtual void init(const std::shared_ptr<SceneGraph> &scene_graph) = 0;
 
+            virtual void test() {}
+
             virtual void init_with_config(const IntegratorConfig &ic) {
                 _max_depth = ic.max_depth;
                 _rr_threshold = ic.rr_threshold;

@@ -31,6 +31,8 @@ namespace luminous {
         XPU BufferView(T *ptr, size_t num)
                 : _ptr(ptr), _num(num) {}
 
+        NDSC_XPU T *ptr() { return _ptr; }
+
         NDSC_XPU iterator begin() { return _ptr; }
 
         NDSC_XPU iterator end() { return _ptr + _num; }

@@ -55,6 +55,14 @@ namespace luminous {
                 _frame_buffer_view = buffer_view;
             }
 
+            NDSC_XPU float4 *accumulate_buffer_ptr() {
+                return _accumulate_buffer_view.ptr();
+            }
+
+            NDSC_XPU FrameBufferType *frame_buffer_ptr() {
+                return _frame_buffer_view.ptr();
+            }
+
             NDSC_XPU uint2 resolution() const { return _resolution; }
 
             NDSC_XPU Box2f screen_window() const { return _screen_window; }

@@ -427,8 +427,8 @@ namespace luminous {
 
         void OptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {
 
-            launchSubframe(_path_tracer_state);
-            return;
+//            launchSubframe(_path_tracer_state);
+//            return;
             auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;
             auto x = res.x;
             auto y = res.y;

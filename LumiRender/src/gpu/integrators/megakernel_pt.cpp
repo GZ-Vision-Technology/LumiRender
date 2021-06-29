@@ -22,14 +22,12 @@ namespace luminous {
             lp.width = 768;
             lp.height = 768;
 
-
             lp.sampler = _sampler.device_data();
             lp.camera = _camera.device_data();
             lp.frame_index = 0u;
             lp.max_depth = _max_depth;
             lp.rr_threshold = _rr_threshold;
             _launch_params.reset(&lp, _device);
-            _launch_params.synchronize_to_gpu();
         }
 
         void MegakernelPT::init(const std::shared_ptr<SceneGraph> &scene_graph) {

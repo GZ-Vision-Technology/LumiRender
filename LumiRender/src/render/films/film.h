@@ -31,6 +31,14 @@ namespace luminous {
 
             XPU void set_frame_buffer_view(BufferView<FrameBufferType> buffer_view);
 
+            NDSC_XPU float4 *accumulate_buffer_ptr() {
+                LUMINOUS_VAR_DISPATCH(accumulate_buffer_ptr);
+            }
+
+            NDSC_XPU FrameBufferType *frame_buffer_ptr() {
+                LUMINOUS_VAR_DISPATCH(frame_buffer_ptr);
+            }
+
             GEN_NAME_AND_TO_STRING_FUNC
 
             static Film create(const FilmConfig &fc);
