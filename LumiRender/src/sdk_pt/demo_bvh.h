@@ -240,7 +240,6 @@ void handleCameraUpdate( Params& params )
 inline void launchSubframe(PathTracerState& state )
 {
     state.b_params.upload_async(state.dispatcher,&state.params);
-
     OPTIX_CHECK( optixLaunch(
             state.pipeline,
             state.stream,
@@ -251,6 +250,7 @@ inline void launchSubframe(PathTracerState& state )
             768,  // launch height
             1                     // launch depth
     ) );
+
     cudaDeviceSynchronize();
 }
 

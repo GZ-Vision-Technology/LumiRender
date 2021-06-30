@@ -188,22 +188,23 @@ __device__ void test() {
 }
 
 GLOBAL __raygen__rg() {
-    using namespace luminous;
-    luminous::uint2 pixel = getPixelCoords();
-    Sensor *camera = params.camera;
-    Film *film = camera->film();
-    Sampler sampler = *params.sampler;
-    auto frame_index = params.frame_index;
-    sampler.start_pixel_sample(pixel, frame_index, 0);
-    auto ss = sampler.sensor_sample(pixel);
-    bool debug = false;
-    Ray ray(luminous::make_float3(278.0f, 273.0f, -900.0f),
-            luminous::make_float3(0,0,1));
-    float weight = camera->generate_ray(ss, &ray);
-
-    Spectrum L = Li(ray, params.traversable_handle, sampler,
-                    params.max_depth, params.rr_threshold, debug);
-    film->add_sample(pixel, L, weight, frame_index);
+    printf("%p\n", params.frame_buffer);
+//    using namespace luminous;
+//    luminous::uint2 pixel = getPixelCoords();
+//    Sensor *camera = params.camera;
+//    Film *film = camera->film();
+//    Sampler sampler = *params.sampler;
+//    auto frame_index = params.frame_index;
+//    sampler.start_pixel_sample(pixel, frame_index, 0);
+//    auto ss = sampler.sensor_sample(pixel);
+//    bool debug = false;
+//    Ray ray(luminous::make_float3(278.0f, 273.0f, -900.0f),
+//            luminous::make_float3(0,0,1));
+//    float weight = camera->generate_ray(ss, &ray);
+//
+//    Spectrum L = Li(ray, params.traversable_handle, sampler,
+//                    params.max_depth, params.rr_threshold, debug);
+//    film->add_sample(pixel, L, weight, frame_index);
 }
 
 GLOBAL __miss__radiance() {
