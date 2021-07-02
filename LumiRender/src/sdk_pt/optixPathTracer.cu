@@ -286,7 +286,9 @@ extern "C" __global__ void __raygen__rg()
 
 }
 
-
+extern "C" __global__ void __miss__shadow() {
+    setPayloadOcclusion(false);
+}
 
 extern "C" __global__ void __miss__radiance()
 {

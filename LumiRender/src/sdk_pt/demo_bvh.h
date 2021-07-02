@@ -286,6 +286,9 @@ void createContext( PathTracerState& state )
     OptixDeviceContextOptions options = {};
     options.logCallbackFunction       = &context_log_cb;
     options.logCallbackLevel          = 4;
+#if (OPTIX_VERSION >= 70200)
+    options.validationMode = OPTIX_DEVICE_CONTEXT_VALIDATION_MODE_OFF;
+#endif
     OPTIX_CHECK( optixDeviceContextCreate( cu_ctx, &options, &context ) );
 
     state.context = context;
@@ -383,8 +386,9 @@ void buildMeshAccel( PathTracerState& state )
     triangle_input.triangleArray.numIndexTriplets = tri_list.size();
 
     OptixAccelBuildOptions accel_options = {};
-    accel_options.buildFlags             = OPTIX_BUILD_FLAG_ALLOW_COMPACTION;
-    accel_options.operation              = OPTIX_BUILD_OPERATION_BUILD;
+    accel_options.buildFlags = (OPTIX_BUILD_FLAG_ALLOW_COMPACTION );
+    accel_options.motionOptions.numKeys = 1;
+    accel_options.operation = OPTIX_BUILD_OPERATION_BUILD;
 
     OptixAccelBufferSizes gas_buffer_sizes;
     OPTIX_CHECK( optixAccelComputeMemoryUsage(
@@ -668,10 +672,10 @@ inline void init(PathTracerState &state) {
     initCameraState();
     init_tri_list();
     createContext( state );
-    buildMeshAccel( state );
 //        buildInstanceAccel(state);
     createModule( state );
     createProgramGroups( state );
+    buildMeshAccel( state );
     createPipeline( state );
     createSBT( state );
     initLaunchParams( state );

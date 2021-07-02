@@ -42,7 +42,7 @@ namespace luminous {
 #endif
             ctx_options.logCallbackFunction = context_log_cb;
 #if (OPTIX_VERSION >= 70200)
-            ctx_options.validationMode = OPTIX_DEVICE_CONTEXT_VALIDATION_MODE_ALL;
+            ctx_options.validationMode = OPTIX_DEVICE_CONTEXT_VALIDATION_MODE_OFF;
 #endif
             // Zero means take the current context
             CUcontext cu_context = 0;
@@ -81,7 +81,7 @@ namespace luminous {
 
             char log[2048];
             size_t log_size = sizeof(log);
-            std::string ptx_code(optix_shader_code);
+            std::string ptx_code(sdk_ptx);
             OPTIX_CHECK_WITH_LOG(optixModuleCreateFromPTX(
                     _optix_device_context,
                     &module_compile_options,
@@ -300,7 +300,7 @@ namespace luminous {
             OptixBuildInput build_input = get_mesh_build_input(positions, triangles, mesh, vert_buffer_ptr);
 
             OptixAccelBuildOptions accel_options = {};
-            accel_options.buildFlags = (OPTIX_BUILD_FLAG_ALLOW_COMPACTION | OPTIX_BUILD_FLAG_PREFER_FAST_TRACE);
+            accel_options.buildFlags = (OPTIX_BUILD_FLAG_ALLOW_COMPACTION );
             accel_options.motionOptions.numKeys = 1;
             accel_options.operation = OPTIX_BUILD_OPERATION_BUILD;
 
@@ -429,14 +429,14 @@ namespace luminous {
         }
 
         void OptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {
-//            _path_tracer_state.params = launch_params.front();
-//            _path_tracer_state.params.traversable_handle = _path_tracer_state.gas_handle;
-//            launchSubframe(_path_tracer_state);
-//            return;
+            _path_tracer_state.params = launch_params.front();
+            _path_tracer_state.params.traversable_handle = _path_tracer_state.gas_handle;
+            launchSubframe(_path_tracer_state);
+            return;
             auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;
             auto x = res.x;
             auto y = res.y;
-            launch_params->traversable_handle = _root_ias_handle;
+            launch_params->traversable_handle = _root_gas_handle;
             launch_params.synchronize_to_gpu();
             OPTIX_CHECK(optixLaunch(_optix_pipeline,
                                     stream,
