@@ -23,7 +23,6 @@ __constant__ luminous::LaunchParams
 params;
 }
 
-
 struct RadiancePRD
 {
     // TODO: move some state directly into payload registers?
@@ -32,11 +31,13 @@ struct RadiancePRD
     float3       attenuation;
     float3       origin;
     float3       direction;
+    int flag = 0;
     unsigned int seed;
     int          countEmitted;
     int          done;
     int          pad;
 };
+
 
 //struct RadiancePRD
 //{
@@ -111,100 +112,71 @@ static __forceinline__ __device__ void traceRadiance(
 }
 
 __device__ void test() {
-
-
-
-    luminous::uint2 pixel = getPixelCoords();
-    auto camera = params.camera;
-    auto film = camera->film();
-    auto res = film->resolution();
-
-
-
-    const int    w   = res.x;
-    const int    h   = res.y;
-    auto pos = camera->position();
-    const float3 eye = make_float3(pos.x, pos.y, pos.z);
-    auto right = camera->right();
-    const float3 U   = make_float3(right.x, right.y, right.z);
-    auto up = camera->up();
-
-    const float3 V   = make_float3(up.x, up.y, up.z);
-    auto forward = camera->forward();
-    const float3 W   = make_float3(forward.x, forward.y, forward.z);
+    const int    w   = params.width;
+    const int    h   = params.height;
+    const float3 eye = params.eye;
+    const float3 U   = params.U;
+    const float3 V   = params.V;
+    const float3 W   = params.W;
     const uint3  idx = optixGetLaunchIndex();
+
     const int    subframe_index = params.frame_index;
+
     unsigned int seed = tea<4>( idx.y*w + idx.x, subframe_index );
-    float3 result = make_float3( 0.0f,0.0f,0.0f );
 
-
-
+    float3 result = make_float3( 0.0f );
     int i = 1;
-    do
-    {
-        // The center of each pixel is at fraction (0.5,0.5)
-        auto subpixel_jitter = make_float2( rnd( seed ), rnd( seed ) );
 
-        auto d = 2.0f * make_float2(
-                ( static_cast<float>( idx.x ) + subpixel_jitter.x ) / static_cast<float>( w ),
-                ( static_cast<float>( idx.y ) + subpixel_jitter.y ) / static_cast<float>( h )
-        ) - 1.0f;
-        float3 ray_direction = normalize(d.x*U + d.y*V + W);
-        float3 ray_origin    = eye;
+    // The center of each pixel is at fraction (0.5,0.5)
+    const float2 subpixel_jitter = make_float2( rnd( seed ), rnd( seed ) );
 
-        RadiancePRD prd;
-        prd.emitted      = make_float3(0.f);
-        prd.radiance     = make_float3(0.f);
-        prd.attenuation  = make_float3(1.f);
-        prd.countEmitted = true;
-        prd.done         = false;
-        prd.seed         = seed;
+    const float2 d = 2.0f * make_float2(
+            ( static_cast<float>( idx.x ) + subpixel_jitter.x ) / static_cast<float>( w ),
+            ( static_cast<float>( idx.y ) + subpixel_jitter.y ) / static_cast<float>( h )
+    ) - 1.0f;
+    float3 ray_direction = normalize(d.x*U + d.y*V + W);
+    float3 ray_origin    = eye;
 
-        int depth = 0;
-        for( ;; )
-        {
 
-            traceRadiance(
-                    params.traversable_handle,
-                    ::make_float3(278.0f, 273.0f, -900.0f),
-            ::make_float3(0,0,1),
-                    0.01f,  // tmin       // TODO: smarter offset
-                    1e16f,  // tmax
-                    &prd );
-            return;
-            result += prd.emitted;
-            result += prd.radiance * prd.attenuation;
+    RadiancePRD prd;
+    prd.emitted      = make_float3(0.f);
+    prd.radiance     = make_float3(0.f);
+    prd.attenuation  = make_float3(1.f);
+    prd.countEmitted = true;
+    prd.done         = false;
+    prd.seed         = seed;
 
-//            if( prd.done  || depth >= 3 ) // TODO RR, variable for depth
-            break;
-
-            ray_origin    = prd.origin;
-            ray_direction = prd.direction;
-
-            ++depth;
-        }
-    }
-    while( --i );
+    traceRadiance(
+            params.traversable_handle,
+            ray_origin,
+            ray_direction,
+            0.01f,  // tmin       // TODO: smarter offset
+            1e16f,  // tmax
+            &prd );
+    const uint3    launch_index = optixGetLaunchIndex();
+    const unsigned int image_index  = launch_index.y * params.width + launch_index.x;
+    params.frame_buffer[ image_index ] = 100 * prd.flag;
 }
 
 GLOBAL __raygen__rg() {
-    printf("%p\n", params.frame_buffer);
-//    using namespace luminous;
-//    luminous::uint2 pixel = getPixelCoords();
-//    Sensor *camera = params.camera;
-//    Film *film = camera->film();
-//    Sampler sampler = *params.sampler;
-//    auto frame_index = params.frame_index;
-//    sampler.start_pixel_sample(pixel, frame_index, 0);
-//    auto ss = sampler.sensor_sample(pixel);
-//    bool debug = false;
-//    Ray ray(luminous::make_float3(278.0f, 273.0f, -900.0f),
-//            luminous::make_float3(0,0,1));
-//    float weight = camera->generate_ray(ss, &ray);
-//
-//    Spectrum L = Li(ray, params.traversable_handle, sampler,
-//                    params.max_depth, params.rr_threshold, debug);
-//    film->add_sample(pixel, L, weight, frame_index);
+    test();
+    return;
+    using namespace luminous;
+    luminous::uint2 pixel = getPixelCoords();
+    Sensor *camera = params.camera;
+    Film *film = camera->film();
+    Sampler sampler = *params.sampler;
+    auto frame_index = params.frame_index;
+    sampler.start_pixel_sample(pixel, frame_index, 0);
+    auto ss = sampler.sensor_sample(pixel);
+    bool debug = false;
+    Ray ray(luminous::make_float3(278.0f, 273.0f, -900.0f),
+            luminous::make_float3(0,0,1));
+    float weight = camera->generate_ray(ss, &ray);
+
+    Spectrum L = Li(ray, params.traversable_handle, sampler,
+                    params.max_depth, params.rr_threshold, debug);
+    film->add_sample(pixel, L, weight, frame_index);
 }
 
 GLOBAL __miss__radiance() {
