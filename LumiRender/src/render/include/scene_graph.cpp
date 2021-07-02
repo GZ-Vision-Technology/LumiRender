@@ -8,6 +8,148 @@
 namespace luminous {
     inline namespace render {
 
+
+        const static std::vector<luminous::float3> g_vertices =
+                {
+                        // Floor  -- white lambert
+                        luminous::float3(    0.0f,    0.0f,    0.0f),
+                        luminous::float3(    0.0f,    0.0f,  559.2f),
+                        luminous::float3(  556.0f,    0.0f,  559.2f),
+                        luminous::float3(    0.0f,    0.0f,    0.0f),
+                        luminous::float3(  556.0f,    0.0f,  559.2f),
+                        luminous::float3(  556.0f,    0.0f,    0.0f),
+
+                        // Ceiling -- white lambert
+                        luminous::float3(    0.0f,  548.8f,    0.0f),
+                        luminous::float3(  556.0f,  548.8f,    0.0f),
+                        luminous::float3(  556.0f,  548.8f,  559.2f),
+
+                        luminous::float3(    0.0f,  548.8f,    0.0f),
+                        luminous::float3(  556.0f,  548.8f,  559.2f),
+                        luminous::float3(    0.0f,  548.8f,  559.2f),
+
+                        // Back wall -- white lambert
+                        luminous::float3(    0.0f,    0.0f,  559.2f),
+                        luminous::float3(    0.0f,  548.8f,  559.2f),
+                        luminous::float3(  556.0f,  548.8f,  559.2f),
+
+                        luminous::float3(    0.0f,    0.0f,  559.2f),
+                        luminous::float3(  556.0f,  548.8f,  559.2f),
+                        luminous::float3(  556.0f,    0.0f,  559.2f),
+
+                        // Right wall -- green lambert
+                        luminous::float3(    0.0f,    0.0f,    0.0f),
+                        luminous::float3(    0.0f,  548.8f,    0.0f),
+                        luminous::float3(    0.0f,  548.8f,  559.2f),
+
+                        luminous::float3(    0.0f,    0.0f,    0.0f),
+                        luminous::float3(    0.0f,  548.8f,  559.2f),
+                        luminous::float3(    0.0f,    0.0f,  559.2f),
+
+                        // Left wall -- red lambert
+                        luminous::float3(  556.0f,    0.0f,    0.0f),
+                        luminous::float3(  556.0f,    0.0f,  559.2f),
+                        luminous::float3(  556.0f,  548.8f,  559.2f),
+
+                        luminous::float3(  556.0f,    0.0f,    0.0f),
+                        luminous::float3(  556.0f,  548.8f,  559.2f),
+                        luminous::float3(  556.0f,  548.8f,    0.0f),
+
+                        // Short block -- white lambert
+                        luminous::float3(  130.0f,  165.0f,   65.0f),
+                        luminous::float3(   82.0f,  165.0f,  225.0f),
+                        luminous::float3(  242.0f,  165.0f,  274.0f),
+
+                        luminous::float3(  130.0f,  165.0f,   65.0f),
+                        luminous::float3(  242.0f,  165.0f,  274.0f),
+                        luminous::float3(  290.0f,  165.0f,  114.0f),
+
+                        luminous::float3(  290.0f,    0.0f,  114.0f),
+                        luminous::float3(  290.0f,  165.0f,  114.0f),
+                        luminous::float3(  240.0f,  165.0f,  272.0f),
+
+                        luminous::float3(  290.0f,    0.0f,  114.0f),
+                        luminous::float3(  240.0f,  165.0f,  272.0f),
+                        luminous::float3(  240.0f,    0.0f,  272.0f),
+
+                        luminous::float3(  130.0f,    0.0f,   65.0f),
+                        luminous::float3(  130.0f,  165.0f,   65.0f),
+                        luminous::float3(  290.0f,  165.0f,  114.0f),
+
+                        luminous::float3(  130.0f,    0.0f,   65.0f),
+                        luminous::float3(  290.0f,  165.0f,  114.0f),
+                        luminous::float3(  290.0f,    0.0f,  114.0f),
+
+                        luminous::float3(   82.0f,    0.0f,  225.0f),
+                        luminous::float3(   82.0f,  165.0f,  225.0f),
+                        luminous::float3(  130.0f,  165.0f,   65.0f),
+
+                        luminous::float3(   82.0f,    0.0f,  225.0f),
+                        luminous::float3(  130.0f,  165.0f,   65.0f),
+                        luminous::float3(  130.0f,    0.0f,   65.0f),
+
+                        luminous::float3(  240.0f,    0.0f,  272.0f),
+                        luminous::float3(  240.0f,  165.0f,  272.0f),
+                        luminous::float3(   82.0f,  165.0f,  225.0f),
+
+                        luminous::float3(  240.0f,    0.0f,  272.0f),
+                        luminous::float3(   82.0f,  165.0f,  225.0f),
+                        luminous::float3(   82.0f,    0.0f,  225.0f),
+
+                        // Tall block -- white lambert
+                        luminous::float3(  423.0f,  330.0f,  247.0f),
+                        luminous::float3(  265.0f,  330.0f,  296.0f),
+                        luminous::float3(  314.0f,  330.0f,  455.0f),
+
+                        luminous::float3(  423.0f,  330.0f,  247.0f),
+                        luminous::float3(  314.0f,  330.0f,  455.0f),
+                        luminous::float3(  472.0f,  330.0f,  406.0f),
+
+                        luminous::float3(  423.0f,    0.0f,  247.0f),
+                        luminous::float3(  423.0f,  330.0f,  247.0f),
+                        luminous::float3(  472.0f,  330.0f,  406.0f),
+
+                        luminous::float3(  423.0f,    0.0f,  247.0f),
+                        luminous::float3(  472.0f,  330.0f,  406.0f),
+                        luminous::float3(  472.0f,    0.0f,  406.0f),
+
+                        luminous::float3(  472.0f,    0.0f,  406.0f),
+                        luminous::float3(  472.0f,  330.0f,  406.0f),
+                        luminous::float3(  314.0f,  330.0f,  456.0f),
+
+                        luminous::float3(  472.0f,    0.0f,  406.0f),
+                        luminous::float3(  314.0f,  330.0f,  456.0f),
+                        luminous::float3(  314.0f,    0.0f,  456.0f),
+
+                        luminous::float3(  314.0f,    0.0f,  456.0f),
+                        luminous::float3(  314.0f,  330.0f,  456.0f),
+                        luminous::float3(  265.0f,  330.0f,  296.0f),
+
+                        luminous::float3(  314.0f,    0.0f,  456.0f),
+                        luminous::float3(  265.0f,  330.0f,  296.0f),
+                        luminous::float3(  265.0f,    0.0f,  296.0f),
+
+                        luminous::float3(  265.0f,    0.0f,  296.0f),
+                        luminous::float3(  265.0f,  330.0f,  296.0f),
+                        luminous::float3(  423.0f,  330.0f,  247.0f),
+
+                        luminous::float3(  265.0f,    0.0f,  296.0f),
+                        luminous::float3(  423.0f,  330.0f,  247.0f),
+                        luminous::float3(  423.0f,    0.0f,  247.0f),
+
+                        // Ceiling light -- emmissive
+                        luminous::float3(  343.0f,  548.6f,  227.0f),
+                        luminous::float3(  213.0f,  548.6f,  227.0f),
+                        luminous::float3(  213.0f,  548.6f,  332.0f),
+
+                        luminous::float3(  343.0f,  548.6f,  227.0f),
+                        luminous::float3(  213.0f,  548.6f,  332.0f),
+                        luminous::float3(  343.0f,  548.6f,  332.0f)
+                };
+
+        std::vector<luminous::TriangleHandle> tri_list;
+
+
         string gen_key(const string &fn, uint subdiv_level = 0) {
             return string_printf("%s_subdiv_%u", fn.c_str(), subdiv_level);
         }
@@ -38,18 +180,23 @@ namespace luminous {
                 for (auto p : P) {
                     aabb.extend(p);
                 }
-                
-                vector<float3> N(4, make_float3(0, 0, -1));
 
-                vector<float2> UV{make_float2(1, 1),
-                                  make_float2(1, 0),
-                                  make_float2(0, 1),
-                                  make_float2(0, 0)};
+                for (int i = 0; i < g_vertices.size() / 3; ++i) {
+                    uint32_t s = 3 * i;
+                    tri_list.push_back(luminous::TriangleHandle{s, s + 1, s + 2});
+                }
+                
+//                vector<float3> N(4, make_float3(0, 0, -1));
+//
+//                vector<float2> UV{make_float2(1, 1),
+//                                  make_float2(1, 0),
+//                                  make_float2(0, 1),
+//                                  make_float2(0, 0)};
 
                 vector<TriangleHandle> triangles{TriangleHandle{0,1,2},
                                                  TriangleHandle{2,1,3}};
 
-                auto mesh = make_shared<Mesh>(move(P),move(N), move(UV), move(triangles), aabb);
+                auto mesh = make_shared<Mesh>(move(g_vertices),move(vector<float3>()), move(vector<float2>()), move(tri_list), aabb);
                 model->meshes.push_back(mesh);
                 model->custom_material_name = config.material_name;
                 return model;

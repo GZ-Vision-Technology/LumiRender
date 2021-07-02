@@ -189,12 +189,21 @@ GLOBAL __miss__shadow() {
     setPayloadOcclusion(false);
 }
 
+static __forceinline__ __device__ RadiancePRD* getPRD2()
+{
+    const unsigned int u0 = optixGetPayload_0();
+    const unsigned int u1 = optixGetPayload_1();
+    return reinterpret_cast<RadiancePRD*>( unpackPointer( u0, u1 ) );
+}
+
 GLOBAL __closesthit__radiance() {
-    using namespace luminous;
-    PerRayData *prd = getPRD();
-    const HitGroupData &data = getSbtData<HitGroupData>();
-    prd->data = &data;
-    prd->closest_hit = getClosestHit();
+    RadiancePRD* prd = getPRD2();
+    prd->flag = 1;
+//    using namespace luminous;
+//    PerRayData *prd = getPRD();
+//    const HitGroupData &data = getSbtData<HitGroupData>();
+//    prd->data = &data;
+//    prd->closest_hit = getClosestHit();
 }
 
 GLOBAL __closesthit__occlusion() {
