@@ -69,6 +69,10 @@ typedef Record<HitGroupData> HitGroupRecord;
 
 extern "C" char sdk_ptx[];
 
+struct Instance
+{
+    float transform[12];
+};
 
 
 struct PathTracerState
@@ -89,7 +93,7 @@ struct PathTracerState
     OptixTraversableHandle         ias_handle               = 0;  // Traversable handle for triangle AS
     CUdeviceptr                    d_vertices               = 0;
     CUdeviceptr                    d_tri                    = 0;
-
+    CUdeviceptr                 d_ias_output_buffer          = 0;  // Instance AS memory
     OptixModule                    ptx_module               = 0;
     OptixPipelineCompileOptions    pipeline_compile_options = {};
     OptixPipeline                  pipeline                 = 0;

@@ -350,6 +350,76 @@ void buildInstanceAccel(PathTracerState &state) {
     CU_CHECK(cuCtxSynchronize());
 }
 
+void buildInstanceAccel2( PathTracerState& state )
+{
+    CUdeviceptr d_instances;
+    size_t      instance_size_in_bytes = sizeof( OptixInstance ) * 1;
+    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &d_instances ), instance_size_in_bytes ) );
+
+    OptixBuildInput instance_input = {};
+
+    instance_input.type                       = OPTIX_BUILD_INPUT_TYPE_INSTANCES;
+    instance_input.instanceArray.instances    = d_instances;
+    instance_input.instanceArray.numInstances = 1;
+
+    OptixAccelBuildOptions accel_options = {};
+    accel_options.buildFlags = (OPTIX_BUILD_FLAG_ALLOW_COMPACTION | OPTIX_BUILD_FLAG_PREFER_FAST_TRACE);
+    accel_options.operation = OPTIX_BUILD_OPERATION_BUILD;
+
+    OptixAccelBufferSizes ias_buffer_sizes;
+    OPTIX_CHECK( optixAccelComputeMemoryUsage( state.context, &accel_options, &instance_input,
+                                               1,  // num build inputs
+                                               &ias_buffer_sizes ) );
+
+    CUdeviceptr d_temp_buffer;
+    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &d_temp_buffer ), ias_buffer_sizes.tempSizeInBytes ) );
+    CUDA_CHECK( cudaMalloc( reinterpret_cast<void**>( &state.d_ias_output_buffer ), ias_buffer_sizes.outputSizeInBytes ) );
+
+    // Use the identity matrix for the instance transform
+    Instance instance = { { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0 } };
+
+    OptixInstance optix_instances[1];
+    memset( optix_instances, 0, instance_size_in_bytes );
+
+    optix_instances[0].traversableHandle = state.gas_handle;
+    optix_instances[0].flags             = OPTIX_INSTANCE_FLAG_NONE;
+    optix_instances[0].instanceId        = 0;
+    optix_instances[0].sbtOffset         = 0;
+    optix_instances[0].visibilityMask    = 1;
+
+    memcpy( optix_instances[0].transform, instance.transform, sizeof( float ) * 12 );
+//    auto mat = luminous::float4x4(1);
+//    luminous::mat4x4_to_array12(mat, optix_instances[0].transform);
+
+//    optix_instances[1].traversableHandle = state.sphere_gas_handle;
+//    optix_instances[1].flags             = OPTIX_INSTANCE_FLAG_NONE;
+//    optix_instances[1].instanceId        = 1;
+//    optix_instances[1].sbtOffset         = TRIANGLE_MAT_COUNT*RAY_TYPE_COUNT;
+//    optix_instances[1].visibilityMask    = 1;
+//    memcpy( optix_instances[1].transform, instance.transform, sizeof( float ) * 12 );
+
+    CUDA_CHECK( cudaMemcpy( reinterpret_cast<void*>( d_instances ), &optix_instances, instance_size_in_bytes,
+                            cudaMemcpyHostToDevice ) );
+
+    OPTIX_CHECK( optixAccelBuild( state.context,
+                                  0,  // CUDA stream
+                                  &accel_options,
+                                  &instance_input,
+                                  1,  // num build inputs
+                                  d_temp_buffer,
+                                  ias_buffer_sizes.tempSizeInBytes,
+                                  state.d_ias_output_buffer,
+                                  ias_buffer_sizes.outputSizeInBytes,
+                                  &state.ias_handle,
+                                  nullptr,  // emitted property list
+                                  0         // num emitted properties
+    ) );
+
+    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( d_temp_buffer ) ) );
+    CUDA_CHECK( cudaFree( reinterpret_cast<void*>( d_instances   ) ) );
+}
+
+
 void buildMeshAccel( PathTracerState& state )
 {
     //
@@ -430,12 +500,16 @@ void buildMeshAccel( PathTracerState& state )
 void createModule( PathTracerState& state )
 {
     OptixModuleCompileOptions module_compile_options = {};
-    module_compile_options.maxRegisterCount  = OPTIX_COMPILE_DEFAULT_MAX_REGISTER_COUNT;
-    module_compile_options.optLevel          = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
-    module_compile_options.debugLevel        = OPTIX_COMPILE_DEBUG_LEVEL_LINEINFO;
-
+    module_compile_options.maxRegisterCount = OPTIX_COMPILE_DEFAULT_MAX_REGISTER_COUNT;
+#ifndef NDEBUG
+    module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
+    module_compile_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_LINEINFO;
+#else
+    module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
+            module_compile_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_NONE;
+#endif
     state.pipeline_compile_options.usesMotionBlur        = false;
-    state.pipeline_compile_options.traversableGraphFlags = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_SINGLE_GAS;
+    state.pipeline_compile_options.traversableGraphFlags = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_ANY;
     state.pipeline_compile_options.numPayloadValues      = 2;
     state.pipeline_compile_options.numAttributeValues    = 2;
 #ifdef DEBUG // Enables debug exceptions during optix launches. This may incur significant performance cost and should only be done during development.
@@ -672,10 +746,10 @@ inline void init(PathTracerState &state) {
     initCameraState();
     init_tri_list();
     createContext( state );
-//        buildInstanceAccel(state);
     createModule( state );
     createProgramGroups( state );
     buildMeshAccel( state );
+    buildInstanceAccel2(state);
     createPipeline( state );
     createSBT( state );
     initLaunchParams( state );

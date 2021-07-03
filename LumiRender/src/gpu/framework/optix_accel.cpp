@@ -70,13 +70,13 @@ namespace luminous {
             _pipeline_compile_options.numPayloadValues = 2;
             _pipeline_compile_options.numAttributeValues = 2;
             // OPTIX_EXCEPTION_FLAG_NONE;
-#ifndef NDEBUG
-            _pipeline_compile_options.exceptionFlags =
-                    (OPTIX_EXCEPTION_FLAG_STACK_OVERFLOW | OPTIX_EXCEPTION_FLAG_TRACE_DEPTH |
-                     OPTIX_EXCEPTION_FLAG_DEBUG);
-#else
+//#ifndef NDEBUG
+//            _pipeline_compile_options.exceptionFlags =
+//                    (OPTIX_EXCEPTION_FLAG_STACK_OVERFLOW | OPTIX_EXCEPTION_FLAG_TRACE_DEPTH |
+//                     OPTIX_EXCEPTION_FLAG_DEBUG);
+//#else
             _pipeline_compile_options.exceptionFlags = OPTIX_EXCEPTION_FLAG_NONE;
-#endif
+//#endif
             _pipeline_compile_options.pipelineLaunchParamsVariableName = "params";
 
             char log[2048];
@@ -276,10 +276,10 @@ namespace luminous {
                 input.triangleArray.vertexBuffers = &vert_buffer_ptr.back();
             }
             {
-                input.triangleArray.indexFormat = OPTIX_INDICES_FORMAT_UNSIGNED_INT3;
-                input.triangleArray.indexStrideInBytes = sizeof(TriangleHandle);
-                input.triangleArray.numIndexTriplets = mesh.triangle_count;
-                input.triangleArray.indexBuffer = triangles.address<CUdeviceptr>(mesh.triangle_offset);
+//                input.triangleArray.indexFormat = OPTIX_INDICES_FORMAT_UNSIGNED_INT3;
+//                input.triangleArray.indexStrideInBytes = sizeof(TriangleHandle);
+//                input.triangleArray.numIndexTriplets = mesh.triangle_count;
+//                input.triangleArray.indexBuffer = triangles.address<CUdeviceptr>(mesh.triangle_offset);
             }
             {
                 //todo fix
@@ -300,7 +300,7 @@ namespace luminous {
             OptixBuildInput build_input = get_mesh_build_input(positions, triangles, mesh, vert_buffer_ptr);
 
             OptixAccelBuildOptions accel_options = {};
-            accel_options.buildFlags = (OPTIX_BUILD_FLAG_ALLOW_COMPACTION );
+            accel_options.buildFlags = (OPTIX_BUILD_FLAG_ALLOW_COMPACTION | OPTIX_BUILD_FLAG_PREFER_FAST_TRACE);
             accel_options.motionOptions.numKeys = 1;
             accel_options.operation = OPTIX_BUILD_OPERATION_BUILD;
 
@@ -430,7 +430,7 @@ namespace luminous {
 
         void OptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {
             _path_tracer_state.params = launch_params.front();
-            _path_tracer_state.params.traversable_handle = _path_tracer_state.gas_handle;
+            _path_tracer_state.params.traversable_handle = _path_tracer_state.ias_handle;
             launchSubframe(_path_tracer_state);
             return;
             auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;
