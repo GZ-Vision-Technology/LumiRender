@@ -109,4 +109,10 @@ struct PathTracerState
     luminous::Buffer<Params>       b_params{nullptr};
     luminous::Dispatcher dispatcher{std::make_unique<luminous::CUDADispatcher>()};
     OptixShaderBindingTable        sbt                      = {};
+
+
+    CUdeviceptr                    d_gas_output_buffer      = 0;  // Triangle AS memory
+
+    Params*                        d_params;
+
 };
