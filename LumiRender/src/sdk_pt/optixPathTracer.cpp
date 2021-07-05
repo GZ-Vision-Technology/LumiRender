@@ -289,6 +289,7 @@ const std::array<float3, MAT_COUNT> g_diffuse_colors =
 
 void initLaunchParams( PathTracerState& state )
 {
+    state.params.width = state.params.height = 768;
     CUDA_CHECK( cudaMalloc(
             reinterpret_cast<void**>( &state.params.accum_buffer ),
             state.params.width * state.params.height * sizeof( float4 )
@@ -310,10 +311,10 @@ void launchSubframe(PathTracerState& state )
 {
     // Launch
 //    state.params.frame_buffer  = result_buffer_data;
-    CUDA_CHECK( cudaMemcpyAsync(
+    CUDA_CHECK( cudaMemcpy(
             reinterpret_cast<void*>( state.d_params ),
             &state.params, sizeof( Params ),
-            cudaMemcpyHostToDevice, state.stream
+            cudaMemcpyHostToDevice
     ) );
 
     OPTIX_CHECK( optixLaunch(

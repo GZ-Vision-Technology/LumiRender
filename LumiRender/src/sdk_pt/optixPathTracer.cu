@@ -282,7 +282,7 @@ extern "C" __global__ void __raygen__rg()
             &prd );
     const uint3    launch_index = optixGetLaunchIndex();
     const unsigned int image_index  = launch_index.y * params.width + launch_index.x;
-    params.frame_buffer[ image_index ] = 100 * prd.flag;
+//    params.frame_buffer[ image_index ] = 100 * prd.flag;
 
 }
 
