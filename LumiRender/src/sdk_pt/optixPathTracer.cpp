@@ -890,10 +890,9 @@ inline void init(PathTracerState &state) {
     createSBT( state );
     initLaunchParams( state );
 }
-
 using namespace std;
 
-int main() {
+inline int run() {
     PathTracerState state;
     state.device = luminous::create_cuda_device();
     init(state);
@@ -909,5 +908,9 @@ int main() {
         cout << "dt = "<< dt <<",count = " << ++i <<",average = " << t / i << endl;
     }
     return 0;
+}
+
+int main() {
+    return run();
 }
 
