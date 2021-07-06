@@ -180,23 +180,18 @@ namespace luminous {
                 for (auto p : P) {
                     aabb.extend(p);
                 }
-
-                for (int i = 0; i < g_vertices.size() / 3; ++i) {
-                    uint32_t s = 3 * i;
-                    tri_list.push_back(luminous::TriangleHandle{s, s + 1, s + 2});
-                }
                 
-//                vector<float3> N(4, make_float3(0, 0, -1));
-//
-//                vector<float2> UV{make_float2(1, 1),
-//                                  make_float2(1, 0),
-//                                  make_float2(0, 1),
-//                                  make_float2(0, 0)};
+                vector<float3> N(4, make_float3(0, 0, -1));
+
+                vector<float2> UV{make_float2(1, 1),
+                                  make_float2(1, 0),
+                                  make_float2(0, 1),
+                                  make_float2(0, 0)};
 
                 vector<TriangleHandle> triangles{TriangleHandle{0,1,2},
                                                  TriangleHandle{2,1,3}};
 
-                auto mesh = make_shared<Mesh>(move(g_vertices),move(vector<float3>()), move(vector<float2>()), move(tri_list), aabb);
+                auto mesh = make_shared<Mesh>(move(P),move(N), move(UV), move(triangles), aabb);
                 model->meshes.push_back(mesh);
                 model->custom_material_name = config.material_name;
                 return model;

@@ -159,8 +159,6 @@ __device__ void test() {
 }
 
 GLOBAL __raygen__rg() {
-    test();
-    return;
     using namespace luminous;
     luminous::uint2 pixel = getPixelCoords();
     Sensor *camera = params.camera;
@@ -197,13 +195,11 @@ static __forceinline__ __device__ RadiancePRD* getPRD2()
 }
 
 GLOBAL __closesthit__radiance() {
-    RadiancePRD* prd = getPRD2();
-    prd->flag = 1;
-//    using namespace luminous;
-//    PerRayData *prd = getPRD();
-//    const HitGroupData &data = getSbtData<HitGroupData>();
-//    prd->data = &data;
-//    prd->closest_hit = getClosestHit();
+    using namespace luminous;
+    PerRayData *prd = getPRD();
+    const HitGroupData &data = getSbtData<HitGroupData>();
+    prd->data = &data;
+    prd->closest_hit = getClosestHit();
 }
 
 GLOBAL __closesthit__occlusion() {

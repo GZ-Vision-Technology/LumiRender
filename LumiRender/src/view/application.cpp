@@ -176,14 +176,14 @@ namespace luminous {
 
     int App::run() {
         while (!glfwWindowShouldClose(_handle)) {
-            imgui_begin();
+//            imgui_begin();
+            glfwPollEvents();
             glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
             glClear(GL_COLOR_BUFFER_BIT);
             render();
             update_render_texture();
             draw();
-            imgui_end();
-            glfwPollEvents();
+//            imgui_end();
             glfwSwapBuffers(_handle);
         }
         return 0;
@@ -214,7 +214,7 @@ namespace luminous {
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-
+        glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
         _handle = glfwCreateWindow(size.x, size.y, title.c_str(), NULL, NULL);
         if (!_handle) {
             glfwTerminate();
@@ -222,7 +222,7 @@ namespace luminous {
         }
         glfwSetWindowUserPointer(_handle, this);
         glfwMakeContextCurrent(_handle);
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
 
         if (gladLoadGL() == 0) {
             fprintf(stderr, "Failed to initialize OpenGL loader!\n");
@@ -231,12 +231,12 @@ namespace luminous {
     }
 
     void App::init_imgui() {
-        const char *glsl_version = "#version 130";
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGui::StyleColorsDark();
-        ImGui_ImplGlfw_InitForOpenGL(_handle, true);
-        ImGui_ImplOpenGL3_Init(glsl_version);
+//        const char *glsl_version = "#version 130";
+//        IMGUI_CHECKVERSION();
+//        ImGui::CreateContext();
+//        ImGui::StyleColorsDark();
+//        ImGui_ImplGlfw_InitForOpenGL(_handle, true);
+//        ImGui_ImplOpenGL3_Init(glsl_version);
     }
 
     void App::set_title(const std::string &s) {

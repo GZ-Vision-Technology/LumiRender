@@ -100,20 +100,13 @@
 					"type" : "yaw_pitch",
 					"param" : {
 						"yaw" : 0,
-						"pitch": -0,
-						"position": [0,0,0]
+						"pitch": -90,
+						"position": [-0.83,1.62,0.8]
 					}
-//					"type" : "yaw_pitch",
-//					"param" : {
-//						"yaw" : 0,
-//						"pitch": -90,
-//						"position": [-0.83,1.62,0.8]
-//					}
 				},
 				"material": "quad2"
 			}
-		}
-//	,
+		},
 //		{
 //			"name" : "c_box",
 //			"type": "model",
@@ -130,24 +123,24 @@
 //				}
 //			}
 //		},
-//		{
-//			"name" : "c_box",
-//			"type": "model",
-//			"param" : {
-//				"fn": "cornell_box.obj",
-//				"smooth": false,
-//				"swap_handed": true,
-//				"subdiv_level": 0,
-//				"transform" : {
-//					"type" : "trs",
-//					"param" : {
-//						"t": [0,0,0],
-//						"r": [0,1,0,180],
-//						"s": [0.003,0.003,0.003]
-//					}
-//				}
-//			}
-//		}
+		{
+			"name" : "c_box",
+			"type": "model",
+			"param" : {
+				"fn": "cornell_box.obj",
+				"smooth": false,
+				"swap_handed": true,
+				"subdiv_level": 0,
+				"transform" : {
+					"type" : "trs",
+					"param" : {
+						"t": [0,0,0],
+						"r": [0,1,0,180],
+						"s": [0.003,0.003,0.003]
+					}
+				}
+			}
+		}
 //	,
 //		{
 //			"name" : "c_box",
