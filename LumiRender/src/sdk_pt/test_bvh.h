@@ -891,7 +891,6 @@ using namespace std;
 
 inline int run() {
     PathTracerState state;
-    state.device = luminous::create_cuda_device();
     init(state);
 
     luminous::Clock clk;

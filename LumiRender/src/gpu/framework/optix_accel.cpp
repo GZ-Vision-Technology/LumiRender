@@ -7,7 +7,7 @@
 #include "../gpu_scene.h"
 #include "render/include/shader_data.h"
 #include "util/stats.h"
-#include "demo_bvh.h"
+#include "test_bvh.h"
 
 extern "C" char optix_shader_code[];
 
@@ -431,7 +431,20 @@ namespace luminous {
         void OptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {
             _path_tracer_state.params = launch_params.front();
             _path_tracer_state.params.traversable_handle = _path_tracer_state.ias_handle;
-            launchSubframe(_path_tracer_state);
+
+            luminous::Clock clk;
+            int i = 0;
+            double t = 0;
+//            while (1) {
+//                clk.start();
+                launchSubframe(_path_tracer_state);
+//                double dt = clk.elapse_ms();
+//                t += dt;
+//                cout << "dt = "<< dt <<",count = " << ++i <<",average = " << t / i << endl;
+//                if (i > 3)
+//                exit(0);
+//            }
+//            launchSubframe(_path_tracer_state);
             return;
             auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;
             auto x = res.x;
