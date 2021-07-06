@@ -175,16 +175,19 @@ namespace luminous {
     }
 
     int App::run() {
+        Clock clock;
         while (!glfwWindowShouldClose(_handle)) {
 //            imgui_begin();
             glfwPollEvents();
             glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
             glClear(GL_COLOR_BUFFER_BIT);
-            render();
-            update_render_texture();
-            draw();
+//            render();
+//            update_render_texture();
+//            draw();
 //            imgui_end();
+            clock.start();
             glfwSwapBuffers(_handle);
+            cout << clock.elapse_ms() << endl;
         }
         return 0;
     }
