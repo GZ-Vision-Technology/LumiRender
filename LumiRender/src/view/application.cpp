@@ -181,13 +181,13 @@ namespace luminous {
             glfwPollEvents();
             glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
             glClear(GL_COLOR_BUFFER_BIT);
-//            render();
-//            update_render_texture();
-//            draw();
+            render();
+            update_render_texture();
+            draw();
 //            imgui_end();
-            clock.start();
+//            clock.start();
             glfwSwapBuffers(_handle);
-            cout << clock.elapse_ms() << endl;
+//            cout << clock.elapse_ms() << endl;
         }
         return 0;
     }
