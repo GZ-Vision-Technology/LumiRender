@@ -25,10 +25,6 @@ namespace luminous {
             return 1;
         }
 
-        std::string PerspectiveCamera::to_string() const {
-            LUMINOUS_TO_STRING("%s:%s", type_name(this), _to_string().c_str());
-        }
-
         PerspectiveCamera PerspectiveCamera::create(const SensorConfig &config) {
             auto transform = config.transform_config.create();
             return PerspectiveCamera(transform.mat4x4(), config.fov_y, config.velocity);

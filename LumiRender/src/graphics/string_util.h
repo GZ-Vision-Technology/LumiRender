@@ -5,6 +5,8 @@
 
 #pragma once
 
+//#ifndef __CUDACC__
+
 #include <string>
 #include <string_view>
 #include <sstream>
@@ -177,3 +179,5 @@ namespace luminous {
         }
     }
 }
+
+//#endif

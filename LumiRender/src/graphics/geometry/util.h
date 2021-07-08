@@ -109,12 +109,12 @@ namespace luminous {
                 return Ray(org, dir, 1 - shadow_epsilon);
             }
 
-            [[nodiscard]] std::string to_string() const {
+            GEN_STRING_FUNC({
                 return string_printf("ray:{origin:%s,direction:%s,t_min:%f,t_max:%f}",
                                      origin().to_string().c_str(),
                                      direction().to_string().c_str(),
                                      t_min, t_max);
-            }
+            })
         };
 
         struct alignas(8) ClosestHit {

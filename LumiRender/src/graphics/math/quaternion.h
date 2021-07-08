@@ -94,10 +94,10 @@ namespace luminous {
                 return ret;
             }
 
-            [[nodiscard]] std::string to_string() const {
+            GEN_STRING_FUNC({
                 auto theta = degrees(acos(w));
                 return string_printf("quaternion:{ v:%s, angle:%f}", v.to_string().c_str(), (theta * 2));
-            }
+            })
         };
 
         NDSC_XPU_INLINE bool has_nan(Quaternion q) noexcept {

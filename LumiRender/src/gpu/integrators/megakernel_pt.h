@@ -30,7 +30,6 @@ namespace luminous {
                 auto film = _camera->film();
                 _launch_params->accum_buffer = reinterpret_cast<::float4*>(film->accumulate_buffer_ptr());
                 _launch_params->frame_buffer = reinterpret_cast<FrameBufferType*>(film->frame_buffer_ptr());
-//                cout << 345;
             }
 
             void init(const SP<SceneGraph> &scene_graph) override;

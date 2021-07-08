@@ -17,7 +17,6 @@
 #define L1_CACHE_LINE_SIZE 64
 #endif
 
-
 #define F_INLINE __forceinline
 
 #if defined(__CUDACC__)
@@ -41,7 +40,12 @@
 #define GEN_NAME_FUNC NDSC_XPU const char *name() {             \
                                     LUMINOUS_VAR_DISPATCH(name);\
                                }
+
+#define GEN_STRING_FUNC(args)
+
 #else
+
+#define GEN_STRING_FUNC(args) [[nodiscard]] std::string to_string() const args
 
 #define GEN_NAME_FUNC NDSC_XPU const std::string name() {       \
                                     return this->dispatch([&, this](auto &&self) { return type_name(&self); });\

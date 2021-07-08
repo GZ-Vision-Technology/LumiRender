@@ -18,6 +18,7 @@
 #include "render/include/trace.h"
 #include "render/integrators/shader_include.h"
 
+
 extern "C" {
 __constant__ luminous::LaunchParams
 params;
@@ -37,51 +38,6 @@ struct RadiancePRD
     int          done;
     int          pad;
 };
-
-
-//struct RadiancePRD
-//{
-//    // TODO: move some state directly into payload registers?
-//    luminous::float4       emitted;
-//    luminous::float4       radiance;
-//    luminous::float4       attenuation;
-//    luminous::float4       origin;
-//    luminous::float4       direction;
-//
-////    float4       emitted;
-////    float4       radiance;
-////    float4       attenuation;
-////    float4       origin;
-////    float4       direction;
-//
-////    vvv4       emitted;
-////    vvv4       radiance;
-////    vvv4       attenuation;
-////    vvv4       origin;
-////    vvv4       direction;
-//
-////    unsigned int seed;
-////    int          countEmitted;
-////    int          done;
-////    int          pad;
-////
-////    luminous::ClosestHit closest_hit;
-////    const void *data{nullptr};
-////    luminous::SurfaceInteraction si;
-////    lstd::optional<luminous::BSDF> b;
-////    luminous::BxDF b;
-////    luminous::Frame f;
-////
-////    NDSC_XPU_INLINE bool is_hit() const {
-////        return closest_hit.is_hit();
-////    }
-//
-////    XPU void init_surface_interaction(const HitGroupData *data, Ray ray);
-////
-////    NDSC_XPU const HitGroupData *hit_group_data() const;
-//};
-
-#include "sdk_pt/sutil/vec_math.h"
 
 static __forceinline__ __device__ void traceRadiance(
         OptixTraversableHandle handle,

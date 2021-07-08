@@ -24,10 +24,6 @@ namespace luminous {
             return 1;
         }
 
-        std::string PinholeCamera::to_string() const {
-            LUMINOUS_TO_STRING("%s:%s", type_name(this), _to_string().c_str());
-        }
-
         PinholeCamera PinholeCamera::create(const SensorConfig &config) {
             auto transform = config.transform_config.create();
             return PinholeCamera(transform.mat4x4(), config.fov_y, config.velocity);

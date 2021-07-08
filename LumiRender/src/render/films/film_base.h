@@ -67,11 +67,11 @@ namespace luminous {
 
             NDSC_XPU Box2f screen_window() const { return _screen_window; }
 
-            NDSC std::string _to_string() const {
-                return string_printf("resolution : %s, pixel bounds : %s", 
-                                    _resolution.to_string().c_str(),
-                                    _screen_window.to_string().c_str());
-            }
+            GEN_STRING_FUNC({
+                return string_printf("resolution : %s, pixel bounds : %s",
+                                     _resolution.to_string().c_str(),
+                                     _screen_window.to_string().c_str());
+            })
         };
     }
 }

@@ -205,11 +205,11 @@ namespace luminous {
                 return Transform(_inv_mat, _mat);
             }
 
-            NDSC std::string to_string() const {
-                return string_printf("transform:%s", _mat.to_string().c_str());
-            }
+//            NDSC std::string to_string() const {
+//                return string_printf("transform:%s", _mat.to_string().c_str());
+//            }
 
-            NDSC std::string to_string_detail() const {
+            GEN_STRING_FUNC({
                 float3 tt;
                 Quaternion rr;
                 float3 ss;
@@ -218,7 +218,7 @@ namespace luminous {
                                      tt.to_string().c_str(),
                                      rr.to_string().c_str(),
                                      ss.to_string().c_str());
-            }
+            })
 
             NDSC_XPU static Transform translation(float3 t) {
                 auto mat = make_float4x4(

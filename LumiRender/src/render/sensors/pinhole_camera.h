@@ -18,7 +18,9 @@ namespace luminous {
 
             XPU float generate_ray(const SensorSample &ss, Ray * ray);
 
-            NDSC std::string to_string() const;
+            GEN_STRING_FUNC({
+                LUMINOUS_TO_STRING("%s:%s", type_name(this), CameraBase::to_string().c_str());
+            })
 
             static PinholeCamera create(const SensorConfig &config);
         };
