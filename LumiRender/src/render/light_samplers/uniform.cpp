@@ -28,10 +28,6 @@ namespace luminous {
             return PMF(light);
         }
 
-        std::string UniformLightSampler::to_string() const {
-            LUMINOUS_TO_STRING("light sampler : %s",type_name(this));
-        }
-
         UniformLightSampler UniformLightSampler::create(const LightSamplerConfig &config) {
             return UniformLightSampler();
         }

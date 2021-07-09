@@ -21,11 +21,6 @@ namespace luminous {
             _frame_buffer_view[pixel_index] = make_rgba(Spectrum::linear_to_srgb(color));
         }
 
-        std::string RGBFilm::to_string() const {
-            LUMINOUS_TO_STRING("%s : {resolution :%s}", type_name<RGBFilm>(),
-                               _resolution.to_string().c_str());
-        }
-
         RGBFilm RGBFilm::create(const FilmConfig &config) {
             return RGBFilm(config.resolution);
         }

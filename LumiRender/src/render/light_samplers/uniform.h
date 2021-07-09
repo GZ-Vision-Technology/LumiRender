@@ -22,7 +22,9 @@ namespace luminous {
 
             NDSC_XPU float PMF(const LightSampleContext &ctx, const Light &light) const;
 
-            NDSC std::string to_string() const;
+            GEN_STRING_FUNC({
+                LUMINOUS_TO_STRING("light sampler : %s",type_name(this));
+            })
 
             static UniformLightSampler create(const LightSamplerConfig &config);
         };

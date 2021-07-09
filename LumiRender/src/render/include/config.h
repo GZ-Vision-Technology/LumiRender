@@ -82,7 +82,9 @@ namespace luminous {
                     auto tt = Transform::translation(position);
                     return tt * pitch_t * yaw_t;
                 }
+#ifndef __CUDACC__
                 LUMINOUS_ERROR("unknown transform type ", type());
+#endif
             }
         };
 

@@ -56,11 +56,11 @@ namespace luminous {
                        cols[2].x, cols[2].y, cols[2].z);
             }
 
-            [[nodiscard]] std::string to_string() const {
+            GEN_STRING_FUNC({
                 return serialize("[", serialize(cols[0].to_string()), "\n",
                                  serialize(cols[1].to_string()), "\n",
                                  serialize(cols[2].to_string()), "]\n");
-            }
+            })
         };
 
         template<typename T>
@@ -106,12 +106,12 @@ namespace luminous {
                        cols[3].x, cols[3].y, cols[3].z,cols[3].w);
             }
 
-            [[nodiscard]] std::string to_string() const {
+            GEN_STRING_FUNC({
                 return serialize("[", serialize(cols[0].to_string()), "\n",
                                  serialize(cols[1].to_string()), "\n",
                                  serialize(cols[2].to_string()), "\n",
                                  serialize(cols[3].to_string()), "]\n");
-            }
+            })
         };
 
 #define _define_matrix3x3(type)                                                                          \

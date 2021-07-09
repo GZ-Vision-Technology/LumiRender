@@ -55,13 +55,6 @@ namespace luminous {
             printf("type:AreaLight,L:(%f,%f,%f)\n", _L.x, _L.y, _L.z);
         }
 
-        std::string AreaLight::to_string() const {
-            LUMINOUS_TO_STRING("light Base : %s,name:%s, L : %s",
-                               _to_string().c_str(),
-                               type_name(this),
-                               _L.to_string().c_str());
-        }
-
         AreaLight AreaLight::create(const LightConfig &config) {
             return AreaLight(config.instance_idx, config.emission, config.surface_area);
         }

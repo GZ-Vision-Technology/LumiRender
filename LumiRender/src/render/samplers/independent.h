@@ -24,7 +24,9 @@ namespace luminous {
 
             NDSC XPU float2 next_2d();
 
-            NDSC std::string to_string() const;
+            GEN_STRING_FUNC({
+                LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
+            })
 
             static LCGSampler create(const SamplerConfig &config);
         };
@@ -42,7 +44,9 @@ namespace luminous {
 
             NDSC XPU float2 next_2d();
 
-            NDSC std::string to_string() const;
+            GEN_STRING_FUNC({
+                LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
+            })
 
             static PCGSampler create(const SamplerConfig &config);
         };

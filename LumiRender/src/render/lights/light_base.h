@@ -71,9 +71,9 @@ namespace luminous {
                 return _type == LightType::DeltaDirection || _type == LightType::DeltaPosition;
             }
 
-            NDSC std::string _to_string() const {
+            GEN_STRING_FUNC({
                 return string_printf("type : %d", (int) _type);
-            }
+            })
         };
     }
 }

@@ -24,72 +24,72 @@ namespace luminous {
                       upper(v) {}
 
             /*! construct a new, origin-oriented box of given size */
-            inline XPU TBox(const vector_t &lo, const vector_t &hi)
+            NDSC_XPU_INLINE TBox(const vector_t &lo, const vector_t &hi)
                     : lower(lo),
                       upper(hi) {}
 
             /*! returns new box including both ourselves _and_ the given point */
-            [[nodiscard]] inline XPU TBox including(const vector_t &other) const {
+            NDSC_XPU_INLINE TBox including(const vector_t &other) const {
                 return TBox(min(lower, other), max(upper, other));
             }
 
             /*! returns new box including both ourselves _and_ the given point */
-            [[nodiscard]] inline XPU TBox including(const TBox &other) const {
+            NDSC_XPU_INLINE TBox including(const TBox &other) const {
                 return TBox(min(lower, other.lower), max(upper, other.upper));
             }
 
             /*! returns new box including both ourselves _and_ the given point */
-            inline XPU TBox &extend(const vector_t &other) {
+            NDSC_XPU_INLINE TBox &extend(const vector_t &other) {
                 lower = min(lower, other);
                 upper = max(upper, other);
                 return *this;
             }
 
             /*! returns new box including both ourselves _and_ the given point */
-            inline XPU TBox &extend(const TBox &other) {
+            NDSC_XPU_INLINE TBox &extend(const TBox &other) {
                 lower = min(lower, other.lower);
                 upper = max(upper, other.upper);
                 return *this;
             }
 
             /*! get the d-th dimensional slab (lo[dim]..hi[dim] */
-            [[nodiscard]] inline XPU interval<scalar_t> get_slab(const uint32_t dim) {
+            NDSC_XPU_INLINE interval<scalar_t> get_slab(const uint32_t dim) {
                 return interval<scalar_t>(lower[dim], upper[dim]);
             }
 
-            [[nodiscard]] inline XPU vector_t offset(vector_t p) const {
+            NDSC_XPU_INLINE vector_t offset(vector_t p) const {
                 return (p - lower) / span();
             }
 
-            [[nodiscard]] inline XPU bool contains(const vector_t &point) const {
+            NDSC_XPU_INLINE bool contains(const vector_t &point) const {
                 return all(point >= lower) && all(upper >= point);
             }
 
-            [[nodiscard]] inline XPU bool contains(const TBox &other) const {
+            NDSC_XPU_INLINE bool contains(const TBox &other) const {
                 return all(other.lower >= lower) && all(upper >= other.upper);
             }
 
-            [[nodiscard]] inline XPU bool overlap(const TBox &other) const {
+            NDSC_XPU_INLINE bool overlap(const TBox &other) const {
                 return contains(other.lower) || contains(other.upper);
             }
 
-            [[nodiscard]] inline XPU vector_t center() const {
+            NDSC_XPU_INLINE vector_t center() const {
                 return (lower + upper) / (scalar_t) 2;
             }
 
-            [[nodiscard]] inline XPU vector_t span() const {
+            NDSC_XPU_INLINE vector_t span() const {
                 return upper - lower;
             }
 
-            [[nodiscard]] inline XPU vector_t size() const {
+            NDSC_XPU_INLINE vector_t size() const {
                 return upper - lower;
             }
 
-            [[nodiscard]] inline XPU scalar_t volume() const {
+            NDSC_XPU_INLINE scalar_t volume() const {
                 return luminous::functor::volume(upper - lower);
             }
 
-            [[nodiscard]] inline XPU scalar_t area() const {
+            NDSC_XPU_INLINE scalar_t area() const {
                 static_assert(N == 2 || N == 3);
                 vector_t diag = upper - lower;
                 if constexpr (N == 2) {
@@ -101,15 +101,15 @@ namespace luminous {
                 }
             }
 
-            [[nodiscard]] inline XPU bool empty() const {
+            NDSC_XPU_INLINE bool empty() const {
                 return any(upper < lower);
             }
 
-            [[nodiscard]] inline std::string to_string() const {
+            GEN_STRING_FUNC({
                 return string_printf("box : {lower: %s, upper : %s }",
                                      lower.to_string().c_str(),
                                      upper.to_string().c_str());
-            }
+            })
         };
 
         template<typename T, uint N>

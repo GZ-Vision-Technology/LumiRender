@@ -26,10 +26,10 @@ namespace luminous {
                 return light != nullptr;
             }
 
-            NDSC std::string to_string() const {
+            GEN_STRING_FUNC({
                 return string_printf("sampled light :{PMF:%s, light:%s}",
                                      PMF, light->to_string().c_str());
-            }
+            })
         };
 
         class LightSamplerBase {

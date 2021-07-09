@@ -105,9 +105,9 @@ namespace luminous {
 
             XPU int64_t operator-(const RNG &other) const;
 
-            std::string ToString() const {
+            GEN_STRING_FUNC({
                 return string_printf("[ RNG state: %" PRIu64 " inc: %" PRIu64 " ]", _state, _inc);
-            }
+            })
 
         private:
             // RNG Private Members

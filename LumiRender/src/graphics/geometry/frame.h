@@ -133,12 +133,12 @@ namespace luminous {
                 return luminous::has_inf(x) || luminous::has_inf(y) || luminous::has_inf(z);
             }
 
-            [[nodiscard]] std::string to_string() const {
+            GEN_STRING_FUNC({
                 return string_printf("frame : {x:%s,y:%s,z:%s}",
                                      x.to_string().c_str(),
                                      y.to_string().c_str(),
                                      z.to_string().c_str());
-            }
+            })
         };
 
         using Frame = TFrame<float>;

@@ -26,10 +26,6 @@ namespace luminous {
             return LCGSampler(sc.spp);
         }
 
-        std::string LCGSampler::to_string() const {
-            LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
-        }
-
         void PCGSampler::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
             _rng.set_sequence((pixel.x + pixel.y * 65536) | (uint64_t(_seed) << 32));
             _rng.advance(sample_index * 65536 + dimension);
@@ -45,10 +41,6 @@ namespace luminous {
 
         PCGSampler PCGSampler::create(const SamplerConfig &sc) {
             return PCGSampler(sc.spp);
-        }
-
-        std::string PCGSampler::to_string() const {
-            LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
         }
     }
 }

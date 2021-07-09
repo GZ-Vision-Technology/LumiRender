@@ -15,7 +15,10 @@ namespace luminous {
         public:
             GBufferFilm(uint2 res) : FilmBase(res) {}
 
-            NDSC std::string to_string() const;
+            GEN_STRING_FUNC({
+                LUMINOUS_TO_STRING("%s : {resolution :%s}", type_name<GBufferFilm>(),
+                                   _resolution.to_string().c_str());
+            })
 
             static GBufferFilm create(const FilmConfig &config);
         };

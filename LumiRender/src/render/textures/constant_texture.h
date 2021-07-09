@@ -22,9 +22,9 @@ namespace luminous {
                 return _val;
             }
 
-            std::string to_string() const {
+            GEN_STRING_FUNC({
                 LUMINOUS_TO_STRING("name: %s", type_name(this));
-            }
+            })
 
             static ConstantTexture create(const TextureConfig &config) {
                 return ConstantTexture(config.pixel_format, config.val);

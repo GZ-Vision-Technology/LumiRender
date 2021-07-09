@@ -27,13 +27,6 @@ namespace luminous {
             printf("type:PointLight,L:(%f,%f,%f)\n", _intensity.x, _intensity.y, _intensity.z);
         }
 
-        std::string PointLight::to_string() const {
-            LUMINOUS_TO_STRING("light Base : %s, name : %s ,intensity : %s",
-                                 _to_string().c_str(),
-                                 type_name(this),
-                                 _intensity.to_string().c_str());
-        }
-
         LightLiSample PointLight::Li(LightLiSample lls) const {
             float3 wi = lls.p_light.pos - lls.p_ref.pos;
             lls.L = _intensity / length_squared(wi);

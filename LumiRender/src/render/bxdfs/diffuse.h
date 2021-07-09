@@ -66,9 +66,9 @@ namespace luminous {
                 printf("ideal diffuse r(%f,%f,%f,%f)", _R.x, _R.y, _R.z, _R.w);
             }
 
-            NDSC std::string to_string() const {
+            GEN_STRING_FUNC({
                 LUMINOUS_TO_STRING("IdealDiffuse R : %s", _R.to_string().c_str());
-            }
+            })
         };
     } // luminous::render
 } //luminous

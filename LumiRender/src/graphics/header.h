@@ -71,13 +71,10 @@ constexpr const char * type_name(T * ptr = nullptr) {
 
 
 #ifdef IS_GPU_CODE
-#define GEN_TO_STRING_FUNC NDSC std::string to_string() const { \
-                LUMINOUS_ERROR("device not support to string")  \
-        }
+#define GEN_TO_STRING_FUNC GEN_STRING_FUNC({LUMINOUS_VAR_DISPATCH(to_string);})
 #else
-#define GEN_TO_STRING_FUNC NDSC std::string to_string() const { \
-                LUMINOUS_VAR_DISPATCH(to_string);               \
-        }
+
+#define GEN_TO_STRING_FUNC GEN_STRING_FUNC({LUMINOUS_VAR_DISPATCH(to_string);})
 #endif
 
 #define GEN_NAME_AND_TO_STRING_FUNC GEN_TO_STRING_FUNC

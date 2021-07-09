@@ -30,7 +30,12 @@ namespace luminous {
 
             XPU void print() const;
 
-            NDSC std::string to_string() const;
+            GEN_STRING_FUNC({
+                LUMINOUS_TO_STRING("light Base : %s, name : %s ,intensity : %s",
+                                   LightBase::to_string().c_str(),
+                                   type_name(this),
+                                   _intensity.to_string().c_str());
+            })
 
             static PointLight create(const LightConfig &config);
         };

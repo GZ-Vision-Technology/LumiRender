@@ -17,7 +17,10 @@ namespace luminous {
 
             XPU void add_sample(uint2 pixel, Spectrum color, float weight, uint frame_index = 0u);
 
-            NDSC std::string to_string() const;
+            GEN_STRING_FUNC({
+                LUMINOUS_TO_STRING("%s : {resolution :%s}", type_name<RGBFilm>(),
+                                   _resolution.to_string().c_str());
+            })
 
             static RGBFilm create(const FilmConfig &config);
         };
