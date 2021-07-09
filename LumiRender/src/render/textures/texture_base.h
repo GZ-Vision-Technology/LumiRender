@@ -50,7 +50,7 @@ namespace luminous {
                 LUMINOUS_VAR_DISPATCH(map, ctx, dst_dx, dst_dy)
             }
 
-            GEN_NAME_AND_TO_STRING_FUNC
+            GEN_TO_STRING_FUNC
 
             static TextureMapping2D create(const TextureMappingConfig &tmc) {
                 return detail::create<TextureMapping2D>(tmc);

@@ -24,7 +24,7 @@ namespace luminous {
 
             GEN_BASE_NAME(LightSampler)
 
-            GEN_NAME_AND_TO_STRING_FUNC
+            GEN_TO_STRING_FUNC
 
             XPU void set_lights(BufferView<const Light> lights);
 

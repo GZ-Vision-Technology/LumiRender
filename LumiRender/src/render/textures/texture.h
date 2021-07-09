@@ -21,7 +21,7 @@ namespace luminous {
 
             Texture() {}
 
-            GEN_NAME_AND_TO_STRING_FUNC
+            GEN_TO_STRING_FUNC
 
             NDSC_XPU float4 eval(const TextureEvalContext &tec) {
                 LUMINOUS_VAR_DISPATCH(eval, tec)

@@ -76,7 +76,7 @@ namespace luminous {
 
             XPU void set_sensitivity(float val);
 
-            GEN_NAME_AND_TO_STRING_FUNC
+            GEN_TO_STRING_FUNC
 
             static Sensor create(const SensorConfig &config);
         };

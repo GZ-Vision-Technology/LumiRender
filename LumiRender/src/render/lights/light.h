@@ -27,7 +27,7 @@ namespace luminous {
 
             NDSC_XPU LightType type() const;
 
-            GEN_NAME_AND_TO_STRING_FUNC
+            GEN_TO_STRING_FUNC
 
             NDSC_XPU bool is_delta() const;
 

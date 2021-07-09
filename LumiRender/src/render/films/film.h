@@ -39,7 +39,7 @@ namespace luminous {
                 LUMINOUS_VAR_DISPATCH(frame_buffer_ptr);
             }
 
-            GEN_NAME_AND_TO_STRING_FUNC
+            GEN_TO_STRING_FUNC
 
             static Film create(const FilmConfig &fc);
         };

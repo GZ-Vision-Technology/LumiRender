@@ -20,7 +20,7 @@ namespace luminous {
         public:
             GEN_BASE_NAME(BxDF)
 
-            GEN_NAME_AND_TO_STRING_FUNC
+            GEN_TO_STRING_FUNC
 
             NDSC_XPU float4 base_color() const;
 

@@ -77,8 +77,6 @@ constexpr const char * type_name(T * ptr = nullptr) {
 #define GEN_TO_STRING_FUNC GEN_STRING_FUNC({LUMINOUS_VAR_DISPATCH(to_string);})
 #endif
 
-#define GEN_NAME_AND_TO_STRING_FUNC GEN_TO_STRING_FUNC
-
 #define INLINE inline
 
 #define XPU_INLINE XPU INLINE

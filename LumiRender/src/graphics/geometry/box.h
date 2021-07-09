@@ -39,14 +39,14 @@ namespace luminous {
             }
 
             /*! returns new box including both ourselves _and_ the given point */
-            NDSC_XPU_INLINE TBox &extend(const vector_t &other) {
+            XPU_INLINE TBox &extend(const vector_t &other) {
                 lower = min(lower, other);
                 upper = max(upper, other);
                 return *this;
             }
 
             /*! returns new box including both ourselves _and_ the given point */
-            NDSC_XPU_INLINE TBox &extend(const TBox &other) {
+            XPU_INLINE TBox &extend(const TBox &other) {
                 lower = min(lower, other.lower);
                 upper = max(upper, other.upper);
                 return *this;

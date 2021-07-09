@@ -26,7 +26,7 @@ namespace luminous {
 
             XPU SensorSample sensor_sample(uint2 p_raster);
 
-            GEN_NAME_AND_TO_STRING_FUNC
+            GEN_TO_STRING_FUNC
 
             NDSC_XPU float next_1d();
 
