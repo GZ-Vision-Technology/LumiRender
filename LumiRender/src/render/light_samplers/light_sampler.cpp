@@ -53,10 +53,8 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(PMF, ctx, light);
         }
 
-        LightSampler LightSampler::create(const LightSamplerConfig &config) {
+        CPU_ONLY(LightSampler LightSampler::create(const LightSamplerConfig &config) {
             return detail::create<LightSampler>(config);
-        }
-
-
+        })
     } // luminous::render
 } // luminous

@@ -28,8 +28,8 @@ namespace luminous {
             return PMF(light);
         }
 
-        UniformLightSampler UniformLightSampler::create(const LightSamplerConfig &config) {
+        CPU_ONLY(UniformLightSampler UniformLightSampler::create(const LightSamplerConfig &config) {
             return UniformLightSampler();
-        }
+        })
     } // luminous::render
 } // luminous

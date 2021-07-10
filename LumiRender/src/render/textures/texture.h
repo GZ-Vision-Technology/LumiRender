@@ -35,9 +35,9 @@ namespace luminous {
                 LUMINOUS_VAR_DISPATCH(set_mapping, mapping)
             }
 
-            static Texture create(const TextureConfig &config) {
+            CPU_ONLY(static Texture create(const TextureConfig &config) {
                 return detail::create<Texture>(config);
-            }
+            })
         };
     }
 }

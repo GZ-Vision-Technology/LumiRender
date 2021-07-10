@@ -37,7 +37,7 @@ namespace luminous {
                                    _intensity.to_string().c_str());
             })
 
-            static PointLight create(const LightConfig &config);
+            CPU_ONLY(static PointLight create(const LightConfig &config);)
         };
     } // luminous::render
 } // luminous

@@ -26,7 +26,7 @@ namespace luminous {
                 LUMINOUS_TO_STRING("light sampler : %s",type_name(this));
             })
 
-            static UniformLightSampler create(const LightSamplerConfig &config);
+            CPU_ONLY(static UniformLightSampler create(const LightSamplerConfig &config);)
         };
 
     } // luminous::render

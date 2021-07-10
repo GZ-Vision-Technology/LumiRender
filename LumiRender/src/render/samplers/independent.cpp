@@ -22,9 +22,9 @@ namespace luminous {
             return make_float2(next_1d(), next_1d());
         }
 
-        LCGSampler LCGSampler::create(const SamplerConfig &sc) {
+        CPU_ONLY(LCGSampler LCGSampler::create(const SamplerConfig &sc) {
             return LCGSampler(sc.spp);
-        }
+        })
 
         void PCGSampler::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
             _rng.set_sequence((pixel.x + pixel.y * 65536) | (uint64_t(_seed) << 32));
@@ -39,8 +39,8 @@ namespace luminous {
             return make_float2(next_1d(), next_1d());
         }
 
-        PCGSampler PCGSampler::create(const SamplerConfig &sc) {
+        CPU_ONLY(PCGSampler PCGSampler::create(const SamplerConfig &sc) {
             return PCGSampler(sc.spp);
-        }
+        })
     }
 }

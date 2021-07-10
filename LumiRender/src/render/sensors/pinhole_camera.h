@@ -22,7 +22,7 @@ namespace luminous {
                 LUMINOUS_TO_STRING("%s:%s", type_name(this), CameraBase::to_string().c_str());
             })
 
-            static PinholeCamera create(const SensorConfig &config);
+            CPU_ONLY(static PinholeCamera create(const SensorConfig &config);)
         };
 
     } // luminous::render

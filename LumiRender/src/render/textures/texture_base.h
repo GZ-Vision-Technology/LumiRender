@@ -33,9 +33,9 @@ namespace luminous {
                 return make_float2(_su * ctx.uv[0] + _du, _sv * ctx.uv[1] + _dv);
             }
 
-            static UVMapping2D create(const TextureMappingConfig tmc) {
+            CPU_ONLY(static UVMapping2D create(const TextureMappingConfig tmc) {
                 return UVMapping2D(tmc.su, tmc.sv, tmc.du, tmc.dv);
-            }
+            })
         };
 
         using lstd::Variant;
@@ -52,9 +52,9 @@ namespace luminous {
 
             GEN_TO_STRING_FUNC
 
-            static TextureMapping2D create(const TextureMappingConfig &tmc) {
+            CPU_ONLY(static TextureMapping2D create(const TextureMappingConfig &tmc) {
                 return detail::create<TextureMapping2D>(tmc);
-            }
+            })
         };
 
         class TextureBase {

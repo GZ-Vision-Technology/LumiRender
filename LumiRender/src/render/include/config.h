@@ -2,7 +2,7 @@
 // Created by Zero on 2021/4/14.
 //
 
-
+#ifndef __CUDACC__
 #pragma once
 
 #include "graphics/math/common.h"
@@ -220,3 +220,5 @@ namespace luminous {
         };
     }
 }
+
+#endif

@@ -28,7 +28,7 @@ namespace luminous {
                 LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
             })
 
-            static LCGSampler create(const SamplerConfig &config);
+            CPU_ONLY(static LCGSampler create(const SamplerConfig &config);)
         };
 
         class PCGSampler : public SamplerBase {
@@ -48,7 +48,7 @@ namespace luminous {
                 LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
             })
 
-            static PCGSampler create(const SamplerConfig &config);
+            CPU_ONLY(static PCGSampler create(const SamplerConfig &config);)
         };
     }
 }

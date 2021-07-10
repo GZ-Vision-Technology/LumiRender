@@ -24,9 +24,9 @@ namespace luminous {
                 LUMINOUS_VAR_DISPATCH(get_BSDF, ctx, hit_group_data)
             }
 
-            static Material create(const MaterialConfig &mc) {
+            CPU_ONLY(static Material create(const MaterialConfig &mc) {
                 return detail::create<Material>(mc);
-            }
+            })
         };
 
     } // luminous::render

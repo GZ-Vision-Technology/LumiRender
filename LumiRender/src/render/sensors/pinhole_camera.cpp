@@ -24,9 +24,9 @@ namespace luminous {
             return 1;
         }
 
-        PinholeCamera PinholeCamera::create(const SensorConfig &config) {
+        CPU_ONLY(PinholeCamera PinholeCamera::create(const SensorConfig &config) {
             auto transform = config.transform_config.create();
             return PinholeCamera(transform.mat4x4(), config.fov_y, config.velocity);
-        }
+        })
     }
 }

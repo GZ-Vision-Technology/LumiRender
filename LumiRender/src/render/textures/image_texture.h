@@ -52,9 +52,9 @@ namespace luminous {
                 LUMINOUS_TO_STRING("name: %s", type_name(this));
             })
 
-            static ImageTexture create(const TextureConfig &config) {
+            CPU_ONLY(static ImageTexture create(const TextureConfig &config) {
                 return ImageTexture ((ImageTexture::TypeHandle) config.handle, config.pixel_format);
-            }
+            })
         };
     }
 }

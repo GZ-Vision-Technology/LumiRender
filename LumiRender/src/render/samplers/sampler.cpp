@@ -33,8 +33,8 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(next_2d)
         }
 
-        Sampler Sampler::create(const SamplerConfig &config) {
+        CPU_ONLY(Sampler Sampler::create(const SamplerConfig &config) {
             return detail::create<Sampler>(config);
-        }
+        })
     }
 }

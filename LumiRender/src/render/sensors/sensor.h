@@ -78,7 +78,7 @@ namespace luminous {
 
             GEN_TO_STRING_FUNC
 
-            static Sensor create(const SensorConfig &config);
+            CPU_ONLY(static Sensor create(const SensorConfig &config);)
         };
     }
 }

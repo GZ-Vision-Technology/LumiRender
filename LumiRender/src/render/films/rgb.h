@@ -22,7 +22,7 @@ namespace luminous {
                                    _resolution.to_string().c_str());
             })
 
-            static RGBFilm create(const FilmConfig &config);
+            CPU_ONLY(static RGBFilm create(const FilmConfig &config);)
         };
     }
 }

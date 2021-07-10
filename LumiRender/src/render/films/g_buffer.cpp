@@ -8,10 +8,8 @@
 namespace luminous {
     inline namespace render {
 
-        GBufferFilm GBufferFilm::create(const FilmConfig &config) {
+        CPU_ONLY(GBufferFilm GBufferFilm::create(const FilmConfig &config) {
             return GBufferFilm(config.resolution);
-        }
-
-
+        })
     }
 }

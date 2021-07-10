@@ -119,9 +119,9 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(print);
         }
 
-        Light Light::create(const LightConfig &config) {
+        CPU_ONLY(Light Light::create(const LightConfig &config) {
             return detail::create<Light>(config);
-        }
+        })
 
     } // luminous::render
 } // luminous

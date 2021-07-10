@@ -32,7 +32,7 @@ namespace luminous {
 
             NDSC_XPU float2 next_2d();
 
-            static Sampler create(const SamplerConfig &config);
+            CPU_ONLY(static Sampler create(const SamplerConfig &config);)
         };
     }
 }

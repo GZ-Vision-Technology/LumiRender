@@ -113,10 +113,10 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(right)
         }
 
-        Sensor Sensor::create(const SensorConfig &config) {
+        CPU_ONLY(Sensor Sensor::create(const SensorConfig &config) {
             auto ret = detail::create<Sensor>(config);
             ret.set_film(Film::create(config.film_config));
             return ret;
-        }
+        })
     }
 }

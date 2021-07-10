@@ -45,7 +45,7 @@ namespace luminous {
                                    _L.to_string().c_str());
             })
 
-            static AreaLight create(const LightConfig &config);
+            CPU_ONLY(static AreaLight create(const LightConfig &config);)
         };
     } //luminous::render
 } // luminous::render

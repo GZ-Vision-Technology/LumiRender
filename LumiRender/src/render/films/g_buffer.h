@@ -9,8 +9,6 @@
 
 namespace luminous {
     inline namespace render {
-
-
         class GBufferFilm : public FilmBase {
         public:
             GBufferFilm(uint2 res) : FilmBase(res) {}
@@ -20,7 +18,7 @@ namespace luminous {
                                    _resolution.to_string().c_str());
             })
 
-            static GBufferFilm create(const FilmConfig &config);
+            CPU_ONLY(static GBufferFilm create(const FilmConfig &config);)
         };
     }
 }

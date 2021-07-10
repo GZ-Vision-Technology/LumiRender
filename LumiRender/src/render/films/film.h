@@ -42,7 +42,9 @@ namespace luminous {
 
             GEN_TO_STRING_FUNC
 
-            GEN_CREATOR(Film)
+            CPU_ONLY(static Film create(const FilmConfig &fc) {
+                return detail::create<Film>(fc);
+            })
         };
     }
 }

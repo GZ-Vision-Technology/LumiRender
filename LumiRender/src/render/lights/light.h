@@ -56,7 +56,7 @@ namespace luminous {
 
             XPU void print() const;
 
-            static Light create(const LightConfig &config);
+            CPU_ONLY(static Light create(const LightConfig &config);)
         };
     } // luminous::render
 } // luminous

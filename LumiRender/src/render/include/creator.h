@@ -5,6 +5,8 @@
 
 #pragma once
 
+#ifndef __CUDACC__
+
 #include "graphics/lstd/lstd.h"
 #include "core/logging.h"
 namespace luminous {
@@ -18,9 +20,9 @@ namespace luminous {
                     return Handle(Class::create(config));
                 }
                 if constexpr (current_index + 1 == std::tuple_size_v<typename Handle::TypeTuple>) {
-#ifndef __CUDACC__
+
                     LUMINOUS_ERROR(string_printf("unknown %s type %s", Handle::base_name(), config.type().c_str()));
-#endif
+
                 } else {
                     return create<Handle, Config, current_index + 1>(config);
                 }
@@ -28,3 +30,5 @@ namespace luminous {
         }
     } // luminous::render
 } // luminous
+
+#endif

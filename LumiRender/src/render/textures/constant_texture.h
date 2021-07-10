@@ -26,9 +26,9 @@ namespace luminous {
                 LUMINOUS_TO_STRING("name: %s", type_name(this));
             })
 
-            static ConstantTexture create(const TextureConfig &config) {
+            CPU_ONLY(static ConstantTexture create(const TextureConfig &config) {
                 return ConstantTexture(config.pixel_format, config.val);
-            }
+            })
         };
     }
 }

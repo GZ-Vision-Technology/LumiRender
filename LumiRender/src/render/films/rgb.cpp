@@ -19,8 +19,8 @@ namespace luminous {
             _frame_buffer_view[pixel_index] = make_rgba(Spectrum::linear_to_srgb(color));
         }
 
-        RGBFilm RGBFilm::create(const FilmConfig &config) {
+        CPU_ONLY(RGBFilm RGBFilm::create(const FilmConfig &config) {
             return RGBFilm(config.resolution);
-        }
+        })
     } // luminous::render
 } // luminous

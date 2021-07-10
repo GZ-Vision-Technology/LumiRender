@@ -25,11 +25,9 @@ namespace luminous {
             return 1;
         }
 
-        PerspectiveCamera PerspectiveCamera::create(const SensorConfig &config) {
+        CPU_ONLY(PerspectiveCamera PerspectiveCamera::create(const SensorConfig &config) {
             auto transform = config.transform_config.create();
             return PerspectiveCamera(transform.mat4x4(), config.fov_y, config.velocity);
-        }
-
-
+        })
     }
 }

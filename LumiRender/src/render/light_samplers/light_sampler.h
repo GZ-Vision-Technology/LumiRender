@@ -46,7 +46,7 @@ namespace luminous {
 
             NDSC_XPU float PMF(const LightSampleContext &ctx, const Light &light) const;
 
-            static LightSampler create(const LightSamplerConfig &config);
+            CPU_ONLY(static LightSampler create(const LightSamplerConfig &config);)
         };
 
     } // luminous::render

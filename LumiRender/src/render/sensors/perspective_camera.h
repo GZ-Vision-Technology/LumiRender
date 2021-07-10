@@ -25,7 +25,7 @@ namespace luminous {
                 LUMINOUS_TO_STRING("%s:%s", type_name(this), CameraBase::to_string().c_str());
             })
 
-            static PerspectiveCamera create(const SensorConfig &config);
+            CPU_ONLY(static PerspectiveCamera create(const SensorConfig &config);)
         };
     }
 
