@@ -8,6 +8,7 @@
 #include "film_base.h"
 #include "rgb.h"
 #include "g_buffer.h"
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
@@ -41,7 +42,7 @@ namespace luminous {
 
             GEN_TO_STRING_FUNC
 
-            static Film create(const FilmConfig &fc);
+            GEN_CREATOR(Film)
         };
     }
 }

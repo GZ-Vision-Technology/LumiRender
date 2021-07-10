@@ -31,9 +31,5 @@ namespace luminous {
         void Film::set_frame_buffer_view(BufferView<FrameBufferType> buffer_view) {
             LUMINOUS_VAR_DISPATCH(set_frame_buffer_view, buffer_view);
         }
-
-        Film Film::create(const FilmConfig &config) {
-            return detail::create<Film>(config);
-        }
     }
 }

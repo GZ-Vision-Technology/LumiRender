@@ -19,6 +19,21 @@
 
 #define F_INLINE __forceinline
 
+#define INLINE inline
+
+#define XPU_INLINE XPU INLINE
+
+#define GPU_INLINE GPU INLINE
+
+#define NDSC [[nodiscard]]
+
+#define NDSC_XPU NDSC XPU
+#define NDSC_INLINE NDSC INLINE
+#define NDSC_XPU_INLINE NDSC XPU_INLINE
+
+#define TO_STRING(x) TO_STRING2(x)
+#define TO_STRING2(x) #x
+
 #if defined(__CUDACC__)
 #define IS_GPU_CODE
 #endif
@@ -37,19 +52,40 @@
 
 
 #ifdef IS_GPU_CODE
-#define GEN_NAME_FUNC NDSC_XPU const char *name() {             \
-                                    LUMINOUS_VAR_DISPATCH(name);\
-                               }
 
-#define GEN_STRING_FUNC(args)
+    #define CPU_ONLY(arg)
+
+    #define GEN_NAME_FUNC NDSC_XPU const char *name() {             \
+                                        LUMINOUS_VAR_DISPATCH(name);\
+                                   }
+
+    #define GEN_STRING_FUNC(args)
+
+    #define LUMINOUS_TO_STRING(...) LUMINOUS_ERROR("device not support to string");
+
+    #define GEN_CREATE_FUNC(Class, ClassConfig) static Class create(const ClassConfig &fc) { \
+            return detail::create<Class>(fc);\
+        }
+
+    #define GEN_CREATOR(Class) GEN_CREATE_FUNC(Class, Class##Config)
 
 #else
 
-#define GEN_STRING_FUNC(args) [[nodiscard]] std::string to_string() const args
+    #define LUMINOUS_TO_STRING(...) return string_printf(__VA_ARGS__);
 
-#define GEN_NAME_FUNC NDSC_XPU const std::string name() {       \
-                                    return this->dispatch([&, this](auto &&self) { return type_name(&self); });\
-                               }
+    #define GEN_CREATE_FUNC(Class, ClassConfig) static Class create(const ClassConfig &fc) { \
+                    return detail::create<Class>(fc);\
+                }
+
+    #define GEN_CREATOR(Class) GEN_CREATE_FUNC(Class, Class##Config)
+
+    #define CPU_ONLY(arg) arg
+
+    #define GEN_STRING_FUNC(args) [[nodiscard]] std::string to_string() const args
+
+    #define GEN_NAME_FUNC NDSC_XPU const std::string name() {       \
+                                        return this->dispatch([&, this](auto &&self) { return type_name(&self); });\
+                                   }
 #endif
 
 template<typename T>
@@ -60,37 +96,9 @@ constexpr const char * type_name(T * ptr = nullptr) {
         return typeid(*ptr).name();
 }
 
-#ifdef IS_GPU_CODE
-    #define LUMINOUS_TO_STRING(...) LUMINOUS_ERROR("device not support to string");
-#else
-    #define LUMINOUS_TO_STRING(...) return string_printf(__VA_ARGS__);
-#endif
-
 #define GEN_BASE_NAME(arg) XPU static constexpr const char *base_name() { return #arg; }
 
-
-
-#ifdef IS_GPU_CODE
 #define GEN_TO_STRING_FUNC GEN_STRING_FUNC({LUMINOUS_VAR_DISPATCH(to_string);})
-#else
-
-#define GEN_TO_STRING_FUNC GEN_STRING_FUNC({LUMINOUS_VAR_DISPATCH(to_string);})
-#endif
-
-#define INLINE inline
-
-#define XPU_INLINE XPU INLINE
-
-#define GPU_INLINE GPU INLINE
-
-#define NDSC [[nodiscard]]
-
-#define NDSC_XPU NDSC XPU
-#define NDSC_INLINE NDSC INLINE
-#define NDSC_XPU_INLINE NDSC XPU_INLINE
-
-#define TO_STRING(x) TO_STRING2(x)
-#define TO_STRING2(x) #x
 
 #ifdef IS_GPU_CODE
 #define LUMINOUS_DBG(...) printf(__FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)

@@ -3,8 +3,6 @@
 //
 
 #include "rgb.h"
-#include "graphics/optics/rgb.h"
-#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
