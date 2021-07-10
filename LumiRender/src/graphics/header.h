@@ -40,18 +40,12 @@
 
 #define HAVE_POSIX_MEMALIGN
 
-#if defined(__CUDACC__)
+#ifdef IS_GPU_CODE
+
+    #define LUMINOUS_DBG(...) printf(__FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
     #define XPU __host__ __device__
     #define GPU __device__
     #define CPU __host__
-#else
-    #define XPU
-    #define GPU
-    #define CPU
-#endif
-
-
-#ifdef IS_GPU_CODE
 
     #define CPU_ONLY(arg)
 
@@ -70,6 +64,11 @@
     #define GEN_CREATOR(Class) GEN_CREATE_FUNC(Class, Class##Config)
 
 #else
+
+    #define XPU
+    #define GPU
+    #define CPU
+    #define LUMINOUS_DBG(...) fprintf(stderr, __FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
 
     #define LUMINOUS_TO_STRING(...) return string_printf(__VA_ARGS__);
 
@@ -99,12 +98,6 @@ constexpr const char * type_name(T * ptr = nullptr) {
 #define GEN_BASE_NAME(arg) XPU static constexpr const char *base_name() { return #arg; }
 
 #define GEN_TO_STRING_FUNC GEN_STRING_FUNC({LUMINOUS_VAR_DISPATCH(to_string);})
-
-#ifdef IS_GPU_CODE
-#define LUMINOUS_DBG(...) printf(__FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
-#else
-#define LUMINOUS_DBG(...) fprintf(stderr, __FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
-#endif  // IS_GPU_CODE
 
 #ifdef __GNUC__
 #define MAYBE_UNUSED __attribute__((unused))
