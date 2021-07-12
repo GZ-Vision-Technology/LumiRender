@@ -171,7 +171,7 @@ void test_transform() {
     Quaternion rr;
     float3 ss;
     decompose(tsf.mat4x4(), &tt, &rr, &ss);
-    cout << tsf.to_string_detail();
+    cout << tsf.to_string();
 }
 
 void test_transform_box() {
@@ -196,7 +196,7 @@ void test_transform_order() {
 
     auto pr2 = r2.apply_point(pr);
 
-    cout << r2.to_string_detail() << endl;
+    cout << r2.to_string() << endl;
 
     cout << r2.to_string() << endl;
     cout << "p " << p.to_string() << endl;
@@ -285,7 +285,7 @@ void test_matrix_to_Euler_angle() {
     auto v2 = tt.apply_vector(v);
     cout << v1.to_string() << endl;
     cout << v2.to_string() << endl;
-    cout << tt.to_string_detail();
+    cout << tt.to_string();
 }
 
 void test_yaw_pitch() {
