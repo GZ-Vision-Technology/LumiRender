@@ -19,6 +19,8 @@ for root,dirs,files in os.walk(os.path.join(os.getcwd(), "LumiRender/src")):
             continue
         if "jitify" in fn:
             continue
+        if "sdk_pt" in fn:
+            continue
         try:
             f = open(fn, "r")
             count += len(f.readlines())
