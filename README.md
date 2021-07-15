@@ -6,9 +6,39 @@ A GPU/CPU physically based renderer
 ### Render algorithm
 | Feature                                                 | Progress  |
 |---------------------------------------------------------|-----------|
-| megakernel path tracing                                 | Done      |
-| wavefront path tracing                                  | Planned   |
-| bidirectional path tracing                              | Planned   |
+| Megakernel path tracing                                 | Done      |
+| Normal visualize                                        | Done      |
+| Wavefront path tracing                                  | Planned   |
+| Bidirectional path tracing                              | Planned   |
+| Photon mapping                                          | Planned   |
+
+### Reconstruction Filters
+| Feature                      | Progress    |
+|------------------------------|-------------|
+| Filter Importance Sampling   | Planned     |
+| Mitchell-Netravali Filter    | Planned     |
+| Box Filter                   | Planned     |
+| Triangle Filter              | Planned     |
+| Gaussian Filter              | Planned     |
+| Lanczos Windowed Sinc Filter | Planned     |
+
+### Sensor
+| Feature                                   | Progress    |
+|-------------------------------------------|-------------|
+| Pinhole Cameras                           | Done        |
+| Thin-Lens Cameras                         | Planned     |
+| Realistic Cameras                         | Planned     |
+| Fish-Eye Cameras                          | Planned     |
+| Geometry surface(for light map baker)     | Planned     |
+
+### Illumination
+| Feature                                       | Progress    |
+|-----------------------------------------------|-------------|
+| Diffuse Area Lights, emission                 | done        |
+| HDRI Environment Maps                         |Planned|
+| Uniform-Distribution Light Selection Strategy | done     |
+| Power-Distribution Light Selection Strategy   |     Planned        |
+| BVH Light Selection Strategy                  |      Planned       |
 
 ### Backends
 | Feature             | Progress                                            |
