@@ -10,7 +10,7 @@
 #include "graphics/lstd/lstd.h"
 #include "../include/config.h"
 #include "pinhole_camera.h"
-#include "perspective_camera.h"
+#include "thin_lens_camera.h"
 
 
 
@@ -18,7 +18,7 @@ namespace luminous {
     inline namespace render {
         using lstd::Variant;
 
-        class Sensor : public Variant<PinholeCamera, PerspectiveCamera> {
+        class Sensor : public Variant<PinholeCamera, ThinLensCamera> {
         public:
             using Variant::Variant;
 
