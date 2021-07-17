@@ -1,3 +1,1 @@
-import bpy
-
-print(bpy)
+# -*- coding:utf-8 -*-

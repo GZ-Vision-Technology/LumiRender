@@ -34,11 +34,11 @@ A GPU/CPU physically based renderer
 ### Illumination
 | Feature                                       | Progress    |
 |-----------------------------------------------|-------------|
-| Diffuse Area Lights, emission                 | done        |
-| HDRI Environment Maps                         |Planned|
-| Uniform-Distribution Light Selection Strategy | done     |
-| Power-Distribution Light Selection Strategy   |     Planned        |
-| BVH Light Selection Strategy                  |      Planned       |
+| Diffuse Area Lights, emission                 |  done       |
+| HDRI Environment Maps                         |  Planned    |
+| Uniform-Distribution Light Selection Strategy |  done       |
+| Power-Distribution Light Selection Strategy   |  Planned    |
+| BVH Light Selection Strategy                  |  Planned    |
 
 ### Backends
 | Feature             | Progress                                            |
