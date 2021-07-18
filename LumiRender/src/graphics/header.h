@@ -53,14 +53,6 @@
                                         LUMINOUS_VAR_DISPATCH(name);\
                                    }
 
-    #define GEN_STRING_FUNC(args)
-
-    #define LUMINOUS_TO_STRING(...) LUMINOUS_ERROR("device not support to string");
-
-    #define GEN_CREATE_FUNC(Class, ClassConfig) static Class create(const ClassConfig &fc) { \
-            return detail::create<Class>(fc);\
-        }
-
     #define GEN_CREATOR(Class) GEN_CREATE_FUNC(Class, Class##Config)
 
 #else
@@ -70,14 +62,6 @@
     #define CPU
     #define LUMINOUS_DBG(...) fprintf(stderr, __FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
 
-    #define LUMINOUS_TO_STRING(...) return string_printf(__VA_ARGS__);
-
-    #define GEN_CREATE_FUNC(Class, ClassConfig) static Class create(const ClassConfig &fc) { \
-                    return detail::create<Class>(fc);\
-                }
-
-    #define GEN_CREATOR(Class) GEN_CREATE_FUNC(Class, Class##Config)
-
     #define CPU_ONLY(arg) arg
 
     #define GEN_STRING_FUNC(args) [[nodiscard]] std::string to_string() const args
@@ -86,6 +70,8 @@
                                         return this->dispatch([&, this](auto &&self) { return type_name(&self); });\
                                    }
 #endif
+
+#define LUMINOUS_TO_STRING(...) return string_printf(__VA_ARGS__);
 
 template<typename T>
 constexpr const char * type_name(T * ptr = nullptr) {
