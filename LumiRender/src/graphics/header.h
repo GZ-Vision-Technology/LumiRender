@@ -53,7 +53,7 @@
                                         LUMINOUS_VAR_DISPATCH(name);\
                                    }
 
-    #define GEN_CREATOR(Class) GEN_CREATE_FUNC(Class, Class##Config)
+    #define GEN_STRING_FUNC(args)
 
 #else
 
