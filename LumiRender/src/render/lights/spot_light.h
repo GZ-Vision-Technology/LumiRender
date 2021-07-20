@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "light.h"
+#include "light_base.h"
 #include "render/include/config.h"
 
 namespace luminous {
@@ -14,8 +14,11 @@ namespace luminous {
         class SpotLight : public LightBase {
         private:
             float3 _pos;
+            // center direction in world space
             float3 _axis;
+            // decay from inner ring
             float _cos_theta_i;
+            // decay end with outer ring
             float _cos_theta_o;
             float3 _intensity;
         public:
@@ -26,13 +29,21 @@ namespace luminous {
                       _cos_theta_i(cos(radians(theta_i))),
                       _cos_theta_o(cos(radians(theta_o))) {}
 
-            NDSC_XPU Interaction sample(float u, const HitGroupData *hit_group_data) const;
+            NDSC_XPU SurfaceInteraction sample(float2 u, const HitGroupData *hit_group_data) const;
 
             NDSC_XPU LightLiSample Li(LightLiSample lls) const;
 
-            NDSC_XPU float PDF_Li(const Interaction &ref_p, const Interaction &p_light) const;
+            /**
+             * @param w_world : unit vector in world space
+             * @return
+             */
+            NDSC_XPU float fall_off(float3 w_world) const;
 
-            NDSC_XPU float3 power() const;
+            NDSC_XPU float PDF_dir(const Interaction &ref_p, const SurfaceInteraction &p_light) const;
+
+            NDSC_XPU Spectrum power() const;
+
+            XPU void print() const;
 
             GEN_STRING_FUNC({
                 LUMINOUS_TO_STRING("light Base : %s, name : %s ,intensity : %s",
@@ -41,7 +52,7 @@ namespace luminous {
                                    _intensity.to_string().c_str());
             })
 
-            CPU_ONLY(static PointLight create(const LightConfig &config);)
+            CPU_ONLY(static SpotLight create(const LightConfig &config);)
         };
 
     } // luminous::render

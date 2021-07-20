@@ -215,6 +215,8 @@ namespace luminous {
                 struct {
                     float3 intensity;
                     float3 position;
+                    float theta_i;
+                    float theta_o;
                 };
             };
         };

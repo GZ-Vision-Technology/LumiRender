@@ -19,7 +19,7 @@ namespace luminous {
 
         using lstd::Variant;
 
-        class Light : public Variant<PointLight, AreaLight> {
+        class Light : public Variant<PointLight, AreaLight, SpotLight> {
         private:
             using Variant::Variant;
         public:

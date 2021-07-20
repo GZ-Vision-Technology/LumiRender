@@ -10,6 +10,7 @@
     #include "light.cpp"
     #include "area_light.cpp"
     #include "point_light.cpp"
+    #include "spot_light.cpp"
 #else
     #error "this file just for cuda shader include"
 #endif

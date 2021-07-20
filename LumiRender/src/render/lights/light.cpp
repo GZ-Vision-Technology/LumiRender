@@ -32,6 +32,7 @@ namespace luminous {
                 return {};
             }
             lls.p_light.wo = normalize(-ray.direction());
+            lls.p_light.light = this;
             lls = Li(lls);
             return lls;
         }
