@@ -8,8 +8,8 @@
 #include <memory>
 #include "gpu/framework/cuda_task.h"
 
-using namespace std;
 using namespace luminous;
+using std::cout;
 int main(int argc, char *argv[]) {
     logging::set_log_level(spdlog::level::info);
     Context context{argc, argv};

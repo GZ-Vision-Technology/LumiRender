@@ -7,7 +7,8 @@
 #include <cassert>
 #include <iostream>
 #include "util/stats.h"
-
+using std::cout;
+using std::endl;
 namespace luminous {
     inline namespace gpu {
 
@@ -72,7 +73,7 @@ namespace luminous {
         }
 
         void GPUScene::init_accel() {
-            _optix_accel = make_unique<OptixAccel>(_device, this);
+            _optix_accel = std::make_unique<OptixAccel>(_device, this);
             build_accel();
         }
 
@@ -80,7 +81,7 @@ namespace luminous {
             TASK_TAG("preload_textures")
             for (auto &tc : _tex_configs) {
                 if (tc.type() == type_name<ImageTexture>() && !tc.fn.empty()) {
-                    if (filesystem::path(tc.fn).is_relative()) {
+                    if (std::filesystem::path(tc.fn).is_relative()) {
                         auto path = _context->scene_path() / tc.fn;
                         tc.fn = path.string();
                     }
@@ -89,7 +90,7 @@ namespace luminous {
                     texture.copy_from(image);
                     tc.handle = texture.tex_handle();
                     tc.pixel_format = texture.pixel_format();
-                    _texture_mgr.push_back(move(texture));
+                    _texture_mgr.push_back(std::move(texture));
                     _texture_num += 1;
                     _texture_size_in_byte += image.size_in_bytes();
                 }

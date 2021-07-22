@@ -14,7 +14,6 @@
 
 namespace luminous {
     inline namespace utility {
-        using namespace std;
 
         class Image : public Noncopyable, public ImageBase {
         private:
@@ -36,31 +35,31 @@ namespace luminous {
 
             bool is_32bit() const;
 
-            static Image load(const filesystem::path &fn, ColorSpace color_space);
+            static Image load(const std::filesystem::path &fn, ColorSpace color_space);
 
-            static Image load_hdr(const filesystem::path &fn, ColorSpace color_space);
+            static Image load_hdr(const std::filesystem::path &fn, ColorSpace color_space);
 
-            static Image load_exr(const filesystem::path &fn, ColorSpace color_space);
+            static Image load_exr(const std::filesystem::path &fn, ColorSpace color_space);
 
             /**
              * ".bmp" or ".png" or ".tga" or ".jpg" or ".jpeg"
              */
-            static Image load_other(const filesystem::path &fn, ColorSpace color_space);
+            static Image load_other(const std::filesystem::path &fn, ColorSpace color_space);
 
             void convert_to_32bit();
 
             void convert_to_8bit();
 
-            void save_image(const filesystem::path &fn);
+            void save_image(const std::filesystem::path &fn);
 
-            void save_hdr(const filesystem::path &fn);
+            void save_hdr(const std::filesystem::path &fn);
 
-            void save_exr(const filesystem::path &fn);
+            void save_exr(const std::filesystem::path &fn);
 
             /**
              * ".bmp" or ".png" or ".tga" or ".jpg" or ".jpeg"
              */
-            void save_other(const filesystem::path &fn);
+            void save_other(const std::filesystem::path &fn);
         };
     } // luminous::utility
 } // luminous

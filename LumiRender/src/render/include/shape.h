@@ -61,7 +61,7 @@ namespace luminous {
             }
 
             string custom_material_name;
-            filesystem::path directory;
+            std::filesystem::path directory;
             vector <std::shared_ptr<const Mesh>> meshes;
             vector <MaterialConfig> materials;
             vector <TextureConfig> textures;

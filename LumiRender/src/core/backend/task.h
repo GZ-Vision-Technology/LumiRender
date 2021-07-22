@@ -16,12 +16,12 @@ namespace luminous {
     using std::unique_ptr;
     class Task : public Noncopyable {
     protected:
-        shared_ptr<Device> _device{nullptr};
+        std::shared_ptr<Device> _device{nullptr};
         Context * _context{nullptr};
         UP<Integrator> _integrator;
         double _dt{0};
     public:
-        Task(const shared_ptr<Device> &device, Context *context)
+        Task(const std::shared_ptr<Device> &device, Context *context)
             : _device(device),
             _context(context) {}
 

@@ -37,7 +37,7 @@ namespace luminous {
             _pixel = move(other._pixel);
         }
 
-        Image Image::load(const filesystem::path &path, ColorSpace color_space) {
+        Image Image::load(const std::filesystem::path &path, ColorSpace color_space) {
             auto extension = to_lower(path.extension().string());
             LUMINOUS_INFO("load picture ", path.string());
             if (extension == ".exr") {
@@ -49,7 +49,7 @@ namespace luminous {
             }
         }
 
-        Image Image::load_hdr(const filesystem::path &path, ColorSpace color_space) {
+        Image Image::load_hdr(const std::filesystem::path &path, ColorSpace color_space) {
             int w, h;
             int comp;
             auto path_str = std::filesystem::absolute(path).string();
@@ -80,7 +80,7 @@ namespace luminous {
             return Image(pixel_format, pixel, make_uint2(w, h), path);
         }
 
-        Image Image::load_exr(const filesystem::path &fn, ColorSpace color_space) {
+        Image Image::load_exr(const std::filesystem::path &fn, ColorSpace color_space) {
             // Parse OpenEXR
             EXRVersion exr_version;
             auto path_str = std::filesystem::absolute(fn).string();
@@ -186,7 +186,7 @@ namespace luminous {
             }
         }
 
-        Image Image::load_other(const filesystem::path &path, ColorSpace color_space) {
+        Image Image::load_other(const std::filesystem::path &path, ColorSpace color_space) {
             uint8_t *rgba;
             int w, h;
             int channel;
@@ -220,7 +220,7 @@ namespace luminous {
             return Image(pixel_format, pixel, resolution, path);
         }
 
-        void Image::save_image(const filesystem::path &path) {
+        void Image::save_image(const std::filesystem::path &path) {
             auto extension = to_lower(path.extension().string());
             if (extension == ".exr") {
                 save_exr(path);
@@ -231,14 +231,14 @@ namespace luminous {
             }
         }
 
-        void Image::save_hdr(const filesystem::path &path) {
+        void Image::save_hdr(const std::filesystem::path &path) {
             convert_to_32bit();
             auto path_str = std::filesystem::absolute(path).string();
             stbi_write_hdr(path_str.c_str(), _resolution.x, _resolution.y, 4,
                            reinterpret_cast<const float *>(_pixel.get()));
         }
 
-        void Image::save_exr(const filesystem::path &fn) {
+        void Image::save_exr(const std::filesystem::path &fn) {
             convert_to_32bit();
             EXRHeader header;
             InitEXRHeader(&header);
@@ -284,7 +284,7 @@ namespace luminous {
             }
         }
 
-        void Image::save_other(const filesystem::path &path) {
+        void Image::save_other(const std::filesystem::path &path) {
             auto path_str = std::filesystem::absolute(path).string();
             auto extension = to_lower(path.extension().string());
             convert_to_8bit();

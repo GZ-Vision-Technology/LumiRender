@@ -19,7 +19,6 @@
 
 namespace luminous {
     inline namespace render {
-        using namespace std;
 
         template<typename T>
         void append(std::vector<T> &v1, const std::vector<T> &v2) {

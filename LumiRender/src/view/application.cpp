@@ -7,7 +7,6 @@
 #include <iostream>
 #include "util/stats.h"
 
-using namespace std;
 
 namespace luminous {
 
@@ -101,10 +100,8 @@ namespace luminous {
     App::App(const std::string &title, const int2 &size, Context *context, const Parser &parser)
             : _size(size) {
         TASK_TAG("launch app")
-        _task = make_unique<CUDATask>(context);
+        _task = std::make_unique<CUDATask>(context);
         _task->init(parser);
-        using namespace std;
-        using namespace chrono;
 
         init_window(title, _task->resolution());
         init_event_cb();

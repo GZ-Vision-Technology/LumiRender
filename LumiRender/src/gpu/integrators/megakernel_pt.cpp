@@ -31,7 +31,7 @@ namespace luminous {
         }
 
         void MegakernelPT::init(const std::shared_ptr<SceneGraph> &scene_graph) {
-            _scene = make_unique<GPUScene>(_device, _context);
+            _scene = std::make_unique<GPUScene>(_device, _context);
             init_with_config(scene_graph->integrator_config);
             _scene->init(scene_graph);
             auto camera = Sensor::create(scene_graph->sensor_config);

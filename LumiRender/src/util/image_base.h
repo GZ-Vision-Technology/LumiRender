@@ -9,7 +9,6 @@
 
 namespace luminous {
     inline namespace utility {
-        using namespace std;
         enum struct PixelFormat : uint32_t {
             R8U, RG8U, RGBA8U,
             R32F, RG32F, RGBA32F,

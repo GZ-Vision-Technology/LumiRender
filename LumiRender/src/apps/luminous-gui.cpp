@@ -7,14 +7,8 @@
 #include "render/include/parser.h"
 #include <memory>
 #include "view/application.h"
-#include <glad/glad.h>
-#include<chrono>
-#ifdef CUDA_SUPPORT
-#include "gpu/framework/cuda_task.h"
-#endif
-#include "cpu/cpu_task.h"
 
-using namespace std;
+using std::cout;
 using namespace luminous;
 int main(int argc, char *argv[]) {
     logging::set_log_level(spdlog::level::info);

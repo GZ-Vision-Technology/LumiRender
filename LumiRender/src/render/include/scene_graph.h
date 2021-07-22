@@ -12,7 +12,6 @@
 #include "render/include/config.h"
 
 namespace luminous {
-    using namespace std;
     inline namespace render {
 
         struct SceneGraph {

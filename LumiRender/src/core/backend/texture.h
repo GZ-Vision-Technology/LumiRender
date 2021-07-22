@@ -53,7 +53,7 @@ namespace luminous {
         }
 
         Image download() const {
-            return move(_impl->download());
+            return std::move(_impl->download());
         }
 
         template<typename T = void *>

@@ -6,13 +6,15 @@
 #include "util/clock.h"
 #include "gpu/integrators/megakernel_pt.h"
 
+using std::cout;
+using std::endl;
 namespace luminous {
     inline namespace gpu {
 
         void CUDATask::init(const Parser &parser) {
             auto scene_graph = parser.parse();
             scene_graph->create_shapes();
-            _integrator = make_unique<MegakernelPT>(_device, _context);
+            _integrator = std::make_unique<MegakernelPT>(_device, _context);
             _integrator->init(scene_graph);
             update_device_buffer();
             _integrator->test();

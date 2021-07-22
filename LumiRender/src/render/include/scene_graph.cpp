@@ -165,10 +165,10 @@ namespace luminous {
         SP<Model> SceneGraph::create_shape(const ShapeConfig &config) {
             if (config.type() == "model") {
                 config.fn = (_context->scene_path() / config.fn).string();
-                auto model = make_shared<Model>(config);
+                auto model = std::make_shared<Model>(config);
                 return model;
             } else if (config.type() == "quad") {
-                auto model = make_shared<Model>();
+                auto model = std::make_shared<Model>();
                 auto x = config.width / 2;
                 auto y = config.height / 2;
                 Box3f aabb;
@@ -191,7 +191,7 @@ namespace luminous {
                 vector<TriangleHandle> triangles{TriangleHandle{0,1,2},
                                                  TriangleHandle{2,1,3}};
 
-                auto mesh = make_shared<Mesh>(move(P),move(N), move(UV), move(triangles), aabb);
+                auto mesh = std::make_shared<Mesh>(move(P),move(N), move(UV), move(triangles), aabb);
                 model->meshes.push_back(mesh);
                 model->custom_material_name = config.material_name;
                 return model;
@@ -210,7 +210,7 @@ namespace luminous {
             }
             uint idx = _key_to_idx[key];
             Transform o2w = config.o2w.create();
-            auto instance = make_shared<ModelInstance>(idx, o2w, config.name.c_str(), config.emission);
+            auto instance = std::make_shared<ModelInstance>(idx, o2w, config.name.c_str(), config.emission);
             instance_list.push_back(instance);
         }
 
