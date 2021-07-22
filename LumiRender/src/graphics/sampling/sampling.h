@@ -6,17 +6,11 @@
 #pragma once
 
 #include <assert.h>
-
+#include "core/backend/buffer_view.h"
 
 namespace luminous {
 
     inline namespace sampling {
-
-#if USE_LSTD == 1
-        using ::lstd::span;
-#else
-        using std::span;
-#endif
 
         NDSC_XPU_INLINE float linear_PDF(float x, float a, float b) {
             assert(a > 0 && b > 0);
@@ -42,7 +36,7 @@ namespace luminous {
 #endif
         }
 
-        NDSC_XPU_INLINE int sample_discrete(span<const float> weights, float u,
+        NDSC_XPU_INLINE int sample_discrete(BufferView<const float> weights, float u,
                                        float *pmf, float *uRemapped) {
             // Handle empty _weights_ for discrete sampling
             if (weights.empty()) {
@@ -88,7 +82,7 @@ namespace luminous {
             return 0.5f * (std::erf((mu - x0) / sigmaRoot2) - std::erf((mu - x1) / sigmaRoot2));
         }
 
-        NDSC_XPU_INLINE float2 sample_bilinear(float2 u, span<const float> w) {
+        NDSC_XPU_INLINE float2 sample_bilinear(float2 u, BufferView<const float> w) {
             assert(4 == w.size());
             float2 p;
             // Sample $v$ for bilinear marginal distribution

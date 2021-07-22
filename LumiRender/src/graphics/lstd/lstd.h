@@ -6,5 +6,4 @@
 #pragma once
 
 #include "common.h"
-#include "span.h"
 #include "variant.h"
