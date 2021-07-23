@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     }
     Parser sp(&context);
     try {
-        sp.load_from_json(context.scene_file());
+        sp.load(context.scene_file());
     } catch (std::exception &e1) {
         cout << e1.what();
         context.print_help();

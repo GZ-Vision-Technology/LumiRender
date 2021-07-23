@@ -20,7 +20,7 @@ namespace luminous {
         public:
             explicit Parser(Context *context) : _context(context) {}
 
-            void load_from_json(const std::filesystem::path &fn);
+            void load(const std::filesystem::path &fn);
 
             SP<SceneGraph> parse() const;
         };
