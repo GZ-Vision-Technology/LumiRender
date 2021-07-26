@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "../include/filter.h"
+#include "filter_base.h"
 #include "graphics/math/rng.h"
-#include "../include/config.h"
+#include "render/include/config.h"
 
 namespace luminous {
     inline namespace render {
