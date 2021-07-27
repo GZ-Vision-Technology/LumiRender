@@ -50,7 +50,7 @@ namespace luminous {
 
             void clear();
 
-            size_t size_in_bytes() const;
+            NDSC size_t size_in_bytes() const;
         };
     }
 }

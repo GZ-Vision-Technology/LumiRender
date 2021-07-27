@@ -187,9 +187,7 @@ namespace luminous {
         }
 
         void Parser::load(const std::filesystem::path &fn) {
-            if (fn.extension() == "json") {
-                _data = create_json_from_file(fn);
-            }
+            _data = create_json_from_file(fn);
         }
 
         TextureConfig parse_texture(const ParameterSet &ps) {

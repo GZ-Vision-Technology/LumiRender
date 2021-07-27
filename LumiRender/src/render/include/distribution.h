@@ -11,7 +11,8 @@
 
 namespace luminous {
     inline namespace render {
-
+        using std::vector;
+        using std::move;
         struct Distribution1DBuilder {
         public:
             std::vector<float> func;
@@ -29,6 +30,7 @@ namespace luminous {
             using value_type = float;
             using const_value_type = const float;
         private:
+            // todo change to indice mode, reduce memory usage
             BufferView <const_value_type> _func;
             BufferView <const_value_type> _CDF;
             float _func_integral;
@@ -64,7 +66,7 @@ namespace luminous {
                 auto predicate = [&](int index) {
                     return _CDF[index] <= u;
                 };
-                int offset = find_interval((int) _CDF.size(), predicate);
+                int offset = find_interval(_CDF.size(), predicate);
                 if (PMF) {
                     *PMF = (_func_integral > 0) ? _func[offset] / (_func_integral * size()) : 0;
                 }
@@ -107,5 +109,47 @@ namespace luminous {
             }
         };
 
+        struct Distribution2DBuilder {
+            vector<Distribution1DBuilder> conditional_v;
+            Distribution1DBuilder marginal;
+            Distribution2DBuilder(vector<Distribution1DBuilder> conditional_v, Distribution1DBuilder marginal)
+                : conditional_v(move(conditional_v)), marginal(move(marginal)) {}
+        };
+
+
+        class Distribution2D {
+        private:
+            BufferView <Distribution1D> _conditional_v;
+            Distribution1D _marginal;
+
+            XPU Distribution2D(BufferView <Distribution1D> conditional_v, Distribution1D marginal)
+                    : _conditional_v(conditional_v), _marginal(marginal) {}
+
+            NDSC_XPU float2 sample_discrete(float2 u, float *PMF) {
+
+            }
+
+            NDSC_XPU float PMF(float2 u) const {
+
+            }
+
+            static Distribution2DBuilder create_builder(vector<float> func, int nu, int nv) {
+                vector<Distribution1DBuilder> conditional_v;
+                conditional_v.reserve(nv);
+                for (int v = 0; v < nv; ++v) {
+                    vector<float> func_v;
+                    func_v.insert(func_v.end(), func[v * nu], func[v * (nu + 1)]);
+                    Distribution1DBuilder builder = Distribution1D::create_builder(func_v);
+                    conditional_v.push_back(builder);
+                }
+                vector<float> marginal_func;
+                marginal_func.reserve(nv);
+                for (int v = 0; v < nv; ++v) {
+                    marginal_func.push_back(conditional_v[v].func_integral);
+                }
+                Distribution1DBuilder marginal_builder = Distribution1D::create_builder(marginal_func);
+                return Distribution2DBuilder(move(conditional_v), move(marginal_builder));
+            }
+        };
     } // luminous::sampling
 } // luminous
