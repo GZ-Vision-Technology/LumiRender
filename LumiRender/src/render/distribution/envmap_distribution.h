@@ -5,35 +5,29 @@
 
 #pragma once
 
-#include "distribution_handle.h"
-#include "core/backend/managed.h"
+#include "distribution_mgr.h"
 
 namespace luminous {
     inline namespace render {
         using std::vector;
-        struct EnvmapDistribution {
-            Managed<float> func_buffer;
-            Managed<float> CDF_buffer;
-            std::vector<DistributionHandle> handles;
+        struct EnvmapDistribution : public DistributionMgr {
             Managed<Distribution2D> distribution_2D;
 
             EnvmapDistribution() = default;
 
             void init(vector<float> f, int nu, int nv);
 
-            void add_distribute(const Distribution1DBuilder &builder);
-
             void init_on_host();
 
-            void init_on_device(const SP<Device> &device);
+            void init_on_device(const SP<Device> &device) override;
 
             void synchronize_to_gpu();
 
-            void shrink_to_fit();
+            void shrink_to_fit() override;
 
-            void clear();
+            void clear() override;
 
-            NDSC size_t size_in_bytes() const;
+            NDSC size_t size_in_bytes() const override;
         };
     }
 }
