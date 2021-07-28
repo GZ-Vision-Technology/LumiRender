@@ -21,6 +21,8 @@ namespace luminous {
 
             void init(vector<float> f, int nu, int nv);
 
+            void add_distribute(const Distribution1DBuilder &builder);
+
             void init_on_host();
 
             void init_on_device(const SP<Device> &device);

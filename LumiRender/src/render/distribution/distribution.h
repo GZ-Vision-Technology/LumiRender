@@ -121,7 +121,7 @@ namespace luminous {
         private:
             BufferView <Distribution1D> _conditional_v;
             Distribution1D _marginal;
-
+        public:
             XPU Distribution2D(BufferView <Distribution1D> conditional_v, Distribution1D marginal)
                     : _conditional_v(conditional_v), _marginal(marginal) {}
 
@@ -145,7 +145,7 @@ namespace luminous {
                 conditional_v.reserve(nv);
                 for (int v = 0; v < nv; ++v) {
                     vector<float> func_v;
-                    func_v.insert(func_v.end(), func[v * nu], func[v * (nu + 1)]);
+                    func_v.insert(func_v.end(), &func[v * nu], &func[v * nu + nv]);
                     Distribution1DBuilder builder = Distribution1D::create_builder(func_v);
                     conditional_v.push_back(builder);
                 }
