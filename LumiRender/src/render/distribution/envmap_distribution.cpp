@@ -31,7 +31,7 @@ namespace luminous {
             return func.size_in_bytes();
         }
 
-        void EnvmapDistribution::init(vector<float> func, int nu, int nv) {
+        void EnvmapDistribution::init(vector<float> f, int u, int v) {
 
         }
     }

@@ -4,7 +4,7 @@
 
 #include "area_light.h"
 #include "render/include/creator.h"
-#include "render/include/distribution.h"
+#include "render/distribution/distribution.h"
 #include "graphics/sampling/warp.h"
 
 namespace luminous {

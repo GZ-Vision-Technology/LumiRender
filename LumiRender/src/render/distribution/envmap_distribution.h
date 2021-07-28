@@ -5,19 +5,21 @@
 
 #pragma once
 
-#include "distribution.h"
+#include "distribution_handle.h"
 #include "core/backend/managed.h"
 
 namespace luminous {
     inline namespace render {
         using std::vector;
         struct EnvmapDistribution {
-            Managed<float> func;
-            int nu, nv;
+            Managed<float> func_buffer;
+            Managed<float> CDF_buffer;
+            std::vector<DistributionHandle> handles;
+            Managed<Distribution2D> distribution_2D;
 
             EnvmapDistribution() = default;
 
-            void init(vector<float> func, int nu, int nv);
+            void init(vector<float> f, int nu, int nv);
 
             void init_on_host();
 

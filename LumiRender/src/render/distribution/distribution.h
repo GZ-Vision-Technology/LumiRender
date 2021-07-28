@@ -125,15 +125,22 @@ namespace luminous {
             XPU Distribution2D(BufferView <Distribution1D> conditional_v, Distribution1D marginal)
                     : _conditional_v(conditional_v), _marginal(marginal) {}
 
-            NDSC_XPU float2 sample_discrete(float2 u, float *PMF) {
-
+            NDSC_XPU float2 sample_continuous(float2 u, float *PDF) {
+                float PDFs[2];
+                int v;
+                float d1 = _marginal.sample_continuous(u[1], &PDFs[1], &v);
+                float d0 = _conditional_v[v].sample_continuous(u[0], &PDFs[0]);
+                *PDF = PDFs[0] * PDFs[1];
+                return make_float2(d0, d1);
             }
 
-            NDSC_XPU float PMF(float2 u) const {
-
+            NDSC_XPU float PDF(float2 p) const {
+                int iu = clamp(int(p[0] * _conditional_v[0].size()), 0, _conditional_v[0].size());
+                int iv = clamp(int(p[1] * _marginal.size()), 0, _marginal.size());
+                return _conditional_v[iv].func_at(iu) / _marginal.integral();
             }
 
-            static Distribution2DBuilder create_builder(vector<float> func, int nu, int nv) {
+            static Distribution2DBuilder create_builder(float *func, int nu, int nv) {
                 vector<Distribution1DBuilder> conditional_v;
                 conditional_v.reserve(nv);
                 for (int v = 0; v < nv; ++v) {

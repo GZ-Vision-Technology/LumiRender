@@ -11,7 +11,7 @@
 #include "scene_graph.h"
 #include "render/lights/light.h"
 #include "graphics/sampling/common.h"
-#include "render/include/emission_distribution.h"
+#include "render/distribution/emission_distribution.h"
 #include "render/light_samplers/light_sampler.h"
 #include "render/textures/texture.h"
 #include "gpu/gpu_include.h"
