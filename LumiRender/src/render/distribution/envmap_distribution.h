@@ -11,11 +11,16 @@ namespace luminous {
     inline namespace render {
         using std::vector;
         struct EnvmapDistribution : public DistributionMgr {
-            Managed<Distribution2D> distribution_2D;
+            Managed<Distribution1D> distributions;
+            Managed<Distribution2D> distribution_2d;
 
             EnvmapDistribution() = default;
 
             void init(vector<float> f, int nu, int nv);
+
+            NDSC_INLINE Distribution2D get_distribution() const {
+                return distribution_2d.front();
+            }
 
             void init_on_host();
 
