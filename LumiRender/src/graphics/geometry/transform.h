@@ -205,10 +205,6 @@ namespace luminous {
                 return Transform(_inv_mat, _mat);
             }
 
-//            NDSC std::string to_string() const {
-//                return string_printf("transform:%s", _mat.to_string().c_str());
-//            }
-
             GEN_STRING_FUNC({
                 float3 tt;
                 Quaternion rr;

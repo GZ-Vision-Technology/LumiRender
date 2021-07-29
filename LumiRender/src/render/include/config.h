@@ -25,6 +25,7 @@ namespace luminous {
             std::string _type;
         public:
             std::string name = "";
+
             void set_type(const std::string &type) {
                 _type = type;
             }
@@ -138,7 +139,7 @@ namespace luminous {
                    && t1.pixel_format == t2.pixel_format;
         }
 
-        inline bool is_contain(const std::vector <TextureConfig> &tex_configs,
+        inline bool is_contain(const std::vector<TextureConfig> &tex_configs,
                                const TextureConfig &texture_config) {
             return std::any_of(tex_configs.cbegin(), tex_configs.cend(), [&](const auto &config) {
                 return config == texture_config;
@@ -159,7 +160,7 @@ namespace luminous {
             TextureConfig normal_tex;
             index_t normal_idx{index_t(-1)};
 
-            void fill_tex_configs(std::vector <TextureConfig> &tex_configs) {
+            void fill_tex_configs(std::vector<TextureConfig> &tex_configs) {
                 if (type() == full_type("AssimpMaterial")) {
                     if (!is_contain(tex_configs, diffuse_tex)) {
                         diffuse_idx = tex_configs.size();
@@ -174,7 +175,7 @@ namespace luminous {
                         tex_configs.push_back(normal_tex);
                     }
                 } else if (type() == full_type("MatteMaterial")) {
-                    int idx = lstd::find_index_if(tex_configs, [&](TextureConfig tex_config){
+                    int idx = lstd::find_index_if(tex_configs, [&](TextureConfig tex_config) {
                         return tex_config.name == diffuse_tex.name;
                     });
                     DCHECK(idx != -1);
@@ -207,19 +208,18 @@ namespace luminous {
         struct LightConfig : Config {
             LightConfig() {}
 
-            union {
-                struct {
-                    uint instance_idx;
-                    float3 emission;
-                    float surface_area;
-                };
-                struct {
-                    float3 intensity;
-                    float3 position;
-                    float theta_i;
-                    float theta_o;
-                };
-            };
+            // for area light
+            uint instance_idx;
+            float3 emission;
+            float surface_area;
+            // for point light and spot light
+            float3 intensity;
+            float3 position;
+            float theta_i;
+            float theta_o;
+            // for env
+            std::string fn;
+
         };
     }
 }

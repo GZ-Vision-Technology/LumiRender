@@ -25,7 +25,7 @@ namespace luminous {
 
         Spectrum Envmap::power() const {
             // todo
-            return luminous::Spectrum();
+            return luminous::Spectrum(1.f);
         }
 
         void Envmap::print() const {

@@ -41,13 +41,13 @@ namespace luminous {
 
             NDSC_XPU size_t size() const { return _func.size(); }
 
-            NDSC_XPU float sample_continuous(float u, float *pdf = nullptr, int *off = nullptr) const {
+            NDSC_XPU float sample_continuous(float u, float *pdf = nullptr, int *ofs = nullptr) const {
                 auto predicate = [&](int index) {
                     return _CDF[index] <= u;
                 };
                 int offset = find_interval((int) _CDF.size(), predicate);
-                if (off) {
-                    *off = offset;
+                if (ofs) {
+                    *ofs = offset;
                 }
                 float du = u - _CDF[offset];
                 if ((_CDF[offset + 1] - _CDF[offset]) > 0) {
