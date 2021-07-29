@@ -23,6 +23,8 @@ namespace luminous {
         private:
             using Variant::Variant;
         public:
+            void preprocess(const Scene *scene);
+
             GEN_BASE_NAME(Light)
 
             NDSC_XPU LightType type() const;

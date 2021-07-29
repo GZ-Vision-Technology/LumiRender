@@ -42,6 +42,7 @@ namespace luminous {
                                                distributions.back());
             distribution_2d.push_back(distribution);
             distribution_2d.allocate_device(device);
+            distributions.allocate_device(device);
         }
 
         void EnvmapDistribution::synchronize_to_gpu() {

@@ -56,7 +56,7 @@ namespace luminous {
             XPU LightSampleContext(float3 p, float3 ng, float3 ns)
                     : pos(p), ng(ng), ns(ns) {}
         };
-
+        class Scene;
         class LightBase {
         protected:
             const LightType _type;
@@ -66,6 +66,8 @@ namespace luminous {
             NDSC_XPU LightType type() const {
                 return _type;
             }
+
+            void preprocess(const Scene *scene) {}
 
             NDSC_XPU bool is_delta() const {
                 return _type == LightType::DeltaDirection || _type == LightType::DeltaPosition;

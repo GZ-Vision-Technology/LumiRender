@@ -4,6 +4,7 @@
 
 
 #pragma once
+
 #include "graphics/math/common.h"
 
 namespace luminous {
@@ -53,7 +54,7 @@ namespace luminous {
             }
 
             /*! get the d-th dimensional slab (lo[dim]..hi[dim] */
-            NDSC_XPU_INLINE interval<scalar_t> get_slab(const uint32_t dim) {
+            NDSC_XPU_INLINE interval <scalar_t> get_slab(const uint32_t dim) {
                 return interval<scalar_t>(lower[dim], upper[dim]);
             }
 
@@ -71,6 +72,10 @@ namespace luminous {
 
             NDSC_XPU_INLINE bool overlap(const TBox &other) const {
                 return contains(other.lower) || contains(other.upper);
+            }
+
+            NDSC_XPU_INLINE vector_t radius() const {
+                return (upper - lower) / (scalar_t) 2;
             }
 
             NDSC_XPU_INLINE vector_t center() const {
@@ -106,10 +111,10 @@ namespace luminous {
             }
 
             GEN_STRING_FUNC({
-                return string_printf("box : {lower: %s, upper : %s }",
-                                     lower.to_string().c_str(),
-                                     upper.to_string().c_str());
-            })
+                                return string_printf("box : {lower: %s, upper : %s }",
+                                                     lower.to_string().c_str(),
+                                                     upper.to_string().c_str());
+                            })
         };
 
         template<typename T, uint N>
@@ -118,12 +123,12 @@ namespace luminous {
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU bool operator == (const TBox<T, N> &a, const TBox<T, N> &b) {
+        [[nodiscard]] XPU bool operator==(const TBox<T, N> &a, const TBox<T, N> &b) {
             return a.lower == b.lower && a.upper == b.upper;
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU bool operator != (const TBox<T, N> &a, const TBox<T, N> &b) {
+        [[nodiscard]] XPU bool operator!=(const TBox<T, N> &a, const TBox<T, N> &b) {
             return !(a == b);
         }
 
@@ -132,10 +137,10 @@ namespace luminous {
         using Box##3##suffix = TBox<scalar_t, 3>; \
         using Box##4##suffix = TBox<scalar_t, 4>;
 
-        _define_box(int32_t , i);
+        _define_box(int32_t, i);
         _define_box(float, f);
         _define_box(double, d);
-        _define_box(int64_t , l);
+        _define_box(int64_t, l);
 
 #undef _define_box
 

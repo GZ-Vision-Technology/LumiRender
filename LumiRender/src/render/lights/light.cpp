@@ -124,5 +124,9 @@ namespace luminous {
             return detail::create<Light>(config);
         })
 
+        void Light::preprocess(const Scene *scene) {
+            LUMINOUS_VAR_DISPATCH(preprocess, scene);
+        }
+
     } // luminous::render
 } // luminous
