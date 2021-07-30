@@ -4,6 +4,8 @@
 
 #include "envmap.h"
 
+
+
 namespace luminous {
     inline namespace render {
 
@@ -31,5 +33,9 @@ namespace luminous {
         void Envmap::print() const {
             printf("type:Envmap\n");
         }
+
+//        CPU_ONLY(Envmap Envmap::create(const LightConfig &config) {
+//
+//        })
     }
 }

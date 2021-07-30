@@ -18,14 +18,14 @@ namespace luminous {
         private:
             Distribution2D _distribution;
             Texture _tex;
-            Transform _transform;
+            Transform _o2w;
             float3 _scene_center{};
             float _scene_radius{};
         public:
-            Envmap(Texture tex, Transform transform, Distribution2D distribution)
+            Envmap(Texture tex, Transform o2w, Distribution2D distribution)
                 : LightBase(LightType::Infinite),
                 _tex(std::move(tex)),
-                _transform(transform),
+                _o2w(o2w),
                 _distribution(distribution) {}
 
             void preprocess(const Scene *scene);

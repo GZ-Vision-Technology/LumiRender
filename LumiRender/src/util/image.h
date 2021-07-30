@@ -5,12 +5,15 @@
 
 #pragma once
 
+
+#ifndef __CUDACC__
+
+// cpu only
 #include "graphics/math/common.h"
 #include "graphics/optics/rgb.h"
 #include "core/concepts.h"
 #include "image_base.h"
 #include <utility>
-
 
 namespace luminous {
     inline namespace utility {
@@ -63,3 +66,5 @@ namespace luminous {
         };
     } // luminous::utility
 } // luminous
+
+#endif

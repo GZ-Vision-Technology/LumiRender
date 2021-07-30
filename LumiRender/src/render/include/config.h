@@ -204,7 +204,7 @@ namespace luminous {
 
         struct LightSamplerConfig : Config {
         };
-
+        class Texture;
         struct LightConfig : Config {
             LightConfig() {}
 
@@ -219,7 +219,7 @@ namespace luminous {
             float theta_o;
             // for env
             std::string fn;
-
+            TransformConfig o2w_config;
         };
     }
 }
