@@ -10,8 +10,9 @@
 #include "graphics/optics/rgb.h"
 #include <string>
 #include "core/logging.h"
-#include "util/image_base.h"
+#include "util/image.h"
 #include "graphics/lstd/lstd.h"
+#include "render/distribution/distribution.h"
 
 namespace luminous {
     inline namespace render {
@@ -206,20 +207,37 @@ namespace luminous {
         };
         class Texture;
         struct LightConfig : Config {
-            LightConfig() {}
+            LightConfig() = default;
 
             // for area light
-            uint instance_idx;
+            uint instance_idx{};
             float3 emission;
-            float surface_area;
+            float surface_area{};
+
             // for point light and spot light
             float3 intensity;
             float3 position;
-            float theta_i;
-            float theta_o;
+            float theta_i{};
+            float theta_o{};
+
             // for env
-            std::string fn;
+            TextureConfig texture_config;
+            Distribution2D distribution;
+            index_t tex_idx{};
+            Image *image{};
+            Texture *tex{};
+            float3 scale{};
             TransformConfig o2w_config;
+
+            void fill_tex_config(std::vector<TextureConfig> &tex_configs) {
+                if (type() != full_type("Envmap")) {
+                    return;
+                }
+                int idx = lstd::find_index_if(tex_configs, [&](TextureConfig tex_config) {
+                    return tex_config.name == texture_config.name;
+                });
+                tex_idx = idx;
+            }
         };
     }
 }

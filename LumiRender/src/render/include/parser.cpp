@@ -153,17 +153,24 @@ namespace luminous {
 
         //    {
         //        "type": "PointLight",
-        //            "param": {
+        //         "param": {
         //            "pos": [10,10,10],
         //            "intensity": [10,1,6]
         //        }
         //    }
         LightConfig parse_light(const ParameterSet &ps) {
             LightConfig ret;
-            ret.set_full_type(ps["type"].as_string("PointLight"));
+            std::string type = ps["type"].as_string("PointLight");
+            ret.set_full_type(type);
             ParameterSet param = ps["param"];
-            ret.position = param["pos"].as_float3(make_float3(0.f));
-            ret.intensity = param["intensity"].as_float3(make_float3(0.f));
+            if (type == "PointLight") {
+                ret.position = param["pos"].as_float3(make_float3(0.f));
+                ret.intensity = param["intensity"].as_float3(make_float3(0.f));
+            } else if (type == "Envmap") {
+                ret.texture_config.name = param["key"].as_string("");
+                ret.scale = param["scale"].as_float3(make_float3(1.f));
+                ret.o2w_config = parse_transform(param["transform"]);
+            }
             return ret;
         }
 

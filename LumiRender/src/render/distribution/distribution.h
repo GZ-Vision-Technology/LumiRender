@@ -31,10 +31,12 @@ namespace luminous {
             using const_value_type = const float;
         private:
             // todo change to indice mode, reduce memory usage
-            BufferView <const_value_type> _func;
-            BufferView <const_value_type> _CDF;
-            float _func_integral;
+            BufferView <const_value_type> _func{};
+            BufferView <const_value_type> _CDF{};
+            float _func_integral{};
         public:
+            XPU Distribution1D() = default;
+
             XPU Distribution1D(BufferView <const_value_type> func,
                                BufferView <const_value_type> CDF, float integral)
                     : _func(func), _CDF(CDF), _func_integral(integral) {}
@@ -119,9 +121,11 @@ namespace luminous {
 
         class Distribution2D {
         private:
-            BufferView <Distribution1D> _conditional_v;
-            Distribution1D _marginal;
+            BufferView <Distribution1D> _conditional_v{};
+            Distribution1D _marginal{};
         public:
+            XPU Distribution2D() = default;
+
             XPU Distribution2D(BufferView <Distribution1D> conditional_v, Distribution1D marginal)
                     : _conditional_v(conditional_v), _marginal(marginal) {}
 

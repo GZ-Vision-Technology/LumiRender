@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include "light_base.h"
 #include "point_light.h"
 #include "spot_light.h"
 #include "area_light.h"
+#include "envmap.h"
 #include "render/samplers/sampler.h"
 #include "graphics/lstd/lstd.h"
 #include "render/include/config.h"
@@ -19,7 +19,7 @@ namespace luminous {
 
         using lstd::Variant;
 
-        class Light : public Variant<PointLight, AreaLight, SpotLight> {
+        class Light : public Variant<PointLight, AreaLight, SpotLight, Envmap> {
         private:
             using Variant::Variant;
         public:

@@ -92,6 +92,8 @@ namespace luminous {
 
             void relevance_material_and_texture(vector<MaterialConfig> &material_configs);
 
+            void relevance_light_and_texture(vector<LightConfig> &light_configs);
+
             void load_lights(const vector <LightConfig> &lc, const LightSamplerConfig &lsc);
 
             void preprocess_meshes();

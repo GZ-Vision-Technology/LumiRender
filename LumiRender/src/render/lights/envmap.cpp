@@ -34,8 +34,8 @@ namespace luminous {
             printf("type:Envmap\n");
         }
 
-//        CPU_ONLY(Envmap Envmap::create(const LightConfig &config) {
-//
-//        })
+        CPU_ONLY(Envmap Envmap::create(const LightConfig &config) {
+            return Envmap(*config.tex, config.o2w_config.create(), config.distribution);
+        })
     }
 }

@@ -20,6 +20,12 @@ namespace luminous {
             material_configs.push_back(mc);
         }
 
+        void Scene::relevance_light_and_texture(vector<LightConfig> &light_configs) {
+            for (auto &config : light_configs) {
+                config.fill_tex_config(_tex_configs);
+            }
+        }
+
         void Scene::load_lights(const vector <LightConfig> &light_configs, const LightSamplerConfig &lsc) {
             _lights.reserve(light_configs.size());
             for (const auto &lc : light_configs) {
@@ -143,12 +149,12 @@ namespace luminous {
                         }
                     }
                     _inst_to_mesh_idx.push_back(mesh->idx_in_meshes);
-
                     _inst_triangle_num += mesh->triangles.size();
                     _inst_vertices_num += mesh->positions.size();
                 }
                 _transforms.push_back(instance->o2w);
             }
+            relevance_light_and_texture(scene_graph->light_configs);
             load_lights(scene_graph->light_configs, scene_graph->light_sampler_config);
             preprocess_meshes();
             shrink_to_fit();
@@ -250,6 +256,5 @@ namespace luminous {
                                  _scene_box.to_string().c_str(),
                                  _lights.size());
         }
-
     }
 }
