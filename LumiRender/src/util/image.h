@@ -53,6 +53,16 @@ namespace luminous {
 
             void convert_to_8bit();
 
+            template<typename Func>
+            void for_each(Func func) {
+                auto p = _pixel.get();
+                int stride = pixel_size(_pixel_format);
+                for (int i = 0; i < pixel_num(); ++i) {
+                    p += i * stride;
+                    func(p, i);
+                }
+            }
+
             void save_image(const std::filesystem::path &fn);
 
             void save_hdr(const std::filesystem::path &fn);

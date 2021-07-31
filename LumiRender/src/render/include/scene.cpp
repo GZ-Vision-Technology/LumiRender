@@ -23,6 +23,9 @@ namespace luminous {
         void Scene::relevance_light_and_texture(vector<LightConfig> &light_configs) {
             for (auto &config : light_configs) {
                 config.fill_tex_config(_tex_configs);
+                if (config.type() == full_type("Envmap")) {
+
+                }
             }
         }
 

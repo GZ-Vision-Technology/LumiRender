@@ -15,6 +15,14 @@ namespace luminous {
             SRGB
         };
 
+        NDSC_XPU_INLINE float luminance(float3 v) {
+            return dot(v, make_float3(0.212671f, 0.715160f, 0.072169f));
+        }
+
+        NDSC_XPU_INLINE float luminance(float4 v) {
+            return dot(make_float3(v), make_float3(0.212671f, 0.715160f, 0.072169f));
+        }
+
         class RGBSpectrum : public float3 {
         public:
             using scalar_t = float;

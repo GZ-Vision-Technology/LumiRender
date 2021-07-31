@@ -25,7 +25,7 @@ namespace luminous {
         protected:
             std::string _type;
         public:
-            std::string name = "";
+            std::string name;
 
             void set_type(const std::string &type) {
                 _type = type;
@@ -35,7 +35,7 @@ namespace luminous {
                 _type = full_type(type);
             }
 
-            const std::string &type() const {
+            NDSC const std::string &type() const {
                 return _type;
             }
         };
@@ -50,27 +50,20 @@ namespace luminous {
         };
 
         struct TransformConfig : Config {
-            TransformConfig() {}
+            TransformConfig() {};
 
             // trs and matrix4x4 and ...
-            union {
-                struct {
-                    // trs
-                    float3 t;
-                    float4 r;
-                    float3 s;
-                };
-                struct {
-                    float4x4 mat4x4;
-                };
-                struct {
-                    float yaw;
-                    float pitch;
-                    float3 position;
-                };
-            };
+            float3 t;
+            float4 r;
+            float3 s;
 
-            Transform create() const {
+            float4x4 mat4x4;
+
+            float yaw{};
+            float pitch{};
+            float3 position;
+
+            NDSC Transform create() const {
                 if (type() == "matrix4x4") {
                     return Transform(mat4x4);
                 } else if (type() == "trs") {
@@ -91,27 +84,20 @@ namespace luminous {
         };
 
         struct ShapeConfig : Config {
-            ShapeConfig() {
-            }
+            ShapeConfig() {}
 
             TransformConfig o2w;
             float3 emission = make_float3(0.f);
 
             std::string material_name;
-//            union {
-//                // model param
-//                struct {
+            // model param
             mutable std::string fn;
             bool smooth;
             bool swap_handed;
             uint subdiv_level;
-//                };
-//                // quad param
-//                struct {
+            // quad param
             float width;
             float height;
-//                };
-//            };
         };
 
         struct TextureMappingConfig : Config {
@@ -205,7 +191,9 @@ namespace luminous {
 
         struct LightSamplerConfig : Config {
         };
+
         class Texture;
+
         struct LightConfig : Config {
             LightConfig() = default;
 
