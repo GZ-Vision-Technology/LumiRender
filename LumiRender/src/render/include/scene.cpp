@@ -72,7 +72,7 @@ namespace luminous {
             }
         }
 
-        void Scene::convert_data(const SP<SceneGraph> &scene_graph) {
+        void Scene::convert_geometry_data(const SP<SceneGraph> &scene_graph) {
             TASK_TAG("convert scene data")
             index_t vert_offset = 0u;
             index_t tri_offset = 0u;
@@ -154,10 +154,12 @@ namespace luminous {
                 }
                 _transforms.push_back(instance->o2w);
             }
+        }
+
+        void Scene::init_lights(const SP<SceneGraph> &scene_graph) {
             relevance_light_and_texture(scene_graph->light_configs);
             load_lights(scene_graph->light_configs, scene_graph->light_sampler_config);
             preprocess_meshes();
-            shrink_to_fit();
         }
 
         void Scene::init_materials(const SP<SceneGraph> &scene_graph) {
@@ -256,5 +258,6 @@ namespace luminous {
                                  _scene_box.to_string().c_str(),
                                  _lights.size());
         }
+
     }
 }

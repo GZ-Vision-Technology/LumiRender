@@ -88,7 +88,9 @@ namespace luminous {
 
             void append_light_material(vector <MaterialConfig> &material_configs);
 
-            void convert_data(const SP<SceneGraph> &scene_graph);
+            void convert_geometry_data(const SP<SceneGraph> &scene_graph);
+
+            void init_lights(const SP<SceneGraph> &scene_graph);
 
             void relevance_material_and_texture(vector<MaterialConfig> &material_configs);
 

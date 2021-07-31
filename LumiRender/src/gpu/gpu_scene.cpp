@@ -99,11 +99,13 @@ namespace luminous {
         }
 
         void GPUScene::init(const SP<SceneGraph> &scene_graph) {
-            convert_data(scene_graph);
+            convert_geometry_data(scene_graph);
             preload_textures(scene_graph);
+            init_lights(scene_graph);
             create_device_memory();
             synchronize_to_gpu();
             init_accel();
+            shrink_to_fit();
         }
 
         void GPUScene::build_accel() {

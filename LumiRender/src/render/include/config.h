@@ -176,7 +176,7 @@ namespace luminous {
                         tex_configs.push_back(normal_tex);
                     }
                 } else if (type() == full_type("MatteMaterial")) {
-                    int idx = lstd::find_index_if(tex_configs, [&](TextureConfig tex_config) {
+                    int idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config.name == diffuse_tex.name;
                     });
                     DCHECK(idx != -1);
@@ -233,10 +233,11 @@ namespace luminous {
                 if (type() != full_type("Envmap")) {
                     return;
                 }
-                int idx = lstd::find_index_if(tex_configs, [&](TextureConfig tex_config) {
+                int idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                     return tex_config.name == texture_config.name;
                 });
                 tex_idx = idx;
+                texture_config = tex_configs[idx];
             }
         };
     }
