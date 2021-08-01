@@ -93,6 +93,8 @@ namespace luminous {
                     _texture_mgr.push_back(std::move(texture));
                     _texture_num += 1;
                     _texture_size_in_byte += image.size_in_bytes();
+                    tc.image_idx = _images.size();
+                    _images.push_back(move(image));
                 }
                 _textures.push_back(Texture::create(tc));
             }

@@ -113,6 +113,8 @@ namespace luminous {
             // for constant texture
             float4 val = make_float4(0.f);
             // for image texture
+            Image *image{};
+            index_t image_idx{index_t (-1)};
             std::string fn = "";
             PixelFormat pixel_format = PixelFormat::UNKNOWN;
             void *handle{nullptr};
@@ -212,7 +214,6 @@ namespace luminous {
             TextureConfig texture_config;
             Distribution2D distribution;
             index_t tex_idx{};
-            Image *image{};
             Texture *tex{};
             float3 scale{};
             TransformConfig o2w_config;

@@ -25,7 +25,9 @@ namespace luminous {
         void append(std::vector<T> &v1, const std::vector<T> &v2) {
             v1.insert(v1.cend(), v2.cbegin(), v2.cend());
         }
-
+        /**
+         * all memory data manage
+         */
         class Scene : public Noncopyable {
         protected:
             Context *_context{nullptr};
@@ -68,6 +70,8 @@ namespace luminous {
 
             // prepare for texture out of core render
             vector<TextureConfig> _tex_configs;
+
+            vector<Image> _images;
 
         public:
             Scene(Context *context) : _context(context) {}

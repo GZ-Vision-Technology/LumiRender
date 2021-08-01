@@ -24,7 +24,7 @@ namespace luminous {
             for (auto &config : light_configs) {
                 config.fill_tex_config(_tex_configs);
                 if (config.type() == full_type("Envmap")) {
-
+                    config.texture_config.image = &_images[config.texture_config.image_idx];
                 }
             }
         }
