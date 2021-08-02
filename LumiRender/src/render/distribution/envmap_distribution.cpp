@@ -30,6 +30,9 @@ namespace luminous {
         }
 
         void EnvmapDistribution::init_on_device(const SP<Device> &device) {
+            if (handles.empty()) {
+                return;
+            }
             distribution_2d.clear();
             distributions.clear();
             DistributionMgr::init_on_device(device);
@@ -46,6 +49,9 @@ namespace luminous {
         }
 
         void EnvmapDistribution::synchronize_to_gpu() {
+            if (handles.empty()) {
+                return;
+            }
             distribution_2d.synchronize_to_gpu();
         }
 

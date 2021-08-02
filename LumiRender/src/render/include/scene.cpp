@@ -186,6 +186,7 @@ namespace luminous {
 
             ret += _lights.size_in_bytes();
             ret += _emission_distrib.size_in_bytes();
+            ret += _envmap_distribution.size_in_bytes();
             ret += _texture_size_in_byte;
 
             return ret;
@@ -207,6 +208,7 @@ namespace luminous {
             {
                 _lights.clear();
                 _emission_distrib.clear();
+                _envmap_distribution.clear();
             }
             {
                 _materials.clear();
@@ -234,6 +236,7 @@ namespace luminous {
             }
             {
                 _lights.shrink_to_fit();
+                _envmap_distribution.shrink_to_fit();
                 _emission_distrib.shrink_to_fit();
             }
             {

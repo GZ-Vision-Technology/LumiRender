@@ -34,6 +34,7 @@ namespace luminous {
                 // light data
                 _lights.allocate_device(_device);
                 _emission_distrib.init_on_device(_device);
+//                _envmap_distribution.init_on_device(_device);
                 _light_sampler.allocate_device(_device);
             }
             {
@@ -62,6 +63,7 @@ namespace luminous {
                 // light data
                 _lights.synchronize_to_gpu();
                 _emission_distrib.synchronize_to_gpu();
+                _envmap_distribution.synchronize_to_gpu();
                 _light_sampler->set_lights(_lights.device_buffer_view());
                 _light_sampler.synchronize_to_gpu();
             }

@@ -36,20 +36,20 @@ namespace luminous {
         CPU_ONLY(std::vector<float> Envmap::create_distribution(const Image &image) {
             auto width = image.width();
             auto height = image.height();
-            std::vector<float> ret(0, image.pixel_num());
-            auto func = [&](std::byte *pixel, index_t idx) {
+            std::vector<float> ret(image.pixel_num(), 0);
+            auto func = [&](const std::byte *pixel, index_t idx) {
                 float f = 0;
                 float v = idx / width + 0.5f;
                 float theta = v / height;
                 float sinTheta = std::sin(Pi * theta);
                 switch (image.pixel_format()) {
                     case PixelFormat::RGBA32F:{
-                        float4 val = *(reinterpret_cast<float4*>(&pixel[idx]));
+                        float4 val = *(reinterpret_cast<const float4*>(pixel));
                         f = luminance(val);
                         break;
                     }
                     case PixelFormat::RGBA8U:{
-                        uchar4 val = *(reinterpret_cast<uchar4*>(&pixel[idx]));
+                        uchar4 val = *(reinterpret_cast<const uchar4*>(pixel));
                         float4 f4 = make_float4(val) / 255.f;
                         f = luminance(f4);
                         break;
@@ -59,6 +59,7 @@ namespace luminous {
                 }
                 ret[idx] = f * sinTheta;
             };
+            image.for_each(func);
             return ret;
         })
 
