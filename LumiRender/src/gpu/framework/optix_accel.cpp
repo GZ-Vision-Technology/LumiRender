@@ -223,7 +223,7 @@ namespace luminous {
                 p->data.transforms = gpu_scene->_transforms.device_buffer_view();
 
                 p->data.light_sampler = gpu_scene->_light_sampler.device_data();
-                p->data.distributions = gpu_scene->_emission_distrib.emission_distributions.device_buffer_view();
+                p->data.distributions = gpu_scene->_distribution_mgr.distributions.device_buffer_view();
 
                 p->data.textures = gpu_scene->_textures.device_buffer_view();
                 p->data.materials = gpu_scene->_materials.device_buffer_view();

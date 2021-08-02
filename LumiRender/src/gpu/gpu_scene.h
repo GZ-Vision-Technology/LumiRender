@@ -8,7 +8,6 @@
 #include "core/concepts.h"
 #include "framework/optix_accel.h"
 #include "render/include/scene.h"
-#include "render/distribution/emission_distribution.h"
 
 namespace luminous {
     inline namespace gpu {

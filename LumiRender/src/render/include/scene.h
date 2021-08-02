@@ -11,11 +11,10 @@
 #include "scene_graph.h"
 #include "render/lights/light.h"
 #include "graphics/sampling/common.h"
-#include "render/distribution/emission_distribution.h"
 #include "render/light_samplers/light_sampler.h"
 #include "render/textures/texture.h"
 #include "gpu/gpu_include.h"
-#include "render/distribution/envmap_distribution.h"
+#include "render/distribution/distribution_mgr.h"
 #include "render/materials/material.h"
 
 namespace luminous {
@@ -53,11 +52,8 @@ namespace luminous {
 
             // light data
             Managed<Light> _lights;
-            EmissionDistribution _emission_distrib;
             Managed<LightSampler> _light_sampler;
-
-            // envmap illumination distribution
-            EnvmapDistribution _envmap_distribution;
+            DistributionMgr _distribution_mgr;
 
             // texture data
             Managed<Texture> _textures;

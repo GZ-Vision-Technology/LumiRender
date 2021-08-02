@@ -16,7 +16,17 @@ namespace luminous {
             Managed<float> CDF_buffer;
             std::vector<DistributionHandle> handles;
         public:
+
+            Managed<Distribution1D> distributions;
+            Managed<Distribution2D> distribution2ds;
+
             virtual void add_distribution(const Distribution1DBuilder &builder);
+
+            virtual void add_distribution2d(const vector<float> &f, int nu, int nv);
+
+            virtual void init_on_host();
+
+            virtual void synchronize_to_gpu();
 
             virtual void init_on_device(const SP<Device> &device);
 

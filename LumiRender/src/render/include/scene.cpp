@@ -26,8 +26,8 @@ namespace luminous {
                 if (config.type() == full_type("Envmap")) {
                     const Image &image = _images[config.texture_config.image_idx];
                     std::vector<float> vec = Envmap::create_distribution(image);
-                    config.distribution_idx = _envmap_distribution.distribution2d.size();
-                    _envmap_distribution.add_distribution2d(vec, image.width(), image.height());
+//                    config.distribution_idx = _envmap_distribution.distribution2d.size();
+//                    _envmap_distribution.add_distribution2d(vec, image.width(), image.height());
                 }
             }
         }
@@ -68,7 +68,7 @@ namespace luminous {
                 process_mesh(mesh);
             }
             for (const auto &builder : builders) {
-                _emission_distrib.add_distribution(builder);
+                _distribution_mgr.add_distribution(builder);
             }
         }
 
@@ -186,8 +186,7 @@ namespace luminous {
             ret += _inst_to_transform_idx.size_in_bytes();
 
             ret += _lights.size_in_bytes();
-            ret += _emission_distrib.size_in_bytes();
-            ret += _envmap_distribution.size_in_bytes();
+            ret += _distribution_mgr.size_in_bytes();
             ret += _texture_size_in_byte;
 
             return ret;
@@ -208,8 +207,7 @@ namespace luminous {
             }
             {
                 _lights.clear();
-                _emission_distrib.clear();
-                _envmap_distribution.clear();
+                _distribution_mgr.clear();
             }
             {
                 _materials.clear();
@@ -237,8 +235,7 @@ namespace luminous {
             }
             {
                 _lights.shrink_to_fit();
-                _envmap_distribution.shrink_to_fit();
-                _emission_distrib.shrink_to_fit();
+                _distribution_mgr.shrink_to_fit();
             }
             {
                 _materials.shrink_to_fit();
