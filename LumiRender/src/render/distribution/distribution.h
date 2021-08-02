@@ -144,7 +144,7 @@ namespace luminous {
                 return _conditional_v[iv].func_at(iu) / _marginal.integral();
             }
 
-            static Distribution2DBuilder create_builder(float *func, int nu, int nv) {
+            static Distribution2DBuilder create_builder(const float *func, int nu, int nv) {
                 vector<Distribution1DBuilder> conditional_v;
                 conditional_v.reserve(nv);
                 for (int v = 0; v < nv; ++v) {

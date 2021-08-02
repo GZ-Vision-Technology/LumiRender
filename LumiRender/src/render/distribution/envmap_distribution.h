@@ -16,7 +16,7 @@ namespace luminous {
 
             EnvmapDistribution() = default;
 
-            void init(vector<float> f, int nu, int nv);
+            void init(const vector<float> &f, int nu, int nv);
 
             NDSC_INLINE Distribution2D get_distribution() const {
                 return distribution_2d.front();

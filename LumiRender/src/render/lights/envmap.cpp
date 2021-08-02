@@ -5,7 +5,6 @@
 #include "envmap.h"
 
 
-
 namespace luminous {
     inline namespace render {
 
@@ -33,6 +32,35 @@ namespace luminous {
         void Envmap::print() const {
             printf("type:Envmap\n");
         }
+
+        CPU_ONLY(std::vector<float> Envmap::create_distribution(const Image &image) {
+            auto width = image.width();
+            auto height = image.height();
+            std::vector<float> ret(0, image.pixel_num());
+            auto func = [&](std::byte *pixel, index_t idx) {
+                float f = 0;
+                float v = idx / width + 0.5f;
+                float theta = v / height;
+                float sinTheta = std::sin(Pi * theta);
+                switch (image.pixel_format()) {
+                    case PixelFormat::RGBA32F:{
+                        float4 val = *(reinterpret_cast<float4*>(&pixel[idx]));
+                        f = luminance(val);
+                        break;
+                    }
+                    case PixelFormat::RGBA8U:{
+                        uchar4 val = *(reinterpret_cast<uchar4*>(&pixel[idx]));
+                        float4 f4 = make_float4(val) / 255.f;
+                        f = luminance(f4);
+                        break;
+                    }
+                    default:
+                        break;
+                }
+                ret[idx] = f * sinTheta;
+            };
+            return ret;
+        })
 
         CPU_ONLY(Envmap Envmap::create(const LightConfig &config) {
             return Envmap(config.tex_idx, config.o2w_config.create(), config.distribution);

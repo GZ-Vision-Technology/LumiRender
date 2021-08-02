@@ -7,7 +7,7 @@
 namespace luminous {
     inline namespace render {
 
-        void EnvmapDistribution::init(vector<float> f, int u, int v) {
+        void EnvmapDistribution::init(const vector<float> &f, int u, int v) {
             clear();
             Distribution2DBuilder builder = Distribution2D::create_builder(f.data(), u, v);
             for (const auto& builder_1D : builder.conditional_v) {

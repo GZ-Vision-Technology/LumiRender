@@ -80,7 +80,6 @@ namespace luminous {
                     : _pixel_format(pixel_format),
                       _resolution(resolution) {}
 
-
             ImageBase(ImageBase &&other) noexcept {
                 _pixel_format = other._pixel_format;
                 _resolution = other._resolution;

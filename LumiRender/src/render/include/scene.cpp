@@ -24,7 +24,9 @@ namespace luminous {
             for (auto &config : light_configs) {
                 config.fill_tex_config(_tex_configs);
                 if (config.type() == full_type("Envmap")) {
-                    config.texture_config.image = &_images[config.texture_config.image_idx];
+                    const Image &image = _images[config.texture_config.image_idx];
+                    std::vector<float> vec = Envmap::create_distribution(image);
+                    _envmap_distribution.init(vec, image.width(), image.height());
                 }
             }
         }

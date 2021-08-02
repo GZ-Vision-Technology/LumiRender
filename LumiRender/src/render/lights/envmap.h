@@ -46,6 +46,8 @@ namespace luminous {
                                    type_name(this));
             })
 
+            CPU_ONLY(static std::vector<float> create_distribution(const Image &image));
+
             CPU_ONLY(static Envmap create(const LightConfig &config);)
         };
     }
