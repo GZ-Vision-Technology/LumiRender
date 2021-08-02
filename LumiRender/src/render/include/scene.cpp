@@ -26,8 +26,8 @@ namespace luminous {
                 if (config.type() == full_type("Envmap")) {
                     const Image &image = _images[config.texture_config.image_idx];
                     std::vector<float> vec = Envmap::create_distribution(image);
-                    _envmap_distribution.init(vec, image.width(), image.height());
-
+                    config.distribution_idx = _envmap_distribution.distribution2d.size();
+                    _envmap_distribution.add_distribution2d(vec, image.width(), image.height());
                 }
             }
         }
@@ -68,7 +68,7 @@ namespace luminous {
                 process_mesh(mesh);
             }
             for (const auto &builder : builders) {
-                _emission_distrib.add_distribute(builder);
+                _emission_distrib.add_distribution(builder);
             }
         }
 

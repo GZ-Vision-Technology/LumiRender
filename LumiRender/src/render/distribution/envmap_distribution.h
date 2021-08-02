@@ -12,14 +12,14 @@ namespace luminous {
         using std::vector;
         struct EnvmapDistribution : public DistributionMgr {
             Managed<Distribution1D> distributions;
-            Managed<Distribution2D> distribution_2d;
+            Managed<Distribution2D> distribution2d;
 
             EnvmapDistribution() = default;
 
-            void init(const vector<float> &f, int nu, int nv);
+            void add_distribution2d(const vector<float> &f, int nu, int nv);
 
             NDSC_INLINE Distribution2D get_distribution() const {
-                return distribution_2d.front();
+                return distribution2d.front();
             }
 
             void init_on_host();
