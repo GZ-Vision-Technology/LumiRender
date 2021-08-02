@@ -25,6 +25,8 @@ namespace luminous {
 
         class Distribution1D;
 
+        class Distribution2D;
+
         class Texture;
 
         class Material;
@@ -51,6 +53,7 @@ namespace luminous {
             // light data
             const LightSampler *light_sampler;
             BufferView<const Distribution1D> emission_distributions;
+            BufferView<const Distribution2D> envmap_distributions;
 
 #define GEN_GET_FUNCTION(attribute)                                                     \
             NDSC_XPU_INLINE auto get_##attribute(const MeshHandle &mesh) const {        \
@@ -116,6 +119,8 @@ namespace luminous {
             NDSC_XPU_INLINE const Texture &get_texture(index_t idx) const;
 
             NDSC_XPU_INLINE const Distribution1D &get_distrib(index_t inst_id) const;
+
+            NDSC_XPU_INLINE const Distribution2D &get_distribution2d(index_t idx) const;
         };
     }
 }

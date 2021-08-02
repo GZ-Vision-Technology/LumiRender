@@ -34,7 +34,7 @@ namespace luminous {
                 // light data
                 _lights.allocate_device(_device);
                 _emission_distrib.init_on_device(_device);
-//                _envmap_distribution.init_on_device(_device);
+                _envmap_distribution.init_on_device(_device);
                 _light_sampler.allocate_device(_device);
             }
             {

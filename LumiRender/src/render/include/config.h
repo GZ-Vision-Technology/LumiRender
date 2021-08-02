@@ -212,7 +212,8 @@ namespace luminous {
             // for env
             TextureConfig texture_config;
             Distribution2D distribution;
-            index_t tex_idx{};
+            index_t tex_idx{index_t(-1)};
+            index_t distribution_idx{index_t(-1)};
             float3 scale{};
             TransformConfig o2w_config;
 

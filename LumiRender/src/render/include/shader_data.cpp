@@ -120,6 +120,10 @@ namespace luminous {
             return emission_distributions[mesh.distribute_idx];
         }
 
+        const Distribution2D &HitGroupData::get_distribution2d(index_t idx) const {
+            return envmap_distributions[idx];
+        }
+
         const Texture &HitGroupData::get_texture(index_t idx) const {
             return textures[idx];
         }
@@ -128,6 +132,5 @@ namespace luminous {
             auto mesh = get_mesh(inst_id);
             return materials[mesh.material_idx];
         }
-
     } // luminous::render
 } // luminous
