@@ -16,7 +16,7 @@ namespace luminous {
 
             MaterialConfig mc;
             mc.set_full_type("MatteMaterial");
-            mc.diffuse_idx = _tex_configs.size() - 1;
+            mc.diffuse_tex.tex_idx = _tex_configs.size() - 1;
             material_configs.push_back(mc);
         }
 

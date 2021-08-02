@@ -21,7 +21,7 @@ namespace luminous {
             NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const HitGroupData* hit_group_data) const;
 
             CPU_ONLY(static MatteMaterial create(const MaterialConfig &mc) {
-                return MatteMaterial(mc.diffuse_idx);
+                return MatteMaterial(mc.diffuse_tex.tex_idx);
             })
         };
     }

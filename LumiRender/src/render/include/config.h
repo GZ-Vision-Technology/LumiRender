@@ -114,6 +114,7 @@ namespace luminous {
 
             // for constant texture
             float4 val = make_float4(0.f);
+
             // for image texture
             Image *image{};
             index_t image_idx{index_t(-1)};
@@ -143,26 +144,23 @@ namespace luminous {
 
             // common
             TextureConfig diffuse_tex;
-            index_t diffuse_idx{index_t(-1)};
 
             // assimp material
             TextureConfig specular_tex;
-            index_t specular_idx{index_t(-1)};
             TextureConfig normal_tex;
-            index_t normal_idx{index_t(-1)};
 
             void fill_tex_configs(std::vector<TextureConfig> &tex_configs) {
                 if (type() == full_type("AssimpMaterial")) {
                     if (!is_contain(tex_configs, diffuse_tex)) {
-                        diffuse_idx = tex_configs.size();
+                        diffuse_tex.tex_idx = tex_configs.size();
                         tex_configs.push_back(diffuse_tex);
                     }
                     if (!is_contain(tex_configs, specular_tex)) {
-                        specular_idx = tex_configs.size();
+                        specular_tex.tex_idx = tex_configs.size();
                         tex_configs.push_back(specular_tex);
                     }
                     if (!is_contain(tex_configs, normal_tex)) {
-                        normal_idx = tex_configs.size();
+                        normal_tex.tex_idx = tex_configs.size();
                         tex_configs.push_back(normal_tex);
                     }
                 } else if (type() == full_type("MatteMaterial")) {
@@ -170,7 +168,7 @@ namespace luminous {
                         return tex_config.name == diffuse_tex.name;
                     });
                     DCHECK(idx != -1);
-                    diffuse_idx = idx;
+                    diffuse_tex.tex_idx = idx;
                 }
             }
         };

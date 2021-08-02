@@ -31,7 +31,7 @@ namespace luminous {
             NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const HitGroupData *hit_group_data) const;
 
             CPU_ONLY(static AssimpMaterial create(const MaterialConfig &mc) {
-                return AssimpMaterial(mc.diffuse_idx, mc.specular_idx, mc.normal_idx,
+                return AssimpMaterial(mc.diffuse_tex.tex_idx, mc.specular_tex.tex_idx, mc.normal_tex.tex_idx,
                                       mc.diffuse_tex.val, mc.specular_tex.val);
             })
         };
