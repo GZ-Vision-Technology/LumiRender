@@ -17,14 +17,14 @@ namespace luminous {
         class Envmap : public LightBase {
         private:
             Distribution2D _distribution;
-            Texture _tex;
+            index_t _tex_idx{};
             Transform _o2w;
             float3 _scene_center{};
             float _scene_radius{};
         public:
-            Envmap(Texture tex, Transform o2w, Distribution2D distribution)
+            Envmap(index_t tex_idx, Transform o2w, Distribution2D distribution)
                 : LightBase(LightType::Infinite),
-                _tex(std::move(tex)),
+                _tex_idx(tex_idx),
                 _o2w(o2w),
                 _distribution(distribution) {}
 
@@ -41,10 +41,9 @@ namespace luminous {
             XPU void print() const;
 
             GEN_STRING_FUNC({
-                LUMINOUS_TO_STRING("light Base : %s,name:%s, L : %s",
+                LUMINOUS_TO_STRING("light Base : %s,name:%s",
                                    LightBase::to_string().c_str(),
-                                   type_name(this),
-                                   _tex.to_string().c_str());
+                                   type_name(this));
             })
 
             CPU_ONLY(static Envmap create(const LightConfig &config);)

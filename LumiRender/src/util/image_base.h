@@ -90,19 +90,19 @@ namespace luminous {
 
             NDSC_XPU int channel_num() const { return utility::channel_num(_pixel_format); }
 
-            uint2 resolution() const { return _resolution; }
+            NDSC uint2 resolution() const { return _resolution; }
 
-            uint width() const { return _resolution.x; }
+            NDSC uint width() const { return _resolution.x; }
 
-            uint height() const { return _resolution.y; }
+            NDSC uint height() const { return _resolution.y; }
 
-            PixelFormat pixel_format() const { return _pixel_format; }
+            NDSC PixelFormat pixel_format() const { return _pixel_format; }
 
-            size_t pitch_byte_size() const { return _resolution.x * pixel_size(_pixel_format); }
+            NDSC size_t pitch_byte_size() const { return _resolution.x * pixel_size(_pixel_format); }
 
-            size_t size_in_bytes() const { return pixel_size(_pixel_format) * pixel_num() * channel_num(); }
+            NDSC size_t size_in_bytes() const { return pixel_size(_pixel_format) * pixel_num() * channel_num(); }
 
-            size_t pixel_num() const { return _resolution.x * _resolution.y; }
+            NDSC size_t pixel_num() const { return _resolution.x * _resolution.y; }
         };
     }
 }
