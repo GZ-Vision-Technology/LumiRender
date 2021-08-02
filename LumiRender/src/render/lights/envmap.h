@@ -14,19 +14,20 @@
 namespace luminous {
     inline namespace render {
         class Scene;
+
         class Envmap : public LightBase {
         private:
-            Distribution2D _distribution;
-            index_t _tex_idx{};
+            index_t _tex_idx{index_t(-1)};
+            index_t _distribution_idx{index_t(-1)};
             Transform _o2w;
             float3 _scene_center{};
             float _scene_radius{};
         public:
-            Envmap(index_t tex_idx, Transform o2w, Distribution2D distribution)
-                : LightBase(LightType::Infinite),
-                _tex_idx(tex_idx),
-                _o2w(o2w),
-                _distribution(distribution) {}
+            Envmap(index_t tex_idx, Transform o2w, index_t distribution_idx)
+                    : LightBase(LightType::Infinite),
+                      _tex_idx(tex_idx),
+                      _o2w(o2w),
+                      _distribution_idx(distribution_idx) {}
 
             void preprocess(const Scene *scene);
 
@@ -41,10 +42,10 @@ namespace luminous {
             XPU void print() const;
 
             GEN_STRING_FUNC({
-                LUMINOUS_TO_STRING("light Base : %s,name:%s",
-                                   LightBase::to_string().c_str(),
-                                   type_name(this));
-            })
+                                LUMINOUS_TO_STRING("light Base : %s,name:%s",
+                                                   LightBase::to_string().c_str(),
+                                                   type_name(this));
+                            })
 
             CPU_ONLY(static std::vector<float> create_distribution(const Image &image));
 

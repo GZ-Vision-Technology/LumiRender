@@ -117,11 +117,11 @@ namespace luminous {
 
         const Distribution1D &HitGroupData::get_distrib(index_t inst_id) const {
             auto mesh = get_mesh(inst_id);
-            return emission_distributions[mesh.distribute_idx];
+            return distributions[mesh.distribute_idx];
         }
 
         const Distribution2D &HitGroupData::get_distribution2d(index_t idx) const {
-            return envmap_distributions[idx];
+            return distribution2ds[idx];
         }
 
         const Texture &HitGroupData::get_texture(index_t idx) const {

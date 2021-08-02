@@ -52,8 +52,8 @@ namespace luminous {
 
             // light data
             const LightSampler *light_sampler;
-            BufferView<const Distribution1D> emission_distributions;
-            BufferView<const Distribution2D> envmap_distributions;
+            BufferView<const Distribution1D> distributions;
+            BufferView<const Distribution2D> distribution2ds;
 
 #define GEN_GET_FUNCTION(attribute)                                                     \
             NDSC_XPU_INLINE auto get_##attribute(const MeshHandle &mesh) const {        \

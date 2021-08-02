@@ -27,6 +27,7 @@ namespace luminous {
                     const Image &image = _images[config.texture_config.image_idx];
                     std::vector<float> vec = Envmap::create_distribution(image);
                     _envmap_distribution.init(vec, image.width(), image.height());
+
                 }
             }
         }

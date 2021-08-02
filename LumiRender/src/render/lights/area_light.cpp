@@ -11,7 +11,7 @@ namespace luminous {
         SurfaceInteraction AreaLight::sample(float2 u, const HitGroupData *hit_group_data) const {
             SurfaceInteraction ret;
             auto mesh = hit_group_data->get_mesh(_inst_idx);
-            const Distribution1D &distrib = hit_group_data->emission_distributions[mesh.distribute_idx];
+            const Distribution1D &distrib = hit_group_data->distributions[mesh.distribute_idx];
             float PMF = 0;
             size_t triangle_id = distrib.sample_discrete(u.x, &PMF, &u.x);
             float2 uv = square_to_triangle(u);
