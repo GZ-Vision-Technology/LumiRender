@@ -168,7 +168,7 @@ namespace luminous {
 
         struct NEEData {
             Spectrum bsdf_val{0.f};
-            float bsdf_PDF;
+            float bsdf_PDF{-1.f};
             float3 wi{0.f};
             SurfaceInteraction next_si;
             bool found_intersection{false};

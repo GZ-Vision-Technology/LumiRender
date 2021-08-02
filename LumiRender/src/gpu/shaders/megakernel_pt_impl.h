@@ -76,7 +76,7 @@ GLOBAL __raygen__rg() {
     auto frame_index = params.frame_index;
     sampler.start_pixel_sample(pixel, frame_index, 0);
     auto ss = sampler.sensor_sample(pixel);
-    bool debug = false;
+    bool debug = pixel.x == 0 && pixel.y == 0;
     Ray ray(luminous::make_float3(278.0f, 273.0f, -900.0f),
             luminous::make_float3(0,0,1));
     float weight = camera->generate_ray(ss, &ray);

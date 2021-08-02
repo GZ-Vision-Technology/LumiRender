@@ -54,6 +54,7 @@ namespace luminous {
                                                                       prd.hit_group_data(), &NEE_data);
                 found_intersection = NEE_data.found_intersection;
                 Spectrum bsdf_ei = NEE_data.bsdf_val / NEE_data.bsdf_PDF;
+
                 throughput *= bsdf_ei;
                 L += Ld * throughput;
                 float max_comp = throughput.max_comp();
