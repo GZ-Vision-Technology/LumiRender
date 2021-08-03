@@ -59,7 +59,7 @@ namespace luminous {
                 }
                 ret[idx] = f * sinTheta;
             };
-            image.for_each(func);
+            image.for_each_pixel(func);
             return ret;
         })
 

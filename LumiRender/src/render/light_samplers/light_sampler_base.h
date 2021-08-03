@@ -44,6 +44,23 @@ namespace luminous {
                 return _lights[idx];
             }
 
+            template<typename Func>
+            XPU void for_each_light(Func func) const {
+                for (int i = 0; i < light_num(); ++i) {
+                    func(light_at(i), i);
+                }
+            }
+
+            template<typename Func>
+            XPU void for_each_infinity_light(Func func) const {
+                for (int i = 0; i < light_num(); ++i) {
+                    const Light &light = light_at(i);
+                    if (light.is_infinity()) {
+                        func(_lights[i], i);
+                    }
+                }
+            }
+
             XPU void set_lights(BufferView<const Light> lights) {
                 _lights = lights;
             }

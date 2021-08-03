@@ -54,7 +54,7 @@ namespace luminous {
             void convert_to_8bit();
 
             template<typename Func>
-            void for_each(Func func) const {
+            void for_each_pixel(Func func) const {
                 auto p = _pixel.get();
                 int stride = pixel_size(_pixel_format);
                 for (int i = 0; i < pixel_num(); ++i) {

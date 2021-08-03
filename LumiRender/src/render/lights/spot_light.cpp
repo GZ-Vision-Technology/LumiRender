@@ -51,7 +51,7 @@ namespace luminous {
 
         CPU_ONLY(SpotLight SpotLight::create(const LightConfig &config) {
             return SpotLight(config.position, config.intensity, cos(config.theta_i),
-                             cos(config.theta_o), config.miss_color);
+                             cos(config.theta_o));
         })
 
 

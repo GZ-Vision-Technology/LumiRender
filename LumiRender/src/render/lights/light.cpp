@@ -78,6 +78,7 @@ namespace luminous {
                 NEE_data->wi = bsdf_sample->wi;
                 NEE_data->bsdf_val = bsdf_sample->f_val;
                 NEE_data->bsdf_PDF = bsdf_sample->PDF;
+                float weight = 1;
                 if (!is_delta()) {
                     bsdf_PDF = bsdf_sample->PDF;
                     bsdf_val = bsdf_sample->f_val;
@@ -87,10 +88,12 @@ namespace luminous {
                     if (prd.is_hit() && (NEE_data->next_si = prd.compute_surface_interaction(ray)).light == this) {
                         NEE_data->next_si.PDF_pos = get<AreaLight>()->inv_area();
                         light_PDF = PDF_Li(si, NEE_data->next_si);
-                        float weight = MIS_weight(bsdf_PDF, light_PDF);
+                        weight = MIS_weight(bsdf_PDF, light_PDF);
                         Li = NEE_data->next_si.Le(-NEE_data->wi);
-                        Ld = bsdf_val * Li * weight / bsdf_PDF;
+                    } else if (!NEE_data->found_intersection) {
+                        Li = this->on_miss(ray);
                     }
+                    Ld = bsdf_val * Li * weight / bsdf_PDF;
                 }
             }
             return Ld;
@@ -104,8 +107,16 @@ namespace luminous {
             return Ld + MIS_sample_BSDF(si, sampler, traversable_handle, NEE_data);
         }
 
+        void Light::preprocess(const Scene *scene) {
+            LUMINOUS_VAR_DISPATCH(preprocess, scene);
+        }
+
         bool Light::is_delta() const {
             LUMINOUS_VAR_DISPATCH(is_delta);
+        }
+
+        bool Light::is_infinity() const {
+            LUMINOUS_VAR_DISPATCH(is_infinity);
         }
 
         Spectrum Light::on_miss(Ray ray) const {
@@ -127,11 +138,6 @@ namespace luminous {
         CPU_ONLY(Light Light::create(const LightConfig &config) {
             return detail::create<Light>(config);
         })
-
-        void Light::preprocess(const Scene *scene) {
-            LUMINOUS_VAR_DISPATCH(preprocess, scene);
-        }
-
 
     } // luminous::render
 } // luminous

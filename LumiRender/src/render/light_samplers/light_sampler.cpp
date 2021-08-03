@@ -12,7 +12,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(set_lights, lights);
         }
 
-        size_t LightSampler::light_num() {
+        size_t LightSampler::light_num() const {
             LUMINOUS_VAR_DISPATCH(light_num);
         }
 

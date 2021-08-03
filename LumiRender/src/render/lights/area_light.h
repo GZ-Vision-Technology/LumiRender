@@ -17,8 +17,8 @@ namespace luminous {
             bool _two_sided;
             float _inv_area;
         public:
-            AreaLight(uint inst_idx, float3 L, float area, bool two_sided, float3 miss_color)
-                    : LightBase(LightType::Area, miss_color),
+            AreaLight(uint inst_idx, float3 L, float area, bool two_sided)
+                    : LightBase(LightType::Area),
                       _inst_idx(inst_idx),
                       _L(L),
                       _inv_area(1 / area),

@@ -22,8 +22,8 @@ namespace luminous {
             float _cos_theta_o;
             float3 _intensity;
         public:
-            SpotLight(float3 pos, float3 intensity, float theta_i, float theta_o, float3 miss_color)
-                    : LightBase(LightType::DeltaPosition, miss_color),
+            SpotLight(float3 pos, float3 intensity, float theta_i, float theta_o)
+                    : LightBase(LightType::DeltaPosition),
                       _pos(pos),
                       _intensity(intensity),
                       _cos_theta_i(cos(radians(theta_i))),

@@ -36,7 +36,7 @@ namespace luminous {
         }
 
         CPU_ONLY(PointLight PointLight::create(const LightConfig &config) {
-            return PointLight(config.position, config.intensity, config.miss_color);
+            return PointLight(config.position, config.intensity);
         })
 
     } // luminous::render

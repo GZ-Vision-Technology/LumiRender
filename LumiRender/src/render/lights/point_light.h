@@ -15,8 +15,8 @@ namespace luminous {
             float3 _pos;
             Spectrum _intensity;
         public:
-            PointLight(float3 pos, float3 intensity, float3 miss_color)
-                    : LightBase(LightType::DeltaPosition, miss_color),
+            PointLight(float3 pos, float3 intensity)
+                    : LightBase(LightType::DeltaPosition),
                       _pos(pos),
                       _intensity(intensity) {}
 
