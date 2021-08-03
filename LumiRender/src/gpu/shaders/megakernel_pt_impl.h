@@ -24,49 +24,6 @@ __constant__ luminous::LaunchParams
 params;
 }
 
-struct RadiancePRD
-{
-    // TODO: move some state directly into payload registers?
-    float3       emitted;
-    float3       radiance;
-    float3       attenuation;
-    float3       origin;
-    float3       direction;
-    int flag = 0;
-    unsigned int seed;
-    int          countEmitted;
-    int          done;
-    int          pad;
-};
-
-static __forceinline__ __device__ void traceRadiance(
-        OptixTraversableHandle handle,
-        float3                 ray_origin,
-        float3                 ray_direction,
-        float                  tmin,
-        float                  tmax,
-        RadiancePRD*           prd
-)
-{
-    // TODO: deduce stride from num ray-types passed in params
-
-    unsigned int u0, u1;
-    packPointer( prd, u0, u1 );
-    optixTrace(
-            handle,
-            ray_origin,
-            ray_direction,
-            tmin,
-            tmax,
-            0.0f,                // rayTime
-            OptixVisibilityMask( 1 ),
-            OPTIX_RAY_FLAG_NONE,
-            0,        // SBT offset
-            2,           // SBT stride
-            0,        // missSBTIndex
-            u0, u1 );
-}
-
 GLOBAL __raygen__rg() {
     using namespace luminous;
     luminous::uint2 pixel = getPixelCoords();
@@ -98,13 +55,6 @@ GLOBAL __miss__radiance() {
 
 GLOBAL __miss__shadow() {
     setPayloadOcclusion(false);
-}
-
-static __forceinline__ __device__ RadiancePRD* getPRD2()
-{
-    const unsigned int u0 = optixGetPayload_0();
-    const unsigned int u1 = optixGetPayload_1();
-    return reinterpret_cast<RadiancePRD*>( unpackPointer( u0, u1 ) );
 }
 
 GLOBAL __closesthit__radiance() {

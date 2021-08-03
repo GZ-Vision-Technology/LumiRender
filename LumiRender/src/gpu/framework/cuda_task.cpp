@@ -17,7 +17,6 @@ namespace luminous {
             _integrator = std::make_unique<MegakernelPT>(_device, _context);
             _integrator->init(scene_graph);
             update_device_buffer();
-            _integrator->test();
         }
 
         void CUDATask::update_device_buffer() {

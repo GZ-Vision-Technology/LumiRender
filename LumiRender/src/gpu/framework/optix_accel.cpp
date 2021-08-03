@@ -7,7 +7,6 @@
 #include "../gpu_scene.h"
 #include "render/include/shader_data.h"
 #include "util/stats.h"
-#include "test_bvh.h"
 
 extern "C" char optix_shader_code[];
 
@@ -224,6 +223,7 @@ namespace luminous {
 
                 p->data.light_sampler = gpu_scene->_light_sampler.device_data();
                 p->data.distributions = gpu_scene->_distribution_mgr.distributions.device_buffer_view();
+                p->data.distribution2ds = gpu_scene->_distribution_mgr.distribution2ds.device_buffer_view();
 
                 p->data.textures = gpu_scene->_textures.device_buffer_view();
                 p->data.materials = gpu_scene->_materials.device_buffer_view();
@@ -236,8 +236,8 @@ namespace luminous {
 
             _device_ptr_table.miss_record = _device->allocate_buffer<MissRecord>(RayType::Count);
             MissRecord ms_sbt[RayType::Count] = {};
-            ms_sbt[RayType::Radiance].data.bg_color = gpu_scene->_bg_color;
-            ms_sbt[RayType::Occlusion].data.bg_color = gpu_scene->_bg_color;
+            ms_sbt[RayType::Radiance].data.light_sampler = gpu_scene->_light_sampler.device_data();
+            ms_sbt[RayType::Occlusion].data.light_sampler = gpu_scene->_light_sampler.device_data();
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::Radiance]));
             OPTIX_CHECK(
                     optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::Occlusion]));
@@ -343,7 +343,6 @@ namespace luminous {
                 _as_buffer_list.push_back(move(tri_gas_buffer));
             }
             CU_CHECK(cuCtxSynchronize());
-            _root_gas_handle = traversable_handle;
             return traversable_handle;
         }
 

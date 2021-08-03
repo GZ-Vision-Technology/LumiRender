@@ -12,15 +12,6 @@
 
 namespace luminous {
     inline namespace render {
-
-        struct RayGenData {
-
-        };
-
-        struct MissData {
-            float3 bg_color;
-        };
-
         class LightSampler;
 
         class Distribution1D;
@@ -30,6 +21,14 @@ namespace luminous {
         class Texture;
 
         class Material;
+
+        struct RayGenData {
+
+        };
+
+        struct MissData {
+            const LightSampler *light_sampler;
+        };
 
         struct HitGroupData {
             // instance data

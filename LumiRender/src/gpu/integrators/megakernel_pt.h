@@ -26,12 +26,6 @@ namespace luminous {
 
             MegakernelPT(const SP<Device> &device, Context *context);
 
-            void test() override {
-                auto film = _camera->film();
-                _launch_params->accum_buffer = reinterpret_cast<::float4*>(film->accumulate_buffer_ptr());
-                _launch_params->frame_buffer = reinterpret_cast<FrameBufferType*>(film->frame_buffer_ptr());
-            }
-
             void init(const SP<SceneGraph> &scene_graph) override;
 
             void init_launch_params();

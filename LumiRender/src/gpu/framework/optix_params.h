@@ -20,16 +20,6 @@ namespace luminous {
             float rr_threshold;
             Sensor *camera;
             const Sampler *sampler;
-
-            // just for test
-            ::float3       eye;
-            ::float3       U;
-            ::float3       V;
-            ::float3       W;
-            int width;
-            int height;
-            ::float4*      accum_buffer;
-            FrameBufferType *      frame_buffer;
         };
         
         template<typename T>

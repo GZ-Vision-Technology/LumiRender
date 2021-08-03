@@ -12,7 +12,6 @@
 #include "render/include/scene_graph.h"
 #include "optix_params.h"
 #include "core/backend/managed.h"
-#include "sdk_pt/optixPathTracer.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -28,8 +27,6 @@ namespace luminous {
             OptixModule _optix_module{};
             OptixPipelineCompileOptions _pipeline_compile_options = {};
             uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
-
-            ::PathTracerState _path_tracer_state;
 
             struct ProgramGroupTable {
                 OptixProgramGroup raygen_prog_group{nullptr};
@@ -64,7 +61,6 @@ namespace luminous {
 
             OptixShaderBindingTable _sbt{};
             OptixTraversableHandle _root_ias_handle{};
-            OptixTraversableHandle _root_gas_handle{};
 
             size_t _bvh_size_in_bytes{0u};
 
