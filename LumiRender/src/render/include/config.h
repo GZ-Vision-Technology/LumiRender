@@ -212,7 +212,6 @@ namespace luminous {
             // for env
             TextureConfig texture_config;
             Distribution2D distribution;
-            index_t tex_idx{index_t(-1)};
             index_t distribution_idx{index_t(-1)};
             float3 scale{};
             TransformConfig o2w_config;
@@ -224,8 +223,8 @@ namespace luminous {
                 int idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                     return tex_config.name == texture_config.name;
                 });
-                tex_idx = idx;
                 texture_config = tex_configs[idx];
+                texture_config.tex_idx = idx;
             }
         };
     }

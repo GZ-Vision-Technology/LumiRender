@@ -64,7 +64,7 @@ namespace luminous {
         })
 
         CPU_ONLY(Envmap Envmap::create(const LightConfig &config) {
-            return Envmap(config.tex_idx, config.o2w_config.create(), config.distribution_idx);
+            return Envmap(config.texture_config.tex_idx, config.o2w_config.create(), config.distribution_idx);
         })
     }
 }

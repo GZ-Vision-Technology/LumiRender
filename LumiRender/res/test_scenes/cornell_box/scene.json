@@ -135,6 +135,7 @@
 			"name" : "c_box",
 			"type": "model",
 			"param" : {
+//				"material": "quad",
 				"fn": "cornell_box.obj",
 				"smooth": false,
 				"swap_handed": true,
@@ -154,7 +155,7 @@
 //			"name" : "c_box",
 //			"type": "model",
 //			"param" : {
-////				"material": "quad",
+//				"material": "quad",
 //				"fn": "nanosuit/nanosuit.obj",
 //				"subdiv_level": 0,
 //				"transform" : {

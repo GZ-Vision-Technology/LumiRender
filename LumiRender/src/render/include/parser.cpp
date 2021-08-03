@@ -221,7 +221,9 @@ namespace luminous {
         std::vector<TextureConfig> parse_textures(const DataWrap &textures) {
             std::vector<TextureConfig> ret;
             for (const auto &texture : textures) {
-                ret.push_back(parse_texture(ParameterSet(texture)));
+                TextureConfig config = parse_texture(ParameterSet(texture));
+                config.tex_idx = ret.size();
+                ret.push_back(config);
             }
             return ret;
         }
