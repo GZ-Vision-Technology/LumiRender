@@ -26,8 +26,8 @@ namespace luminous {
                 if (config.type() == full_type("Envmap")) {
                     const Image &image = _images[config.texture_config.image_idx];
                     std::vector<float> vec = Envmap::create_distribution(image);
-//                    config.distribution_idx = _envmap_distribution.distribution2d.size();
-//                    _envmap_distribution.add_distribution2d(vec, image.width(), image.height());
+                    config.distribution_idx = _distribution_mgr.distribution2ds.size();
+                    _distribution_mgr.add_distribution2d(vec, image.width(), image.height());
                 }
             }
         }
@@ -68,7 +68,7 @@ namespace luminous {
                 process_mesh(mesh);
             }
             for (const auto &builder : builders) {
-                _distribution_mgr.add_distribution(builder);
+                _distribution_mgr.add_distribution(builder, true);
             }
         }
 
@@ -163,9 +163,9 @@ namespace luminous {
         }
 
         void Scene::init_lights(const SP<SceneGraph> &scene_graph) {
+            preprocess_meshes();
             relevance_light_and_texture(scene_graph->light_configs);
             load_lights(scene_graph->light_configs, scene_graph->light_sampler_config);
-            preprocess_meshes();
         }
 
         void Scene::init_materials(const SP<SceneGraph> &scene_graph) {

@@ -79,6 +79,10 @@ namespace luminous {
             return _device_buffer.view(offset, count);
         }
 
+        BufferView <const Distribution1D> const_device_buffer_view(size_t offset = 0, size_t count = -1) const {
+            return _device_buffer.view(offset, count);
+        }
+
         const Buffer <TDevice> &device_buffer() const {
             return _device_buffer;
         }

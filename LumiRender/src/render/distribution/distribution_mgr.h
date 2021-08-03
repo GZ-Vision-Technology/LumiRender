@@ -10,29 +10,37 @@
 
 namespace luminous {
     inline namespace render {
-        struct DistributionMgr {
+        class DistributionMgr {
         protected:
-            Managed<float> func_buffer;
-            Managed<float> CDF_buffer;
-            std::vector<DistributionHandle> handles;
+            Managed<float> _func_buffer;
+            Managed<float> _CDF_buffer;
+            /**
+             * count of distribution1d
+             */
+            size_t _count_distribution{0};
+            /**
+             * the first _count_distribution is independent distribution1d
+             * and the rest are distribution1d make up the distribution2d
+             */
+            std::vector<DistributionHandle> _handles;
         public:
 
             Managed<Distribution1D> distributions;
             Managed<Distribution2D> distribution2ds;
 
-            virtual void add_distribution(const Distribution1DBuilder &builder);
+            void add_distribution(const Distribution1DBuilder &builder, bool need_count = false);
 
-            virtual void add_distribution2d(const vector<float> &f, int nu, int nv);
+            void add_distribution2d(const vector<float> &f, int nu, int nv);
 
-            virtual void init_on_host();
+            void init_on_host();
 
-            virtual void synchronize_to_gpu();
+            void synchronize_to_gpu();
 
-            virtual void init_on_device(const SP<Device> &device);
+            void init_on_device(const SP<Device> &device);
 
-            virtual void shrink_to_fit();
+            void shrink_to_fit();
 
-            virtual void clear();
+            void clear();
 
             NDSC virtual size_t size_in_bytes() const;
         };

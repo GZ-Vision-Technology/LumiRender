@@ -121,12 +121,12 @@ namespace luminous {
 
         class Distribution2D {
         private:
-            BufferView <Distribution1D> _conditional_v{};
+            BufferView <const Distribution1D> _conditional_v{};
             Distribution1D _marginal{};
         public:
             XPU Distribution2D() = default;
 
-            XPU Distribution2D(BufferView <Distribution1D> conditional_v, Distribution1D marginal)
+            XPU Distribution2D(BufferView <const Distribution1D> conditional_v, Distribution1D marginal)
                     : _conditional_v(conditional_v), _marginal(marginal) {}
 
             NDSC_XPU float2 sample_continuous(float2 u, float *PDF) {
