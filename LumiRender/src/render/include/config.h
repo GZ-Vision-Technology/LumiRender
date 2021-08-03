@@ -198,9 +198,12 @@ namespace luminous {
         struct LightConfig : Config {
             LightConfig() = default;
 
+            float3 miss_color{};
+
             // for area light
             uint instance_idx{};
             float3 emission;
+            bool two_sided{false};
             float surface_area{};
 
             // for point light and spot light

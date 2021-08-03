@@ -37,12 +37,6 @@ namespace luminous {
             void synchronize_to_gpu();
 
             void render() override;
-
-            void update_camera_fov_y(float val);
-
-            void update_camera_view(float d_yaw, float d_pitch);
-
-            void update_film_resolution(uint2 res);
         };
     }
 }

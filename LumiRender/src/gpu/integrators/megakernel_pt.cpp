@@ -34,20 +34,6 @@ namespace luminous {
             init_launch_params();
         }
 
-        void MegakernelPT::update_camera_fov_y(float val) {
-            _camera->update_fov_y(val);
-        }
-
-        void MegakernelPT::update_camera_view(float d_yaw, float d_pitch) {
-            _camera->update_yaw(d_yaw);
-            _camera->update_pitch(d_pitch);
-        }
-
-        void MegakernelPT::update_film_resolution(uint2 res) {
-            auto film = _camera->film();
-            film->set_resolution(res);
-        }
-
         void MegakernelPT::render() {
             auto res = _camera->resolution();
             _scene->launch(res, _launch_params);

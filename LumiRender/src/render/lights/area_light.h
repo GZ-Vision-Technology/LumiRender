@@ -17,8 +17,8 @@ namespace luminous {
             bool _two_sided;
             float _inv_area;
         public:
-            AreaLight(uint inst_idx, float3 L, float area, bool two_sided = false)
-                    : LightBase(LightType::Area),
+            AreaLight(uint inst_idx, float3 L, float area, bool two_sided, float3 miss_color)
+                    : LightBase(LightType::Area, miss_color),
                       _inst_idx(inst_idx),
                       _L(L),
                       _inv_area(1 / area),
@@ -39,11 +39,11 @@ namespace luminous {
             XPU void print() const;
 
             GEN_STRING_FUNC({
-                LUMINOUS_TO_STRING("light Base : %s,name:%s, L : %s",
-                                   LightBase::to_string().c_str(),
-                                   type_name(this),
-                                   _L.to_string().c_str());
-            })
+                                LUMINOUS_TO_STRING("light Base : %s,name:%s, L : %s",
+                                                   LightBase::to_string().c_str(),
+                                                   type_name(this),
+                                                   _L.to_string().c_str());
+                            })
 
             CPU_ONLY(static AreaLight create(const LightConfig &config);)
         };

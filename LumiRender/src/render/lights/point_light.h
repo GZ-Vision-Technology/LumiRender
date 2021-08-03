@@ -15,8 +15,8 @@ namespace luminous {
             float3 _pos;
             Spectrum _intensity;
         public:
-            PointLight(float3 pos, float3 intensity)
-                    : LightBase(LightType::DeltaPosition),
+            PointLight(float3 pos, float3 intensity, float3 miss_color)
+                    : LightBase(LightType::DeltaPosition, miss_color),
                       _pos(pos),
                       _intensity(intensity) {}
 
@@ -31,11 +31,11 @@ namespace luminous {
             XPU void print() const;
 
             GEN_STRING_FUNC({
-                LUMINOUS_TO_STRING("light Base : %s, name : %s ,intensity : %s",
-                                   LightBase::to_string().c_str(),
-                                   type_name(this),
-                                   _intensity.to_string().c_str());
-            })
+                                LUMINOUS_TO_STRING("light Base : %s, name : %s ,intensity : %s",
+                                                   LightBase::to_string().c_str(),
+                                                   type_name(this),
+                                                   _intensity.to_string().c_str());
+                            })
 
             CPU_ONLY(static PointLight create(const LightConfig &config);)
         };

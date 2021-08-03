@@ -108,6 +108,10 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(is_delta);
         }
 
+        Spectrum Light::on_miss(Ray ray) const {
+            LUMINOUS_VAR_DISPATCH(on_miss, ray);
+        }
+
         float Light::PDF_Li(const Interaction &ref_p, const SurfaceInteraction &p_light) const {
             LUMINOUS_VAR_DISPATCH(PDF_Li, ref_p, p_light);
         }
@@ -127,6 +131,7 @@ namespace luminous {
         void Light::preprocess(const Scene *scene) {
             LUMINOUS_VAR_DISPATCH(preprocess, scene);
         }
+
 
     } // luminous::render
 } // luminous

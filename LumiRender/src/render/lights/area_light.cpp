@@ -54,7 +54,8 @@ namespace luminous {
         }
 
         CPU_ONLY(AreaLight AreaLight::create(const LightConfig &config) {
-            return AreaLight(config.instance_idx, config.emission, config.surface_area);
+            return AreaLight(config.instance_idx, config.emission, config.surface_area,
+                             config.two_sided, config.miss_color);
         })
 
     } //luminous::render

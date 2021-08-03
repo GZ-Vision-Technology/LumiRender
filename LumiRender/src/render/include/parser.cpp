@@ -163,6 +163,7 @@ namespace luminous {
             std::string type = ps["type"].as_string("PointLight");
             ret.set_full_type(type);
             ParameterSet param = ps["param"];
+            ret.miss_color = param["miss_color"].as_float3(make_float3(0.f));
             if (type == "PointLight") {
                 ret.position = param["pos"].as_float3(make_float3(0.f));
                 ret.intensity = param["intensity"].as_float3(make_float3(0.f));

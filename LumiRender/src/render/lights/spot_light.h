@@ -22,8 +22,8 @@ namespace luminous {
             float _cos_theta_o;
             float3 _intensity;
         public:
-            SpotLight(float3 pos, float3 intensity, float theta_i, float theta_o)
-                    : LightBase(LightType::DeltaPosition),
+            SpotLight(float3 pos, float3 intensity, float theta_i, float theta_o, float3 miss_color)
+                    : LightBase(LightType::DeltaPosition, miss_color),
                       _pos(pos),
                       _intensity(intensity),
                       _cos_theta_i(cos(radians(theta_i))),
@@ -46,11 +46,11 @@ namespace luminous {
             XPU void print() const;
 
             GEN_STRING_FUNC({
-                LUMINOUS_TO_STRING("light Base : %s, name : %s ,intensity : %s",
-                                   LightBase::to_string().c_str(),
-                                   type_name(this),
-                                   _intensity.to_string().c_str());
-            })
+                                LUMINOUS_TO_STRING("light Base : %s, name : %s ,intensity : %s",
+                                                   LightBase::to_string().c_str(),
+                                                   type_name(this),
+                                                   _intensity.to_string().c_str());
+                            })
 
             CPU_ONLY(static SpotLight create(const LightConfig &config);)
         };
