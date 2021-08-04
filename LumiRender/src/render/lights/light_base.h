@@ -57,6 +57,7 @@ namespace luminous {
                     : pos(p), ng(ng), ns(ns) {}
         };
         class Scene;
+        class MissData;
         class LightBase {
         protected:
             const LightType _type;
@@ -69,7 +70,7 @@ namespace luminous {
                 return _type;
             }
 
-            NDSC_XPU Spectrum on_miss(Ray ray) const {
+            NDSC_XPU Spectrum on_miss(Ray ray, const MissData * miss_data) const {
                 return {_miss_color};
             }
 

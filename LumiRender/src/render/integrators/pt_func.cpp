@@ -37,7 +37,7 @@ namespace luminous {
                         L += throughput * si.Le(-ray.direction());
                     } else {
                         auto func = [&](const Light &light, int i) {
-                            L += throughput * light.on_miss(ray);
+                            L += throughput * light.on_miss(ray, prd.miss_data());
                         };
                         prd.miss_data()->light_sampler->for_each_infinity_light(func);
                     }

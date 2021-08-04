@@ -91,7 +91,7 @@ namespace luminous {
                         weight = MIS_weight(bsdf_PDF, light_PDF);
                         Li = NEE_data->next_si.Le(-NEE_data->wi);
                     } else if (!NEE_data->found_intersection) {
-                        Li = this->on_miss(ray);
+                        Li = this->on_miss(ray, prd.miss_data());
                     }
                     Ld = bsdf_val * Li * weight / bsdf_PDF;
                 }
@@ -119,8 +119,8 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(is_infinity);
         }
 
-        Spectrum Light::on_miss(Ray ray) const {
-            LUMINOUS_VAR_DISPATCH(on_miss, ray);
+        Spectrum Light::on_miss(Ray ray, const MissData * miss_data) const {
+            LUMINOUS_VAR_DISPATCH(on_miss, ray, miss_data);
         }
 
         float Light::PDF_Li(const Interaction &ref_p, const SurfaceInteraction &p_light) const {

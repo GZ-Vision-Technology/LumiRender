@@ -28,6 +28,8 @@ namespace luminous {
 
         struct MissData {
             const LightSampler *light_sampler;
+            // texture data
+            BufferView<const Texture> textures;
         };
 
         struct HitGroupData {

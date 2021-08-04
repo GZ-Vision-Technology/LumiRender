@@ -238,6 +238,8 @@ namespace luminous {
             MissRecord ms_sbt[RayType::Count] = {};
             ms_sbt[RayType::Radiance].data.light_sampler = gpu_scene->_light_sampler.device_data();
             ms_sbt[RayType::Occlusion].data.light_sampler = gpu_scene->_light_sampler.device_data();
+            ms_sbt[RayType::Radiance].data.textures = gpu_scene->_textures.device_buffer_view();
+            ms_sbt[RayType::Occlusion].data.textures = gpu_scene->_textures.device_buffer_view();
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::Radiance]));
             OPTIX_CHECK(
                     optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::Occlusion]));

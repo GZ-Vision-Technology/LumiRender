@@ -35,7 +35,7 @@ namespace luminous {
 
             NDSC_XPU bool is_infinity() const;
 
-            NDSC_XPU Spectrum on_miss(Ray ray) const;
+            NDSC_XPU Spectrum on_miss(Ray ray, const MissData * miss_data) const;
 
             NDSC_XPU SurfaceInteraction sample(float2 u, const HitGroupData *hit_group_data) const;
 
