@@ -115,13 +115,13 @@ namespace luminous {
                                world_p, world_ng, world_ns, tex_coord);
             }
 
-            NDSC_XPU_INLINE const Material &get_material(index_t inst_id) const;
+            NDSC_XPU const Material &get_material(index_t inst_id) const;
 
-            NDSC_XPU_INLINE const Texture &get_texture(index_t idx) const;
+            NDSC_XPU const Texture &get_texture(index_t idx) const;
 
-            NDSC_XPU_INLINE const Distribution1D &get_distrib(index_t inst_id) const;
+            NDSC_XPU const Distribution1D &get_distrib(index_t inst_id) const;
 
-            NDSC_XPU_INLINE const Distribution2D &get_distribution2d(index_t idx) const;
+            NDSC_XPU const Distribution2D &get_distribution2d(index_t idx) const;
         };
     }
 }
