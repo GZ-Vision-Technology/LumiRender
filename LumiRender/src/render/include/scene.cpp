@@ -35,6 +35,7 @@ namespace luminous {
         void Scene::load_lights(const vector <LightConfig> &light_configs, const LightSamplerConfig &lsc) {
             _lights.reserve(light_configs.size());
             for (const auto &lc : light_configs) {
+                lc.scene_box = _scene_box;
                 _lights.push_back(Light::create(lc));
             }
             auto light_sampler = LightSampler::create(lsc);

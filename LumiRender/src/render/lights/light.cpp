@@ -107,10 +107,6 @@ namespace luminous {
             return Ld + MIS_sample_BSDF(si, sampler, traversable_handle, NEE_data);
         }
 
-        void Light::preprocess(const Scene *scene) {
-            LUMINOUS_VAR_DISPATCH(preprocess, scene);
-        }
-
         bool Light::is_delta() const {
             LUMINOUS_VAR_DISPATCH(is_delta);
         }

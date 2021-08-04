@@ -48,6 +48,10 @@ namespace luminous {
 #endif
             }
 
+            XPU void print() const {
+                printf("ImageTexture\n");
+            }
+
             GEN_STRING_FUNC({
                 LUMINOUS_TO_STRING("name: %s", type_name(this));
             })

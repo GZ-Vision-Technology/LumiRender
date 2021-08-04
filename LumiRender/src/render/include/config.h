@@ -199,6 +199,7 @@ namespace luminous {
             LightConfig() = default;
 
             float3 miss_color{};
+            mutable Box3f scene_box{};
 
             // for area light
             uint instance_idx{};

@@ -23,8 +23,16 @@ namespace luminous {
 
             GEN_TO_STRING_FUNC
 
-            NDSC_XPU float4 eval(const TextureEvalContext &tec) {
+            XPU void print() const {
+                LUMINOUS_VAR_DISPATCH(print)
+            }
+
+            NDSC_XPU float4 eval(const TextureEvalContext &tec) const {
                 LUMINOUS_VAR_DISPATCH(eval, tec)
+            }
+
+            NDSC_XPU float4 eval(float2 uv) const {
+                return eval(TextureEvalContext(uv));
             }
 
             NDSC_XPU PixelFormat pixel_format() const {

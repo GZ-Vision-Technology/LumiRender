@@ -74,12 +74,12 @@ namespace luminous {
                 return contains(other.lower) || contains(other.upper);
             }
 
-            NDSC_XPU_INLINE vector_t radius() const {
-                return (upper - lower) / (scalar_t) 2;
+            NDSC_XPU_INLINE scalar_t radius() const {
+                return length(upper - lower) * 0.5f;
             }
 
             NDSC_XPU_INLINE vector_t center() const {
-                return (lower + upper) / (scalar_t) 2;
+                return (lower + upper) * 0.5f;
             }
 
             NDSC_XPU_INLINE vector_t span() const {

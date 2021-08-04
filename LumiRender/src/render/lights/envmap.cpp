@@ -8,16 +8,20 @@
 namespace luminous {
     inline namespace render {
 
-        void Envmap::preprocess(const Scene *scene) {
-
-        }
-
         LightLiSample Envmap::Li(LightLiSample lls) const {
             return LightLiSample();
         }
 
         SurfaceInteraction Envmap::sample(float2 u, const HitGroupData *hit_group_data) const {
             return SurfaceInteraction();
+        }
+
+        Spectrum Envmap::on_miss(Ray ray, const MissData *miss_data) const {
+            const Texture &tex = miss_data->textures[_tex_idx];
+            float3 d = normalize(_w2o.apply_vector(ray.direction()));
+            float2 uv = make_float2(spherical_phi(d) * inv2Pi, spherical_theta(d) * invPi);
+            float4 L = tex.eval(uv);
+            return Spectrum(make_float3(L));
         }
 
         float Envmap::PDF_Li(const Interaction &p_ref, const SurfaceInteraction &p_light) const {
@@ -64,8 +68,8 @@ namespace luminous {
         })
 
         CPU_ONLY(Envmap Envmap::create(const LightConfig &config) {
-            return Envmap(config.texture_config.tex_idx, config.o2w_config.create(),
-                          config.distribution_idx);
+            return Envmap(config.texture_config.tex_idx, config.o2w_config.create().inverse(),
+                          config.distribution_idx, config.scene_box);
         })
     }
 }

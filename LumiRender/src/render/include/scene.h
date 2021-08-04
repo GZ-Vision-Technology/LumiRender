@@ -79,6 +79,10 @@ namespace luminous {
 
             virtual void clear();
 
+            Box3f scene_box() const {
+                return _scene_box;
+            }
+
             void init_materials(const SP<SceneGraph> &scene_graph);
 
             virtual void init(const SP<SceneGraph> &scene_graph) = 0;

@@ -90,16 +90,31 @@ namespace luminous {
         }
 #endif
 
-        inline XPU float safe_sqrt(float x) noexcept {
-            return sqrt(std::max(x, 0.f));
+        template<typename FloatType>
+        NDSC_XPU_INLINE FloatType safe_sqrt(FloatType x) noexcept {
+            if constexpr (std::is_same_v<FloatType, float>) {
+                return std::sqrtf(std::max(x, 0.f));
+            } else {
+                return std::sqrt(std::max(x, 0.f));
+            }
         }
 
-        inline XPU float safe_acos(float x) noexcept {
-            return acos(clamp(x, -1.f, 1.f));
+        template<typename FloatType>
+        NDSC_XPU_INLINE FloatType safe_acos(FloatType x) noexcept {
+            if constexpr (std::is_same_v<FloatType, float>) {
+                return std::acosf(clamp(x, -1.f, 1.f));
+            } else {
+                return std::acos(clamp(x, -1.f, 1.f));
+            }
         }
 
-        inline XPU float safe_asin(float x) noexcept {
-            return asin(clamp(x, -1.f, 1.f));
+        template<typename FloatType>
+        NDSC_XPU_INLINE FloatType safe_asin(FloatType x) noexcept {
+            if constexpr (std::is_same_v<FloatType, float>) {
+                return std::asinf(clamp(x, -1.f, 1.f));
+            } else {
+                return std::asin(clamp(x, -1.f, 1.f));
+            }
         }
 
         template <typename T>

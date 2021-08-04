@@ -22,6 +22,10 @@ namespace luminous {
                 return _val;
             }
 
+            XPU void print() const {
+                printf("ConstantTexture: %f,%f,%f,%f\n", _val.x, _val.y, _val.z, _val.w);
+            }
+
             GEN_STRING_FUNC({
                 LUMINOUS_TO_STRING("name: %s", type_name(this));
             })

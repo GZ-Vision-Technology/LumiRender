@@ -178,6 +178,9 @@ namespace luminous {
         struct TextureEvalContext {
             XPU TextureEvalContext() = default;
 
+            XPU explicit TextureEvalContext(float2 uv)
+                :uv(uv) {}
+
             XPU TextureEvalContext(const SurfaceInteraction &si)
                     : p(si.pos),
                       uv(si.uv),
@@ -186,8 +189,8 @@ namespace luminous {
                       dv_dx(si.dv_dx),
                       dv_dy(si.dv_dy) {}
 
-            float3 p;
-            float2 uv;
+            float3 p{};
+            float2 uv{};
             float du_dx = 0, du_dy = 0, dv_dx = 0, dv_dy = 0;
         };
 
