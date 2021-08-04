@@ -43,12 +43,13 @@ namespace luminous {
                 BufferView<const float> CDF = _CDF_buffer.device_buffer_view(handle.CDF_offset, handle.CDF_size);
                 distributions.emplace_back(func, CDF, handle.integral);
             }
+            distributions.allocate_device(device);
             int count = distributions.size() - 1 - _count_distribution;
             auto distribution = Distribution2D(distributions.const_device_buffer_view(_count_distribution, count),
                                                distributions.back());
             distribution2ds.push_back(distribution);
             distribution2ds.allocate_device(device);
-            distributions.allocate_device(device);
+
         }
 
         void DistributionMgr::init_on_host() {
