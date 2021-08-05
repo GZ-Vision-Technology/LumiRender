@@ -29,7 +29,7 @@ namespace luminous {
                       _cos_theta_i(cos(radians(theta_i))),
                       _cos_theta_o(cos(radians(theta_o))) {}
 
-            NDSC_XPU SurfaceInteraction sample(float2 u, const HitGroupData *hit_group_data) const;
+            NDSC_XPU SurfaceInteraction sample(float2 u, const SceneData *hit_group_data) const;
 
             NDSC_XPU LightLiSample Li(LightLiSample lls) const;
 

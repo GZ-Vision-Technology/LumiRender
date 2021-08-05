@@ -26,7 +26,7 @@ namespace luminous {
 
         Spectrum LightSampler::estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
                                                         uint64_t traversable_handle,
-                                                        const HitGroupData *hit_group_data,
+                                                        const SceneData *hit_group_data,
                                                         NEEData *NEE_data) const {
             auto sampled_light = sample(si, sampler.next_1d());
             if (sampled_light.is_valid()) {

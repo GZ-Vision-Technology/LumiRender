@@ -70,7 +70,7 @@ namespace luminous {
                 return _type;
             }
 
-            NDSC_XPU Spectrum on_miss(Ray ray, const MissData * miss_data) const {
+            NDSC_XPU Spectrum on_miss(Ray ray, const SceneData * data) const {
                 return {_miss_color};
             }
 

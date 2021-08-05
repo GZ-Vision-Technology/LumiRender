@@ -8,7 +8,7 @@
 namespace luminous {
     inline namespace render {
 
-        SurfaceInteraction AreaLight::sample(float2 u, const HitGroupData *hit_group_data) const {
+        SurfaceInteraction AreaLight::sample(float2 u, const SceneData *hit_group_data) const {
             SurfaceInteraction ret;
             auto mesh = hit_group_data->get_mesh(_inst_idx);
             const Distribution1D &distrib = hit_group_data->distributions[mesh.distribute_idx];

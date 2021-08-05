@@ -15,7 +15,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(type);
         }
 
-        SurfaceInteraction Light::sample(float2 u, const HitGroupData *hit_group_data) const {
+        SurfaceInteraction Light::sample(float2 u, const SceneData *hit_group_data) const {
             LUMINOUS_VAR_DISPATCH(sample, u, hit_group_data);
         }
 
@@ -24,7 +24,7 @@ namespace luminous {
         }
 
         lstd::optional<LightLiSample> Light::sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
-                                                       const HitGroupData *hit_group_data) const {
+                                                       const SceneData *hit_group_data) const {
             lls.p_light = sample(u, hit_group_data);
             Ray ray = lls.p_ref.spawn_ray_to(lls.p_light);
             bool occluded = intersect_any(traversable_handle, ray);
@@ -39,7 +39,7 @@ namespace luminous {
 
 
         Spectrum Light::MIS_sample_light(const SurfaceInteraction &si, Sampler &sampler,
-                                         uint64_t traversable_handle, const HitGroupData *hit_group_data) const {
+                                         uint64_t traversable_handle, const SceneData *hit_group_data) const {
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
             Spectrum Ld(0.f);
@@ -91,7 +91,7 @@ namespace luminous {
                         weight = MIS_weight(bsdf_PDF, light_PDF);
                         Li = NEE_data->next_si.Le(-NEE_data->wi);
                     } else if (!NEE_data->found_intersection) {
-                        Li = this->on_miss(ray, prd.miss_data());
+                        Li = this->on_miss(ray, prd.scene_data());
                     }
                     Ld = bsdf_val * Li * weight / bsdf_PDF;
                 }
@@ -100,7 +100,7 @@ namespace luminous {
         }
 
         Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
-                                                 uint64_t traversable_handle, const HitGroupData *hit_group_data,
+                                                 uint64_t traversable_handle, const SceneData *hit_group_data,
                                                  NEEData *NEE_data) const {
 
             Spectrum Ld = MIS_sample_light(si, sampler, traversable_handle, hit_group_data);
@@ -115,8 +115,8 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(is_infinity);
         }
 
-        Spectrum Light::on_miss(Ray ray, const MissData * miss_data) const {
-            LUMINOUS_VAR_DISPATCH(on_miss, ray, miss_data);
+        Spectrum Light::on_miss(Ray ray, const SceneData * data) const {
+            LUMINOUS_VAR_DISPATCH(on_miss, ray, data);
         }
 
         float Light::PDF_Li(const Interaction &ref_p, const SurfaceInteraction &p_light) const {

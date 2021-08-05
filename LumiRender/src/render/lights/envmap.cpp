@@ -12,12 +12,12 @@ namespace luminous {
             return LightLiSample();
         }
 
-        SurfaceInteraction Envmap::sample(float2 u, const HitGroupData *hit_group_data) const {
+        SurfaceInteraction Envmap::sample(float2 u, const SceneData *hit_group_data) const {
             return SurfaceInteraction();
         }
 
-        Spectrum Envmap::on_miss(Ray ray, const MissData *miss_data) const {
-            const Texture &tex = miss_data->textures[_tex_idx];
+        Spectrum Envmap::on_miss(Ray ray, const SceneData *data) const {
+            const Texture &tex = data->textures[_tex_idx];
             float3 d = normalize(_w2o.apply_vector(ray.direction()));
             float2 uv = make_float2(spherical_phi(d) * inv2Pi, spherical_theta(d) * invPi);
             float4 L = tex.eval(uv);

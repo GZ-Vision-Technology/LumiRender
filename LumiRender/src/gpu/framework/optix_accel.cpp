@@ -210,7 +210,7 @@ namespace luminous {
 
         void OptixAccel::create_sbt(ProgramGroupTable program_group_table, const GPUScene *gpu_scene) {
 
-            auto fill_group_data = [&](HitGroupRecord *p, const GPUScene *gpu_scene) {
+            auto fill_group_data = [&](SceneRecord *p, const GPUScene *gpu_scene) {
                 p->data.positions = gpu_scene->_positions.device_buffer_view();
                 p->data.normals = gpu_scene->_normals.device_buffer_view();
                 p->data.tex_coords = gpu_scene->_tex_coords.device_buffer_view();
@@ -234,19 +234,17 @@ namespace luminous {
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.raygen_prog_group, &rg_sbt));
             _device_ptr_table.rg_record.upload(&rg_sbt);
 
-            _device_ptr_table.miss_record = _device->allocate_buffer<MissRecord>(RayType::Count);
-            MissRecord ms_sbt[RayType::Count] = {};
-            ms_sbt[RayType::Radiance].data.light_sampler = gpu_scene->_light_sampler.device_data();
-            ms_sbt[RayType::Occlusion].data.light_sampler = gpu_scene->_light_sampler.device_data();
-            ms_sbt[RayType::Radiance].data.textures = gpu_scene->_textures.device_buffer_view();
-            ms_sbt[RayType::Occlusion].data.textures = gpu_scene->_textures.device_buffer_view();
+            _device_ptr_table.miss_record = _device->allocate_buffer<SceneRecord>(RayType::Count);
+            SceneRecord ms_sbt[RayType::Count] = {};
+            fill_group_data(&ms_sbt[RayType::Radiance], gpu_scene);
+            fill_group_data(&ms_sbt[RayType::Occlusion], gpu_scene);
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::Radiance]));
             OPTIX_CHECK(
                     optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::Occlusion]));
             _device_ptr_table.miss_record.upload(ms_sbt);
 
-            _device_ptr_table.hit_record = _device->allocate_buffer<HitGroupRecord>(RayType::Count);
-            HitGroupRecord hit_sbt[RayType::Count] = {};
+            _device_ptr_table.hit_record = _device->allocate_buffer<SceneRecord>(RayType::Count);
+            SceneRecord hit_sbt[RayType::Count] = {};
             fill_group_data(&hit_sbt[RayType::Radiance], gpu_scene);
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_hit_group,
                                                  &hit_sbt[RayType::Radiance]));

@@ -26,13 +26,7 @@ namespace luminous {
 
         };
 
-        struct MissData {
-            const LightSampler *light_sampler;
-            // texture data
-            BufferView<const Texture> textures;
-        };
-
-        struct HitGroupData {
+        struct SceneData {
             // instance data
             BufferView<const index_t> inst_to_mesh_idx;
             BufferView<const index_t> inst_to_transform_idx;

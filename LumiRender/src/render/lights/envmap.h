@@ -33,11 +33,11 @@ namespace luminous {
 
             NDSC_XPU LightLiSample Li(LightLiSample lls) const;
 
-            NDSC_XPU SurfaceInteraction sample(float2 u, const HitGroupData *hit_group_data) const;
+            NDSC_XPU SurfaceInteraction sample(float2 u, const SceneData *hit_group_data) const;
 
             NDSC_XPU float PDF_Li(const Interaction &p_ref, const SurfaceInteraction &p_light) const;
 
-            NDSC_XPU Spectrum on_miss(Ray ray, const MissData *miss_data) const;
+            NDSC_XPU Spectrum on_miss(Ray ray, const SceneData *data) const;
 
             NDSC_XPU Spectrum power() const;
 

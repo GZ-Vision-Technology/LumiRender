@@ -9,7 +9,7 @@ namespace luminous {
     inline namespace render {
 
 
-        SurfaceInteraction SpotLight::sample(float2 u, const HitGroupData *hit_group_data) const {
+        SurfaceInteraction SpotLight::sample(float2 u, const SceneData *hit_group_data) const {
             SurfaceInteraction ret;
             ret.pos = _pos;
             return ret;

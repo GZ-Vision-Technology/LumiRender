@@ -35,7 +35,7 @@ namespace luminous {
                 OptixProgramGroup radiance_hit_group{nullptr};
                 OptixProgramGroup occlusion_hit_group{nullptr};
 
-                constexpr auto size() const {
+                static constexpr auto size() {
                     return sizeof(ProgramGroupTable) / sizeof(OptixProgramGroup);
                 }
 
@@ -50,8 +50,8 @@ namespace luminous {
 
             struct DevicePtrTable {
                 Buffer<RayGenRecord> rg_record{nullptr};
-                Buffer<MissRecord> miss_record{nullptr};
-                Buffer<HitGroupRecord> hit_record{nullptr};
+                Buffer<SceneRecord> miss_record{nullptr};
+                Buffer<SceneRecord> hit_record{nullptr};
                 Buffer<OptixInstance> instances{nullptr};
             };
 

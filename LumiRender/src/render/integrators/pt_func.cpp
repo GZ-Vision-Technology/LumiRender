@@ -37,9 +37,9 @@ namespace luminous {
                         L += throughput * si.Le(-ray.direction());
                     } else {
                         auto func = [&](const Light &light, int i) {
-                            L += throughput * light.on_miss(ray, prd.miss_data());
+                            L += throughput * light.on_miss(ray, prd.scene_data());
                         };
-                        prd.miss_data()->light_sampler->for_each_infinity_light(func);
+                        prd.scene_data()->light_sampler->for_each_infinity_light(func);
                     }
                 }
                 BREAK_IF(!found_intersection)
@@ -49,12 +49,12 @@ namespace luminous {
                     continue;
                 }
 
-                const LightSampler *light_sampler = prd.hit_group_data()->light_sampler;
+                const LightSampler *light_sampler = prd.scene_data()->light_sampler;
                 NEEData NEE_data;
                 NEE_data.debug = debug;
                 Spectrum Ld = light_sampler->estimate_direct_lighting(si, sampler,
                                                                       scene_handle,
-                                                                      prd.hit_group_data(), &NEE_data);
+                                                                      prd.scene_data(), &NEE_data);
                 found_intersection = NEE_data.found_intersection;
                 Spectrum bsdf_ei = NEE_data.bsdf_val / NEE_data.bsdf_PDF;
 

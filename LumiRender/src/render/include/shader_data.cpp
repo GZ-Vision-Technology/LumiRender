@@ -10,9 +10,9 @@
 namespace luminous {
     inline namespace render {
 
-        SurfaceInteraction HitGroupData::compute_surface_interaction(index_t inst_id,
-                                                                     index_t tri_id,
-                                                                     float2 bary) const {
+        SurfaceInteraction SceneData::compute_surface_interaction(index_t inst_id,
+                                                                  index_t tri_id,
+                                                                  float2 bary) const {
             auto mesh = get_mesh(inst_id);
             TriangleHandle tri = get_triangle(mesh, tri_id);
             const auto &mesh_tex_coords = get_tex_coords(mesh);
@@ -73,9 +73,9 @@ namespace luminous {
             return si;
         }
 
-        void HitGroupData::fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
-                                          float3 *world_p, float3 *world_ng,
-                                          float3 *world_ns, float2 *tex_coord) const {
+        void SceneData::fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
+                                       float3 *world_p, float3 *world_ng,
+                                       float3 *world_ns, float2 *tex_coord) const {
             auto mesh = get_mesh(inst_id);
             TriangleHandle tri = get_triangle(mesh, tri_id);
 
@@ -115,20 +115,20 @@ namespace luminous {
             }
         }
 
-        const Distribution1D &HitGroupData::get_distrib(index_t inst_id) const {
+        const Distribution1D &SceneData::get_distrib(index_t inst_id) const {
             auto mesh = get_mesh(inst_id);
             return distributions[mesh.distribute_idx];
         }
 
-        const Distribution2D &HitGroupData::get_distribution2d(index_t idx) const {
+        const Distribution2D &SceneData::get_distribution2d(index_t idx) const {
             return distribution2ds[idx];
         }
 
-        const Texture &HitGroupData::get_texture(index_t idx) const {
+        const Texture &SceneData::get_texture(index_t idx) const {
             return textures[idx];
         }
 
-        const Material &HitGroupData::get_material(index_t inst_id) const {
+        const Material &SceneData::get_material(index_t inst_id) const {
             auto mesh = get_mesh(inst_id);
             return materials[mesh.material_idx];
         }
