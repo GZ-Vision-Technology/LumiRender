@@ -141,10 +141,10 @@ namespace luminous {
 
             NDSC_XPU Spectrum Le(float3 w) const;
 
-            NDSC_XPU lstd::optional<BSDF> get_BSDF(const SceneData *hit_group_data) const;
+            NDSC_XPU lstd::optional<BSDF> get_BSDF(const SceneData *scene_data) const;
 
-            XPU_INLINE void init_BSDF(const SceneData *hit_group_data) {
-                op_bsdf = get_BSDF(hit_group_data);
+            XPU_INLINE void init_BSDF(const SceneData *scene_data) {
+                op_bsdf = get_BSDF(scene_data);
             }
         };
 

@@ -28,7 +28,7 @@ namespace luminous {
                       _Kd(diffuse),
                       _Ks(specular) {}
 
-            NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *hit_group_data) const;
+            NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(static AssimpMaterial create(const MaterialConfig &mc) {
                 return AssimpMaterial(mc.diffuse_tex.tex_idx, mc.specular_tex.tex_idx, mc.normal_tex.tex_idx,

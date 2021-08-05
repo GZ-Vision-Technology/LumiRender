@@ -20,7 +20,7 @@ namespace luminous {
                       _pos(pos),
                       _intensity(intensity) {}
 
-            NDSC_XPU SurfaceInteraction sample(float2 u, const SceneData *hit_group_data) const;
+            NDSC_XPU SurfaceInteraction sample(float2 u, const SceneData *scene_data) const;
 
             NDSC_XPU LightLiSample Li(LightLiSample lls) const;
 

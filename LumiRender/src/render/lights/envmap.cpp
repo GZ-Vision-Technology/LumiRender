@@ -12,7 +12,7 @@ namespace luminous {
             return LightLiSample();
         }
 
-        SurfaceInteraction Envmap::sample(float2 u, const SceneData *hit_group_data) const {
+        SurfaceInteraction Envmap::sample(float2 u, const SceneData *scene_data) const {
             return SurfaceInteraction();
         }
 

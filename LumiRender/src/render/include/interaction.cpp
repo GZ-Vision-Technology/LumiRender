@@ -21,11 +21,11 @@ namespace luminous {
             return si;
         }
 
-        lstd::optional<BSDF> SurfaceInteraction::get_BSDF(const SceneData *hit_group_data) const {
+        lstd::optional<BSDF> SurfaceInteraction::get_BSDF(const SceneData *scene_data) const {
             if (!has_material()) {
                 return {};
             }
-            auto bsdf = material->get_BSDF(*this, hit_group_data);
+            auto bsdf = material->get_BSDF(*this, scene_data);
             return lstd::optional<BSDF>(bsdf);
         }
     } // luminous::render

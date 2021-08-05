@@ -19,9 +19,9 @@ namespace luminous {
         public:
             GEN_BASE_NAME(Material)
 
-            NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *hit_group_data) const {
+            NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
 
-                LUMINOUS_VAR_DISPATCH(get_BSDF, ctx, hit_group_data)
+                LUMINOUS_VAR_DISPATCH(get_BSDF, ctx, scene_data)
             }
 
             CPU_ONLY(static Material create(const MaterialConfig &mc) {

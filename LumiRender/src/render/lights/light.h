@@ -36,16 +36,16 @@ namespace luminous {
 
             NDSC_XPU Spectrum on_miss(Ray ray, const SceneData * data) const;
 
-            NDSC_XPU SurfaceInteraction sample(float2 u, const SceneData *hit_group_data) const;
+            NDSC_XPU SurfaceInteraction sample(float2 u, const SceneData *scene_data) const;
 
             NDSC_XPU LightLiSample Li(LightLiSample lls) const;
 
             NDSC_XPU lstd::optional<LightLiSample> sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
-                                                             const SceneData *hit_group_data) const;
+                                                             const SceneData *scene_data) const;
 
             NDSC_XPU Spectrum MIS_sample_light(const SurfaceInteraction &si,
                                                Sampler &sampler, uint64_t traversable_handle,
-                                               const SceneData *hit_group_data) const;
+                                               const SceneData *scene_data) const;
 
             NDSC_XPU Spectrum MIS_sample_BSDF(const SurfaceInteraction &si,
                                               Sampler &sampler, uint64_t traversable_handle,
@@ -53,7 +53,7 @@ namespace luminous {
 
             NDSC_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si,
                                                        Sampler &sampler, uint64_t traversable_handle,
-                                                       const SceneData *hit_group_data, NEEData *NEE_data) const;
+                                                       const SceneData *scene_data, NEEData *NEE_data) const;
 
             NDSC_XPU float PDF_Li(const Interaction &ref_p, const SurfaceInteraction &p_light) const;
 

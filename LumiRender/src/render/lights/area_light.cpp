@@ -8,14 +8,14 @@
 namespace luminous {
     inline namespace render {
 
-        SurfaceInteraction AreaLight::sample(float2 u, const SceneData *hit_group_data) const {
+        SurfaceInteraction AreaLight::sample(float2 u, const SceneData *scene_data) const {
             SurfaceInteraction ret;
-            auto mesh = hit_group_data->get_mesh(_inst_idx);
-            const Distribution1D &distrib = hit_group_data->distributions[mesh.distribute_idx];
+            auto mesh = scene_data->get_mesh(_inst_idx);
+            const Distribution1D &distrib = scene_data->distributions[mesh.distribute_idx];
             float PMF = 0;
             size_t triangle_id = distrib.sample_discrete(u.x, &PMF, &u.x);
             float2 uv = square_to_triangle(u);
-            ret = hit_group_data->compute_surface_interaction(_inst_idx, triangle_id, uv);
+            ret = scene_data->compute_surface_interaction(_inst_idx, triangle_id, uv);
             ret.PDF_pos = PMF / ret.prim_area;
             return ret;
         }

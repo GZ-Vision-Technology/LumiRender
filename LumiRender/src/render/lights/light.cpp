@@ -15,8 +15,8 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(type);
         }
 
-        SurfaceInteraction Light::sample(float2 u, const SceneData *hit_group_data) const {
-            LUMINOUS_VAR_DISPATCH(sample, u, hit_group_data);
+        SurfaceInteraction Light::sample(float2 u, const SceneData *scene_data) const {
+            LUMINOUS_VAR_DISPATCH(sample, u, scene_data);
         }
 
         LightLiSample Light::Li(LightLiSample lls) const {
@@ -24,8 +24,8 @@ namespace luminous {
         }
 
         lstd::optional<LightLiSample> Light::sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
-                                                       const SceneData *hit_group_data) const {
-            lls.p_light = sample(u, hit_group_data);
+                                                       const SceneData *scene_data) const {
+            lls.p_light = sample(u, scene_data);
             Ray ray = lls.p_ref.spawn_ray_to(lls.p_light);
             bool occluded = intersect_any(traversable_handle, ray);
             if (occluded) {
@@ -39,14 +39,14 @@ namespace luminous {
 
 
         Spectrum Light::MIS_sample_light(const SurfaceInteraction &si, Sampler &sampler,
-                                         uint64_t traversable_handle, const SceneData *hit_group_data) const {
+                                         uint64_t traversable_handle, const SceneData *scene_data) const {
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
             Spectrum Ld(0.f);
             LightLiSample lls;
             auto bsdf = si.op_bsdf.value();
             lls.p_ref = (const Interaction &) si;
-            auto op_lls = sample_Li(sampler.next_2d(), lls, traversable_handle, hit_group_data);
+            auto op_lls = sample_Li(sampler.next_2d(), lls, traversable_handle, scene_data);
             if (op_lls && op_lls->has_contribution()) {
                 bsdf_val = bsdf.eval(si.wo, op_lls->wi);
                 bsdf_PDF = bsdf.PDF(si.wo, op_lls->wi);
@@ -100,10 +100,10 @@ namespace luminous {
         }
 
         Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
-                                                 uint64_t traversable_handle, const SceneData *hit_group_data,
+                                                 uint64_t traversable_handle, const SceneData *scene_data,
                                                  NEEData *NEE_data) const {
 
-            Spectrum Ld = MIS_sample_light(si, sampler, traversable_handle, hit_group_data);
+            Spectrum Ld = MIS_sample_light(si, sampler, traversable_handle, scene_data);
             return Ld + MIS_sample_BSDF(si, sampler, traversable_handle, NEE_data);
         }
 

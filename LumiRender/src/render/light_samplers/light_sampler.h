@@ -50,7 +50,7 @@ namespace luminous {
 
             NDSC_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
                                                        uint64_t traversable_handle,
-                                                       const SceneData *hit_group_data, NEEData *NEE_data) const;
+                                                       const SceneData *scene_data, NEEData *NEE_data) const;
 
             NDSC_XPU float PMF(const Light &light) const;
 
