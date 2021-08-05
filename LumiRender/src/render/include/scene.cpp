@@ -38,6 +38,10 @@ namespace luminous {
                 lc.scene_box = _scene_box;
                 _lights.push_back(Light::create(lc));
             }
+            // put the infinite light to first
+            std::sort(_lights.begin(),  _lights.end(), [](const Light &v1, const Light &v2) {
+                return v1.is_infinite() > v2.is_infinite();
+            });
             auto light_sampler = LightSampler::create(lsc);
             _light_sampler.reset(&light_sampler);
         }

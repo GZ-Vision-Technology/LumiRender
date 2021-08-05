@@ -17,7 +17,7 @@ namespace luminous {
         public:
             std::vector<float> func;
             std::vector<float> CDF;
-            float func_integral;
+            float func_integral{};
 
             Distribution1DBuilder() = default;
 

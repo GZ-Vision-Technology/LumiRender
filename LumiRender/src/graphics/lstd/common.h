@@ -26,7 +26,7 @@
 namespace lstd {
 
     template<typename T>
-    XPU inline void swap(T &a, T &b) {
+    XPU inline void luminous_swap(T &a, T &b) {
         T tmp = std::move(a);
         a = std::move(b);
         b = std::move(tmp);

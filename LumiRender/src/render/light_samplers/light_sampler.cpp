@@ -12,6 +12,10 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(set_lights, lights);
         }
 
+        void LightSampler::set_infinite_lights(BufferView<const Light> lights) {
+            LUMINOUS_VAR_DISPATCH(set_infinite_lights, lights);
+        }
+
         size_t LightSampler::light_num() const {
             LUMINOUS_VAR_DISPATCH(light_num);
         }

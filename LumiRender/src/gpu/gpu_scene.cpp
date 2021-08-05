@@ -63,6 +63,7 @@ namespace luminous {
                 _lights.synchronize_to_gpu();
                 _distribution_mgr.synchronize_to_gpu();
                 _light_sampler->set_lights(_lights.device_buffer_view());
+                _light_sampler->set_infinite_lights(_lights.device_buffer_view(0,1));
                 _light_sampler.synchronize_to_gpu();
             }
             {

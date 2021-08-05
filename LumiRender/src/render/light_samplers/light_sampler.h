@@ -28,6 +28,8 @@ namespace luminous {
 
             XPU void set_lights(BufferView<const Light> lights);
 
+            XPU void set_infinite_lights(BufferView<const Light> lights);
+
             NDSC_XPU BufferView<const Light> lights() const;
 
             NDSC_XPU const Light &light_at(uint idx) const;
@@ -40,8 +42,8 @@ namespace luminous {
             }
 
             template<typename Func>
-            XPU void for_each_infinity_light(Func func) const {
-                LUMINOUS_VAR_DISPATCH(for_each_infinity_light, func);
+            XPU void for_each_infinite_light(Func func) const {
+                LUMINOUS_VAR_DISPATCH(for_each_infinite_light, func);
             }
 
             NDSC_XPU SampledLight sample(float u) const;

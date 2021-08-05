@@ -90,8 +90,8 @@ namespace luminous {
                         light_PDF = PDF_Li(si, NEE_data->next_si);
                         weight = MIS_weight(bsdf_PDF, light_PDF);
                         Li = NEE_data->next_si.Le(-NEE_data->wi);
-                    } else if (!NEE_data->found_intersection) {
-                        Li = this->on_miss(ray, prd.scene_data());
+                    } else if (!NEE_data->found_intersection && is_infinite()) {
+                        Li = get<Envmap>()->on_miss(ray, prd.scene_data());
                     }
                     Ld = bsdf_val * Li * weight / bsdf_PDF;
                 }
@@ -111,8 +111,8 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(is_delta);
         }
 
-        bool Light::is_infinity() const {
-            LUMINOUS_VAR_DISPATCH(is_infinity);
+        bool Light::is_infinite() const {
+            LUMINOUS_VAR_DISPATCH(is_infinite);
         }
 
         Spectrum Light::on_miss(Ray ray, const SceneData * data) const {

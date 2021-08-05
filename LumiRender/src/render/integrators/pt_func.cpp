@@ -36,10 +36,10 @@ namespace luminous {
                         si = prd.compute_surface_interaction(ray);
                         L += throughput * si.Le(-ray.direction());
                     } else {
-                        auto func = [&](const Light &light, int i) {
+                        auto func = [&](const Envmap &light, int i) {
                             L += throughput * light.on_miss(ray, prd.scene_data());
                         };
-                        prd.scene_data()->light_sampler->for_each_infinity_light(func);
+                        prd.scene_data()->light_sampler->for_each_infinite_light(func);
                     }
                 }
                 BREAK_IF(!found_intersection)

@@ -74,7 +74,7 @@ namespace luminous {
                 return {_miss_color};
             }
 
-            NDSC_XPU bool is_infinity() const {
+            NDSC_XPU bool is_infinite() const {
                 return _type == LightType::Infinite;
             }
 

@@ -32,7 +32,7 @@ namespace luminous {
 
             NDSC_XPU bool is_delta() const;
 
-            NDSC_XPU bool is_infinity() const;
+            NDSC_XPU bool is_infinite() const;
 
             NDSC_XPU Spectrum on_miss(Ray ray, const SceneData * data) const;
 
