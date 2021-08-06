@@ -90,10 +90,12 @@ namespace luminous {
         struct Interaction {
             float3 pos;
             float3 wo;
-            float time;
+            float time{};
             UVN g_uvn;
 
             XPU Interaction() = default;
+
+            XPU explicit Interaction(float3 pos) : pos(pos) {}
 
             NDSC_XPU_INLINE bool is_on_surface() const {
                 return g_uvn.valid();
@@ -131,12 +133,16 @@ namespace luminous {
             const Material *material = nullptr;
             float du_dx = 0, dv_dx = 0, du_dy = 0, dv_dy = 0;
 
-            NDSC_XPU_INLINE bool has_material() const {
-                return material != nullptr;
-            }
+            XPU SurfaceInteraction() = default;
+
+            XPU explicit SurfaceInteraction(float3 pos) : Interaction(pos) {}
 
             NDSC_XPU_INLINE bool has_emission() const {
                 return light != nullptr;
+            }
+
+            NDSC_XPU_INLINE bool has_material() const {
+                return material != nullptr;
             }
 
             NDSC_XPU Spectrum Le(float3 w) const;

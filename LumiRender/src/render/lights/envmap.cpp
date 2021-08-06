@@ -9,7 +9,10 @@ namespace luminous {
     inline namespace render {
 
         LightLiSample Envmap::Li(LightLiSample lls, const SceneData *data) const {
-            return LightLiSample();
+            float3 wi = lls.p_light.pos - lls.p_ref.pos;
+            lls.wi = normalize(wi);
+            lls.L = L(_w2o.apply_vector(lls.wi), data);
+            return lls;
         }
 
         SurfaceInteraction Envmap::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
@@ -18,15 +21,16 @@ namespace luminous {
             float2 uv = distribution2d.sample_continuous(u, &map_PDF);
             if (map_PDF == 0) {
                 lls->PDF_dir = 0;
-                return SurfaceInteraction();
+                return {};
             }
             float theta = uv[1] * Pi;
             float phi = uv[0] * _2Pi;
             float sin_theta = 0, cos_theta = 0;
             sincos(theta, &sin_theta, &cos_theta);
             float3 dir_in_world = _w2o.inverse().apply_vector(spherical_direction(sin_theta, cos_theta, phi));
-
-            return SurfaceInteraction();
+            lls->PDF_dir = map_PDF / (2 * Pi * Pi * sin_theta);
+            lls->p_light.pos = lls->p_ref.pos + dir_in_world;
+            return SurfaceInteraction(lls->p_light.pos);
         }
 
         Spectrum Envmap::L(float3 dir_in_obj, const SceneData *data) const {
