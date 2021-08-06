@@ -41,7 +41,8 @@ namespace luminous {
             return lls;
         }
 
-        float SpotLight::PDF_Li(const Interaction &ref_p, const SurfaceInteraction &p_light) const {
+        float SpotLight::PDF_Li(const Interaction &ref_p, const SurfaceInteraction &p_light,
+                                float3 wi, const SceneData *data) const {
             return 0;
         }
 

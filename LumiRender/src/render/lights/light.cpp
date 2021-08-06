@@ -69,8 +69,8 @@ namespace luminous {
         }
 
         Spectrum Light::MIS_sample_BSDF(const SurfaceInteraction &si, Sampler &sampler,
-                                        uint64_t traversable_handle,
-                                        NEEData *NEE_data) const {
+                                        uint64_t traversable_handle,NEEData *NEE_data,
+                                        const SceneData *data) const {
             Spectrum Ld(0.f);
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
@@ -89,11 +89,13 @@ namespace luminous {
                     NEE_data->found_intersection = intersect_closest(traversable_handle, ray, &prd);
                     if (prd.is_hit() && (NEE_data->next_si = prd.compute_surface_interaction(ray)).light == this) {
                         NEE_data->next_si.PDF_pos = get<AreaLight>()->inv_area();
-                        light_PDF = PDF_Li(si, NEE_data->next_si);
+                        light_PDF = PDF_Li(si, NEE_data->next_si, NEE_data->wi, data);
                         weight = MIS_weight(bsdf_PDF, light_PDF);
                         Li = NEE_data->next_si.Le(-NEE_data->wi);
                     } else if (!NEE_data->found_intersection && is_infinite()) {
                         Li = get<Envmap>()->on_miss(ray, prd.scene_data());
+                        light_PDF = get<Envmap>()->PDF_Li(si, NEE_data->next_si, NEE_data->wi, data);
+                        weight = MIS_weight(bsdf_PDF, light_PDF);
                     }
                     Ld = bsdf_val * Li * weight / bsdf_PDF;
                 }
@@ -106,7 +108,7 @@ namespace luminous {
                                                  NEEData *NEE_data) const {
 
             Spectrum Ld = MIS_sample_light(si, sampler, traversable_handle, scene_data);
-            return Ld + MIS_sample_BSDF(si, sampler, traversable_handle, NEE_data);
+            return Ld + MIS_sample_BSDF(si, sampler, traversable_handle, NEE_data,scene_data);
         }
 
         bool Light::is_delta() const {
@@ -121,8 +123,9 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(on_miss, ray, data);
         }
 
-        float Light::PDF_Li(const Interaction &ref_p, const SurfaceInteraction &p_light) const {
-            LUMINOUS_VAR_DISPATCH(PDF_Li, ref_p, p_light);
+        float Light::PDF_Li(const Interaction &ref_p, const SurfaceInteraction &p_light,
+                            float3 wi, const SceneData *data) const {
+            LUMINOUS_VAR_DISPATCH(PDF_Li, ref_p, p_light, wi, data);
         }
 
         Spectrum Light::power() const {
