@@ -60,34 +60,55 @@ public:
     }
 };
 
-int main() {
-    int a = 0;
+void test_normal(int a) {
     E ca;
-//    std::cin >> a;
+    Base *p;
+    a = 0;
+    luminous::Clock clk;
+    for (int i = 0; i < 10000000; ++i) {
+        a += ca.func();
+    }
+    cout << a << endl << clk.elapse_ms() << endl;
+}
+
+void test_virtual(int a) {
+    E ca;
+
     Base *p;
     if (a % 2 == 0) {
         p = new A();
     } else {
         p = new B();
     }
-
+    a = 0;
     luminous::Clock clk;
     for (int i = 0; i < 10000000; ++i) {
-//        a += p->func();
-        a += ca.func();
+        a += p->func();
     }
     cout << a << endl << clk.elapse_ms() << endl;
+}
 
+void test_variant(int a) {
     CD cd;
     if (a % 2 == 0) {
         cd = CD(D());
     } else {
         cd = CD(C());
     }
+    luminous::Clock clk;
     clk.start();
     a = 0;
     for (int i = 0; i < 10000000; ++i) {
         a += cd.func();
     }
     cout << a << endl << clk.elapse_ms() << endl;
+}
+
+int main() {
+    int a = 0;
+    std::cin >> a;
+
+    test_virtual(a);
+    test_variant(a);
+    test_normal(a);
 }
