@@ -7,7 +7,7 @@
 
 #include "../header.h"
 #include "common.h"
-
+#include <algorithm>
 
 namespace lstd {
 

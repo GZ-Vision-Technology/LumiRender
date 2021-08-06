@@ -16,6 +16,7 @@ luminous_render_add_application(test-image-io SOURCES test_image_io.cpp)
 luminous_render_add_application(test-sampler SOURCES test_sampler.cpp)
 luminous_render_add_application(test-camera SOURCES test_camera.cpp)
 luminous_render_add_application(test-distribution2d SOURCES distribution2d_test.cpp)
+luminous_render_add_application(test-variant SOURCES test_variant.cpp)
 
 
 #set(CMAKE_CUDA_STANDARD 17)
