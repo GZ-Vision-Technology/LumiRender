@@ -5,22 +5,9 @@
 
 #pragma once
 
-#include <cassert>
-#include <cstddef>
-#include <cstring>
-#include <initializer_list>
-#include <iterator>
-#include <list>
-#include <new>
-#include <string>
-#include <type_traits>
 #include <typeinfo>
-#include <utility>
 #include <variant>
-#include <vector>
-#include <optional>
-#include <memory>
-#include <cstring>
+#include <utility>
 #include "../header.h"
 
 namespace lstd {
