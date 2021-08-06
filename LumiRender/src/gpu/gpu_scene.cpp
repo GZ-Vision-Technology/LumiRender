@@ -74,7 +74,7 @@ namespace luminous {
         }
 
         void GPUScene::init_accel() {
-            _optix_accel = std::make_unique<OptixAccel>(_device, this);
+            _optix_accel = std::make_unique<OptixAccel>(_device, this, _context);
             build_accel();
         }
 

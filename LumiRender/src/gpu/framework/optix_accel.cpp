@@ -7,10 +7,9 @@
 #include "../gpu_scene.h"
 #include "render/include/shader_data.h"
 #include "util/stats.h"
+#include <iosfwd>
 
 extern "C" char optix_shader_code[];
-
-extern "C" char sdk_ptx[];
 
 namespace luminous {
     inline namespace gpu {
@@ -19,9 +18,10 @@ namespace luminous {
             std::cerr << "[" << std::setw(2) << level << "][" << std::setw(12) << tag << "]: " << message << "\n";
         }
 
-        OptixAccel::OptixAccel(const SP<Device> &device, const GPUScene *gpu_scene)
+        OptixAccel::OptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context)
                 : _device(device),
-                  _dispatcher(_device->new_dispatcher()) {
+                  _dispatcher(_device->new_dispatcher()),
+                  _context(context) {
             _optix_device_context = create_context();
             _optix_module = create_module(_optix_device_context);
             _program_group_table = create_program_groups(_optix_module);
@@ -81,6 +81,9 @@ namespace luminous {
             char log[2048];
             size_t log_size = sizeof(log);
             std::string ptx_code(optix_shader_code);
+            std::ofstream ofs(_context->working_path("luminous_ptx.txt"));
+            ofs << ptx_code;
+            ofs.close();
             OPTIX_CHECK_WITH_LOG(optixModuleCreateFromPTX(
                     _optix_device_context,
                     &module_compile_options,
