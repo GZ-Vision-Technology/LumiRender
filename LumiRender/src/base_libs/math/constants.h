@@ -32,59 +32,6 @@ namespace luminous {
         constexpr float ray_t_max = 1e16f;
         constexpr float shadow_epsilon = 0.0001f;
 
-        static struct ZeroTy {
-            XPU operator double() const { return 0; }
-
-            XPU operator float() const { return 0; }
-
-            XPU operator long long() const { return 0; }
-
-            XPU operator unsigned long long() const { return 0; }
-
-            XPU operator long() const { return 0; }
-
-            XPU operator unsigned long() const { return 0; }
-
-            XPU operator int() const { return 0; }
-
-            XPU operator unsigned int() const { return 0; }
-
-            XPU operator short() const { return 0; }
-
-            XPU operator unsigned short() const { return 0; }
-
-            XPU operator char() const { return 0; }
-
-            XPU operator unsigned char() const { return 0; }
-        } zero MAYBE_UNUSED;
-
-        static struct OneTy {
-            XPU operator double() const { return 1; }
-
-            XPU operator float() const { return 1; }
-
-            XPU operator long long() const { return 1; }
-
-            XPU operator unsigned long long() const { return 1; }
-
-            XPU operator long() const { return 1; }
-
-            XPU operator unsigned long() const { return 1; }
-
-            XPU operator int() const { return 1; }
-
-            XPU operator unsigned int() const { return 1; }
-
-            XPU operator short() const { return 1; }
-
-            XPU operator unsigned short() const { return 1; }
-
-            XPU operator char() const { return 1; }
-
-            XPU operator unsigned char() const { return 1; }
-        } one MAYBE_UNUSED;
-
-
         static struct NegInfTy {
 #ifdef __CUDA_ARCH__
             __device__ operator          double   ( ) const { return -CUDART_INF; }
