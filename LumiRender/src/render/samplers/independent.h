@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "graphics/math/rng.h"
+#include "base_libs/math/rng.h"
 #include "../include/config.h"
 #include "sampler_base.h"
 

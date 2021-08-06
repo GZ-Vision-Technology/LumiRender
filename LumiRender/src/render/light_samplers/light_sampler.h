@@ -8,7 +8,7 @@
 #include "uniform.h"
 #include "power.h"
 #include "bvh.h"
-#include "graphics/lstd/lstd.h"
+#include "base_libs/lstd/lstd.h"
 #include "render/bxdfs/bsdf.h"
 #include "render/samplers/sampler.h"
 

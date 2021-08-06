@@ -5,7 +5,7 @@ add_library(luminous-render SHARED ${HEADER_FILES} ${SOURCE_FILES})
 target_link_libraries(luminous-render
         PUBLIC
         assimp_config
-        luminous-graphics
+        luminous-base_libs
         luminous-core)
 
 set_target_properties(luminous-render PROPERTIES

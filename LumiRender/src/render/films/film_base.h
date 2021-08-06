@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "graphics/math/common.h"
-#include "graphics/lstd/lstd.h"
+#include "base_libs/math/common.h"
+#include "base_libs/lstd/lstd.h"
 #include "render//include/config.h"
 #include "core/backend/buffer_view.h"
 

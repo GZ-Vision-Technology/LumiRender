@@ -7,7 +7,7 @@
 
 #ifdef CUDA_SUPPORT
 
-#include "graphics/header.h"
+#include "base_libs/header.h"
 #include "vector_types.h"
 #include <cuda_runtime.h>
 #include <cuda.h>

@@ -6,7 +6,7 @@
 #pragma once
 
 #include "core/concepts.h"
-#include "graphics/math/common.h"
+#include "base_libs/math/common.h"
 #include "dispatcher.h"
 
 namespace luminous {

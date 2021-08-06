@@ -6,9 +6,9 @@
 #pragma once
 
 #include "diffuse.h"
-#include "graphics/lstd/variant.h"
+#include "base_libs/lstd/variant.h"
 //#include "render/include/shader_data.h"
-#include "graphics/optics/rgb.h"
+#include "base_libs/optics/rgb.h"
 #include "core/backend/buffer_view.h"
 
 namespace luminous {

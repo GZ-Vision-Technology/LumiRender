@@ -9,9 +9,9 @@
 #include "gui/imgui/imgui_impl_glfw.h"
 #include "gui/imgui/imgui_impl_opengl3.h"
 #include <iostream>
-#include "graphics/header.h"
+#include "base_libs/header.h"
 #include "core/logging.h"
-#include "graphics/math/common.h"
+#include "base_libs/math/common.h"
 #include "gl_helper.h"
 #include "gpu/gpu_include.h"
 #include "util/clock.h"

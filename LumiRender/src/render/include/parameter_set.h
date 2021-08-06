@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "graphics/header.h"
-#include "graphics/math/common.h"
+#include "base_libs/header.h"
+#include "base_libs/math/common.h"
 
 namespace luminous {
     inline namespace utility {

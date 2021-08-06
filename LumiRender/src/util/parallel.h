@@ -7,7 +7,7 @@
 #include <atomic>
 #include <functional>
 #include <future>
-#include "graphics/math/common.h"
+#include "base_libs/math/common.h"
 
 namespace luminous {
     inline namespace utility {

@@ -5,13 +5,13 @@
 #ifndef __CUDACC__
 #pragma once
 
-#include "graphics/math/common.h"
-#include "graphics/geometry/common.h"
-#include "graphics/optics/rgb.h"
+#include "base_libs/math/common.h"
+#include "base_libs/geometry/common.h"
+#include "base_libs/optics/rgb.h"
 #include <string>
 #include "core/logging.h"
 #include "util/image.h"
-#include "graphics/lstd/lstd.h"
+#include "base_libs/lstd/lstd.h"
 #include "render/distribution/distribution.h"
 
 namespace luminous {

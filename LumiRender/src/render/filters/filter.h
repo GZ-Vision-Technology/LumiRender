@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "graphics/math/common.h"
-#include "graphics/lstd/lstd.h"
+#include "base_libs/math/common.h"
+#include "base_libs/lstd/lstd.h"
 #include "gaussian.h"
 #include "triangle.h"
 #include "box.h"

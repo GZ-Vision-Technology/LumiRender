@@ -5,11 +5,11 @@
 
 #pragma once
 
-#include "graphics/math/common.h"
+#include "base_libs/math/common.h"
 #include "core/backend/buffer_view.h"
-#include "graphics/geometry/util.h"
-#include "graphics/optics/rgb.h"
-#include "graphics/lstd/lstd.h"
+#include "base_libs/geometry/util.h"
+#include "base_libs/optics/rgb.h"
+#include "base_libs/lstd/lstd.h"
 #include "render/bxdfs/bsdf.h"
 
 namespace luminous {

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "graphics/math/common.h"
+#include "base_libs/math/common.h"
 #include "render/lights/light.h"
 #include "core/backend/buffer_view.h"
 

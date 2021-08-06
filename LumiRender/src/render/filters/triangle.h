@@ -6,7 +6,7 @@
 #pragma once
 
 #include "filter_base.h"
-#include "graphics/math/rng.h"
+#include "base_libs/math/rng.h"
 #include "render/include/config.h"
 
 namespace luminous {

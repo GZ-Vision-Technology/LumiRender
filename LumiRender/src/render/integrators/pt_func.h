@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "graphics/geometry/common.h"
-#include "graphics/optics/common.h"
+#include "base_libs/geometry/common.h"
+#include "base_libs/optics/common.h"
 
 namespace luminous {
     inline namespace render {

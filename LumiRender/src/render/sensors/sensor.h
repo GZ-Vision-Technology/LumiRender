@@ -6,8 +6,8 @@
 #pragma once
 
 
-#include "graphics/math/common.h"
-#include "graphics/lstd/lstd.h"
+#include "base_libs/math/common.h"
+#include "base_libs/lstd/lstd.h"
 #include "../include/config.h"
 #include "pinhole_camera.h"
 #include "thin_lens_camera.h"

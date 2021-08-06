@@ -5,8 +5,8 @@
 
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-#include "graphics/lstd/lstd.h"
-#include "graphics/common.h"
+#include "base_libs/lstd/lstd.h"
+#include "base_libs/common.h"
 #include <stdio.h>
 #include <iostream>
 #include "render/samplers/sampler.cpp"

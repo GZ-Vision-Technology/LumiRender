@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "graphics/math/common.h"
+#include "base_libs/math/common.h"
 #include "render/include/interaction.h"
-#include "graphics/lstd/variant.h"
+#include "base_libs/lstd/variant.h"
 #include "render/include/creator.h"
 #include "util/image_base.h"
 #include "render/include/config.h"

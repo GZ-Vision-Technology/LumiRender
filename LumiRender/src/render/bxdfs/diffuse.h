@@ -7,7 +7,7 @@
 
 
 #include "base.h"
-#include "graphics/optics/rgb.h"
+#include "base_libs/optics/rgb.h"
 #include "core/logging.h"
 
 namespace luminous {

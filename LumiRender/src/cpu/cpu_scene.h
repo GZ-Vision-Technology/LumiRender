@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "graphics/math/common.h"
+#include "base_libs/math/common.h"
 #include "render/include/scene.h"
 #include "embree_accel.h"
 

@@ -15,7 +15,7 @@ target_link_libraries(luminous-gpu
         PUBLIC CUDA::nvrtc
         CUDA::cuda_driver
         CUDA::cudart
-        luminous-graphics
+        luminous-base_libs
         luminous-core
         luminous-util
         luminous-render

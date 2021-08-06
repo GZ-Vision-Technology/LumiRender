@@ -6,7 +6,7 @@
 #pragma once
 
 #include "gpu/framework/helper/cuda.h"
-#include "graphics/math/common.h"
+#include "base_libs/math/common.h"
 #include "texture_base.h"
 
 

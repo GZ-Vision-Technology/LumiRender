@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "graphics/optics/common.h"
+#include "base_libs/optics/common.h"
 #include "core/concepts.h"
 
 namespace luminous {

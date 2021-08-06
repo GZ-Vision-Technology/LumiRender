@@ -9,8 +9,8 @@
 #ifndef __CUDACC__
 
 // cpu only
-#include "graphics/math/common.h"
-#include "graphics/optics/rgb.h"
+#include "base_libs/math/common.h"
+#include "base_libs/optics/rgb.h"
 #include "core/concepts.h"
 #include "image_base.h"
 #include <utility>

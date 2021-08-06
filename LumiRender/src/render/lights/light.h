@@ -10,7 +10,7 @@
 #include "area_light.h"
 #include "envmap.h"
 #include "render/samplers/sampler.h"
-#include "graphics/lstd/lstd.h"
+#include "base_libs/lstd/lstd.h"
 #include "render/include/config.h"
 #include "render/bxdfs/bsdf.h"
 

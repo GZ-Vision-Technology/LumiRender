@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "graphics/geometry/common.h"
+#include "base_libs/geometry/common.h"
 #include <vector>
 #include "core/concepts.h"
 #include "interaction.h"

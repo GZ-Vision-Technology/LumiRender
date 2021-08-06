@@ -3,9 +3,9 @@
 #file(GLOB_RECURSE SOURCE_FILES *.c*)
 #
 #
-#add_library(graphics-lstd SHARED ${HEADER_FILES} ${SOURCE_FILES})
+#add_library(base_libs-lstd SHARED ${HEADER_FILES} ${SOURCE_FILES})
 #
-#set_target_properties(graphics-lstd PROPERTIES
+#set_target_properties(base_libs-lstd PROPERTIES
 #        PUBLIC_HEADER "${HEADER_FILES}"
 #        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
 #        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"

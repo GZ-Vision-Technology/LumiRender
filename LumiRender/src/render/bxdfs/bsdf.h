@@ -6,7 +6,7 @@
 #pragma once
 
 #include "render/bxdfs/bxdf.h"
-#include "graphics/optics/rgb.h"
+#include "base_libs/optics/rgb.h"
 
 namespace luminous {
     inline namespace render {

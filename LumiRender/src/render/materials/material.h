@@ -7,7 +7,7 @@
 
 #include "matte.h"
 #include "ai_material.h"
-#include "graphics/lstd/variant.h"
+#include "base_libs/lstd/variant.h"
 
 namespace luminous {
     inline namespace render {

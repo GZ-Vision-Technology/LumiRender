@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "graphics/math/common.h"
+#include "base_libs/math/common.h"
 #include <embree3/rtcore.h>
 #include "core/concepts.h"
 #include "render/include/shape.h"

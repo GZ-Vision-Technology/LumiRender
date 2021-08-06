@@ -7,7 +7,7 @@
 
 #ifndef __CUDACC__
 
-#include "graphics/lstd/lstd.h"
+#include "base_libs/lstd/lstd.h"
 #include "core/logging.h"
 namespace luminous {
     inline namespace render {

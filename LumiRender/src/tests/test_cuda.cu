@@ -3,8 +3,8 @@
 #include "device_launch_parameters.h"
 
 #include <stdio.h>
-#include "graphics/lstd/lstd.h"
-#include "graphics/common.h"
+#include "base_libs/lstd/lstd.h"
+#include "base_libs/common.h"
 #include <iostream>
 #include <memory>
 #include "render/samplers/independent.cpp"

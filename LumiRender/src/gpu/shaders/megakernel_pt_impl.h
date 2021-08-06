@@ -14,7 +14,7 @@
 #include "render/textures/shader_include.h"
 #include "render/materials/shader_include.h"
 #include "render/bxdfs/shader_include.h"
-#include "graphics/lstd/lstd.h"
+#include "base_libs/lstd/lstd.h"
 #include "render/include/trace.h"
 #include "render/integrators/shader_include.h"
 

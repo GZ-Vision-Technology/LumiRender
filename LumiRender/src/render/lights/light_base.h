@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "graphics/geometry/common.h"
-#include "graphics/optics/common.h"
+#include "base_libs/geometry/common.h"
+#include "base_libs/optics/common.h"
 #include "render/include/interaction.h"
 #include "render/include/config.h"
 #include "render/include/shader_data.h"

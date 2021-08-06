@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "graphics/optics/common.h"
-#include "graphics/geometry/common.h"
+#include "base_libs/optics/common.h"
+#include "base_libs/geometry/common.h"
 #include "../films/film.h"
 #include "../samplers/sampler_base.h"
 #include "render/include/creator.h"

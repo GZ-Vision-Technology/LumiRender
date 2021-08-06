@@ -6,11 +6,11 @@
 #pragma once
 
 #include "core/concepts.h"
-#include "graphics/math/common.h"
+#include "base_libs/math/common.h"
 #include "shape.h"
 #include "scene_graph.h"
 #include "render/lights/light.h"
-#include "graphics/sampling/common.h"
+#include "base_libs/sampling/common.h"
 #include "render/light_samplers/light_sampler.h"
 #include "render/textures/texture.h"
 #include "gpu/gpu_include.h"

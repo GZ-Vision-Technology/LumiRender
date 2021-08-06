@@ -2,8 +2,8 @@
 // Created by Zero on 2021/1/31.
 //
 
-#include "graphics/lstd/lstd.h"
-#include "graphics/common.h"
+#include "base_libs/lstd/lstd.h"
+#include "base_libs/common.h"
 #include "iostream"
 
 using namespace luminous;

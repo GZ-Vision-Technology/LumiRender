@@ -21,7 +21,7 @@ if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
                 luminous-gpu
                 luminous-cpu
                 luminous-render
-                luminous-graphics
+                luminous-base_libs
                 luminous-view
                 luminous-util)
     else()
@@ -30,7 +30,7 @@ if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
                 luminous-ext
                 luminous-gpu
                 luminous-render
-                luminous-graphics
+                luminous-base_libs
                 luminous-view
                 luminous-util)
     endif ()
@@ -42,7 +42,7 @@ else()
             luminous-ext
             luminous-cpu
             luminous-render
-            luminous-graphics
+            luminous-base_libs
             luminous-view
             luminous-util)
 endif ()
@@ -60,7 +60,7 @@ if (LUMINOUS_CPU_BACKEND)
     add_subdirectory(cpu)
 endif ()
 add_subdirectory(view)
-add_subdirectory(graphics)
+add_subdirectory(base_libs)
 add_subdirectory(tests)
 add_subdirectory(apps)
 add_subdirectory(render)

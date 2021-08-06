@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include "graphics/math/common.h"
+#include "base_libs/math/common.h"
 #include "constant_texture.h"
 #include "image_texture.h"
-#include "graphics/lstd/lstd.h"
+#include "base_libs/lstd/lstd.h"
 
 namespace luminous {
     inline namespace render {
