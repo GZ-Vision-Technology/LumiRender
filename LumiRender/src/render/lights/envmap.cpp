@@ -8,7 +8,7 @@
 namespace luminous {
     inline namespace render {
 
-        LightLiSample Envmap::Li(LightLiSample lls) const {
+        LightLiSample Envmap::Li(LightLiSample lls, const SceneData *data) const {
             return LightLiSample();
         }
 

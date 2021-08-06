@@ -38,7 +38,7 @@ namespace luminous {
 
             NDSC_XPU SurfaceInteraction sample(float2 u, const SceneData *scene_data) const;
 
-            NDSC_XPU LightLiSample Li(LightLiSample lls) const;
+            NDSC_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 
             NDSC_XPU lstd::optional<LightLiSample> sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
                                                              const SceneData *scene_data) const;

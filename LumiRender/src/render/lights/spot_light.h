@@ -31,7 +31,7 @@ namespace luminous {
 
             NDSC_XPU SurfaceInteraction sample(float2 u, const SceneData *scene_data) const;
 
-            NDSC_XPU LightLiSample Li(LightLiSample lls) const;
+            NDSC_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 
             /**
              * @param w_world : unit vector in world space

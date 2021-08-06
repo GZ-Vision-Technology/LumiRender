@@ -31,7 +31,7 @@ namespace luminous {
                       _scene_radius(scene_box.radius()),
                       _distribution_idx(distribution_idx) {}
 
-            NDSC_XPU LightLiSample Li(LightLiSample lls) const;
+            NDSC_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 
             NDSC_XPU SurfaceInteraction sample(float2 u, const SceneData *scene_data) const;
 

@@ -27,7 +27,7 @@ namespace luminous {
             printf("type:PointLight,L:(%f,%f,%f)\n", _intensity.x, _intensity.y, _intensity.z);
         }
 
-        LightLiSample PointLight::Li(LightLiSample lls) const {
+        LightLiSample PointLight::Li(LightLiSample lls, const SceneData *data) const {
             float3 wi = lls.p_light.pos - lls.p_ref.pos;
             lls.L = _intensity / length_squared(wi);
             lls.PDF_dir = 0;

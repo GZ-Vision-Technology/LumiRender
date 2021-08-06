@@ -28,7 +28,7 @@ namespace luminous {
 
             NDSC_XPU float inv_area() const;
 
-            NDSC_XPU LightLiSample Li(LightLiSample lls) const;
+            NDSC_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 
             NDSC_XPU SurfaceInteraction sample(float2 u, const SceneData *scene_data) const;
 

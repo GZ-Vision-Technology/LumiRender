@@ -20,7 +20,7 @@ namespace luminous {
             return ret;
         }
 
-        LightLiSample AreaLight::Li(LightLiSample lls) const {
+        LightLiSample AreaLight::Li(LightLiSample lls, const SceneData *data) const {
             float3 wi = lls.p_light.pos - lls.p_ref.pos;
             lls.wi = normalize(wi);
             lls.L = L(lls.p_light, -lls.wi);

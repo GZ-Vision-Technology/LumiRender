@@ -30,7 +30,7 @@ namespace luminous {
             printf("type:SpotLight,L:(%f,%f,%f)\n", _intensity.x, _intensity.y, _intensity.z);
         }
 
-        LightLiSample SpotLight::Li(LightLiSample lls) const {
+        LightLiSample SpotLight::Li(LightLiSample lls, const SceneData *data) const {
             float3 wi = lls.p_ref.pos - lls.p_light.pos;
             float3 L = _intensity / length_squared(wi);
             wi = normalize(wi);

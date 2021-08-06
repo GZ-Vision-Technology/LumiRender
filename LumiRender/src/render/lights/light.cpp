@@ -19,8 +19,8 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(sample, u, scene_data);
         }
 
-        LightLiSample Light::Li(LightLiSample lls) const {
-            LUMINOUS_VAR_DISPATCH(Li, lls);
+        LightLiSample Light::Li(LightLiSample lls, const SceneData *data) const {
+            LUMINOUS_VAR_DISPATCH(Li, lls, data);
         }
 
         lstd::optional<LightLiSample> Light::sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
@@ -33,7 +33,7 @@ namespace luminous {
             }
             lls.p_light.wo = normalize(-ray.direction());
             lls.p_light.light = this;
-            lls = Li(lls);
+            lls = Li(lls,scene_data);
             return lls;
         }
 
