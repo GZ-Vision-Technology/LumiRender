@@ -36,7 +36,7 @@ namespace luminous {
 
             NDSC_XPU Spectrum on_miss(Ray ray, const SceneData * data) const;
 
-            NDSC_XPU SurfaceInteraction sample(LightLiSample lls, float2 u, const SceneData *scene_data) const;
+            NDSC_XPU SurfaceInteraction sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const;
 
             NDSC_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 

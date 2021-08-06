@@ -9,7 +9,7 @@
 namespace luminous {
     inline namespace render {
 
-        SurfaceInteraction PointLight::sample(LightLiSample lls, float2 u, const SceneData *scene_data) const {
+        SurfaceInteraction PointLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             SurfaceInteraction ret;
             ret.pos = _pos;
             return ret;

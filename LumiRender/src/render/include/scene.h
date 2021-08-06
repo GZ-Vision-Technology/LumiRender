@@ -34,6 +34,7 @@ namespace luminous {
             size_t _inst_triangle_num{0};
             size_t _texture_size_in_byte{0};
             size_t _texture_num{0};
+            int _infinite_light_num{0};
 
             Box3f _scene_box;
 

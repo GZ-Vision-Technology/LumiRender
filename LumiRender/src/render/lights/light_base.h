@@ -30,7 +30,7 @@ namespace luminous {
         struct LightLiSample {
             Spectrum L{};
             float3 wi{};
-            float PDF_dir{0.f};
+            float PDF_dir{-1.f};
             SurfaceInteraction p_light{};
             Interaction p_ref{};
             XPU LightLiSample() = default;

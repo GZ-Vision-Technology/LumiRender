@@ -15,7 +15,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(type);
         }
 
-        SurfaceInteraction Light::sample(LightLiSample lls, float2 u, const SceneData *scene_data) const {
+        SurfaceInteraction Light::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             LUMINOUS_VAR_DISPATCH(sample, lls, u, scene_data);
         }
 
@@ -25,7 +25,8 @@ namespace luminous {
 
         lstd::optional<LightLiSample> Light::sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
                                                        const SceneData *scene_data) const {
-            lls.p_light = sample(lls, u, scene_data);
+            lls.p_light = sample(&lls, u, scene_data);
+            float factor = lls.PDF_dir == 0 ? 0 : 1;
             Ray ray = lls.p_ref.spawn_ray_to(lls.p_light);
             bool occluded = intersect_any(traversable_handle, ray);
             if (occluded) {
@@ -34,6 +35,7 @@ namespace luminous {
             lls.p_light.wo = normalize(-ray.direction());
             lls.p_light.light = this;
             lls = Li(lls,scene_data);
+            lls.L *= factor;
             return lls;
         }
 

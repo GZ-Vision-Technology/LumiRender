@@ -12,13 +12,17 @@ namespace luminous {
             return LightLiSample();
         }
 
-        SurfaceInteraction Envmap::sample(LightLiSample lls, float2 u, const SceneData *scene_data) const {
+        SurfaceInteraction Envmap::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             const Distribution2D &distribution2d = scene_data->get_distribution2d(_distribution_idx);
-            float PDF;
-            float2 uv = distribution2d.sample_continuous(u, &PDF);
+            float map_PDF = 0;
+            float2 uv = distribution2d.sample_continuous(u, &map_PDF);
+            if (map_PDF == 0) {
+                lls->PDF_dir = 0;
+                return SurfaceInteraction();
+            }
             float theta = uv[1] * Pi;
             float phi = uv[0] * _2Pi;
-            float sin_theta, cos_theta;
+            float sin_theta = 0, cos_theta = 0;
             sincos(theta, &sin_theta, &cos_theta);
             float3 dir_in_world = _w2o.inverse().apply_vector(spherical_direction(sin_theta, cos_theta, phi));
 
