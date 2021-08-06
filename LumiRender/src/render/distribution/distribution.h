@@ -129,7 +129,7 @@ namespace luminous {
             XPU Distribution2D(BufferView <const Distribution1D> conditional_v, Distribution1D marginal)
                     : _conditional_v(conditional_v), _marginal(marginal) {}
 
-            NDSC_XPU float2 sample_continuous(float2 u, float *PDF) {
+            NDSC_XPU float2 sample_continuous(float2 u, float *PDF) const {
                 float PDFs[2];
                 int v;
                 float d1 = _marginal.sample_continuous(u[1], &PDFs[1], &v);

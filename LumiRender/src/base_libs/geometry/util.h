@@ -34,8 +34,12 @@ namespace luminous {
             return select(functor::abs(p) < origin, p + float_scale * n, p_i);
         }
 
+        NDSC_XPU_INLINE float3 spherical_direction(float sin_theta, float cos_theta, float sin_phi, float cos_phi) {
+            return make_float3(sin_theta * cos_phi, sin_theta * sin_phi, cos_theta);
+        }
+
         NDSC_XPU_INLINE float3 spherical_direction(float sin_theta, float cos_theta, float phi) {
-            return make_float3(sin_theta * std::cos(phi), sin_theta * std::sin(phi), cos_theta);
+            return make_float3(sin_theta * std::cosf(phi), sin_theta * std::sinf(phi), cos_theta);
         }
 
         NDSC_XPU_INLINE float3 spherical_direction(float theta, float phi) {
@@ -47,7 +51,7 @@ namespace luminous {
         }
 
         NDSC_XPU_INLINE float spherical_phi(float3 v) {
-            float p = std::atan2(v.y, v.x);
+            float p = std::atan2f(v.y, v.x);
             return (p < 0) ? (p + 2 * Pi) : p;
         }
 

@@ -21,19 +21,21 @@ namespace luminous {
             index_t _distribution_idx{index_t(-1)};
             Transform _w2o;
             float3 _scene_center{};
-            float _scene_radius{};
+            float _scene_diameter{};
         public:
             Envmap(index_t tex_idx, Transform w2o, index_t distribution_idx, Box3f scene_box)
                     : LightBase(LightType::Infinite),
                       _tex_idx(tex_idx),
                       _w2o(w2o),
                       _scene_center(scene_box.center()),
-                      _scene_radius(scene_box.radius()),
+                      _scene_diameter(scene_box.radius() * 2.f),
                       _distribution_idx(distribution_idx) {}
 
             NDSC_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 
-            NDSC_XPU SurfaceInteraction sample(float2 u, const SceneData *scene_data) const;
+            NDSC_XPU Spectrum L(float3 dir, const SceneData *data) const;
+
+            NDSC_XPU SurfaceInteraction sample(LightLiSample lls, float2 u, const SceneData *scene_data) const;
 
             NDSC_XPU float PDF_Li(const Interaction &p_ref, const SurfaceInteraction &p_light) const;
 

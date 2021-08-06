@@ -12,16 +12,29 @@ namespace luminous {
             return LightLiSample();
         }
 
-        SurfaceInteraction Envmap::sample(float2 u, const SceneData *scene_data) const {
+        SurfaceInteraction Envmap::sample(LightLiSample lls, float2 u, const SceneData *scene_data) const {
+            const Distribution2D &distribution2d = scene_data->get_distribution2d(_distribution_idx);
+            float PDF;
+            float2 uv = distribution2d.sample_continuous(u, &PDF);
+            float theta = uv[1] * Pi;
+            float phi = uv[0] * _2Pi;
+            float sin_theta, cos_theta;
+            sincos(theta, &sin_theta, &cos_theta);
+            float3 dir_in_world = _w2o.inverse().apply_vector(spherical_direction(sin_theta, cos_theta, phi));
+
             return SurfaceInteraction();
         }
 
-        Spectrum Envmap::on_miss(Ray ray, const SceneData *data) const {
+        Spectrum Envmap::L(float3 dir_in_obj, const SceneData *data) const {
             const Texture &tex = data->textures[_tex_idx];
+            float2 uv = make_float2(spherical_phi(dir_in_obj) * inv2Pi, spherical_theta(dir_in_obj) * invPi);
+            float4 ret = tex.eval(uv);
+            return {make_float3(ret)};
+        }
+
+        Spectrum Envmap::on_miss(Ray ray, const SceneData *data) const {
             float3 d = normalize(_w2o.apply_vector(ray.direction()));
-            float2 uv = make_float2(spherical_phi(d) * inv2Pi, spherical_theta(d) * invPi);
-            float4 L = tex.eval(uv);
-            return Spectrum(make_float3(L));
+            return L(d, data);
         }
 
         float Envmap::PDF_Li(const Interaction &p_ref, const SurfaceInteraction &p_light) const {
@@ -74,5 +87,6 @@ namespace luminous {
             return Envmap(config.texture_config.tex_idx, o2w.inverse(),
                           config.distribution_idx, config.scene_box);
         })
+
     }
 }
