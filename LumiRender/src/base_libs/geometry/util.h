@@ -113,20 +113,23 @@ namespace luminous {
             }
 
             NDSC_XPU static Ray spawn_ray(float3 pos, float3 normal, float3 dir) {
+                normal *= dot(normal, dir) > 0 ? 1 : -1;
                 float3 org = offset_ray_origin(pos, normal);
                 return Ray(org, dir);
             }
 
             NDSC_XPU static Ray spawn_ray_to(float3 p_start, float3 n_start, float3 p_target) {
-                float3 org = offset_ray_origin(p_start, n_start);
                 float3 dir = p_target - p_start;
+                float3 org = offset_ray_origin(p_start, n_start);
+                n_start *= dot(n_start, dir) > 0 ? 1 : -1;
                 return Ray(org, dir, 1 - shadow_epsilon);
             }
 
             NDSC_XPU static Ray spawn_ray_to(float3 p_start, float3 n_start, float3 p_target, float3 n_target) {
-                float3 org = offset_ray_origin(p_start, n_start);
                 p_target = offset_ray_origin(p_target, n_target);
                 float3 dir = p_target - p_start;
+                n_start *= dot(n_start, dir) > 0 ? 1 : -1;
+                float3 org = offset_ray_origin(p_start, n_start);
                 return Ray(org, dir, 1 - shadow_epsilon);
             }
 

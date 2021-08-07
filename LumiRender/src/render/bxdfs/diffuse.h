@@ -40,7 +40,7 @@ namespace luminous {
 
             NDSC_XPU float PDF(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance,
                                BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
-                return cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
+                return same_hemisphere(wo, wi) ? cosine_hemisphere_PDF(Frame::abs_cos_theta(wi)) : 0;
             }
 
             NDSC_XPU lstd::optional<BSDFSample> sample_f(float3 wo, float uc, float2 u,
