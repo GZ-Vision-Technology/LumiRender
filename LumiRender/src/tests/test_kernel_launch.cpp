@@ -11,8 +11,7 @@
 #include "core/backend/managed.h"
 
 #include "render/samplers/sampler.h"
-#include "render/distribution/distribution_handle.h"
-#include "render/distribution/envmap_distribution.h"
+#include "render/distribution/distribution.h"
 
 using namespace std;
 
@@ -112,30 +111,10 @@ void test_managed() {
     cout << sizeof(vector<Sampler>);
 
 }
-using namespace luminous;
-void test_distribution() {
-    vector<float> vec;
-    int nu = 5;
-    int nv = 5;
-    for (int i = 0; i < nu * nv; ++i) {
-        vec.push_back(i);
-    }
-
-    auto ed = EnvmapDistribution();
-    ed.init(vec, nu, nv);
-    ed.init_on_host();
-    auto device = create_cuda_device();
-    auto dispatcher = device->new_dispatcher();
-
-    ed.init_on_device(device);
-//    ed.synchronize_to_gpu();
-}
 
 int main() {
 
 //    test_managed();
-
-    test_distribution();
 
 //    test_driver_api();
 //    test_kernel_sampler();
