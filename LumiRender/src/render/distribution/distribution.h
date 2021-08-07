@@ -13,6 +13,7 @@ namespace luminous {
     inline namespace render {
         using std::vector;
         using std::move;
+
         struct Distribution1DBuilder {
         public:
             std::vector<float> func;
@@ -114,19 +115,20 @@ namespace luminous {
         struct Distribution2DBuilder {
             vector<Distribution1DBuilder> conditional_v;
             Distribution1DBuilder marginal;
+
             Distribution2DBuilder(vector<Distribution1DBuilder> conditional_v, Distribution1DBuilder marginal)
-                : conditional_v(move(conditional_v)), marginal(move(marginal)) {}
+                    : conditional_v(move(conditional_v)), marginal(move(marginal)) {}
         };
 
 
         class Distribution2D {
         private:
-            BufferView <const Distribution1D> _conditional_v{};
+            BufferView<const Distribution1D> _conditional_v{};
             Distribution1D _marginal{};
         public:
             XPU Distribution2D() = default;
 
-            XPU Distribution2D(BufferView <const Distribution1D> conditional_v, Distribution1D marginal)
+            XPU Distribution2D(BufferView<const Distribution1D> conditional_v, Distribution1D marginal)
                     : _conditional_v(conditional_v), _marginal(marginal) {}
 
             NDSC_XPU float2 sample_continuous(float2 u, float *PDF) const {
@@ -139,8 +141,8 @@ namespace luminous {
             }
 
             NDSC_XPU float PDF(float2 p) const {
-                int iu = clamp(int(p[0] * _conditional_v[0].size()), 0, _conditional_v[0].size());
-                int iv = clamp(int(p[1] * _marginal.size()), 0, _marginal.size());
+                int iu = clamp(int(p[0] * _conditional_v[0].size()), 0, _conditional_v[0].size() - 1);
+                int iv = clamp(int(p[1] * _marginal.size()), 0, _marginal.size() - 1);
                 return _conditional_v[iv].func_at(iu) / _marginal.integral();
             }
 

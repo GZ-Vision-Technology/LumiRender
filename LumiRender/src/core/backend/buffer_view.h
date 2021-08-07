@@ -26,7 +26,8 @@ namespace luminous {
         using iterator = T *;
         using const_iterator = const T *;
 
-        XPU BufferView() : _ptr(nullptr), _num(0) {}
+        XPU BufferView()
+                : _ptr(nullptr), _num(0) {}
 
         XPU BufferView(T *ptr, size_t num)
                 : _ptr(ptr), _num(num) {}
@@ -64,8 +65,6 @@ namespace luminous {
             return BufferView(_ptr + offset, count);
         }
 
-        NDSC_XPU size_t size() const {
-            return _num;
-        }
+        NDSC_XPU size_t size() const { return _num; }
     };
 }
