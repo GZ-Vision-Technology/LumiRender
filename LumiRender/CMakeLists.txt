@@ -16,9 +16,15 @@ else ()
     message(not find cuda !!)
 endif ()
 
-set(LUMINOUS_LOCAL_EMBREE_PATH "D:/Program Files/Intel/Embree3")
 
 set(LUMINOUS_CPU_BACKEND ON)
+set(LUMINOUS_LOCAL_EMBREE ON)
+
+if (LUMINOUS_LOCAL_EMBREE)
+    set(LUMINOUS_LOCAL_EMBREE_PATH "D:/Program Files/Intel/Embree3")
+endif ()
+
+set(LUMINOUS_LOCAL_OIIO_PATH "E:/work/tools/vcpkg/installed/x64-windows")
 
 set(CMAKE_CXX_STANDARD 11)
 
