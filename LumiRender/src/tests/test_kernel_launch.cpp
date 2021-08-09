@@ -99,7 +99,7 @@ void test_managed() {
     v.push_back(sampler);
 
 //    s.reset(&sampler, device);
-    s.reset(v,device);
+//    s.reset(v,device);
     cout << v[0].to_string() << endl;
     s.synchronize_to_gpu();
     ps = s.device_ptr();

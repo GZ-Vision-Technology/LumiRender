@@ -16,7 +16,9 @@ else ()
     message(not find cuda !!)
 endif ()
 
-set(LUMINOUS_CPU_BACKEND OFF)
+set(LUMINOUS_LOCAL_EMBREE_PATH "D:/Program Files/Intel/Embree3")
+
+set(LUMINOUS_CPU_BACKEND ON)
 
 set(CMAKE_CXX_STANDARD 11)
 

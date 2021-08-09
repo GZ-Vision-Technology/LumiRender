@@ -8,7 +8,7 @@ add_library(luminous-cpu SHARED ${HEADER_FILES} ${SOURCE_FILES})
 target_link_libraries(luminous-cpu
         PUBLIC
         luminous-base_libs
-        embree
+        ${LUMINOUS_LOCAL_EMBREE_PATH}/lib/embree3.lib
         luminous-core
         luminous-util
         luminous-render)

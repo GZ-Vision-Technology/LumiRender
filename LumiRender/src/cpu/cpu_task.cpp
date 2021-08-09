@@ -10,7 +10,7 @@ namespace luminous {
         void CPUTask::init(const Parser &parser) {
             auto scene_graph = parser.parse();
             scene_graph->create_shapes();
-            _integrator = make_unique<CPUPathTracer>(_context);
+            _integrator = std::make_unique<CPUPathTracer>(_context);
             _integrator->init(scene_graph);
         }
 

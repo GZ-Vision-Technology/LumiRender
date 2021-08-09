@@ -7,7 +7,7 @@ add_subdirectory(gui)
 
 add_library(luminous-ext INTERFACE)
 target_link_libraries(luminous-ext INTERFACE
-        luminous-ext-xatlas
+     ##   luminous-ext-xatlas
         luminous-ext-stb
         luminous-ext-gui
         luminous-ext-tinyexr)
