@@ -9,6 +9,7 @@
 #include "view/application.h"
 
 using std::cout;
+using std::endl;
 using namespace luminous;
 int main(int argc, char *argv[]) {
     logging::set_log_level(spdlog::level::info);

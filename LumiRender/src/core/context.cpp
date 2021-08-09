@@ -73,7 +73,7 @@ namespace luminous {
                  "Specify working directory",
                  cxxopts::value<std::filesystem::path>()->default_value(
                          std::filesystem::canonical(std::filesystem::current_path()).string()))
-                ("c, clear-cache", "Clear cached kernel compilation", cxxopts::value<bool>())
+                ("c, clear-cache", "Clear cached", cxxopts::value<bool>())
                 ("s, scene", "The scene to render,file name end with json", cxxopts::value<std::string>())
                 ("positional", "Specify input file", cxxopts::value<std::string>())
                 ("h,help", "Print usage");

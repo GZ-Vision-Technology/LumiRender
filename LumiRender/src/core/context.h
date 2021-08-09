@@ -74,6 +74,10 @@ namespace luminous {
             return _parse_result().count("help") > 0;
         }
 
+        bool use_gpu() noexcept {
+            return device() == "cuda";
+        }
+
         void print_help() noexcept {
             std::cout << _cli_options.help() << std::endl;
         }

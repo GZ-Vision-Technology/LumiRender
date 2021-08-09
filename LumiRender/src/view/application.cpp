@@ -6,7 +6,7 @@
 #include "application.h"
 #include <iostream>
 #include "util/stats.h"
-
+#include "cpu/cpu_task.h"
 
 namespace luminous {
 
@@ -100,7 +100,11 @@ namespace luminous {
     App::App(const std::string &title, const int2 &size, Context *context, const Parser &parser)
             : _size(size) {
         TASK_TAG("launch app")
-        _task = std::make_unique<CUDATask>(context);
+        if (context->use_gpu()) {
+            _task = std::make_unique<CUDATask>(context);
+        } else {
+            _task = std::make_unique<CPUTask>(context);
+        }
         _task->init(parser);
 
         init_window(title, _task->resolution());
