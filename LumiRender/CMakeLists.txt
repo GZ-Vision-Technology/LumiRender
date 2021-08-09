@@ -16,16 +16,6 @@ else ()
     message(not find cuda !!)
 endif ()
 
-
-set(LUMINOUS_CPU_BACKEND ON)
-set(LUMINOUS_LOCAL_EMBREE ON)
-
-if (LUMINOUS_LOCAL_EMBREE)
-    set(LUMINOUS_LOCAL_EMBREE_PATH "D:/Program Files/Intel/Embree3")
-endif ()
-
-set(LUMINOUS_LOCAL_OIIO_PATH "E:/work/tools/vcpkg/installed/x64-windows")
-
 set(CMAKE_CXX_STANDARD 11)
 
 function(luminous_render_add_application name)
@@ -36,33 +26,39 @@ function(luminous_render_add_application name)
     set_target_properties(${name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/")
 endfunction()
 
+#add_subdirectory(thirdparty/assimp)
+#add_library(assimp_config INTERFACE)
+#target_link_libraries(assimp_config INTERFACE assimp::assimp)
+#set_target_properties(assimp PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/")
 
-#add_subdirectory(thirdparty/spdlog)
-#add_library(spdlog_config INTERFACE)
-#target_link_libraries(spdlog_config INTERFACE spdlog::spdlog)
-#
-#add_subdirectory(thirdparty/cxxopts)
-#add_library(cxxopts_config INTERFACE)
-#target_link_libraries(cxxopts_config INTERFACE cxxopts::cxxopts)
-
-add_subdirectory(thirdparty/assimp)
+find_package(assimp CONFIG REQUIRED)
 add_library(assimp_config INTERFACE)
 target_link_libraries(assimp_config INTERFACE assimp::assimp)
-set_target_properties(assimp PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/")
 
 set(EMBREE_ISPC_SUPPORT OFF CACHE BOOL "" FORCE)
 set(EMBREE_TUTORIALS OFF CACHE BOOL "" FORCE)
 
 set(CMAKE_DEBUG_POSTFIX "")
 
-add_subdirectory(thirdparty/embree)
-add_library(embree_config INTERFACE)
-target_link_libraries(embree_config INTERFACE embree3)
-set_target_properties(embree PROPERTIES
-        PUBLIC_HEADER "${HEADER_FILES}"
-        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
-        WINDOWS_EXPORT_ALL_SYMBOLS ON)
+set(LUMINOUS_CPU_BACKEND ON)
+set(LUMINOUS_LOCAL_EMBREE ON)
+
+if (LUMINOUS_LOCAL_EMBREE)
+    set(LUMINOUS_LOCAL_EMBREE_PATH "E:/work/tools/vcpkg/installed/x64-windows/include")
+    find_package(embree 3 CONFIG REQUIRED)
+else()
+    add_subdirectory(thirdparty/embree)
+    add_library(embree_config INTERFACE)
+    target_link_libraries(embree_config INTERFACE embree3)
+    set_target_properties(embree PROPERTIES
+            PUBLIC_HEADER "${HEADER_FILES}"
+            LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
+            WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+
+set(LUMINOUS_LOCAL_OIIO_PATH "E:/work/tools/vcpkg/installed/x64-windows")
+
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions (-D DEBUG_BUILD)
