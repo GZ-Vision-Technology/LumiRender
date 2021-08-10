@@ -26,7 +26,7 @@ namespace luminous {
 
         NDSC_INLINE RTCRayHit to_RTCRayHit(Ray ray) {
             RTCRay rtc_ray = to_RTCRay(ray);
-            RTCRayHit rh;
+            RTCRayHit rh{};
             rh.ray = rtc_ray;
             rh.hit.geomID = RTC_INVALID_GEOMETRY_ID;
             rh.hit.primID = RTC_INVALID_GEOMETRY_ID;

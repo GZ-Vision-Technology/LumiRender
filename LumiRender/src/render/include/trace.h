@@ -21,7 +21,7 @@ namespace luminous {
             return traceRadiance((OptixTraversableHandle)traversable_handle, ray, prd);
 #else
             // CPU is not implemented
-            RTCIntersectContext context;
+            RTCIntersectContext context{};
             RTCRayHit rh = to_RTCRayHit(ray);
             rtcIntersect1(reinterpret_cast<RTCScene>(traversable_handle), &context, &rh);
             prd->closest_hit.instance_id = rh.hit.instID[0];
@@ -43,7 +43,7 @@ namespace luminous {
 
         class VisibilityTester {
         private:
-            Interaction _p0, _p1;
+            Interaction _p0{}, _p1{};
         public:
             XPU VisibilityTester() = default;
 

@@ -70,19 +70,23 @@ namespace luminous {
 
         [[nodiscard]] const std::filesystem::path &scene_file() noexcept;
 
-        bool has_help_cmd() noexcept {
+        bool has_help_cmd() const noexcept {
             return _parse_result().count("help") > 0;
         }
 
-        bool use_gpu() noexcept {
+        NDSC bool use_gpu() noexcept {
             return device() == "cuda";
         }
 
-        void print_help() noexcept {
+        NDSC bool thread_num() const noexcept {
+            return cli_option<int>("thread-num");
+        }
+
+        void print_help() const noexcept {
             std::cout << _cli_options.help() << std::endl;
         }
 
-        void try_print_help_and_exit() noexcept {
+        void try_print_help_and_exit()  const noexcept {
             if (has_help_cmd()) {
                 print_help();
                 exit(0);

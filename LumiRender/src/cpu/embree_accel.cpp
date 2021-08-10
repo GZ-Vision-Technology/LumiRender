@@ -3,7 +3,6 @@
 //
 
 #include "embree_accel.h"
-#include "cpu_scene.h"
 
 namespace luminous {
     inline namespace cpu {
@@ -42,7 +41,6 @@ namespace luminous {
                 RTCGeometry mesh_geometry = rtc_geometries[mesh_idx];
                 rtcCommitGeometry(mesh_geometry);
                 rtcAttachGeometry(rtc_scene, mesh_geometry);
-                rtcReleaseGeometry(mesh_geometry);
                 RTCGeometry instance = rtcNewGeometry(rtc_device(), RTC_GEOMETRY_TYPE_INSTANCE);
                 rtcSetGeometryInstancedScene(instance, rtc_scene);
                 rtc_instances.push_back(instance);
