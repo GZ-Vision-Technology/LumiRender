@@ -74,7 +74,7 @@ namespace luminous {
                  cxxopts::value<std::filesystem::path>()->default_value(
                          std::filesystem::canonical(std::filesystem::current_path()).string()))
                 ("c, clear-cache", "Clear cached", cxxopts::value<bool>())
-                ("tn, thread-num", "the num of threads to render", cxxopts::value<int>()->default_value(0))
+                ("t, thread-num", "the num of threads to render", cxxopts::value<std::string>()->default_value("0"))
                 ("s, scene", "The scene to render,file name end with json", cxxopts::value<std::string>())
                 ("positional", "Specify input file", cxxopts::value<std::string>())
                 ("h,help", "Print usage");

@@ -78,8 +78,8 @@ namespace luminous {
             return device() == "cuda";
         }
 
-        NDSC bool thread_num() const noexcept {
-            return cli_option<int>("thread-num");
+        NDSC int thread_num() const noexcept {
+            return std::stoi(cli_option<std::string>("thread-num"));
         }
 
         void print_help() const noexcept {

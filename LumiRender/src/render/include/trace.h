@@ -20,14 +20,7 @@ namespace luminous {
 #if defined(__CUDACC__)
             return traceRadiance((OptixTraversableHandle)traversable_handle, ray, prd);
 #else
-            // CPU is not implemented
-            RTCIntersectContext context{};
-            RTCRayHit rh = to_RTCRayHit(ray);
-            rtcIntersect1(reinterpret_cast<RTCScene>(traversable_handle), &context, &rh);
-            prd->closest_hit.instance_id = rh.hit.instID[0];
-            prd->closest_hit.triangle_id = rh.hit.primID;
-            prd->closest_hit.bary = make_float2(rh.hit.u, rh.hit.v);
-            return prd->is_hit();
+            return rtc_intersect((RTCScene)traversable_handle, ray, prd);
 #endif
         }
 
@@ -35,9 +28,7 @@ namespace luminous {
 #if defined(__CUDACC__)
             return traceOcclusion((OptixTraversableHandle)traversable_handle, ray);
 #else
-            // CPU is not implemented
-            assert(0);
-            return false;
+            return rtc_occlusion((RTCScene)traversable_handle, ray);
 #endif
         }
 

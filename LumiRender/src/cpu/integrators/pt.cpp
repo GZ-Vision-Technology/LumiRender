@@ -4,6 +4,8 @@
 
 #include "pt.h"
 #include "cpu/cpu_scene.h"
+#include "render/integrators/pt_func.h"
+#include ""
 
 namespace luminous {
     inline namespace cpu {
