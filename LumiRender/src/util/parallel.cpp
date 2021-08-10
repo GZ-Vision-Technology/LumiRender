@@ -11,69 +11,68 @@
 
 namespace luminous {
     inline namespace utility {
-        size_t num_work_threads() { return std::thread::hardware_concurrency(); }
 
         struct ParallelForContext {
-            std::atomic_uint32_t workIndex;
+            std::atomic_uint32_t work_index;
             size_t count = 0;
             uint32_t chunkSize = 0;
 
-            ParallelForContext() : workIndex(0) {}
+            ParallelForContext() : work_index(0) {}
 
             const std::function<void(uint32_t, uint32_t)> *func = nullptr;
 
-            bool done() const { return workIndex >= count; }
+            bool done() const { return work_index >= count; }
 
             ParallelForContext(const ParallelForContext &rhs)
-                    : workIndex(rhs.workIndex.load()), count(rhs.count), chunkSize(rhs.chunkSize), func(rhs.func) {}
+                    : work_index(rhs.work_index.load()), count(rhs.count), chunkSize(rhs.chunkSize), func(rhs.func) {}
         };
 
         struct ParallelForWorkPool {
             std::deque<ParallelForContext> works;
             std::vector<std::thread> threads;
-            std::condition_variable hasWork, oneThreadFinished, mainWaiting;
-            std::mutex workMutex;
+            std::condition_variable has_work, one_thread_finished, main_waiting;
+            std::mutex work_mutex;
             std::atomic_bool stopped;
-            std::uint32_t workId;
-            std::uint32_t nThreadFinished;
+            std::uint32_t work_id;
+            std::uint32_t n_thread_finished;
 
-            ParallelForWorkPool() : workId(0), nThreadFinished(0) {
+            ParallelForWorkPool() : work_id(0), n_thread_finished(0) {
                 stopped = false;
                 auto n = num_work_threads();
                 for (uint32_t tid = 0; tid < n; tid++) {
                     threads.emplace_back([=]() {
                         while (!stopped) {
-                            std::unique_lock<std::mutex> lock(workMutex);
+                            std::unique_lock<std::mutex> lock(work_mutex);
                             while (works.empty() && !stopped) {
-                                hasWork.wait(lock);
+                                has_work.wait(lock);
                             }
                             if (stopped)
                                 return;
                             auto &loop = works.front();
-                            auto id = workId;
+                            auto id = work_id;
                             lock.unlock();
                             // lock held
                             while (!loop.done()) {
-                                auto begin = loop.workIndex.fetch_add(loop.chunkSize);
+                                auto begin = loop.work_index.fetch_add(loop.chunkSize);
                                 for (auto i = begin; i < begin + loop.chunkSize && i < loop.count; i++) {
                                     (*loop.func)(i, tid);
                                 }
                             }
                             lock.lock();
-                            nThreadFinished++;
-                            oneThreadFinished.notify_all();
+                            n_thread_finished++;
+                            one_thread_finished.notify_all();
 
-                            while (nThreadFinished != (uint32_t) threads.size() && workId == id) {
-                                oneThreadFinished.wait(lock);
+                            while (n_thread_finished != (uint32_t) threads.size() && work_id == id) {
+                                one_thread_finished.wait(lock);
                             }
 
-                            if (workId == id) {
-                                workId++; // only one thread would reach here
+                            if (work_id == id) {
+                                work_id++; // only one thread would reach here
                                 works.pop_front();
                                 if (works.empty()) {
-                                    mainWaiting.notify_one();
+                                    main_waiting.notify_one();
                                 }
-                                nThreadFinished = 0;
+                                n_thread_finished = 0;
                             }
                             lock.unlock();
                         }
@@ -82,22 +81,22 @@ namespace luminous {
             }
 
             void enqueue(const ParallelForContext &context) {
-                std::lock_guard<std::mutex> lock(workMutex);
+                std::lock_guard<std::mutex> lock(work_mutex);
                 works.emplace_back(context);
-                hasWork.notify_all();
+                has_work.notify_all();
             }
 
             void wait() {
-                std::unique_lock<std::mutex> lock(workMutex);
+                std::unique_lock<std::mutex> lock(work_mutex);
                 while (!works.empty()) {
 
-                    mainWaiting.wait(lock);
+                    main_waiting.wait(lock);
                 }
             }
 
             ~ParallelForWorkPool() {
                 stopped = true;
-                hasWork.notify_all();
+                has_work.notify_all();
                 for (auto &thr : threads) {
                     thr.join();
                 }
@@ -116,7 +115,7 @@ namespace luminous {
             ctx.func = &func;
             ctx.chunkSize = (uint32_t) chunkSize;
             ctx.count = count;
-            ctx.workIndex = 0;
+            ctx.work_index = 0;
             pool->enqueue(ctx);
             pool->wait();
         }

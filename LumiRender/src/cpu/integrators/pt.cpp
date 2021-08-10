@@ -5,13 +5,14 @@
 #include "pt.h"
 #include "cpu/cpu_scene.h"
 #include "render/integrators/pt_func.h"
-#include ""
+#include "util/parallel.h"
 
 namespace luminous {
     inline namespace cpu {
 
-        CPUPathTracer::CPUPathTracer(Context *context) {
-
+        CPUPathTracer::CPUPathTracer(Context *context)
+            : _context(context) {
+            set_thread_num(_context->thread_num());
         }
 
         void CPUPathTracer::init(const SP<SceneGraph> &scene_graph) {
@@ -33,7 +34,13 @@ namespace luminous {
         }
 
         void CPUPathTracer::render() {
+            const uint tile_size = 16u;
+            uint2 res = _camera.resolution();
+            uint2 n_tiles = (res + tile_size - 1u) / tile_size;
 
+            parallel_for_2d(n_tiles, [&](uint2 pixel, uint thread_id) {
+                pixel.print();
+            });
         }
     }
 }

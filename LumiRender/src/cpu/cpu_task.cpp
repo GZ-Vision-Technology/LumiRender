@@ -15,7 +15,7 @@ namespace luminous {
         }
 
         void CPUTask::render_gui(double dt) {
-
+            _integrator->render();
         }
 
         void CPUTask::render_cli() {
