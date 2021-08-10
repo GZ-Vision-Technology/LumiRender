@@ -17,8 +17,8 @@ namespace luminous {
 
         class Envmap : public LightBase {
         private:
-            index_t _tex_idx{index_t(-1)};
-            index_t _distribution_idx{index_t(-1)};
+            index_t _tex_idx{invalid_uint32};
+            index_t _distribution_idx{invalid_uint32};
             Transform _w2o;
             float3 _scene_center{};
             float _scene_diameter{};

@@ -21,7 +21,7 @@ namespace luminous {
             Sampler _sampler;
             Sensor _camera;
         public:
-            CPUPathTracer(Context *context);
+            explicit CPUPathTracer(Context *context);
 
             void init(const SP<SceneGraph> &scene_graph) override;
 
@@ -30,12 +30,6 @@ namespace luminous {
             void update() override;
 
             void render() override;
-
-            void update_camera_fov_y(float val);
-
-            void update_camera_view(float d_yaw, float d_pitch);
-
-            void update_film_resolution(uint2 res);
         };
 
     } // luminous::render

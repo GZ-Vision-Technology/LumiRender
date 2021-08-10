@@ -29,7 +29,7 @@ namespace luminous {
 
             void init_accel() override;
 
-            size_t size_in_bytes() const override;
+            NDSC size_t size_in_bytes() const override;
 
             void create_device_memory();
 

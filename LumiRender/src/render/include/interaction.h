@@ -49,15 +49,15 @@ namespace luminous {
             index_t light_idx;
 
             NDSC_XPU_INLINE bool has_material() const {
-                return material_idx != index_t(-1);
+                return material_idx != invalid_uint32;
             }
 
             NDSC_XPU_INLINE bool has_distribute() const {
-                return distribute_idx != index_t(-1);
+                return distribute_idx != invalid_uint32;
             }
 
             NDSC_XPU_INLINE bool has_light() const {
-                return light_idx != index_t(-1);
+                return light_idx != invalid_uint32;
             }
 
             XPU void print() const {

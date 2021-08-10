@@ -11,19 +11,23 @@
 #if defined(__CUDACC__)
 #include "gpu/shaders/optix_util.h"
 #else
-
+#include "cpu/embree_util.h"
 #endif
 namespace luminous {
     inline namespace render {
-
 
         XPU_INLINE bool intersect_closest(uint64_t traversable_handle, Ray ray, PerRayData *prd) {
 #if defined(__CUDACC__)
             return traceRadiance((OptixTraversableHandle)traversable_handle, ray, prd);
 #else
             // CPU is not implemented
-            assert(0);
-            return false;
+            RTCIntersectContext context;
+            RTCRayHit rh = to_RTCRayHit(ray);
+            rtcIntersect1(reinterpret_cast<RTCScene>(traversable_handle), &context, &rh);
+            prd->closest_hit.instance_id = rh.hit.instID[0];
+            prd->closest_hit.triangle_id = rh.hit.primID;
+            prd->closest_hit.bary = make_float2(rh.hit.u, rh.hit.v);
+            return prd->is_hit();
 #endif
         }
 

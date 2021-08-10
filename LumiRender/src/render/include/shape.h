@@ -40,12 +40,12 @@ namespace luminous {
             vector <float3> positions;
             vector <float2> tex_coords;
             vector <TriangleHandle> triangles;
-            index_t mat_idx{index_t(-1)};
+            index_t mat_idx{invalid_uint32};
             Box3f aabb;
             mutable uint idx_in_meshes;
 
             bool has_material() const {
-                return mat_idx != index_t(-1);
+                return mat_idx != invalid_uint32;
             }
         };
 

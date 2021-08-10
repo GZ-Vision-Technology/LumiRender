@@ -110,13 +110,13 @@ namespace luminous {
             }
 
             ColorSpace color_space = LINEAR;
-            index_t tex_idx{index_t(-1)};
+            index_t tex_idx{invalid_uint32};
 
             // for constant texture
             float4 val = make_float4(0.f);
 
             // for image texture
-            index_t image_idx{index_t(-1)};
+            index_t image_idx{invalid_uint32};
             std::string fn = "";
             PixelFormat pixel_format = PixelFormat::UNKNOWN;
             void *handle{nullptr};
@@ -216,7 +216,7 @@ namespace luminous {
             // for env
             TextureConfig texture_config;
             Distribution2D distribution;
-            index_t distribution_idx{index_t(-1)};
+            index_t distribution_idx{invalid_uint32};
             float3 scale{};
             TransformConfig o2w_config;
 

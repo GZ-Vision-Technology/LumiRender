@@ -31,6 +31,8 @@ namespace luminous {
         constexpr float one_minus_epsilon = float_one_minus_epsilon;
         constexpr float ray_t_max = 1e16f;
         constexpr float shadow_epsilon = 0.0001f;
+        constexpr uint32_t invalid_uint32 = uint32_t(-1);
+        constexpr uint64_t invalid_uint64 = uint64_t(-1);
 
         static struct NegInfTy {
 #ifdef __CUDA_ARCH__

@@ -142,18 +142,13 @@ namespace luminous {
         };
 
         struct alignas(8) ClosestHit {
-            float distance{0};
-            index_t triangle_id{index_t(-1)};
-            index_t instance_id{index_t(-1)};
+            index_t triangle_id{invalid_uint32};
+            index_t instance_id{invalid_uint32};
             float2 bary;
 
             NDSC_XPU bool is_hit() const {
-                return triangle_id != index_t(-1);
+                return triangle_id != invalid_uint32;
             }
-        };
-
-        struct AnyHit {
-            float distance;
         };
     }
 }
