@@ -23,7 +23,9 @@ namespace luminous {
 
             void init(const SP<SceneGraph> &scene_graph) override;
 
-            RTCScene rtc_scene() { return _embree_accel->rtc_scene(); }
+            NDSC const SceneData * scene_data() const { return _scene_data.get(); }
+
+            NDSC RTCScene rtc_scene() { return _embree_accel->rtc_scene(); }
 
             void fill_scene_data();
 

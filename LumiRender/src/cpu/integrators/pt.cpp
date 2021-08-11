@@ -7,6 +7,10 @@
 #include "render/integrators/pt_func.h"
 #include "util/parallel.h"
 
+using std::cout;
+
+using std::endl;
+
 namespace luminous {
     inline namespace cpu {
 
@@ -29,7 +33,7 @@ namespace luminous {
         }
 
         void CPUPathTracer::update() {
-
+            _frame_index = 0;
         }
 
         void CPUPathTracer::render() {
@@ -41,13 +45,26 @@ namespace luminous {
                 uint2 p_max = p_min + tile_size;
                 p_max = select(p_max > res, res, p_max);
                 Box2u tile_bound{p_min, p_max};
+                Sampler sampler = _sampler;
                 tile_bound.for_each([&](uint2 pixel) {
 
-                    auto film = _camera.film();
-                    film->add_sample(pixel, 0.5, 1, 1);
-
+                    Film *film = _camera.film();
+                    sampler.start_pixel_sample(pixel, _frame_index, 0);
+                    auto ss = sampler.sensor_sample(pixel);
+                    Ray ray{};
+                    float weight = _camera.generate_ray(ss, &ray);
+                    uint spp = sampler.spp();
+                    Spectrum L(0.f);
+                    for (int i = 0; i < spp; ++i) {
+                        L += Li(ray, (uint64_t)_scene->rtc_scene(), sampler,
+                                _max_depth, _rr_threshold, false, _scene->scene_data());
+                    }
+                    L = L / float(spp);
+                    film->add_sample(pixel, L, weight, _frame_index);
                 });
             });
+            cout << "ASdfasdf" << endl;
+            ++_frame_index;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace luminous {
             UP<CPUScene> _scene{nullptr};
             Sampler _sampler;
             Sensor _camera;
-
+            int _frame_index{0};
         public:
             explicit CPUPathTracer(Context *context);
 

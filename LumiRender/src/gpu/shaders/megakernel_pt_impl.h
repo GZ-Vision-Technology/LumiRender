@@ -34,8 +34,7 @@ GLOBAL __raygen__rg() {
     sampler.start_pixel_sample(pixel, frame_index, 0);
     auto ss = sampler.sensor_sample(pixel);
     bool debug = pixel.x == 383 && pixel.y == 383;
-    Ray ray(luminous::make_float3(278.0f, 273.0f, -900.0f),
-            luminous::make_float3(0,0,1));
+    Ray ray{};
     float weight = camera->generate_ray(ss, &ray);
     uint spp = sampler.spp();
     Spectrum L(0.f);
