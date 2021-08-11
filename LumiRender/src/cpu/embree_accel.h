@@ -21,6 +21,7 @@ namespace luminous {
             static RTCDevice _rtc_device;
             RTCScene _rtc_scene;
             size_t _bvh_size_in_bytes{0u};
+            const SceneData *_scene_data{nullptr};
         public:
             EmbreeAccel(const CPUScene *cpu_scene);
 

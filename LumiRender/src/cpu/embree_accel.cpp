@@ -3,6 +3,7 @@
 //
 
 #include "embree_accel.h"
+#include "util/stats.h"
 
 namespace luminous {
     inline namespace cpu {
@@ -17,6 +18,7 @@ namespace luminous {
             _rtc_scene = rtcNewScene(_rtc_device);
             rtcSetSceneBuildQuality(_rtc_scene, RTC_BUILD_QUALITY_HIGH);
             rtcSetSceneFlags(_rtc_scene, RTC_SCENE_FLAG_CONTEXT_FILTER_FUNCTION);
+            _scene_data = cpu_scene->_scene_data.get();
         }
 
         std::string EmbreeAccel::description() const {
@@ -27,6 +29,7 @@ namespace luminous {
                                     const Managed<TriangleHandle> &triangles,
                                     const Managed<MeshHandle> &meshes, const Managed<uint> &instance_list,
                                     const Managed<Transform> &transform_list, const Managed<uint> &inst_to_transform) {
+            TASK_TAG("build embree bvh");
             std::vector<RTCGeometry> rtc_geometries;
             rtc_geometries.reserve(meshes.size());
             for (const auto &mesh : meshes) {

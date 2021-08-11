@@ -18,10 +18,14 @@ namespace luminous {
             friend class EmbreeAccel;
 
             UP<EmbreeAccel> _embree_accel;
+
+            UP<SceneData> _scene_data{new SceneData()};
         public:
             CPUScene(Context *context);
 
             void init(const SP<SceneGraph> &scene_graph) override;
+
+            void fill_scene_data();
 
             void preload_textures(const SP<SceneGraph> &scene_graph);
 
