@@ -11,6 +11,7 @@
 #include "render/include/parser.h"
 #include "render/sensors/sensor.h"
 #include "render/include/integrator.h"
+#include "core/backend/managed.h"
 
 namespace luminous {
     using std::unique_ptr;
@@ -20,6 +21,8 @@ namespace luminous {
         Context * _context{nullptr};
         UP<Integrator> _integrator;
         double _dt{0};
+        Managed<float4, float4> _accumulate_buffer;
+        Managed<FrameBufferType, FrameBufferType> _frame_buffer;
     public:
         Task(const std::shared_ptr<Device> &device, Context *context)
             : _device(device),

@@ -19,10 +19,6 @@ namespace luminous {
 
             double acc_t = 0;
 
-            Buffer<float4> _accumulate_buffer{nullptr};
-
-            Managed<FrameBufferType, FrameBufferType> _frame_buffer;
-
         public:
             explicit CUDATask(Context *context)
                 : Task(create_cuda_device(), context) {}

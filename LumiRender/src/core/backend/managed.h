@@ -58,28 +58,29 @@ namespace luminous {
             BaseClass::insert(BaseClass::cend(), v.cbegin(), v.cend());
         }
 
-        void allocate_device(const SP <Device> device) {
-            if (BaseClass::size() == 0) {
+        void allocate_device(const SP <Device> device, size_t size = 0) {
+            size = size == 0 ? BaseClass::size() : size;
+            if (size == 0) {
                 return;
             }
-            _device_buffer = device->allocate_buffer<TDevice>(BaseClass::size());
+            _device_buffer = device->allocate_buffer<TDevice>(size);
         }
 
-        BufferView <const THost> const_host_buffer_view(size_t offset = 0, size_t count = -1) const {
+        NDSC BufferView <const THost> const_host_buffer_view(size_t offset = 0, size_t count = -1) const {
             count = fix_count(offset, count, BaseClass::size());
             return BufferView<const THost>(((const THost *) BaseClass::data()) + offset, count);
         }
 
-        BufferView <THost> host_buffer_view(size_t offset = 0, size_t count = -1) const {
+        NDSC BufferView <THost> host_buffer_view(size_t offset = 0, size_t count = -1) const {
             count = fix_count(offset, count, BaseClass::size());
             return BufferView<THost>(((THost *) BaseClass::data()) + offset, count);
         }
 
-        BufferView <TDevice> device_buffer_view(size_t offset = 0, size_t count = -1) const {
+        NDSC BufferView <TDevice> device_buffer_view(size_t offset = 0, size_t count = -1) const {
             return _device_buffer.view(offset, count);
         }
 
-        BufferView <const Distribution1D> const_device_buffer_view(size_t offset = 0, size_t count = -1) const {
+        NDSC BufferView <const Distribution1D> const_device_buffer_view(size_t offset = 0, size_t count = -1) const {
             return _device_buffer.view(offset, count);
         }
 

@@ -11,10 +11,6 @@ namespace luminous {
     inline namespace cpu {
 
         class CPUTask : public Task {
-        private:
-            Managed<float4, float4> _accumulate_buffer;
-
-            Managed<FrameBufferType, FrameBufferType> _frame_buffer;
         public:
             explicit CPUTask(Context *context)
                 : Task(nullptr, context) {}

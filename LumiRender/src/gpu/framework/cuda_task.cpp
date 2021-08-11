@@ -22,8 +22,8 @@ namespace luminous {
         void CUDATask::update_device_buffer() {
             auto res = camera()->film()->resolution();
             auto num = res.x * res.y;
-            _accumulate_buffer = _device->allocate_buffer<float4>(num);
-            camera()->film()->set_accumulate_buffer_view(_accumulate_buffer.view());
+            _accumulate_buffer.allocate_device(_device, num);
+            camera()->film()->set_accumulate_buffer_view(_accumulate_buffer.device_buffer_view());
 
             _frame_buffer.reset(_device, num);
             _frame_buffer.synchronize_to_gpu();

@@ -37,7 +37,7 @@ namespace luminous {
         void CPUPathTracer::render() {
             const uint tile_size = 3;
             uint2 res = _camera.resolution();
-            res = make_uint2(6);
+//            res = make_uint2(6);
             uint2 n_tiles = (res + tile_size - 1u) / tile_size;
             parallel_for_2d(n_tiles, [&](uint2 tile, uint thread_id) {
                 uint2 p_min = tile * tile_size;
@@ -47,7 +47,7 @@ namespace luminous {
                 tile_bound.for_each([&](uint2 pixel) {
 
                     auto film = _camera.film();
-                    film->add_sample(pixel, 1, 1, 1);
+                    film->add_sample(pixel, 0.5, 1, 1);
 
                 });
             });
