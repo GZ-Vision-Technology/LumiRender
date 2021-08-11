@@ -22,8 +22,6 @@ namespace luminous {
             _camera = Sensor::create(scene_graph->sensor_config);
             _sampler = Sampler::create(scene_graph->sampler_config);
 
-            Film *film = _camera.film();
-
         }
 
         Sensor *CPUPathTracer::camera() {

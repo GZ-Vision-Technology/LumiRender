@@ -4,6 +4,7 @@
 
 #include "cpu_scene.h"
 #include "util/stats.h"
+#include "embree_accel.h"
 
 using std::cout;
 using std::endl;
@@ -23,7 +24,7 @@ namespace luminous {
 
         void CPUScene::init_accel() {
             EmbreeAccel::init_device();
-            _embree_accel = std::make_unique<EmbreeAccel>(this);
+            _embree_accel = std::make_unique<EmbreeAccel>();
             build_accel();
         }
 
@@ -74,6 +75,10 @@ namespace luminous {
             _scene_data->textures = this->_textures.const_host_buffer_view();
             _scene_data->materials = this->_materials.const_host_buffer_view();
         }
+
+//        RTCScene CPUScene::rtc_scene() {
+//            return _embree_accel->rtc_scene();
+//        }
 
     } // luminous::cpu
 } // luminous

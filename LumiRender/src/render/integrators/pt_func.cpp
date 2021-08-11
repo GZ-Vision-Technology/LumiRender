@@ -14,7 +14,7 @@ namespace luminous {
         NDSC_XPU Spectrum Li(Ray ray, uint64_t scene_handle, Sampler &sampler,
                              uint max_depth, float rr_threshold, bool debug,
                              const SceneData *scene_data) {
-            PerRayData prd;
+            PerRayData prd{scene_data};
             luminous::intersect_closest(scene_handle, ray, &prd);
 
             if (prd.is_hit()) {

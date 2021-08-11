@@ -13,12 +13,11 @@ namespace luminous {
             _rtc_device = rtcNewDevice(nullptr);
         }
 
-        EmbreeAccel::EmbreeAccel(const CPUScene *cpu_scene) {
+        EmbreeAccel::EmbreeAccel() {
             init_device();
             _rtc_scene = rtcNewScene(_rtc_device);
             rtcSetSceneBuildQuality(_rtc_scene, RTC_BUILD_QUALITY_HIGH);
             rtcSetSceneFlags(_rtc_scene, RTC_SCENE_FLAG_CONTEXT_FILTER_FUNCTION);
-            _scene_data = cpu_scene->_scene_data.get();
         }
 
         std::string EmbreeAccel::description() const {

@@ -162,7 +162,7 @@ namespace luminous {
 
             PerRayData() = default;
 
-            explicit PerRayData(const SceneData *data)
+            XPU explicit PerRayData(const SceneData *data)
                     : data(data) {}
 
             NDSC_XPU_INLINE bool is_hit() const {

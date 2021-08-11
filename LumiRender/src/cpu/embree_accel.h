@@ -6,11 +6,10 @@
 #pragma once
 
 #include "base_libs/math/common.h"
-#include <embree3/rtcore.h>
 #include "core/concepts.h"
 #include "render/include/shape.h"
 #include "core/backend/managed.h"
-#include "cpu_scene.h"
+#include <embree3/rtcore.h>
 
 namespace luminous {
     inline namespace cpu {
@@ -21,15 +20,16 @@ namespace luminous {
             static RTCDevice _rtc_device;
             RTCScene _rtc_scene;
             size_t _bvh_size_in_bytes{0u};
-            const SceneData *_scene_data{nullptr};
         public:
-            EmbreeAccel(const CPUScene *cpu_scene);
+            EmbreeAccel();
 
             static void init_device();
 
+            NDSC RTCScene rtc_scene() { return _rtc_scene; }
+
             static RTCDevice rtc_device() { return _rtc_device; }
 
-            size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
+            NDSC size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 
             NDSC std::string description() const;
 
