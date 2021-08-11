@@ -110,6 +110,31 @@ namespace luminous {
                 return any(upper < lower);
             }
 
+            NDSC_XPU_INLINE auto advance(Vector<scalar_t, 2> p) const {
+                ++p.x;
+                if (p.x == upper.x) {
+                    p.x = lower.x;
+                    ++p.y;
+                }
+                return p;
+            }
+
+            /**
+             * for each every point in [lower, upper)
+             * @tparam Func
+             * @param func
+             */
+            template<typename Func>
+            XPU_INLINE void for_each(Func func) const {
+                static_assert(std::is_integral_v<scalar_t> || std::is_unsigned_v<scalar_t>,
+                        "scalar_t must be unsigned or integral!");
+                auto p = lower;
+                do {
+                    func(p);
+                    p = advance(p);
+                } while (all(p < upper));
+            }
+
             GEN_STRING_FUNC({
                                 return string_printf("box : {lower: %s, upper : %s }",
                                                      lower.to_string().c_str(),
@@ -118,17 +143,17 @@ namespace luminous {
         };
 
         template<typename T, uint N>
-        [[nodiscard]] XPU auto intersection(const TBox<T, N> &a, const TBox<T, N> &b) {
+        NDSC_XPU auto intersection(const TBox<T, N> &a, const TBox<T, N> &b) {
             return TBox<T, N>(max(a.lower, b.lower), min(a.upper, b.upper));
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU bool operator==(const TBox<T, N> &a, const TBox<T, N> &b) {
+        NDSC_XPU bool operator==(const TBox<T, N> &a, const TBox<T, N> &b) {
             return a.lower == b.lower && a.upper == b.upper;
         }
 
         template<typename T, uint N>
-        [[nodiscard]] XPU bool operator!=(const TBox<T, N> &a, const TBox<T, N> &b) {
+        NDSC_XPU bool operator!=(const TBox<T, N> &a, const TBox<T, N> &b) {
             return !(a == b);
         }
 
@@ -138,11 +163,11 @@ namespace luminous {
         using Box##4##suffix = TBox<scalar_t, 4>;
 
         _define_box(int32_t, i);
+        _define_box(uint32_t, u);
         _define_box(float, f);
         _define_box(double, d);
         _define_box(int64_t, l);
 
 #undef _define_box
-
     }
 }

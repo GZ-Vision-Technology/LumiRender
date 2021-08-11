@@ -40,6 +40,12 @@
 
 #define HAVE_POSIX_MEMALIGN
 
+#ifdef NDEBUG
+#define EXE_DEBUG(pred, arg)
+#else
+#define EXE_DEBUG(pred, arg) if (pred) { arg; }
+#endif
+
 #ifdef IS_GPU_CODE
 
     #define LUMINOUS_DBG(...) printf(__FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)

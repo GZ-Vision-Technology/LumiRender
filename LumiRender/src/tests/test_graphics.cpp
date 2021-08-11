@@ -304,6 +304,14 @@ void test_yaw_pitch() {
 
 }
 
+
+void test_box_iter() {
+    Box2i box{make_int2(5,5), make_int2(7,7)};
+    box.for_each([&](int2 p){
+        p.print();
+    });
+}
+
 int main() {
 
 //    testVariant();
@@ -318,12 +326,6 @@ int main() {
 
 //    test_color();
 
-//    piecewise_construct_test();
-
-//    piecewise2d_test();
-    auto f4 = make_float2(5);
-
-//    cout << is_nan(f4);
-
+    test_box_iter();
     return 0;
 }

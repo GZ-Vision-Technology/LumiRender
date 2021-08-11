@@ -11,7 +11,7 @@ namespace luminous {
     inline namespace cpu {
 
         CPUPathTracer::CPUPathTracer(Context *context)
-            : _context(context) {
+                : _context(context) {
             set_thread_num(_context->thread_num());
         }
 
@@ -22,6 +22,7 @@ namespace luminous {
             _camera = Sensor::create(scene_graph->sensor_config);
             _sampler = Sampler::create(scene_graph->sampler_config);
 
+            Film *film = _camera.film();
 
         }
 
@@ -34,12 +35,21 @@ namespace luminous {
         }
 
         void CPUPathTracer::render() {
-            const uint tile_size = 16u;
+            const uint tile_size = 3;
             uint2 res = _camera.resolution();
+            res = make_uint2(6);
             uint2 n_tiles = (res + tile_size - 1u) / tile_size;
+            parallel_for_2d(n_tiles, [&](uint2 tile, uint thread_id) {
+                uint2 p_min = tile * tile_size;
+                uint2 p_max = p_min + tile_size;
+                p_max = select(p_max > res, res, p_max);
+                Box2u tile_bound{p_min, p_max};
+                tile_bound.for_each([&](uint2 pixel) {
 
-            parallel_for_2d(n_tiles, [&](uint2 pixel, uint thread_id) {
-                pixel.print();
+                    auto film = _camera.film();
+                    film->add_sample(pixel, 1, 1, 1);
+
+                });
             });
         }
     }

@@ -12,6 +12,7 @@ namespace luminous {
             scene_graph->create_shapes();
             _integrator = std::make_unique<CPUPathTracer>(_context);
             _integrator->init(scene_graph);
+            update_device_buffer();
         }
 
         void CPUTask::render_gui(double dt) {
