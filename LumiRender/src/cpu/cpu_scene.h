@@ -8,12 +8,15 @@
 #include "base_libs/math/common.h"
 #include "render/include/scene.h"
 #include "embree_accel.h"
+#include "render/include/scene_data.h"
+
 
 namespace luminous {
     inline namespace cpu {
         class CPUScene : public Scene {
         private:
             friend class EmbreeAccel;
+
             UP<EmbreeAccel> _embree_accel;
         public:
             CPUScene(Context *context);

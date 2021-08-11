@@ -5,7 +5,7 @@
 #include "optix_accel.h"
 #include <optix_function_table_definition.h>
 #include "../gpu_scene.h"
-#include "render/include/shader_data.h"
+#include "render/include/scene_data.h"
 #include "util/stats.h"
 #include <iosfwd>
 

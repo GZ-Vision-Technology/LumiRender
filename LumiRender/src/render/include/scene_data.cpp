@@ -2,7 +2,7 @@
 // Created by Zero on 2021/5/5.
 //
 
-#include "shader_data.h"
+#include "scene_data.h"
 #include "render/materials/material.h"
 #include "render/light_samplers/light_sampler.h"
 #include "render/distribution/distribution.h"

@@ -7,7 +7,6 @@
 
 #include "diffuse.h"
 #include "base_libs/lstd/variant.h"
-//#include "render/include/shader_data.h"
 #include "base_libs/optics/rgb.h"
 #include "core/backend/buffer_view.h"
 

@@ -37,7 +37,6 @@ namespace luminous {
         void CPUPathTracer::render() {
             const uint tile_size = 3;
             uint2 res = _camera.resolution();
-//            res = make_uint2(6);
             uint2 n_tiles = (res + tile_size - 1u) / tile_size;
             parallel_for_2d(n_tiles, [&](uint2 tile, uint thread_id) {
                 uint2 p_min = tile * tile_size;

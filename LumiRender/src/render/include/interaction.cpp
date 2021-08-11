@@ -3,7 +3,7 @@
 //
 
 #include "interaction.h"
-#include "render/include/shader_data.h"
+#include "render/include/scene_data.h"
 #include "render/lights/light.h"
 #include "render/bxdfs/bsdf.h"
 #include "render/materials/material.h"

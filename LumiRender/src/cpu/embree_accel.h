@@ -12,7 +12,6 @@
 #include "core/backend/managed.h"
 #include "cpu_scene.h"
 
-
 namespace luminous {
     inline namespace cpu {
         class CPUScene;
