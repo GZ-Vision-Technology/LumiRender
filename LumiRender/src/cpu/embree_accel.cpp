@@ -43,9 +43,12 @@ namespace luminous {
                 RTCGeometry mesh_geometry = rtc_geometries[mesh_idx];
                 rtcCommitGeometry(mesh_geometry);
                 rtcAttachGeometry(rtc_scene, mesh_geometry);
+                uint transform_idx = inst_to_transform[i];
+                const Transform &transform = transform_list[transform_idx];
                 RTCGeometry instance = rtcNewGeometry(rtc_device(), RTC_GEOMETRY_TYPE_INSTANCE);
                 rtcSetGeometryInstancedScene(instance, rtc_scene);
                 rtc_instances.push_back(instance);
+                rtcSetGeometryTransform(instance, 0, RTC_FORMAT_FLOAT4X4_COLUMN_MAJOR, transform.mat4x4_ptr());
                 rtcAttachGeometry(_rtc_scene, instance);
                 rtcReleaseGeometry(instance);
             }

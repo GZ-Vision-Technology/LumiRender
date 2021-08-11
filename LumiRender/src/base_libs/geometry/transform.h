@@ -148,6 +148,10 @@ namespace luminous {
                 return _mat;
             }
 
+            NDSC_XPU const float4x4 *mat4x4_ptr() const {
+                return &_mat;
+            }
+
             NDSC_XPU auto mat3x3() const {
                 return make_float3x3(_mat);
             }
