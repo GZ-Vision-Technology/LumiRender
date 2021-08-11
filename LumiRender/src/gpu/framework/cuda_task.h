@@ -13,12 +13,6 @@
 namespace luminous {
     inline namespace gpu {
         class CUDATask : public Task {
-        private:
-
-            uint test_count = 0;
-
-            double acc_t = 0;
-
         public:
             explicit CUDATask(Context *context)
                 : Task(create_cuda_device(), context) {}

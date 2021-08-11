@@ -8,6 +8,9 @@
 #include "util/stats.h"
 #include "cpu/cpu_task.h"
 
+using std::cout;
+using std::endl;
+
 namespace luminous {
 
     static float4 bg_color = make_float4(0.2);
@@ -172,7 +175,12 @@ namespace luminous {
         auto dt = _clock.elapse_s();
         _clock.start();
         check_and_update();
+        Clock clock;
         _task->render_gui(dt);
+        double d = clock.elapse_ms();
+        acc_t += d;
+        ++test_count;
+        cout << d << "  " << acc_t / test_count <<"   " << test_count << endl;
     }
 
     int App::run() {

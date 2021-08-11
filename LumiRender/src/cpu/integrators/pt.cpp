@@ -63,7 +63,6 @@ namespace luminous {
                     film->add_sample(pixel, L, weight, _frame_index);
                 });
             });
-            cout << "ASdfasdf" << endl;
             ++_frame_index;
         }
     }

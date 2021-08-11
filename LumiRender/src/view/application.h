@@ -43,6 +43,10 @@ namespace luminous {
 
         bool _need_update{true};
 
+        uint test_count = 0;
+
+        double acc_t = 0;
+
     public:
         App(const std::string &title, const int2 &size, Context *context, const Parser &parser);
 
