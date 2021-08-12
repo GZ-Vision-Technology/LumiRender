@@ -34,6 +34,11 @@ namespace luminous {
             return rh;
         }
 
+        NDSC_INLINE RTCBounds to_RTCBounds(Box3f box) {
+            return RTCBounds{box.lower.x,box.lower.y,box.lower.z,0,
+                             box.upper.x,box.upper.y,box.upper.z,0};
+        }
+
         NDSC_INLINE bool rtc_intersect(RTCScene scene, Ray ray, PerRayData *prd) {
             RTCIntersectContext context{};
             rtcInitIntersectContext(&context);
