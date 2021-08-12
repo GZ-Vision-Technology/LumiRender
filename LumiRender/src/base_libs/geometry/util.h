@@ -150,7 +150,7 @@ namespace luminous {
             }
 
             XPU void print() const {
-                printf("triangle id:%u,instance_id:%u, bary:(%f,%f)",
+                printf("triangle id:%u,instance_id:%u, bary:(%f,%f)\n",
                        triangle_id, instance_id, bary.x, bary.y);
             }
         };

@@ -37,7 +37,7 @@ namespace luminous {
         }
 
         void CPUPathTracer::render() {
-            const uint tile_size = 3;
+            const uint tile_size = 16;
             uint2 res = _camera.resolution();
             uint2 n_tiles = (res + tile_size - 1u) / tile_size;
             parallel_for_2d(n_tiles, [&](uint2 tile, uint thread_id) {
@@ -47,6 +47,7 @@ namespace luminous {
                 Box2u tile_bound{p_min, p_max};
                 Sampler sampler = _sampler;
                 tile_bound.for_each([&](uint2 pixel) {
+//                    pixel = make_uint2(383,383);
 
                     Film *film = _camera.film();
                     sampler.start_pixel_sample(pixel, _frame_index, 0);

@@ -23,6 +23,8 @@ namespace luminous {
         public:
             EmbreeAccel();
 
+            ~EmbreeAccel();
+
             static void init_device();
 
             NDSC RTCScene rtc_scene() { return _rtc_scene; }

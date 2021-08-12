@@ -20,6 +20,10 @@ namespace luminous {
             rtcSetSceneFlags(_rtc_scene, RTC_SCENE_FLAG_CONTEXT_FILTER_FUNCTION);
         }
 
+        EmbreeAccel::~EmbreeAccel() {
+            rtcReleaseScene(_rtc_scene);
+        }
+
         std::string EmbreeAccel::description() const {
             return string_printf("EmbreeAccel");
         }
@@ -35,40 +39,40 @@ namespace luminous {
                 RTCGeometry rtc_geometry = build_mesh(positions, triangles, mesh);
                 rtc_geometries.push_back(rtc_geometry);
             }
-            std::vector<RTCGeometry> rtc_instances;
-            rtc_instances.reserve(instance_list.size());
             for (int i = 0; i < instance_list.size(); ++i) {
                 uint mesh_idx = instance_list[i];
                 RTCScene rtc_scene = rtcNewScene(rtc_device());
                 RTCGeometry mesh_geometry = rtc_geometries[mesh_idx];
                 rtcCommitGeometry(mesh_geometry);
                 rtcAttachGeometry(rtc_scene, mesh_geometry);
+                rtcCommitScene(rtc_scene);
                 uint transform_idx = inst_to_transform[i];
                 const Transform &transform = transform_list[transform_idx];
                 RTCGeometry instance = rtcNewGeometry(rtc_device(), RTC_GEOMETRY_TYPE_INSTANCE);
                 rtcSetGeometryInstancedScene(instance, rtc_scene);
-                rtc_instances.push_back(instance);
                 rtcSetGeometryTransform(instance, 0, RTC_FORMAT_FLOAT4X4_COLUMN_MAJOR, transform.mat4x4_ptr());
+                rtcCommitGeometry(instance);
                 rtcAttachGeometry(_rtc_scene, instance);
                 rtcReleaseGeometry(instance);
             }
             for (auto geometry : rtc_geometries) {
                 rtcReleaseGeometry(geometry);
             }
+            rtcCommitScene(_rtc_scene);
         }
 
         RTCGeometry EmbreeAccel::build_mesh(const Managed<float3> &positions,
                                             const Managed<TriangleHandle> &triangles,
                                             const MeshHandle &mesh) {
             RTCGeometry rtc_geometry = rtcNewGeometry(rtc_device(), RTC_GEOMETRY_TYPE_TRIANGLE);
-            auto p_vert = positions.const_host_buffer_view(mesh.vertex_offset, mesh.vertex_count).cbegin();
+            auto pos = positions.const_host_buffer_view(mesh.vertex_offset, mesh.vertex_count);
             rtcSetSharedGeometryBuffer(rtc_geometry, RTC_BUFFER_TYPE_VERTEX,
                                        0, RTC_FORMAT_FLOAT3,
-                                       p_vert, 0, sizeof(float3), positions.size());
-            auto p_tri = triangles.const_host_buffer_view(mesh.triangle_offset, mesh.triangle_count).cbegin();
+                                       pos.cbegin(), 0, sizeof(float3), pos.size());
+            auto tri_list = triangles.const_host_buffer_view(mesh.triangle_offset, mesh.triangle_count);
             rtcSetSharedGeometryBuffer(rtc_geometry, RTC_BUFFER_TYPE_INDEX,
-                                       0, RTC_FORMAT_UINT3, p_tri,
-                                       0, sizeof(TriangleHandle), triangles.size());
+                                       0, RTC_FORMAT_UINT3, tri_list.cbegin(),
+                                       0, sizeof(TriangleHandle), tri_list.size());
             return rtc_geometry;
         }
 

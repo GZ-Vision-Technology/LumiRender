@@ -45,6 +45,11 @@ namespace luminous {
         template<typename Index>
         NDSC_XPU T &operator[](Index i) {
             EXE_DEBUG(i >= size(), printf("size:%d,index:%d\n",int(size()), int(i)));
+#ifndef NDEBUG
+            if (i >= size()) {
+                volatile int a = 0;
+            }
+#endif
             DCHECK_LT(i, size());
             return _ptr[i];
         }
@@ -52,6 +57,11 @@ namespace luminous {
         template<typename Index>
         NDSC_XPU const T &operator[](Index i) const {
             EXE_DEBUG(i >= size(), printf("size:%d,index:%d\n",int(size()), int(i)));
+#ifndef NDEBUG
+            if (i >= size()) {
+                volatile int a = 0;
+            }
+#endif
             DCHECK_LT(i, size());
             return _ptr[i];
         }

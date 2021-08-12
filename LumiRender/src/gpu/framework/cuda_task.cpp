@@ -35,7 +35,7 @@ namespace luminous {
         }
 
         void CUDATask::render_gui(double dt) {
-            _dt = dt;
+            Task::render_gui(dt);
             _integrator->render();
         }
 
