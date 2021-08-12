@@ -30,15 +30,6 @@ namespace luminous {
             camera()->film()->set_frame_buffer_view(_frame_buffer.device_buffer_view());
         }
 
-        void CUDATask::update() {
-            _integrator->update();
-        }
-
-        void CUDATask::render_gui(double dt) {
-            Task::render_gui(dt);
-            _integrator->render();
-        }
-
         FrameBufferType *CUDATask::download_frame_buffer() {
             _frame_buffer.synchronize_to_cpu();
             return _frame_buffer.data();

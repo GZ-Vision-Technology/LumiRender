@@ -15,11 +15,6 @@ namespace luminous {
             update_device_buffer();
         }
 
-        void CPUTask::render_gui(double dt) {
-            Task::render_gui(dt);
-            _integrator->render();
-        }
-
         void CPUTask::render_cli() {
 
         }

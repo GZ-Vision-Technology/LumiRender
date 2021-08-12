@@ -23,11 +23,7 @@ namespace luminous {
 
             void render_cli() override {}
 
-            void update() override;
-
             FrameBufferType *download_frame_buffer() override;
-
-            void render_gui(double dt) override;
         };
     }
 }

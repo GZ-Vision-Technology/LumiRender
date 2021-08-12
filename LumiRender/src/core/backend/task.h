@@ -34,7 +34,10 @@ namespace luminous {
             _integrator->update();
         }
 
-        virtual void render_gui(double dt) { _dt = dt; }
+        virtual void render_gui(double dt) {
+            _dt = dt;
+            _integrator->render();
+        }
 
         virtual void render_cli() = 0;
 
