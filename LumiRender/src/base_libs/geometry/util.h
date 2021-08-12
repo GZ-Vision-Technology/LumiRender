@@ -148,6 +148,11 @@ namespace luminous {
             NDSC_XPU bool is_hit() const {
                 return triangle_id != invalid_uint32;
             }
+
+            XPU void print() const {
+                printf("triangle id:%u,instance_id:%u, bary:(%f,%f)",
+                       triangle_id, instance_id, bary.x, bary.y);
+            }
         };
     }
 }

@@ -39,7 +39,7 @@ namespace luminous {
             rtc_instances.reserve(instance_list.size());
             for (int i = 0; i < instance_list.size(); ++i) {
                 uint mesh_idx = instance_list[i];
-                RTCScene rtc_scene{nullptr};
+                RTCScene rtc_scene = rtcNewScene(rtc_device());
                 RTCGeometry mesh_geometry = rtc_geometries[mesh_idx];
                 rtcCommitGeometry(mesh_geometry);
                 rtcAttachGeometry(rtc_scene, mesh_geometry);
