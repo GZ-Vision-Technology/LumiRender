@@ -6,7 +6,7 @@
 #pragma once
 
 #include <embree3/rtcore.h>
-#include "interaction.h"
+#include "render/include/interaction.h"
 #include "base_libs/geometry/util.h"
 
 namespace luminous {

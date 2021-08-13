@@ -35,7 +35,7 @@ namespace luminous {
 
             NDSC std::string description() const;
 
-            RTCGeometry build_mesh(const Managed<float3> &positions,
+            RTCScene build_mesh(const Managed<float3> &positions,
                                    const Managed<TriangleHandle> &triangles,
                                    const MeshHandle &mesh);
 
