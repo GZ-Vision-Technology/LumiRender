@@ -25,6 +25,7 @@ namespace luminous {
 
         void CPUScene::create_device_memory() {
             _light_sampler->set_lights(_lights.const_host_buffer_view());
+            _distribution_mgr.init_on_host();
         }
 
         void CPUScene::init_accel() {

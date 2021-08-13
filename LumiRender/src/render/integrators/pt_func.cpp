@@ -15,15 +15,15 @@ namespace luminous {
                              uint max_depth, float rr_threshold, bool debug,
                              const SceneData *scene_data) {
             PerRayData prd{scene_data};
-            luminous::intersect_closest(scene_handle, ray, &prd);
-
-            if (prd.is_hit()) {
-                auto si = prd.compute_surface_interaction(ray);
-                auto bsdf = si.op_bsdf.value();
-                auto color = bsdf.base_color();
-                return color;
-            }
-            return 0;
+//            luminous::intersect_closest(scene_handle, ray, &prd);
+//
+//            if (prd.is_hit()) {
+//                auto si = prd.compute_surface_interaction(ray);
+//                auto bsdf = si.op_bsdf.value();
+//                auto color = bsdf.base_color();
+//                return color;
+//            }
+//            return 0;
             Spectrum L(0.f);
             Spectrum throughput(1.f);
             SurfaceInteraction si;
