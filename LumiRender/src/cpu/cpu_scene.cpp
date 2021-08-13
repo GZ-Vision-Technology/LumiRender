@@ -18,8 +18,13 @@ namespace luminous {
             convert_geometry_data(scene_graph);
             preload_textures(scene_graph);
             init_lights(scene_graph);
+            create_device_memory();
             init_accel();
             fill_scene_data();
+        }
+
+        void CPUScene::create_device_memory() {
+            _light_sampler->set_lights(_lights.const_host_buffer_view());
         }
 
         void CPUScene::init_accel() {
@@ -76,9 +81,6 @@ namespace luminous {
             _scene_data->materials = this->_materials.const_host_buffer_view();
         }
 
-//        RTCScene CPUScene::rtc_scene() {
-//            return _embree_accel->rtc_scene();
-//        }
 
     } // luminous::cpu
 } // luminous

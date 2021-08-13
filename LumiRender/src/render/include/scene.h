@@ -70,23 +70,21 @@ namespace luminous {
             vector<Image> _images;
 
         public:
-            Scene(Context *context) : _context(context) {}
+            explicit Scene(Context *context) : _context(context) {}
 
             void shrink_to_fit();
 
             NDSC virtual std::string description() const;
 
-            virtual size_t size_in_bytes() const;
+            NDSC virtual size_t size_in_bytes() const;
 
             virtual void clear();
-
-            Box3f scene_box() const {
-                return _scene_box;
-            }
 
             void init_materials(const SP<SceneGraph> &scene_graph);
 
             virtual void init(const SP<SceneGraph> &scene_graph) = 0;
+
+            virtual void create_device_memory() = 0;
 
             virtual void init_accel() = 0;
 

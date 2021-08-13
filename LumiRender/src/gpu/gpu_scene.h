@@ -31,7 +31,7 @@ namespace luminous {
 
             NDSC size_t size_in_bytes() const override;
 
-            void create_device_memory();
+            void create_device_memory() override;
 
             void synchronize_to_gpu();
 

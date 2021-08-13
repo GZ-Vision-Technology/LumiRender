@@ -19,11 +19,13 @@ namespace luminous {
             UP<EmbreeAccel> _embree_accel;
             UP<SceneData> _scene_data{new SceneData()};
         public:
-            CPUScene(Context *context);
+            explicit CPUScene(Context *context);
 
             void init(const SP<SceneGraph> &scene_graph) override;
 
-            NDSC const SceneData * scene_data() const { return _scene_data.get(); }
+            void create_device_memory() override;
+
+            NDSC const SceneData *scene_data() const { return _scene_data.get(); }
 
             NDSC RTCScene rtc_scene() { return _embree_accel->rtc_scene(); }
 
