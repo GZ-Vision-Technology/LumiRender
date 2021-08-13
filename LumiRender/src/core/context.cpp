@@ -127,7 +127,7 @@ namespace luminous {
 
     std::string Context::device() noexcept {
         if (_device.empty()) {
-            _device = cli_option<std::string>("device");
+            _device = _parse_result()["device"].as<std::string>();
         }
         return _device;
     }

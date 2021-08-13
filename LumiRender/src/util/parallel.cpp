@@ -12,6 +12,15 @@
 namespace luminous {
     inline namespace utility {
 
+        static int n_thread{0};
+        void set_thread_num(int num) {
+            n_thread = num;
+        }
+
+        int num_work_threads() {
+            return n_thread == 0 ? std::thread::hardware_concurrency() : n_thread;
+        }
+
         struct ParallelForContext {
             std::atomic_uint32_t work_index;
             size_t count = 0;

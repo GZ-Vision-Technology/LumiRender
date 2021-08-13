@@ -12,14 +12,10 @@
 namespace luminous {
     inline namespace utility {
 
-        static int n_thread{0};
-        static size_t num_work_threads() {
-            return n_thread == 0 ? std::thread::hardware_concurrency() : n_thread;
-        }
 
-        static void set_thread_num(int num) {
-            n_thread = num;
-        }
+        int num_work_threads();
+
+        void set_thread_num(int num);
 
         class AtomicFloat {
         private:

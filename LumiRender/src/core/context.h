@@ -28,6 +28,7 @@ namespace luminous {
         std::filesystem::path _in_dir;
         std::filesystem::path _scene_file;
         std::string _device;
+        int _thread_num{0};
         mutable cxxopts::Options _cli_options;
         mutable std::optional<cxxopts::ParseResult> _parsed_cli_options;
         mutable std::optional<std::string> _positional_option;
@@ -79,7 +80,7 @@ namespace luminous {
         }
 
         NDSC int thread_num() const noexcept {
-            return std::stoi(cli_option<std::string>("thread-num"));
+            return std::stoi(_parse_result()["thread-num"].as<std::string>());
         }
 
         void print_help() const noexcept {
