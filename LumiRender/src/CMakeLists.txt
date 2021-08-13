@@ -10,12 +10,14 @@ include_directories("${PROJECT_SOURCE_DIR}/thirdparty/assimp/include")
 include_directories("${PROJECT_SOURCE_DIR}/thirdparty/embree/include")
 
 include_directories("${CMAKE_BINARY_DIR}/thirdparty/assimp/include")
+
+include_directories("${LUMINOUS_VCPKG_PATH}/include")
+
 if(LUMINOUS_LOCAL_EMBREE)
-    include_directories("${LUMINOUS_LOCAL_EMBREE_PATH}/include")
+
 else()
     include_directories("${CMAKE_BINARY_DIR}/thirdparty/embree/include")
 endif()
-include_directories("${LUMINOUS_LOCAL_OIIO_PATH}/include")
 
 if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
     add_library(luminous-all INTERFACE)

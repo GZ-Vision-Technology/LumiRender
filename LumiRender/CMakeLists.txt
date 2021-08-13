@@ -31,6 +31,8 @@ endfunction()
 #target_link_libraries(assimp_config INTERFACE assimp::assimp)
 #set_target_properties(assimp PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/")
 
+set(LUMINOUS_VCPKG_PATH "E:/work/tools/vcpkg/installed/x64-windows/include")
+
 find_package(assimp CONFIG REQUIRED)
 add_library(assimp_config INTERFACE)
 target_link_libraries(assimp_config INTERFACE assimp::assimp)
@@ -44,7 +46,6 @@ set(LUMINOUS_CPU_BACKEND ON)
 set(LUMINOUS_LOCAL_EMBREE ON)
 
 if (LUMINOUS_LOCAL_EMBREE)
-    set(LUMINOUS_LOCAL_EMBREE_PATH "E:/work/tools/vcpkg/installed/x64-windows/include")
     find_package(embree 3 CONFIG REQUIRED)
 else()
     add_subdirectory(thirdparty/embree)
@@ -57,8 +58,7 @@ else()
             WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
-set(LUMINOUS_LOCAL_OIIO_PATH "E:/work/tools/vcpkg/installed/x64-windows")
-
+find_package(OpenImageIO CONFIG REQUIRED)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions (-D DEBUG_BUILD)

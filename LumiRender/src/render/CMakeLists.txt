@@ -6,6 +6,7 @@ target_link_libraries(luminous-render
         PUBLIC
         assimp_config
         embree
+#        OpenImageIO
         luminous-base_libs
         luminous-core)
 
