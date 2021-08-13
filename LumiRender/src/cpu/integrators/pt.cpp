@@ -47,8 +47,6 @@ namespace luminous {
                 Box2u tile_bound{p_min, p_max};
                 Sampler sampler = _sampler;
                 tile_bound.for_each([&](uint2 pixel) {
-//                    pixel = make_uint2(383,383);
-
                     Film *film = _camera.film();
                     sampler.start_pixel_sample(pixel, _frame_index, 0);
                     auto ss = sampler.sensor_sample(pixel);

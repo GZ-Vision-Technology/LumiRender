@@ -45,18 +45,15 @@ namespace luminous {
                 RTCScene mesh_scene = mesh_scenes[mesh_idx];
                 RTCGeometry instance = rtcNewGeometry(rtc_device(), RTC_GEOMETRY_TYPE_INSTANCE);
                 rtcSetGeometryInstancedScene(instance, mesh_scene);
-
+                rtcSetGeometryTimeStepCount(instance,1);
                 uint transform_idx = inst_to_transform[i];
                 const Transform &transform = transform_list[transform_idx];
+                rtcAttachGeometry(_rtc_scene, instance);
                 rtcSetGeometryTransform(instance, 0, RTC_FORMAT_FLOAT4X4_COLUMN_MAJOR, transform.mat4x4_ptr());
                 rtcCommitGeometry(instance);
-                rtcAttachGeometry(_rtc_scene, instance);
                 rtcReleaseGeometry(instance);
             }
             rtcCommitScene(_rtc_scene);
-//            RTCBounds rb;
-//            rtcGetSceneBounds(_rtc_scene, &rb);
-//            printf("ADsfadsfdasf");
         }
 
         RTCScene EmbreeAccel::build_mesh(const Managed<float3> &positions,

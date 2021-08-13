@@ -44,7 +44,7 @@ namespace luminous {
             rtcInitIntersectContext(&context);
             RTCRayHit rh = to_RTCRayHit(ray);
             rtcIntersect1(scene, &context, &rh);
-            prd->closest_hit.instance_id = rh.hit.geomID;
+            prd->closest_hit.instance_id = rh.hit.instID[0];
             prd->closest_hit.triangle_id = rh.hit.primID;
             prd->closest_hit.bary = make_float2(rh.hit.u, rh.hit.v);
             return prd->is_hit();
