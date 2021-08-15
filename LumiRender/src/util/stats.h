@@ -32,6 +32,7 @@ namespace luminous {
     };
 
     class StatsAccumulator;
+
     class StatRegisterer {
     public:
         // StatRegisterer Public Methods
@@ -43,6 +44,7 @@ namespace luminous {
             }
             funcs->push_back(func);
         }
+
         static void CallCallbacks(StatsAccumulator &accum);
 
     private:
@@ -51,7 +53,9 @@ namespace luminous {
     };
 
     void PrintStats(FILE *dest);
+
     void ClearStats();
+
     void ReportThreadStats();
 
     class StatsAccumulator {
@@ -60,9 +64,11 @@ namespace luminous {
         void ReportCounter(const std::string &name, int64_t val) {
             counters[name] += val;
         }
+
         void ReportMemoryCounter(const std::string &name, int64_t val) {
             memoryCounters[name] += val;
         }
+
         void ReportIntDistribution(const std::string &name, int64_t sum,
                                    int64_t count, int64_t min, int64_t max) {
             intDistributionSums[name] += sum;
@@ -78,6 +84,7 @@ namespace luminous {
                 intDistributionMaxs[name] =
                         std::max(intDistributionMaxs[name], max);
         }
+
         void ReportFloatDistribution(const std::string &name, double sum,
                                      int64_t count, double min, double max) {
             floatDistributionSums[name] += sum;
@@ -93,16 +100,19 @@ namespace luminous {
                 floatDistributionMaxs[name] =
                         std::max(floatDistributionMaxs[name], max);
         }
+
         void ReportPercentage(const std::string &name, int64_t num, int64_t denom) {
             percentages[name].first += num;
             percentages[name].second += denom;
         }
+
         void ReportRatio(const std::string &name, int64_t num, int64_t denom) {
             ratios[name].first += num;
             ratios[name].second += denom;
         }
 
         void Print(FILE *file);
+
         void Clear();
 
     private:
@@ -121,6 +131,36 @@ namespace luminous {
         std::map<std::string, std::pair<int64_t, int64_t>> ratios;
     };
 
+
+    enum class Prof {
+        SceneConstruction,
+        AccelConstruction,
+        TextureLoading,
+
+        NumProfCategories
+    };
+
+    static_assert((int) Prof::NumProfCategories <= 64,
+                  "No more than 64 profiling categories may be defined.");
+
+    inline uint64_t ProfToBits(Prof p) { return 1ull << (int) p; }
+
+    static const char *ProfNames[] = {
+            "Scene parsing and creation",
+            "Acceleration structure creation",
+            "Texture loading",
+
+    };
+
+    static_assert((int)Prof::NumProfCategories ==
+    sizeof(ProfNames) / sizeof(ProfNames[0]),
+    "ProfNames[] array and Prof enumerant have different "
+    "numbers of entries!");
+
+    extern thread_local uint64_t ProfilerState;
+    inline uint64_t CurrentProfilerState() { return ProfilerState; }
+
+    
 }
 
 #define TASK_TAG(task_name) TaskTag __(#task_name);
