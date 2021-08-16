@@ -8,8 +8,7 @@
 namespace luminous {
     inline namespace cpu {
         void CPUTask::init(const Parser &parser) {
-            auto scene_graph = parser.parse();
-            scene_graph->create_shapes();
+            auto scene_graph = build_scene_graph(parser);
             _integrator = std::make_unique<CPUPathTracer>(_context);
             _integrator->init(scene_graph);
             update_device_buffer();
@@ -29,7 +28,7 @@ namespace luminous {
             camera()->film()->set_frame_buffer_view(_frame_buffer.host_buffer_view());
         }
 
-        FrameBufferType *CPUTask::download_frame_buffer() {
+        FrameBufferType *CPUTask::get_frame_buffer() {
             return _frame_buffer.data();
         }
 

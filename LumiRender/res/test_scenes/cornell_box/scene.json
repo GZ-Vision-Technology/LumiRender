@@ -231,11 +231,14 @@
 			},
 			"film" : {
 				"param" : {
-					"resolution" : [768, 768],
-					"file_name" : "cornell_box.png"
+					"resolution" : [768, 768]
 				}
 			}
 		}
+	},
+	"output" : {
+		"fn":"cornell-box.png",
+		"spp" : 3
 	},
 	"filter" : {
 		"type" : "triangle",

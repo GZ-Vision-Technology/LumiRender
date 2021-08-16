@@ -29,6 +29,7 @@ namespace luminous {
             vector <SP<const ModelInstance>> instance_list;
             vector <TextureConfig> tex_configs;
             vector <MaterialConfig> material_configs;
+            OutputConfig output_config;
         private:
             bool is_contain(const string &key) {
                 return _key_to_idx.find(key) != _key_to_idx.end();

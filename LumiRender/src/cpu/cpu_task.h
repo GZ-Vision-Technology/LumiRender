@@ -21,7 +21,7 @@ namespace luminous {
 
             void update_device_buffer() override;
 
-            FrameBufferType *download_frame_buffer() override;
+            FrameBufferType *get_frame_buffer() override;
         };
     } // luminous::cpu
 } // luminous

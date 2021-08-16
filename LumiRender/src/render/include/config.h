@@ -172,13 +172,17 @@ namespace luminous {
             }
         };
 
+        struct OutputConfig : Config {
+            std::string fn;
+            int spp;
+        };
+
         struct FilterConfig : Config {
             float2 radius;
         };
 
         struct FilmConfig : Config {
             uint2 resolution;
-            std::string file_name;
         };
 
         struct SensorConfig : Config {

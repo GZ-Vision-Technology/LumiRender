@@ -257,7 +257,7 @@ namespace luminous {
 
     void App::update_render_texture() {
         auto res = _task->resolution();
-        test_color = _task->download_frame_buffer();
+        test_color = _task->get_frame_buffer();
 
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, res.x, res.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, test_color);

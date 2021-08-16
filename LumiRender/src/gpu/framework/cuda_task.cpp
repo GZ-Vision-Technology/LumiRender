@@ -12,8 +12,7 @@ namespace luminous {
     inline namespace gpu {
 
         void CUDATask::init(const Parser &parser) {
-            auto scene_graph = parser.parse();
-            scene_graph->create_shapes();
+            auto scene_graph = build_scene_graph(parser);
             _integrator = std::make_unique<MegakernelPT>(_device, _context);
             _integrator->init(scene_graph);
             update_device_buffer();
@@ -30,7 +29,7 @@ namespace luminous {
             camera()->film()->set_frame_buffer_view(_frame_buffer.device_buffer_view());
         }
 
-        FrameBufferType *CUDATask::download_frame_buffer() {
+        FrameBufferType *CUDATask::get_frame_buffer() {
             _frame_buffer.synchronize_to_cpu();
             return _frame_buffer.data();
         }

@@ -21,6 +21,7 @@ namespace luminous {
         Context * _context{nullptr};
         UP<Integrator> _integrator;
         double _dt{0};
+        OutputConfig _output_config;
         Managed<float4, float4> _accumulate_buffer;
         Managed<FrameBufferType, FrameBufferType> _frame_buffer;
     public:
@@ -29,6 +30,13 @@ namespace luminous {
             _context(context) {}
 
         virtual void init(const Parser &parser) = 0;
+
+        NDSC std::shared_ptr<SceneGraph> build_scene_graph(const Parser &parser) {
+            auto scene_graph = parser.parse();
+            scene_graph->create_shapes();
+            _output_config = scene_graph->output_config;
+            return scene_graph;
+        }
 
         virtual void update() {
             _integrator->update();
@@ -47,7 +55,7 @@ namespace luminous {
             return _integrator->camera();
         }
 
-        virtual FrameBufferType *download_frame_buffer() = 0;
+        virtual FrameBufferType *get_frame_buffer() = 0;
 
         NDSC uint2 resolution() {
             return camera()->film()->resolution();

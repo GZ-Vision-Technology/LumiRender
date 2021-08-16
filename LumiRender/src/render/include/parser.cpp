@@ -121,7 +121,6 @@ namespace luminous {
             fc.set_full_type("RGBFilm");
             ParameterSet param(ps["param"]);
             fc.resolution = param["resolution"].as_uint2(make_uint2(500, 500));
-            fc.file_name = param["file_name"].as_string("luminous.png");
             return fc;
         }
 
@@ -257,6 +256,13 @@ namespace luminous {
             return ret;
         }
 
+        OutputConfig parse_output(const ParameterSet &ps) {
+            OutputConfig ret;
+            ret.fn = ps["fn"].as_string("luminous.png");
+            ret.spp = ps["spp"].as_int(1024);
+            return ret;
+        }
+
         SP<SceneGraph> Parser::parse() const {
             auto shapes = _data["shapes"];
             auto scene_graph = std::make_shared<SceneGraph>(_context);
@@ -268,6 +274,7 @@ namespace luminous {
             scene_graph->tex_configs = parse_textures(_data["textures"]);
             scene_graph->material_configs = parse_materials(_data["materials"]);
             scene_graph->integrator_config = parse_integrator(ParameterSet(_data["integrator"]));
+            scene_graph->output_config = parse_output(ParameterSet(_data["output"]));
             return scene_graph;
         }
     }
