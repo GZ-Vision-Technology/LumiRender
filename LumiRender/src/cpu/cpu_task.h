@@ -21,7 +21,9 @@ namespace luminous {
 
             void update_device_buffer() override;
 
-            FrameBufferType *get_frame_buffer() override;
+            NDSC FrameBufferType *get_frame_buffer() override;
+
+            NDSC float4 *get_accumulate_buffer() override;
         };
     } // luminous::cpu
 } // luminous

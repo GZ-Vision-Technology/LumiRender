@@ -33,5 +33,10 @@ namespace luminous {
             _frame_buffer.synchronize_to_cpu();
             return _frame_buffer.data();
         }
+
+        float4 *CUDATask::get_accumulate_buffer() {
+            _accumulate_buffer.synchronize_to_cpu();
+            return _accumulate_buffer.data();
+        }
     }
 }

@@ -229,6 +229,7 @@ namespace luminous {
             } else {
                 save_other(path);
             }
+            LUMINOUS_INFO("save picture ",path);
         }
 
         void Image::save_hdr(const std::filesystem::path &path) {

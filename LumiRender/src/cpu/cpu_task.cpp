@@ -32,5 +32,9 @@ namespace luminous {
             return _frame_buffer.data();
         }
 
+        float4 *CPUTask::get_accumulate_buffer() {
+            return _accumulate_buffer.data();
+        }
+
     } // luminous::cpu
 } // luminous

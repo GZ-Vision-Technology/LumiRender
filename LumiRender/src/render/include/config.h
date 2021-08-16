@@ -50,7 +50,7 @@ namespace luminous {
         };
 
         struct TransformConfig : Config {
-            TransformConfig() {};
+            TransformConfig() = default;
 
             // trs and matrix4x4 and ...
             float3 t;
@@ -92,20 +92,20 @@ namespace luminous {
             std::string material_name;
             // model param
             mutable std::string fn;
-            bool smooth;
-            bool swap_handed;
-            uint subdiv_level;
+            bool smooth{};
+            bool swap_handed{};
+            uint subdiv_level{};
             // quad param
-            float width;
-            float height;
+            float width{};
+            float height{};
         };
 
         struct TextureMappingConfig : Config {
-            float su, sv, du, dv;
+            float su{}, sv{}, du{}, dv{};
         };
 
         struct TextureConfig : Config {
-            bool is_image() const {
+            NDSC bool is_image() const {
                 return fn != "";
             }
 
@@ -117,7 +117,7 @@ namespace luminous {
 
             // for image texture
             index_t image_idx{invalid_uint32};
-            std::string fn = "";
+            std::string fn;
             PixelFormat pixel_format = PixelFormat::UNKNOWN;
             void *handle{nullptr};
         };
@@ -187,10 +187,10 @@ namespace luminous {
 
         struct SensorConfig : Config {
             TransformConfig transform_config;
-            float fov_y;
-            float velocity;
-            float focal_distance;
-            float lens_radius;
+            float fov_y{};
+            float velocity{};
+            float focal_distance{};
+            float lens_radius{};
             FilmConfig film_config;
         };
 

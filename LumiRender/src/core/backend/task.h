@@ -15,10 +15,11 @@
 
 namespace luminous {
     using std::unique_ptr;
+
     class Task : public Noncopyable {
     protected:
         std::shared_ptr<Device> _device{nullptr};
-        Context * _context{nullptr};
+        Context *_context{nullptr};
         UP<Integrator> _integrator;
         double _dt{0};
         OutputConfig _output_config;
@@ -26,8 +27,8 @@ namespace luminous {
         Managed<FrameBufferType, FrameBufferType> _frame_buffer;
     public:
         Task(const std::shared_ptr<Device> &device, Context *context)
-            : _device(device),
-            _context(context) {}
+                : _device(device),
+                  _context(context) {}
 
         virtual void init(const Parser &parser) = 0;
 
@@ -42,26 +43,42 @@ namespace luminous {
             _integrator->update();
         }
 
+        void save_to_file() {
+            float4 *buffer = get_accumulate_buffer();
+            auto res = resolution();
+            size_t size = res.x * res.y * pixel_size(PixelFormat::RGBA32F);
+            std::byte * p = new std::byte[size];
+            Image image = Image(PixelFormat::RGBA32F, p, res);
+            std::filesystem::path path = _context->scene_path() / _output_config.fn;
+            image.save_image(path);
+        }
+
         virtual void render_gui(double dt) {
             _dt = dt;
             _integrator->render();
+
+            if (_integrator->frame_index() == _output_config.frame_num) {
+                save_to_file();
+            }
         }
 
         virtual void render_cli() = 0;
 
         virtual void update_device_buffer() = 0;
 
-        virtual Sensor * camera() {
+        NDSC virtual Sensor *camera() {
             return _integrator->camera();
         }
 
-        virtual FrameBufferType *get_frame_buffer() = 0;
+        NDSC virtual FrameBufferType *get_frame_buffer() = 0;
+
+        NDSC virtual float4 *get_accumulate_buffer() = 0;
 
         NDSC uint2 resolution() {
             return camera()->film()->resolution();
         }
 
-        virtual void on_key(int key,int scancode, int action, int mods) {
+        virtual void on_key(int key, int scancode, int action, int mods) {
             auto p_camera = camera();
             float3 forward = p_camera->forward();
             float3 up = p_camera->up();
