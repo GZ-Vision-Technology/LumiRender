@@ -13,6 +13,7 @@
 #include "base_libs/optics/rgb.h"
 #include "core/concepts.h"
 #include "image_base.h"
+#include "parallel.h"
 #include <utility>
 
 namespace luminous {
@@ -61,6 +62,16 @@ namespace luminous {
                     p += stride;
                     func(p, i);
                 }
+            }
+
+            template<typename Func>
+            void for_each_pixel(Func func) {
+                auto p = _pixel.get();
+                int stride = pixel_size(_pixel_format);
+                parallel_for(pixel_num(), [&](uint i, uint tid){
+                    std::byte *pixel = const_cast<std::byte*>(p + stride * i);
+                    func(pixel, i);
+                });
             }
 
             void save_image(const std::filesystem::path &fn);

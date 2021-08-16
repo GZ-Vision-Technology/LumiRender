@@ -47,8 +47,12 @@ namespace luminous {
             float4 *buffer = get_accumulate_buffer();
             auto res = resolution();
             size_t size = res.x * res.y * pixel_size(PixelFormat::RGBA32F);
-            std::byte * p = new std::byte[size];
+            auto p = new std::byte[size];
             Image image = Image(PixelFormat::RGBA32F, p, res);
+            image.for_each_pixel([&](std::byte *pixel, int i){
+                auto fp = reinterpret_cast<float4 *>(pixel);
+                *fp = Spectrum::linear_to_srgb(buffer[i]);
+            });
             std::filesystem::path path = _context->scene_path() / _output_config.fn;
             image.save_image(path);
         }
