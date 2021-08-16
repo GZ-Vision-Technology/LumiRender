@@ -110,6 +110,10 @@ namespace luminous {
             return _device_buffer.data();
         }
 
+        const THost *operator->() const {
+            return BaseClass::data();
+        }
+
         THost *operator->() {
             return BaseClass::data();
         }

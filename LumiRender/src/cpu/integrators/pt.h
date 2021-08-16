@@ -26,6 +26,10 @@ namespace luminous {
 
             void init(const SP<SceneGraph> &scene_graph) override;
 
+            NDSC uint frame_index() const override {
+                return _frame_index;
+            }
+
             Sensor *camera() override;
 
             void update() override;

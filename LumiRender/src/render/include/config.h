@@ -174,7 +174,7 @@ namespace luminous {
 
         struct OutputConfig : Config {
             std::string fn;
-            int spp;
+            int frame_num;
         };
 
         struct FilterConfig : Config {

@@ -16,7 +16,7 @@ namespace luminous {
             uint _max_depth;
             float _rr_threshold;
         public:
-            virtual ~Integrator() {}
+            virtual ~Integrator() = default;
 
             virtual void init(const std::shared_ptr<SceneGraph> &scene_graph) = 0;
 
@@ -25,7 +25,9 @@ namespace luminous {
                 _rr_threshold = ic.rr_threshold;
             }
 
-            virtual Sensor *camera() = 0;
+            NDSC virtual uint frame_index() const = 0;
+
+            NDSC virtual Sensor *camera() = 0;
 
             virtual void update() = 0;
 

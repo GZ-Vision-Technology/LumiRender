@@ -30,6 +30,10 @@ namespace luminous {
 
             void init_launch_params();
 
+            NDSC uint frame_index() const override {
+                return _launch_params->frame_index;
+            }
+
             Sensor *camera() override;
 
             void update() override;
