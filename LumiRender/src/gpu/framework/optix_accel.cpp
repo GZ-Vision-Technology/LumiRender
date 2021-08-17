@@ -285,7 +285,6 @@ namespace luminous {
                 input.triangleArray.indexBuffer = triangles.address<CUdeviceptr>(mesh.triangle_offset);
             }
             {
-                //todo fix
                 input.triangleArray.flags = &geom_flags;
                 input.triangleArray.numSbtRecords = 1;
                 input.triangleArray.sbtIndexOffsetBuffer = reinterpret_cast<CUdeviceptr>(nullptr);

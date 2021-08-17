@@ -32,14 +32,14 @@ namespace luminous {
             using const_value_type = const float;
         private:
             // todo change to indice mode, reduce memory usage
-            BufferView <const_value_type> _func{};
-            BufferView <const_value_type> _CDF{};
+            BufferView<const_value_type> _func{};
+            BufferView<const_value_type> _CDF{};
             float _func_integral{};
         public:
             XPU Distribution1D() = default;
 
-            XPU Distribution1D(BufferView <const_value_type> func,
-                               BufferView <const_value_type> CDF, float integral)
+            XPU Distribution1D(BufferView<const_value_type> func,
+                               BufferView<const_value_type> CDF, float integral)
                     : _func(func), _CDF(CDF), _func_integral(integral) {}
 
             NDSC_XPU size_t size() const { return _func.size(); }
@@ -48,7 +48,7 @@ namespace luminous {
                 auto predicate = [&](int index) {
                     return _CDF[index] <= u;
                 };
-                int offset = find_interval((int) _CDF.size(), predicate);
+                size_t offset = find_interval((int) _CDF.size(), predicate);
                 if (ofs) {
                     *ofs = offset;
                 }
@@ -108,7 +108,7 @@ namespace luminous {
                         CDF[i] = CDF[i] / integral;
                     }
                 }
-                return Distribution1DBuilder(move(func), move(CDF), integral);
+                return {move(func), move(CDF), integral};
             }
         };
 
@@ -141,8 +141,8 @@ namespace luminous {
             }
 
             NDSC_XPU float PDF(float2 p) const {
-                int iu = clamp(int(p[0] * _conditional_v[0].size()), 0, _conditional_v[0].size() - 1);
-                int iv = clamp(int(p[1] * _marginal.size()), 0, _marginal.size() - 1);
+                size_t iu = clamp(size_t(p[0] * _conditional_v[0].size()), 0, _conditional_v[0].size() - 1);
+                size_t iv = clamp(size_t(p[1] * _marginal.size()), 0, _marginal.size() - 1);
                 return _conditional_v[iv].func_at(iu) / _marginal.integral();
             }
 
@@ -161,7 +161,7 @@ namespace luminous {
                     marginal_func.push_back(conditional_v[v].func_integral);
                 }
                 Distribution1DBuilder marginal_builder = Distribution1D::create_builder(marginal_func);
-                return Distribution2DBuilder(move(conditional_v), move(marginal_builder));
+                return {move(conditional_v), move(marginal_builder)};
             }
         };
     } // luminous::sampling

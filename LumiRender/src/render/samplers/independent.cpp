@@ -4,8 +4,6 @@
 
 
 #include "sampler.h"
-#include "independent.h"
-#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
