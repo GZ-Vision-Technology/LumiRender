@@ -202,12 +202,6 @@
 			"rr_threshold" : 1
 		}
 	},
-	"sampler" : {
-		"type" : "PCGSampler",
-		"param" : {
-			"spp" : 1
-		}
-	},
 	"light_sampler": {
 		"type": "UniformLightSampler"
 	},
@@ -236,9 +230,15 @@
 			}
 		}
 	},
+	"sampler" : {
+		"type" : "PCGSampler",
+		"param" : {
+			"spp" : 1
+		}
+	},
 	"output" : {
-		"fn":"cornell-box.png",
-		"frame_num" : 1
+		"fn":"cornell-box-1-16.png",
+		"frame_num" : 16
 	},
 	"filter" : {
 		"type" : "triangle",
