@@ -127,7 +127,7 @@ namespace luminous {
 
         void synchronize_to_cpu() {
             if (BaseClass::size() == 0) {
-                return;
+                BaseClass::resize(_device_buffer.size());
             }
             _device_buffer.download(BaseClass::data());
         }
