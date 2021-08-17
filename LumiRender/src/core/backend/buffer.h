@@ -76,11 +76,11 @@ namespace luminous {
         size_t stride_in_bytes() const { return sizeof(value_type); }
 
         template<typename U = void *>
-        auto ptr() const {
-            return (U) (_impl == nullptr ? nullptr: _impl->ptr());
+        NDSC auto ptr() const {
+            return (U) (_impl == nullptr ? nullptr : _impl->ptr());
         }
 
-        BufferView <value_type> view(size_t offset = 0, size_t count = -1) const {
+        NDSC BufferView <value_type> view(size_t offset = 0, size_t count = -1) const {
             count = fix_count(offset, count, size());
             return BufferView<value_type>(data() + offset, count);
         }
@@ -96,11 +96,11 @@ namespace luminous {
             _impl->memset(val);
         }
 
-        size_t size() const {
+        NDSC size_t size() const {
             return size_in_bytes() / sizeof(value_type);
         }
 
-        size_t size_in_bytes() const {
+        NDSC size_t size_in_bytes() const {
             return _impl == nullptr ? 0 : _impl->size();
         }
 

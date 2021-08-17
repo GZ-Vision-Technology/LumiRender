@@ -259,7 +259,7 @@ namespace luminous {
         OutputConfig parse_output(const ParameterSet &ps) {
             OutputConfig ret;
             ret.fn = ps["fn"].as_string("luminous.png");
-            ret.frame_num = ps["frame_num"].as_int(1024);
+            ret.frame_num = ps["frame_num"].as_int(0);
             return ret;
         }
 

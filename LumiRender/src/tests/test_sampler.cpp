@@ -21,13 +21,15 @@ void test_sampler() {
     config.spp = 9;
     auto sampler = Sampler::create(config);
     cout << sampler.to_string() << endl;
-    cout << sampler.next_2d().to_string() << endl;
     auto s2 = sampler;
     auto f = 0.f;
-    for (int i = 0; i < 10000000; ++i) {
-        f = f + sampler.next_1d();
-    }
-    cout << sampler.to_string();
+    sampler.start_pixel_sample(make_uint2(0), 0, 0);
+    cout << sampler.next_2d().to_string() << endl;
+    cout << sampler.next_2d().to_string() << endl;
+
+    sampler.start_pixel_sample(make_uint2(0), 0, 2);
+    cout << sampler.next_2d().to_string() << endl;
+//    cout << sampler.next_2d().to_string() << endl;
 }
 
 void test_sensor() {
@@ -54,5 +56,5 @@ void test_sensor() {
 }
 
 int main() {
-    test_sensor();
+    test_sampler();
 }

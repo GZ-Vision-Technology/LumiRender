@@ -49,7 +49,7 @@ namespace luminous {
             size_t size = res.x * res.y * pixel_size(PixelFormat::RGBA32F);
             auto p = new std::byte[size];
             Image image = Image(PixelFormat::RGBA32F, p, res);
-            image.for_each_pixel([&](std::byte *pixel, int i){
+            image.for_each_pixel([&](std::byte *pixel, int i) {
                 auto fp = reinterpret_cast<float4 *>(pixel);
                 *fp = Spectrum::linear_to_srgb(buffer[i]);
             });
@@ -61,7 +61,8 @@ namespace luminous {
             _dt = dt;
             _integrator->render();
 
-            if (_integrator->frame_index() == _output_config.frame_num) {
+            if (_integrator->frame_index() == _output_config.frame_num
+                && _output_config.frame_num != 0) {
                 save_to_file();
             }
         }
