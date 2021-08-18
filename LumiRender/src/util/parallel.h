@@ -57,26 +57,17 @@ namespace luminous {
 
 
         template<class F>
-        void tiled_for_2d(const uint2 &dim, const uint2 &tile_size, bool parallel, F &&func) {
-            auto tiles = (dim + tile_size - make_uint2(1)) / tile_size;
-            auto body = [&](uint2 t, uint32_t tid) {
-                for (int ty = 0; ty < tile_size[1]; ty++) {
-                    for (int tx = 0; tx < tile_size[0]; tx++) {
-                        int x = tx + t[0] * tile_size.x;
-                        int y = ty + t[1] * tile_size.y;
-                        func(make_uint2(x, y), tid);
-                    }
-                }
-            };
-            if (parallel) {
-                parallel_for_2d(tiles, body);
-            } else {
-                for (int j = 0; j < tiles[1]; j++) {
-                    for (int i = 0; i < tiles[0]; i++) {
-                        body(make_uint2(i, j), 0);
-                    }
-                }
-            }
+        void tiled_for_2d(const uint2 &dim, const uint2 &tile_size, F &&func, bool parallel = true) {
+            uint2 n_tiles = (dim + tile_size - 1u) / tile_size;
+            parallel_for_2d(n_tiles, [&](uint2 tile, uint thread_id) {
+                uint2 p_min = tile * tile_size;
+                uint2 p_max = p_min + tile_size;
+                p_max = select(p_max > dim, dim, p_max);
+                Box2u tile_bound{p_min, p_max};
+                tile_bound.for_each([&](uint2 pixel) {
+                    func(pixel, thread_id);
+                });
+            });
         }
 
         namespace thread {
