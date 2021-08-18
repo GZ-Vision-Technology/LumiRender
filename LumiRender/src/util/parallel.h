@@ -59,12 +59,12 @@ namespace luminous {
         template<class F>
         void tiled_for_2d(const uint2 &dim, const uint2 &tile_size, bool parallel, F &&func) {
             auto tiles = (dim + tile_size - make_uint2(1)) / tile_size;
-            auto body = [&](uint2 t, uint32_t) {
+            auto body = [&](uint2 t, uint32_t tid) {
                 for (int ty = 0; ty < tile_size[1]; ty++) {
                     for (int tx = 0; tx < tile_size[0]; tx++) {
                         int x = tx + t[0] * tile_size.x;
                         int y = ty + t[1] * tile_size.y;
-                        func(make_float2(x, y));
+                        func(make_uint2(x, y), tid);
                     }
                 }
             };
@@ -73,7 +73,7 @@ namespace luminous {
             } else {
                 for (int j = 0; j < tiles[1]; j++) {
                     for (int i = 0; i < tiles[0]; i++) {
-                        body(make_float2(i, j), 0);
+                        body(make_uint2(i, j), 0);
                     }
                 }
             }
