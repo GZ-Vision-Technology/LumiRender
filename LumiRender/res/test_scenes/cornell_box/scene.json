@@ -237,8 +237,8 @@
 		}
 	},
 	"output" : {
-		"fn":"cornell-box-1-16.png",
-		"frame_num" : 16
+		"fn":"cornell-box.png",
+		"frame_num" : 0
 	},
 	"filter" : {
 		"type" : "triangle",

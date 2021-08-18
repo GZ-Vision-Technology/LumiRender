@@ -4,7 +4,6 @@
 
 #include "envmap.h"
 
-
 namespace luminous {
     inline namespace render {
 
@@ -72,7 +71,7 @@ namespace luminous {
             auto width = image.width();
             auto height = image.height();
             std::vector<float> ret(image.pixel_num(), 0);
-            auto func = [&](const std::byte *pixel, index_t idx) {
+            image.for_each_pixel([&](const std::byte *pixel, index_t idx) {
                 float f = 0;
                 float v = idx / width + 0.5f;
                 float theta = v / height;
@@ -93,8 +92,7 @@ namespace luminous {
                         break;
                 }
                 ret[idx] = f * sinTheta;
-            };
-            image.for_each_pixel(func);
+            });
             return ret;
         })
 

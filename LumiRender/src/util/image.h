@@ -58,10 +58,10 @@ namespace luminous {
             void for_each_pixel(Func func) const {
                 auto p = _pixel.get();
                 int stride = pixel_size(_pixel_format);
-                for (int i = 0; i < pixel_num(); ++i) {
-                    p += stride;
-                    func(p, i);
-                }
+                parallel_for(pixel_num(), [&](uint i, uint tid){
+                    const std::byte *pixel = p + stride * i;
+                    func(pixel, i);
+                });
             }
 
             template<typename Func>
