@@ -4,8 +4,6 @@
 
 #include "pt.h"
 #include "cpu/cpu_scene.h"
-#include "render/integrators/pt_func.h"
-#include "util/parallel.h"
 
 using std::cout;
 
@@ -49,7 +47,7 @@ namespace luminous {
                 uint spp = sampler.spp();
                 Spectrum L(0.f);
                 for (int i = 0; i < spp; ++i) {
-                    L += Li(ray, (uint64_t)_scene->rtc_scene(), sampler,
+                    L += Li(ray, _scene->scene_handle(), sampler,
                             _max_depth, _rr_threshold, false, _scene->scene_data());
                 }
                 L = L / float(spp);

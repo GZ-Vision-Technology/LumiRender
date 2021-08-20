@@ -27,7 +27,7 @@ namespace luminous {
 
             static void init_device();
 
-            NDSC RTCScene rtc_scene() { return _rtc_scene; }
+            NDSC RTCScene rtc_scene() const { return _rtc_scene; }
 
             static RTCDevice rtc_device() { return _rtc_device; }
 

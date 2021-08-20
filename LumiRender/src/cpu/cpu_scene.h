@@ -27,7 +27,9 @@ namespace luminous {
 
             NDSC const SceneData *scene_data() const { return _scene_data.get(); }
 
-            NDSC RTCScene rtc_scene() { return _embree_accel->rtc_scene(); }
+            NDSC RTCScene rtc_scene() const { return _embree_accel->rtc_scene(); }
+
+            NDSC uint64_t scene_handle() const { return (uint64_t)rtc_scene(); }
 
             void fill_scene_data();
 
