@@ -2,7 +2,7 @@
 // Created by Zero on 2021/3/24.
 //
 
-#include "wavefront_pt.h"
+#include "integrator.h"
 
 namespace luminous {
     inline namespace gpu {

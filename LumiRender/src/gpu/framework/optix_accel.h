@@ -93,8 +93,6 @@ namespace luminous {
 
             ~OptixAccel();
 
-            void test();
-
             size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 
             void launch(uint2 res, Managed<LaunchParams> &launch_params);

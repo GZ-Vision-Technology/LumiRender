@@ -459,9 +459,5 @@ namespace luminous {
         OptixAccel::~OptixAccel() {
             clear();
         }
-
-        void OptixAccel::test() {
-
-        }
     }
 }
