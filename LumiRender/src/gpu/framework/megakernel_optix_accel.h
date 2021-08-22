@@ -51,7 +51,6 @@ namespace luminous {
                 Buffer<RayGenRecord> rg_record{nullptr};
                 Buffer<SceneRecord> miss_record{nullptr};
                 Buffer<SceneRecord> hit_record{nullptr};
-                Buffer<OptixInstance> instances{nullptr};
             };
 
             DevicePtrTable _device_ptr_table;

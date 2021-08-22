@@ -106,10 +106,10 @@ namespace luminous {
 
             size_t instance_num = instance_list.size();
             OptixBuildInput instance_input = {};
-            _device_ptr_table.instances = _device->allocate_buffer<OptixInstance>(instance_num);
+            _instances = _device->allocate_buffer<OptixInstance>(instance_num);
             instance_input.type = OPTIX_BUILD_INPUT_TYPE_INSTANCES;
             instance_input.instanceArray.numInstances = instance_num;
-            instance_input.instanceArray.instances = _device_ptr_table.instances.ptr<CUdeviceptr>();
+            instance_input.instanceArray.instances = _instances.ptr<CUdeviceptr>();
 
             OptixAccelBuildOptions accel_options = {};
             accel_options.buildFlags = (OPTIX_BUILD_FLAG_ALLOW_COMPACTION | OPTIX_BUILD_FLAG_PREFER_FAST_TRACE);
@@ -144,7 +144,7 @@ namespace luminous {
                 mat4x4_to_array12(transform.mat4x4(), optix_instance.transform);
                 optix_instances.push_back(optix_instance);
             }
-            _device_ptr_table.instances.upload(optix_instances.data());
+            _instances.upload(optix_instances.data());
 
             OPTIX_CHECK(optixAccelBuild(_optix_device_context,
                                         0, &accel_options,
@@ -185,9 +185,9 @@ namespace luminous {
 #ifndef NDEBUG
             ctx_options.logCallbackLevel = 4; // status/progress
 #else
-ctx_options.logCallbackLevel = 2; // error
+            ctx_options.logCallbackLevel = 2; // error
 #endif
-ctx_options.logCallbackFunction = context_log_cb;
+            ctx_options.logCallbackFunction = context_log_cb;
 #if (OPTIX_VERSION >= 70200)
             ctx_options.validationMode = OPTIX_DEVICE_CONTEXT_VALIDATION_MODE_OFF;
 #endif

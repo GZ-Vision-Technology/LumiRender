@@ -261,6 +261,7 @@ namespace luminous {
             optixPipelineDestroy(_optix_pipeline);
             _program_group_table.clear();
             optixModuleDestroy(_optix_module);
+            _device_ptr_table = {};
             OptixAccel::clear();
         }
 

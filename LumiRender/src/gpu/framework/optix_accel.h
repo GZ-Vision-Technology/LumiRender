@@ -27,13 +27,7 @@ namespace luminous {
             OptixTraversableHandle _root_ias_handle{};
             size_t _bvh_size_in_bytes{0u};
             std::list<Buffer<std::byte>> _as_buffer_list;
-            struct DevicePtrTable {
-                Buffer<RayGenRecord> rg_record{nullptr};
-                Buffer<SceneRecord> miss_record{nullptr};
-                Buffer<SceneRecord> hit_record{nullptr};
-                Buffer<OptixInstance> instances{nullptr};
-            };
-            DevicePtrTable _device_ptr_table;
+            Buffer<OptixInstance> _instances{nullptr};
 
             OptixBuildInput get_mesh_build_input(const Buffer<const float3> &positions,
                                                  const Buffer<const TriangleHandle> &triangles,
@@ -53,7 +47,6 @@ namespace luminous {
             NDSC size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 
             virtual void clear() {
-                _device_ptr_table = {};
                 _as_buffer_list.clear();
                 optixDeviceContextDestroy(_optix_device_context);
             }
