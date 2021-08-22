@@ -18,13 +18,13 @@ namespace luminous {
                 : OptixAccel(device),
                   _context(context) {
 
-            _optix_module = create_module(_optix_device_context);
+            _optix_module = create_module();
             _program_group_table = create_program_groups(_optix_module);
-            _optix_pipeline = create_pipeline(_program_group_table);
+            _optix_pipeline = create_pipeline();
             create_sbt(_program_group_table, gpu_scene);
         }
 
-        OptixModule MegakernelOptixAccel::create_module(OptixDeviceContext optix_device_context) {
+        OptixModule MegakernelOptixAccel::create_module() {
             OptixModule optix_module = 0;
 
             // OptiX module
@@ -161,7 +161,7 @@ namespace luminous {
             return program_group_table;
         }
 
-        OptixPipeline MegakernelOptixAccel::create_pipeline(MegakernelOptixAccel::ProgramGroupTable program_group_table) {
+        OptixPipeline MegakernelOptixAccel::create_pipeline() {
             OptixPipeline pipeline = 0;
             OptixPipelineLinkOptions pipeline_link_options = {};
             pipeline_link_options.maxTraceDepth = 2;

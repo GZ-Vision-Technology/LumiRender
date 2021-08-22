@@ -61,11 +61,11 @@ namespace luminous {
 
         private:
 
-            OptixModule create_module(OptixDeviceContext optix_device_context);
+            OptixModule create_module();
 
             ProgramGroupTable create_program_groups(OptixModule optix_module);
 
-            OptixPipeline create_pipeline(ProgramGroupTable program_group_table);
+            OptixPipeline create_pipeline();
 
             void create_sbt(ProgramGroupTable program_group_table, const GPUScene *gpu_scene);
 
