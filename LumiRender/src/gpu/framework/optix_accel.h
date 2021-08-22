@@ -20,9 +20,7 @@ namespace luminous {
 
         class OptixAccel : public Noncopyable {
         protected:
-            Context *_context{};
             OptixDeviceContext _optix_device_context{};
-            OptixPipeline _optix_pipeline{};
             std::shared_ptr<Device> _device;
             Dispatcher _dispatcher;
             uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
@@ -48,11 +46,13 @@ namespace luminous {
                                                   std::list<CUdeviceptr> &_vert_buffer_ptr);
 
         public:
+            explicit OptixAccel(const SP<Device> &device);
+
+            OptixDeviceContext create_context();
 
             NDSC size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 
-            void clear() {
-                optixPipelineDestroy(_optix_pipeline);
+            virtual void clear() {
                 _device_ptr_table = {};
                 _as_buffer_list.clear();
                 optixDeviceContextDestroy(_optix_device_context);
@@ -68,6 +68,5 @@ namespace luminous {
                            const Managed<Transform> &transform_list, const Managed<uint> &inst_to_transform);
 
         };
-
     }
 }

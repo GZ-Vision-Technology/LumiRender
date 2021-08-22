@@ -19,12 +19,9 @@ namespace luminous {
 
         class GPUScene;
 
-        class MegakernelOptixAccel : public Noncopyable {
+        class MegakernelOptixAccel : public OptixAccel {
         private:
             Context *_context{};
-            std::shared_ptr<Device> _device;
-            Dispatcher _dispatcher;
-            OptixDeviceContext _optix_device_context{};
             OptixPipeline _optix_pipeline{};
             OptixModule _optix_module{};
             OptixPipelineCompileOptions _pipeline_compile_options = {};
@@ -62,14 +59,8 @@ namespace luminous {
             ProgramGroupTable _program_group_table{};
 
             OptixShaderBindingTable _sbt{};
-            OptixTraversableHandle _root_ias_handle{};
 
-            size_t _bvh_size_in_bytes{0u};
-
-            std::list<Buffer<std::byte>> _as_buffer_list;
         private:
-
-            OptixDeviceContext create_context();
 
             OptixModule create_module(OptixDeviceContext optix_device_context);
 
@@ -79,32 +70,14 @@ namespace luminous {
 
             void create_sbt(ProgramGroupTable program_group_table, const GPUScene *gpu_scene);
 
-            OptixBuildInput get_mesh_build_input(const Buffer<const float3> &positions,
-                                                 const Buffer<const TriangleHandle> &triangles,
-                                                 const MeshHandle &mesh,
-                                                 std::list<CUdeviceptr> &vert_buffer_ptr);
-
-            OptixTraversableHandle build_mesh_bvh(const Buffer<const float3> &positions,
-                                                  const Buffer<const TriangleHandle> &triangles,
-                                                  const MeshHandle &mesh,
-                                                  std::list<CUdeviceptr> &_vert_buffer_ptr);
-
         public:
             MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context);
 
             ~MegakernelOptixAccel();
 
-            NDSC size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
-
             void launch(uint2 res, Managed<LaunchParams> &launch_params);
 
-            void clear();
-
-            NDSC std::string description() const;
-
-            void build_bvh(const Buffer<const float3> &positions, const Buffer<const TriangleHandle> &triangles,
-                           const Managed<MeshHandle> &meshes, const Managed<uint> &instance_list,
-                           const Managed<Transform> &transform_list, const Managed<uint> &inst_to_transform);
+            void clear() override;
         };
     }
 }

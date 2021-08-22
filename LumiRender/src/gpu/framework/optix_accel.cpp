@@ -9,6 +9,9 @@
 
 namespace luminous {
     inline namespace gpu {
+        static void context_log_cb(unsigned int level, const char *tag, const char *message, void * /*cbdata */ ) {
+            std::cerr << "[" << std::setw(2) << level << "][" << std::setw(12) << tag << "]: " << message << "\n";
+        }
 
         OptixBuildInput OptixAccel::get_mesh_build_input(const Buffer<const float3> &positions,
                                                          const Buffer<const TriangleHandle> &triangles,
@@ -33,8 +36,8 @@ namespace luminous {
                 input.triangleArray.flags = &geom_flags;
                 input.triangleArray.numSbtRecords = 1;
                 input.triangleArray.sbtIndexOffsetBuffer = reinterpret_cast<CUdeviceptr>(nullptr);
-                input.triangleArray.sbtIndexOffsetSizeInBytes = sizeof( uint32_t );
-                input.triangleArray.sbtIndexOffsetStrideInBytes = sizeof( uint32_t );
+                input.triangleArray.sbtIndexOffsetSizeInBytes = sizeof(uint32_t);
+                input.triangleArray.sbtIndexOffsetStrideInBytes = sizeof(uint32_t);
             }
             return input;
         }
@@ -56,7 +59,7 @@ namespace luminous {
                     &build_input,
                     1,  // num_build_inputs
                     &gas_buffer_sizes
-                    ));
+            ));
             auto tri_gas_buffer = _device->allocate_buffer(gas_buffer_sizes.outputSizeInBytes);
             auto temp_buffer = _device->allocate_buffer(gas_buffer_sizes.tempSizeInBytes);
             auto compact_size_buffer = _device->allocate_buffer<uint64_t>(1);
@@ -166,6 +169,32 @@ namespace luminous {
                 _as_buffer_list.push_back(move(ias_buffer));
             }
             CU_CHECK(cuCtxSynchronize());
+        }
+
+        OptixAccel::OptixAccel(const SP<Device> &device)
+                : _device(device),
+                  _dispatcher(_device->new_dispatcher()) {
+            _optix_device_context = create_context();
+        }
+
+        OptixDeviceContext OptixAccel::create_context() {
+            // Initialize CUDA for this device on this thread
+            CU_CHECK(cuMemFree(0));
+            OPTIX_CHECK(optixInit());
+            OptixDeviceContextOptions ctx_options = {};
+#ifndef NDEBUG
+            ctx_options.logCallbackLevel = 4; // status/progress
+#else
+ctx_options.logCallbackLevel = 2; // error
+#endif
+ctx_options.logCallbackFunction = context_log_cb;
+#if (OPTIX_VERSION >= 70200)
+            ctx_options.validationMode = OPTIX_DEVICE_CONTEXT_VALIDATION_MODE_OFF;
+#endif
+            // Zero means take the current context
+            CUcontext cu_context = nullptr;
+            OPTIX_CHECK(optixDeviceContextCreate(cu_context, &ctx_options, &_optix_device_context));
+            return _optix_device_context;
         }
     }
 }
