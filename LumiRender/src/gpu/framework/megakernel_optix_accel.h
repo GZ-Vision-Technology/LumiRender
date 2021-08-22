@@ -12,6 +12,7 @@
 #include "render/include/scene_graph.h"
 #include "optix_params.h"
 #include "core/backend/managed.h"
+#include "gpu/framework/optix_accel.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -93,7 +94,7 @@ namespace luminous {
 
             ~MegakernelOptixAccel();
 
-            size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
+            NDSC size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 
             void launch(uint2 res, Managed<LaunchParams> &launch_params);
 
