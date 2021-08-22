@@ -18,7 +18,7 @@ namespace luminous {
 
         class GPUScene;
 
-        class OptixAccel : public Noncopyable {
+        class MegakernelOptixAccel : public Noncopyable {
         private:
             Context *_context{};
             std::shared_ptr<Device> _device;
@@ -89,9 +89,9 @@ namespace luminous {
                                                   std::list<CUdeviceptr> &_vert_buffer_ptr);
 
         public:
-            OptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context);
+            MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context);
 
-            ~OptixAccel();
+            ~MegakernelOptixAccel();
 
             size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 

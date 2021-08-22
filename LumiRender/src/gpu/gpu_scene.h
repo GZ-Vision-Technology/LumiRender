@@ -6,7 +6,7 @@
 #pragma once
 
 #include "core/concepts.h"
-#include "framework/optix_accel.h"
+#include "framework/megakernel_optix_accel.h"
 #include "render/include/scene.h"
 
 namespace luminous {
@@ -16,9 +16,9 @@ namespace luminous {
         private:
 
             SP<Device> _device;
-            UP<OptixAccel> _optix_accel;
+            UP<MegakernelOptixAccel> _optix_accel;
 
-            friend class OptixAccel;
+            friend class MegakernelOptixAccel;
 
         public:
             GPUScene(const SP<Device> &device, Context *context);

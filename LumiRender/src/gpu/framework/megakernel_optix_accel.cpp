@@ -2,7 +2,7 @@
 // Created by Zero on 2021/1/10.
 //
 
-#include "optix_accel.h"
+#include "megakernel_optix_accel.h"
 #include <optix_function_table_definition.h>
 #include "../gpu_scene.h"
 #include "render/include/scene_data.h"
@@ -18,7 +18,7 @@ namespace luminous {
             std::cerr << "[" << std::setw(2) << level << "][" << std::setw(12) << tag << "]: " << message << "\n";
         }
 
-        OptixAccel::OptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context)
+        MegakernelOptixAccel::MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context)
                 : _device(device),
                   _dispatcher(_device->new_dispatcher()),
                   _context(context) {
@@ -29,7 +29,7 @@ namespace luminous {
             create_sbt(_program_group_table, gpu_scene);
         }
 
-        OptixDeviceContext OptixAccel::create_context() {
+        OptixDeviceContext MegakernelOptixAccel::create_context() {
             // Initialize CUDA for this device on this thread
             CU_CHECK(cuMemFree(0));
             OPTIX_CHECK(optixInit());
@@ -49,7 +49,7 @@ namespace luminous {
             return _optix_device_context;
         }
 
-        OptixModule OptixAccel::create_module(OptixDeviceContext optix_device_context) {
+        OptixModule MegakernelOptixAccel::create_module(OptixDeviceContext optix_device_context) {
             OptixModule optix_module = 0;
 
             // OptiX module
@@ -94,7 +94,7 @@ namespace luminous {
             return optix_module;
         }
 
-        OptixAccel::ProgramGroupTable OptixAccel::create_program_groups(OptixModule optix_module) {
+        MegakernelOptixAccel::ProgramGroupTable MegakernelOptixAccel::create_program_groups(OptixModule optix_module) {
             ProgramGroupTable program_group_table;
             OptixProgramGroupOptions program_group_options = {};
             char log[2048];
@@ -186,7 +186,7 @@ namespace luminous {
             return program_group_table;
         }
 
-        OptixPipeline OptixAccel::create_pipeline(OptixAccel::ProgramGroupTable program_group_table) {
+        OptixPipeline MegakernelOptixAccel::create_pipeline(MegakernelOptixAccel::ProgramGroupTable program_group_table) {
             OptixPipeline pipeline = 0;
             OptixPipelineLinkOptions pipeline_link_options = {};
             pipeline_link_options.maxTraceDepth = 2;
@@ -211,7 +211,7 @@ namespace luminous {
             return pipeline;
         }
 
-        void OptixAccel::create_sbt(ProgramGroupTable program_group_table, const GPUScene *gpu_scene) {
+        void MegakernelOptixAccel::create_sbt(ProgramGroupTable program_group_table, const GPUScene *gpu_scene) {
 
             auto fill_group_data = [&](SceneRecord *p, const GPUScene *gpu_scene) {
                 p->data.positions = gpu_scene->_positions.device_buffer_view();
@@ -265,10 +265,10 @@ namespace luminous {
             _sbt.hitgroupRecordCount = _device_ptr_table.hit_record.size();
         }
 
-        OptixBuildInput OptixAccel::get_mesh_build_input(const Buffer<const float3> &positions,
-                                                         const Buffer<const TriangleHandle> &triangles,
-                                                         const MeshHandle &mesh,
-                                                         std::list<CUdeviceptr> &vert_buffer_ptr) {
+        OptixBuildInput MegakernelOptixAccel::get_mesh_build_input(const Buffer<const float3> &positions,
+                                                                   const Buffer<const TriangleHandle> &triangles,
+                                                                   const MeshHandle &mesh,
+                                                                   std::list<CUdeviceptr> &vert_buffer_ptr) {
             OptixBuildInput input = {};
             input.type = OPTIX_BUILD_INPUT_TYPE_TRIANGLES;
             {
@@ -294,10 +294,10 @@ namespace luminous {
             return input;
         }
 
-        OptixTraversableHandle OptixAccel::build_mesh_bvh(const Buffer<const float3> &positions,
-                                                          const Buffer<const TriangleHandle> &triangles,
-                                                          const MeshHandle &mesh,
-                                                          std::list<CUdeviceptr> &vert_buffer_ptr) {
+        OptixTraversableHandle MegakernelOptixAccel::build_mesh_bvh(const Buffer<const float3> &positions,
+                                                                    const Buffer<const TriangleHandle> &triangles,
+                                                                    const MeshHandle &mesh,
+                                                                    std::list<CUdeviceptr> &vert_buffer_ptr) {
 
             OptixBuildInput build_input = get_mesh_build_input(positions, triangles, mesh, vert_buffer_ptr);
 
@@ -348,9 +348,9 @@ namespace luminous {
             return traversable_handle;
         }
 
-        void OptixAccel::build_bvh(const Buffer<const float3> &positions, const Buffer<const TriangleHandle> &triangles,
-                                   const Managed<MeshHandle> &meshes, const Managed<uint> &instance_list,
-                                   const Managed<Transform> &transform_list, const Managed<uint> &inst_to_transform) {
+        void MegakernelOptixAccel::build_bvh(const Buffer<const float3> &positions, const Buffer<const TriangleHandle> &triangles,
+                                             const Managed<MeshHandle> &meshes, const Managed<uint> &instance_list,
+                                             const Managed<Transform> &transform_list, const Managed<uint> &inst_to_transform) {
             TASK_TAG("build optix bvh");
             std::list<CUdeviceptr> vert_buffer_ptr;
             vector<OptixTraversableHandle> traversable_handles;
@@ -425,7 +425,7 @@ namespace luminous {
             CU_CHECK(cuCtxSynchronize());
         }
 
-        void OptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {
+        void MegakernelOptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {
             auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;
             auto x = res.x;
             auto y = res.y;
@@ -442,7 +442,7 @@ namespace luminous {
             _dispatcher.wait();
         }
 
-        void OptixAccel::clear() {
+        void MegakernelOptixAccel::clear() {
             optixPipelineDestroy(_optix_pipeline);
             _device_ptr_table = {};
             _program_group_table.clear();
@@ -451,12 +451,12 @@ namespace luminous {
             optixDeviceContextDestroy(_optix_device_context);
         }
 
-        std::string OptixAccel::description() const {
+        std::string MegakernelOptixAccel::description() const {
             float size_in_M = (_bvh_size_in_bytes * 1.f) / (sqr(1024));
             return string_printf("bvh size is %f MB\n", size_in_M);
         }
 
-        OptixAccel::~OptixAccel() {
+        MegakernelOptixAccel::~MegakernelOptixAccel() {
             clear();
         }
     }
