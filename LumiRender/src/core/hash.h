@@ -24,7 +24,26 @@ namespace luminous {
 
         public:
             explicit SHA1(const std::string &s);
+
             [[nodiscard]] auto digest() const noexcept { return _digest; }
+
+            [[nodiscard]] bool operator == (const SHA1 &other) const {
+                for (int i = 0; i < _digest.size(); ++i) {
+                    if (_digest[i] != other.digest()[i]) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            [[nodiscard]] bool operator < (const SHA1 &other) const {
+                for (int i = 0; i < _digest.size(); ++i) {
+                    if (_digest[i] >= other.digest()[i]) {
+                        return false;
+                    }
+                }
+                return true;
+            }
         };
 
         inline SHA1::Digest sha1_digest(const std::string &s) noexcept {
@@ -81,4 +100,5 @@ namespace luminous {
             return h;
         }
 
-    }}
+    }
+}

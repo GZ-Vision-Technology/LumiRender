@@ -12,6 +12,7 @@
 #include "render/include/scene_graph.h"
 #include "optix_params.h"
 #include "core/backend/managed.h"
+#include "core/hash.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -19,8 +20,23 @@ namespace luminous {
         class GPUScene;
 
         class OptixAccel : public Noncopyable {
+        private:
+            std::map<SHA1, OptixModule> _module_map;
+
+            OptixModule create_module(const std::string &ptx_code);
+
+            static SHA1 generate_key(const std::string &ptx_code) {
+                return SHA1(ptx_code);
+            }
+
+            NDSC bool is_contain(const SHA1 &key) const {
+                return _module_map.find(key) != _module_map.end();
+            }
+
         protected:
+            Context *_context{};
             OptixDeviceContext _optix_device_context{};
+            OptixPipelineCompileOptions _pipeline_compile_options = {};
             std::shared_ptr<Device> _device;
             Dispatcher _dispatcher;
             uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
@@ -29,18 +45,28 @@ namespace luminous {
             std::list<Buffer<std::byte>> _as_buffer_list;
             Buffer<OptixInstance> _instances{nullptr};
 
-            OptixBuildInput get_mesh_build_input(const Buffer<const float3> &positions,
+            OptixModule obtain_module(const std::string &ptx_code) {
+                SHA1 key = generate_key(ptx_code);
+                if (is_contain(key)) {
+                    return _module_map[key];
+                }
+                OptixModule optix_module = create_module(ptx_code);
+                _module_map[key] = optix_module;
+                return optix_module;
+            }
+
+            NDSC OptixBuildInput get_mesh_build_input(const Buffer<const float3> &positions,
                                                  const Buffer<const TriangleHandle> &triangles,
                                                  const MeshHandle &mesh,
                                                  std::list<CUdeviceptr> &vert_buffer_ptr);
 
-            OptixTraversableHandle build_mesh_bvh(const Buffer<const float3> &positions,
+            NDSC OptixTraversableHandle build_mesh_bvh(const Buffer<const float3> &positions,
                                                   const Buffer<const TriangleHandle> &triangles,
                                                   const MeshHandle &mesh,
                                                   std::list<CUdeviceptr> &_vert_buffer_ptr);
 
         public:
-            explicit OptixAccel(const SP<Device> &device);
+            OptixAccel(const SP<Device> &device, Context *context);
 
             OptixDeviceContext create_context();
 

@@ -15,8 +15,7 @@ namespace luminous {
     inline namespace gpu {
 
         MegakernelOptixAccel::MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context)
-                : OptixAccel(device),
-                  _context(context) {
+                : OptixAccel(device, context){
 
             _optix_module = create_module();
             _program_group_table = create_program_groups(_optix_module);
