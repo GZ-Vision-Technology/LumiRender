@@ -47,24 +47,24 @@ GLOBAL __raygen__rg() {
     film->add_sample(pixel, L, weight, frame_index);
 }
 
-GLOBAL __miss__radiance() {
+GLOBAL __miss__closest() {
     luminous::PerRayData *prd = getPRD();
     const auto &data = getSbtData<luminous::SceneData>();
     prd->data = &data;
 }
 
-GLOBAL __miss__shadow() {
+GLOBAL __miss__any() {
     setPayloadOcclusion(false);
 }
 
-GLOBAL __closesthit__radiance() {
+GLOBAL __closesthit__closest() {
     using namespace luminous;
     PerRayData *prd = getPRD();
     const SceneData &data = getSbtData<SceneData>();
     prd->data = &data;
-    prd->closest_hit = getClosestHit();
+    prd->hit_point = getClosestHit();
 }
 
-GLOBAL __closesthit__occlusion() {
+GLOBAL __closesthit__any() {
     setPayloadOcclusion(true);
 }

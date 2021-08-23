@@ -15,7 +15,7 @@ namespace luminous {
         }
 
         SurfaceInteraction PerRayData::compute_surface_interaction(Ray ray) const {
-            auto si = scene_data()->compute_surface_interaction(closest_hit);
+            auto si = scene_data()->compute_surface_interaction(hit_point);
             si.init_BSDF(scene_data());
             si.wo = normalize(-ray.direction());
             return si;

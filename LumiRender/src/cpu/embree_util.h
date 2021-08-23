@@ -44,10 +44,10 @@ namespace luminous {
             rtcInitIntersectContext(&context);
             RTCRayHit rh = to_RTCRayHit(ray);
             rtcIntersect1(scene, &context, &rh);
-            prd->closest_hit.instance_id = rh.hit.instID[0];
-            prd->closest_hit.triangle_id = rh.hit.primID;
+            prd->hit_point.instance_id = rh.hit.instID[0];
+            prd->hit_point.triangle_id = rh.hit.primID;
             float w = 1 - rh.hit.u - rh.hit.v;
-            prd->closest_hit.bary = make_float2(w, rh.hit.u);
+            prd->hit_point.bary = make_float2(w, rh.hit.u);
             return prd->is_hit();
         }
 

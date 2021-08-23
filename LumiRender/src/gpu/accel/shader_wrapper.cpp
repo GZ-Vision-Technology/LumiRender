@@ -35,21 +35,21 @@ namespace luminous {
 
             _device_ptr_table.miss_record = device->allocate_buffer<SceneRecord>(RayType::Count);
             SceneRecord ms_sbt[RayType::Count] = {};
-            fill_scene_data(&ms_sbt[RayType::Radiance], gpu_scene);
-            fill_scene_data(&ms_sbt[RayType::Occlusion], gpu_scene);
-            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::Radiance]));
+            fill_scene_data(&ms_sbt[RayType::ClosestHit], gpu_scene);
+            fill_scene_data(&ms_sbt[RayType::AnyHit], gpu_scene);
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::ClosestHit]));
             OPTIX_CHECK(
-                    optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::Occlusion]));
+                    optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::AnyHit]));
             _device_ptr_table.miss_record.upload(ms_sbt);
 
             _device_ptr_table.hit_record = device->allocate_buffer<SceneRecord>(RayType::Count);
             SceneRecord hit_sbt[RayType::Count] = {};
-            fill_scene_data(&hit_sbt[RayType::Radiance], gpu_scene);
+            fill_scene_data(&hit_sbt[RayType::ClosestHit], gpu_scene);
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_hit_group,
-                                                 &hit_sbt[RayType::Radiance]));
-            fill_scene_data(&hit_sbt[RayType::Occlusion], gpu_scene);
+                                                 &hit_sbt[RayType::ClosestHit]));
+            fill_scene_data(&hit_sbt[RayType::AnyHit], gpu_scene);
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.occlusion_hit_group,
-                                                 &hit_sbt[RayType::Occlusion]));
+                                                 &hit_sbt[RayType::AnyHit]));
             _device_ptr_table.hit_record.upload(hit_sbt);
 
             _sbt.raygenRecord = _device_ptr_table.rg_record.ptr<CUdeviceptr>();

@@ -72,26 +72,26 @@ static GPU_INLINE void trace(OptixTraversableHandle handle,
             std::forward<Args>(payload)...);
 }
 
-static GPU_INLINE bool traceRadiance(OptixTraversableHandle handle,
-                                     luminous::Ray ray, luminous::PerRayData *prd) {
+static GPU_INLINE bool traceClosestHit(OptixTraversableHandle handle,
+                                       luminous::Ray ray, luminous::PerRayData *prd) {
     unsigned int u0, u1;
     packPointer(prd, u0, u1);
     trace(handle, ray, OPTIX_RAY_FLAG_DISABLE_ANYHIT,
-          luminous::RayType::Radiance,        // SBT offset
+          luminous::RayType::ClosestHit,        // SBT offset
           luminous::RayType::Count,           // SBT stride
-          luminous::RayType::Radiance,        // missSBTIndex
+          luminous::RayType::ClosestHit,        // missSBTIndex
           u0, u1);
     return prd->is_hit();
 }
 
-static GPU_INLINE bool traceOcclusion(OptixTraversableHandle handle, luminous::Ray ray) {
+static GPU_INLINE bool traceAnyHit(OptixTraversableHandle handle, luminous::Ray ray) {
     unsigned int occluded = 1u;
     trace(handle, ray, OPTIX_RAY_FLAG_DISABLE_ANYHIT
                        | OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT
                        | OPTIX_RAY_FLAG_DISABLE_CLOSESTHIT,
-          luminous::RayType::Occlusion,        // SBT offset
+          luminous::RayType::AnyHit,        // SBT offset
           luminous::RayType::Count,           // SBT stride
-          luminous::RayType::Occlusion,        // missSBTIndex
+          luminous::RayType::AnyHit,        // missSBTIndex
           occluded);
     return bool(occluded);
 }
@@ -119,8 +119,8 @@ static GPU_INLINE uint32_t getPrimIdx() {
     return optixGetPrimitiveIndex();
 }
 
-static GPU_INLINE luminous::ClosestHit getClosestHit() {
-    luminous::ClosestHit ret;
+static GPU_INLINE luminous::HitPoint getClosestHit() {
+    luminous::HitPoint ret;
     ret.instance_id = getInstanceId();
     ret.triangle_id = getPrimIdx();
     ret.bary = getTriangleBarycentric();

@@ -85,7 +85,7 @@ namespace luminous {
                 return triangles[mesh.triangle_offset + triangle_id];
             }
 
-            NDSC_XPU_INLINE const TriangleHandle &get_triangle(const ClosestHit &closest_hit) const {
+            NDSC_XPU_INLINE const TriangleHandle &get_triangle(const HitPoint &closest_hit) const {
                 auto mesh = get_mesh(closest_hit.instance_id);
                 return get_triangle(mesh, closest_hit.triangle_id);
             }
@@ -94,7 +94,7 @@ namespace luminous {
                                                                index_t tri_id,
                                                                float2 bary) const;
 
-            XPU_INLINE SurfaceInteraction compute_surface_interaction(const ClosestHit &closest_hit) const {
+            XPU_INLINE SurfaceInteraction compute_surface_interaction(const HitPoint &closest_hit) const {
                 return compute_surface_interaction(closest_hit.instance_id, closest_hit.triangle_id, closest_hit.bary);
             }
 
@@ -102,7 +102,7 @@ namespace luminous {
                                     float3 *world_p, float3 *world_ng = nullptr,
                                     float3 *world_ns = nullptr, float2 *tex_coord = nullptr) const;
 
-            XPU_INLINE void fill_attribute(const ClosestHit &closest_hit,
+            XPU_INLINE void fill_attribute(const HitPoint &closest_hit,
                                            float3 *world_p, float3 *world_ng = nullptr,
                                            float3 *world_ns = nullptr, float2 *tex_coord = nullptr) const {
                 fill_attribute(closest_hit.instance_id, closest_hit.triangle_id, closest_hit.bary,

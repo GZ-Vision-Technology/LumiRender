@@ -29,8 +29,8 @@ namespace luminous {
         };
 
         enum RayType {
-            Radiance = 0,
-            Occlusion = 1,
+            ClosestHit = 0,
+            AnyHit = 1,
             Count
         };
 

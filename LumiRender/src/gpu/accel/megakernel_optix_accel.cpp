@@ -45,7 +45,7 @@ namespace luminous {
                 OptixProgramGroupDesc miss_prog_group_desc = {};
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
                 miss_prog_group_desc.miss.module = optix_module;
-                miss_prog_group_desc.miss.entryFunctionName = "__miss__radiance";
+                miss_prog_group_desc.miss.entryFunctionName = "__miss__closest";
                 sizeof_log = sizeof(log);
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
                         _optix_device_context,
@@ -60,7 +60,7 @@ namespace luminous {
                 memset(&miss_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
                 miss_prog_group_desc.miss.module = optix_module;  // NULL miss program for occlusion rays
-                miss_prog_group_desc.miss.entryFunctionName = "__miss__shadow";
+                miss_prog_group_desc.miss.entryFunctionName = "__miss__any";
                 sizeof_log = sizeof(log);
 
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
@@ -78,7 +78,7 @@ namespace luminous {
                 OptixProgramGroupDesc hit_prog_group_desc = {};
                 hit_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
                 hit_prog_group_desc.hitgroup.moduleCH = optix_module;
-                hit_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__radiance";
+                hit_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__closest";
                 sizeof_log = sizeof(log);
 
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
@@ -94,7 +94,7 @@ namespace luminous {
                 memset(&hit_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 hit_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
                 hit_prog_group_desc.hitgroup.moduleCH = optix_module;
-                hit_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__occlusion";
+                hit_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__any";
                 sizeof_log = sizeof(log);
 
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
@@ -164,21 +164,21 @@ namespace luminous {
 
             _device_ptr_table.miss_record = _device->allocate_buffer<SceneRecord>(RayType::Count);
             SceneRecord ms_sbt[RayType::Count] = {};
-            fill_group_data(&ms_sbt[RayType::Radiance], gpu_scene);
-            fill_group_data(&ms_sbt[RayType::Occlusion], gpu_scene);
-            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::Radiance]));
+            fill_group_data(&ms_sbt[RayType::ClosestHit], gpu_scene);
+            fill_group_data(&ms_sbt[RayType::AnyHit], gpu_scene);
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::ClosestHit]));
             OPTIX_CHECK(
-                    optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::Occlusion]));
+                    optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::AnyHit]));
             _device_ptr_table.miss_record.upload(ms_sbt);
 
             _device_ptr_table.hit_record = _device->allocate_buffer<SceneRecord>(RayType::Count);
             SceneRecord hit_sbt[RayType::Count] = {};
-            fill_group_data(&hit_sbt[RayType::Radiance], gpu_scene);
+            fill_group_data(&hit_sbt[RayType::ClosestHit], gpu_scene);
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_hit_group,
-                                                 &hit_sbt[RayType::Radiance]));
-            fill_group_data(&hit_sbt[RayType::Occlusion], gpu_scene);
+                                                 &hit_sbt[RayType::ClosestHit]));
+            fill_group_data(&hit_sbt[RayType::AnyHit], gpu_scene);
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.occlusion_hit_group,
-                                                 &hit_sbt[RayType::Occlusion]));
+                                                 &hit_sbt[RayType::AnyHit]));
             _device_ptr_table.hit_record.upload(hit_sbt);
 
             _sbt.raygenRecord = _device_ptr_table.rg_record.ptr<CUdeviceptr>();

@@ -141,7 +141,7 @@ namespace luminous {
                             })
         };
 
-        struct alignas(8) ClosestHit {
+        struct alignas(8) HitPoint {
             index_t instance_id{invalid_uint32};
             index_t triangle_id{invalid_uint32};
             float2 bary{};

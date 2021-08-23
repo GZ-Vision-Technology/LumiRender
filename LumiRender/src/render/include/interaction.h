@@ -157,7 +157,7 @@ namespace luminous {
         class Sampler;
 
         struct PerRayData {
-            ClosestHit closest_hit{};
+            HitPoint hit_point{};
             const SceneData *data{nullptr};
 
             PerRayData() = default;
@@ -166,7 +166,7 @@ namespace luminous {
                     : data(data) {}
 
             NDSC_XPU_INLINE bool is_hit() const {
-                return closest_hit.is_hit();
+                return hit_point.is_hit();
             }
 
             NDSC_XPU SurfaceInteraction compute_surface_interaction(Ray ray) const;
