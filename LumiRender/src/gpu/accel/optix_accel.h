@@ -23,6 +23,12 @@ namespace luminous {
         private:
             std::map<SHA1, OptixModule> _module_map;
 
+            void clear_modules() {
+                for (auto iter : _module_map) {
+                    optixModuleDestroy(iter.second);
+                }
+            }
+
             OptixModule create_module(const std::string &ptx_code);
 
             static SHA1 generate_key(const std::string &ptx_code) {
@@ -56,14 +62,14 @@ namespace luminous {
             }
 
             NDSC OptixBuildInput get_mesh_build_input(const Buffer<const float3> &positions,
-                                                 const Buffer<const TriangleHandle> &triangles,
-                                                 const MeshHandle &mesh,
-                                                 std::list<CUdeviceptr> &vert_buffer_ptr);
+                                                      const Buffer<const TriangleHandle> &triangles,
+                                                      const MeshHandle &mesh,
+                                                      std::list<CUdeviceptr> &vert_buffer_ptr);
 
             NDSC OptixTraversableHandle build_mesh_bvh(const Buffer<const float3> &positions,
-                                                  const Buffer<const TriangleHandle> &triangles,
-                                                  const MeshHandle &mesh,
-                                                  std::list<CUdeviceptr> &_vert_buffer_ptr);
+                                                       const Buffer<const TriangleHandle> &triangles,
+                                                       const MeshHandle &mesh,
+                                                       std::list<CUdeviceptr> &_vert_buffer_ptr);
 
         public:
             OptixAccel(const SP<Device> &device, Context *context);
@@ -73,6 +79,7 @@ namespace luminous {
             NDSC size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 
             virtual void clear() {
+                clear_modules();
                 _as_buffer_list.clear();
                 optixDeviceContextDestroy(_optix_device_context);
             }

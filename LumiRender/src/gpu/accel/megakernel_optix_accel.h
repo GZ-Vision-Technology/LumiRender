@@ -23,7 +23,6 @@ namespace luminous {
         private:
 
             OptixPipeline _optix_pipeline{};
-            OptixModule _optix_module{};
             uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
 
             struct ProgramGroupTable {

@@ -5,8 +5,6 @@
 #include "megakernel_optix_accel.h"
 #include <optix_function_table_definition.h>
 #include "gpu/gpu_scene.h"
-#include "render/include/scene_data.h"
-#include "util/stats.h"
 #include <iosfwd>
 
 extern "C" char optix_shader_code[];
@@ -16,10 +14,7 @@ namespace luminous {
 
         MegakernelOptixAccel::MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context)
                 : OptixAccel(device, context){
-
-            _optix_module = obtain_module(optix_shader_code);
-            _optix_module = obtain_module(optix_shader_code);
-            _program_group_table = create_program_groups(_optix_module);
+            _program_group_table = create_program_groups(obtain_module(optix_shader_code));
             _optix_pipeline = create_pipeline();
             create_sbt(_program_group_table, gpu_scene);
         }
@@ -33,7 +28,7 @@ namespace luminous {
             {
                 OptixProgramGroupDesc raygen_prog_group_desc = {};
                 raygen_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_RAYGEN;
-                raygen_prog_group_desc.raygen.module = _optix_module;
+                raygen_prog_group_desc.raygen.module = optix_module;
                 raygen_prog_group_desc.raygen.entryFunctionName = "__raygen__rg";
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
                         _optix_device_context,
@@ -49,7 +44,7 @@ namespace luminous {
             {
                 OptixProgramGroupDesc miss_prog_group_desc = {};
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
-                miss_prog_group_desc.miss.module = _optix_module;
+                miss_prog_group_desc.miss.module = optix_module;
                 miss_prog_group_desc.miss.entryFunctionName = "__miss__radiance";
                 sizeof_log = sizeof(log);
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
@@ -64,7 +59,7 @@ namespace luminous {
 
                 memset(&miss_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
-                miss_prog_group_desc.miss.module = _optix_module;  // NULL miss program for occlusion rays
+                miss_prog_group_desc.miss.module = optix_module;  // NULL miss program for occlusion rays
                 miss_prog_group_desc.miss.entryFunctionName = "__miss__shadow";
                 sizeof_log = sizeof(log);
 
@@ -82,7 +77,7 @@ namespace luminous {
             {
                 OptixProgramGroupDesc hit_prog_group_desc = {};
                 hit_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
-                hit_prog_group_desc.hitgroup.moduleCH = _optix_module;
+                hit_prog_group_desc.hitgroup.moduleCH = optix_module;
                 hit_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__radiance";
                 sizeof_log = sizeof(log);
 
@@ -98,7 +93,7 @@ namespace luminous {
 
                 memset(&hit_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 hit_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
-                hit_prog_group_desc.hitgroup.moduleCH = _optix_module;
+                hit_prog_group_desc.hitgroup.moduleCH = optix_module;
                 hit_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__occlusion";
                 sizeof_log = sizeof(log);
 
@@ -215,7 +210,6 @@ namespace luminous {
         void MegakernelOptixAccel::clear() {
             optixPipelineDestroy(_optix_pipeline);
             _program_group_table.clear();
-            optixModuleDestroy(_optix_module);
             _device_ptr_table = {};
             OptixAccel::clear();
         }
