@@ -10,7 +10,7 @@
 #include "gpu/framework/cuda_impl.h"
 #include "base_libs/geometry/common.h"
 #include "render/include/scene_graph.h"
-#include "optix_params.h"
+#include "shader_wrapper.h"
 #include "core/backend/managed.h"
 #include "core/hash.h"
 

@@ -19,6 +19,7 @@ namespace luminous {
             UP<MegakernelOptixAccel> _optix_accel;
 
             friend class MegakernelOptixAccel;
+            friend class ShaderWrapper;
 
         public:
             GPUScene(const SP<Device> &device, Context *context);

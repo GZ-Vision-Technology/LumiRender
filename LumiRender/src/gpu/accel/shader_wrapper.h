@@ -6,17 +6,21 @@
 #pragma once
 
 #include <optix.h>
-#include <optix_stubs.h>
 #include "core/concepts.h"
 #include "core/backend/buffer.h"
+#include "optix_params.h"
+#include "gpu/framework/cuda_impl.h"
 
 namespace luminous {
     inline namespace gpu {
-        class RayGenRecord;
 
-        class SceneRecord;
+        class GPUScene;
 
-        class SbtWrapper : public Noncopyable {
+        struct ProgramName {
+            char * raygen_name;
+        };
+
+        class ShaderWrapper : public Noncopyable {
         private:
             struct ProgramGroupTable {
                 OptixProgramGroup raygen_prog_group{nullptr};
@@ -49,9 +53,13 @@ namespace luminous {
             OptixShaderBindingTable _sbt{};
 
         public:
-            SbtWrapper(OptixModule optix_module) {
-
+            ShaderWrapper(OptixModule optix_module, const GPUScene *gpu_scene, std::shared_ptr<Device> device) {
+                create_sbt(gpu_scene, device);
             }
+
+            void create_program_groups(OptixModule optix_module);
+
+            void create_sbt(const GPUScene *gpu_scene, std::shared_ptr<Device> device);
         };
     }
 }
