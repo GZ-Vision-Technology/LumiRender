@@ -17,55 +17,11 @@ namespace luminous {
         MegakernelOptixAccel::MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context)
                 : OptixAccel(device, context){
 
-            _optix_module = create_module();
+            _optix_module = obtain_module(optix_shader_code);
+            _optix_module = obtain_module(optix_shader_code);
             _program_group_table = create_program_groups(_optix_module);
             _optix_pipeline = create_pipeline();
             create_sbt(_program_group_table, gpu_scene);
-        }
-
-        OptixModule MegakernelOptixAccel::create_module() {
-            OptixModule optix_module = 0;
-
-            // OptiX module
-            OptixModuleCompileOptions module_compile_options = {};
-            // TODO: REVIEW THIS
-            module_compile_options.maxRegisterCount = OPTIX_COMPILE_DEFAULT_MAX_REGISTER_COUNT;
-#ifndef NDEBUG
-            module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
-            module_compile_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_LINEINFO;
-#else
-            module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
-            module_compile_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_NONE;
-#endif
-
-            _pipeline_compile_options.traversableGraphFlags = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_ANY;
-            _pipeline_compile_options.usesMotionBlur = false;
-            _pipeline_compile_options.numPayloadValues = 2;
-            _pipeline_compile_options.numAttributeValues = 2;
-            // OPTIX_EXCEPTION_FLAG_NONE;
-//#ifndef NDEBUG
-//            _pipeline_compile_options.exceptionFlags =
-//                    (OPTIX_EXCEPTION_FLAG_STACK_OVERFLOW | OPTIX_EXCEPTION_FLAG_TRACE_DEPTH |
-//                     OPTIX_EXCEPTION_FLAG_DEBUG);
-//#else
-            _pipeline_compile_options.exceptionFlags = OPTIX_EXCEPTION_FLAG_NONE;
-//#endif
-            _pipeline_compile_options.pipelineLaunchParamsVariableName = "params";
-
-            char log[2048];
-            size_t log_size = sizeof(log);
-            std::string ptx_code(optix_shader_code);
-            std::ofstream ofs(_context->working_path("luminous_ptx.txt"));
-            ofs << ptx_code;
-            ofs.close();
-            OPTIX_CHECK_WITH_LOG(optixModuleCreateFromPTX(
-                    _optix_device_context,
-                    &module_compile_options,
-                    &_pipeline_compile_options,
-                    ptx_code.c_str(), ptx_code.size(),
-                    log, &log_size, &optix_module), log);
-
-            return optix_module;
         }
 
         MegakernelOptixAccel::ProgramGroupTable MegakernelOptixAccel::create_program_groups(OptixModule optix_module) {

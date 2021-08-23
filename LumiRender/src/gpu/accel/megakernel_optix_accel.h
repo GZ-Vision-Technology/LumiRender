@@ -24,7 +24,6 @@ namespace luminous {
 
             OptixPipeline _optix_pipeline{};
             OptixModule _optix_module{};
-            OptixPipelineCompileOptions _pipeline_compile_options = {};
             uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
 
             struct ProgramGroupTable {
@@ -60,8 +59,6 @@ namespace luminous {
             OptixShaderBindingTable _sbt{};
 
         private:
-
-            OptixModule create_module();
 
             ProgramGroupTable create_program_groups(OptixModule optix_module);
 
