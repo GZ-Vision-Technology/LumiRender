@@ -172,10 +172,11 @@ namespace luminous {
             CU_CHECK(cuCtxSynchronize());
         }
 
-        OptixAccel::OptixAccel(const SP<Device> &device,Context *context)
+        OptixAccel::OptixAccel(const SP<Device> &device, Context *context, const GPUScene *gpu_scene)
                 : _device(device),
                   _dispatcher(_device->new_dispatcher()),
-                  _context(context) {
+                  _context(context),
+                  _gpu_scene(gpu_scene) {
             _optix_device_context = create_context();
         }
 
@@ -242,6 +243,14 @@ namespace luminous {
                     log, &log_size, &optix_module), log);
 
             return optix_module;
+        }
+
+        void OptixAccel::create_optix_pipeline() {
+
+        }
+
+        void OptixAccel::add_shader_wrapper(const string &ptx_code, const ProgramName &program_name) {
+            auto module = obtain_module(ptx_code);
         }
 
     }

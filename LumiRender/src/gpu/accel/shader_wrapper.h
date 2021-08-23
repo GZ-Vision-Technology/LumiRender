@@ -64,6 +64,16 @@ namespace luminous {
                 create_sbt(gpu_scene, device);
             }
 
+            NDSC OptixShaderBindingTable sbt() const { return _sbt; }
+
+            NDSC std::vector<OptixProgramGroup> program_groups() const {
+                return {_program_group_table.raygen_prog_group,
+                        _program_group_table.radiance_miss_group,
+                        _program_group_table.occlusion_miss_group,
+                        _program_group_table.radiance_hit_group,
+                        _program_group_table.occlusion_hit_group};
+            };
+
             void clear() {
                 _program_group_table.clear();
                 _device_ptr_table = {};

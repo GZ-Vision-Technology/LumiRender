@@ -50,6 +50,9 @@ namespace luminous {
             size_t _bvh_size_in_bytes{0u};
             std::list<Buffer<std::byte>> _as_buffer_list;
             Buffer<OptixInstance> _instances{nullptr};
+            OptixPipeline _optix_pipeline{};
+            std::vector<ShaderWrapper> _shader_wrappers;
+            const GPUScene *_gpu_scene{};
 
             OptixModule obtain_module(const std::string &ptx_code) {
                 SHA1 key = generate_key(ptx_code);
@@ -72,9 +75,13 @@ namespace luminous {
                                                        std::list<CUdeviceptr> &_vert_buffer_ptr);
 
         public:
-            OptixAccel(const SP<Device> &device, Context *context);
+            OptixAccel(const SP<Device> &device, Context *context, const GPUScene *gpu_scene);
 
             OptixDeviceContext create_context();
+
+            void create_optix_pipeline();
+
+            void add_shader_wrapper(const std::string &ptx_code, const ProgramName &program_name);
 
             NDSC size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 

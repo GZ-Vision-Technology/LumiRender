@@ -12,8 +12,9 @@ extern "C" char optix_shader_code[];
 namespace luminous {
     inline namespace gpu {
 
-        MegakernelOptixAccel::MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context)
-                : OptixAccel(device, context){
+        MegakernelOptixAccel::MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene,
+                                                   Context *context)
+                : OptixAccel(device, context, gpu_scene) {
             _program_group_table = create_program_groups(obtain_module(optix_shader_code));
             create_sbt(_program_group_table, gpu_scene);
             _optix_pipeline = create_pipeline();
@@ -166,7 +167,8 @@ namespace luminous {
             SceneRecord ms_sbt[RayType::Count] = {};
             fill_group_data(&ms_sbt[RayType::ClosestHit], gpu_scene);
             fill_group_data(&ms_sbt[RayType::AnyHit], gpu_scene);
-            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::ClosestHit]));
+            OPTIX_CHECK(
+                    optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::ClosestHit]));
             OPTIX_CHECK(
                     optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::AnyHit]));
             _device_ptr_table.miss_record.upload(ms_sbt);
