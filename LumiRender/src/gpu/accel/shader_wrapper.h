@@ -17,7 +17,11 @@ namespace luminous {
         class GPUScene;
 
         struct ProgramName {
-            char * raygen_name;
+            char *raygen{};
+            char *closesthit_closest{};
+            char *closesthit_any{};
+            char *miss_closest{};
+            char *miss_any{};
         };
 
         class ShaderWrapper : public Noncopyable {
@@ -53,11 +57,25 @@ namespace luminous {
             OptixShaderBindingTable _sbt{};
 
         public:
-            ShaderWrapper(OptixModule optix_module, const GPUScene *gpu_scene, std::shared_ptr<Device> device) {
+            ShaderWrapper(OptixModule optix_module, OptixDeviceContext optix_device_context,
+                          const GPUScene *gpu_scene, std::shared_ptr<Device> device,
+                          const ProgramName &program_name) {
+                create_program_groups(optix_module, optix_device_context, program_name);
                 create_sbt(gpu_scene, device);
             }
 
-            void create_program_groups(OptixModule optix_module);
+            void clear() {
+                _program_group_table.clear();
+                _device_ptr_table = {};
+            }
+
+            ~ShaderWrapper() {
+                clear();
+            }
+
+            void create_program_groups(OptixModule optix_module,
+                                       OptixDeviceContext optix_device_context,
+                                       const ProgramName &program_name);
 
             void create_sbt(const GPUScene *gpu_scene, std::shared_ptr<Device> device);
         };

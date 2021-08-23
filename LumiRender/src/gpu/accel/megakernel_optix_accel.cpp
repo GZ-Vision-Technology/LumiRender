@@ -15,8 +15,8 @@ namespace luminous {
         MegakernelOptixAccel::MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context)
                 : OptixAccel(device, context){
             _program_group_table = create_program_groups(obtain_module(optix_shader_code));
-            _optix_pipeline = create_pipeline();
             create_sbt(_program_group_table, gpu_scene);
+            _optix_pipeline = create_pipeline();
         }
 
         MegakernelOptixAccel::ProgramGroupTable MegakernelOptixAccel::create_program_groups(OptixModule optix_module) {
