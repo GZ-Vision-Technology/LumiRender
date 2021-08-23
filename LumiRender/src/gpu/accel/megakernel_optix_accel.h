@@ -22,7 +22,6 @@ namespace luminous {
         class MegakernelOptixAccel : public OptixAccel {
         private:
 
-            OptixPipeline _optix_pipeline{};
             uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
 
             struct ProgramGroupTable {

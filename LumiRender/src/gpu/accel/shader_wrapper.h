@@ -78,7 +78,7 @@ namespace luminous {
                 create_sbt(gpu_scene, std::move(device));
             }
 
-            NDSC OptixShaderBindingTable sbt() const { return _sbt; }
+            NDSC const OptixShaderBindingTable * sbt_ptr() const { return &_sbt; }
 
             NDSC std::vector<OptixProgramGroup> program_groups() const {
                 return {_program_group_table.raygen_prog_group,

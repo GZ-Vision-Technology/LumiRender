@@ -83,6 +83,8 @@ namespace luminous {
 
             void add_shader_wrapper(const std::string &ptx_code, const ProgramName &program_name);
 
+            NDSC const OptixShaderBindingTable* sbt_ptr(int idx) const { return _shader_wrappers[idx].sbt_ptr(); }
+
             NDSC size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 
             virtual void clear() {

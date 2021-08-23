@@ -18,6 +18,15 @@ namespace luminous {
             _program_group_table = create_program_groups(obtain_module(optix_shader_code));
             create_sbt(_program_group_table, gpu_scene);
             _optix_pipeline = create_pipeline();
+
+//            ProgramName program_name{"__raygen__rg",
+//                                     "__closesthit__closest",
+//                                     "__closesthit__any",
+//                                     "__miss__closest",
+//                                     "__miss__any"};
+//
+//            add_shader_wrapper(optix_shader_code, program_name);
+//            create_optix_pipeline();
         }
 
         MegakernelOptixAccel::ProgramGroupTable MegakernelOptixAccel::create_program_groups(OptixModule optix_module) {
