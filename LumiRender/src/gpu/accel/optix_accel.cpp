@@ -246,11 +246,35 @@ namespace luminous {
         }
 
         void OptixAccel::create_optix_pipeline() {
+            OptixPipelineLinkOptions pipeline_link_options = {};
+            pipeline_link_options.maxTraceDepth = 2;
+#ifndef NDEBUG
+            pipeline_link_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_FULL;
+#else
+            pipeline_link_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_NONE;
+#endif
+            char log[2048];
+            size_t sizeof_log = sizeof(log);
 
+            std::vector<OptixProgramGroup> program_groups;
+            for (const auto &shader_wrapper : _shader_wrappers) {
+                append(program_groups, shader_wrapper.program_groups());
+            }
+
+            OPTIX_CHECK_WITH_LOG(optixPipelineCreate(
+                    _optix_device_context,
+                    &_pipeline_compile_options,
+                    &pipeline_link_options,
+                    (OptixProgramGroup *) program_groups.data(),
+                    program_groups.size(),
+                    log, &sizeof_log,
+                    &_optix_pipeline), log);
         }
 
         void OptixAccel::add_shader_wrapper(const string &ptx_code, const ProgramName &program_name) {
             auto module = obtain_module(ptx_code);
+            ShaderWrapper shader_wrapper(module, _optix_device_context, _gpu_scene, _device, program_name);
+            _shader_wrappers.push_back(move(shader_wrapper));
         }
 
     }

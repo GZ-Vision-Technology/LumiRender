@@ -6,6 +6,8 @@
 #pragma once
 
 #include <optix.h>
+
+#include <utility>
 #include "core/concepts.h"
 #include "core/backend/buffer.h"
 #include "optix_params.h"
@@ -50,18 +52,30 @@ namespace luminous {
                 Buffer<RayGenRecord> rg_record{nullptr};
                 Buffer<SceneRecord> miss_record{nullptr};
                 Buffer<SceneRecord> hit_record{nullptr};
+
+                void clear() {
+                    rg_record.clear();
+                    miss_record.clear();
+                    hit_record.clear();
+                }
             };
+
         private:
             DevicePtrTable _device_ptr_table;
             ProgramGroupTable _program_group_table{};
             OptixShaderBindingTable _sbt{};
 
         public:
+            ShaderWrapper(ShaderWrapper &&other) noexcept
+                    : _device_ptr_table(std::move(other._device_ptr_table)),
+                      _sbt(other._sbt),
+                      _program_group_table(other._program_group_table) {}
+
             ShaderWrapper(OptixModule optix_module, OptixDeviceContext optix_device_context,
                           const GPUScene *gpu_scene, std::shared_ptr<Device> device,
                           const ProgramName &program_name) {
                 create_program_groups(optix_module, optix_device_context, program_name);
-                create_sbt(gpu_scene, device);
+                create_sbt(gpu_scene, std::move(device));
             }
 
             NDSC OptixShaderBindingTable sbt() const { return _sbt; }
@@ -76,7 +90,7 @@ namespace luminous {
 
             void clear() {
                 _program_group_table.clear();
-                _device_ptr_table = {};
+                _device_ptr_table.clear();
             }
 
             ~ShaderWrapper() {
