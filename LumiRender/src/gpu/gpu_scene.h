@@ -6,7 +6,7 @@
 #pragma once
 
 #include "core/concepts.h"
-#include "framework/megakernel_optix_accel.h"
+#include "gpu/accel/megakernel_optix_accel.h"
 #include "render/include/scene.h"
 
 namespace luminous {

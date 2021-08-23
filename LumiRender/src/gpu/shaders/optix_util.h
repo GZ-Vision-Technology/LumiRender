@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "gpu/framework/optix_params.h"
+#include "gpu/accel/optix_params.h"
 
 
 static GPU_INLINE void *unpackPointer(unsigned int i0, unsigned int i1) {

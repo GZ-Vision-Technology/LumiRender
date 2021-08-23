@@ -7,7 +7,7 @@
 
 #include <optix.h>
 #include <optix_stubs.h>
-#include "cuda_impl.h"
+#include "gpu/framework/cuda_impl.h"
 #include "base_libs/geometry/common.h"
 #include "render/include/scene_graph.h"
 #include "optix_params.h"

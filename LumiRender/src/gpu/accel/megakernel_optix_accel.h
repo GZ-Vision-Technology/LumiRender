@@ -7,12 +7,12 @@
 
 #include <optix.h>
 #include <optix_stubs.h>
-#include "cuda_impl.h"
+#include "gpu/framework/cuda_impl.h"
 #include "base_libs/geometry/common.h"
 #include "render/include/scene_graph.h"
 #include "optix_params.h"
 #include "core/backend/managed.h"
-#include "gpu/framework/optix_accel.h"
+#include "optix_accel.h"
 
 namespace luminous {
     inline namespace gpu {

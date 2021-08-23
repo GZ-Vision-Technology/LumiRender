@@ -3,7 +3,7 @@
 //
 
 #include "optix_accel.h"
-#include "../gpu_scene.h"
+#include "gpu/gpu_scene.h"
 #include "util/stats.h"
 #include <iosfwd>
 
