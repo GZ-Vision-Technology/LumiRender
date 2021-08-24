@@ -19,6 +19,7 @@ namespace luminous {
             UP<MegakernelOptixAccel> _optix_accel;
 
             friend class MegakernelOptixAccel;
+            friend class OptixAccel;
             friend class ShaderWrapper;
 
         public:

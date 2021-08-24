@@ -29,7 +29,9 @@
 #define OPTIX_CHECK_WITH_LOG(EXPR, LOG)                                                                                \
     [&]{                                                                                                               \
         OptixResult res = EXPR;                                                                                        \
-        if (res != OPTIX_SUCCESS)                                                                                      \
-            spdlog::error("OptiX call " #EXPR " failed with code {}: \"{}\"\nLogs: {}", int(res),                      \
-                      optixGetErrorString(res), LOG);                                                                  \
+        if (res != OPTIX_SUCCESS) {                                                                                    \
+            spdlog::error("OptiX call " #EXPR " failed with code {}: \"{}\"\nLogs: {},at {}:{}", int(res),             \
+                optixGetErrorString(res), LOG, __FILE__, __LINE__ );                                                   \
+            std::abort();                                                                                              \
+        }                                                                                                              \
     } ()

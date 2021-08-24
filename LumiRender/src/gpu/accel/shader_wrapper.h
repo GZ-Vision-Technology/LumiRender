@@ -49,9 +49,9 @@ namespace luminous {
             };
 
             struct DevicePtrTable {
-                Buffer<RayGenRecord> rg_record{nullptr};
-                Buffer<SceneRecord> miss_record{nullptr};
-                Buffer<SceneRecord> hit_record{nullptr};
+                Buffer <RayGenRecord> rg_record{nullptr};
+                Buffer <SceneRecord> miss_record{nullptr};
+                Buffer <SceneRecord> hit_record{nullptr};
 
                 void clear() {
                     rg_record.clear();
@@ -78,7 +78,7 @@ namespace luminous {
                 create_sbt(gpu_scene, std::move(device));
             }
 
-            NDSC const OptixShaderBindingTable * sbt_ptr() const { return &_sbt; }
+            NDSC const OptixShaderBindingTable *sbt_ptr() const { return &_sbt; }
 
             NDSC std::vector<OptixProgramGroup> program_groups() const {
                 return {_program_group_table.raygen_prog_group,

@@ -74,6 +74,47 @@ namespace luminous {
                                                        const MeshHandle &mesh,
                                                        std::list<CUdeviceptr> &_vert_buffer_ptr);
 
+
+            struct ProgramGroupTable {
+                OptixProgramGroup raygen_prog_group{nullptr};
+                OptixProgramGroup radiance_miss_group{nullptr};
+                OptixProgramGroup occlusion_miss_group{nullptr};
+                OptixProgramGroup radiance_hit_group{nullptr};
+                OptixProgramGroup occlusion_hit_group{nullptr};
+
+                static constexpr auto size() {
+                    return sizeof(ProgramGroupTable) / sizeof(OptixProgramGroup);
+                }
+
+                void clear() {
+                    optixProgramGroupDestroy(raygen_prog_group);
+                    optixProgramGroupDestroy(radiance_miss_group);
+                    optixProgramGroupDestroy(occlusion_miss_group);
+                    optixProgramGroupDestroy(radiance_hit_group);
+                    optixProgramGroupDestroy(occlusion_hit_group);
+                }
+            };
+
+            struct DevicePtrTable {
+                Buffer<RayGenRecord> rg_record{nullptr};
+                Buffer<SceneRecord> miss_record{nullptr};
+                Buffer<SceneRecord> hit_record{nullptr};
+            };
+
+            DevicePtrTable _device_ptr_table;
+
+            ProgramGroupTable _program_group_table{};
+
+            OptixPipeline _optix_pipeline2{};
+
+            OptixShaderBindingTable _sbt{};
+
+            ProgramGroupTable create_program_groups(OptixModule optix_module);
+
+            OptixPipeline create_pipeline();
+
+            void create_sbt(ProgramGroupTable program_group_table, const GPUScene *gpu_scene);
+
         public:
             OptixAccel(const SP<Device> &device, Context *context, const GPUScene *gpu_scene);
 
@@ -88,6 +129,7 @@ namespace luminous {
             NDSC size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 
             virtual void clear() {
+                optixPipelineDestroy(_optix_pipeline);
                 clear_modules();
                 _as_buffer_list.clear();
                 optixDeviceContextDestroy(_optix_device_context);
