@@ -23,16 +23,22 @@ namespace luminous {
                   _gpu_scene(gpu_scene) {
             _optix_device_context = create_context();
 
-            create_program_groups(obtain_module(optix_shader_code));
-
-
-
             ProgramName program_name{"__raygen__rg",
                                      "__closesthit__closest",
                                      "__closesthit__any",
                                      "__miss__closest",
                                      "__miss__any"};
+            auto module = obtain_module(optix_shader_code);
+            ShaderWrapper shader_wrapper(module, _optix_device_context, _gpu_scene, _device, program_name);
 
+//            _program_group_table = create_program_groups(obtain_module(optix_shader_code),
+//                                                         _optix_device_context);
+
+//            _program_group_table = shader_wrapper.create_program_groups(obtain_module(optix_shader_code),
+//                                                                        _optix_device_context, program_name);
+
+
+            _program_group_table = shader_wrapper._program_group_table;
 //            add_shader_wrapper(optix_shader_code, program_name);
             create_sbt(_program_group_table, gpu_scene);
             _optix_pipeline2 = create_pipeline();
@@ -263,25 +269,26 @@ namespace luminous {
             return optix_module;
         }
 
-        void OptixAccel::create_program_groups(OptixModule optix_module) {
+        ProgramGroupTable OptixAccel::create_program_groups(OptixModule optix_module,
+                                                            OptixDeviceContext optix_device_context) {
             OptixProgramGroupOptions program_group_options = {};
             char log[2048];
             size_t sizeof_log = sizeof(log);
-
+            ProgramGroupTable program_group_table;
             {
                 OptixProgramGroupDesc raygen_prog_group_desc = {};
                 raygen_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_RAYGEN;
                 raygen_prog_group_desc.raygen.module = optix_module;
                 raygen_prog_group_desc.raygen.entryFunctionName = "__raygen__rg";
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
-                        _optix_device_context,
+                        optix_device_context,
                         &raygen_prog_group_desc,
                         1,  // num program groups
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(_program_group_table.raygen_prog_group)
-                ), log);
+                        &(program_group_table.raygen_prog_group)
+                        ), log);
             }
 
             {
@@ -291,14 +298,14 @@ namespace luminous {
                 miss_prog_group_desc.miss.entryFunctionName = "__miss__closest";
                 sizeof_log = sizeof(log);
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
-                        _optix_device_context,
+                        optix_device_context,
                         &miss_prog_group_desc,
                         1,  // num program groups
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(_program_group_table.radiance_miss_group)
-                ), log);
+                        &(program_group_table.radiance_miss_group)
+                        ), log);
 
                 memset(&miss_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
@@ -307,14 +314,14 @@ namespace luminous {
                 sizeof_log = sizeof(log);
 
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
-                        _optix_device_context,
+                        optix_device_context,
                         &miss_prog_group_desc,
                         1,  // num program groups
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(_program_group_table.occlusion_miss_group)
-                ), log);
+                        &(program_group_table.occlusion_miss_group)
+                        ), log);
             }
 
             {
@@ -325,14 +332,14 @@ namespace luminous {
                 sizeof_log = sizeof(log);
 
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
-                        _optix_device_context,
+                        optix_device_context,
                         &hit_prog_group_desc,
                         1,  // num program groups
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(_program_group_table.radiance_hit_group)
-                ), log);
+                        &(program_group_table.radiance_hit_group)
+                        ), log);
 
                 memset(&hit_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 hit_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
@@ -341,15 +348,16 @@ namespace luminous {
                 sizeof_log = sizeof(log);
 
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
-                        _optix_device_context,
+                        optix_device_context,
                         &hit_prog_group_desc,
                         1,  // num program groups
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(_program_group_table.occlusion_hit_group)
-                ), log);
+                        &(program_group_table.occlusion_hit_group)
+                        ), log);
             }
+            return program_group_table;
         }
 
         OptixPipeline OptixAccel::create_pipeline() {

@@ -8,7 +8,7 @@ A GPU/CPU physically based renderer
 |---------------------------------------------------------|-----------|
 | Megakernel path tracing                                 | Done      |
 | Normal visualize                                        | Done      |
-| Wavefront path tracing                                  | Planned   |
+| Wavefront path tracing                                  | Working   |
 | Bidirectional path tracing                              | Planned   |
 | Photon mapping                                          | Planned   |
 
@@ -44,7 +44,7 @@ A GPU/CPU physically based renderer
 | Feature             | Progress                                            |
 |---------------------|-----------------------------------------------------|
 | GPU                 | Done (with CUDA + OptiX)                            |
-| CPU                 | Planned (with embree)                               |
+| CPU                 | Done (with embree)                                  |
 
 ### Exporters
 | Feature             | Progress                                            |

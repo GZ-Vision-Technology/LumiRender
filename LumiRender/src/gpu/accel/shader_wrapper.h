@@ -25,6 +25,7 @@ namespace luminous {
             const char *miss_closest{};
             const char *miss_any{};
         };
+
         struct ProgramGroupTable {
             OptixProgramGroup raygen_prog_group{nullptr};
             OptixProgramGroup radiance_miss_group{nullptr};
@@ -65,6 +66,7 @@ namespace luminous {
 
         public:
             ProgramGroupTable _program_group_table{};
+
             ShaderWrapper(ShaderWrapper &&other) noexcept
                     : _device_ptr_table(std::move(other._device_ptr_table)),
                       _sbt(other._sbt),
@@ -72,10 +74,7 @@ namespace luminous {
 
             ShaderWrapper(OptixModule optix_module, OptixDeviceContext optix_device_context,
                           const GPUScene *gpu_scene, std::shared_ptr<Device> device,
-                          const ProgramName &program_name) {
-                create_program_groups(optix_module, optix_device_context, program_name);
-                create_sbt(gpu_scene, std::move(device));
-            }
+                          const ProgramName &program_name);
 
             NDSC const OptixShaderBindingTable *sbt_ptr() const { return &_sbt; }
 
@@ -96,7 +95,7 @@ namespace luminous {
                 clear();
             }
 
-            void create_program_groups(OptixModule optix_module,
+            ProgramGroupTable create_program_groups(OptixModule optix_module,
                                        OptixDeviceContext optix_device_context,
                                        const ProgramName &program_name);
 
