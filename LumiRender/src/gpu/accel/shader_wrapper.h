@@ -33,6 +33,8 @@ namespace luminous {
             OptixProgramGroup radiance_hit_group{nullptr};
             OptixProgramGroup occlusion_hit_group{nullptr};
 
+            ProgramGroupTable() = default;
+
             static constexpr auto size() {
                 return sizeof(ProgramGroupTable) / sizeof(OptixProgramGroup);
             }
@@ -47,9 +49,9 @@ namespace luminous {
         };
 
         struct DevicePtrTable {
-            Buffer <RayGenRecord> rg_record{nullptr};
-            Buffer <SceneRecord> miss_record{nullptr};
-            Buffer <SceneRecord> hit_record{nullptr};
+            Buffer<RayGenRecord> rg_record{nullptr};
+            Buffer<SceneRecord> miss_record{nullptr};
+            Buffer<SceneRecord> hit_record{nullptr};
 
             void clear() {
                 rg_record.clear();
@@ -66,6 +68,8 @@ namespace luminous {
 
         public:
             ProgramGroupTable _program_group_table{};
+
+            ShaderWrapper() = default;
 
             ShaderWrapper(ShaderWrapper &&other) noexcept
                     : _device_ptr_table(std::move(other._device_ptr_table)),
@@ -96,8 +100,8 @@ namespace luminous {
             }
 
             ProgramGroupTable create_program_groups(OptixModule optix_module,
-                                       OptixDeviceContext optix_device_context,
-                                       const ProgramName &program_name);
+                                                    OptixDeviceContext optix_device_context,
+                                                    const ProgramName &program_name);
 
             void create_sbt(const GPUScene *gpu_scene, std::shared_ptr<Device> device);
         };
