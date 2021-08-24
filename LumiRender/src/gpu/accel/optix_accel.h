@@ -74,32 +74,32 @@ namespace luminous {
                                                        const MeshHandle &mesh,
                                                        std::list<CUdeviceptr> &_vert_buffer_ptr);
 
-
-            struct ProgramGroupTable {
-                OptixProgramGroup raygen_prog_group{nullptr};
-                OptixProgramGroup radiance_miss_group{nullptr};
-                OptixProgramGroup occlusion_miss_group{nullptr};
-                OptixProgramGroup radiance_hit_group{nullptr};
-                OptixProgramGroup occlusion_hit_group{nullptr};
-
-                static constexpr auto size() {
-                    return sizeof(ProgramGroupTable) / sizeof(OptixProgramGroup);
-                }
-
-                void clear() {
-                    optixProgramGroupDestroy(raygen_prog_group);
-                    optixProgramGroupDestroy(radiance_miss_group);
-                    optixProgramGroupDestroy(occlusion_miss_group);
-                    optixProgramGroupDestroy(radiance_hit_group);
-                    optixProgramGroupDestroy(occlusion_hit_group);
-                }
-            };
-
-            struct DevicePtrTable {
-                Buffer<RayGenRecord> rg_record{nullptr};
-                Buffer<SceneRecord> miss_record{nullptr};
-                Buffer<SceneRecord> hit_record{nullptr};
-            };
+//
+//            struct ProgramGroupTable {
+//                OptixProgramGroup raygen_prog_group{nullptr};
+//                OptixProgramGroup radiance_miss_group{nullptr};
+//                OptixProgramGroup occlusion_miss_group{nullptr};
+//                OptixProgramGroup radiance_hit_group{nullptr};
+//                OptixProgramGroup occlusion_hit_group{nullptr};
+//
+//                static constexpr auto size() {
+//                    return sizeof(ProgramGroupTable) / sizeof(OptixProgramGroup);
+//                }
+//
+//                void clear() {
+//                    optixProgramGroupDestroy(raygen_prog_group);
+//                    optixProgramGroupDestroy(radiance_miss_group);
+//                    optixProgramGroupDestroy(occlusion_miss_group);
+//                    optixProgramGroupDestroy(radiance_hit_group);
+//                    optixProgramGroupDestroy(occlusion_hit_group);
+//                }
+//            };
+//
+//            struct DevicePtrTable {
+//                Buffer<RayGenRecord> rg_record{nullptr};
+//                Buffer<SceneRecord> miss_record{nullptr};
+//                Buffer<SceneRecord> hit_record{nullptr};
+//            };
 
             DevicePtrTable _device_ptr_table;
 

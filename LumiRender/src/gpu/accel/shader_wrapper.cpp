@@ -19,7 +19,6 @@ namespace luminous {
                 OptixProgramGroupDesc raygen_prog_group_desc = {};
                 raygen_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_RAYGEN;
                 raygen_prog_group_desc.raygen.module = optix_module;
-                raygen_prog_group_desc.raygen.entryFunctionName = program_name.raygen;
                 raygen_prog_group_desc.raygen.entryFunctionName = "__raygen__rg";
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
                         optix_device_context,
@@ -36,7 +35,6 @@ namespace luminous {
                 OptixProgramGroupDesc miss_prog_group_desc = {};
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
                 miss_prog_group_desc.miss.module = optix_module;
-                miss_prog_group_desc.miss.entryFunctionName = program_name.miss_closest;
                 miss_prog_group_desc.miss.entryFunctionName = "__miss__closest";
                 sizeof_log = sizeof(log);
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
@@ -52,7 +50,6 @@ namespace luminous {
                 memset(&miss_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
                 miss_prog_group_desc.miss.module = optix_module;  // NULL miss program for occlusion rays
-                miss_prog_group_desc.miss.entryFunctionName = program_name.miss_any;
                 miss_prog_group_desc.miss.entryFunctionName = "__miss__any";
                 sizeof_log = sizeof(log);
 
@@ -71,7 +68,6 @@ namespace luminous {
                 OptixProgramGroupDesc hit_prog_group_desc = {};
                 hit_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
                 hit_prog_group_desc.hitgroup.moduleCH = optix_module;
-                hit_prog_group_desc.hitgroup.entryFunctionNameCH = program_name.closesthit_closest;
                 hit_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__closest";
                 sizeof_log = sizeof(log);
 
@@ -88,7 +84,6 @@ namespace luminous {
                 memset(&hit_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 hit_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
                 hit_prog_group_desc.hitgroup.moduleCH = optix_module;
-                hit_prog_group_desc.hitgroup.entryFunctionNameCH = program_name.closesthit_any;
                 hit_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__any";
                 sizeof_log = sizeof(log);
 
