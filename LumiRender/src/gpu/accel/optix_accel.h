@@ -109,7 +109,7 @@ namespace luminous {
 
             OptixShaderBindingTable _sbt{};
 
-            ProgramGroupTable create_program_groups(OptixModule optix_module);
+            void create_program_groups(OptixModule optix_module);
 
             OptixPipeline create_pipeline();
 

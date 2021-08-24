@@ -181,7 +181,7 @@ namespace luminous {
                   _gpu_scene(gpu_scene) {
             _optix_device_context = create_context();
 
-            _program_group_table = create_program_groups(obtain_module(optix_shader_code));
+            create_program_groups(obtain_module(optix_shader_code));
             create_sbt(_program_group_table, gpu_scene);
 
 
@@ -261,8 +261,7 @@ namespace luminous {
             return optix_module;
         }
 
-        OptixAccel::ProgramGroupTable OptixAccel::create_program_groups(OptixModule optix_module) {
-            ProgramGroupTable program_group_table;
+        void OptixAccel::create_program_groups(OptixModule optix_module) {
             OptixProgramGroupOptions program_group_options = {};
             char log[2048];
             size_t sizeof_log = sizeof(log);
@@ -279,7 +278,7 @@ namespace luminous {
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(program_group_table.raygen_prog_group)
+                        &(_program_group_table.raygen_prog_group)
                         ), log);
             }
 
@@ -296,7 +295,7 @@ namespace luminous {
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(program_group_table.radiance_miss_group)
+                        &(_program_group_table.radiance_miss_group)
                         ), log);
 
                 memset(&miss_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
@@ -312,7 +311,7 @@ namespace luminous {
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(program_group_table.occlusion_miss_group)
+                        &(_program_group_table.occlusion_miss_group)
                         ), log);
             }
 
@@ -330,7 +329,7 @@ namespace luminous {
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(program_group_table.radiance_hit_group)
+                        &(_program_group_table.radiance_hit_group)
                         ), log);
 
                 memset(&hit_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
@@ -346,11 +345,9 @@ namespace luminous {
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(program_group_table.occlusion_hit_group)
+                        &(_program_group_table.occlusion_hit_group)
                         ), log);
             }
-
-            return program_group_table;
         }
 
         OptixPipeline OptixAccel::create_pipeline() {
