@@ -12,7 +12,22 @@
 namespace luminous {
     inline namespace gpu {
 
-
+        MegakernelOptixAccel::MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene,
+                                                   Context *context)
+                                                   : OptixAccel(device, context, gpu_scene) {
+            //            _program_group_table = create_program_groups(obtain_module(optix_shader_code));
+            //            create_sbt(_program_group_table, gpu_scene);
+            //            _optix_pipeline2 = create_pipeline();
+            //
+            ////            ProgramName program_name{"__raygen__rg",
+            ////                                     "__closesthit__closest",
+            ////                                     "__closesthit__any",
+            ////                                     "__miss__closest",
+            ////                                     "__miss__any"};
+            ////
+            ////            add_shader_wrapper(optix_shader_code, program_name);
+            ////            create_optix_pipeline();
+        }
 
         void MegakernelOptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {
             auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;

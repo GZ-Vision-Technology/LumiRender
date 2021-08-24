@@ -180,6 +180,20 @@ namespace luminous {
                   _context(context),
                   _gpu_scene(gpu_scene) {
             _optix_device_context = create_context();
+
+            _program_group_table = create_program_groups(obtain_module(optix_shader_code));
+            create_sbt(_program_group_table, gpu_scene);
+
+
+            ProgramName program_name{"__raygen__rg",
+                                     "__closesthit__closest",
+                                     "__closesthit__any",
+                                     "__miss__closest",
+                                     "__miss__any"};
+
+            add_shader_wrapper(optix_shader_code, program_name);
+            _optix_pipeline2 = create_pipeline();
+            create_optix_pipeline();
         }
 
         OptixDeviceContext OptixAccel::create_context() {
@@ -245,23 +259,6 @@ namespace luminous {
                     log, &log_size, &optix_module), log);
 
             return optix_module;
-        }
-
-        MegakernelOptixAccel::MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene,
-                                                   Context *context)
-                                                   : OptixAccel(device, context, gpu_scene) {
-            _program_group_table = create_program_groups(obtain_module(optix_shader_code));
-            create_sbt(_program_group_table, gpu_scene);
-            _optix_pipeline2 = create_pipeline();
-
-//            ProgramName program_name{"__raygen__rg",
-//                                     "__closesthit__closest",
-//                                     "__closesthit__any",
-//                                     "__miss__closest",
-//                                     "__miss__any"};
-//
-//            add_shader_wrapper(optix_shader_code, program_name);
-//            create_optix_pipeline();
         }
 
         OptixAccel::ProgramGroupTable OptixAccel::create_program_groups(OptixModule optix_module) {
@@ -448,6 +445,11 @@ namespace luminous {
             size_t sizeof_log = sizeof(log);
 
             std::vector<OptixProgramGroup> program_groups;
+            program_groups.push_back(_program_group_table.raygen_prog_group);
+            program_groups.push_back(_program_group_table.radiance_miss_group);
+            program_groups.push_back(_program_group_table.occlusion_miss_group);
+            program_groups.push_back(_program_group_table.radiance_hit_group);
+            program_groups.push_back(_program_group_table.occlusion_hit_group);
             for (const auto &shader_wrapper : _shader_wrappers) {
                 append(program_groups, shader_wrapper.program_groups());
             }
@@ -457,11 +459,10 @@ namespace luminous {
                     &_pipeline_compile_options,
                     &pipeline_link_options,
                     (OptixProgramGroup *) program_groups.data(),
-                    program_groups.size(),
+                    _program_group_table.size(),
                     log, &sizeof_log,
                     &_optix_pipeline), log);
 
-            std::cout << _optix_pipeline;
         }
 
         void OptixAccel::add_shader_wrapper(const string &ptx_code, const ProgramName &program_name) {

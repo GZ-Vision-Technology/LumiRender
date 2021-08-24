@@ -19,11 +19,11 @@ namespace luminous {
         class GPUScene;
 
         struct ProgramName {
-            char *raygen{};
-            char *closesthit_closest{};
-            char *closesthit_any{};
-            char *miss_closest{};
-            char *miss_any{};
+            const char *raygen{};
+            const char *closesthit_closest{};
+            const char *closesthit_any{};
+            const char *miss_closest{};
+            const char *miss_any{};
         };
 
         class ShaderWrapper : public Noncopyable {
@@ -62,10 +62,11 @@ namespace luminous {
 
         private:
             DevicePtrTable _device_ptr_table;
-            ProgramGroupTable _program_group_table{};
+
             OptixShaderBindingTable _sbt{};
 
         public:
+            ProgramGroupTable _program_group_table{};
             ShaderWrapper(ShaderWrapper &&other) noexcept
                     : _device_ptr_table(std::move(other._device_ptr_table)),
                       _sbt(other._sbt),
