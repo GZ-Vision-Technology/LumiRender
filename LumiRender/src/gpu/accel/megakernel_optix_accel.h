@@ -26,6 +26,9 @@ namespace luminous {
 
             OptixShaderBindingTable _sbt{};
 
+        private:
+
+            ShaderWrapper _shader_wrapper;
 
         public:
             MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context);

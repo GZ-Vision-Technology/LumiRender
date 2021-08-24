@@ -20,45 +20,15 @@ namespace luminous {
                 : _device(device),
                   _dispatcher(_device->new_dispatcher()),
                   _context(context),
-                  _gpu_scene(gpu_scene) {
-            _optix_device_context = create_context();
-
-            ProgramName program_name{"__raygen__rg",
-                                     "__closesthit__closest",
-                                     "__closesthit__any",
-                                     "__miss__closest",
-                                     "__miss__any"};
-
-
-////            _program_group_table = create_program_groups(obtain_module(optix_shader_code),
-////                                                         _optix_device_context);
-//
-//
-//            add_shader_wrapper(optix_shader_code, program_name);
-//            auto module = obtain_module(optix_shader_code);
-////            _shader_wrappers.reserve(10);
-//            ShaderWrapper shader_wrapper(module, _optix_device_context, _gpu_scene, _device, program_name);
-//            _shader_wrappers.push_back(move(shader_wrapper));
-//
-//            _program_group_table = _shader_wrappers[1]._program_group_table;
-//
-//
-//            create_sbt(_program_group_table, gpu_scene);
-//            create_pipeline();
-//            build_pipeline();
-        }
+                  _gpu_scene(gpu_scene),
+                  _optix_device_context(create_context()) {}
 
         ShaderWrapper OptixAccel::create_shader_wrapper(const string &ptx_code, const ProgramName &program_name) {
             auto module = obtain_module(ptx_code);
-            return {module, _optix_device_context,
-                    _gpu_scene, _device, program_name};
-        }
-
-        void OptixAccel::add_shader_wrapper(const string &ptx_code, const ProgramName &program_name) {
-            auto module = obtain_module(ptx_code);
-            ShaderWrapper shader_wrapper(module, _optix_device_context,
-                                         _gpu_scene, _device, program_name);
-            _shader_wrappers.push_back(move(shader_wrapper));
+            return move(ShaderWrapper{
+                module, _optix_device_context,
+                        _gpu_scene, _device, program_name
+            });
         }
 
         OptixBuildInput OptixAccel::get_mesh_build_input(const Buffer<const float3> &positions,
@@ -287,7 +257,7 @@ namespace luminous {
 
 
 
-        void OptixAccel::build_pipeline(const std::vector<OptixProgramGroup *> &program_groups) {
+        void OptixAccel::build_pipeline(const std::vector<OptixProgramGroup> &program_groups) {
             OptixPipelineLinkOptions pipeline_link_options = {};
             pipeline_link_options.maxTraceDepth = 2;
 #ifndef NDEBUG
@@ -308,8 +278,5 @@ namespace luminous {
                     &_optix_pipeline), log);
 
         }
-
-
-
     }
 }

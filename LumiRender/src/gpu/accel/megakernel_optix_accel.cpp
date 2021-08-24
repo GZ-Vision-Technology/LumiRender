@@ -11,8 +11,14 @@ extern "C" char optix_shader_code[];
 
 namespace luminous {
     inline namespace gpu {
+        ProgramName program_name{"__raygen__rg",
+                                 "__closesthit__closest",
+                                 "__closesthit__any",
+                                 "__miss__closest",
+                                 "__miss__any"};
+
         ProgramGroupTable MegakernelOptixAccel::create_program_groups(OptixModule optix_module,
-                                                            OptixDeviceContext optix_device_context) {
+                                                                      OptixDeviceContext optix_device_context) {
             OptixProgramGroupOptions program_group_options = {};
             char log[2048];
             size_t sizeof_log = sizeof(log);
@@ -30,7 +36,7 @@ namespace luminous {
                         log,
                         &sizeof_log,
                         &(program_group_table.raygen_prog_group)
-                        ), log);
+                ), log);
             }
 
             {
@@ -47,7 +53,7 @@ namespace luminous {
                         log,
                         &sizeof_log,
                         &(program_group_table.radiance_miss_group)
-                        ), log);
+                ), log);
 
                 memset(&miss_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
@@ -63,7 +69,7 @@ namespace luminous {
                         log,
                         &sizeof_log,
                         &(program_group_table.occlusion_miss_group)
-                        ), log);
+                ), log);
             }
 
             {
@@ -81,7 +87,7 @@ namespace luminous {
                         log,
                         &sizeof_log,
                         &(program_group_table.radiance_hit_group)
-                        ), log);
+                ), log);
 
                 memset(&hit_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 hit_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
@@ -97,7 +103,7 @@ namespace luminous {
                         log,
                         &sizeof_log,
                         &(program_group_table.occlusion_hit_group)
-                        ), log);
+                ), log);
             }
             return program_group_table;
         }
@@ -118,12 +124,11 @@ namespace luminous {
                     _optix_device_context,
                     &_pipeline_compile_options,
                     &pipeline_link_options,
-                    //                    (OptixProgramGroup *) &_shader_wrappers[0]._program_group_table,
                     (OptixProgramGroup *) &_program_group_table,
                     _program_group_table.size(),
                     log, &sizeof_log,
                     &pipeline
-                    ), log);
+            ), log);
 
             return pipeline;
         }
@@ -185,10 +190,13 @@ namespace luminous {
 
         MegakernelOptixAccel::MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene,
                                                    Context *context)
-                                                   : OptixAccel(device, context, gpu_scene) {
-            _program_group_table = create_program_groups(obtain_module(optix_shader_code),_optix_device_context);
+                : OptixAccel(device, context, gpu_scene),
+                  _shader_wrapper(std::move(create_shader_wrapper(optix_shader_code, program_name))) {
+            _program_group_table = create_program_groups(obtain_module(optix_shader_code), _optix_device_context);
             create_sbt(_program_group_table, gpu_scene);
             _optix_pipeline = create_pipeline();
+
+//            build_pipeline(_shader_wrapper.program_groups());
         }
 
         void MegakernelOptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {

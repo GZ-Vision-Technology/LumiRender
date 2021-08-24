@@ -24,7 +24,7 @@ namespace luminous {
             std::map<SHA1, OptixModule> _module_map;
 
             void clear_modules() {
-                for (auto iter : _module_map) {
+                for (const auto& iter : _module_map) {
                     optixModuleDestroy(iter.second);
                 }
             }
@@ -51,7 +51,6 @@ namespace luminous {
             std::list<Buffer<std::byte>> _as_buffer_list;
             Buffer<OptixInstance> _instances{nullptr};
             OptixPipeline _optix_pipeline{};
-            std::vector<ShaderWrapper> _shader_wrappers;
             const GPUScene *_gpu_scene{};
 
             OptixModule obtain_module(const std::string &ptx_code) {
@@ -79,9 +78,7 @@ namespace luminous {
 
             OptixDeviceContext create_context();
 
-            void build_pipeline(const std::vector<OptixProgramGroup *> &program_groups);
-
-            void add_shader_wrapper(const std::string &ptx_code, const ProgramName &program_name);
+            void build_pipeline(const std::vector<OptixProgramGroup> &program_groups);
 
             NDSC ShaderWrapper create_shader_wrapper(const std::string &ptx_code, const ProgramName &program_name);
 
