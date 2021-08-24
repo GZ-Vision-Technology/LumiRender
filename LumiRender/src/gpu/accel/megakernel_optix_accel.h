@@ -20,9 +20,21 @@ namespace luminous {
         class GPUScene;
 
         class MegakernelOptixAccel : public OptixAccel {
+            DevicePtrTable _device_ptr_table;
+
+            ProgramGroupTable _program_group_table{};
+
+            OptixShaderBindingTable _sbt{};
+
 
         public:
             MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context);
+
+            ProgramGroupTable create_program_groups(OptixModule optix_module,OptixDeviceContext optix_device_context);
+
+            OptixPipeline create_pipeline();
+
+            void create_sbt(ProgramGroupTable program_group_table, const GPUScene *gpu_scene);
 
             ~MegakernelOptixAccel();
 
