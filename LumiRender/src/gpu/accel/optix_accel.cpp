@@ -34,15 +34,13 @@ namespace luminous {
 //                                                         _optix_device_context);
 
 
-
+            add_shader_wrapper(optix_shader_code, program_name);
             auto module = obtain_module(optix_shader_code);
-            _shader_wrappers.reserve(10);
+//            _shader_wrappers.reserve(10);
             ShaderWrapper shader_wrapper(module, _optix_device_context, _gpu_scene, _device, program_name);
             _shader_wrappers.push_back(move(shader_wrapper));
-            ShaderWrapper sw;
-            _shader_wrappers.push_back(move(sw));
-//            add_shader_wrapper(optix_shader_code, program_name);
-            _program_group_table = _shader_wrappers[0]._program_group_table;
+
+            _program_group_table = _shader_wrappers[1]._program_group_table;
 
 
             create_sbt(_program_group_table, gpu_scene);
@@ -51,14 +49,10 @@ namespace luminous {
         }
 
         void OptixAccel::add_shader_wrapper(const string &ptx_code, const ProgramName &program_name) {
-//            auto module = obtain_module(ptx_code);
-//            ShaderWrapper shader_wrapper(module, _optix_device_context,
-//                                         _gpu_scene, _device, program_name);
-//            LUMINOUS_INFO(&shader_wrapper);
-//            auto s = move(shader_wrapper);
-//            LUMINOUS_INFO(s.sbt_ptr());
-//            ShaderWrapper sw;
-//            _shader_wrappers.push_back(move(sw));
+            auto module = obtain_module(ptx_code);
+            ShaderWrapper shader_wrapper(module, _optix_device_context,
+                                         _gpu_scene, _device, program_name);
+            _shader_wrappers.push_back(move(shader_wrapper));
         }
 
         OptixBuildInput OptixAccel::get_mesh_build_input(const Buffer<const float3> &positions,
