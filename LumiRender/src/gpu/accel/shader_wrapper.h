@@ -63,12 +63,9 @@ namespace luminous {
         class ShaderWrapper : public Noncopyable {
         private:
             DevicePtrTable _device_ptr_table;
-
             OptixShaderBindingTable _sbt{};
-
-        public:
             ProgramGroupTable _program_group_table{};
-
+        public:
             ShaderWrapper() = default;
 
             ShaderWrapper(ShaderWrapper &&other) noexcept
@@ -95,9 +92,7 @@ namespace luminous {
                 _device_ptr_table.clear();
             }
 
-            ~ShaderWrapper() {
-                clear();
-            }
+            ~ShaderWrapper() = default;
 
             ProgramGroupTable create_program_groups(OptixModule optix_module,
                                                     OptixDeviceContext optix_device_context,
