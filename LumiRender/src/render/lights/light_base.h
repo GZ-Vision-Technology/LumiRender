@@ -61,17 +61,16 @@ namespace luminous {
         class LightBase {
         protected:
             const LightType _type;
-            const float3 _miss_color;
         public:
-            XPU LightBase(LightType type, float3 miss_color = make_float3(0.f))
-                : _type(type), _miss_color(miss_color) {}
+            XPU LightBase(LightType type)
+                : _type(type) {}
 
             NDSC_XPU LightType type() const {
                 return _type;
             }
 
             NDSC_XPU Spectrum on_miss(Ray ray, const SceneData * data) const {
-                return {_miss_color};
+                return {0.f};
             }
 
             NDSC_XPU bool is_infinite() const {

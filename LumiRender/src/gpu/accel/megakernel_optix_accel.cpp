@@ -7,7 +7,7 @@
 #include "gpu/gpu_scene.h"
 #include <iosfwd>
 
-extern "C" char optix_shader_code[];
+extern "C" char megakernel_pt[];
 
 namespace luminous {
     inline namespace gpu {
@@ -20,7 +20,7 @@ namespace luminous {
         MegakernelOptixAccel::MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene,
                                                    Context *context)
                 : OptixAccel(device, context, gpu_scene),
-                  _shader_wrapper((create_shader_wrapper(optix_shader_code, program_name))) {
+                _shader_wrapper((create_shader_wrapper(megakernel_pt, program_name))) {
             build_pipeline(_shader_wrapper.program_groups());
         }
 

@@ -3,13 +3,12 @@ add_library(luminous-backends INTERFACE)
 include_directories(${OptiX_INCLUDE})
 
 
-#add_subdirectory(framework)
-cuda_compile_and_embed(optix_shader_code ${PROJECT_SOURCE_DIR}/src/gpu/shaders/megakernel_pt.cu)
+cuda_compile_and_embed(megakernel_pt ${PROJECT_SOURCE_DIR}/src/gpu/shaders/megakernel_pt.cu)
 
 file(GLOB_RECURSE HEADER_FILES *.h*)
 file(GLOB_RECURSE SOURCE_FILES *.cpp)
 
-add_library(luminous-gpu SHARED ${HEADER_FILES} ${SOURCE_FILES} ${optix_shader_code})
+add_library(luminous-gpu SHARED ${HEADER_FILES} ${SOURCE_FILES} ${megakernel_pt})
 
 target_link_libraries(luminous-gpu
         PUBLIC CUDA::nvrtc

@@ -26,13 +26,13 @@ namespace luminous {
             return BaseClass::size() * sizeof(T);
         }
 
-        void reset(const vector <THost> &v) {
+        void reset(const std::vector <THost> &v) {
             BaseClass::reserve(v.capacity());
             BaseClass::resize(v.size());
             std::memcpy(BaseClass::data(), v.data(), sizeof(THost) * v.size());
         }
 
-        void reset(const vector <THost> &v, const SP <Device> &device) {
+        void reset(const std::vector <THost> &v, const SP <Device> &device) {
             _device_buffer = device->allocate_buffer<TDevice>(v.size());
             reset(v);
         }
@@ -80,7 +80,7 @@ namespace luminous {
             return _device_buffer.view(offset, count);
         }
 
-        NDSC BufferView <const Distribution1D> const_device_buffer_view(size_t offset = 0, size_t count = -1) const {
+        NDSC BufferView <const THost> const_device_buffer_view(size_t offset = 0, size_t count = -1) const {
             return _device_buffer.view(offset, count);
         }
 

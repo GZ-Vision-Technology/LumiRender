@@ -86,6 +86,7 @@ namespace luminous {
 
             virtual void create_device_memory() = 0;
 
+            // todo add geometry accelerate structure
             virtual void init_accel() = 0;
 
             void append_light_material(vector <MaterialConfig> &material_configs);
