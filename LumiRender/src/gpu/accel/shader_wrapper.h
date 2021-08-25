@@ -27,11 +27,11 @@ namespace luminous {
         };
 
         struct ProgramGroupTable {
-            OptixProgramGroup raygen_prog_group{nullptr};
-            OptixProgramGroup radiance_miss_group{nullptr};
-            OptixProgramGroup occlusion_miss_group{nullptr};
-            OptixProgramGroup radiance_hit_group{nullptr};
-            OptixProgramGroup occlusion_hit_group{nullptr};
+            OptixProgramGroup raygen_group{nullptr};
+            OptixProgramGroup miss_closest_group{nullptr};
+            OptixProgramGroup miss_any_group{nullptr};
+            OptixProgramGroup hit_closest_group{nullptr};
+            OptixProgramGroup hit_any_group{nullptr};
 
             ProgramGroupTable() = default;
 
@@ -39,12 +39,12 @@ namespace luminous {
                 return sizeof(ProgramGroupTable) / sizeof(OptixProgramGroup);
             }
 
-            void clear() {
-                optixProgramGroupDestroy(raygen_prog_group);
-                optixProgramGroupDestroy(radiance_miss_group);
-                optixProgramGroupDestroy(occlusion_miss_group);
-                optixProgramGroupDestroy(radiance_hit_group);
-                optixProgramGroupDestroy(occlusion_hit_group);
+            void clear() const {
+                OPTIX_CHECK(optixProgramGroupDestroy(raygen_group));
+                OPTIX_CHECK(optixProgramGroupDestroy(miss_closest_group));
+                OPTIX_CHECK(optixProgramGroupDestroy(miss_any_group));
+                OPTIX_CHECK(optixProgramGroupDestroy(hit_closest_group));
+                OPTIX_CHECK(optixProgramGroupDestroy(hit_any_group));
             }
         };
 
@@ -80,11 +80,11 @@ namespace luminous {
             NDSC const OptixShaderBindingTable *sbt_ptr() const { return &_sbt; }
 
             NDSC std::vector<OptixProgramGroup> program_groups() const {
-                return {_program_group_table.raygen_prog_group,
-                        _program_group_table.radiance_miss_group,
-                        _program_group_table.occlusion_miss_group,
-                        _program_group_table.radiance_hit_group,
-                        _program_group_table.occlusion_hit_group};
+                return {_program_group_table.raygen_group,
+                        _program_group_table.miss_closest_group,
+                        _program_group_table.miss_any_group,
+                        _program_group_table.hit_closest_group,
+                        _program_group_table.hit_any_group};
             };
 
             void clear() {
@@ -98,7 +98,7 @@ namespace luminous {
                                                     OptixDeviceContext optix_device_context,
                                                     const ProgramName &program_name);
 
-            void create_sbt(const GPUScene *gpu_scene, std::shared_ptr<Device> device);
+            void create_sbt(const GPUScene *gpu_scene, const std::shared_ptr<Device>& device);
         };
     }
 }

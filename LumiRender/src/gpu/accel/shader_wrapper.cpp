@@ -27,7 +27,7 @@ namespace luminous {
                 OptixProgramGroupDesc raygen_prog_group_desc = {};
                 raygen_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_RAYGEN;
                 raygen_prog_group_desc.raygen.module = optix_module;
-                raygen_prog_group_desc.raygen.entryFunctionName = "__raygen__rg";
+                raygen_prog_group_desc.raygen.entryFunctionName = program_name.raygen;
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
                         optix_device_context,
                         &raygen_prog_group_desc,
@@ -35,7 +35,7 @@ namespace luminous {
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(program_group_table.raygen_prog_group)
+                        &(program_group_table.raygen_group)
                         ), log);
             }
 
@@ -43,7 +43,7 @@ namespace luminous {
                 OptixProgramGroupDesc miss_prog_group_desc = {};
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
                 miss_prog_group_desc.miss.module = optix_module;
-                miss_prog_group_desc.miss.entryFunctionName = "__miss__closest";
+                miss_prog_group_desc.miss.entryFunctionName = program_name.miss_closest;
                 sizeof_log = sizeof(log);
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
                         optix_device_context,
@@ -52,13 +52,13 @@ namespace luminous {
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(program_group_table.radiance_miss_group)
+                        &(program_group_table.miss_closest_group)
                         ), log);
 
                 memset(&miss_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
                 miss_prog_group_desc.miss.module = optix_module;  // NULL miss program for occlusion rays
-                miss_prog_group_desc.miss.entryFunctionName = "__miss__any";
+                miss_prog_group_desc.miss.entryFunctionName = program_name.miss_any;
                 sizeof_log = sizeof(log);
 
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
@@ -68,7 +68,7 @@ namespace luminous {
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(program_group_table.occlusion_miss_group)
+                        &(program_group_table.miss_any_group)
                         ), log);
             }
 
@@ -76,7 +76,7 @@ namespace luminous {
                 OptixProgramGroupDesc hit_prog_group_desc = {};
                 hit_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
                 hit_prog_group_desc.hitgroup.moduleCH = optix_module;
-                hit_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__closest";
+                hit_prog_group_desc.hitgroup.entryFunctionNameCH = program_name.closesthit_closest;
                 sizeof_log = sizeof(log);
 
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
@@ -86,13 +86,13 @@ namespace luminous {
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(program_group_table.radiance_hit_group)
+                        &(program_group_table.hit_closest_group)
                         ), log);
 
                 memset(&hit_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 hit_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
                 hit_prog_group_desc.hitgroup.moduleCH = optix_module;
-                hit_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__any";
+                hit_prog_group_desc.hitgroup.entryFunctionNameCH = program_name.closesthit_any;
                 sizeof_log = sizeof(log);
 
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
@@ -102,13 +102,13 @@ namespace luminous {
                         &program_group_options,
                         log,
                         &sizeof_log,
-                        &(program_group_table.occlusion_hit_group)
+                        &(program_group_table.hit_any_group)
                         ), log);
             }
             return program_group_table;
         }
 
-        void ShaderWrapper::create_sbt(const GPUScene *gpu_scene, std::shared_ptr<Device> device) {
+        void ShaderWrapper::create_sbt(const GPUScene *gpu_scene, const std::shared_ptr<Device>& device) {
             auto fill_scene_data = [&](SceneRecord *p, const GPUScene *gpu_scene) {
                 p->data.positions = gpu_scene->_positions.device_buffer_view();
                 p->data.normals = gpu_scene->_normals.device_buffer_view();
@@ -130,7 +130,7 @@ namespace luminous {
 
             _device_ptr_table.rg_record = device->allocate_buffer<RayGenRecord>(1);
             RayGenRecord rg_sbt = {};
-            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.raygen_prog_group, &rg_sbt));
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.raygen_group, &rg_sbt));
             _device_ptr_table.rg_record.upload(&rg_sbt);
 
             _device_ptr_table.miss_record = device->allocate_buffer<SceneRecord>(RayType::Count);
@@ -138,18 +138,18 @@ namespace luminous {
             fill_scene_data(&ms_sbt[RayType::ClosestHit], gpu_scene);
             fill_scene_data(&ms_sbt[RayType::AnyHit], gpu_scene);
             OPTIX_CHECK(
-                    optixSbtRecordPackHeader(_program_group_table.radiance_miss_group, &ms_sbt[RayType::ClosestHit]));
+                    optixSbtRecordPackHeader(_program_group_table.miss_closest_group, &ms_sbt[RayType::ClosestHit]));
             OPTIX_CHECK(
-                    optixSbtRecordPackHeader(_program_group_table.occlusion_miss_group, &ms_sbt[RayType::AnyHit]));
+                    optixSbtRecordPackHeader(_program_group_table.miss_any_group, &ms_sbt[RayType::AnyHit]));
             _device_ptr_table.miss_record.upload(ms_sbt);
 
             _device_ptr_table.hit_record = device->allocate_buffer<SceneRecord>(RayType::Count);
             SceneRecord hit_sbt[RayType::Count] = {};
             fill_scene_data(&hit_sbt[RayType::ClosestHit], gpu_scene);
-            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.radiance_hit_group,
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.hit_closest_group,
                                                  &hit_sbt[RayType::ClosestHit]));
             fill_scene_data(&hit_sbt[RayType::AnyHit], gpu_scene);
-            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.occlusion_hit_group,
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.hit_any_group,
                                                  &hit_sbt[RayType::AnyHit]));
             _device_ptr_table.hit_record.upload(hit_sbt);
 

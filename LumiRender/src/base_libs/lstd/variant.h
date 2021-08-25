@@ -240,11 +240,11 @@ namespace lstd {
 #undef _GEN_CASE_N
 
 #define LUMINOUS_VAR_DISPATCH(method, ...)                                                                             \
-    return this->dispatch([&, this](auto &&self)-> decltype(auto) {                                                    \
+    return this->dispatch([&](auto &&self)-> decltype(auto) {                                                          \
         return self.method(__VA_ARGS__);                                                                               \
     });
 #define LUMINOUS_VAR_PTR_DISPATCH(method, ...)                                                                         \
-    return this->dispatch([&, this](auto &&self)-> decltype(auto) {                                                    \
+    return this->dispatch([&](auto &&self)-> decltype(auto) {                                                          \
         return self->method(__VA_ARGS__);                                                                              \
     });
 

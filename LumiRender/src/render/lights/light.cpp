@@ -89,14 +89,13 @@ namespace luminous {
                     NEE_data->found_intersection = intersect_closest(traversable_handle, ray, &prd);
                     if (prd.is_hit() && (NEE_data->next_si = prd.compute_surface_interaction(ray)).light == this) {
                         NEE_data->next_si.PDF_pos = get<AreaLight>()->inv_area();
-                        light_PDF = PDF_Li(si, NEE_data->next_si, NEE_data->wi, data);
-                        weight = MIS_weight(bsdf_PDF, light_PDF);
                         Li = NEE_data->next_si.Le(-NEE_data->wi);
+                        light_PDF = PDF_Li(si, NEE_data->next_si, NEE_data->wi, data);
                     } else if (!NEE_data->found_intersection && is_infinite()) {
                         Li = get<Envmap>()->on_miss(ray, prd.scene_data());
                         light_PDF = get<Envmap>()->PDF_Li(si, NEE_data->next_si, NEE_data->wi, data);
-                        weight = MIS_weight(bsdf_PDF, light_PDF);
                     }
+                    weight = MIS_weight(bsdf_PDF, light_PDF);
                     Ld = bsdf_val * Li * weight / bsdf_PDF;
                 }
             }
