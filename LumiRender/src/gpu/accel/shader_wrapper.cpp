@@ -10,10 +10,10 @@ namespace luminous {
     inline namespace gpu {
 
         ShaderWrapper::ShaderWrapper(OptixModule optix_module, OptixDeviceContext optix_device_context,
-                                     const GPUScene *gpu_scene, std::shared_ptr<Device> device,
+                                     const GPUScene *gpu_scene, const std::shared_ptr<Device>& device,
                                      const ProgramName &program_name) {
             _program_group_table = create_program_groups(optix_module, optix_device_context, program_name);
-            create_sbt(gpu_scene, std::move(device));
+            build_sbt(gpu_scene, device);
         }
 
         ProgramGroupTable ShaderWrapper::create_program_groups(OptixModule optix_module,
@@ -57,7 +57,7 @@ namespace luminous {
 
                 memset(&miss_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
-                miss_prog_group_desc.miss.module = optix_module;  // NULL miss program for occlusion rays
+                miss_prog_group_desc.miss.module = optix_module;
                 miss_prog_group_desc.miss.entryFunctionName = program_name.miss_any;
                 sizeof_log = sizeof(log);
 
@@ -108,7 +108,7 @@ namespace luminous {
             return program_group_table;
         }
 
-        void ShaderWrapper::create_sbt(const GPUScene *gpu_scene, const std::shared_ptr<Device>& device) {
+        void ShaderWrapper::build_sbt(const GPUScene *gpu_scene, const std::shared_ptr<Device>& device) {
             auto fill_scene_data = [&](SceneRecord *p, const GPUScene *gpu_scene) {
                 p->data.positions = gpu_scene->_positions.device_buffer_view();
                 p->data.normals = gpu_scene->_normals.device_buffer_view();

@@ -46,13 +46,13 @@ namespace luminous {
             BufferView<const Material> materials;
 
             // light data
-            const LightSampler *light_sampler;
+            const LightSampler *light_sampler{};
             BufferView<const Distribution1D> distributions;
             BufferView<const Distribution2D> distribution2ds;
 
 #define GEN_GET_FUNCTION(attribute)                                                     \
             NDSC_XPU_INLINE auto get_##attribute(const MeshHandle &mesh) const {        \
-                return attribute.sub_view(mesh.vertex_offset, mesh.vertex_count);       \
+                return (attribute).sub_view(mesh.vertex_offset, mesh.vertex_count);     \
             }                                                                           \
             NDSC_XPU_INLINE auto get_##attribute##_by_mesh_idx(index_t mesh_idx) const {\
                 MeshHandle mesh = meshes[mesh_idx];                                     \
