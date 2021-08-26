@@ -61,7 +61,7 @@ namespace luminous {
             size_t _size_in_bytes;
 
         public:
-            void *ptr() override;
+            NDSC void *ptr() const override;
 
             explicit CUDABuffer(size_t bytes);
 

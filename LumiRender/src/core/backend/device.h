@@ -30,11 +30,19 @@ namespace luminous {
             return Buffer<T>(_impl->allocate_buffer(n_elements * sizeof(T)));
         }
 
-        DTexture& allocate_texture(PixelFormat pixel_format, uint2 resolution) {
-            size_t idx = _texture_mgr.size();
+        template<typename T = std::byte>
+        BufferView<T> obtain_buffer(size_t n_elements) {
+            RawBuffer raw_buffer = _impl->allocate_buffer(n_elements * sizeof(T));
+            BufferView<T> ret(raw_buffer.ptr<T *>(), n_elements);
+            _raw_buffers.push_back(std::move(raw_buffer));
+            return ret;
+        }
+
+        DTexture &allocate_texture(PixelFormat pixel_format, uint2 resolution) {
+            size_t idx = _textures.size();
             DTexture texture = _impl->allocate_texture(pixel_format, resolution);
-            _texture_mgr.push_back(std::move(texture));
-            return _texture_mgr[idx];
+            _textures.push_back(std::move(texture));
+            return _textures[idx];
         }
 
         Dispatcher new_dispatcher() { return _impl->new_dispatcher(); }
@@ -43,6 +51,7 @@ namespace luminous {
 
     protected:
         std::unique_ptr<Impl> _impl;
-        std::vector<DTexture> _texture_mgr;
+        std::vector<DTexture> _textures;
+        std::vector<RawBuffer> _raw_buffers;
     };
 }

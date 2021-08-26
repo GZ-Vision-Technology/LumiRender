@@ -15,7 +15,7 @@ namespace luminous {
             void *_ptr{};
             size_t _size_in_bytes{0};
         public:
-            void *ptr() override;
+            void *ptr() const override;
 
             explicit CPUBuffer(size_t bytes);
 

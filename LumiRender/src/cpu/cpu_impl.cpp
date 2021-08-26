@@ -7,7 +7,7 @@
 namespace luminous {
     inline namespace cpu {
 
-        void *CPUBuffer::ptr() { return _ptr; }
+        void *CPUBuffer::ptr() const { return _ptr; }
 
         CPUBuffer::CPUBuffer(size_t bytes)
                 : _size_in_bytes(bytes) {

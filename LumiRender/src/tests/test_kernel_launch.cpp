@@ -83,38 +83,15 @@ void test_managed() {
     auto cudaModule = create_cuda_module(ptxCode);
     auto kernel = cudaModule->get_kernel("test_sampler2");
 
-    auto config = SamplerConfig();
-    config.set_full_type("PCGSampler");
-    config.spp = 9;
-    auto sampler = Sampler::create(config);
-    auto buffer = device->allocate_buffer<Sampler>(1);
-    buffer.upload(&sampler);
-    auto ps = buffer.ptr();
+    auto b = device->obtain_buffer(6);
 
-    Managed<Sampler> s;
-
-    vector<Sampler> v;
-
-    v.push_back(sampler);
-    v.push_back(sampler);
-
-//    s.reset(&sampler, device);
-//    s.reset(v,device);
-    cout << v[0].to_string() << endl;
-    s.synchronize_to_gpu();
-    ps = s.device_ptr();
-    kernel->launch(dispatcher, {&ps});
-    dispatcher.wait();
-    s.synchronize_to_cpu();
-    cout << s[0].next_1d() << endl;
-
-    cout << sizeof(vector<Sampler>);
+    cout << "Adfdasf" << endl;
 
 }
 
 int main() {
 
-//    test_managed();
+    test_managed();
 
 //    test_driver_api();
 //    test_kernel_sampler();

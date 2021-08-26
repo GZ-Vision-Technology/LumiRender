@@ -36,7 +36,7 @@ namespace luminous {
 
             NDSC virtual size_t size() const = 0;
 
-            NDSC virtual void *ptr() = 0;
+            NDSC virtual void *ptr() const = 0;
 
             virtual ~Impl() = default;
         };
@@ -46,6 +46,11 @@ namespace luminous {
         NDSC Impl *impl_mut() const {
             DCHECK(valid());
             return _impl.get();
+        }
+
+        template<typename U = void *>
+        NDSC auto ptr() const {
+            return (U) (_impl == nullptr ? nullptr : _impl->ptr());
         }
 
         NDSC bool valid() const {
@@ -73,12 +78,7 @@ namespace luminous {
 
         value_type *data() const { return reinterpret_cast<value_type *>(ptr()); }
 
-        size_t stride_in_bytes() const { return sizeof(value_type); }
-
-        template<typename U = void *>
-        NDSC auto ptr() const {
-            return (U) (_impl == nullptr ? nullptr : _impl->ptr());
-        }
+        NDSC size_t stride_in_bytes() const { return sizeof(value_type); }
 
         NDSC BufferView <value_type> view(size_t offset = 0, size_t count = -1) const {
             count = fix_count(offset, count, size());

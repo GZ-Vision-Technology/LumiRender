@@ -149,7 +149,7 @@ namespace luminous {
             CU_CHECK(cuStreamDestroy(stream));
         }
 
-        void *CUDABuffer::ptr() {
+        void *CUDABuffer::ptr() const {
             return (void *) _ptr;
         }
 
