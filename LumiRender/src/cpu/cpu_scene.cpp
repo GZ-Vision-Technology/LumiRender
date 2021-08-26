@@ -11,8 +11,8 @@ using std::endl;
 namespace luminous {
     inline namespace cpu {
 
-        CPUScene::CPUScene(Context *context)
-                : Scene(context) {}
+        CPUScene::CPUScene(const SP<Device> &device, Context *context)
+                : Scene(device, context) {}
 
         void CPUScene::init(const SP<SceneGraph> &scene_graph) {
             convert_geometry_data(scene_graph);
@@ -32,13 +32,6 @@ namespace luminous {
             EmbreeAccel::init_device();
             _embree_accel = std::make_unique<EmbreeAccel>();
             build_accel();
-        }
-
-        void CPUScene::preload_textures(const SP<SceneGraph> &scene_graph) {
-            TASK_TAG("preload_textures")
-            for (auto &tc : _tex_configs) {
-                _textures.push_back(Texture::create(tc));
-            }
         }
 
         void CPUScene::build_accel() {

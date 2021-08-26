@@ -8,7 +8,7 @@
 namespace luminous {
     inline namespace render {
 
-        void Scene::append_light_material(vector <MaterialConfig> &material_configs) {
+        void Scene::append_light_material(vector<MaterialConfig> &material_configs) {
             TextureConfig tc;
             tc.set_full_type("ConstantTexture");
             tc.val = make_float4(0.f);
@@ -32,7 +32,7 @@ namespace luminous {
             }
         }
 
-        void Scene::load_lights(const vector <LightConfig> &light_configs, const LightSamplerConfig &lsc) {
+        void Scene::load_lights(const vector<LightConfig> &light_configs, const LightSamplerConfig &lsc) {
             _lights.reserve(light_configs.size());
             for (const auto &lc : light_configs) {
                 lc.scene_box = _scene_box;
@@ -42,7 +42,7 @@ namespace luminous {
                 _lights.push_back(Light::create(lc));
             }
             // put the infinite light to first
-            std::sort(_lights.begin(),  _lights.end(), [](const Light &v1, const Light &v2) {
+            std::sort(_lights.begin(), _lights.end(), [](const Light &v1, const Light &v2) {
                 return v1.is_infinite() > v2.is_infinite();
             });
 
@@ -51,7 +51,7 @@ namespace luminous {
         }
 
         void Scene::preprocess_meshes() {
-            vector <Distribution1DBuilder> builders;
+            vector<Distribution1DBuilder> builders;
             auto process_mesh = [&](MeshHandle mesh) {
                 if (!mesh.has_distribute()) {
                     return;
@@ -81,7 +81,7 @@ namespace luminous {
             }
         }
 
-        void Scene::relevance_material_and_texture(vector <MaterialConfig> &material_configs) {
+        void Scene::relevance_material_and_texture(vector<MaterialConfig> &material_configs) {
             for (auto &mat_config : material_configs) {
                 mat_config.fill_tex_configs(_tex_configs);
             }
@@ -91,7 +91,7 @@ namespace luminous {
             TASK_TAG("convert scene data")
             index_t vert_offset = 0u;
             index_t tri_offset = 0u;
-            vector <TextureConfig> tex_configs;
+            vector<TextureConfig> tex_configs;
             index_t material_count = scene_graph->material_configs.size();
             for (const SP<const Model> &model : scene_graph->model_list) {
                 int64_t model_mat_idx = lstd::find_index_if(scene_graph->material_configs,
@@ -133,7 +133,7 @@ namespace luminous {
                 float surface_area = 0;
                 BufferView<const float3> mesh_positions = _positions.const_host_buffer_view(mesh.vertex_offset,
                                                                                             mesh.vertex_count);
-                for (size_t i = tri_start ; i < tri_end; ++i) {
+                for (size_t i = tri_start; i < tri_end; ++i) {
                     TriangleHandle tri = _triangles[i];
                     float3 p0 = transform.apply_point(mesh_positions[tri.i]);
                     float3 p1 = transform.apply_point(mesh_positions[tri.j]);
@@ -175,6 +175,28 @@ namespace luminous {
             preprocess_meshes();
             relevance_light_and_texture(scene_graph->light_configs);
             load_lights(scene_graph->light_configs, scene_graph->light_sampler_config);
+        }
+
+        void Scene::preload_textures(const SP<SceneGraph> &scene_graph) {
+            TASK_TAG("preload_textures")
+            for (auto &tc : _tex_configs) {
+                if (tc.type() == type_name<ImageTexture>() && !tc.fn.empty()) {
+                    if (std::filesystem::path(tc.fn).is_relative()) {
+                        auto path = _context->scene_path() / tc.fn;
+                        tc.fn = path.string();
+                    }
+                    Image image = Image::load(tc.fn, tc.color_space);
+                    DTexture &texture = _device->allocate_texture(image.pixel_format(), image.resolution());
+                    texture.copy_from(image);
+                    tc.handle = texture.tex_handle();
+                    tc.pixel_format = texture.pixel_format();
+                    _texture_num += 1;
+                    _texture_size_in_byte += image.size_in_bytes();
+                    tc.image_idx = _images.size();
+                    _images.push_back(move(image));
+                }
+                _textures.push_back(Texture::create(tc));
+            }
         }
 
         void Scene::init_materials(const SP<SceneGraph> &scene_graph) {

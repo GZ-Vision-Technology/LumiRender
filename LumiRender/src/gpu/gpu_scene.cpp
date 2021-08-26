@@ -13,7 +13,7 @@ namespace luminous {
     inline namespace gpu {
 
         GPUScene::GPUScene(const SP<Device> &device, Context *context)
-                : Scene(context), _device(device) {}
+                : Scene(device, context) {}
 
         void GPUScene::create_device_memory() {
             {
@@ -76,28 +76,6 @@ namespace luminous {
         void GPUScene::init_accel() {
             _optix_accel = std::make_unique<MegakernelOptixAccel>(_device, this, _context);
             build_accel();
-        }
-
-        void GPUScene::preload_textures(const SP<SceneGraph> &scene_graph) {
-            TASK_TAG("preload_textures")
-            for (auto &tc : _tex_configs) {
-                if (tc.type() == type_name<ImageTexture>() && !tc.fn.empty()) {
-                    if (std::filesystem::path(tc.fn).is_relative()) {
-                        auto path = _context->scene_path() / tc.fn;
-                        tc.fn = path.string();
-                    }
-                    Image image = Image::load(tc.fn, tc.color_space);
-                    DTexture &texture = _device->allocate_texture(image.pixel_format(), image.resolution());
-                    texture.copy_from(image);
-                    tc.handle = texture.tex_handle();
-                    tc.pixel_format = texture.pixel_format();
-                    _texture_num += 1;
-                    _texture_size_in_byte += image.size_in_bytes();
-                    tc.image_idx = _images.size();
-                    _images.push_back(move(image));
-                }
-                _textures.push_back(Texture::create(tc));
-            }
         }
 
         void GPUScene::init(const SP<SceneGraph> &scene_graph) {

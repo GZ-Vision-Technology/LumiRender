@@ -18,7 +18,7 @@ namespace luminous {
         }
 
         void CPUPathTracer::init(const SP<SceneGraph> &scene_graph) {
-            _scene = std::make_unique<CPUScene>(_context);
+            _scene = std::make_unique<CPUScene>(nullptr, _context);
             init_with_config(scene_graph->integrator_config);
             _scene->init(scene_graph);
             _camera = Sensor::create(scene_graph->sensor_config);

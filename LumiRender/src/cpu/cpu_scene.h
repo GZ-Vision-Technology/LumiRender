@@ -19,7 +19,7 @@ namespace luminous {
             UP<EmbreeAccel> _embree_accel;
             UP<SceneData> _scene_data{new SceneData()};
         public:
-            explicit CPUScene(Context *context);
+            CPUScene(const SP<Device> &device, Context *context);
 
             void init(const SP<SceneGraph> &scene_graph) override;
 
@@ -32,8 +32,6 @@ namespace luminous {
             NDSC uint64_t scene_handle() const { return (uint64_t)rtc_scene(); }
 
             void fill_scene_data();
-
-            void preload_textures(const SP<SceneGraph> &scene_graph);
 
             void init_accel() override;
 

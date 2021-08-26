@@ -14,8 +14,6 @@ namespace luminous {
 
         class GPUScene : public Scene {
         private:
-
-            SP<Device> _device;
             UP<MegakernelOptixAccel> _optix_accel;
 
             friend class MegakernelOptixAccel;
@@ -26,8 +24,6 @@ namespace luminous {
             GPUScene(const SP<Device> &device, Context *context);
 
             void init(const SP<SceneGraph> &scene_graph) override;
-
-            void preload_textures(const SP<SceneGraph> &scene_graph);
 
             void init_accel() override;
 

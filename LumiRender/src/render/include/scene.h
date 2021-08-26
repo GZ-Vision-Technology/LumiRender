@@ -24,11 +24,13 @@ namespace luminous {
         void append(std::vector<T> &v1, const std::vector<T> &v2) {
             v1.insert(v1.cend(), v2.cbegin(), v2.cend());
         }
+
         /**
          * all memory data manage
          */
         class Scene : public Noncopyable {
         protected:
+            SP<Device> _device;
             Context *_context{nullptr};
             size_t _inst_vertices_num{0};
             size_t _inst_triangle_num{0};
@@ -67,7 +69,8 @@ namespace luminous {
             vector<Image> _images;
 
         public:
-            explicit Scene(Context *context) : _context(context) {}
+            Scene(const SP<Device> &device, Context *context)
+                    : _device(device), _context(context) {}
 
             void shrink_to_fit();
 
@@ -86,17 +89,19 @@ namespace luminous {
             // todo add geometry accelerate structure
             virtual void init_accel() = 0;
 
-            void append_light_material(vector <MaterialConfig> &material_configs);
+            void append_light_material(vector<MaterialConfig> &material_configs);
 
             void convert_geometry_data(const SP<SceneGraph> &scene_graph);
 
             void init_lights(const SP<SceneGraph> &scene_graph);
 
+            void preload_textures(const SP<SceneGraph> &scene_graph);
+
             void relevance_material_and_texture(vector<MaterialConfig> &material_configs);
 
             void relevance_light_and_texture(vector<LightConfig> &light_configs);
 
-            void load_lights(const vector <LightConfig> &lc, const LightSamplerConfig &lsc);
+            void load_lights(const vector<LightConfig> &lc, const LightSamplerConfig &lsc);
 
             void preprocess_meshes();
         };
