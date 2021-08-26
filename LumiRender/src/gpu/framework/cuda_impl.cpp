@@ -92,8 +92,8 @@ namespace luminous {
             return memcpy_desc;
         }
 
-        void *CUDATexture::tex_handle() const {
-            return (void *) _tex_handle;
+        uint64_t CUDATexture::tex_handle() const {
+            return _tex_handle;
         }
 
         Image CUDATexture::download() const {
@@ -234,8 +234,8 @@ namespace luminous {
             return RawBuffer(std::make_unique<CUDABuffer>(bytes));
         }
 
-        DeviceTexture CUDADevice::allocate_texture(PixelFormat pixel_format, uint2 resolution) {
-            return DeviceTexture(std::make_unique<CUDATexture>(pixel_format, resolution));
+        DTexture CUDADevice::allocate_texture(PixelFormat pixel_format, uint2 resolution) {
+            return DTexture(std::make_unique<CUDATexture>(pixel_format, resolution));
         }
 
         Dispatcher CUDADevice::new_dispatcher() {

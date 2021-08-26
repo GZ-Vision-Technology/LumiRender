@@ -42,7 +42,7 @@ namespace luminous {
 //
 //            RawBuffer allocate_buffer(size_t bytes) override;
 //
-//            DeviceTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
+//            DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
 //
 //            Dispatcher new_dispatcher() override;
 //

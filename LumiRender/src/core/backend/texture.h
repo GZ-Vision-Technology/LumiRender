@@ -13,7 +13,7 @@
 
 namespace luminous {
 
-    class DeviceTexture {
+    class DTexture {
     public:
         class Impl : public ImageBase {
         public:
@@ -26,12 +26,12 @@ namespace luminous {
 
             virtual void copy_from(const Image &image) = 0;
 
-            NDSC virtual void *tex_handle() const = 0;
+            NDSC virtual uint64_t tex_handle() const = 0;
 
             virtual ~Impl() = default;
         };
 
-        explicit DeviceTexture(std::unique_ptr<Impl> impl)
+        explicit DTexture(std::unique_ptr<Impl> impl)
                 : _impl(move(impl)) {}
 
         NDSC uint32_t width() const { return _impl->width(); }
@@ -56,7 +56,7 @@ namespace luminous {
             return std::move(_impl->download());
         }
 
-        template<typename T = void *>
+        template<typename T = uint64_t>
         NDSC T tex_handle() const {
             return (T) _impl->tex_handle();
         }

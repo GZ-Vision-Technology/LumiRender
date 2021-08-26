@@ -119,7 +119,7 @@ namespace luminous {
             index_t image_idx{invalid_uint32};
             std::string fn;
             PixelFormat pixel_format = PixelFormat::UNKNOWN;
-            void *handle{nullptr};
+            uint64_t handle{0};
         };
 
         NDSC_INLINE bool operator==(const TextureConfig &t1, const TextureConfig &t2) {

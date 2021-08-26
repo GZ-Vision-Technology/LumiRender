@@ -18,7 +18,7 @@ namespace luminous {
         public:
             virtual RawBuffer allocate_buffer(size_t bytes) = 0;
 
-            virtual DeviceTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) = 0;
+            virtual DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) = 0;
 
             virtual Dispatcher new_dispatcher() = 0;
 
@@ -30,7 +30,7 @@ namespace luminous {
             return Buffer<T>(_impl->allocate_buffer(n_elements * sizeof(T)));
         }
 
-        DeviceTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) {
+        DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) {
             return _impl->allocate_texture(pixel_format, resolution);
         }
 

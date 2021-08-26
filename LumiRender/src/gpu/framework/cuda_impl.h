@@ -16,7 +16,7 @@
 
 namespace luminous {
     inline namespace gpu {
-        class CUDATexture : public DeviceTexture::Impl {
+        class CUDATexture : public DTexture::Impl {
         private:
             CUtexObject _tex_handle{};
             CUarray _array_handle{};
@@ -31,7 +31,7 @@ namespace luminous {
 
             void init();
 
-            NDSC void *tex_handle() const override;
+            NDSC uint64_t tex_handle() const override;
 
             void copy_from(Dispatcher &dispatcher, const Image &image) override;
 
@@ -111,12 +111,13 @@ namespace luminous {
         private:
             CUdevice _cu_device{};
             CUcontext _cu_context{};
+
         public:
             CUDADevice();
 
             RawBuffer allocate_buffer(size_t bytes) override;
 
-            DeviceTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
+            DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
 
             Dispatcher new_dispatcher() override;
 
@@ -133,7 +134,7 @@ namespace luminous {
         public:
             explicit CUDAModule(const std::string &ptx_code);
 
-            SP<Kernel> get_kernel(const std::string &name);
+            SP<Kernel> get_kernel(const std::string &name) override;
         };
 
         inline SP<Module> create_cuda_module(const std::string &ptx_code) {
