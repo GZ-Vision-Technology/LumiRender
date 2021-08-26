@@ -22,27 +22,27 @@ namespace luminous {
 
             virtual void copy_from(Dispatcher &dispatcher, const Image &image) = 0;
 
-            virtual Image download() const = 0;
+            NDSC virtual Image download() const = 0;
 
             virtual void copy_from(const Image &image) = 0;
 
-            virtual void *tex_handle() const = 0;
+            NDSC virtual void *tex_handle() const = 0;
 
             virtual ~Impl() = default;
         };
 
-        DeviceTexture(std::unique_ptr<Impl> impl)
+        explicit DeviceTexture(std::unique_ptr<Impl> impl)
                 : _impl(move(impl)) {}
 
-        uint32_t width() const { return _impl->width(); }
+        NDSC uint32_t width() const { return _impl->width(); }
 
-        uint32_t height() const { return _impl->height(); }
+        NDSC uint32_t height() const { return _impl->height(); }
 
-        uint2 resolution() const { return _impl->resolution(); }
+        NDSC uint2 resolution() const { return _impl->resolution(); }
 
-        size_t pixel_num() const { return _impl->pixel_num(); }
+        NDSC size_t pixel_num() const { return _impl->pixel_num(); }
 
-        PixelFormat pixel_format() const { return _impl->pixel_format(); }
+        NDSC PixelFormat pixel_format() const { return _impl->pixel_format(); }
 
         void copy_from(Dispatcher &dispatcher, const Image &image) {
             _impl->copy_from(dispatcher, image);
@@ -52,12 +52,12 @@ namespace luminous {
             _impl->copy_from(image);
         }
 
-        Image download() const {
+        NDSC Image download() const {
             return std::move(_impl->download());
         }
 
         template<typename T = void *>
-        T tex_handle() const {
+        NDSC T tex_handle() const {
             return (T) _impl->tex_handle();
         }
 

@@ -10,6 +10,7 @@
 #include "gpu/accel/megakernel_optix_accel.h"
 #include "gpu/gpu_scene.h"
 #include "render/samplers/sampler.h"
+#include "work_items.h"
 
 namespace luminous {
     inline namespace gpu {

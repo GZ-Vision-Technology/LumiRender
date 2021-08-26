@@ -25,6 +25,8 @@
 
 #define GPU_INLINE GPU INLINE
 
+#define LM_RESTRICT __restrict
+
 #define NDSC [[nodiscard]]
 
 #define NDSC_XPU NDSC XPU

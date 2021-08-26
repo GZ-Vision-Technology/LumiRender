@@ -21,18 +21,19 @@ namespace luminous {
             CUtexObject _tex_handle{};
             CUarray _array_handle{};
             CUsurfObject _surface_handle{};
-            CUDA_MEMCPY2D common_memcpy_from_desc() const;
 
-            CUDA_MEMCPY2D host_src_memcpy_desc(const Image &image) const;
+            NDSC CUDA_MEMCPY2D common_memcpy_from_desc() const;
+
+            NDSC CUDA_MEMCPY2D host_src_memcpy_desc(const Image &image) const;
 
         public:
             CUDATexture(PixelFormat pixel_format, uint2 resolution);
 
             void init();
 
-            void * tex_handle() const;
+            NDSC void *tex_handle() const;
 
-            void copy_from(Dispatcher &dispatcher, const Image &image);
+            void copy_from(Dispatcher &dispatcher, const Image &image) override;
 
             Image download() const;
 
@@ -51,7 +52,7 @@ namespace luminous {
 
             void then(std::function<void(void)> F) override;
 
-            ~CUDADispatcher();
+            ~CUDADispatcher() override;
         };
 
         class CUDABuffer : public RawBuffer::Impl {
@@ -62,13 +63,13 @@ namespace luminous {
         public:
             void *ptr() override;
 
-            CUDABuffer(size_t bytes);
+            explicit CUDABuffer(size_t bytes);
 
-            ~CUDABuffer();
+            ~CUDABuffer() override;
 
-            size_t size() const override;
+            NDSC size_t size() const override;
 
-            void *address(size_t offset) const override;
+            NDSC void *address(size_t offset) const override;
 
             void memset(uint32_t val) override;
 
@@ -90,7 +91,7 @@ namespace luminous {
             int _min_grid_size = 0;
             size_t _shared_mem = 1024;
         public:
-            CUDAKernel(CUfunction func);
+            explicit CUDAKernel(CUfunction func);
 
             void compute_fit_size();
 
@@ -119,7 +120,7 @@ namespace luminous {
 
             Dispatcher new_dispatcher() override;
 
-            ~CUDADevice();
+            ~CUDADevice() override;
         };
 
         inline std::shared_ptr<Device> create_cuda_device() {
