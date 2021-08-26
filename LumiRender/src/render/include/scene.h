@@ -61,9 +61,6 @@ namespace luminous {
             // material data, the last element is light material, black diffuse
             Managed<Material> _materials;
 
-            // texture manager, manage the texture on video memory
-            vector <DTexture> _texture_mgr;
-
             // prepare for texture out of core render
             vector<TextureConfig> _tex_configs;
 

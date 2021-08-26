@@ -55,6 +55,28 @@ void test_sensor() {
     cout << camera.to_string();
 }
 
+
+class TT{
+public:
+    TT() = default;
+
+    TT(TT &&other) {
+        cout << "move construct" << endl;
+    }
+
+    ~TT() {
+        cout << "~TT" << endl;
+    }
+};
+
+void test_move() {
+    vector<TT> vt;
+    TT t;
+    vt.push_back(std::move(t));
+    cout << "wocao" << endl;
+}
+
 int main() {
-    test_sampler();
+//    test_sampler();
+    test_move();
 }

@@ -36,7 +36,7 @@ void test_tex_load() {
         printf("origin val :%d, con f %f", uint32_t(uc));
         auto image2 = Image(luminous::utility::PixelFormat::R8U, (byte *) pixel, luminous::make_uint2(2u,1u));
 
-        auto texture = device->allocate_texture(image2.pixel_format(), image2.resolution());
+        auto &texture = device->allocate_texture(image2.pixel_format(), image2.resolution());
         texture.copy_from(image2);
 
         auto img = texture.download();

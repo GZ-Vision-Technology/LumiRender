@@ -86,12 +86,11 @@ namespace luminous {
                         auto path = _context->scene_path() / tc.fn;
                         tc.fn = path.string();
                     }
-                    auto image = Image::load(tc.fn, tc.color_space);
-                    auto texture = _device->allocate_texture(image.pixel_format(), image.resolution());
+                    Image image = Image::load(tc.fn, tc.color_space);
+                    DTexture &texture = _device->allocate_texture(image.pixel_format(), image.resolution());
                     texture.copy_from(image);
                     tc.handle = texture.tex_handle();
                     tc.pixel_format = texture.pixel_format();
-                    _texture_mgr.push_back(std::move(texture));
                     _texture_num += 1;
                     _texture_size_in_byte += image.size_in_bytes();
                     tc.image_idx = _images.size();

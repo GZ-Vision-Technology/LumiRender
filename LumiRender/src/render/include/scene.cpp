@@ -224,7 +224,6 @@ namespace luminous {
             }
             {
                 _tex_configs.clear();
-                _texture_mgr.clear();
                 _scene_box = Box3f();
             }
         }
@@ -252,7 +251,6 @@ namespace luminous {
             }
             {
                 _tex_configs.shrink_to_fit();
-                _texture_mgr.shrink_to_fit();
             }
         }
 

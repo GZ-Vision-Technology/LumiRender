@@ -95,7 +95,7 @@ namespace luminous {
 
             void compute_fit_size();
 
-            void configure(uint3 grid_size, uint3 local_size, size_t sm = 0) override;
+            void configure(uint3 grid_size, uint3 local_size, size_t sm) override;
 
             void launch(Dispatcher &dispatcher, int n_items,
                         std::vector<void *> &args) override;

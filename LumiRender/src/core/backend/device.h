@@ -30,17 +30,19 @@ namespace luminous {
             return Buffer<T>(_impl->allocate_buffer(n_elements * sizeof(T)));
         }
 
-        DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) {
-            return _impl->allocate_texture(pixel_format, resolution);
+        DTexture& allocate_texture(PixelFormat pixel_format, uint2 resolution) {
+            size_t idx = _texture_mgr.size();
+            DTexture texture = _impl->allocate_texture(pixel_format, resolution);
+            _texture_mgr.push_back(std::move(texture));
+            return _texture_mgr[idx];
         }
 
         Dispatcher new_dispatcher() { return _impl->new_dispatcher(); }
-
-
 
         explicit Device(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
 
     protected:
         std::unique_ptr<Impl> _impl;
+        std::vector<DTexture> _texture_mgr;
     };
 }

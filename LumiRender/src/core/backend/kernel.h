@@ -16,7 +16,7 @@ namespace luminous {
         public:
             virtual void configure(uint3 grid_size,
                                    uint3 local_size,
-                                   size_t sm = 0) = 0;
+                                   size_t sm) = 0;
 
             virtual void launch(Dispatcher &dispatcher,
                                 std::vector<void *> &args) = 0;
