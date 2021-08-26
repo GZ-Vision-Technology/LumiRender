@@ -36,7 +36,9 @@ namespace luminous {
 
         Dispatcher new_dispatcher() { return _impl->new_dispatcher(); }
 
-        Device(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
+
+
+        explicit Device(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
 
     protected:
         std::unique_ptr<Impl> _impl;

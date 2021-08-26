@@ -9,23 +9,44 @@
 
 namespace luminous {
     inline namespace cpu {
-        class CPUDevice : public Device::Impl {
+
+        class CPUBuffer : public RawBuffer::Impl {
+        private:
+            void *_ptr{};
+            size_t _size_in_bytes{0};
         public:
-            CPUDevice() = default;
+            void *ptr() override;
 
-            RawBuffer allocate_buffer(size_t bytes) override {
+            explicit CPUBuffer(size_t bytes);
 
-            }
+            ~CPUBuffer() override;
 
-            DeviceTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override {
+            NDSC size_t size() const override;
 
-            }
+            NDSC void *address(size_t offset) const override;
 
-            Dispatcher new_dispatcher() override {
+            void memset(uint32_t val) override;
 
-            }
+            void download_async(Dispatcher &dispatcher, void *host_ptr, size_t size, size_t offset) override;
 
-            ~CPUDevice() override = default;
+            void upload_async(Dispatcher &dispatcher, const void *host_ptr, size_t size, size_t offset) override;
+
+            void download(void *host_ptr, size_t size, size_t offset) override;
+
+            void upload(const void *host_ptr, size_t size, size_t offset) override;
         };
+
+//        class CPUDevice : public Device::Impl {
+//        public:
+//            CPUDevice() = default;
+//
+//            RawBuffer allocate_buffer(size_t bytes) override;
+//
+//            DeviceTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
+//
+//            Dispatcher new_dispatcher() override;
+//
+//            ~CPUDevice() override = default;
+//        };
     }
 }

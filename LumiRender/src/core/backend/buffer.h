@@ -32,23 +32,23 @@ namespace luminous {
 
             virtual void memset(uint32_t val) = 0;
 
-            virtual void *address(size_t offset) const = 0;
+            NDSC virtual void *address(size_t offset) const = 0;
 
-            virtual size_t size() const = 0;
+            NDSC virtual size_t size() const = 0;
 
-            virtual void *ptr() = 0;
+            NDSC virtual void *ptr() = 0;
 
             virtual ~Impl() = default;
         };
 
-        RawBuffer(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
+        explicit RawBuffer(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
 
-        Impl *impl_mut() const {
+        NDSC Impl *impl_mut() const {
             DCHECK(valid());
             return _impl.get();
         }
 
-        bool valid() const {
+        NDSC bool valid() const {
 #ifdef DEBUG_BUILD
             if (_impl == nullptr)
                 std::cerr << "invalid buffer !!!" << std::endl;
@@ -69,7 +69,7 @@ namespace luminous {
 
         using RawBuffer::RawBuffer;
 
-        Buffer(RawBuffer buf) : RawBuffer(std::move(buf)) {}
+        explicit Buffer(RawBuffer buf) : RawBuffer(std::move(buf)) {}
 
         value_type *data() const { return reinterpret_cast<value_type *>(ptr()); }
 

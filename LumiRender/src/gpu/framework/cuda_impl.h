@@ -31,15 +31,15 @@ namespace luminous {
 
             void init();
 
-            NDSC void *tex_handle() const;
+            NDSC void *tex_handle() const override;
 
             void copy_from(Dispatcher &dispatcher, const Image &image) override;
 
-            Image download() const;
+            NDSC Image download() const override;
 
-            void copy_from(const Image &image);
+            void copy_from(const Image &image) override;
 
-            ~CUDATexture();
+            ~CUDATexture() override;
         };
 
         class CUDADispatcher : public Dispatcher::Impl {

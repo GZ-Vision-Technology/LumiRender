@@ -7,6 +7,7 @@
 
 
 #include "core/concepts.h"
+#include <functional>
 
 namespace luminous {
     class Dispatcher : Noncopyable {
