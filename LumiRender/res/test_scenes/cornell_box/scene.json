@@ -8,15 +8,15 @@
 				"color_space": "SRGB"
 			}
 		}
-//	,
-//		{
-//			"name": "picture",
-//			"type" :"ImageTexture",
-//			"param": {
-//				"fn": "HelloWorld.png",
-//				"color_space": "LINEAR"
-//			}
-//		}
+	,
+		{
+			"name": "picture",
+			"type" :"ImageTexture",
+			"param": {
+				"fn": "HelloWorld.png",
+				"color_space": "LINEAR"
+			}
+		}
 //	,
 //		{
 //			"name": "envmap",
@@ -28,13 +28,13 @@
 //		}
 	],
 	"materials": [
-//		{
-//			"type": "MatteMaterial",
-//			"name": "quad",
-//			"param": {
-//				"diffuse": "picture"
-//			}
-//		},
+		{
+			"type": "MatteMaterial",
+			"name": "quad",
+			"param": {
+				"diffuse": "picture"
+			}
+		},
 		{
 			"type": "MatteMaterial",
 			"name": "quad2",
@@ -152,24 +152,24 @@
 				}
 			}
 		}
-//	,
-//		{
-//			"name" : "c_box",
-//			"type": "model",
-//			"param" : {
-//				"material": "quad",
-//				"fn": "nanosuit/nanosuit.obj",
-//				"subdiv_level": 0,
-//				"transform" : {
-//					"type" : "trs",
-//					"param" : {
-//						"t" : [0, 0, 1],
-//						"r" : [0, 1, 0, 180],
-//						"s" : [0.1,0.1,0.1]
-//					}
-//				}
-//			}
-//		}
+	,
+		{
+			"name" : "c_box",
+			"type": "model",
+			"param" : {
+				"material": "quad",
+				"fn": "nanosuit/nanosuit.obj",
+				"subdiv_level": 0,
+				"transform" : {
+					"type" : "trs",
+					"param" : {
+						"t" : [0, 0, 1],
+						"r" : [0, 1, 0, 180],
+						"s" : [0.1,0.1,0.1]
+					}
+				}
+			}
+		}
 	],
 	"lights" : [
 //		{

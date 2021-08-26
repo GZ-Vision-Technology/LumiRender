@@ -84,7 +84,7 @@ namespace luminous {
         };
 
         struct ShapeConfig : Config {
-            ShapeConfig() {}
+            ShapeConfig() = default;
 
             TransformConfig o2w;
             float3 emission = make_float3(0.f);
@@ -106,7 +106,7 @@ namespace luminous {
 
         struct TextureConfig : Config {
             NDSC bool is_image() const {
-                return fn != "";
+                return !fn.empty();
             }
 
             ColorSpace color_space = LINEAR;
@@ -163,7 +163,7 @@ namespace luminous {
                         tex_configs.push_back(normal_tex);
                     }
                 } else if (type() == full_type("MatteMaterial")) {
-                    int idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+                    auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config.name == diffuse_tex.name;
                     });
                     DCHECK(idx != -1);

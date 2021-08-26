@@ -44,19 +44,19 @@ namespace luminous {
             Box3f aabb;
             mutable uint idx_in_meshes;
 
-            bool has_material() const {
+            NDSC bool has_material() const {
                 return mat_idx != invalid_uint32;
             }
         };
 
         struct Model {
-            Model(const ShapeConfig &sc);
+            explicit Model(const ShapeConfig &sc);
 
             Model() = default;
 
-            string full_path(string fn) const { return fn.empty() ? fn : (directory / fn).string(); }
+            NDSC string full_path(const string &fn) const { return fn.empty() ? fn : (directory / fn).string(); }
 
-            bool has_custom_material() const {
+            NDSC bool has_custom_material() const {
                 return !custom_material_name.empty();
             }
 

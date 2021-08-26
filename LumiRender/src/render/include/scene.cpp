@@ -133,7 +133,7 @@ namespace luminous {
                 float surface_area = 0;
                 BufferView<const float3> mesh_positions = _positions.const_host_buffer_view(mesh.vertex_offset,
                                                                                             mesh.vertex_count);
-                for (int i = tri_start ; i < tri_end; ++i) {
+                for (size_t i = tri_start ; i < tri_end; ++i) {
                     TriangleHandle tri = _triangles[i];
                     float3 p0 = transform.apply_point(mesh_positions[tri.i]);
                     float3 p1 = transform.apply_point(mesh_positions[tri.j]);

@@ -28,9 +28,9 @@ namespace luminous {
             return *this;
         }
 
-        Dispatcher(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
+        explicit Dispatcher(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
 
-        Impl *impl_mut() const { return _impl.get(); }
+        NDSC Impl *impl_mut() const { return _impl.get(); }
 
     protected:
         std::unique_ptr<Impl> _impl;

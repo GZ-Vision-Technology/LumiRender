@@ -68,12 +68,15 @@ namespace luminous {
                 shape_config.width = param["width"].as_float(1);
                 shape_config.height = param["height"].as_float(1);
             }
-            shape_config.material_name = param["material"].as_string();
+
             shape_config.name = string(shape["name"]);
             shape_config.o2w = parse_transform(param["transform"]);
             if (param.contains("emission")) {
                 auto scale = param["scale"].as_float(1);
                 shape_config.emission = param["emission"].as_float3(make_float3(0.f)) * scale;
+            }
+            if (is_zero(shape_config.emission)) {
+                shape_config.material_name = param["material"].as_string();
             }
             return shape_config;
         }
