@@ -49,5 +49,62 @@ namespace luminous {
             //todo
             DCHECK(0)
         }
+
+        RawBuffer CPUDevice::allocate_buffer(size_t bytes) {
+            return RawBuffer(std::make_unique<CPUBuffer>(bytes));
+        }
+
+        DTexture CPUDevice::allocate_texture(PixelFormat pixel_format, uint2 resolution) {
+            DCHECK(0)
+            return DTexture(std::make_unique<CPUTexture>(pixel_format, resolution));
+        }
+
+        Dispatcher CPUDevice::new_dispatcher() {
+            return Dispatcher(std::make_unique<CPUDispatcher>());
+        }
+
+        CPUTexture::CPUTexture(PixelFormat pixel_format, uint2 resolution) : Impl(pixel_format, resolution) {
+            init();
+        }
+
+        void CPUTexture::init() {
+
+        }
+
+        uint64_t CPUTexture::tex_handle() const {
+            return _handle;
+        }
+
+        void CPUTexture::copy_from(Dispatcher &dispatcher, const Image &image) {
+
+        }
+
+        Image CPUTexture::download() const {
+            return Image();
+        }
+
+        void CPUTexture::copy_from(const Image &image) {
+
+        }
+
+        CPUTexture::~CPUTexture() {
+
+        }
+
+        CPUDispatcher::CPUDispatcher() {
+
+        }
+
+        void CPUDispatcher::wait() {
+
+        }
+
+        void CPUDispatcher::then(std::function<void(void)> F) {
+
+        }
+
+        CPUDispatcher::~CPUDispatcher() {
+
+        }
     }
 }

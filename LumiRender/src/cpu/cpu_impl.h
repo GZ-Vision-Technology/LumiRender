@@ -15,7 +15,7 @@ namespace luminous {
             void *_ptr{};
             size_t _size_in_bytes{0};
         public:
-            void *ptr() const override;
+            NDSC void *ptr() const override;
 
             explicit CPUBuffer(size_t bytes);
 
@@ -36,17 +36,47 @@ namespace luminous {
             void upload(const void *host_ptr, size_t size, size_t offset) override;
         };
 
-//        class CPUDevice : public Device::Impl {
-//        public:
-//            CPUDevice() = default;
-//
-//            RawBuffer allocate_buffer(size_t bytes) override;
-//
-//            DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
-//
-//            Dispatcher new_dispatcher() override;
-//
-//            ~CPUDevice() override = default;
-//        };
+        class CPUTexture : public DTexture::Impl {
+        private:
+            uint64_t _handle;
+        public:
+            CPUTexture(PixelFormat pixel_format, uint2 resolution);
+
+            void init();
+
+            NDSC uint64_t tex_handle() const override;
+
+            void copy_from(Dispatcher &dispatcher, const Image &image) override;
+
+            NDSC Image download() const override;
+
+            void copy_from(const Image &image) override;
+
+            ~CPUTexture() override;
+        };
+
+        class CPUDispatcher : public Dispatcher::Impl {
+        public:
+            CPUDispatcher();
+
+            void wait() override;
+
+            void then(std::function<void(void)> F) override;
+
+            ~CPUDispatcher() override;
+        };
+
+        class CPUDevice : public Device::Impl {
+        public:
+            CPUDevice() = default;
+
+            RawBuffer allocate_buffer(size_t bytes) override;
+
+            DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
+
+            Dispatcher new_dispatcher() override;
+
+            ~CPUDevice() override = default;
+        };
     }
 }
