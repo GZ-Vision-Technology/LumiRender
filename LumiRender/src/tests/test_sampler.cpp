@@ -5,6 +5,8 @@
 #include "iostream"
 #include "render/samplers/sampler.h"
 #include "render/sensors/sensor.h"
+#include "render/integrators/wavefront/work_items.h"
+#include "gpu/framework/cuda_impl.h"
 using namespace luminous;
 using namespace std;
 
@@ -43,7 +45,7 @@ void test_sensor() {
 
     tc.yaw = 20;
     tc.pitch = 15.6;
-    tc.position = make_float3(2,3,5);
+    tc.position = luminous::make_float3(2,3,5);
 
 
     tc.mat4x4 = make_float4x4(1);
@@ -69,6 +71,18 @@ public:
     }
 };
 
+void test_soa() {
+    using namespace luminous;
+    auto device = luminous::create_cuda_device();
+
+    luminous::SOA<luminous::float4> sf3(9, device);
+
+    luminous::SOA<luminous::Surface> ss(9, device);
+
+    cout << SOA<luminous::float3>::definitional << endl;
+    cout << SOA<luminous::float3*>::definitional << endl;
+}
+
 void test_move() {
     vector<TT> vt;
     TT t;
@@ -78,5 +92,6 @@ void test_move() {
 
 int main() {
 //    test_sampler();
-    test_move();
+//    test_move();
+    test_soa();
 }

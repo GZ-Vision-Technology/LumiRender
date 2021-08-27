@@ -9,21 +9,29 @@
 #include "core/macro_map.h"
 #include "base_libs/header.h"
 #include "core/backend/device.h"
-
+#include "base_libs/geometry/common.h"
 
 namespace luminous {
 
 
     inline namespace render {
+
         template<typename T>
-        struct SOA;
+        struct SOA {
+            static constexpr bool definitional = false;
+        };
 
         template<>
         struct SOA<float3> {
         public:
             XPU SOA() = default;
 
+            static constexpr bool definitional = true;
             using element_type = float3;
+            size_t size;
+            decltype(element_type::x) *LM_RESTRICT x;
+            decltype(element_type::y) *LM_RESTRICT y;
+            decltype(element_type::z) *LM_RESTRICT z;
 
             XPU SOA(size_t n, const std::shared_ptr<Device> &device) : size(n) {
                 x = device->obtain_restrict_ptr<decltype(element_type::x)>(n);
@@ -72,18 +80,55 @@ namespace luminous {
                 return GetSetIndirector{this, i};
             }
 
-            decltype(element_type::x) *LM_RESTRICT x;
-            decltype(element_type::y) *LM_RESTRICT y;
-            decltype(element_type::z) *LM_RESTRICT z;
+        };
+
+        template<typename T>
+        struct SOAMember {
+            static auto create(size_t n, const std::shared_ptr<Device> &device) {
+                if constexpr (SOA<T>::definitional) {
+                    return SOA<T>(n, device);
+                } else {
+                    return device->obtain_restrict_ptr<T>(n);
+                }
+            }
+
+            using type = decltype(create(0, nullptr));
+        };
+
+        class Surface {
+        public:
+            float3 pos;
+            float3 normal;
+            float t;
+        };
+
+        template<>
+        struct SOA<Surface> {
+            XPU SOA() = default;
+
+            using element_type = Surface;
             size_t size;
+            SOAMember<decltype(Surface::normal)>::type normal;
+            SOAMember<decltype(Surface::t)>::type t;
+
+            XPU SOA(size_t n, const std::shared_ptr<Device> &device) : size(n) {
+                normal = SOAMember<decltype(Surface::normal)>::create(n, device);
+                t = SOAMember<decltype(Surface::t)>::create(n, device);
+            }
         };
 
 
 
 
+        void func() {
+            SOA<Surface> ss(5, nullptr);
+
+        }
+
 #define LUMINOUS_SOA_BEGIN(StructName)  template<> \
 struct SOA<StructName> {                           \
 public:                                            \
+static constexpr bool definitional = true;         \
 using element_type = StructName;                   \
 SOA() = default;                                   \
 size_t size;
@@ -136,13 +181,10 @@ return GetSetIndirector{this, i};}
         LUMINOUS_SOA_ACCESSOR(__VA_ARGS__)                          \
         LUMINOUS_SOA_SET_GET_STRUCT(__VA_ARGS__)                    \
         LUMINOUS_SOA_INDIRECTOR_ACCESSOR                            \
-        LUMINOUS_SOA_END \
+        LUMINOUS_SOA_END
 
 
-        LUMINOUS_SOA(float2, x, y)
-
-
-
+        LUMINOUS_SOA(float4, x, y, z, w)
 
 
     }
