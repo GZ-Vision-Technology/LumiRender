@@ -78,5 +78,9 @@ namespace luminous {
 
             ~CPUDevice() override = default;
         };
+
+        inline std::shared_ptr<Device> create_cpu_device() {
+            return std::make_shared<Device>(std::make_unique<CPUDevice>());
+        }
     }
 }
