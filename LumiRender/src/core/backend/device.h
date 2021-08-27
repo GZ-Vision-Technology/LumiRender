@@ -38,6 +38,14 @@ namespace luminous {
             return ret;
         }
 
+        template<typename T = std::byte>
+        T *obtain_restrict_ptr(size_t n_elements) {
+            RawBuffer raw_buffer = _impl->allocate_buffer(n_elements * sizeof(T));
+            T * ret = raw_buffer.ptr<T *>();
+            _raw_buffers.push_back(std::move(raw_buffer));
+            return ret;
+        }
+
         DTexture &allocate_texture(PixelFormat pixel_format, uint2 resolution) {
             size_t idx = _textures.size();
             DTexture texture = _impl->allocate_texture(pixel_format, resolution);
