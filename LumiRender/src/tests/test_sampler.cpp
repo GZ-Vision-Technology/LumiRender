@@ -77,7 +77,6 @@ void test_soa() {
 
     luminous::SOA<luminous::float4> sf3(9, device);
 
-    luminous::SOA<luminous::Surface> ss(9, device);
 
     cout << SOA<luminous::float3>::definitional << endl;
     cout << SOA<luminous::float3*>::definitional << endl;
