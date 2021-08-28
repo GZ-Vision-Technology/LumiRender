@@ -14,7 +14,7 @@ public:                                            \
 static constexpr bool definitional = true;         \
 using element_type = StructName;                   \
 SOA() = default;                                   \
-size_t size;
+int capacity;
 
 // todo add LM_RESTRICT
 // member definition
@@ -23,23 +23,23 @@ size_t size;
 
 // constructor definition
 #define LUMINOUS_SOA_MEMBER_ASSIGNMENT(MemberName) MemberName = SOAMember<decltype(element_type::MemberName)>::create(n, device);
-#define LUMINOUS_SOA_CONSTRUCTOR(...)                            \
-SOA(size_t n, const std::shared_ptr<Device> &device) : size(n) { \
+#define LUMINOUS_SOA_CONSTRUCTOR(...)                             \
+SOA(int n, const std::shared_ptr<Device> &device) : capacity(n) { \
 MAP(LUMINOUS_SOA_MEMBER_ASSIGNMENT,__VA_ARGS__) }
 
 
 // assignment function definition
 #define LUMINOUS_SOA_ASSIGNMENT_BODY_MEMBER_ASSIGNMENT(MemberName) this->MemberName = s.MemberName;
 #define LUMINOUS_SOA_ASSIGNMENT(...)                            \
-XPU SOA &operator=(const SOA &s) { size = s.size;               \
+XPU SOA &operator=(const SOA &s) { capacity = s.capacity;       \
 MAP(LUMINOUS_SOA_ASSIGNMENT_BODY_MEMBER_ASSIGNMENT,__VA_ARGS__) \
 return *this; }
 
 
 // access function definition
 #define LUMINOUS_SOA_ACCESSOR_BODY_MEMBER_ASSIGNMENT(MemberName) r.MemberName = this->MemberName[i];
-#define LUMINOUS_SOA_ACCESSOR(...)                                              \
-XPU element_type operator[](int i) const { DCHECK_LT(i, size); element_type r;  \
+#define LUMINOUS_SOA_ACCESSOR(...)                                                  \
+XPU element_type operator[](int i) const { DCHECK_LT(i, capacity); element_type r;  \
 MAP(LUMINOUS_SOA_ACCESSOR_BODY_MEMBER_ASSIGNMENT,__VA_ARGS__) return r; }
 
 // get set struct
@@ -53,7 +53,7 @@ MAP(LUMINOUS_SOA_GET_SET_ASSIGNMENT_IMPL, __VA_ARGS__) }};
 
 // get set accessor
 #define LUMINOUS_SOA_INDIRECTOR_ACCESSOR XPU GetSetIndirector operator[](int i) { \
-DCHECK_LT(i, size);                                                               \
+DCHECK_LT(i, capacity);                                                           \
 return GetSetIndirector{this, i};}
 
 #define LUMINOUS_SOA_END  };
@@ -76,7 +76,7 @@ namespace luminous {
 
         template<typename T>
         struct SOAMember {
-            static auto create(size_t n, const std::shared_ptr<Device> &device) {
+            static auto create(int n, const std::shared_ptr<Device> &device) {
                 if constexpr (SOA<T>::definitional) {
                     return SOA<T>(n, device);
                 } else {

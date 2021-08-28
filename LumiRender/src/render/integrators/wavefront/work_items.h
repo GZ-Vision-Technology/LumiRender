@@ -10,6 +10,8 @@
 #include "core/backend/device.h"
 #include "base_libs/geometry/common.h"
 #include "base_libs/math/common.h"
+#include "render/bxdfs/bsdf.h"
+#include <cuda.h>
 
 namespace luminous {
 
@@ -17,8 +19,14 @@ namespace luminous {
     inline namespace render {
 
         LUMINOUS_SOA(float2, x, y)
+
         LUMINOUS_SOA(float3, x, y, z)
+
         LUMINOUS_SOA(float4, x, y, z, w)
+
+        LUMINOUS_SOA(Ray, org_x, org_y, org_z, dir_x, dir_y, dir_z, t_min, t_max)
+
+//        LUMINOUS_SOA(BSDF, _ng)
 
     }
 }
