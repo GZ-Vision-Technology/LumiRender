@@ -7,6 +7,7 @@
 
 #include "render/bxdfs/bxdf.h"
 #include "base_libs/optics/rgb.h"
+#include "render/integrators/wavefront/soa.h"
 
 namespace luminous {
     inline namespace render {
@@ -16,6 +17,7 @@ namespace luminous {
             BxDF _bxdf;
             float3 _ng;
             Frame _shading_frame;
+            MAKE_SOA_FRIEND(BSDF);
         public:
             XPU BSDF() = default;
 

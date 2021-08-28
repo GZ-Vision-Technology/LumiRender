@@ -26,7 +26,7 @@ namespace luminous {
 
         LUMINOUS_SOA(Ray, org_x, org_y, org_z, dir_x, dir_y, dir_z, t_min, t_max)
 
-//        LUMINOUS_SOA(BSDF, _ng)
+        LUMINOUS_SOA(BSDF, _bxdf, _ng, _shading_frame)
 
     }
 }

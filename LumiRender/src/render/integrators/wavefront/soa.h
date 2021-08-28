@@ -6,7 +6,6 @@
 #pragma once
 
 #include "core/macro_map.h"
-#include "core/backend/device.h"
 
 #define LUMINOUS_SOA_BEGIN(StructName)  template<> \
 struct SOA<StructName> {                           \
@@ -18,11 +17,11 @@ int capacity;
 
 // todo add LM_RESTRICT
 // member definition
-#define LUMINOUS_SOA_MEMBER(MemberName) SOAMember<decltype(element_type::MemberName)>::type (MemberName);
+#define LUMINOUS_SOA_MEMBER(MemberName) SOAMember<decltype(element_type::MemberName),std::shared_ptr<Device>>::type (MemberName);
 #define LUMINOUS_SOA_MEMBERS(...) MAP(LUMINOUS_SOA_MEMBER,__VA_ARGS__)
 
 // constructor definition
-#define LUMINOUS_SOA_MEMBER_ASSIGNMENT(MemberName) MemberName = SOAMember<decltype(element_type::MemberName)>::create(n, device);
+#define LUMINOUS_SOA_MEMBER_ASSIGNMENT(MemberName) MemberName = SOAMember<decltype(element_type::MemberName),std::shared_ptr<Device>>::create(n, device);
 #define LUMINOUS_SOA_CONSTRUCTOR(...)                             \
 SOA(int n, const std::shared_ptr<Device> &device) : capacity(n) { \
 MAP(LUMINOUS_SOA_MEMBER_ASSIGNMENT,__VA_ARGS__) }
@@ -58,6 +57,8 @@ return GetSetIndirector{this, i};}
 
 #define LUMINOUS_SOA_END  };
 
+#define MAKE_SOA_FRIEND(ClassName) friend class SOA<ClassName>;
+
 #define LUMINOUS_SOA(StructName, ...) LUMINOUS_SOA_BEGIN(StructName)\
         LUMINOUS_SOA_MEMBERS(__VA_ARGS__)                           \
         LUMINOUS_SOA_CONSTRUCTOR(__VA_ARGS__)                       \
@@ -74,13 +75,13 @@ namespace luminous {
             static constexpr bool definitional = false;
         };
 
-        template<typename T>
+        template<typename T, typename TDevice>
         struct SOAMember {
-            static auto create(int n, const std::shared_ptr<Device> &device) {
+            static auto create(int n, const TDevice &device) {
                 if constexpr (SOA<T>::definitional) {
                     return SOA<T>(n, device);
                 } else {
-                    return device->obtain_restrict_ptr<T>(n);
+                    return device->template obtain_restrict_ptr<T>(n);
                 }
             }
 
