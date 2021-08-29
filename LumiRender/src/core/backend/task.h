@@ -10,7 +10,7 @@
 #include "device.h"
 #include "render/include/parser.h"
 #include "render/sensors/sensor.h"
-#include "render/include/integrator.h"
+#include "render/integrators/integrator.h"
 #include "core/backend/managed.h"
 
 namespace luminous {

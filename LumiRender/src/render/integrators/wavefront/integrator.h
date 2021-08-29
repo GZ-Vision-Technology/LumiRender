@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "render/include/integrator.h"
+#include "render/integrators/integrator.h"
 #include "render/sensors/camera_base.h"
 #include "gpu/accel/megakernel_optix_accel.h"
 #include "gpu/gpu_scene.h"
@@ -19,6 +19,8 @@ namespace luminous {
 
         public:
             void render() override;
+
+
         };
     }
 }

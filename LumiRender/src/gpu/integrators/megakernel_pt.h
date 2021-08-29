@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "render/include/integrator.h"
+#include "render/integrators/integrator.h"
 #include "gpu/accel/megakernel_optix_accel.h"
 #include "render/samplers/sampler.h"
 

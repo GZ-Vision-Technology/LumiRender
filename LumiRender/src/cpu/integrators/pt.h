@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "render/include/integrator.h"
+#include "render/integrators/integrator.h"
 #include "render/integrators/pt_func.h"
 #include "render/samplers/sampler.h"
 #include "render/sensors/sensor.h"

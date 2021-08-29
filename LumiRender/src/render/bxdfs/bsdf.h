@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <utility>
+
 #include "render/bxdfs/bxdf.h"
 #include "base_libs/optics/rgb.h"
 #include "render/integrators/wavefront/soa.h"
@@ -22,7 +24,7 @@ namespace luminous {
             XPU BSDF() = default;
 
             XPU BSDF(float3 ng, float3 ns, float3 dp_dus, BxDF bxdf)
-                    : _ng(ng), _shading_frame(Frame::from_xz(dp_dus, ns)), _bxdf(bxdf) {}
+                    : _ng(ng), _shading_frame(Frame::from_xz(dp_dus, ns)), _bxdf(std::move(bxdf)) {}
 
             NDSC_XPU Spectrum eval(float3 wo_world, float3 wi_world,
                                  TransportMode mode = TransportMode::Radiance) const;
