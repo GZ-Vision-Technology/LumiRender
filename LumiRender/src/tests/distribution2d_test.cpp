@@ -2,7 +2,7 @@
 // Created by Zero on 2021/7/28.
 //
 
-#include "render/distribution/distribution_mgr.h"
+#include "render/include/distribution_mgr.h"
 #include "gpu/framework/cuda_impl.h"
 #include "core/backend/managed.h"
 

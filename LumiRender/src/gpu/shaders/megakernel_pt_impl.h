@@ -10,7 +10,7 @@
 #include "render/sensors/shader_include.h"
 #include "render/light_samplers/shader_include.h"
 #include "render/lights/shader_include.h"
-#include "render/distribution/distribution.h"
+#include "base_libs/sampling/distribution.h"
 #include "render/textures/shader_include.h"
 #include "render/materials/shader_include.h"
 #include "render/bxdfs/shader_include.h"

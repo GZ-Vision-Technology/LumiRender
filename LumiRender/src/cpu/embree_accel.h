@@ -20,7 +20,7 @@ namespace luminous {
             static RTCDevice _rtc_device;
             RTCScene _rtc_scene{};
         public:
-            EmbreeAccel(const Scene *scene = nullptr);
+            EmbreeAccel(const Scene *scene);
 
             ~EmbreeAccel();
 

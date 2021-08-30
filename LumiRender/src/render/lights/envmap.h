@@ -8,7 +8,7 @@
 #include <utility>
 
 #include "light_base.h"
-#include "render/distribution/distribution.h"
+#include "base_libs/sampling/distribution.h"
 #include "render/textures/texture.h"
 
 namespace luminous {

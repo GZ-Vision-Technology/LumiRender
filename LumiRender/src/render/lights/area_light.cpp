@@ -3,7 +3,7 @@
 //
 
 #include "area_light.h"
-#include "render/distribution/distribution.h"
+#include "base_libs/sampling/distribution.h"
 
 namespace luminous {
     inline namespace render {

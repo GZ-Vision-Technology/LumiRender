@@ -10,7 +10,7 @@
 
 
 namespace luminous {
-    inline namespace render {
+    inline namespace sampling {
         using std::vector;
         using std::move;
 

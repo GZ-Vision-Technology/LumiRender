@@ -30,7 +30,7 @@ namespace luminous {
 
         void CPUScene::init_accel() {
             EmbreeAccel::init_device();
-            _embree_accel = std::make_unique<EmbreeAccel>();
+            _embree_accel = std::make_unique<EmbreeAccel>(this);
             build_accel();
         }
 

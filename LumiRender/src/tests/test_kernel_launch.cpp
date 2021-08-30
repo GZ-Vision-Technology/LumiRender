@@ -13,7 +13,7 @@
 #include "gpu/framework/jitify/jitify.hpp"
 
 #include "render/samplers/sampler.h"
-#include "render/distribution/distribution.h"
+#include "base_libs/sampling/distribution.h"
 
 using namespace std;
 

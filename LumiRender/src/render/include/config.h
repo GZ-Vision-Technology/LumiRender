@@ -12,7 +12,7 @@
 #include "core/logging.h"
 #include "util/image.h"
 #include "base_libs/lstd/lstd.h"
-#include "render/distribution/distribution.h"
+#include "base_libs/sampling/distribution.h"
 
 namespace luminous {
     inline namespace render {

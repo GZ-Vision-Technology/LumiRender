@@ -11,12 +11,15 @@
 #include "render/include/interaction.h"
 
 namespace luminous {
-    inline namespace render {
-        class LightSampler;
 
+    inline namespace sampling {
         class Distribution1D;
 
         class Distribution2D;
+    }
+
+    inline namespace render {
+        class LightSampler;
 
         class Texture;
 
