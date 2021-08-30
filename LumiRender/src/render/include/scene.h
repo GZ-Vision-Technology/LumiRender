@@ -15,6 +15,7 @@
 #include "render/textures/texture.h"
 #include "render/distribution/distribution_mgr.h"
 #include "render/materials/material.h"
+#include "render/include/accelerator.h"
 
 namespace luminous {
     inline namespace render {
@@ -66,6 +67,8 @@ namespace luminous {
             vector<TextureConfig> _tex_configs;
 
             vector<Image> _images;
+
+            UP<Accelerator> _accelerator;
 
         public:
             Scene(const SP<Device> &device, Context *context)

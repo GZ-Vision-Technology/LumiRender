@@ -13,14 +13,14 @@
 #include "shader_wrapper.h"
 #include "core/backend/managed.h"
 #include "core/hash.h"
-#include "render/include/accel.h"
+#include "render/include/accelerator.h"
 
 namespace luminous {
     inline namespace gpu {
 
         class GPUScene;
 
-        class OptixAccel : public Noncopyable {
+        class OptixAccel : public Accelerator {
         private:
             std::map<SHA1, OptixModule> _module_map;
 
@@ -48,7 +48,6 @@ namespace luminous {
             Dispatcher _dispatcher;
             uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
             OptixTraversableHandle _root_ias_handle{};
-            size_t _bvh_size_in_bytes{0u};
             std::list<Buffer<std::byte>> _as_buffer_list;
             Buffer<OptixInstance> _instances{nullptr};
             OptixPipeline _optix_pipeline{};
@@ -79,27 +78,27 @@ namespace luminous {
 
             OptixDeviceContext create_context();
 
+            NDSC virtual uint64_t handle() const override { return _root_ias_handle; }
+
             void build_pipeline(const std::vector<OptixProgramGroup> &program_groups);
 
             NDSC ShaderWrapper create_shader_wrapper(const std::string &ptx_code, const ProgramName &program_name);
 
-            NDSC size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
-
-            virtual void clear() {
+            void clear() override {
                 optixPipelineDestroy(_optix_pipeline);
                 clear_modules();
                 _as_buffer_list.clear();
                 optixDeviceContextDestroy(_optix_device_context);
             }
 
-            NDSC std::string description() const {
+            NDSC std::string description() const override {
                 float size_in_M = (_bvh_size_in_bytes * 1.f) / (sqr(1024));
                 return string_printf("bvh size is %f MB\n", size_in_M);
             }
 
             void build_bvh(const Managed<float3> &positions, const Managed<TriangleHandle> &triangles,
                            const Managed<MeshHandle> &meshes, const Managed<uint> &instance_list,
-                           const Managed<Transform> &transform_list, const Managed<uint> &inst_to_transform);
+                           const Managed<Transform> &transform_list, const Managed<uint> &inst_to_transform) override;
 
         };
     }
