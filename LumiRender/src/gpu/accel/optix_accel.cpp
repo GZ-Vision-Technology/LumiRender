@@ -15,19 +15,18 @@ namespace luminous {
             std::cerr << "[" << std::setw(2) << level << "][" << std::setw(12) << tag << "]: " << message << "\n";
         }
 
-        OptixAccel::OptixAccel(const SP<Device> &device, Context *context, const GPUScene *gpu_scene)
-                : Accelerator(nullptr),
+        OptixAccel::OptixAccel(const SP<Device> &device, Context *context, const Scene *scene)
+                : Accelerator(scene),
                   _device(device),
                   _dispatcher(_device->new_dispatcher()),
                   _context(context),
-                  _gpu_scene(gpu_scene),
                   _optix_device_context(create_context()) {}
 
         ShaderWrapper OptixAccel::create_shader_wrapper(const string &ptx_code, const ProgramName &program_name) {
             auto module = obtain_module(ptx_code);
             return move(ShaderWrapper{
                     module, _optix_device_context,
-                    _gpu_scene, _device, program_name
+                    _scene, _device, program_name
             });
         }
 

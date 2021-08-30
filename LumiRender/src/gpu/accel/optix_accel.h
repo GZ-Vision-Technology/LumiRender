@@ -18,7 +18,7 @@
 namespace luminous {
     inline namespace gpu {
 
-        class GPUScene;
+//        class GPUScene;
 
 //        class Scene;
 
@@ -53,7 +53,7 @@ namespace luminous {
             std::list<Buffer<std::byte>> _as_buffer_list;
             Buffer<OptixInstance> _instances{nullptr};
             OptixPipeline _optix_pipeline{};
-            const GPUScene *_gpu_scene{};
+//            const GPUScene *_gpu_scene{};
 
             OptixModule obtain_module(const std::string &ptx_code) {
                 SHA1 key = generate_key(ptx_code);
@@ -76,7 +76,7 @@ namespace luminous {
                                                        std::list<CUdeviceptr> &_vert_buffer_ptr);
 
         public:
-            OptixAccel(const SP<Device> &device, Context *context, const GPUScene *gpu_scene);
+            OptixAccel(const SP<Device> &device, Context *context, const Scene *scene);
 
             OptixDeviceContext create_context();
 

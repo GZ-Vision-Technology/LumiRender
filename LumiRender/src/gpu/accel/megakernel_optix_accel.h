@@ -23,7 +23,7 @@ namespace luminous {
         private:
             ShaderWrapper _shader_wrapper;
         public:
-            MegakernelOptixAccel(const SP<Device> &device, const GPUScene *gpu_scene, Context *context);
+            MegakernelOptixAccel(const SP<Device> &device, const Scene *scene, Context *context);
 
             ~MegakernelOptixAccel();
 

@@ -18,6 +18,13 @@
 #include "render/include/accelerator.h"
 
 namespace luminous {
+
+    inline namespace gpu {
+        class MegakernelOptixAccel;
+        class OptixAccel;
+        class ShaderWrapper;
+    }
+
     inline namespace render {
 
         template<typename T>
@@ -29,6 +36,9 @@ namespace luminous {
          * all memory data manage
          */
         class Scene : public Noncopyable {
+            friend class MegakernelOptixAccel;
+            friend class OptixAccel;
+            friend class ShaderWrapper;
         protected:
             SP<Device> _device;
             Context *_context{nullptr};

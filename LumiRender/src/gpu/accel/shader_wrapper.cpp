@@ -10,10 +10,10 @@ namespace luminous {
     inline namespace gpu {
 
         ShaderWrapper::ShaderWrapper(OptixModule optix_module, OptixDeviceContext optix_device_context,
-                                     const GPUScene *gpu_scene, const std::shared_ptr<Device>& device,
+                                     const Scene *scene, const std::shared_ptr<Device>& device,
                                      const ProgramName &program_name) {
             _program_group_table = create_program_groups(optix_module, optix_device_context, program_name);
-            build_sbt(gpu_scene, device);
+            build_sbt(scene, device);
         }
 
         ProgramGroupTable ShaderWrapper::create_program_groups(OptixModule optix_module,
@@ -108,8 +108,8 @@ namespace luminous {
             return program_group_table;
         }
 
-        void ShaderWrapper::build_sbt(const GPUScene *gpu_scene, const std::shared_ptr<Device>& device) {
-            auto fill_scene_data = [&](SceneRecord *p, const GPUScene *gpu_scene) {
+        void ShaderWrapper::build_sbt(const Scene *gpu_scene, const std::shared_ptr<Device>& device) {
+            auto fill_scene_data = [&](SceneRecord *p, const Scene *gpu_scene) {
                 p->data.positions = gpu_scene->_positions.device_buffer_view();
                 p->data.normals = gpu_scene->_normals.device_buffer_view();
                 p->data.tex_coords = gpu_scene->_tex_coords.device_buffer_view();

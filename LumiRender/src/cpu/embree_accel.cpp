@@ -13,7 +13,7 @@ namespace luminous {
             _rtc_device = rtcNewDevice(nullptr);
         }
 
-        EmbreeAccel::EmbreeAccel(Scene *scene): Accelerator(scene) {
+        EmbreeAccel::EmbreeAccel(const Scene *scene): Accelerator(scene) {
             init_device();
             _rtc_scene = rtcNewScene(_rtc_device);
             rtcSetSceneBuildQuality(_rtc_scene, RTC_BUILD_QUALITY_HIGH);

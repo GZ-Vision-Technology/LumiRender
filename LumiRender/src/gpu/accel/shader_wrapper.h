@@ -11,12 +11,11 @@
 #include "core/concepts.h"
 #include "core/backend/buffer.h"
 #include "optix_params.h"
+#include "render/include/scene.h"
 #include "gpu/framework/cuda_impl.h"
 
 namespace luminous {
     inline namespace gpu {
-
-        class GPUScene;
 
         struct ProgramName {
             const char *raygen{};
@@ -74,7 +73,7 @@ namespace luminous {
                       _program_group_table(other._program_group_table) {}
 
             ShaderWrapper(OptixModule optix_module, OptixDeviceContext optix_device_context,
-                          const GPUScene *gpu_scene, const std::shared_ptr<Device>& device,
+                          const Scene *scene, const std::shared_ptr<Device> &device,
                           const ProgramName &program_name);
 
             NDSC const OptixShaderBindingTable *sbt_ptr() const { return &_sbt; }
@@ -98,7 +97,7 @@ namespace luminous {
                                                     OptixDeviceContext optix_device_context,
                                                     const ProgramName &program_name);
 
-            void build_sbt(const GPUScene *gpu_scene, const std::shared_ptr<Device>& device);
+            void build_sbt(const Scene *scene, const std::shared_ptr<Device> &device);
         };
     }
 }
