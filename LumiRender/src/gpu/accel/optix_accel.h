@@ -47,7 +47,7 @@ namespace luminous {
             std::shared_ptr<Device> _device;
             Dispatcher _dispatcher;
             uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
-            OptixTraversableHandle _root_ias_handle{};
+            OptixTraversableHandle _root_as_handle{};
             std::list<Buffer<std::byte>> _as_buffer_list;
             Buffer<OptixInstance> _instances{nullptr};
             OptixPipeline _optix_pipeline{};
@@ -78,7 +78,7 @@ namespace luminous {
 
             OptixDeviceContext create_context();
 
-            NDSC virtual uint64_t handle() const override { return _root_ias_handle; }
+            NDSC uint64_t handle() const override { return _root_as_handle; }
 
             void build_pipeline(const std::vector<OptixProgramGroup> &program_groups);
 

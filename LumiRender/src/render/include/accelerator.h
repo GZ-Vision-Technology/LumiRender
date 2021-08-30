@@ -7,6 +7,7 @@
 
 #include "core/concepts.h"
 #include "base_libs/math/common.h"
+#include "core/backend/managed.h"
 
 namespace luminous {
     inline namespace render {

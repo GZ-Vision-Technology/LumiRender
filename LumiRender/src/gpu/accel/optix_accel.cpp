@@ -172,15 +172,15 @@ namespace luminous {
                                         ias_buffer_sizes.tempSizeInBytes,
                                         ias_buffer.ptr<CUdeviceptr>(),
                                         ias_buffer_sizes.outputSizeInBytes,
-                                        &_root_ias_handle, &emit_desc, 1));
+                                        &_root_as_handle, &emit_desc, 1));
             auto compacted_gas_size = download<size_t>(emit_desc.result);
             if (compacted_gas_size < ias_buffer_sizes.outputSizeInBytes) {
                 ias_buffer = _device->allocate_buffer(compacted_gas_size);
                 OPTIX_CHECK(optixAccelCompact(_optix_device_context, nullptr,
-                                              _root_ias_handle,
+                                              _root_as_handle,
                                               ias_buffer.ptr<CUdeviceptr>(),
                                               compacted_gas_size,
-                                              &_root_ias_handle));
+                                              &_root_as_handle));
                 _bvh_size_in_bytes += ias_buffer.size_in_bytes();
                 _as_buffer_list.push_back(move(ias_buffer));
             } else {
