@@ -13,6 +13,7 @@
 #include "shader_wrapper.h"
 #include "core/backend/managed.h"
 #include "core/hash.h"
+#include "render/include/accel.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -96,7 +97,7 @@ namespace luminous {
                 return string_printf("bvh size is %f MB\n", size_in_M);
             }
 
-            void build_bvh(const Buffer<const float3> &positions, const Buffer<const TriangleHandle> &triangles,
+            void build_bvh(const Managed<float3> &positions, const Managed<TriangleHandle> &triangles,
                            const Managed<MeshHandle> &meshes, const Managed<uint> &instance_list,
                            const Managed<Transform> &transform_list, const Managed<uint> &inst_to_transform);
 

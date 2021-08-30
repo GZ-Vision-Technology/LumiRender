@@ -112,14 +112,15 @@ namespace luminous {
             return traversable_handle;
         }
 
-        void OptixAccel::build_bvh(const Buffer<const float3> &positions, const Buffer<const TriangleHandle> &triangles,
+        void OptixAccel::build_bvh(const Managed<float3> &positions, const Managed<TriangleHandle> &triangles,
                                    const Managed<MeshHandle> &meshes, const Managed<uint> &instance_list,
                                    const Managed<Transform> &transform_list, const Managed<uint> &inst_to_transform) {
             TASK_TAG("build optix bvh");
             std::list<CUdeviceptr> vert_buffer_ptr;
             vector<OptixTraversableHandle> traversable_handles;
             for (const auto &mesh : meshes) {
-                traversable_handles.push_back(build_mesh_bvh(positions, triangles, mesh, vert_buffer_ptr));
+                traversable_handles.push_back(build_mesh_bvh(positions.device_buffer(),
+                                                             triangles.device_buffer(), mesh, vert_buffer_ptr));
             }
 
             size_t instance_num = instance_list.size();

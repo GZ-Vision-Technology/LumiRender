@@ -9,12 +9,13 @@
 #include "gpu/accel/megakernel_optix_accel.h"
 #include "render/samplers/sampler.h"
 #include "render/include/scene.h"
+#include "integrator.h"
 
 namespace luminous {
 
     inline namespace gpu {
 
-        class MegakernelPT : public Integrator {
+        class MegakernelPT : public GPUIntegrator {
         private:
             Managed<LaunchParams> _launch_params;
         public:

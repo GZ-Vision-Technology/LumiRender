@@ -89,8 +89,8 @@ namespace luminous {
         }
 
         void GPUScene::build_accel() {
-            _optix_accel->build_bvh(_positions.device_buffer(),
-                                    _triangles.device_buffer(),
+            _optix_accel->build_bvh(_positions,
+                                    _triangles,
                                     _meshes,
                                     _inst_to_mesh_idx,
                                     _transforms,
