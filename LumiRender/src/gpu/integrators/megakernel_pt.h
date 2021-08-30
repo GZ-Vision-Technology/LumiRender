@@ -18,7 +18,6 @@ namespace luminous {
         private:
             Managed<Sampler, Sampler> _sampler;
             Managed<Sensor, Sensor> _camera;
-            UP<GPUScene> _scene{nullptr};
             Managed<LaunchParams> _launch_params;
         public:
 

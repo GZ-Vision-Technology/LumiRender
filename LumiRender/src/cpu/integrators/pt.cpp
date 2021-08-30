@@ -3,6 +3,7 @@
 //
 
 #include "pt.h"
+#include "render/integrators/pt_func.h"
 #include "cpu/cpu_scene.h"
 
 using std::cout;
@@ -18,7 +19,7 @@ namespace luminous {
         }
 
         void CPUPathTracer::init(const SP<SceneGraph> &scene_graph) {
-            _scene = std::make_unique<CPUScene>(nullptr, _context);
+            _scene = std::make_shared<CPUScene>(nullptr, _context);
             init_with_config(scene_graph->integrator_config);
             _scene->init(scene_graph);
             _camera = Sensor::create(scene_graph->sensor_config);
@@ -47,8 +48,9 @@ namespace luminous {
                 uint spp = sampler.spp();
                 Spectrum L(0.f);
                 for (int i = 0; i < spp; ++i) {
-                    L += Li(ray, _scene->scene_handle(), sampler,
-                            _max_depth, _rr_threshold, false, _scene->scene_data());
+                    L += luminous::render::Li(ray, scene<CPUScene>()->scene_handle(), sampler,
+                                              _max_depth, _rr_threshold, false,
+                                              scene<CPUScene>()->scene_data());
                 }
                 L = L / float(spp);
                 film->add_sample(pixel, L, weight, _frame_index);

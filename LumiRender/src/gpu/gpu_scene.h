@@ -8,6 +8,7 @@
 #include "core/concepts.h"
 #include "gpu/accel/megakernel_optix_accel.h"
 #include "render/include/scene.h"
+#include "gpu/gpu_include.h"
 
 namespace luminous {
     inline namespace gpu {

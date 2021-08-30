@@ -6,7 +6,6 @@
 #pragma once
 
 #include "render/integrators/integrator.h"
-#include "render/integrators/pt_func.h"
 #include "render/samplers/sampler.h"
 #include "render/sensors/sensor.h"
 
@@ -16,7 +15,6 @@ namespace luminous {
 
         class CPUPathTracer : public Integrator {
         private:
-            UP<CPUScene> _scene{nullptr};
             Sampler _sampler;
             Sensor _camera;
             int _frame_index{0};
@@ -25,9 +23,12 @@ namespace luminous {
 
             void init(const SP<SceneGraph> &scene_graph) override;
 
-            NDSC uint frame_index() const override {
-                return _frame_index;
+            template<typename TScene>
+            NDSC decltype(auto) scene() {
+                return reinterpret_cast<TScene*>(_scene.get());
             }
+
+            NDSC uint frame_index() const override { return _frame_index; }
 
             Sensor *camera() override;
 

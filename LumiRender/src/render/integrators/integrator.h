@@ -10,13 +10,21 @@
 #include "render/sensors/sensor.h"
 #include "core/backend/managed.h"
 
+// todo compile error
+//#include "render/include/scene_data.h"
+
+
 namespace luminous {
     inline namespace render {
+
+        class Scene;
+
         class Integrator : public Noncopyable {
         protected:
             uint _max_depth{};
             float _rr_threshold{};
             SP<Device> _device{};
+            SP<Scene> _scene;
             Context *_context{};
         public:
             Integrator(const SP<Device> &device, Context *context)
