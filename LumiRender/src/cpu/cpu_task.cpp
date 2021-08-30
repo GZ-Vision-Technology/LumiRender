@@ -9,7 +9,7 @@ namespace luminous {
     inline namespace cpu {
         void CPUTask::init(const Parser &parser) {
             auto scene_graph = build_scene_graph(parser);
-            _integrator = std::make_unique<CPUPathTracer>(_context);
+            _integrator = std::make_unique<CPUPathTracer>(_device, _context);
             _integrator->init(scene_graph);
             update_device_buffer();
         }

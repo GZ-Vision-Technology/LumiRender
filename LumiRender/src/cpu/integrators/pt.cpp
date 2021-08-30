@@ -12,8 +12,8 @@ using std::endl;
 namespace luminous {
     inline namespace cpu {
 
-        CPUPathTracer::CPUPathTracer(Context *context)
-                : _context(context) {
+        CPUPathTracer::CPUPathTracer(const SP<Device> &device, Context *context)
+                : Integrator(device, context) {
             set_thread_num(_context->thread_num());
         }
 

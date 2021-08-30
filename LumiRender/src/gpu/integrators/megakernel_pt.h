@@ -16,11 +16,9 @@ namespace luminous {
 
         class MegakernelPT : public Integrator {
         private:
-            Context *_context{};
             Managed<Sampler, Sampler> _sampler;
             Managed<Sensor, Sensor> _camera;
             UP<GPUScene> _scene{nullptr};
-            SP<Device> _device{};
             Managed<LaunchParams> _launch_params;
         public:
 

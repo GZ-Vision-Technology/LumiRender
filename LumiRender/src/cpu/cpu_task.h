@@ -6,6 +6,7 @@
 
 #include "core/backend/task.h"
 #include "core/backend/managed.h"
+#include "cpu/cpu_impl.h"
 
 namespace luminous {
     inline namespace cpu {
@@ -13,7 +14,7 @@ namespace luminous {
         class CPUTask : public Task {
         public:
             explicit CPUTask(Context *context)
-                : Task(nullptr, context) {}
+                : Task(create_cpu_device(), context) {}
 
             void init(const Parser &parser) override;
 

@@ -9,8 +9,7 @@ namespace luminous {
     inline namespace gpu {
 
         MegakernelPT::MegakernelPT(const SP<Device> &device, Context *context)
-                : _device(device),
-                  _context(context) {}
+                : Integrator(device, context) {}
 
         void MegakernelPT::init_launch_params() {
             LaunchParams lp{};

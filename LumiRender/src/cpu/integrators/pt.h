@@ -16,13 +16,12 @@ namespace luminous {
 
         class CPUPathTracer : public Integrator {
         private:
-            Context *_context{};
             UP<CPUScene> _scene{nullptr};
             Sampler _sampler;
             Sensor _camera;
             int _frame_index{0};
         public:
-            explicit CPUPathTracer(Context *context);
+            CPUPathTracer(const SP<Device> &device, Context *context);
 
             void init(const SP<SceneGraph> &scene_graph) override;
 
