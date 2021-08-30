@@ -18,9 +18,9 @@ namespace luminous {
         class EmbreeAccel : public Accelerator {
         private:
             static RTCDevice _rtc_device;
-            RTCScene _rtc_scene;
+            RTCScene _rtc_scene{};
         public:
-            EmbreeAccel();
+            EmbreeAccel(Scene *scene = nullptr);
 
             ~EmbreeAccel();
 

@@ -82,6 +82,13 @@ namespace luminous {
 
             virtual void clear();
 
+            NDSC uint64_t as_handle() const { return _accelerator->handle(); }
+
+            template<typename TAccel>
+            NDSC decltype(auto) accel() {
+                return reinterpret_cast<TAccel*>(_accelerator.get());
+            }
+
             void init_materials(const SP<SceneGraph> &scene_graph);
 
             virtual void init(const SP<SceneGraph> &scene_graph) = 0;

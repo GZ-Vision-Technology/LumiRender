@@ -11,10 +11,16 @@
 
 namespace luminous {
     inline namespace render {
+
+        class Scene;
+
         class Accelerator : public Noncopyable {
         protected:
             size_t _bvh_size_in_bytes{0u};
+            Scene * _scene{};
         public:
+            explicit Accelerator(Scene *scene) : _scene(scene) {}
+
             NDSC virtual uint64_t handle() const = 0;
 
             NDSC size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }

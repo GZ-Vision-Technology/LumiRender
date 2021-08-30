@@ -9,7 +9,6 @@
 #include <iosfwd>
 
 
-
 namespace luminous {
     inline namespace gpu {
         static void context_log_cb(unsigned int level, const char *tag, const char *message, void * /*cbdata */ ) {
@@ -17,7 +16,8 @@ namespace luminous {
         }
 
         OptixAccel::OptixAccel(const SP<Device> &device, Context *context, const GPUScene *gpu_scene)
-                : _device(device),
+                : Accelerator(nullptr),
+                  _device(device),
                   _dispatcher(_device->new_dispatcher()),
                   _context(context),
                   _gpu_scene(gpu_scene),
@@ -26,8 +26,8 @@ namespace luminous {
         ShaderWrapper OptixAccel::create_shader_wrapper(const string &ptx_code, const ProgramName &program_name) {
             auto module = obtain_module(ptx_code);
             return move(ShaderWrapper{
-                module, _optix_device_context,
-                        _gpu_scene, _device, program_name
+                    module, _optix_device_context,
+                    _gpu_scene, _device, program_name
             });
         }
 
@@ -61,8 +61,9 @@ namespace luminous {
         }
 
         OptixTraversableHandle OptixAccel::build_mesh_bvh(const Buffer<const float3> &positions,
-                                   const Buffer<const TriangleHandle> &triangles,
-                                   const MeshHandle &mesh, std::list<CUdeviceptr> &vert_buffer_ptr) {
+                                                          const Buffer<const TriangleHandle> &triangles,
+                                                          const MeshHandle &mesh,
+                                                          std::list<CUdeviceptr> &vert_buffer_ptr) {
             OptixBuildInput build_input = get_mesh_build_input(positions, triangles, mesh, vert_buffer_ptr);
 
             OptixAccelBuildOptions accel_options = {};
@@ -255,7 +256,6 @@ namespace luminous {
 
             return optix_module;
         }
-
 
 
         void OptixAccel::build_pipeline(const std::vector<OptixProgramGroup> &program_groups) {

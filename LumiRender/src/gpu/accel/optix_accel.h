@@ -20,6 +20,8 @@ namespace luminous {
 
         class GPUScene;
 
+//        class Scene;
+
         class OptixAccel : public Accelerator {
         private:
             std::map<SHA1, OptixModule> _module_map;
