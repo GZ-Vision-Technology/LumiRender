@@ -10,6 +10,8 @@
 #include "gpu/framework/cuda_impl.h"
 #include "core/backend/managed.h"
 
+#include "gpu/framework/jitify/jitify.hpp"
+
 #include "render/samplers/sampler.h"
 #include "render/distribution/distribution.h"
 
@@ -91,9 +93,9 @@ void test_managed() {
 
 int main() {
 
-    test_managed();
+//    test_managed();
 
-//    test_driver_api();
+    test_driver_api();
 //    test_kernel_sampler();
 //    test3();
 //    test2();

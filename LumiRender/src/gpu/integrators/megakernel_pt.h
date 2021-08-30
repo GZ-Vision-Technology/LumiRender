@@ -8,11 +8,11 @@
 #include "render/integrators/integrator.h"
 #include "gpu/accel/megakernel_optix_accel.h"
 #include "render/samplers/sampler.h"
+#include "render/include/scene.h"
 
 namespace luminous {
 
     inline namespace gpu {
-        class GPUScene;
 
         class MegakernelPT : public Integrator {
         private:
@@ -32,6 +32,11 @@ namespace luminous {
 
             NDSC uint frame_index() const override {
                 return _launch_params->frame_index;
+            }
+
+            template<typename TScene>
+            NDSC decltype(auto) scene() {
+                return reinterpret_cast<TScene*>(_scene.get());
             }
 
             Sensor *camera() override;

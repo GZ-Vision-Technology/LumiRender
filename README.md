@@ -1,6 +1,11 @@
 # LumiRender
 A GPU/CPU physically based renderer
 
+## platform
+###windows 10
+
+-DCMAKE_TOOLCHAIN_FILE=E:\work\tools\vcpkg\scripts\buildsystems\vcpkg.cmake
+
 ## Features
 
 ### Render algorithm

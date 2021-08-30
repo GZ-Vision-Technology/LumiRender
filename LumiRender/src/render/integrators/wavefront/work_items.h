@@ -15,7 +15,6 @@
 
 namespace luminous {
 
-
     inline namespace render {
 
         LUMINOUS_SOA(float2, x, y)
@@ -28,5 +27,23 @@ namespace luminous {
 
         LUMINOUS_SOA(BSDF, _bxdf, _ng, _shading_frame)
 
+        enum RaySampleFlag {
+            hasMedia = 1 << 0,
+            hasSubsurface = 1 << 1
+        };
+
+        struct RaySamples {
+            struct {
+                float2 u{};
+                float uc{};
+            } direct;
+            struct {
+                float2 u{};
+                float uc{}, rr{};
+            } indirect;
+            RaySampleFlag flag;
+        };
+
+        LUMINOUS_SOA(RaySamples, direct, indirect)
     }
 }
