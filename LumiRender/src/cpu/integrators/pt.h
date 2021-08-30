@@ -15,8 +15,6 @@ namespace luminous {
 
         class CPUPathTracer : public Integrator {
         private:
-            Sampler _sampler;
-            Sensor _camera;
             int _frame_index{0};
         public:
             CPUPathTracer(const SP<Device> &device, Context *context);

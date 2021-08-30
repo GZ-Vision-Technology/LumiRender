@@ -9,6 +9,7 @@
 #include "render/include/scene_graph.h"
 #include "render/sensors/sensor.h"
 #include "core/backend/managed.h"
+#include "render/samplers/sampler.h"
 
 // todo compile error
 //#include "render/include/scene_data.h"
@@ -24,8 +25,10 @@ namespace luminous {
             uint _max_depth{};
             float _rr_threshold{};
             SP<Device> _device{};
-            SP<Scene> _scene;
+            SP<Scene> _scene{};
             Context *_context{};
+            Managed<Sampler, Sampler> _sampler;
+            Managed<Sensor, Sensor> _camera;
         public:
             Integrator(const SP<Device> &device, Context *context)
                     : _device(device),
