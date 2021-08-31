@@ -49,9 +49,5 @@ namespace luminous {
             synchronize_to_gpu();
         }
 
-        Sensor *MegakernelPT::camera() {
-            return _camera.data();
-        }
-
     }
 }

@@ -35,8 +35,6 @@ namespace luminous {
                 return reinterpret_cast<TScene*>(_scene.get());
             }
 
-            Sensor *camera() override;
-
             void update() override;
 
             void synchronize_to_gpu();

@@ -17,8 +17,6 @@
 namespace luminous {
     inline namespace gpu {
 
-        class GPUScene;
-
         class MegakernelOptixAccel : public OptixAccel {
         private:
             ShaderWrapper _shader_wrapper;

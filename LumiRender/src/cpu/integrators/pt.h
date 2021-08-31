@@ -28,8 +28,6 @@ namespace luminous {
 
             NDSC uint frame_index() const override { return _frame_index; }
 
-            Sensor *camera() override;
-
             void update() override;
 
             void render() override;

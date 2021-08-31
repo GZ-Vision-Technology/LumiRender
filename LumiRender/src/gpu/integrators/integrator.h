@@ -7,6 +7,7 @@
 
 #include "render/integrators/integrator.h"
 #include "gpu/framework/cuda_impl.h"
+#include "gpu/accel/optix_accel.h"
 
 namespace luminous {
     inline namespace gpu {

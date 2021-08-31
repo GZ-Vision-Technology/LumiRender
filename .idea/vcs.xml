@@ -5,6 +5,7 @@
     <mapping directory="$PROJECT_DIR$/LumiRender/src/gpu/owl" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/LumiRender/thirdparty/assimp" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/LumiRender/thirdparty/cxxopts" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/LumiRender/thirdparty/embree" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/LumiRender/thirdparty/glfw" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/LumiRender/thirdparty/jitify" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/LumiRender/thirdparty/spdlog" vcs="Git" />

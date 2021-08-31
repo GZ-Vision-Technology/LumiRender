@@ -26,10 +26,6 @@ namespace luminous {
             _sampler.push_back(Sampler::create(scene_graph->sampler_config));
         }
 
-        Sensor *CPUPathTracer::camera() {
-            return _camera.data();
-        }
-
         void CPUPathTracer::update() {
             _frame_index = 0;
         }

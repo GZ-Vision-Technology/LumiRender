@@ -45,7 +45,9 @@ namespace luminous {
 
             NDSC virtual uint frame_index() const = 0;
 
-            NDSC virtual Sensor *camera() = 0;
+            NDSC virtual Sensor *camera() {
+                return _camera.data();
+            }
 
             virtual void update() = 0;
 
