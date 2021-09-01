@@ -19,7 +19,7 @@ namespace luminous {
             ray.dir_x = r.dir_x;
             ray.dir_y = r.dir_y;
             ray.dir_z = r.dir_z;
-            ray.tnear = r.t_min;
+            ray.tnear = 0;
             ray.tfar  = r.t_max;
             ray.flags = 0;
             return ray;

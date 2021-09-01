@@ -23,7 +23,7 @@ namespace luminous {
             std::map<SHA1, OptixModule> _module_map;
 
             void clear_modules() {
-                for (const auto& iter : _module_map) {
+                for (const auto &iter : _module_map) {
                     optixModuleDestroy(iter.second);
                 }
             }
@@ -49,7 +49,6 @@ namespace luminous {
             std::list<Buffer<std::byte>> _as_buffer_list;
             Buffer<OptixInstance> _instances{nullptr};
             OptixPipeline _optix_pipeline{};
-//            const GPUScene *_gpu_scene{};
 
             OptixModule obtain_module(const std::string &ptx_code) {
                 SHA1 key = generate_key(ptx_code);

@@ -97,7 +97,7 @@ namespace luminous {
                                                                index_t tri_id,
                                                                float2 bary) const;
 
-            XPU_INLINE SurfaceInteraction compute_surface_interaction(const HitPoint &closest_hit) const {
+            NDSC XPU_INLINE SurfaceInteraction compute_surface_interaction(const HitPoint &closest_hit) const {
                 return compute_surface_interaction(closest_hit.instance_id, closest_hit.triangle_id, closest_hit.bary);
             }
 

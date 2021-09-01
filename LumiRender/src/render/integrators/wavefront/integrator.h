@@ -16,7 +16,9 @@ namespace luminous {
     inline namespace gpu {
         class WavefrontPT : public Integrator {
         private:
-
+            RayQueue *_ray_queue[2];
+            int _scanline_per_pass{};
+            int _max_queue_size{};
         public:
             void render() override;
 

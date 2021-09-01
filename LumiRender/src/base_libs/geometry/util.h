@@ -60,20 +60,16 @@ namespace luminous {
             float org_x{0.f};
             float org_y{0.f};
             float org_z{0.f};
-            float t_min{0.f};
             float dir_x{0.f};
             float dir_y{0.f};
             float dir_z{0.f};
             float t_max{0.f};
         public:
-            explicit XPU Ray(float t_max = ray_t_max,
-                             float t_min = 0) noexcept: t_min(t_min),
-                                                        t_max(t_max) {}
+            explicit XPU Ray(float t_max = ray_t_max) noexcept:
+                    t_max(t_max) {}
 
             XPU Ray(const float3 origin, const float3 direction,
-                    float t_max = ray_t_max,
-                    float t_min = 0) noexcept:
-                    t_min(t_min),
+                    float t_max = ray_t_max) noexcept:
                     t_max(t_max) {
                 update_origin(origin);
                 update_direction(direction);
@@ -134,10 +130,10 @@ namespace luminous {
             }
 
             GEN_STRING_FUNC({
-                                return string_printf("ray:{origin:%s,direction:%s,t_min:%f,t_max:%f}",
+                                return string_printf("ray:{origin:%s,direction:%s,t_max:%f}",
                                                      origin().to_string().c_str(),
                                                      direction().to_string().c_str(),
-                                                     t_min, t_max);
+                                                     t_max);
                             })
         };
 

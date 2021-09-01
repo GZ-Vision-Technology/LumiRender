@@ -61,7 +61,7 @@ static GPU_INLINE void trace(OptixTraversableHandle handle,
             handle,
             origin,
             direction,
-            ray.t_min,
+            0,
             ray.t_max,
             0.0f,                // rayTime
             OptixVisibilityMask(1),
@@ -108,7 +108,7 @@ static GPU_INLINE luminous::Ray getRayInWorld() {
     auto org = luminous::make_float3(o.x, o.y, o.z);
     float t_min = optixGetRayTmin();
     float t_max = optixGetRayTmax();
-    return luminous::Ray(org, dir, t_min, t_max);
+    return luminous::Ray(org, dir, t_max);
 }
 
 static GPU_INLINE uint32_t getInstanceId() {
