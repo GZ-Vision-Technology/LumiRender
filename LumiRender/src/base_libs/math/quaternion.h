@@ -9,22 +9,25 @@
 
 namespace luminous {
     inline namespace math {
+        
         /**
-         * 跟复数一样，四元数用来表示旋转
+         * as complex number, 
+         * quaternion is used to represent rotation
          * q = w + xi + yj + zk
-         *其中 i^2 = j^2 = k^2 = ijk = -1
-         *实部为w，虚部为x,y,z
-         单位四元数为 x^2 + y^2 + z^2 + w^2 = 1
-
-         *四元数的乘法法则与复数相似
-         *qq' = (qw + qxi + qyj + qxk) * (q'w + q'xi + q'yj + q'xk)
-         *展开整理之后
-         *(qq')xyz = cross(qxyz, q'xyz) + qw * q'xyz + q'w * qxyz
-         *(qq')w = qw * q'w - dot(qxyz, q'xyz)
-
-         * 四元数用法
-         *一个点p在绕某个向量单位v旋转2θ之后p',其中旋转四元数为q = (cosθ, v * sinθ)，q为单位四元数
-         * 则满足p' = q * p * p^-1
+         * among i^2 = j^2 = k^2 = ijk = -1
+         * real portion is w，imagine portion x,y,z
+         *  x^2 + y^2 + z^2 + w^2 = 1
+         * 
+         * The multiplication rule the same as complex numbers
+         * qq' = (qw + qxi + qyj + qxk) * (q'w + q'xi + q'yj + q'xk)
+         * unfold
+         * (qq')xyz = cross(qxyz, q'xyz) + qw * q'xyz + q'w * qxyz
+         * (qq')w = qw * q'w - dot(qxyz, q'xyz)
+         * 
+         * A point p is rotated 2 theta around some vector unit v get point p',
+         * Where the rotation quaternion is:q = (cosθ, v * sinθ)
+         * if q is unit quaterion
+         * then p' = q * p * p^-1 is satisfied
          */
         struct Quaternion {
             float3 v;

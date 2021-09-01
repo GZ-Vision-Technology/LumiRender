@@ -257,11 +257,12 @@ namespace luminous {
         [[nodiscard]] XPU_INLINE Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) {
             float cosTheta = dot(q1, q2);
             if (cosTheta > .9995f)
-                //如果旋转角度特别小，当做直线处理
+                //If the rotation Angle is too small, treat it as a straight line
                 return normalize(q1 * (1 - t) + q2 * t);
             else {
-                // 原始公式 result = (q1sin((1-t)θ) + q2sin(tθ)) / (sinθ)
-                // 比较直观的理解qperp = q2 - cosθ * q1 = q2 - dot(q1, q2) * q1
+                // origin equation: result = (q1 * sin((1-t)*θ) + q2 * sin(tθ)) / (sinθ)
+                // More intuitive understanding : 
+                // qperp = q2 - cosθ * q1 = q2 - dot(q1, q2) * q1
                 // q' = q1 * cos(θt) + qperp * sin(θt)
                 float theta = std::acos(clamp(cosTheta, -1, 1));
                 float theta_p = theta * t;

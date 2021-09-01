@@ -6,9 +6,7 @@
 
 namespace luminous {
     inline namespace utility {
-        /**
-         * 对齐分配内存
-         */
+
         void *alloc_aligned(size_t size) {
         #if defined(HAVE_ALIGNED_MALLOC)
             return _aligned_malloc(size, L1_CACHE_LINE_SIZE);

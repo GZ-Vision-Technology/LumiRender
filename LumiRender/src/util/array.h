@@ -11,32 +11,24 @@
 namespace luminous {
     inline namespace utility {
         /**
-          * 2D数组优化，重新排布内存结构
-          * 二维数组在内存中的排布实际上是1维连续的
-          * 假设二维数组两个维度分别为uv，当索引a[u][v]时，编译器实际上会转成一维数组的索引方式
-          * idx = u * width + v
+          * 2D array optimization, rearrangement of memory structure
+          * The arrangement of a two-dimensional array in memory is actually 1-dimensional continuous
+          * When indexing a[u][v], the compiler actually changes to indexing 
+          * a one-dimensional array, 
+          * assuming that the two-dimensional coordinate are uv
+          * then idx = u * width + v
           *
-          * BlockedArray有何好处？
-          * 数组的默认内存结构，a[u][v]被访问之后，通常周围的内存块容易被访问到
-          * 比如说a[u + 1][v]，a[u - 1][v]但这这两个元素通常跟a[u][v]不在一个cache line上，导致cache miss
+          * What are the benefits of BlockedArray?
+          * The default memory structure of an array, 
+          * a[u][v] is usually accessible from the surrounding memory blocks
+          * 
+          * For example, a[u + 1][v] and a[U-1][v] are not on the same cache line with a[u][v],
+          * resulting in a cache miss
           *
-          * 为了优化目前这个缺点，基本思路，将一连串内存地址分隔为一个个块，块的尺寸为2的整数次幂，每个块逐行排布
+          * In order to optimize this shortcoming, the basic idea is to divide a series of memory addresses into blocks, 
+          * the size of the blocks is an integer power of 2, and each block is arranged line by line
           *
-          * 假设
-          * logBlockSize = 2 ，block_size = 4 每个块的长宽均为4
-          * _u_res = 8
-          * _v_res = 8
-          * _u_blocks = round_up(_u_res) >> logBlockSize = 2
-          * nAlloc = round_up(_u_res) * round_up(_v_res) = 64 需要申请64个单位的内存空间
-          *
-          * 如上参数，内存排布如下，上部分是实际内存中连续地址0-63，下部分是经过下标(u,v)重新映射之后索引的地址，
-          * 可以看到，经过重新映射之后,(0,0)与(1,0)是相邻的，并且(0,0)与(0,1)距离不远，
-          * 位于同一个cache line的概率也较高，所以可以提高缓存命中率
-          *
-          * 整个内存片段分为2x2个block，每两个块一行
-          *
-          * 基本思路是先找到(u,v)所在的块的索引的offset，然后找到块内的索引的offset
-          *
+          * The memory addresses are compared as follows
           *
           * |----------0 block----------| |----------1 block----------|
           *
@@ -75,18 +67,14 @@ namespace luminous {
             const int _u_res, _v_res, _u_blocks;
 
         public:
-            /**
-             * 分配一段连续的内存块，用uv参数重排二维数组的索引
-             */
+  
             BlockedArray(int u_res, int v_res, const T *d = nullptr)
                     : _u_res(u_res),
                       _v_res(v_res),
                       _u_blocks(round_up(u_res) >> logBlockSize) {
-                // 先向上取到2^logBlockSize
                 int nAlloc = round_up(_u_res) * round_up(_v_res);
                 _data = alloc_aligned<T>(nAlloc);
                 for (int i = 0; i < nAlloc; ++i) {
-                    // placement new，在指定地址上调用构造函数
                     new (&_data[i]) T();
                 }
                 if (d) {
@@ -98,16 +86,10 @@ namespace luminous {
                 }
             }
 
-            /**
-             * 2^logBlockSize
-             */
             CONSTEXPR int block_size() const {
                 return 1 << logBlockSize;
             }
 
-            /**
-             * 向上取到最近的2的logBlockSize次幂
-             */
             int round_up(int x) const {
                 return (x + block_size() - 1) & ~(block_size() - 1);
             }
@@ -127,9 +109,6 @@ namespace luminous {
                 free_aligned(_data);
             }
 
-            /**
-             * 返回a * 2^logBlockSize
-             */
             int block(int a) const {
                 return a >> logBlockSize;
             }
@@ -138,19 +117,12 @@ namespace luminous {
                 return (a & (block_size() - 1));
             }
 
-            /**
-             * 通过uv参数找到指定内存的思路
-             * 1.先找到指定内存在哪个块中(bu,bv)
-             * 2.然后找到块中的偏移量 (ou, ov)
-             */
             inline int get_total_offset(int u, int v) const {
                 int bu = block(u);
                 int bv = block(v);
                 int ou = offset(u);
                 int ov = offset(v);
-                // 小block的偏移
                 int offset = block_size() * block_size() * (_u_blocks * bv + bu);
-                // 小block内的偏移
                 offset += block_size() * ov + ou;
                 return offset;
             }

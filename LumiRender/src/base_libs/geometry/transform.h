@@ -12,23 +12,6 @@
 namespace luminous {
     inline namespace geometry {
 
-        /**
-         * 跟复数一样，四元数用来表示旋转
-         * q = w + xi + yj + zk
-         * 其中 i^2 = j^2 = k^2 = ijk = -1
-         * 实部为w，虚部为x,y,z
-         * 单位四元数为 x^2 + y^2 + z^2 + w^2 = 1
-
-         * 四元数的乘法法则与复数相似
-         * qq' = (qw + qxi + qyj + qxk) * (q'w + q'xi + q'yj + q'xk)
-         * 展开整理之后
-         * (qq')xyz = cross(qxyz, q'xyz) + qw * q'xyz + q'w * qxyz
-         * (qq')w = qw * q'w - dot(qxyz, q'xyz)
-
-         * 四元数用法
-         * 一个点p在绕某个向量单位v旋转2θ之后p',其中旋转四元数为q = (cosθ, v * sinθ)，q为单位四元数
-         * 则满足p' = q * p * p^-1
-         */
         XPU [[nodiscard]] static Quaternion matrix_to_quaternion(const float4x4 &m) {
             float x, y, z, w;
             float trace = m[0][0] + m[1][1] + m[2][2];
@@ -105,12 +88,10 @@ namespace luminous {
             int count = 0;
             auto R = M;
             do {
-                // 计算下一个矩阵
                 float4x4 R_next;
                 float4x4 Rit = inverse(transpose(R));
                 R_next = 0.5f * (R + Rit);
 
-                // 对比两个矩阵的差异，如果差异小于0.0001则分解完成
                 norm = 0;
                 for (int i = 0; i < 3; ++i) {
                     float n = std::abs(R[i][0] - R_next[i][0]) +

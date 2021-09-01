@@ -49,6 +49,8 @@ namespace luminous {
 
             NDSC virtual Sensor *camera() { return _camera.data(); }
 
+            NDSC uint2 resolution() const { return _camera->resolution(); }
+
             virtual void update() = 0;
 
             virtual void render() = 0;
