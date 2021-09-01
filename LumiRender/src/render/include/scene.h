@@ -48,6 +48,8 @@ namespace luminous {
             size_t _texture_num{0};
             int _infinite_light_num{0};
 
+            UP<SceneData> _scene_data{new SceneData()};
+
             Box3f _scene_box;
 
             // instance data
@@ -91,6 +93,10 @@ namespace luminous {
             NDSC virtual size_t size_in_bytes() const;
 
             virtual void clear();
+
+            virtual void fill_scene_data() = 0;
+
+            NDSC const SceneData *scene_data() const { return _scene_data.get(); }
 
             NDSC uint64_t as_handle() const { return _accelerator->handle(); }
 

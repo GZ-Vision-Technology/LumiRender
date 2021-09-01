@@ -109,24 +109,6 @@ namespace luminous {
         }
 
         void ShaderWrapper::build_sbt(const Scene *gpu_scene, const std::shared_ptr<Device>& device) {
-            auto fill_scene_data = [&](SceneRecord *p, const Scene *gpu_scene) {
-                p->data.positions = gpu_scene->_positions.device_buffer_view();
-                p->data.normals = gpu_scene->_normals.device_buffer_view();
-                p->data.tex_coords = gpu_scene->_tex_coords.device_buffer_view();
-                p->data.triangles = gpu_scene->_triangles.device_buffer_view();
-                p->data.meshes = gpu_scene->_meshes.device_buffer_view();
-
-                p->data.inst_to_mesh_idx = gpu_scene->_inst_to_mesh_idx.device_buffer_view();
-                p->data.inst_to_transform_idx = gpu_scene->_inst_to_transform_idx.device_buffer_view();
-                p->data.transforms = gpu_scene->_transforms.device_buffer_view();
-
-                p->data.light_sampler = gpu_scene->_light_sampler.device_data();
-                p->data.distributions = gpu_scene->_distribution_mgr.distributions.device_buffer_view();
-                p->data.distribution2ds = gpu_scene->_distribution_mgr.distribution2ds.device_buffer_view();
-
-                p->data.textures = gpu_scene->_textures.device_buffer_view();
-                p->data.materials = gpu_scene->_materials.device_buffer_view();
-            };
 
             _device_ptr_table.rg_record = device->allocate_buffer<RayGenRecord>(1);
             RayGenRecord rg_sbt = {};
@@ -135,8 +117,10 @@ namespace luminous {
 
             _device_ptr_table.miss_record = device->allocate_buffer<SceneRecord>(RayType::Count);
             SceneRecord ms_sbt[RayType::Count] = {};
-            fill_scene_data(&ms_sbt[RayType::ClosestHit], gpu_scene);
-            fill_scene_data(&ms_sbt[RayType::AnyHit], gpu_scene);
+
+            ms_sbt[RayType::ClosestHit].data = *gpu_scene->scene_data();
+            ms_sbt[RayType::AnyHit].data = *gpu_scene->scene_data();
+
             OPTIX_CHECK(
                     optixSbtRecordPackHeader(_program_group_table.miss_closest_group, &ms_sbt[RayType::ClosestHit]));
             OPTIX_CHECK(
@@ -145,10 +129,10 @@ namespace luminous {
 
             _device_ptr_table.hit_record = device->allocate_buffer<SceneRecord>(RayType::Count);
             SceneRecord hit_sbt[RayType::Count] = {};
-            fill_scene_data(&hit_sbt[RayType::ClosestHit], gpu_scene);
+            hit_sbt[RayType::ClosestHit].data = *gpu_scene->scene_data();
+            hit_sbt[RayType::AnyHit].data = *gpu_scene->scene_data();
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.hit_closest_group,
                                                  &hit_sbt[RayType::ClosestHit]));
-            fill_scene_data(&hit_sbt[RayType::AnyHit], gpu_scene);
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.hit_any_group,
                                                  &hit_sbt[RayType::AnyHit]));
             _device_ptr_table.hit_record.upload(hit_sbt);

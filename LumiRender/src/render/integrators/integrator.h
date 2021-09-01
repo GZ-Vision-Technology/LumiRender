@@ -43,6 +43,8 @@ namespace luminous {
                 _rr_threshold = ic.rr_threshold;
             }
 
+            NDSC virtual int spp() const { return _sampler->spp(); }
+
             NDSC virtual uint frame_index() const = 0;
 
             NDSC virtual Sensor *camera() {

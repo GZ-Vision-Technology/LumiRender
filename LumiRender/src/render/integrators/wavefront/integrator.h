@@ -14,7 +14,7 @@
 
 namespace luminous {
     inline namespace gpu {
-        class WavefrontPT : public GPUIntegrator {
+        class WavefrontPT : public Integrator {
         private:
 
         public:

@@ -12,8 +12,6 @@
 namespace luminous {
     inline namespace gpu {
         class GPUIntegrator : public Integrator {
-        protected:
-            std::unique_ptr<OptixAccel> _accel;
 
         public:
             GPUIntegrator(const SP <Device> &device, Context *context)

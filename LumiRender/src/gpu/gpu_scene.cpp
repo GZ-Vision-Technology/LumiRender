@@ -43,6 +43,25 @@ namespace luminous {
             }
         }
 
+        void GPUScene::fill_scene_data() {
+            _scene_data->positions = this->_positions.const_device_buffer_view();
+            _scene_data->normals = this->_normals.const_device_buffer_view();
+            _scene_data->tex_coords = this->_tex_coords.const_device_buffer_view();
+            _scene_data->triangles = this->_triangles.const_device_buffer_view();
+            _scene_data->meshes = this->_meshes.const_device_buffer_view();
+
+            _scene_data->inst_to_mesh_idx = this->_inst_to_mesh_idx.const_device_buffer_view();
+            _scene_data->inst_to_transform_idx = this->_inst_to_transform_idx.const_device_buffer_view();
+            _scene_data->transforms = this->_transforms.const_device_buffer_view();
+
+            _scene_data->light_sampler = this->_light_sampler.device_data();
+            _scene_data->distributions = this->_distribution_mgr.distributions.const_device_buffer_view();
+            _scene_data->distribution2ds = this->_distribution_mgr.distribution2ds.const_device_buffer_view();
+
+            _scene_data->textures = this->_textures.const_device_buffer_view();
+            _scene_data->materials = this->_materials.const_device_buffer_view();
+        }
+
         void GPUScene::synchronize_to_gpu() {
             {
                 // instance data
@@ -84,6 +103,7 @@ namespace luminous {
             init_lights(scene_graph);
             create_device_memory();
             synchronize_to_gpu();
+            fill_scene_data();
             init_accel();
             shrink_to_fit();
         }

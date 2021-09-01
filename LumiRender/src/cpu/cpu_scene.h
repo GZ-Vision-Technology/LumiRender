@@ -17,7 +17,6 @@ namespace luminous {
         class CPUScene : public Scene {
         private:
             UP<EmbreeAccel> _embree_accel;
-            UP<SceneData> _scene_data{new SceneData()};
         public:
             CPUScene(const SP<Device> &device, Context *context);
 
@@ -25,13 +24,11 @@ namespace luminous {
 
             void create_device_memory() override;
 
-            NDSC const SceneData *scene_data() const { return _scene_data.get(); }
-
             NDSC RTCScene rtc_scene() const { return _embree_accel->rtc_scene(); }
 
             NDSC uint64_t scene_handle() const { return (uint64_t)rtc_scene(); }
 
-            void fill_scene_data();
+            void fill_scene_data() override;
 
             void init_accel() override;
 

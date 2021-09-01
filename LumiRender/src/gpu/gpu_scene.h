@@ -17,10 +17,6 @@ namespace luminous {
         private:
             UP<MegakernelOptixAccel> _optix_accel;
 
-            friend class MegakernelOptixAccel;
-            friend class OptixAccel;
-            friend class ShaderWrapper;
-
         public:
             GPUScene(const SP<Device> &device, Context *context);
 
@@ -33,6 +29,8 @@ namespace luminous {
             void create_device_memory() override;
 
             void synchronize_to_gpu();
+
+            void fill_scene_data() override;
 
             template<typename... Args>
             void launch(Args &&...args) {
