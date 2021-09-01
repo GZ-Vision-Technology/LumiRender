@@ -13,7 +13,7 @@ using namespace luminous;
 class Test {
 public:
     float t{1};
-    float3 pos{};
+    luminous::float3 pos{};
 };
 
 LUMINOUS_SOA(Test, t, pos)

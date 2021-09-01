@@ -12,6 +12,7 @@
 #include "render/samplers/sampler.cpp"
 #include "render/samplers/independent.cpp"
 #include <cuda.h>
+#include <cuda/atomic>
 //#include "render/samplers/sampler_handle.cpp"
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 

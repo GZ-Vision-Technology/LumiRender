@@ -46,7 +46,7 @@ namespace luminous {
             RaySampleFlag flag;
         };
 
-        LUMINOUS_SOA(RaySamples, direct, indirect)
+        LUMINOUS_SOA(RaySamples, direct, indirect, flag)
 
         struct RayWorkItem {
             Ray ray;

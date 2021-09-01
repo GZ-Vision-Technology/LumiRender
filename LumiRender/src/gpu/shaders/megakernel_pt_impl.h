@@ -18,7 +18,6 @@
 #include "render/include/trace.h"
 #include "render/integrators/shader_include.h"
 
-
 extern "C" {
 __constant__ luminous::LaunchParams
 params;

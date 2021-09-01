@@ -108,6 +108,9 @@ constexpr const char * type_name(T * ptr = nullptr) {
 #define DCHECK_LT(a, b) DCHECK(a < b);
 #define DCHECK_LE(a, b) DCHECK(a <= b);
 
+// todo change to cross platform
+#define LUMINOUS_IS_WINDOWS
+
 #define CONTINUE_IF(condition) if((condition)) { continue; }
 #define CONTINUE_IF_TIPS(condition, str) if((condition)) { LUMINOUS_DBG(str); continue; }
 

@@ -53,13 +53,16 @@ macro(cuda_compile_and_embed output_var cuda_file)
                 -use_fast_math
                 --expt-relaxed-constexpr
                 --std=c++17
-                -arch compute_60
+                -arch=sm_70
                 -D__x86_64
                 )
     else ()
         cuda_compile_ptx(ptx_files
                 ${cuda_file}
-                OPTIONS -D _ENABLE_EXTENDED_ALIGNED_STORAGE --expt-relaxed-constexpr --std=c++17
+                OPTIONS -D _ENABLE_EXTENDED_ALIGNED_STORAGE
+                --expt-relaxed-constexpr
+                --std=c++17
+                -arch=sm_70
                 )
     endif ()
     list(GET ptx_files 0 ptx_file)
