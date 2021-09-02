@@ -10,6 +10,7 @@
 #include "core/backend/device.h"
 #include "base_libs/geometry/common.h"
 #include "base_libs/math/common.h"
+#include "base_libs/optics/rgb.h"
 #include "render/bxdfs/bsdf.h"
 #include "render/lights/light.h"
 #include "work_queue.h"
@@ -25,9 +26,9 @@ namespace luminous {
 
         LUMINOUS_SOA(float4, x, y, z, w)
 
-        LUMINOUS_SOA(Ray, org_x, org_y, org_z, dir_x, dir_y, dir_z, t_max)
+        LUMINOUS_SOA(Spectrum, x, y, z)
 
-        LUMINOUS_SOA(BSDF, _bxdf, _ng, _shading_frame)
+        LUMINOUS_SOA(Ray, org_x, org_y, org_z, dir_x, dir_y, dir_z, t_max)
 
         enum RaySampleFlag {
             hasMedia = 1 << 0,
@@ -144,5 +145,21 @@ namespace luminous {
         LUMINOUS_SOA(ShadowRayWorkItem, ray, Ld, pixel_index)
 
         using ShadowRayQueue = WorkQueue<ShadowRayWorkItem>;
+
+        struct MaterialEvalWorkItem {
+            float3 pos;
+            float3 ng;
+            float3 ns;
+            float2 uv;
+            float3 wo;
+            bool any_non_specular_bounces;
+            int pixel_index;
+            Spectrum throughput;
+        };
+
+        LUMINOUS_SOA(MaterialEvalWorkItem, pos, ng, ns, uv, wo,
+                     any_non_specular_bounces, pixel_index, throughput)
+
+        using MaterialEvalQueue = WorkQueue<MaterialEvalWorkItem>;
     }
 }

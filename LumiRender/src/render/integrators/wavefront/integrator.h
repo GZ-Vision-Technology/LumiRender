@@ -20,6 +20,7 @@ namespace luminous {
             ShadowRayQueue * _shadow_ray_queue{};
             HitAreaLightQueue * _hit_area_light_queue{};
             EscapedRayQueue * _escaped_ray_queue{};
+            MaterialEvalQueue *_material_eval_queue{};
             int _scanline_per_pass{};
             int _max_queue_size{};
         public:

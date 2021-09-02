@@ -43,6 +43,8 @@ namespace luminous {
                 _rr_threshold = ic.rr_threshold;
             }
 
+            NDSC const SceneData * scene_data() const;
+
             NDSC virtual int spp() const { return _sampler->spp(); }
 
             NDSC virtual uint frame_index() const = 0;
