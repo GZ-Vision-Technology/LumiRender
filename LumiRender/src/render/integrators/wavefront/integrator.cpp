@@ -13,8 +13,8 @@ namespace luminous {
         }
 
         void WavefrontPT::init(const std::shared_ptr<SceneGraph> &scene_graph) {
-            init_with_config(scene_graph->integrator_config);
-
+            Integrator::init(scene_graph);
+            init_on_device();
         }
 
         void WavefrontPT::render() {

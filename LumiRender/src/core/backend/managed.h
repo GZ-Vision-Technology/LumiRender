@@ -62,7 +62,7 @@ namespace luminous {
             BaseClass::insert(BaseClass::cend(), v.cbegin(), v.cend());
         }
 
-        void allocate_device(const SP <Device> device, size_t size = 0) {
+        void allocate_device(const SP <Device> &device, size_t size = 0) {
             size = size == 0 ? BaseClass::size() : size;
             if (size == 0) {
                 return;

@@ -16,7 +16,7 @@ namespace luminous {
         class Scene;
     }
 
-    class Device : public Noncopyable, std::enable_shared_from_this<Device> {
+    class Device : public Noncopyable, public std::enable_shared_from_this<Device> {
     public:
         class Impl {
         public:
@@ -66,7 +66,8 @@ namespace luminous {
 
         Dispatcher new_dispatcher() { return _impl->new_dispatcher(); }
 
-        explicit Device(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
+        explicit Device(std::unique_ptr<Impl> impl)
+                : _impl(std::move(impl)) {}
 
     protected:
         std::unique_ptr<Impl> _impl;
