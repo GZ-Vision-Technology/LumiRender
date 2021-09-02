@@ -16,7 +16,7 @@ namespace luminous {
     inline namespace gpu {
         class WavefrontPT : public Integrator {
         private:
-            RayQueue *_ray_queues[2];
+            RayQueue *_ray_queues[2]{};
             ShadowRayQueue * _shadow_ray_queue{};
             HitAreaLightQueue * _hit_area_light_queue{};
             EscapedRayQueue * _escaped_ray_queue{};
@@ -24,6 +24,11 @@ namespace luminous {
             int _scanline_per_pass{};
             int _max_queue_size{};
         public:
+
+            WavefrontPT(const SP<Device> &device, Context *context);
+
+            void init(const std::shared_ptr<SceneGraph> &scene_graph) override;
+
             RayQueue *current_ray_queue(int wavefrontDepth) {
                 return _ray_queues[wavefrontDepth & 1];
             }

@@ -3,6 +3,7 @@
 //
 
 #include "cpu_impl.h"
+#include "cpu_scene.h"
 
 namespace luminous {
     inline namespace cpu {
@@ -61,6 +62,10 @@ namespace luminous {
 
         Dispatcher CPUDevice::new_dispatcher() {
             return Dispatcher(std::make_unique<CPUDispatcher>());
+        }
+
+        std::shared_ptr<Scene> CPUDevice::create_scene(const std::shared_ptr<Device> &device,Context *context) {
+            return std::make_shared<CPUScene>(device, context);
         }
 
         CPUTexture::CPUTexture(PixelFormat pixel_format, uint2 resolution) : Impl(pixel_format, resolution) {

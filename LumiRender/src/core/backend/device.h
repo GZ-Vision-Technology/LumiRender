@@ -12,13 +12,20 @@
 
 namespace luminous {
 
-    class Device : public Noncopyable {
+    inline namespace render {
+        class Scene;
+    }
+
+    class Device : public Noncopyable, std::enable_shared_from_this<Device> {
     public:
         class Impl {
         public:
             virtual RawBuffer allocate_buffer(size_t bytes) = 0;
 
             virtual DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) = 0;
+
+            NDSC virtual std::shared_ptr<Scene>
+            create_scene(const std::shared_ptr<Device> &device, Context *context) = 0;
 
             virtual Dispatcher new_dispatcher() = 0;
 
@@ -28,6 +35,10 @@ namespace luminous {
         template<typename T = std::byte>
         Buffer<T> allocate_buffer(size_t n_elements) {
             return Buffer<T>(_impl->allocate_buffer(n_elements * sizeof(T)));
+        }
+
+        NDSC std::shared_ptr<Scene> create_scene(Context *context) {
+            return _impl->create_scene(shared_from_this(), context);
         }
 
         template<typename T = std::byte>
@@ -41,7 +52,7 @@ namespace luminous {
         template<typename T = std::byte>
         T *obtain_restrict_ptr(size_t n_elements) {
             RawBuffer raw_buffer = _impl->allocate_buffer(n_elements * sizeof(T));
-            T * ret = raw_buffer.ptr<T *>();
+            T *ret = raw_buffer.ptr<T *>();
             _raw_buffers.push_back(std::move(raw_buffer));
             return ret;
         }

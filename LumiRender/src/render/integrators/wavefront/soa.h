@@ -7,6 +7,28 @@
 
 #include "core/macro_map.h"
 
+namespace luminous {
+    inline namespace render {
+        template<typename T>
+        struct SOA {
+            static constexpr bool definitional = false;
+        };
+
+        template<typename T, typename TDevice>
+        struct SOAMember {
+            static auto create(int n, const TDevice &device) {
+                if constexpr (SOA<T>::definitional) {
+                    return SOA<T>(n, device);
+                } else {
+                    return device->template obtain_restrict_ptr<T>(n);
+                }
+            }
+
+            using type = decltype(create(0, nullptr));
+        };
+    }
+}
+
 #define LUMINOUS_SOA_BEGIN(StructName)  template<> \
 struct SOA<StructName> {                           \
 public:                                            \
@@ -68,24 +90,4 @@ return GetSetIndirector{this, i};}
         LUMINOUS_SOA_INDIRECTOR_ACCESSOR                            \
         LUMINOUS_SOA_END
 
-namespace luminous {
-    inline namespace render {
-        template<typename T>
-        struct SOA {
-            static constexpr bool definitional = false;
-        };
 
-        template<typename T, typename TDevice>
-        struct SOAMember {
-            static auto create(int n, const TDevice &device) {
-                if constexpr (SOA<T>::definitional) {
-                    return SOA<T>(n, device);
-                } else {
-                    return device->template obtain_restrict_ptr<T>(n);
-                }
-            }
-
-            using type = decltype(create(0, nullptr));
-        };
-    }
-}

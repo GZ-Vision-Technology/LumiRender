@@ -38,7 +38,7 @@ namespace luminous {
 
         class CPUTexture : public DTexture::Impl {
         private:
-            uint64_t _handle;
+            uint64_t _handle{};
         public:
             CPUTexture(PixelFormat pixel_format, uint2 resolution);
 
@@ -73,6 +73,8 @@ namespace luminous {
             RawBuffer allocate_buffer(size_t bytes) override;
 
             DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
+
+            std::shared_ptr<Scene> create_scene(const std::shared_ptr<Device> &device, Context *context) override;
 
             Dispatcher new_dispatcher() override;
 

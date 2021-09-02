@@ -119,6 +119,8 @@ namespace luminous {
 
             DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
 
+            std::shared_ptr<Scene> create_scene(const std::shared_ptr<Device> &device,Context *context) override;
+
             Dispatcher new_dispatcher() override;
 
             ~CUDADevice() override;
