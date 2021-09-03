@@ -3,8 +3,8 @@
 //
 
 #include "cuda_task.h"
-#include "util/clock.h"
 #include "gpu/integrators/megakernel_pt.h"
+#include "render/integrators/wavefront/integrator.h"
 
 using std::cout;
 using std::endl;
@@ -13,7 +13,12 @@ namespace luminous {
 
         void CUDATask::init(const Parser &parser) {
             auto scene_graph = build_scene_graph(parser);
-            _integrator = std::make_unique<MegakernelPT>(_device, _context);
+            const std::string type = scene_graph->integrator_config.type();
+            if (type == "PT") {
+                _integrator = std::make_unique<MegakernelPT>(_device, _context);
+            } else if(type == "WavefrontPT") {
+                _integrator = std::make_unique<WavefrontPT>(_device, _context);
+            }
             _integrator->init(scene_graph);
             update_device_buffer();
         }

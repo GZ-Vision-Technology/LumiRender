@@ -29,6 +29,14 @@ namespace luminous {
 
             void init(const std::shared_ptr<SceneGraph> &scene_graph) override;
 
+            uint frame_index() const override {
+                return 0;
+            }
+
+            void update() override {
+
+            }
+
             RayQueue *current_ray_queue(int wavefrontDepth) {
                 return _ray_queues[wavefrontDepth & 1];
             }

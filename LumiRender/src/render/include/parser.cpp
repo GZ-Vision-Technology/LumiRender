@@ -254,6 +254,7 @@ namespace luminous {
         IntegratorConfig parse_integrator(const ParameterSet &ps) {
             IntegratorConfig ret;
             auto param = ps["param"];
+            ret.set_type(ps["type"].as_string("PT"));
             ret.max_depth = param["max_depth"].as_uint(10);
             ret.rr_threshold = param["rr_threshold"].as_float(1);
             return ret;
