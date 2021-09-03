@@ -39,13 +39,13 @@ int capacity;
 
 // todo add LM_RESTRICT
 // member definition
-#define LUMINOUS_SOA_MEMBER(MemberName) SOAMember<decltype(element_type::MemberName),Device*>::type (MemberName);
+#define LUMINOUS_SOA_MEMBER(MemberName) SOAMember<decltype(element_type::MemberName),Device*>::type MemberName;
 #define LUMINOUS_SOA_MEMBERS(...) MAP(LUMINOUS_SOA_MEMBER,__VA_ARGS__)
 
 // constructor definition
 #define LUMINOUS_SOA_MEMBER_ASSIGNMENT(MemberName) MemberName = SOAMember<decltype(element_type::MemberName),Device*>::create(n, device);
 #define LUMINOUS_SOA_CONSTRUCTOR(...)                             \
-SOA(int n, Device *device) : capacity(n) { \
+SOA(int n, Device *device) : capacity(n) {                        \
 MAP(LUMINOUS_SOA_MEMBER_ASSIGNMENT,__VA_ARGS__) }
 
 

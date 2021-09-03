@@ -20,6 +20,63 @@ namespace luminous {
 
     inline namespace render {
 
+#if 0 // unfold
+
+        LUMINOUS_SOA(int3, x, y, z)
+        template<>
+        struct SOA<luminous::int3> {
+        public:
+            static constexpr bool definitional = true;
+            using element_type = luminous::int3;
+            SOA() = default;
+            int capacity;
+            SOAMember<decltype(element_type::x), Device *>::type x;
+            SOAMember<decltype(element_type::y), Device *>::type y;
+            SOAMember<decltype(element_type::z), Device *>::type z;
+            SOA(int n, Device *device) : capacity(n) {
+                x = SOAMember<decltype(element_type::x), Device *>::create(n, device);
+                y = SOAMember<decltype(element_type::y), Device *>::create(n, device);
+                z = SOAMember<decltype(element_type::z), Device *>::create(n, device);
+            }
+            SOA &operator=(const SOA &s) {
+                capacity = s.capacity;
+                this->x = s.x;
+                this->y = s.y;
+                this->z = s.z;
+                return *this;
+            }
+            element_type operator[](int i) const {
+                (void) ((!!(i < capacity)) || (_wassert(L"i < capacity", L"_file_name_", (unsigned) (21)), 0));;;
+                element_type r;
+                r.x = this->x[i];
+                r.y = this->y[i];
+                r.z = this->z[i];
+                return r;
+            }
+            struct GetSetIndirector {
+                SOA *soa;
+                int i;
+                operator element_type() const {
+                    element_type r;
+                    r.x = soa->x[i];
+                    r.y = soa->y[i];
+                    r.z = soa->z[i];
+                    return r;
+                }
+                void operator=(const element_type &a) const {
+                    soa->x[i] = a.x;
+                    soa->y[i] = a.y;
+                    soa->z[i] = a.z;
+                }
+            };
+            GetSetIndirector operator[](int i) {
+                (void) ((!!(i < capacity)) || (_wassert(L"i < capacity", L"_file_name_", (unsigned) (21)), 0));;;
+                return GetSetIndirector{this, i};
+            }
+        };
+
+#endif
+
         LUMINOUS_SOA(float2, x, y)
 
         LUMINOUS_SOA(float3, x, y, z)
