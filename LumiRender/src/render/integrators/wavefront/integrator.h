@@ -11,6 +11,7 @@
 #include "gpu/gpu_scene.h"
 #include "render/samplers/sampler.h"
 #include "work_items.h"
+#include "params.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -21,6 +22,7 @@ namespace luminous {
             HitAreaLightQueue * _hit_area_light_queue{};
             EscapedRayQueue * _escaped_ray_queue{};
             MaterialEvalQueue *_material_eval_queue{};
+            SOA<PixelSampleState> * _pixel_sample_state{};
             int _scanline_per_pass{};
             int _max_queue_size{};
         public:
@@ -29,7 +31,7 @@ namespace luminous {
 
             void init(const std::shared_ptr<SceneGraph> &scene_graph) override;
 
-            uint frame_index() const override {
+            NDSC uint frame_index() const override {
                 return 0;
             }
 

@@ -161,5 +161,15 @@ namespace luminous {
                      any_non_specular_bounces, pixel_index, throughput)
 
         using MaterialEvalQueue = WorkQueue<MaterialEvalWorkItem>;
+
+        struct PixelSampleState {
+            uint2 pixel;
+            Spectrum L;
+            float filter_weight;
+            Spectrum sensor_ray_weight;
+            RaySamples samples;
+        };
+
+        LUMINOUS_SOA(PixelSampleState, pixel, L, filter_weight, sensor_ray_weight, samples)
     }
 }
