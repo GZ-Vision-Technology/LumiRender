@@ -14,7 +14,7 @@ namespace luminous {
         class GPUIntegrator : public Integrator {
 
         public:
-            GPUIntegrator(const SP <Device> &device, Context *context)
+            GPUIntegrator(Device *device, Context *context)
                     : Integrator(device, context) {}
         };
     }

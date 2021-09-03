@@ -57,7 +57,7 @@ namespace luminous {
 
             void synchronize_to_gpu();
 
-            void init_on_device(const SP<Device> &device);
+            void init_on_device(Device *device);
 
             void shrink_to_fit();
 

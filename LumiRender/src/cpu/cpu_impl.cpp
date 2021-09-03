@@ -64,7 +64,7 @@ namespace luminous {
             return Dispatcher(std::make_unique<CPUDispatcher>());
         }
 
-        std::shared_ptr<Scene> CPUDevice::create_scene(const std::shared_ptr<Device> &device,Context *context) {
+        std::shared_ptr<Scene> CPUDevice::create_scene(Device *device,Context *context) {
             return std::make_shared<CPUScene>(device, context);
         }
 

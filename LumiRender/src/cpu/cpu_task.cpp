@@ -12,9 +12,9 @@ namespace luminous {
             auto scene_graph = build_scene_graph(parser);
             const std::string type = scene_graph->integrator_config.type();
             if (type == "PT") {
-                _integrator = std::make_unique<CPUPathTracer>(_device, _context);
+                _integrator = std::make_unique<CPUPathTracer>(_device.get(), _context);
             } else if(type == "WavefrontPT") {
-                _integrator = std::make_unique<WavefrontPT>(_device, _context);
+                _integrator = std::make_unique<WavefrontPT>(_device.get(), _context);
             }
             _integrator->init(scene_graph);
             update_device_buffer();

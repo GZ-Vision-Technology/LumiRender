@@ -12,7 +12,7 @@ using std::endl;
 namespace luminous {
     inline namespace gpu {
 
-        GPUScene::GPUScene(const SP<Device> &device, Context *context)
+        GPUScene::GPUScene(Device *device, Context *context)
                 : Scene(device, context) {}
 
         void GPUScene::create_device_memory() {

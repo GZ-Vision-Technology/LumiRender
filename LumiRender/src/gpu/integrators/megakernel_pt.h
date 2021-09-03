@@ -20,7 +20,7 @@ namespace luminous {
             Managed<LaunchParams> _launch_params;
         public:
 
-            MegakernelPT(const SP<Device> &device, Context *context);
+            MegakernelPT(Device *device, Context *context);
 
             void init(const SP<SceneGraph> &scene_graph) override;
 

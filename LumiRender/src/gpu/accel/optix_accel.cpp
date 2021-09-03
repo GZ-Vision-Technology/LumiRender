@@ -15,7 +15,7 @@ namespace luminous {
             std::cerr << "[" << std::setw(2) << level << "][" << std::setw(12) << tag << "]: " << message << "\n";
         }
 
-        OptixAccel::OptixAccel(const SP<Device> &device, Context *context, const Scene *scene)
+        OptixAccel::OptixAccel(Device *device, Context *context, const Scene *scene)
                 : Accelerator(scene),
                   _device(device),
                   _dispatcher(_device->new_dispatcher()),

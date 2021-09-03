@@ -21,11 +21,11 @@ LUMINOUS_SOA(Test, t, pos)
 int main() {
     auto device = create_cpu_device();
 
-    SOA<Test> st(3, device);
+    SOA<Test> st(3, device.get());
 
     Test t;
 
-    st[1] = t;
+    st[0] = t;
 
     Test ss = st[1];
 

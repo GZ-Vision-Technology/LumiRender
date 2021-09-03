@@ -24,13 +24,13 @@ namespace luminous {
         protected:
             uint _max_depth{};
             float _rr_threshold{};
-            SP<Device> _device{};
+            Device *_device{};
             SP<Scene> _scene{};
             Context *_context{};
             Managed<Sampler, Sampler> _sampler;
             Managed<Sensor, Sensor> _camera;
         public:
-            Integrator(const SP<Device> &device, Context *context)
+            Integrator(Device *device, Context *context)
                     : _device(device),
                       _context(context) {}
 

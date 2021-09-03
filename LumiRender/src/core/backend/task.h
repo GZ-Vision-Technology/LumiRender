@@ -18,7 +18,7 @@ namespace luminous {
 
     class Task : public Noncopyable {
     protected:
-        std::shared_ptr<Device> _device{nullptr};
+        std::unique_ptr<Device> _device{nullptr};
         Context *_context{nullptr};
         UP<Integrator> _integrator;
         double _dt{0};
@@ -26,8 +26,8 @@ namespace luminous {
         Managed<float4, float4> _accumulate_buffer;
         Managed<FrameBufferType, FrameBufferType> _frame_buffer;
     public:
-        Task(const std::shared_ptr<Device> &device, Context *context)
-                : _device(device),
+        Task(std::unique_ptr<Device> device, Context *context)
+                : _device(move(device)),
                   _context(context) {}
 
         virtual void init(const Parser &parser) = 0;

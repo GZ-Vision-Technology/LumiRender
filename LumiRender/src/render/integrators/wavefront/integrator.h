@@ -27,7 +27,7 @@ namespace luminous {
             uint _frame_index{};
         public:
 
-            WavefrontPT(const SP<Device> &device, Context *context);
+            WavefrontPT(Device *device, Context *context);
 
             void init(const std::shared_ptr<SceneGraph> &scene_graph) override;
 

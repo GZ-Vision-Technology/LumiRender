@@ -36,7 +36,7 @@ namespace luminous {
             std::memcpy(BaseClass::data(), v.data(), sizeof(THost) * v.size());
         }
 
-        void reset(const std::vector<THost> &v, const SP <Device> &device) {
+        void reset(const std::vector<THost> &v, Device *device) {
             _device_buffer = device->allocate_buffer<TDevice>(v.size());
             reset(v);
         }
@@ -47,12 +47,12 @@ namespace luminous {
             std::memcpy(BaseClass::data(), host, sizeof(THost) * n);
         }
 
-        void reset(THost *host, const SP <Device> &device, int n = 1) {
+        void reset(THost *host, Device *device, int n = 1) {
             _device_buffer = device->allocate_buffer<TDevice>(n);
             reset(host, n);
         }
 
-        void reset(const SP <Device> &device, size_t n) {
+        void reset(Device *device, size_t n) {
             BaseClass::resize(n);
             _device_buffer = device->allocate_buffer<TDevice>(n);
             std::memset(BaseClass::data(), 0, sizeof(THost) * n);
@@ -62,7 +62,7 @@ namespace luminous {
             BaseClass::insert(BaseClass::cend(), v.cbegin(), v.cend());
         }
 
-        void allocate_device(const SP <Device> &device, size_t size = 0) {
+        void allocate_device(Device *device, size_t size = 0) {
             size = size == 0 ? BaseClass::size() : size;
             if (size == 0) {
                 return;

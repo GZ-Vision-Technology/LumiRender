@@ -75,7 +75,7 @@ void test_soa() {
     using namespace luminous;
     auto device = luminous::create_cuda_device();
 
-    luminous::SOA<luminous::float4> sf3(9, device);
+    luminous::SOA<luminous::float4> sf3(9, device.get());
 
 
     cout << SOA<luminous::float3>::definitional << endl;

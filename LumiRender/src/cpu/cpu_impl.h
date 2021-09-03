@@ -74,15 +74,15 @@ namespace luminous {
 
             DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
 
-            std::shared_ptr<Scene> create_scene(const std::shared_ptr<Device> &device, Context *context) override;
+            std::shared_ptr<Scene> create_scene(Device *device, Context *context) override;
 
             Dispatcher new_dispatcher() override;
 
             ~CPUDevice() override = default;
         };
 
-        inline std::shared_ptr<Device> create_cpu_device() {
-            return std::make_shared<Device>(std::make_unique<CPUDevice>());
+        inline std::unique_ptr<Device> create_cpu_device() {
+            return std::make_unique<Device>(std::make_unique<CPUDevice>());
         }
     }
 }

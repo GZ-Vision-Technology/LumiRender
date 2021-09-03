@@ -18,7 +18,7 @@ namespace luminous {
             UP<MegakernelOptixAccel> _optix_accel;
 
         public:
-            GPUScene(const SP<Device> &device, Context *context);
+            GPUScene(Device *device, Context *context);
 
             void init(const SP<SceneGraph> &scene_graph) override;
 

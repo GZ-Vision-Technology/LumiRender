@@ -18,7 +18,7 @@ namespace luminous {
         private:
             UP<EmbreeAccel> _embree_accel;
         public:
-            CPUScene(const SP<Device> &device, Context *context);
+            CPUScene(Device *device, Context *context);
 
             void init(const SP<SceneGraph> &scene_graph) override;
 

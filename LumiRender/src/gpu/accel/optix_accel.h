@@ -42,7 +42,7 @@ namespace luminous {
             Context *_context{};
             OptixDeviceContext _optix_device_context{};
             OptixPipelineCompileOptions _pipeline_compile_options = {};
-            std::shared_ptr<Device> _device;
+            Device *_device{};
             Dispatcher _dispatcher;
             uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
             OptixTraversableHandle _root_as_handle{};
@@ -71,7 +71,7 @@ namespace luminous {
                                                        std::list<CUdeviceptr> &_vert_buffer_ptr);
 
         public:
-            OptixAccel(const SP<Device> &device, Context *context, const Scene *scene);
+            OptixAccel(Device *device, Context *context, const Scene *scene);
 
             OptixDeviceContext create_context();
 

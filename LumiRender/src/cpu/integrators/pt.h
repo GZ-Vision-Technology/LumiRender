@@ -17,7 +17,7 @@ namespace luminous {
         private:
             int _frame_index{0};
         public:
-            CPUPathTracer(const SP<Device> &device, Context *context);
+            CPUPathTracer(Device *device, Context *context);
 
             void init(const SP<SceneGraph> &scene_graph) override;
 

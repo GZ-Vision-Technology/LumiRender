@@ -73,7 +73,7 @@ namespace luminous {
                       _program_group_table(other._program_group_table) {}
 
             ShaderWrapper(OptixModule optix_module, OptixDeviceContext optix_device_context,
-                          const Scene *scene, const std::shared_ptr<Device> &device,
+                          const Scene *scene, Device *device,
                           const ProgramName &program_name);
 
             NDSC const OptixShaderBindingTable *sbt_ptr() const { return &_sbt; }
@@ -97,7 +97,7 @@ namespace luminous {
                                                     OptixDeviceContext optix_device_context,
                                                     const ProgramName &program_name);
 
-            void build_sbt(const Scene *scene, const std::shared_ptr<Device> &device);
+            void build_sbt(const Scene *scene, Device *device);
         };
     }
 }

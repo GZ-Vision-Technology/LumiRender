@@ -10,15 +10,15 @@ namespace luminous {
     inline namespace gpu {
 
         ShaderWrapper::ShaderWrapper(OptixModule optix_module, OptixDeviceContext optix_device_context,
-                                     const Scene *scene, const std::shared_ptr<Device>& device,
+                                     const Scene *scene, Device *device,
                                      const ProgramName &program_name) {
             _program_group_table = create_program_groups(optix_module, optix_device_context, program_name);
             build_sbt(scene, device);
         }
 
         ProgramGroupTable ShaderWrapper::create_program_groups(OptixModule optix_module,
-                                                  OptixDeviceContext optix_device_context,
-                                                  const ProgramName &program_name) {
+                                                               OptixDeviceContext optix_device_context,
+                                                               const ProgramName &program_name) {
             OptixProgramGroupOptions program_group_options = {};
             char log[2048];
             size_t sizeof_log = sizeof(log);
@@ -36,7 +36,7 @@ namespace luminous {
                         log,
                         &sizeof_log,
                         &(program_group_table.raygen_group)
-                        ), log);
+                ), log);
             }
 
             {
@@ -53,7 +53,7 @@ namespace luminous {
                         log,
                         &sizeof_log,
                         &(program_group_table.miss_closest_group)
-                        ), log);
+                ), log);
 
                 memset(&miss_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
@@ -69,7 +69,7 @@ namespace luminous {
                         log,
                         &sizeof_log,
                         &(program_group_table.miss_any_group)
-                        ), log);
+                ), log);
             }
 
             {
@@ -87,7 +87,7 @@ namespace luminous {
                         log,
                         &sizeof_log,
                         &(program_group_table.hit_closest_group)
-                        ), log);
+                ), log);
 
                 memset(&hit_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
                 hit_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
@@ -103,12 +103,12 @@ namespace luminous {
                         log,
                         &sizeof_log,
                         &(program_group_table.hit_any_group)
-                        ), log);
+                ), log);
             }
             return program_group_table;
         }
 
-        void ShaderWrapper::build_sbt(const Scene *gpu_scene, const std::shared_ptr<Device>& device) {
+        void ShaderWrapper::build_sbt(const Scene *gpu_scene, Device *device) {
 
             _device_ptr_table.rg_record = device->allocate_buffer<RayGenRecord>(1);
             RayGenRecord rg_sbt = {};

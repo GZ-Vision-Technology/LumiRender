@@ -27,7 +27,7 @@ namespace luminous {
             }
         }
 
-        void DistributionMgr::init_on_device(const SP<Device> &device) {
+        void DistributionMgr::init_on_device(Device *device) {
             if (_handles.empty()) {
                 return;
             }

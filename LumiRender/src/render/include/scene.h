@@ -21,7 +21,9 @@ namespace luminous {
 
     inline namespace gpu {
         class MegakernelOptixAccel;
+
         class OptixAccel;
+
         class ShaderWrapper;
     }
 
@@ -37,7 +39,7 @@ namespace luminous {
          */
         class Scene : public Noncopyable {
         protected:
-            SP<Device> _device;
+            Device *_device;
             Context *_context{nullptr};
             size_t _inst_vertices_num{0};
             size_t _inst_triangle_num{0};
@@ -80,7 +82,7 @@ namespace luminous {
             UP<Accelerator> _accelerator;
 
         public:
-            Scene(const SP<Device> &device, Context *context)
+            Scene(Device *device, Context *context)
                     : _device(device), _context(context) {}
 
             void shrink_to_fit();
@@ -99,7 +101,7 @@ namespace luminous {
 
             template<typename TAccel>
             NDSC decltype(auto) accel() {
-                return reinterpret_cast<TAccel*>(_accelerator.get());
+                return reinterpret_cast<TAccel *>(_accelerator.get());
             }
 
             void init_materials(const SP<SceneGraph> &scene_graph);

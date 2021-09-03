@@ -7,7 +7,7 @@
 namespace luminous {
     inline namespace gpu {
 
-        WavefrontPT::WavefrontPT(const SP<Device> &device, Context *context)
+        WavefrontPT::WavefrontPT(Device *device, Context *context)
                 : Integrator(device, context) {
 
         }

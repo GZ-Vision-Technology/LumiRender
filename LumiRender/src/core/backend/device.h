@@ -25,7 +25,7 @@ namespace luminous {
             virtual DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) = 0;
 
             NDSC virtual std::shared_ptr<Scene>
-            create_scene(const std::shared_ptr<Device> &device, Context *context) = 0;
+            create_scene(Device *device, Context *context) = 0;
 
             virtual Dispatcher new_dispatcher() = 0;
 
@@ -38,7 +38,7 @@ namespace luminous {
         }
 
         NDSC std::shared_ptr<Scene> create_scene(Context *context) {
-            return _impl->create_scene(shared_from_this(), context);
+            return _impl->create_scene(this, context);
         }
 
         template<typename T = std::byte>

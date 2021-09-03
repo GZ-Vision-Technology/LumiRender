@@ -45,7 +45,7 @@ namespace luminous {
         public:
             WorkQueue() = default;
 
-            WorkQueue(int n, std::shared_ptr<Device> &device)
+            WorkQueue(int n, Device *device)
                     : SOA<WorkItem>(n, device) {}
 
             WorkQueue &operator=(const WorkQueue &other) {

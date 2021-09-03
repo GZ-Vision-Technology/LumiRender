@@ -11,7 +11,7 @@ using std::endl;
 namespace luminous {
     inline namespace cpu {
 
-        CPUScene::CPUScene(const SP<Device> &device, Context *context)
+        CPUScene::CPUScene(Device *device, Context *context)
                 : Scene(device, context) {}
 
         void CPUScene::init(const SP<SceneGraph> &scene_graph) {

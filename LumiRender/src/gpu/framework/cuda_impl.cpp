@@ -246,7 +246,7 @@ namespace luminous {
             CU_CHECK(cuCtxDestroy(_cu_context));
         }
 
-        std::shared_ptr<Scene> CUDADevice::create_scene(const std::shared_ptr<Device> &device,Context *context) {
+        std::shared_ptr<Scene> CUDADevice::create_scene(Device *device,Context *context) {
             return std::make_shared<GPUScene>(device, context);
         }
 
