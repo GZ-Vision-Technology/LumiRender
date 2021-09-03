@@ -27,10 +27,6 @@ namespace luminous {
             NDSC uint64_t scene_handle() const { return (uint64_t)rtc_scene(); }
 
             void fill_scene_data() override;
-
-//            void init_accel() override;
-//
-//            void build_accel();
         };
     } // luminous::cpu
 } // luminous

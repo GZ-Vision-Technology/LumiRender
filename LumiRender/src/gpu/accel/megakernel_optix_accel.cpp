@@ -17,8 +17,7 @@ namespace luminous {
                                  "__miss__closest",
                                  "__miss__any"};
 
-        MegakernelOptixAccel::MegakernelOptixAccel(Device *device, const Scene *scene,
-                                                   Context *context)
+        MegakernelOptixAccel::MegakernelOptixAccel(Device *device, Context *context, const Scene *scene)
                 : OptixAccel(device, context, scene),
                 _shader_wrapper((create_shader_wrapper(megakernel_pt, program_name))) {
             build_pipeline(_shader_wrapper.program_groups());

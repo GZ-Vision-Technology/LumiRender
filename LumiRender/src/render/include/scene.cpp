@@ -248,6 +248,7 @@ namespace luminous {
                 _tex_configs.clear();
                 _scene_box = Box3f();
             }
+            _accelerator->clear();
         }
 
         void Scene::shrink_to_fit() {

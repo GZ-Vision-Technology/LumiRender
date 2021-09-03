@@ -14,15 +14,11 @@ namespace luminous {
     inline namespace gpu {
 
         class GPUScene : public Scene {
-        private:
-            UP<MegakernelOptixAccel> _optix_accel;
 
         public:
             GPUScene(Device *device, Context *context);
 
             void init(const SP<SceneGraph> &scene_graph) override;
-
-            void init_accel() override;
 
             NDSC size_t size_in_bytes() const override;
 
@@ -31,11 +27,6 @@ namespace luminous {
             void synchronize_to_gpu();
 
             void fill_scene_data() override;
-
-            template<typename... Args>
-            void launch(Args &&...args) {
-                _optix_accel->launch(std::forward<Args>(args)...);
-            }
 
             void clear() override;
 

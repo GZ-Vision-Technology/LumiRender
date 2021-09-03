@@ -92,11 +92,6 @@ namespace luminous {
             }
         }
 
-        void GPUScene::init_accel() {
-            _optix_accel = std::make_unique<MegakernelOptixAccel>(_device, this, _context);
-            build_accel();
-        }
-
         void GPUScene::init(const SP<SceneGraph> &scene_graph) {
             convert_geometry_data(scene_graph);
             preload_textures(scene_graph);
@@ -104,24 +99,13 @@ namespace luminous {
             create_device_memory();
             synchronize_to_gpu();
             fill_scene_data();
-            init_accel();
             shrink_to_fit();
         }
 
-        void GPUScene::build_accel() {
-            _optix_accel->build_bvh(_positions,
-                                    _triangles,
-                                    _meshes,
-                                    _inst_to_mesh_idx,
-                                    _transforms,
-                                    _inst_to_transform_idx);
-            cout << _optix_accel->description() << endl;
-            cout << description() << endl;
-        }
+
 
         void GPUScene::clear() {
             Scene::clear();
-            _optix_accel->clear();
         }
 
         size_t GPUScene::size_in_bytes() const {

@@ -24,13 +24,14 @@ namespace luminous {
 
         void MegakernelPT::init(const std::shared_ptr<SceneGraph> &scene_graph) {
             Integrator::init(scene_graph);
+            _scene->init_accel<MegakernelOptixAccel>();
             init_on_device();
             init_launch_params();
         }
 
         void MegakernelPT::render() {
             auto res = _camera->resolution();
-            scene<GPUScene>()->launch(res, _launch_params);
+            _scene->accel<MegakernelOptixAccel>()->launch(res, _launch_params);
             _launch_params->frame_index += 1;
         }
 

@@ -19,7 +19,6 @@ namespace luminous {
             preload_textures(scene_graph);
             init_lights(scene_graph);
             create_device_memory();
-            init_accel();
             fill_scene_data();
         }
 
@@ -27,17 +26,6 @@ namespace luminous {
             _light_sampler->set_lights(_lights.const_host_buffer_view());
             _distribution_mgr.init_on_host();
         }
-
-//        void CPUScene::init_accel() {
-//            _embree_accel = std::make_unique<EmbreeAccel>(_device, _context, this);
-//            build_accel();
-//        }
-//
-//        void CPUScene::build_accel() {
-//            _embree_accel->build_bvh(_positions, _triangles, _meshes, _inst_to_mesh_idx,
-//                                     _transforms, _inst_to_transform_idx);
-//
-//        }
 
         void CPUScene::fill_scene_data() {
             _scene_data->positions = this->_positions.const_host_buffer_view();
