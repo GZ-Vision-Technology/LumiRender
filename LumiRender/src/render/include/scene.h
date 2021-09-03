@@ -36,9 +36,6 @@ namespace luminous {
          * all memory data manage
          */
         class Scene : public Noncopyable {
-            friend class gpu::MegakernelOptixAccel;
-            friend class gpu::OptixAccel;
-            friend class gpu::ShaderWrapper;
         protected:
             SP<Device> _device;
             Context *_context{nullptr};
