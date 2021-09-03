@@ -16,12 +16,12 @@ namespace luminous {
     inline namespace gpu {
         class WavefrontPT : public Integrator {
         private:
-            RayQueue _ray_queues[2];
-            ShadowRayQueue _shadow_ray_queue{};
-            HitAreaLightQueue _hit_area_light_queue{};
-            EscapedRayQueue _escaped_ray_queue{};
-            MaterialEvalQueue _material_eval_queue{};
-            SOA<PixelSampleState> _pixel_sample_state{};
+            Managed<RayQueue, RayQueue> _ray_queues;
+            Managed<ShadowRayQueue, ShadowRayQueue> _shadow_ray_queue;
+            Managed<HitAreaLightQueue, HitAreaLightQueue> _hit_area_light_queue;
+            Managed<EscapedRayQueue, EscapedRayQueue> _escaped_ray_queue;
+            Managed<MaterialEvalQueue, MaterialEvalQueue> _material_eval_queue;
+            Managed<SOA<PixelSampleState>, SOA<PixelSampleState>> _pixel_sample_state;
             uint _scanline_per_pass{};
             uint _max_queue_size{};
             uint _frame_index{};

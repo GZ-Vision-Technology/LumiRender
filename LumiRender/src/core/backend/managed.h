@@ -10,7 +10,7 @@
 #include "core/concepts.h"
 
 namespace luminous {
-    template<typename T, typename U = const std::remove_const_t<T>>
+    template<typename T, typename U = const T>
     struct Managed : public Noncopyable, public std::vector<T> {
     public:
         using BaseClass = std::vector<T>;
