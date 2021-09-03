@@ -28,17 +28,16 @@ namespace luminous {
             _distribution_mgr.init_on_host();
         }
 
-        void CPUScene::init_accel() {
-            EmbreeAccel::init_device();
-            _embree_accel = std::make_unique<EmbreeAccel>(this);
-            build_accel();
-        }
-
-        void CPUScene::build_accel() {
-            _embree_accel->build_bvh(_positions, _triangles, _meshes, _inst_to_mesh_idx,
-                                     _transforms, _inst_to_transform_idx);
-
-        }
+//        void CPUScene::init_accel() {
+//            _embree_accel = std::make_unique<EmbreeAccel>(_device, _context, this);
+//            build_accel();
+//        }
+//
+//        void CPUScene::build_accel() {
+//            _embree_accel->build_bvh(_positions, _triangles, _meshes, _inst_to_mesh_idx,
+//                                     _transforms, _inst_to_transform_idx);
+//
+//        }
 
         void CPUScene::fill_scene_data() {
             _scene_data->positions = this->_positions.const_host_buffer_view();

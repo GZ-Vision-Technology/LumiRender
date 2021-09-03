@@ -100,7 +100,7 @@ namespace luminous {
             NDSC uint64_t as_handle() const { return _accelerator->handle(); }
 
             template<typename TAccel>
-            NDSC decltype(auto) accel() {
+            NDSC decltype(auto) accel() const {
                 return reinterpret_cast<TAccel *>(_accelerator.get());
             }
 
@@ -110,8 +110,15 @@ namespace luminous {
 
             virtual void create_device_memory() = 0;
 
-            // todo add geometry accelerate structure
-            virtual void init_accel() = 0;
+            virtual void init_accel() {};
+
+            template<typename TAccel>
+            void init_accel() {
+                // todo add geometry accelerate structure
+                _accelerator = std::make_unique<TAccel>(_device, _context, this);
+                _accelerator->build_bvh(_positions, _triangles, _meshes, _inst_to_mesh_idx,
+                                        _transforms, _inst_to_transform_idx);
+            }
 
             void append_light_material(vector<MaterialConfig> &material_configs);
 

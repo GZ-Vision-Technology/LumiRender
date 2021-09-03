@@ -20,6 +20,7 @@ namespace luminous {
 
         void CPUPathTracer::init(const SP<SceneGraph> &scene_graph) {
             Integrator::init(scene_graph);
+            _scene->init_accel<EmbreeAccel>();
         }
 
         void CPUPathTracer::update() {

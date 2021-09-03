@@ -13,7 +13,8 @@ namespace luminous {
             _rtc_device = rtcNewDevice(nullptr);
         }
 
-        EmbreeAccel::EmbreeAccel(const Scene *scene): Accelerator(scene) {
+        EmbreeAccel::EmbreeAccel(Device *device, Context *context, const Scene *scene)
+                : Accelerator(scene) {
             init_device();
             _rtc_scene = rtcNewScene(_rtc_device);
             rtcSetSceneBuildQuality(_rtc_scene, RTC_BUILD_QUALITY_HIGH);
@@ -45,7 +46,7 @@ namespace luminous {
                 RTCScene mesh_scene = mesh_scenes[mesh_idx];
                 RTCGeometry instance = rtcNewGeometry(rtc_device(), RTC_GEOMETRY_TYPE_INSTANCE);
                 rtcSetGeometryInstancedScene(instance, mesh_scene);
-                rtcSetGeometryTimeStepCount(instance,1);
+                rtcSetGeometryTimeStepCount(instance, 1);
                 uint transform_idx = inst_to_transform[i];
                 const Transform &transform = transform_list[transform_idx];
                 rtcAttachGeometry(_rtc_scene, instance);
@@ -57,8 +58,8 @@ namespace luminous {
         }
 
         RTCScene EmbreeAccel::build_mesh(const Managed<float3> &positions,
-                                            const Managed<TriangleHandle> &triangles,
-                                            const MeshHandle &mesh) {
+                                         const Managed<TriangleHandle> &triangles,
+                                         const MeshHandle &mesh) {
             RTCScene scene = rtcNewScene(rtc_device());
             RTCGeometry rtc_geometry = rtcNewGeometry(rtc_device(), RTC_GEOMETRY_TYPE_TRIANGLE);
             auto pos = positions.const_host_buffer_view(mesh.vertex_offset, mesh.vertex_count);
