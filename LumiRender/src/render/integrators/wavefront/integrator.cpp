@@ -25,7 +25,8 @@ namespace luminous {
         }
 
         void WavefrontPT::allocate_memory() {
-
+            _ray_queues.emplace_back(_max_queue_size, _device);
+            _ray_queues.emplace_back(_max_queue_size, _device);
         }
 
         void WavefrontPT::render() {

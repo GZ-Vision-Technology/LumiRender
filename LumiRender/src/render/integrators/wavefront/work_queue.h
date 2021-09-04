@@ -8,24 +8,25 @@
 #include "work_items.h"
 
 #ifdef __CUDACC__
-    #ifdef LUMINOUS_IS_WINDOWS
-        #if (__CUDA_ARCH__ < 700)
-            #define LUMINOUS_USE_LEGACY_CUDA_ATOMICS
-        #endif
-    #else
-        #if (__CUDA_ARCH__ < 600)
-            #define LUMINOUS_USE_LEGACY_CUDA_ATOMICS
-        #endif
-    #endif  // LUMINOUS_USE_LEGACY_CUDA_ATOMICS
-
-    #ifndef LUMINOUS_USE_LEGACY_CUDA_ATOMICS
-        #include <cuda/atomic>
-    #endif
-#else
-    #include <atomic>
-    #include <utility>
+#ifdef LUMINOUS_IS_WINDOWS
+#if (__CUDA_ARCH__ < 700)
+#define LUMINOUS_USE_LEGACY_CUDA_ATOMICS
 #endif
+#else
+#if (__CUDA_ARCH__ < 600)
+#define LUMINOUS_USE_LEGACY_CUDA_ATOMICS
+#endif
+#endif  // LUMINOUS_USE_LEGACY_CUDA_ATOMICS
 
+#ifndef LUMINOUS_USE_LEGACY_CUDA_ATOMICS
+#include <cuda/atomic>
+#endif
+#else
+
+#include <atomic>
+#include <utility>
+
+#endif
 
 
 namespace luminous {
@@ -34,11 +35,11 @@ namespace luminous {
         class WorkQueue : public SOA<WorkItem> {
         private:
 #ifdef __CUDACC__
-    #ifdef LUMINOUS_USE_LEGACY_CUDA_ATOMICS
+#ifdef LUMINOUS_USE_LEGACY_CUDA_ATOMICS
             int _size = 0;
-    #else
+#else
             cuda::atomic<int, cuda::thread_scope_device> _size{0};
-    #endif
+#endif
 #else
             std::atomic<int> _size{0};
 #endif
@@ -47,6 +48,15 @@ namespace luminous {
 
             WorkQueue(int n, Device *device)
                     : SOA<WorkItem>(n, device) {}
+
+            WorkQueue(const WorkQueue &other)
+                    : SOA<WorkItem>(other) {
+#if defined(__CUDACC__) && defined(LUMINOUS_USE_LEGACY_CUDA_ATOMICS)
+                size = w.size;
+#else
+                _size.store(other._size.load());
+#endif
+            }
 
             WorkQueue &operator=(const WorkQueue &other) {
                 SOA<WorkItem>::operator=(other);

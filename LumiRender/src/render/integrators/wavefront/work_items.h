@@ -123,6 +123,12 @@ namespace luminous {
 
         class RayQueue : public WorkQueue<RayWorkItem> {
         public:
+            RayQueue(int n, Device *device)
+                    : WorkQueue<RayWorkItem>(n, device) {}
+
+            RayQueue(const RayQueue &other)
+                    : WorkQueue<RayWorkItem>(other) {}
+
             NDSC_XPU_INLINE int push_primary_ray(const Ray &ray, int pixel_index) {
                 int index = allocate_entry();
                 this->ray[index] = ray;

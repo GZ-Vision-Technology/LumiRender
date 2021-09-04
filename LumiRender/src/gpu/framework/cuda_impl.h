@@ -100,6 +100,11 @@ namespace luminous {
             void launch(Dispatcher &dispatcher, int n_items,
                         std::vector<void *> &args) override;
 
+            template<typename... Args>
+            void launch(Dispatcher &dispatcher, int n_item, Args&... args) {
+                
+            }
+
             void launch(Dispatcher &dispatcher, std::vector<void *> &args) override;
         };
 
