@@ -45,8 +45,9 @@ void test_driver_api() {
     auto pb = buffer_b.ptr();
     auto pc = buffer_c.ptr();
     vector<void *> args{&pc, &pa, &pb};
-//    kernel->launch(dispatcher, 5,{&pc, &pa, &pb});
-    kernel->launch(dispatcher,args);
+    int nitem = 5;
+//    kernel->launch(dispatcher, nitem,pc, pa, pb);
+    kernel->launch(dispatcher, pc, pa, pb);
 
     dispatcher.wait();
 
@@ -73,7 +74,7 @@ void test_kernel_sampler() {
     buffer.upload(&sampler);
     auto ps = buffer.ptr();
 
-    kernel->launch(dispatcher, {&ps});
+    kernel->launch(dispatcher, ps);
 }
 
 void test_managed() {

@@ -98,14 +98,9 @@ namespace luminous {
             void configure(uint3 grid_size, uint3 local_size, size_t sm) override;
 
             void launch(Dispatcher &dispatcher, int n_items,
-                        std::vector<void *> &args) override;
+                        void *args[]) override;
 
-            template<typename... Args>
-            void launch(Dispatcher &dispatcher, int n_item, Args&... args) {
-                
-            }
-
-            void launch(Dispatcher &dispatcher, std::vector<void *> &args) override;
+            void launch(Dispatcher &dispatcher, void *args[]) override;
         };
 
         inline std::shared_ptr<Kernel> create_cuda_kernel(CUfunction func) {
@@ -124,7 +119,7 @@ namespace luminous {
 
             DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
 
-            std::shared_ptr<Scene> create_scene(Device *device,Context *context) override;
+            std::shared_ptr<Scene> create_scene(Device *device, Context *context) override;
 
             Dispatcher new_dispatcher() override;
 

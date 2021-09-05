@@ -19,10 +19,10 @@ namespace luminous {
                                    size_t sm) = 0;
 
             virtual void launch(Dispatcher &dispatcher,
-                                std::vector<void *> &args) = 0;
+                                void *args[]) = 0;
 
             virtual void launch(Dispatcher &dispatcher, int n_items,
-                                std::vector<void *> &args) = 0;
+                                void *args[]) = 0;
 
             virtual ~Impl() = default;
         };
@@ -34,14 +34,16 @@ namespace luminous {
             return *this;
         }
 
-        void launch(Dispatcher &dispatcher,
-                    std::vector<void *> args) {
-            _impl->launch(dispatcher, args);
+        template<typename... Args>
+        void launch(Dispatcher &dispatcher, int n_items, Args &...args) {
+            void *array[]{(&args)...};
+            _impl->launch(dispatcher, n_items, array);
         }
 
-        void launch(Dispatcher &dispatcher, int n_items,
-                    std::vector<void *> &args) {
-            _impl->launch(dispatcher, n_items, args);
+        template<typename... Args>
+        void launch(Dispatcher &dispatcher, Args &...args) {
+            void *array[]{(&args)...};
+            _impl->launch(dispatcher, array);
         }
 
         explicit Kernel(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}

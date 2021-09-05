@@ -46,7 +46,7 @@ void test_tex_load() {
         float u = 0.499;
         float v = 0;
         kernel->configure(make_uint3(1), make_uint3(1));
-        kernel->launch(dispatcher, {&handle, &u, &v});
+        kernel->launch(dispatcher, handle, u, v);
         dispatcher.wait();
     }
 }

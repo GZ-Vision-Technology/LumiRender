@@ -208,19 +208,19 @@ namespace luminous {
             _block_size = local_size;
         }
 
-        void CUDAKernel::launch(Dispatcher &dispatcher, int n_items, std::vector<void *> &args) {
+        void CUDAKernel::launch(Dispatcher &dispatcher, int n_items, void *args[]) {
             auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
             int grid_size = (n_items + _auto_block_size - 1) / _auto_block_size;
             CU_CHECK(cuLaunchKernel(_func, grid_size, 1, 1,
                                     _auto_block_size, 1, 1,
-                                    _shared_mem, stream, args.data(), nullptr));
+                                    _shared_mem, stream, args, nullptr));
         }
 
-        void CUDAKernel::launch(Dispatcher &dispatcher, std::vector<void *> &args) {
+        void CUDAKernel::launch(Dispatcher &dispatcher, void * args[]) {
             auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
             CU_CHECK(cuLaunchKernel(_func, _grid_size.x, _grid_size.y, _grid_size.z,
                                     _block_size.x, _block_size.y, _block_size.z,
-                                    _shared_mem, stream, args.data(), nullptr));
+                                    _shared_mem, stream, args, nullptr));
         }
 
         CUDADevice::CUDADevice() {
