@@ -6,6 +6,7 @@
 #pragma once
 
 #include "core/backend/device.h"
+#include "core/backend/kernel.h"
 
 namespace luminous {
     inline namespace cpu {
@@ -53,6 +54,17 @@ namespace luminous {
             void copy_from(const Image &image) override;
 
             ~CPUTexture() override;
+        };
+
+        class CPUKernel : public Kernel::Impl {
+        private:
+            std::function<void(void *[], uint)> _func;
+        public:
+            void configure(uint3 grid_size, uint3 local_size,size_t sm) override {}
+
+            void launch(Dispatcher &dispatcher, void *args[]) override;
+
+            void launch(Dispatcher &dispatcher, int n_items, void *args[]) override;
         };
 
         class CPUDispatcher : public Dispatcher::Impl {

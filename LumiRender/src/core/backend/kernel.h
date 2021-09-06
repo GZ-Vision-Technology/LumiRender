@@ -35,7 +35,7 @@ namespace luminous {
         }
 
         template<typename... Args>
-        void launch(Dispatcher &dispatcher, int n_items, Args &...args) {
+        void launch(int n_items, Dispatcher &dispatcher, Args &...args) {
             void *array[]{(&args)...};
             _impl->launch(dispatcher, n_items, array);
         }

@@ -4,6 +4,7 @@
 
 #include "cpu_impl.h"
 #include "cpu_scene.h"
+#include "util/parallel.h"
 
 namespace luminous {
     inline namespace cpu {
@@ -64,7 +65,20 @@ namespace luminous {
             return Dispatcher(std::make_unique<CPUDispatcher>());
         }
 
-        std::shared_ptr<Scene> CPUDevice::create_scene(Device *device,Context *context) {
+
+        void CPUKernel::launch(Dispatcher &dispatcher, void **args) {
+            parallel_for(1, [&](uint idx, uint tid) {
+                _func(args, idx);
+            });
+        }
+
+        void CPUKernel::launch(Dispatcher &dispatcher, int n_items, void **args) {
+            parallel_for(n_items, [&](uint idx, uint tid) {
+                _func(args, idx);
+            });
+        }
+
+        std::shared_ptr<Scene> CPUDevice::create_scene(Device *device, Context *context) {
             return std::make_shared<CPUScene>(device, context);
         }
 
