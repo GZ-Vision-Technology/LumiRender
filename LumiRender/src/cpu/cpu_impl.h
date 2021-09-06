@@ -8,7 +8,13 @@
 #include "core/backend/device.h"
 #include "core/backend/kernel.h"
 
+
 namespace luminous {
+
+    inline namespace utility {
+        class ParallelForWorkPool;
+    }
+
     inline namespace cpu {
 
         class CPUBuffer : public RawBuffer::Impl {
@@ -60,14 +66,22 @@ namespace luminous {
         private:
             std::function<void(void *[], uint)> _func;
         public:
-            void configure(uint3 grid_size, uint3 local_size,size_t sm) override {}
+            explicit CPUKernel(const std::function<void(void *[], uint)> &func);
+
+            void configure(uint3 grid_size, uint3 local_size, size_t sm) override {}
 
             void launch(Dispatcher &dispatcher, void *args[]) override;
 
             void launch(Dispatcher &dispatcher, int n_items, void *args[]) override;
         };
 
+        inline std::shared_ptr<Kernel> create_cpu_kernel(const std::function<void(void *[], uint)> &func) {
+            return std::make_shared<Kernel>(std::make_unique<CPUKernel>(func));
+        }
+
         class CPUDispatcher : public Dispatcher::Impl {
+        private:
+            ParallelForWorkPool *_work_pool{};
         public:
             CPUDispatcher();
 

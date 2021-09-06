@@ -65,15 +65,17 @@ namespace luminous {
             return Dispatcher(std::make_unique<CPUDispatcher>());
         }
 
+        CPUKernel::CPUKernel(const std::function<void(void *[], uint)> &func)
+                : _func(func) {}
 
         void CPUKernel::launch(Dispatcher &dispatcher, void **args) {
-            parallel_for(1, [&](uint idx, uint tid) {
+            async(1, [&](uint idx, uint tid) {
                 _func(args, idx);
             });
         }
 
         void CPUKernel::launch(Dispatcher &dispatcher, int n_items, void **args) {
-            parallel_for(n_items, [&](uint idx, uint tid) {
+            async(n_items, [&](uint idx, uint tid) {
                 _func(args, idx);
             });
         }
@@ -111,15 +113,16 @@ namespace luminous {
         }
 
         CPUDispatcher::CPUDispatcher() {
-
+            init_thread_pool();
+            _work_pool = work_pool();
         }
 
         void CPUDispatcher::wait() {
-
+            _work_pool->wait();
         }
 
         void CPUDispatcher::then(std::function<void(void)> F) {
-
+            // todo
         }
 
         CPUDispatcher::~CPUDispatcher() {

@@ -19,6 +19,7 @@ luminous_render_add_application(test-distribution2d SOURCES distribution2d_test.
 luminous_render_add_application(test-variant SOURCES test_variant.cpp)
 luminous_render_add_application(test-embree SOURCES test_embree.cpp)
 luminous_render_add_application(test-soa SOURCES test_soa.cpp)
+luminous_render_add_application(test-parallel SOURCES test_parallel.cpp)
 
 
 #set(CMAKE_CUDA_STANDARD 17)
