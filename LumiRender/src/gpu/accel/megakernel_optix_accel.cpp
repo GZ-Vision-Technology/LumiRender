@@ -28,7 +28,7 @@ namespace luminous {
             auto x = res.x;
             auto y = res.y;
             launch_params->traversable_handle = _root_as_handle;
-            launch_params.synchronize_to_gpu();
+            launch_params.synchronize_to_device();
             OPTIX_CHECK(optixLaunch(_optix_pipeline,
                                     stream,
                                     launch_params.device_ptr<CUdeviceptr>(),

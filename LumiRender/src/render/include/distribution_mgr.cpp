@@ -34,9 +34,9 @@ namespace luminous {
             distribution2ds.clear();
             distributions.clear();
             _func_buffer.allocate_device(device);
-            _func_buffer.synchronize_to_gpu();
+            _func_buffer.synchronize_to_device();
             _CDF_buffer.allocate_device(device);
-            _CDF_buffer.synchronize_to_gpu();
+            _CDF_buffer.synchronize_to_device();
 
             for (const auto &handle : _handles) {
                 BufferView<const float> func = _func_buffer.device_buffer_view(handle.func_offset, handle.func_size);
@@ -94,12 +94,12 @@ namespace luminous {
             return ret;
         }
 
-        void DistributionMgr::synchronize_to_gpu() {
+        void DistributionMgr::synchronize_to_device() {
             if (_handles.empty()) {
                 return;
             }
-            distribution2ds.synchronize_to_gpu();
-            distributions.synchronize_to_gpu();
+            distribution2ds.synchronize_to_device();
+            distributions.synchronize_to_device();
         }
 
     }

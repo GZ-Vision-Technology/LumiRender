@@ -27,6 +27,20 @@ namespace luminous {
         void WavefrontPT::allocate_memory() {
             _ray_queues.emplace_back(_max_queue_size, _device);
             _ray_queues.emplace_back(_max_queue_size, _device);
+            _ray_queues.allocate_device(_device);
+            _ray_queues.synchronize_to_device();
+
+#define ALLOCATE_AND_SYNCHRONIZE(args)         \
+(args).emplace_back(_max_queue_size, _device); \
+(args).allocate_device(_device);               \
+(args).synchronize_to_device();
+            ALLOCATE_AND_SYNCHRONIZE(_shadow_ray_queue)
+            ALLOCATE_AND_SYNCHRONIZE(_hit_area_light_queue)
+            ALLOCATE_AND_SYNCHRONIZE(_escaped_ray_queue)
+            ALLOCATE_AND_SYNCHRONIZE(_material_eval_queue)
+            ALLOCATE_AND_SYNCHRONIZE(_pixel_sample_state)
+#undef ALLOCATE_AND_SYNCHRONIZE
+
         }
 
         void WavefrontPT::render() {

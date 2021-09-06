@@ -30,17 +30,17 @@ namespace luminous {
             camera()->film()->set_accumulate_buffer_view(_accumulate_buffer.device_buffer_view());
 
             _frame_buffer.reset(_device.get(), num);
-            _frame_buffer.synchronize_to_gpu();
+            _frame_buffer.synchronize_to_device();
             camera()->film()->set_frame_buffer_view(_frame_buffer.device_buffer_view());
         }
 
         FrameBufferType *CUDATask::get_frame_buffer() {
-            _frame_buffer.synchronize_to_cpu();
+            _frame_buffer.synchronize_to_host();
             return _frame_buffer.data();
         }
 
         float4 *CUDATask::get_accumulate_buffer() {
-            _accumulate_buffer.synchronize_to_cpu();
+            _accumulate_buffer.synchronize_to_host();
             return _accumulate_buffer.data();
         }
     }

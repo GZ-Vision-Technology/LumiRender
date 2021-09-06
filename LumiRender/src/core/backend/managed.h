@@ -122,14 +122,14 @@ namespace luminous {
             return BaseClass::data();
         }
 
-        void synchronize_to_gpu() {
+        void synchronize_to_device() {
             if (BaseClass::size() == 0) {
                 return;
             }
             _device_buffer.upload(BaseClass::data());
         }
 
-        void synchronize_to_cpu() {
+        void synchronize_to_host() {
             if (BaseClass::size() == 0) {
                 BaseClass::resize(_device_buffer.size());
             }

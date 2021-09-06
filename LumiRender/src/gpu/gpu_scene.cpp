@@ -65,30 +65,30 @@ namespace luminous {
         void GPUScene::synchronize_to_gpu() {
             {
                 // instance data
-                _inst_to_mesh_idx.synchronize_to_gpu();
-                _inst_to_transform_idx.synchronize_to_gpu();
-                _transforms.synchronize_to_gpu();
+                _inst_to_mesh_idx.synchronize_to_device();
+                _inst_to_transform_idx.synchronize_to_device();
+                _transforms.synchronize_to_device();
             }
             {
                 // mesh data
-                _meshes.synchronize_to_gpu();
-                _positions.synchronize_to_gpu();
-                _tex_coords.synchronize_to_gpu();
-                _triangles.synchronize_to_gpu();
-                _normals.synchronize_to_gpu();
+                _meshes.synchronize_to_device();
+                _positions.synchronize_to_device();
+                _tex_coords.synchronize_to_device();
+                _triangles.synchronize_to_device();
+                _normals.synchronize_to_device();
             }
             {
                 // light data
-                _lights.synchronize_to_gpu();
-                _distribution_mgr.synchronize_to_gpu();
+                _lights.synchronize_to_device();
+                _distribution_mgr.synchronize_to_device();
                 _light_sampler->set_lights(_lights.device_buffer_view());
                 _light_sampler->set_infinite_lights(_lights.device_buffer_view(0,_infinite_light_num));
-                _light_sampler.synchronize_to_gpu();
+                _light_sampler.synchronize_to_device();
             }
             {
                 // texture data
-                _textures.synchronize_to_gpu();
-                _materials.synchronize_to_gpu();
+                _textures.synchronize_to_device();
+                _materials.synchronize_to_device();
             }
         }
 

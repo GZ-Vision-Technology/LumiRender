@@ -36,8 +36,8 @@ namespace luminous {
         }
 
         void MegakernelPT::synchronize_to_gpu() {
-            _camera.synchronize_to_gpu();
-            _sampler.synchronize_to_gpu();
+            _camera.synchronize_to_device();
+            _sampler.synchronize_to_device();
         }
 
         void MegakernelPT::update() {

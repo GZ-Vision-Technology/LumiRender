@@ -55,7 +55,7 @@ namespace luminous {
 
             void init_on_host();
 
-            void synchronize_to_gpu();
+            void synchronize_to_device();
 
             void init_on_device(Device *device);
 
