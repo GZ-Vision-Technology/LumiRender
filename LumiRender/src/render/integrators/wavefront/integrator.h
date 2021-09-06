@@ -16,6 +16,7 @@
 
 namespace luminous {
     inline namespace gpu {
+        using std::shared_ptr;
         class WavefrontPT : public Integrator {
         private:
             // queue
@@ -32,13 +33,17 @@ namespace luminous {
             uint _frame_index{};
 
             // kernels
-            std::shared_ptr<Kernel> _raygen_kernel;
-
+            shared_ptr<Kernel> _generate_ray{};
+            shared_ptr<Kernel> _queues_reset{};
+            shared_ptr<Kernel> _generate_ray_samples{};
+            shared_ptr<Kernel> _process_escape_ray{};
+            shared_ptr<Kernel> _process_emission{};
+            shared_ptr<Kernel> _eval_BSDFs{};
         public:
 
             WavefrontPT(Device *device, Context *context);
 
-            void init(const std::shared_ptr<SceneGraph> &scene_graph) override;
+            void init(const shared_ptr<SceneGraph> &scene_graph) override;
 
             void allocate_memory();
 
