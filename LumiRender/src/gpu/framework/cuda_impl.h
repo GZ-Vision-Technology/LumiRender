@@ -121,6 +121,8 @@ namespace luminous {
 
             std::shared_ptr<Scene> create_scene(Device *device, Context *context) override;
 
+            NDSC bool is_cpu() const override { return false; }
+
             Dispatcher new_dispatcher() override;
 
             ~CUDADevice() override;

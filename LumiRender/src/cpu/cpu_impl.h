@@ -98,6 +98,8 @@ namespace luminous {
 
             RawBuffer allocate_buffer(size_t bytes) override;
 
+            NDSC bool is_cpu() const override { return true; }
+
             DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
 
             std::shared_ptr<Scene> create_scene(Device *device, Context *context) override;

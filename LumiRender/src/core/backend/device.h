@@ -27,6 +27,8 @@ namespace luminous {
             NDSC virtual std::shared_ptr<Scene>
             create_scene(Device *device, Context *context) = 0;
 
+            NDSC virtual bool is_cpu() const = 0;
+
             virtual Dispatcher new_dispatcher() = 0;
 
             virtual ~Impl() = default;
@@ -65,6 +67,8 @@ namespace luminous {
         }
 
         Dispatcher new_dispatcher() { return _impl->new_dispatcher(); }
+
+        NDSC bool is_cpu() const { return _impl->is_cpu(); }
 
         explicit Device(std::unique_ptr<Impl> impl)
                 : _impl(std::move(impl)) {}

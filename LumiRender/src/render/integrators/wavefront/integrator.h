@@ -11,20 +11,29 @@
 #include "gpu/gpu_scene.h"
 #include "render/samplers/sampler.h"
 #include "work_items.h"
+#include "core/backend/device.h"
+#include "core/backend/kernel.h"
 
 namespace luminous {
     inline namespace gpu {
         class WavefrontPT : public Integrator {
         private:
+            // queue
             Managed<RayQueue, RayQueue> _ray_queues;
             Managed<ShadowRayQueue, ShadowRayQueue> _shadow_ray_queue;
             Managed<HitAreaLightQueue, HitAreaLightQueue> _hit_area_light_queue;
             Managed<EscapedRayQueue, EscapedRayQueue> _escaped_ray_queue;
             Managed<MaterialEvalQueue, MaterialEvalQueue> _material_eval_queue;
             Managed<SOA<PixelSampleState>, SOA<PixelSampleState>> _pixel_sample_state;
+
+            // base params
             uint _scanline_per_pass{};
             uint _max_queue_size{};
             uint _frame_index{};
+
+            // kernels
+            std::shared_ptr<Kernel> _raygen_kernel;
+
         public:
 
             WavefrontPT(Device *device, Context *context);
