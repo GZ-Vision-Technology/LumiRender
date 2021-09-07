@@ -1,58 +1,145 @@
-# -*- coding:utf-8 -*-
-
-# bl_info = {
-#     "name" : "io_scene_luminous",
-#     "author" : "Zero",
-#     "description" : "exporter for luminous",
-#     "blender" : (2, 80, 0),
-#     "location" : "",
-#     "warning" : "",
-# }
-
-
-# def register():
-#     pass
-
-# def unregister():
-#     pass
-
-
 bl_info = {
-    "name": "Move X Axis",
+    "name": "Blender Addon Example",
+    "author": "babyformula",
+    "version": (2021, 7, 30),
     "blender": (2, 80, 0),
-    "category": "Object",
-}
+    "location": "Viewport > Right panel",
+    "description": "Blender Addon Example",
+    "category": "Example"}
 
 import bpy
+from bpy_extras.io_utils import ImportHelper, ExportHelper
+from bpy.props import ( BoolProperty, EnumProperty, FloatProperty, PointerProperty, StringProperty )
+from bpy.types import ( PropertyGroup )
 
+import numpy as np
+import os
 
-class ObjectMoveX(bpy.types.Operator):
-    """My Object Moving Script"""      # Use this as a tooltip for menu items and buttons.
-    bl_idname = "object.move_x"        # Unique identifier for buttons and menu items to reference.
-    bl_label = "Move X by One"         # Display name in the interface.
-    bl_options = {'REGISTER', 'UNDO'}  # Enable undo for the operator.
+class exampleLoadPose(bpy.types.Operator, ImportHelper):
+    bl_idname = "object.example_load_pose"
+    bl_label = "Load Pose"
+    bl_description = ("Load pose from file")
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    filter_glob: StringProperty(
+        default="*.npz",
+        options={'HIDDEN'}
+    )
 
-    def execute(self, context):        # execute() is called when running the operator.
+    @classmethod
+    def poll(cls, context):
+        try:
+            # Enable button only if mesh or armature is active object
+            return (context.object.type == 'MESH') or (context.object.type == 'ARMATURE')
+        except: return False
 
-        # The original script
-        scene = context.scene
-        for obj in scene.objects:
-            obj.location.x += 1.0
+    def execute(self, context):
+        obj = bpy.context.object
 
-        return {'FINISHED'}            # Lets Blender know the operator finished successfully.
+        if obj.type == 'MESH':
+            armature = obj.parent
+        else:
+            armature = obj
+            obj = armature.children[0]
+            context.view_layer.objects.active = obj # mesh needs to be active object for recalculating joint locations
+        
+        print("Loading: " + self.filepath)
+        data = np.load(self.filepath)
+        if "transl" in data:
+            translation = np.array(data["transl"]).reshape(3)
+        # Set translation
+        if translation is not None:
+            obj.location = (translation[0], -translation[2], translation[1])
+            
+        return {'FINISHED'}
 
-def menu_func(self, context):
-    self.layout.operator(ObjectMoveX.bl_idname)
+class exampleExportPose(bpy.types.Operator, ExportHelper):
+    bl_idname = "object.example_export_pose"
+    bl_label = "Export Pose"
+    bl_description = ("Export pose to Numpy Compressed NPZ format")
+    bl_options = {'REGISTER', 'UNDO'}
+
+    # ExportHelper class uses this
+    filename_ext = ".npz"
+    
+    @classmethod
+    def poll(cls, context):
+        try:
+            # Enable button only if mesh or armature is active object
+            return (context.object.type == 'MESH') or (context.object.type == 'ARMATURE')
+        except: return False
+        
+    def execute(self, context):
+        obj = bpy.context.object
+
+        if obj.type == 'MESH':
+            armature = obj.parent
+        else:
+            armature = obj
+            obj = armature.children[0]
+            context.view_layer.objects.active = obj # mesh needs to be active object for recalculating joint locations
+            
+        ret = {"transl": np.array(obj.location)}
+        print("Exported: " + self.filepath)
+        np.savez_compressed(self.filepath, **ret)
+        
+        return {'FINISHED'}
+        
+class examplePTLoad(bpy.types.Panel):
+    bl_label = "Load"
+    bl_category = "Example"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+
+    def draw(self, context):
+        layout = self.layout
+        col = layout.column(align=True)
+        col.label(text="Load Pose:")
+        col.operator("object.example_load_pose")
+        col.separator()
+
+class examplePTExport(bpy.types.Panel):
+    bl_label = "Export"
+    bl_category = "Example"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+
+    def draw(self, context):
+        layout = self.layout
+        col = layout.column(align=True)
+
+        col.label(text="Export Pose:")
+        col.operator("object.example_export_pose")
+        col.separator()
+
+        row = col.row(align=True)
+        row.operator("ed.undo", icon='LOOP_BACK')
+        row.operator("ed.redo", icon='LOOP_FORWARDS')
+        col.separator()
+
+        (year, month, day) = bl_info["version"]
+        col.label(text="Version: %s-%s-%s" % (year, month, day))
+        
+classes = [
+    exampleLoadPose,
+    exampleExportPose,
+    examplePTLoad,
+    examplePTExport
+]
+
+# ===================================================================
 
 def register():
-    bpy.utils.register_class(ObjectMoveX)
-    bpy.types.VIEW3D_MT_object.append(menu_func)  # Adds the new operator to an existing menu.
+    from bpy.utils import register_class
+    for cls in classes:
+        bpy.utils.register_class(cls)
+
 
 def unregister():
-    bpy.utils.unregister_class(ObjectMoveX)
+    from bpy.utils import unregister_class
+    for cls in classes:
+        bpy.utils.unregister_class(cls)
 
 
-# This allows you to run the script directly from Blender's Text editor
-# to test the add-on without having to install it.
 if __name__ == "__main__":
     register()
