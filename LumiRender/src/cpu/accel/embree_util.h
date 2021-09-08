@@ -9,6 +9,9 @@
 #include "render/include/interaction.h"
 #include "base_libs/geometry/util.h"
 
+using std::cout;
+using std::endl;
+
 namespace luminous {
     inline namespace cpu {
         NDSC_INLINE RTCRay to_RTCRay(Ray r) {
@@ -32,6 +35,58 @@ namespace luminous {
             rh.hit.geomID = RTC_INVALID_GEOMETRY_ID;
             rh.hit.primID = RTC_INVALID_GEOMETRY_ID;
             return rh;
+        }
+
+        template<int ray_num>
+        struct RTCType {
+            using RayType = RTCRayNp;
+            using HitType = RTCHitNp;
+            using RHType = RTCRayHitNp;
+        };
+
+        template<>
+        struct RTCType<4> {
+            using RayType = RTCRay4;
+            using HitType = RTCHit4;
+            using RHType = RTCRayHit4;
+        };
+
+        template<>
+        struct RTCType<8> {
+            using RayType = RTCRay8;
+            using HitType = RTCHit8;
+            using RHType = RTCRayHit8;
+        };
+
+        template<>
+        struct RTCType<16> {
+            using RayType = RTCRay16;
+            using HitType = RTCHit16;
+            using RHType = RTCRayHit16;
+        };
+
+        template<int ray_num>
+        NDSC_INLINE auto to_RTCRayN(Ray *ray) {
+            typename RTCType<ray_num>::RayType ret{};
+            parallel_for(4, [&](uint idx, uint tid){
+                ret.org_x[idx] = ray[idx].org_x;
+                ret.org_y[idx] = ray[idx].org_y;
+                ret.org_z[idx] = ray[idx].org_z;
+                ret.dir_x[idx] = ray[idx].dir_x;
+                ret.dir_y[idx] = ray[idx].dir_y;
+                ret.dir_z[idx] = ray[idx].dir_z;
+                ret.tnear[idx] = 0;
+                ret.tfar[idx]  = ray[idx].t_max;
+                ret.flags[idx] = 0;
+            });
+            return ret;
+        }
+
+        template<int ray_num>
+        NDSC_INLINE auto to_RTCRayHitN(Ray *ray) {
+            typename RTCType<ray_num>::RHType ret;
+            ret.ray = to_RTCRayN<ray_num>(ray);
+            return ret;
         }
 
         NDSC_INLINE RTCBounds to_RTCBounds(Box3f box) {

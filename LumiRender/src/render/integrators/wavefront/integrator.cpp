@@ -35,7 +35,7 @@ namespace luminous {
 
 #define ALLOCATE_AND_SYNCHRONIZE(args)         \
 (args).emplace_back(_max_queue_size, _device); \
-(args).allocate_device();               \
+(args).allocate_device();                      \
 (args).synchronize_to_device();
             ALLOCATE_AND_SYNCHRONIZE(_shadow_ray_queue)
             ALLOCATE_AND_SYNCHRONIZE(_hit_area_light_queue)
@@ -65,6 +65,11 @@ namespace luminous {
                                           _hit_area_light_queue.device_data(),
                                           _material_eval_queue.device_data(),
                                           next_ray_queue(wavefront_depth));
+        }
+
+        void WavefrontPT::trace_shadow_ray(int wavefront_depth) {
+            _aggregate->intersect_any(_max_queue_size, _shadow_ray_queue.device_data(),
+                                      _pixel_sample_state.device_data());
         }
     }
 }

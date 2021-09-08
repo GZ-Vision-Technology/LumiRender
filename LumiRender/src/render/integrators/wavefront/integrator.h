@@ -30,9 +30,9 @@ namespace luminous {
             Managed<SOA<PixelSampleState>, SOA<PixelSampleState>> _pixel_sample_state{_device};
 
             // base params
-            uint _scanline_per_pass{};
-            uint _max_queue_size{};
-            uint _frame_index{};
+            int _scanline_per_pass{};
+            int _max_queue_size{};
+            int _frame_index{};
 
             // kernels
             shared_ptr<Kernel> _generate_ray{};
@@ -57,6 +57,8 @@ namespace luminous {
             NDSC uint frame_index() const override { return _frame_index; }
 
             void intersect_closest(int wavefront_depth);
+
+            void trace_shadow_ray(int wavefront_depth);
 
             void update() override {
 
