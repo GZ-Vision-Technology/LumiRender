@@ -3,6 +3,8 @@
 //
 
 #include "integrator.h"
+#include "cpu/accel/embree_aggregate.h"
+#include "gpu/accel/optix_aggregate.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -22,6 +24,7 @@ namespace luminous {
             _scanline_per_pass = (res.y + n_passes - 1) / n_passes;
             _max_queue_size = res.x * _scanline_per_pass;
             allocate_memory();
+            init_aggregate();
         }
 
         void WavefrontPT::allocate_memory() {
@@ -48,7 +51,20 @@ namespace luminous {
         }
 
         void WavefrontPT::init_aggregate() {
+            if (_device->is_cpu()) {
+                _scene->init_accel<EmbreeAggregate>();
+            } else {
+                _scene->init_accel<OptixAggregate>();
+            }
+            _aggregate = _scene->accel<WavefrontAggregate>();
+        }
 
+        void WavefrontPT::intersect_closest(int wavefront_depth) {
+            _aggregate->intersect_closest(_max_queue_size, current_ray_queue(wavefront_depth),
+                                          _escaped_ray_queue.device_data(),
+                                          _hit_area_light_queue.device_data(),
+                                          _material_eval_queue.device_data(),
+                                          next_ray_queue(wavefront_depth));
         }
     }
 }

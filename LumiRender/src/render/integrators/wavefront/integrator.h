@@ -56,6 +56,8 @@ namespace luminous {
 
             NDSC uint frame_index() const override { return _frame_index; }
 
+            void intersect_closest(int wavefront_depth);
+
             void update() override {
 
             }
