@@ -10,8 +10,7 @@ target_link_libraries(luminous-cpu
         luminous-base_libs
         embree
         luminous-core
-        luminous-util
-        luminous-render)
+        luminous-util)
 
 set_target_properties(luminous-cpu PROPERTIES
         PUBLIC_HEADER "${HEADER_FILES}"

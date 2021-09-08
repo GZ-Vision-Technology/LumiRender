@@ -9,6 +9,7 @@ target_link_libraries(luminous-render
 #        OpenImageIO
         luminous-base_libs
         luminous-util
+        luminous-cpu
         luminous-core)
 
 set_target_properties(luminous-render PROPERTIES

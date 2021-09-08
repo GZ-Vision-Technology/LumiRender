@@ -5,7 +5,7 @@
 #include "cpu_impl.h"
 
 #include <utility>
-#include "cpu_scene.h"
+#include "render/include/cpu_scene.h"
 
 namespace luminous {
     inline namespace cpu {
@@ -87,7 +87,7 @@ namespace luminous {
         }
 
         std::shared_ptr<Scene> CPUDevice::create_scene(Device *device, Context *context) {
-            return std::make_shared<CPUScene>(device, context);
+            return nullptr;
         }
 
         CPUTexture::CPUTexture(PixelFormat pixel_format, uint2 resolution) : Impl(pixel_format, resolution) {

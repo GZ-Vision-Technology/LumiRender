@@ -2,9 +2,9 @@
 // Created by Zero on 2021/5/29.
 //
 
-#include "pt.h"
+#include "cpu_pt.h"
 #include "render/integrators/pt_func.h"
-#include "cpu/cpu_scene.h"
+#include "render/include/cpu_scene.h"
 
 using std::cout;
 
