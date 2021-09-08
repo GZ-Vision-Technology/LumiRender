@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "work_items.h"
-
 #ifdef __CUDACC__
 #ifdef LUMINOUS_IS_WINDOWS
 #if (__CUDA_ARCH__ < 700)

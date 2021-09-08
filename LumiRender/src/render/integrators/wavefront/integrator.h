@@ -17,6 +17,7 @@
 namespace luminous {
     inline namespace gpu {
         using std::shared_ptr;
+
         class WavefrontPT : public Integrator {
         private:
             // queue
@@ -53,12 +54,12 @@ namespace luminous {
 
             }
 
-            RayQueue &current_ray_queue(int wavefrontDepth) {
-                return _ray_queues[wavefrontDepth & 1];
+            RayQueue *current_ray_queue(int wavefrontDepth) {
+                return _ray_queues.device_buffer().address<RayQueue *>(wavefrontDepth & 1);
             }
 
-            RayQueue &next_ray_queue(int wavefrontDepth) {
-                return _ray_queues[(wavefrontDepth + 1) & 1];
+            RayQueue *next_ray_queue(int wavefrontDepth) {
+                return _ray_queues.device_buffer().address<RayQueue *>((wavefrontDepth + 1) & 1);
             }
 
             void render() override;

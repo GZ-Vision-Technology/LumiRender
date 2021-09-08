@@ -22,14 +22,6 @@ using std::endl;
 
 namespace luminous {
 
-    inline namespace gpu {
-        class MegakernelOptixAccel;
-
-        class OptixAccel;
-
-        class ShaderWrapper;
-    }
-
     inline namespace render {
 
         template<typename T>

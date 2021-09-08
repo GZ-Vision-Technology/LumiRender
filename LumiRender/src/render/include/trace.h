@@ -11,7 +11,7 @@
 #if defined(__CUDACC__)
 #include "gpu/shaders/optix_util.h"
 #else
-#include "cpu/embree_util.h"
+#include "cpu/accel/embree_util.h"
 #endif
 namespace luminous {
     inline namespace render {

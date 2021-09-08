@@ -21,6 +21,8 @@ namespace luminous {
         public:
             explicit Accelerator(const Scene *scene) : _scene(scene) {}
 
+            virtual ~Accelerator() {}
+
             NDSC virtual uint64_t handle() const = 0;
 
             NDSC size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }

@@ -4,7 +4,7 @@
 
 #include "cpu_scene.h"
 #include "util/stats.h"
-#include "embree_accel.h"
+#include "cpu/accel/embree_accel.h"
 
 using std::cout;
 using std::endl;
