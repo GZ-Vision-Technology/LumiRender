@@ -28,10 +28,12 @@ namespace luminous {
             auto res = camera()->film()->resolution();
             auto num = res.x * res.y;
             _accumulate_buffer.resize(num, make_float4(0.f));
-            camera()->film()->set_accumulate_buffer_view(_accumulate_buffer.host_buffer_view());
+            _accumulate_buffer.allocate_device(num);
+            camera()->film()->set_accumulate_buffer_view(_accumulate_buffer.device_buffer_view());
 
-            _frame_buffer.resize(num, 0);
-            camera()->film()->set_frame_buffer_view(_frame_buffer.host_buffer_view());
+            _frame_buffer.reset(num);
+            _frame_buffer.synchronize_to_device();
+            camera()->film()->set_frame_buffer_view(_frame_buffer.device_buffer_view());
         }
 
         FrameBufferType *CPUTask::get_frame_buffer() {

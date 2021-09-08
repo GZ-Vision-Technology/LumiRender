@@ -67,9 +67,18 @@ namespace luminous {
             _device_buffer = _device->create_buffer<TDevice>(size, ptr);
         }
 
-        NDSC BufferView <THost> obtain_host_accessible_buffer_view(size_t offset = 0, size_t count = -1) const {
+        NDSC BufferView <THost> obtain_accessible_buffer_view(size_t offset = 0, size_t count = -1) {
             if (_device->is_cpu()) {
                 return host_buffer_view(offset, count);
+            } else {
+                synchronize_to_host();
+                return device_buffer_view(offset, count);
+            }
+        }
+
+        NDSC BufferView <const THost> obtain_const_accessible_buffer_view(size_t offset = 0, size_t count = -1) {
+            if (_device->is_cpu()) {
+                return static_cast<BufferView<const Vector<float, 4>> &&>(host_buffer_view(offset, count));
             } else {
                 synchronize_to_host();
                 return device_buffer_view(offset, count);
