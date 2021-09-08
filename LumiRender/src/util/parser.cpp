@@ -8,7 +8,7 @@
 #include <iomanip>
 
 namespace luminous {
-    inline namespace render {
+    inline namespace utility {
         DataWrap create_json_from_file(const std::filesystem::path &fn) {
             std::ifstream fst;
             fst.open(fn.c_str());

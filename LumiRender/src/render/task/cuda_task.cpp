@@ -3,6 +3,7 @@
 //
 
 #include "cuda_task.h"
+#include "util/parser.h"
 #include "render/integrators/megakernel_pt.h"
 #include "render/integrators/wavefront/integrator.h"
 

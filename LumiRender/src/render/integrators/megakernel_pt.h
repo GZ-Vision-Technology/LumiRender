@@ -9,7 +9,6 @@
 #include "gpu/accel/megakernel_optix_accel.h"
 #include "render/samplers/sampler.h"
 #include "render/scene/scene.h"
-#include "gpu/integrators/integrator.h"
 
 namespace luminous {
 

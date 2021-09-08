@@ -12,7 +12,7 @@ using DataWrap = nlohmann::json ;
 
 namespace luminous {
 
-    inline namespace render {
+    inline namespace utility {
         class Parser : public Noncopyable {
         private:
             DataWrap _data;

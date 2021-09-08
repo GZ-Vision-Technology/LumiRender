@@ -57,5 +57,12 @@ namespace luminous {
 
             virtual void render() = 0;
         };
+
+        class GPUIntegrator : public Integrator {
+
+        public:
+            GPUIntegrator(Device *device, Context *context)
+            : Integrator(device, context) {}
+        };
     }
 }
