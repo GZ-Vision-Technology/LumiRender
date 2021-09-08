@@ -5,7 +5,7 @@
 #include "cpu_impl.h"
 
 #include <utility>
-#include "render/include/cpu_scene.h"
+#include "render/scene/cpu_scene.h"
 
 namespace luminous {
     inline namespace cpu {

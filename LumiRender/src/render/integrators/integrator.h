@@ -6,7 +6,7 @@
 #pragma once
 
 #include "core/concepts.h"
-#include "render/include/scene_graph.h"
+#include "render/scene/scene_graph.h"
 #include "render/sensors/sensor.h"
 #include "core/backend/managed.h"
 #include "render/samplers/sampler.h"

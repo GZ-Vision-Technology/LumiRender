@@ -7,13 +7,13 @@
 
 #include "core/concepts.h"
 #include "base_libs/math/common.h"
-#include "shape.h"
+#include "render/include/shape.h"
 #include "scene_graph.h"
 #include "render/lights/light.h"
 #include "base_libs/sampling/common.h"
 #include "render/light_samplers/light_sampler.h"
 #include "render/textures/texture.h"
-#include "distribution_mgr.h"
+#include "render/include/distribution_mgr.h"
 #include "render/materials/material.h"
 #include "render/include/accelerator.h"
 

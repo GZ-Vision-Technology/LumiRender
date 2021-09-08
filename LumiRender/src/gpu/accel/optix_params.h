@@ -9,7 +9,7 @@
 #include "base_libs/math/common.h"
 #include "render/sensors/sensor.h"
 #include "render/samplers/sampler.h"
-#include "render/include/scene_data.h"
+#include "render/scene/scene_data.h"
 #include "optix_defines.h"
 
 namespace luminous {

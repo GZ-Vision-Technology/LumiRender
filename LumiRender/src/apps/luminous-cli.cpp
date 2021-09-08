@@ -6,7 +6,7 @@
 #include "core/context.h"
 #include "render/include/parser.h"
 #include <memory>
-#include "render/include/cuda_task.h"
+#include "render/task/cuda_task.h"
 
 using namespace luminous;
 using std::cout;

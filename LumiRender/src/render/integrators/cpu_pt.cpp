@@ -4,7 +4,7 @@
 
 #include "cpu_pt.h"
 #include "render/integrators/pt_func.h"
-#include "render/include/cpu_scene.h"
+#include "render/scene/cpu_scene.h"
 
 using std::cout;
 

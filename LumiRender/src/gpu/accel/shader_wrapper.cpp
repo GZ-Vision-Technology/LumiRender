@@ -3,7 +3,7 @@
 //
 
 #include "shader_wrapper.h"
-#include "render/include/scene.h"
+#include "render/scene/scene.h"
 #include <iosfwd>
 #include <optix.h>
 #include <optix_stubs.h>

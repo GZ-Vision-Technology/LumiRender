@@ -17,6 +17,7 @@
 #include "base_libs/lstd/lstd.h"
 #include "render/include/trace.h"
 #include "render/integrators/shader_include.h"
+#include "render/scene/shader_include.h"
 
 extern "C" {
 __constant__ luminous::LaunchParams

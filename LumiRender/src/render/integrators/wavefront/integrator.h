@@ -8,7 +8,7 @@
 #include "gpu/integrators/integrator.h"
 #include "render/sensors/camera_base.h"
 #include "gpu/accel/megakernel_optix_accel.h"
-#include "render/include/gpu_scene.h"
+#include "render/scene/gpu_scene.h"
 #include "render/samplers/sampler.h"
 #include "work_items.h"
 #include "core/backend/device.h"

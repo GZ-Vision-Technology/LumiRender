@@ -6,7 +6,7 @@
 #pragma once
 
 #include "core/concepts.h"
-#include "scene_graph.h"
+#include "render/scene/scene_graph.h"
 #include "ext/nlohmann/json.hpp"
 using DataWrap = nlohmann::json ;
 

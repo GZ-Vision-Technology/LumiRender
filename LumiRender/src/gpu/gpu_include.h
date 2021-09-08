@@ -5,5 +5,5 @@
 #pragma once
 
 #ifdef CUDA_SUPPORT
-#include "render/include/cuda_task.h"
+#include "render/task/cuda_task.h"
 #endif

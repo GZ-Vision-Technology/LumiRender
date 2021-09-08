@@ -15,7 +15,7 @@
 #include "gl_helper.h"
 #include "gpu/gpu_include.h"
 #include "util/clock.h"
-#include "render/include/task.h"
+#include "render/task/task.h"
 
 namespace luminous {
     using namespace std::chrono;

@@ -3,7 +3,7 @@
 //
 
 #include "cuda_impl.h"
-#include "render/include/gpu_scene.h"
+#include "render/scene/gpu_scene.h"
 
 namespace luminous {
     inline namespace gpu {

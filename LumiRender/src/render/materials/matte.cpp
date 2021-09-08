@@ -2,7 +2,7 @@
 // Created by Zero on 2021/5/13.
 //
 
-#include "render/include/scene_data.h"
+#include "render/scene/scene_data.h"
 #include "matte.h"
 
 namespace luminous {

@@ -3,9 +3,9 @@
 //
 
 #include "integrator.h"
-#include "render/include/scene.h"
-#include "render/include/cpu_scene.h"
-#include "render/include/gpu_scene.h"
+#include "render/scene/scene.h"
+#include "render/scene/cpu_scene.h"
+#include "render/scene/gpu_scene.h"
 
 
 namespace luminous {

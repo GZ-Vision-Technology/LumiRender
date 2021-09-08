@@ -6,10 +6,10 @@
 #pragma once
 
 #include "base_libs/math/common.h"
-#include "render/include/scene.h"
+#include "scene.h"
 #include <embree3/rtcore.h>
 #include "cpu/accel/embree_accel.h"
-#include "render/include/scene_data.h"
+#include "scene_data.h"
 
 namespace luminous {
     inline namespace cpu {
