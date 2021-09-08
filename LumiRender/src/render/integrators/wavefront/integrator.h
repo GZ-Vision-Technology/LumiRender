@@ -22,12 +22,12 @@ namespace luminous {
         class WavefrontPT : public Integrator {
         private:
             // queue
-            Managed<RayQueue, RayQueue> _ray_queues;
-            Managed<ShadowRayQueue, ShadowRayQueue> _shadow_ray_queue;
-            Managed<HitAreaLightQueue, HitAreaLightQueue> _hit_area_light_queue;
-            Managed<EscapedRayQueue, EscapedRayQueue> _escaped_ray_queue;
-            Managed<MaterialEvalQueue, MaterialEvalQueue> _material_eval_queue;
-            Managed<SOA<PixelSampleState>, SOA<PixelSampleState>> _pixel_sample_state;
+            Managed<RayQueue, RayQueue> _ray_queues{_device};
+            Managed<ShadowRayQueue, ShadowRayQueue> _shadow_ray_queue{_device};
+            Managed<HitAreaLightQueue, HitAreaLightQueue> _hit_area_light_queue{_device};
+            Managed<EscapedRayQueue, EscapedRayQueue> _escaped_ray_queue{_device};
+            Managed<MaterialEvalQueue, MaterialEvalQueue> _material_eval_queue{_device};
+            Managed<SOA<PixelSampleState>, SOA<PixelSampleState>> _pixel_sample_state{_device};
 
             // base params
             uint _scanline_per_pass{};

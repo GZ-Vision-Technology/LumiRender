@@ -11,10 +11,13 @@
 #include "core/concepts.h"
 #include "core/backend/buffer.h"
 #include "optix_params.h"
-#include "render/include/scene.h"
 #include "gpu/framework/cuda_impl.h"
 
 namespace luminous {
+    inline namespace render {
+        class Scene;
+    }
+
     inline namespace gpu {
 
         struct ProgramName {
@@ -97,7 +100,7 @@ namespace luminous {
                                                     OptixDeviceContext optix_device_context,
                                                     const ProgramName &program_name);
 
-            void build_sbt(const Scene *scene, Device *device);
+            void build_sbt(const render::Scene *scene, Device *device);
         };
     }
 }

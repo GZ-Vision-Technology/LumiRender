@@ -19,8 +19,11 @@ namespace luminous {
     private:
         static_assert(!std::is_pointer_v<std::remove_pointer_t<THost>>, "THost can not be the secondary pointer!");
         Buffer <TDevice> _device_buffer{nullptr};
+        Device *_device{};
     public:
         Managed() = default;
+
+        Managed(Device *device) : _device(device) {}
 
         Managed(Managed &&other) noexcept
                 : BaseClass(std::move(other)),
@@ -29,6 +32,8 @@ namespace luminous {
         NDSC size_t size_in_bytes() const {
             return BaseClass::size() * sizeof(T);
         }
+
+        void set_device(Device *device) { _device = device; }
 
         void reset(const std::vector<THost> &v) {
             BaseClass::reserve(v.capacity());

@@ -33,8 +33,9 @@ namespace luminous {
 
         class DistributionMgr {
         protected:
-            Managed<float> _func_buffer;
-            Managed<float> _CDF_buffer;
+            Device * _device;
+            Managed<float> _func_buffer{_device};
+            Managed<float> _CDF_buffer{_device};
             /**
              * count of distribution1d
              */
@@ -45,9 +46,10 @@ namespace luminous {
              */
             std::vector<DistributionHandle> _handles;
         public:
+            Managed<Distribution1D> distributions{_device};
+            Managed<Distribution2D> distribution2ds{_device};
 
-            Managed<Distribution1D> distributions;
-            Managed<Distribution2D> distribution2ds;
+            DistributionMgr(Device *device) : _device(device) {}
 
             void add_distribution(const Distribution1DBuilder &builder, bool need_count = false);
 

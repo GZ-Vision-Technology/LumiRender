@@ -34,7 +34,7 @@ namespace luminous {
          */
         class Scene : public Noncopyable {
         protected:
-            Device *_device;
+            Device *_device{};
             Context *_context{nullptr};
             size_t _inst_vertices_num{0};
             size_t _inst_triangle_num{0};
@@ -47,27 +47,27 @@ namespace luminous {
             Box3f _scene_box;
 
             // instance data
-            Managed<uint> _inst_to_mesh_idx;
-            Managed<uint> _inst_to_transform_idx;
-            Managed<Transform> _transforms;
+            Managed<uint> _inst_to_mesh_idx{_device};
+            Managed<uint> _inst_to_transform_idx{_device};
+            Managed<Transform> _transforms{_device};
 
             // mesh data
-            Managed<MeshHandle> _meshes;
-            Managed<float3> _positions;
-            Managed<float3> _normals;
-            Managed<float2> _tex_coords;
-            Managed<TriangleHandle> _triangles;
+            Managed<MeshHandle> _meshes{_device};
+            Managed<float3> _positions{_device};
+            Managed<float3> _normals{_device};
+            Managed<float2> _tex_coords{_device};
+            Managed<TriangleHandle> _triangles{_device};
 
             // light data
-            Managed<Light> _lights;
-            Managed<LightSampler> _light_sampler;
-            DistributionMgr _distribution_mgr;
+            Managed<Light> _lights{_device};
+            Managed<LightSampler> _light_sampler{_device};
+            DistributionMgr _distribution_mgr{_device};
 
             // texture data
-            Managed<Texture> _textures;
+            Managed<Texture> _textures{_device};
 
             // material data, the last element is light material, black diffuse
-            Managed<Material> _materials;
+            Managed<Material> _materials{_device};
 
             // prepare for texture out of core render
             vector<TextureConfig> _tex_configs;
