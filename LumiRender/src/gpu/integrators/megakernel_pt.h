@@ -17,7 +17,7 @@ namespace luminous {
 
         class MegakernelPT : public GPUIntegrator {
         private:
-            Managed<LaunchParams> _launch_params;
+            Managed<LaunchParams> _launch_params{_device};
         public:
 
             MegakernelPT(Device *device, Context *context);

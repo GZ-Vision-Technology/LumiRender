@@ -19,7 +19,7 @@ namespace luminous {
             lp.frame_index = 0u;
             lp.max_depth = _max_depth;
             lp.rr_threshold = _rr_threshold;
-            _launch_params.reset(&lp, _device);
+            _launch_params.reset(&lp);
         }
 
         void MegakernelPT::init(const std::shared_ptr<SceneGraph> &scene_graph) {

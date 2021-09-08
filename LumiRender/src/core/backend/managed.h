@@ -23,7 +23,7 @@ namespace luminous {
     public:
         Managed() = default;
 
-        Managed(Device *device) : _device(device) {}
+        explicit Managed(Device *device) : _device(device) {}
 
         Managed(Managed &&other) noexcept
                 : BaseClass(std::move(other)),
@@ -35,31 +35,22 @@ namespace luminous {
 
         void set_device(Device *device) { _device = device; }
 
-        void reset(const std::vector<THost> &v) {
-            BaseClass::reserve(v.capacity());
-            BaseClass::resize(v.size());
-            std::memcpy(BaseClass::data(), v.data(), sizeof(THost) * v.size());
-        }
-
-        void reset(const std::vector<THost> &v, Device *device) {
-            _device_buffer = device->create_buffer<TDevice>(v.size());
-            reset(v);
-        }
-
         void reset(THost *host, int n = 1) {
             BaseClass::reserve(n);
             BaseClass::resize(n);
             std::memcpy(BaseClass::data(), host, sizeof(THost) * n);
+            void *ptr = _device->is_cpu() ? BaseClass::data() : nullptr;
+            _device_buffer = _device->create_buffer<TDevice>(n, ptr);
         }
 
-        void reset(THost *host, Device *device, int n = 1) {
-            _device_buffer = device->create_buffer<TDevice>(n);
-            reset(host, n);
+        void reset(const std::vector<THost> &v) {
+            reset(v.data(), v.size());
         }
 
         void reset(size_t n) {
             BaseClass::resize(n);
-            _device_buffer = _device->create_buffer<TDevice>(n);
+            void *ptr = _device->is_cpu() ? BaseClass::data() : nullptr;
+            _device_buffer = _device->create_buffer<TDevice>(n, ptr);
             std::memset(BaseClass::data(), 0, sizeof(THost) * n);
         }
 
@@ -72,7 +63,17 @@ namespace luminous {
             if (size == 0) {
                 return;
             }
-            _device_buffer = _device->create_buffer<TDevice>(size);
+            void *ptr = _device->is_cpu() ? BaseClass::data() : nullptr;
+            _device_buffer = _device->create_buffer<TDevice>(size, ptr);
+        }
+
+        NDSC BufferView <THost> obtain_host_accessible_buffer_view(size_t offset = 0, size_t count = -1) const {
+            if (_device->is_cpu()) {
+                return host_buffer_view(offset, count);
+            } else {
+                synchronize_to_host();
+                return device_buffer_view(offset, count);
+            }
         }
 
         NDSC BufferView<const THost> const_host_buffer_view(size_t offset = 0, size_t count = -1) const {
