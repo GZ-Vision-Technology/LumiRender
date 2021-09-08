@@ -13,6 +13,7 @@
 #include "work_items.h"
 #include "core/backend/device.h"
 #include "core/backend/kernel.h"
+#include "aggregate.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -40,11 +41,16 @@ namespace luminous {
             shared_ptr<Kernel> _process_escape_ray{};
             shared_ptr<Kernel> _process_emission{};
             shared_ptr<Kernel> _eval_BSDFs{};
+
+            // accelerate structure
+            WavefrontAggregate *_aggregate{};
         public:
 
             WavefrontPT(Device *device, Context *context);
 
             void init(const shared_ptr<SceneGraph> &scene_graph) override;
+
+            void init_aggregate();
 
             void allocate_memory();
 

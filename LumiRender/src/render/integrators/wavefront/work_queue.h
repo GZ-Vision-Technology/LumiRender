@@ -5,6 +5,9 @@
 
 #pragma once
 
+#include "soa.h"
+#include "core/backend/device.h"
+
 #ifdef __CUDACC__
 #ifdef LUMINOUS_IS_WINDOWS
 #if (__CUDA_ARCH__ < 700)
@@ -28,6 +31,7 @@
 
 
 namespace luminous {
+
     inline namespace render {
         template<typename WorkItem>
         class WorkQueue : public SOA<WorkItem> {

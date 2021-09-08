@@ -25,7 +25,7 @@ namespace luminous {
             virtual void intersect_any_tr(int max_rays, ShadowRayQueue *shadow_ray_queue,
                                           SOA<PixelSampleState> *pixel_sample_state) = 0;
 
-            virtual ~WavefrontAggregate() {}
+            virtual ~WavefrontAggregate() = default;
         };
     }
 }

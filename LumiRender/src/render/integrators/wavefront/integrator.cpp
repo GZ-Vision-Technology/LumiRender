@@ -46,5 +46,9 @@ namespace luminous {
         void WavefrontPT::render() {
 
         }
+
+        void WavefrontPT::init_aggregate() {
+
+        }
     }
 }

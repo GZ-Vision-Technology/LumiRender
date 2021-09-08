@@ -23,7 +23,7 @@ namespace luminous {
 
             EmbreeAccel(Device *device, Context *context, const Scene *scene);
 
-            virtual ~EmbreeAccel();
+            ~EmbreeAccel() override;
 
             static void init_device();
 
