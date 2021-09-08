@@ -59,11 +59,11 @@ namespace luminous {
         private:
             CUdeviceptr _ptr{};
             size_t _size_in_bytes;
-
+            const bool _is_external_ptr;
         public:
             NDSC void *ptr() const override;
 
-            explicit CUDABuffer(size_t bytes);
+            explicit CUDABuffer(size_t bytes, void *ptr = nullptr);
 
             ~CUDABuffer() override;
 
@@ -115,7 +115,7 @@ namespace luminous {
         public:
             CUDADevice();
 
-            RawBuffer allocate_buffer(size_t bytes) override;
+            RawBuffer create_buffer(size_t bytes, void *ptr) override;
 
             DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
 

@@ -37,7 +37,7 @@ namespace luminous {
         }
 
         void reset(const std::vector<THost> &v, Device *device) {
-            _device_buffer = device->allocate_buffer<TDevice>(v.size());
+            _device_buffer = device->create_buffer<TDevice>(v.size());
             reset(v);
         }
 
@@ -48,13 +48,13 @@ namespace luminous {
         }
 
         void reset(THost *host, Device *device, int n = 1) {
-            _device_buffer = device->allocate_buffer<TDevice>(n);
+            _device_buffer = device->create_buffer<TDevice>(n);
             reset(host, n);
         }
 
         void reset(Device *device, size_t n) {
             BaseClass::resize(n);
-            _device_buffer = device->allocate_buffer<TDevice>(n);
+            _device_buffer = device->create_buffer<TDevice>(n);
             std::memset(BaseClass::data(), 0, sizeof(THost) * n);
         }
 
@@ -67,7 +67,7 @@ namespace luminous {
             if (size == 0) {
                 return;
             }
-            _device_buffer = device->allocate_buffer<TDevice>(size);
+            _device_buffer = device->create_buffer<TDevice>(size);
         }
 
         NDSC BufferView<const THost> const_host_buffer_view(size_t offset = 0, size_t count = -1) const {

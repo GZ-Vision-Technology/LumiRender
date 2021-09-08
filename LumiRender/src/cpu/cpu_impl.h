@@ -20,11 +20,12 @@ namespace luminous {
         class CPUBuffer : public RawBuffer::Impl {
         private:
             void *_ptr{};
+            const bool _is_external_ptr;
             size_t _size_in_bytes{0};
         public:
             NDSC void *ptr() const override;
 
-            explicit CPUBuffer(size_t bytes);
+            explicit CPUBuffer(size_t bytes, void *ptr = nullptr);
 
             ~CPUBuffer() override;
 
@@ -96,7 +97,7 @@ namespace luminous {
         public:
             CPUDevice() = default;
 
-            RawBuffer allocate_buffer(size_t bytes) override;
+            RawBuffer create_buffer(size_t bytes, void *ptr) override;
 
             NDSC bool is_cpu() const override { return true; }
 

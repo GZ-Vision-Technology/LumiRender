@@ -16,16 +16,15 @@ namespace luminous {
         class Scene;
     }
 
-    class Device : public Noncopyable, public std::enable_shared_from_this<Device> {
+    class Device : public Noncopyable {
     public:
         class Impl {
         public:
-            virtual RawBuffer allocate_buffer(size_t bytes) = 0;
+            virtual RawBuffer create_buffer(size_t bytes, void *ptr) = 0;
 
             virtual DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) = 0;
 
-            NDSC virtual std::shared_ptr<Scene>
-            create_scene(Device *device, Context *context) = 0;
+            NDSC virtual std::shared_ptr<Scene> create_scene(Device *device, Context *context) = 0;
 
             NDSC virtual bool is_cpu() const = 0;
 
@@ -35,8 +34,8 @@ namespace luminous {
         };
 
         template<typename T = std::byte>
-        Buffer<T> allocate_buffer(size_t n_elements) {
-            return Buffer<T>(_impl->allocate_buffer(n_elements * sizeof(T)));
+        Buffer<T> create_buffer(size_t n_elements, void *ptr = nullptr) {
+            return Buffer<T>(_impl->create_buffer(n_elements * sizeof(T), ptr));
         }
 
         NDSC std::shared_ptr<Scene> create_scene(Context *context) {
@@ -44,16 +43,16 @@ namespace luminous {
         }
 
         template<typename T = std::byte>
-        BufferView<T> obtain_buffer(size_t n_elements) {
-            RawBuffer raw_buffer = _impl->allocate_buffer(n_elements * sizeof(T));
+        BufferView<T> obtain_buffer(size_t n_elements, void *ptr = nullptr) {
+            RawBuffer raw_buffer = _impl->create_buffer(n_elements * sizeof(T), ptr);
             BufferView<T> ret(raw_buffer.ptr<T *>(), n_elements);
             _raw_buffers.push_back(std::move(raw_buffer));
             return ret;
         }
 
         template<typename T = std::byte>
-        T *obtain_restrict_ptr(size_t n_elements) {
-            RawBuffer raw_buffer = _impl->allocate_buffer(n_elements * sizeof(T));
+        T *obtain_restrict_ptr(size_t n_elements, void *ptr = nullptr) {
+            RawBuffer raw_buffer = _impl->create_buffer(n_elements * sizeof(T), ptr);
             T *ret = raw_buffer.ptr<T *>();
             _raw_buffers.push_back(std::move(raw_buffer));
             return ret;

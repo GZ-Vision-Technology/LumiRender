@@ -4,21 +4,21 @@
 
 #include "cpu_impl.h"
 #include "cpu_scene.h"
-#include "util/parallel.h"
 
 namespace luminous {
     inline namespace cpu {
 
         void *CPUBuffer::ptr() const { return _ptr; }
 
-        CPUBuffer::CPUBuffer(size_t bytes)
-                : _size_in_bytes(bytes) {
-            DCHECK_GT(bytes, 0)
-            _ptr = ::malloc(bytes);
-        }
+        CPUBuffer::CPUBuffer(size_t bytes, void *ptr)
+                : _size_in_bytes(bytes),
+                  _is_external_ptr(ptr ? true : false),
+                  _ptr(ptr ? ptr : ::malloc(bytes)) {}
 
         CPUBuffer::~CPUBuffer() {
-            ::free(_ptr);
+            if (!_is_external_ptr) {
+                ::free(_ptr);
+            }
             _ptr = nullptr;
         }
 
@@ -33,27 +33,31 @@ namespace luminous {
         }
 
         void CPUBuffer::download_async(Dispatcher &dispatcher, void *host_ptr, size_t size, size_t offset) {
-            //todo
-            DCHECK(0)
+            if (host_ptr == _ptr) { return; }
+            async(1, [&](uint, uint){
+                download(host_ptr, size, offset);
+            });
         }
 
         void CPUBuffer::upload_async(Dispatcher &dispatcher, const void *host_ptr, size_t size, size_t offset) {
-            //todo
-            DCHECK(0)
+            if (host_ptr == _ptr) { return; }
+            async(1, [&](uint, uint){
+                upload(host_ptr, size, offset);
+            });
         }
 
         void CPUBuffer::download(void *host_ptr, size_t size, size_t offset) {
-            //todo
-            DCHECK(0)
+            if (host_ptr == _ptr) { return; }
+            ::memcpy(host_ptr, (void*)(reinterpret_cast<uint64_t>(_ptr) + offset), size);
         }
 
         void CPUBuffer::upload(const void *host_ptr, size_t size, size_t offset) {
-            //todo
-            DCHECK(0)
+            if (host_ptr == _ptr) { return; }
+            ::memcpy((void*)(reinterpret_cast<uint64_t>(_ptr) + offset), host_ptr, size);
         }
 
-        RawBuffer CPUDevice::allocate_buffer(size_t bytes) {
-            return RawBuffer(std::make_unique<CPUBuffer>(bytes));
+        RawBuffer CPUDevice::create_buffer(size_t bytes, void *ptr) {
+            return RawBuffer(std::make_unique<CPUBuffer>(bytes, ptr));
         }
 
         DTexture CPUDevice::allocate_texture(PixelFormat pixel_format, uint2 resolution) {

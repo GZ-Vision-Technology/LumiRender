@@ -34,9 +34,9 @@ void test_driver_api() {
     const int b[size] = {10, 20, 30, 40, 50};
     int c[size] = {};
 
-    auto buffer_a = device->allocate_buffer<int>(size);
-    auto buffer_b = device->allocate_buffer<int>(size);
-    auto buffer_c = device->allocate_buffer<int>(size);
+    auto buffer_a = device->create_buffer<int>(size);
+    auto buffer_b = device->create_buffer<int>(size);
+    auto buffer_c = device->create_buffer<int>(size);
 
     buffer_a.upload(a, size);
     buffer_b.upload(b, size);
@@ -70,7 +70,7 @@ void test_kernel_sampler() {
     config.set_full_type("LCGSampler");
     config.spp = 9;
     auto sampler = Sampler::create(config);
-    auto buffer = device->allocate_buffer<Sampler>(1);
+    auto buffer = device->create_buffer<Sampler>(1);
     buffer.upload(&sampler);
     auto ps = buffer.ptr();
 

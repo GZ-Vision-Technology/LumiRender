@@ -153,14 +153,20 @@ namespace luminous {
             return (void *) _ptr;
         }
 
-        CUDABuffer::CUDABuffer(size_t bytes)
-                : _size_in_bytes(bytes) {
+        CUDABuffer::CUDABuffer(size_t bytes, void *ptr)
+        : _size_in_bytes(bytes), _is_external_ptr(ptr ? true : false) {
             DCHECK_GT(bytes, 0)
-            CU_CHECK(cuMemAlloc(&_ptr, bytes));
+            if (ptr) {
+                _ptr = reinterpret_cast<CUdeviceptr>(ptr);
+            } else {
+                CU_CHECK(cuMemAlloc(&_ptr, bytes));
+            }
         }
 
         CUDABuffer::~CUDABuffer() {
-            CU_CHECK(cuMemFree(_ptr));
+            if (!_is_external_ptr) {
+                CU_CHECK(cuMemFree(_ptr));
+            }
         }
 
         size_t CUDABuffer::size() const {
@@ -230,7 +236,7 @@ namespace luminous {
             CU_CHECK(cuCtxSetCurrent(_cu_context));
         }
 
-        RawBuffer CUDADevice::allocate_buffer(size_t bytes) {
+        RawBuffer CUDADevice::create_buffer(size_t bytes,void *ptr) {
             return RawBuffer(std::make_unique<CUDABuffer>(bytes));
         }
 
