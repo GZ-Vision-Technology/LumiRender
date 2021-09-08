@@ -16,9 +16,7 @@ target_link_libraries(luminous-gpu
         CUDA::cudart
         luminous-base_libs
         luminous-core
-        luminous-util
-        luminous-render
-        )
+        luminous-util)
 
 set_target_properties(luminous-gpu PROPERTIES
         PUBLIC_HEADER "${HEADER_FILES}"

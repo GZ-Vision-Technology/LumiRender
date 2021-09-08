@@ -5,6 +5,7 @@
 #include "integrator.h"
 #include "render/include/scene.h"
 #include "render/include/cpu_scene.h"
+#include "render/include/gpu_scene.h"
 
 
 namespace luminous {
@@ -15,7 +16,7 @@ namespace luminous {
             if (_device->is_cpu()) {
                 _scene = std::make_shared<CPUScene>(_device, _context);
             } else {
-                _scene = _device->create_scene(_context);
+                _scene = std::make_shared<GPUScene>(_device, _context);
             }
             _max_depth = scene_graph->integrator_config.max_depth;
             _rr_threshold = scene_graph->integrator_config.rr_threshold;

@@ -6,7 +6,7 @@
 #pragma once
 
 #include "render/include/task.h"
-#include "cuda_impl.h"
+#include "gpu/framework/cuda_impl.h"
 #include "render/films/film.h"
 #include "core/backend/managed.h"
 

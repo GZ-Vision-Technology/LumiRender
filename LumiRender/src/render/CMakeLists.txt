@@ -10,6 +10,7 @@ target_link_libraries(luminous-render
         luminous-base_libs
         luminous-util
         luminous-cpu
+        luminous-gpu
         luminous-core)
 
 set_target_properties(luminous-render PROPERTIES
