@@ -57,9 +57,9 @@ namespace luminous {
             reset(host, n);
         }
 
-        void reset(Device *device, size_t n) {
+        void reset(size_t n) {
             BaseClass::resize(n);
-            _device_buffer = device->create_buffer<TDevice>(n);
+            _device_buffer = _device->create_buffer<TDevice>(n);
             std::memset(BaseClass::data(), 0, sizeof(THost) * n);
         }
 
@@ -67,12 +67,12 @@ namespace luminous {
             BaseClass::insert(BaseClass::cend(), v.cbegin(), v.cend());
         }
 
-        void allocate_device(Device *device, size_t size = 0) {
+        void allocate_device(size_t size = 0) {
             size = size == 0 ? BaseClass::size() : size;
             if (size == 0) {
                 return;
             }
-            _device_buffer = device->create_buffer<TDevice>(size);
+            _device_buffer = _device->create_buffer<TDevice>(size);
         }
 
         NDSC BufferView<const THost> const_host_buffer_view(size_t offset = 0, size_t count = -1) const {

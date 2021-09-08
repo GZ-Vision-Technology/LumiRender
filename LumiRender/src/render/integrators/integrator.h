@@ -27,8 +27,8 @@ namespace luminous {
             Device *_device{};
             SP<Scene> _scene{};
             Context *_context{};
-            Managed<Sampler, Sampler> _sampler;
-            Managed<Sensor, Sensor> _camera;
+            Managed<Sampler, Sampler> _sampler{_device};
+            Managed<Sensor, Sensor> _camera{_device};
         public:
             Integrator(Device *device, Context *context)
                     : _device(device),
@@ -39,8 +39,8 @@ namespace luminous {
             virtual void init(const std::shared_ptr<SceneGraph> &scene_graph);
 
             virtual void init_on_device() {
-                _camera.allocate_device(_device, 1);
-                _sampler.allocate_device(_device, 1);
+                _camera.allocate_device( 1);
+                _sampler.allocate_device( 1);
             }
 
             NDSC const SceneData * scene_data() const;

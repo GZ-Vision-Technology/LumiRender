@@ -18,28 +18,28 @@ namespace luminous {
         void GPUScene::create_device_memory() {
             {
                 // instance data
-                _inst_to_mesh_idx.allocate_device(_device);
-                _inst_to_transform_idx.allocate_device(_device);
-                _transforms.allocate_device(_device);
+                _inst_to_mesh_idx.allocate_device();
+                _inst_to_transform_idx.allocate_device();
+                _transforms.allocate_device();
             }
             {
                 // mesh data
-                _meshes.allocate_device(_device);
-                _positions.allocate_device(_device);
-                _tex_coords.allocate_device(_device);
-                _triangles.allocate_device(_device);
-                _normals.allocate_device(_device);
+                _meshes.allocate_device();
+                _positions.allocate_device();
+                _tex_coords.allocate_device();
+                _triangles.allocate_device();
+                _normals.allocate_device();
             }
             {
                 // light data
-                _lights.allocate_device(_device);
+                _lights.allocate_device();
                 _distribution_mgr.init_on_device(_device);
-                _light_sampler.allocate_device(_device);
+                _light_sampler.allocate_device();
             }
             {
                 // texture data
-                _textures.allocate_device(_device);
-                _materials.allocate_device(_device);
+                _textures.allocate_device();
+                _materials.allocate_device();
             }
         }
 

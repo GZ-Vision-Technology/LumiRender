@@ -33,9 +33,9 @@ namespace luminous {
             }
             distribution2ds.clear();
             distributions.clear();
-            _func_buffer.allocate_device(device);
+            _func_buffer.allocate_device();
             _func_buffer.synchronize_to_device();
-            _CDF_buffer.allocate_device(device);
+            _CDF_buffer.allocate_device();
             _CDF_buffer.synchronize_to_device();
 
             for (const auto &handle : _handles) {
@@ -43,12 +43,12 @@ namespace luminous {
                 BufferView<const float> CDF = _CDF_buffer.device_buffer_view(handle.CDF_offset, handle.CDF_size);
                 distributions.emplace_back(func, CDF, handle.integral);
             }
-            distributions.allocate_device(device);
+            distributions.allocate_device();
             int count = distributions.size() - 1 - _count_distribution;
             auto distribution = Distribution2D(distributions.const_device_buffer_view(_count_distribution, count),
                                                distributions.back());
             distribution2ds.push_back(distribution);
-            distribution2ds.allocate_device(device);
+            distribution2ds.allocate_device();
 
         }
 

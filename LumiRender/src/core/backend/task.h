@@ -23,8 +23,8 @@ namespace luminous {
         UP<Integrator> _integrator;
         double _dt{0};
         OutputConfig _output_config;
-        Managed<float4, float4> _accumulate_buffer;
-        Managed<FrameBufferType, FrameBufferType> _frame_buffer;
+        Managed<float4, float4> _accumulate_buffer{_device.get()};
+        Managed<FrameBufferType, FrameBufferType> _frame_buffer{_device.get()};
     public:
         Task(std::unique_ptr<Device> device, Context *context)
                 : _device(move(device)),
