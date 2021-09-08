@@ -20,7 +20,7 @@ namespace luminous {
         struct ParallelForContext {
             std::atomic_uint32_t work_index;
             size_t count = 0;
-            uint32_t chunkSize = 0;
+            uint32_t chunk_size = 0;
 
             ParallelForContext() : work_index(0) {}
 
@@ -29,7 +29,7 @@ namespace luminous {
             bool done() const { return work_index >= count; }
 
             ParallelForContext(const ParallelForContext &rhs)
-            : work_index(rhs.work_index.load()), count(rhs.count), chunkSize(rhs.chunkSize), func(rhs.func) {}
+            : work_index(rhs.work_index.load()), count(rhs.count), chunk_size(rhs.chunk_size), func(rhs.func) {}
         };
 
         struct ParallelForWorkPool {
@@ -58,8 +58,8 @@ namespace luminous {
                             lock.unlock();
                             // lock held
                             while (!loop.done()) {
-                                auto begin = loop.work_index.fetch_add(loop.chunkSize);
-                                for (auto i = begin; i < begin + loop.chunkSize && i < loop.count; i++) {
+                                auto begin = loop.work_index.fetch_add(loop.chunk_size);
+                                for (auto i = begin; i < begin + loop.chunk_size && i < loop.count; i++) {
                                     (loop.func)(i, tid);
                                 }
                             }

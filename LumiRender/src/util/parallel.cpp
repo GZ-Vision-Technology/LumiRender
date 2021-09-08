@@ -30,27 +30,21 @@ namespace luminous {
             std::call_once(flag, [&]() { pool = std::make_unique<ParallelForWorkPool>(); });
         }
 
-        void parallel_for(int count, const std::function<void(uint32_t, uint32_t)> &func, size_t chunkSize) {
+        void async(int count, const std::function<void(uint32_t, uint32_t)> &func, size_t chunk_size) {
             using namespace thread_internal;
             init_thread_pool();
             ParallelForContext ctx;
             ctx.func = func;
-            ctx.chunkSize = (uint32_t) chunkSize;
+            ctx.chunk_size = (uint32_t) chunk_size;
             ctx.count = count;
             ctx.work_index = 0;
             pool->enqueue(ctx);
-            pool->wait();
         }
 
-        void async(int count, const std::function<void(uint32_t, uint32_t)> &func, size_t chunkSize) {
+        void parallel_for(int count, const std::function<void(uint32_t, uint32_t)> &func, size_t chunk_size) {
             using namespace thread_internal;
-            init_thread_pool();
-            ParallelForContext ctx;
-            ctx.func = func;
-            ctx.chunkSize = (uint32_t) chunkSize;
-            ctx.count = count;
-            ctx.work_index = 0;
-            pool->enqueue(ctx);
+            async(count, func, chunk_size);
+            pool->wait();
         }
 
         namespace thread {

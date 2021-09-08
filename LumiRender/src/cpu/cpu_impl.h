@@ -67,7 +67,7 @@ namespace luminous {
         private:
             std::function<void(void *[], uint)> _func;
         public:
-            explicit CPUKernel(const std::function<void(void *[], uint)> &func);
+            explicit CPUKernel(std::function<void(void *[], uint)> func);
 
             void configure(uint3 grid_size, uint3 local_size, size_t sm) override {}
 

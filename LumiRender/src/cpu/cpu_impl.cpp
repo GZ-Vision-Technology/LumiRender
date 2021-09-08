@@ -3,6 +3,8 @@
 //
 
 #include "cpu_impl.h"
+
+#include <utility>
 #include "cpu_scene.h"
 
 namespace luminous {
@@ -69,8 +71,8 @@ namespace luminous {
             return Dispatcher(std::make_unique<CPUDispatcher>());
         }
 
-        CPUKernel::CPUKernel(const std::function<void(void *[], uint)> &func)
-                : _func(func) {}
+        CPUKernel::CPUKernel(std::function<void(void *[], uint)> func)
+                : _func(std::move(func)) {}
 
         void CPUKernel::launch(Dispatcher &dispatcher, void **args) {
             async(1, [&](uint idx, uint tid) {
