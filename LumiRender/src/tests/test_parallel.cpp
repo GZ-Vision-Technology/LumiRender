@@ -14,11 +14,10 @@ using namespace luminous;
 int main() {
     Ray ray[16];
 
-//    parallel_for(1, [&](uint, uint){
-//auto r = luminous::to_RTCRayN<4>(ray);
-//auto r = luminous::to_RTCRayN<8>(ray);
-auto r = luminous::to_RTCRayN<16>(ray);
-//    });
+    parallel_for(1, [&](uint, uint){
+        auto r = luminous::to_RTCRayN<8>(ray);
+
+    });
 
 
 

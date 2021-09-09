@@ -68,7 +68,7 @@ namespace luminous {
         template<int ray_num>
         NDSC_INLINE auto to_RTCRayN(Ray *ray) {
             typename RTCType<ray_num>::RayType ret{};
-            parallel_for(4, [&](uint idx, uint tid){
+            parallel_for(ray_num, [&](uint idx, uint tid){
                 ret.org_x[idx] = ray[idx].org_x;
                 ret.org_y[idx] = ray[idx].org_y;
                 ret.org_z[idx] = ray[idx].org_z;
