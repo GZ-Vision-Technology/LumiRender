@@ -11,6 +11,10 @@
 #include <future>
 #include <base_libs/geometry/box.h>
 #include "base_libs/math/common.h"
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 namespace luminous {
     inline namespace utility {
@@ -41,71 +45,17 @@ namespace luminous {
             std::uint32_t work_id;
             std::uint32_t n_thread_finished;
 
-            ParallelForWorkPool() : work_id(0), n_thread_finished(0) {
-                stopped = false;
-                auto n = num_work_threads();
-                for (uint32_t tid = 0; tid < n; tid++) {
-                    threads.emplace_back([=]() {
-                        while (!stopped) {
-                            std::unique_lock<std::mutex> lock(work_mutex);
-                            while (works.empty() && !stopped) {
-                                has_work.wait(lock);
-                            }
-                            if (stopped)
-                                return;
-                            auto &loop = works.front();
-                            auto id = work_id;
-                            lock.unlock();
-                            // lock held
-                            while (!loop.done()) {
-                                auto begin = loop.work_index.fetch_add(loop.chunk_size);
-                                for (auto i = begin; i < begin + loop.chunk_size && i < loop.count; i++) {
-                                    (loop.func)(i, tid);
-                                }
-                            }
-                            lock.lock();
-                            n_thread_finished++;
-                            one_thread_finished.notify_all();
-
-                            while (n_thread_finished != (uint32_t) threads.size() && work_id == id) {
-                                one_thread_finished.wait(lock);
-                            }
-
-                            if (work_id == id) {
-                                work_id++; // only one thread would reach here
-                                works.pop_front();
-                                if (works.empty()) {
-                                    main_waiting.notify_one();
-                                }
-                                n_thread_finished = 0;
-                            }
-                            lock.unlock();
-                        }
-                    });
-                }
+            ParallelForWorkPool() : work_id(0), n_thread_finished(0), stopped(false) {
+                init();
             }
 
-            void enqueue(const ParallelForContext &context) {
-                std::lock_guard<std::mutex> lock(work_mutex);
-                works.emplace_back(context);
-                has_work.notify_all();
-            }
+            void init();
 
-            void wait() {
-                std::unique_lock<std::mutex> lock(work_mutex);
-                while (!works.empty()) {
+            void enqueue(const ParallelForContext &context);
 
-                    main_waiting.wait(lock);
-                }
-            }
+            void wait();
 
-            ~ParallelForWorkPool() {
-                stopped = true;
-                has_work.notify_all();
-                for (auto &thr : threads) {
-                    thr.join();
-                }
-            }
+            ~ParallelForWorkPool();
         };
 
         void init_thread_pool();
