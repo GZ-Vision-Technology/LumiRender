@@ -26,21 +26,27 @@ namespace luminous {
                         auto id = work_id;
                         lock.unlock();
                         // lock held
+                        printf("tid start :%d\n", (int)tid);
                         while (!loop.done()) {
+
                             auto begin = loop.work_index.fetch_add(loop.chunk_size);
                             for (auto i = begin; i < begin + loop.chunk_size && i < loop.count; i++) {
                                 (loop.func)(i, tid);
                             }
+
                         }
+                        printf("tid end :%d\n", (int)tid);
                         lock.lock();
                         n_thread_finished++;
                         one_thread_finished.notify_all();
 
                         while (n_thread_finished != (uint32_t) threads.size() && work_id == id) {
+                            printf("wait %d tid\n", tid);
                             one_thread_finished.wait(lock);
                         }
 
                         if (work_id == id) {
+                            printf("tid :%d\n", (int)tid);
                             work_id++; // only one thread would reach here
                             works.pop_front();
                             if (works.empty()) {
@@ -48,7 +54,7 @@ namespace luminous {
                             }
                             n_thread_finished = 0;
                         } else {
-//                            cout << work_id << "  " << id << endl;
+                            cout <<"wori "<< work_id << "  " << id << endl;
                         }
                         lock.unlock();
                     }
@@ -82,7 +88,7 @@ namespace luminous {
         void set_thread_num(int num) { n_thread = num; }
 
         int num_work_threads() {
-            return 2;
+            return 3;
             return n_thread == 0 ? std::thread::hardware_concurrency() : n_thread;
         }
 
