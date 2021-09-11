@@ -58,12 +58,12 @@ namespace luminous {
 
         void ThreadPool::start_work(const ParallelWork &work) {
             _works.push_back(work);
-            _cv.notify_all();
             std::unique_lock<std::mutex> lock(_work_mtx);
+            _cv.notify_all();
             work_loop(0, lock);
         }
 
-        void ThreadPool::work_loop(uint tid,std::unique_lock<std::mutex> &lock) {
+        void ThreadPool::work_loop(uint tid, std::unique_lock<std::mutex> &lock) {
             if (tid != 0 && _works.empty()) {
                 _cv.wait(lock);
             }
@@ -80,6 +80,7 @@ namespace luminous {
                                       std::unique_lock<std::mutex> &lock) {
             while (!work.done()) {
                 work.active_thread_num += 1;
+                printf("unlock %u %d\n",tid, work.active_thread_num);
                 lock.unlock();
                 auto begin = work.work_index.fetch_add(work.chunk_size);
                 for (uint i = begin; i < begin + work.chunk_size && work.count; ++i) {
@@ -87,6 +88,7 @@ namespace luminous {
                 }
                 lock.lock();
                 work.active_thread_num -= 1;
+                printf("  lock %u %d\n", tid, work.active_thread_num);
             }
         }
 

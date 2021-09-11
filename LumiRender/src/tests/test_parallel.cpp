@@ -29,12 +29,12 @@ int main() {
 //        printf("tid out :%d\n", (int)tid);
 //    });
 
-    init_thread_pool(3);
+    init_thread_pool(2);
 
 //    parallelFor(2, [&](uint idx, uint tid) {
 //        parallelFor(4, [&](uint idx, uint tid) {
     parallelFor(5, [&](uint idx, uint tid) {
-        printf("%u %u\n", idx, tid);
+//        printf("%u %u\n", idx, tid);
     }, 1);
 //        }, 1);
 //    }, 1);

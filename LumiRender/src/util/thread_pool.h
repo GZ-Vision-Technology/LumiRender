@@ -70,6 +70,7 @@ namespace luminous {
             std::vector<std::thread> _threads;
             std::condition_variable _cv;
             std::mutex _work_mtx;
+            std::mutex _mtx;
             std::atomic_bool _stopped;
         public:
             explicit ThreadPool(int num);
