@@ -31,9 +31,9 @@ int main() {
 
     init_thread_pool(9);
 
-    parallelFor(5, [&](uint idx, uint tid) {
-        printf("%u\n", idx);
-    },7);
+    parallelFor(20, [&](uint idx, uint tid) {
+        printf("%u %u\n", idx, tid);
+    },1);
 
 //    std::function < void(void**, uint32_t) > func = [&](void**, uint idx) {
 //        printf("%u \n", idx);

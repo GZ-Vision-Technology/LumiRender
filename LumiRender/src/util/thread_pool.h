@@ -63,6 +63,7 @@ namespace luminous {
             int _thread_num{};
             std::deque<ParallelWork> _works;
             std::vector<std::thread> _threads;
+            std::condition_variable _cv;
             std::mutex _work_mtx;
             std::atomic_bool _stopped;
         public:
@@ -72,7 +73,7 @@ namespace luminous {
 
             void execute_work(ParallelWork &work, uint tid);
 
-            void loop_func();
+            void work_loop(uint tid);
 
             void start_work(const ParallelWork& work);
 

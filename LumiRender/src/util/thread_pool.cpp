@@ -58,12 +58,23 @@ namespace luminous {
 
         void ThreadPool::start_work(const ParallelWork& work) {
             _works.push_back(work);
-
+//            _cv.notify_all();
+            work_loop(0);
 
         }
 
-        void ThreadPool::loop_func() {
-
+        void ThreadPool::work_loop(uint tid) {
+            _work_mtx.lock();
+            while (!_stopped && !_works.empty()) {
+                auto &work = _works.front();
+                _work_mtx.unlock();
+                execute_work(work, tid);
+                _work_mtx.lock();
+                if (work.done()) {
+                    _works.pop_front();
+                }
+            }
+            _work_mtx.unlock();
         }
 
         void ThreadPool::execute_work(ParallelWork &work, uint tid) {
@@ -82,10 +93,9 @@ namespace luminous {
                     thread_idx = tid;
                     barrier->wait();
                     barrier.reset();
-
-                    while (!_stopped) {
-
-                    }
+                    std::unique_lock<std::mutex> lock(_work_mtx);
+                    _cv.wait(lock);
+//                    work_loop(tid);
 
                 }, tid, barrier);
             }
