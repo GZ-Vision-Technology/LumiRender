@@ -29,17 +29,19 @@ int main() {
 //        printf("tid out :%d\n", (int)tid);
 //    });
 
-    init_thread_pool(9);
+    init_thread_pool(3);
 
-    parallelFor(2, [&](uint idx, uint tid) {
-        parallelFor(4, [&](uint idx, uint tid) {
-//            printf("%u %u\n", idx, tid);
-            parallelFor(4, [&](uint idx, uint tid) {
-                printf("%u %u\n", idx, tid);
-            }, 1);
-        }, 1);
+//    parallelFor(2, [&](uint idx, uint tid) {
+//        parallelFor(4, [&](uint idx, uint tid) {
+    parallelFor(5, [&](uint idx, uint tid) {
+        printf("%u %u\n", idx, tid);
     }, 1);
-
+//        }, 1);
+//    }, 1);
+printf("99999999999999\n");
+//    parallelFor(50, [&](uint idx, uint tid) {
+//        printf("%u %u\n", idx, tid);
+//    }, 19);
 //    std::function < void(void**, uint32_t) > func = [&](void**, uint idx) {
 //        printf("%u \n", idx);
 //    };
@@ -55,6 +57,7 @@ int main() {
 //    kernel->launch(count, dispatcher, func);
 //
 //    dispatcher.wait();
+    printf("wancheng \n");
     getchar();
     return 0;
 }

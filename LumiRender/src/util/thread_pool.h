@@ -23,7 +23,9 @@ namespace luminous {
 
         void init_thread_pool(int threads_num);
 
-        void parallelFor(int count, std::function<void(uint idx, uint tid)> func, int chunk_size = 1);
+        void parallelFor(int count,
+                         std::function<void(uint, uint)> func,
+                         int chunk_size = 1);
 
         extern thread_local int thread_idx;
 
@@ -45,10 +47,11 @@ namespace luminous {
             size_t count = 0;
             uint32_t chunk_size = 0;
             std::atomic_uint32_t work_index;
+            int active_thread_num{0};
 
-            bool done() const { return work_index >= count; }
+            bool done() const { return work_index >= count && active_thread_num == 0; }
 
-            bool valid() const { return bool(func);}
+            bool valid() const { return bool(func); }
 
             ParallelWork(std::function<void(uint, uint)> f, size_t c, uint32_t chunk_size)
                     : func(std::move(f)), count(c), chunk_size(chunk_size), work_index(0) {}
@@ -73,11 +76,12 @@ namespace luminous {
 
             void init(int num);
 
-            void execute_work(ParallelWork &work, uint tid);
+            void execute_work(ParallelWork &work, uint tid,
+                              std::unique_lock<std::mutex> &lock);
 
-            void work_loop(uint tid);
+            void work_loop(uint tid, std::unique_lock<std::mutex> &lock);
 
-            void start_work(const ParallelWork& work);
+            void start_work(const ParallelWork &work);
 
             ~ThreadPool();
         };
