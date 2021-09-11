@@ -48,6 +48,8 @@ namespace luminous {
 
             bool done() const { return work_index >= count; }
 
+            bool valid() const { return bool(func);}
+
             ParallelWork(std::function<void(uint, uint)> f, size_t c, uint32_t chunk_size)
                     : func(std::move(f)), count(c), chunk_size(chunk_size), work_index(0) {}
 
