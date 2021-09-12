@@ -19,6 +19,11 @@ namespace lstd {
         b = std::move(tmp);
     }
 
+    template<typename T>
+    void append(T &v1, const T &v2) {
+        v1.insert(v1.cend(), v2.cbegin(), v2.cend());
+    }
+
     template<typename Iter, typename Predict>
     NDSC_XPU Iter find_if(const Iter begin, const Iter end, Predict predict) {
         Iter iter;

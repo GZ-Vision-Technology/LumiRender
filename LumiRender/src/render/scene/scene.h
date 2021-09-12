@@ -17,17 +17,13 @@
 #include "render/materials/material.h"
 #include "render/include/accelerator.h"
 
+
 using std::cout;
 using std::endl;
 
 namespace luminous {
 
     inline namespace render {
-
-        template<typename T>
-        void append(std::vector<T> &v1, const std::vector<T> &v2) {
-            v1.insert(v1.cend(), v2.cbegin(), v2.cend());
-        }
 
         /**
          * all memory data manage

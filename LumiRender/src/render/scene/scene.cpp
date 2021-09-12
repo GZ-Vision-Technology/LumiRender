@@ -4,6 +4,7 @@
 
 #include "scene.h"
 #include "util/stats.h"
+#include "base_libs/lstd/common.h"
 
 namespace luminous {
     inline namespace render {
@@ -118,11 +119,11 @@ namespace luminous {
                     tri_offset += tri_count;
                 }
                 material_count += model->materials.size();
-                append(scene_graph->material_configs, model->materials);
-                append(tex_configs, model->textures);
+                lstd::append(scene_graph->material_configs, model->materials);
+                lstd::append(tex_configs, model->textures);
             }
 
-            append(_tex_configs, scene_graph->tex_configs);
+            lstd::append(_tex_configs, scene_graph->tex_configs);
             relevance_material_and_texture(scene_graph->material_configs);
             append_light_material(scene_graph->material_configs);
             init_materials(scene_graph);

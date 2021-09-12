@@ -23,7 +23,7 @@ namespace luminous {
             ray.dir_y = r.dir_y;
             ray.dir_z = r.dir_z;
             ray.tnear = 0;
-            ray.tfar  = r.t_max;
+            ray.tfar = r.t_max;
             ray.flags = 0;
             return ray;
         }
@@ -42,6 +42,11 @@ namespace luminous {
             using RayType = RTCRayNp;
             using HitType = RTCHitNp;
             using RHType = RTCRayHitNp;
+
+            template<typename... Args>
+            static auto rtcIntersect(Args &&...args) {
+                return rtcIntersectNp(std::forward<Args>(args)..., ray_num);
+            }
         };
 
         template<>
@@ -49,6 +54,12 @@ namespace luminous {
             using RayType = RTCRay4;
             using HitType = RTCHit4;
             using RHType = RTCRayHit4;
+
+            template<typename... Args>
+            static auto rtcIntersect(Args &&...args) {
+                int a[] = {-1,-1,-1,-1};
+                return rtcIntersect4(a, std::forward<Args>(args)...);
+            }
         };
 
         template<>
@@ -56,6 +67,12 @@ namespace luminous {
             using RayType = RTCRay8;
             using HitType = RTCHit8;
             using RHType = RTCRayHit8;
+
+            template<typename... Args>
+            static auto rtcIntersect(Args &&...args) {
+                int a[] = {-1,-1,-1,-1,-1,-1,-1,-1};
+                return rtcIntersect8(a, std::forward<Args>(args)...);
+            }
         };
 
         template<>
@@ -63,12 +80,19 @@ namespace luminous {
             using RayType = RTCRay16;
             using HitType = RTCHit16;
             using RHType = RTCRayHit16;
+
+            template<typename... Args>
+            static auto rtcIntersect(Args &&...args) {
+                int a[] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+                return rtcIntersect16(a, std::forward<Args>(args)...);
+            }
         };
 
         template<int ray_num>
-        NDSC_INLINE auto to_RTCRayN(Ray *ray) {
+        auto to_RTCRayN(const Ray *ray) {
             typename RTCType<ray_num>::RayType ret{};
-            parallel_for(ray_num, [&](uint idx, uint tid){
+            // todo allocate memory
+            for (int idx = 0; idx < ray_num; ++idx) {
                 ret.org_x[idx] = ray[idx].org_x;
                 ret.org_y[idx] = ray[idx].org_y;
                 ret.org_z[idx] = ray[idx].org_z;
@@ -76,22 +100,43 @@ namespace luminous {
                 ret.dir_y[idx] = ray[idx].dir_y;
                 ret.dir_z[idx] = ray[idx].dir_z;
                 ret.tnear[idx] = 0;
-                ret.tfar[idx]  = ray[idx].t_max;
+                ret.tfar[idx] = ray[idx].t_max;
                 ret.flags[idx] = 0;
-            });
+                ret.time[idx] = 0;
+            }
             return ret;
         }
 
         template<int ray_num>
-        NDSC_INLINE auto to_RTCRayHitN(Ray *ray) {
+        auto to_RTCRayHitN(const Ray *ray) {
             typename RTCType<ray_num>::RHType ret;
             ret.ray = to_RTCRayN<ray_num>(ray);
             return ret;
         }
 
+        template<int ray_num, typename RHType>
+        void to_prd(const RHType rh, PerRayData *prd) {
+            static_assert(std::is_same_v<RTCType<ray_num>::RHType, RHType>, "RTCType is not match!");
+            for (int i = 0; i < ray_num; ++i) {
+                prd[i].hit_point.instance_id = rh.hit.instID[0][i];
+                prd[i].hit_point.triangle_id = rh.hit.primID[i];
+                prd[i].hit_point.bary.x = 1 - rh.hit.u[i] - rh.hit.v[i];
+                prd[i].hit_point.bary.y = rh.hit.u[i];
+            }
+        }
+
+        template<int ray_num>
+        void rtc_intersectNp(RTCScene scene, const Ray *ray, PerRayData *prd) {
+            RTCIntersectContext context{};
+            rtcInitIntersectContext(&context);
+            auto rh = to_RTCRayHitN<ray_num>(ray);
+            RTCType<ray_num>::rtcIntersect(scene, &context, &rh);
+            to_prd<ray_num>(rh, prd);
+        }
+
         NDSC_INLINE RTCBounds to_RTCBounds(Box3f box) {
-            return RTCBounds{box.lower.x,box.lower.y,box.lower.z,0,
-                             box.upper.x,box.upper.y,box.upper.z,0};
+            return RTCBounds{box.lower.x, box.lower.y, box.lower.z, 0,
+                             box.upper.x, box.upper.y, box.upper.z, 0};
         }
 
         NDSC_INLINE bool rtc_intersect(RTCScene scene, Ray ray, PerRayData *prd) {
