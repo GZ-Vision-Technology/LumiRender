@@ -18,7 +18,7 @@ namespace luminous {
         using std::vector;
         using std::string;
 
-        class Shape : public IObject {
+        class Shape {
 
         };
 

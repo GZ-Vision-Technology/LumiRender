@@ -8,10 +8,6 @@
 
 namespace luminous {
 
-    class IObject {
-
-    };
-
     struct Noncopyable {
         Noncopyable() = default;
 
