@@ -86,14 +86,12 @@ namespace luminous {
         NDSC virtual size_t ptr_member_size() const { return 0; }
 
         NDSC virtual size_t real_size() const {
-            return self_size();
+            return self_size() + ptr_member_size();
         }
     };
 
-#define CALL_SIZE_FUNC(ptr) + (ptr ? ptr->real_size() : 0)
-#define GEN_REAL_SIZE_FUNC_BODY(...) MAP(CALL_SIZE_FUNC,__VA_ARGS__)
-
-#define GEN_REAL_SIZE_FUNC(...) NDSC size_t real_size() { return self_size() MAP(CALL_SIZE_FUNC,__VA_ARGS__); }
+#define CALL_SIZE_FUNC(ptr) (+ ((ptr) ? (ptr)->real_size() : 0))
+#define GEN_PTR_MEMBER_SIZE_FUNC(...) NDSC size_t ptr_member_size() const override { return MAP(CALL_SIZE_FUNC,__VA_ARGS__) + Super::ptr_member_size(); }
 
 
     template<typename T>
