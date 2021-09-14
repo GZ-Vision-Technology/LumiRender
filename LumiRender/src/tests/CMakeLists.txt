@@ -21,6 +21,7 @@ luminous_render_add_application(test-embree SOURCES test_embree.cpp)
 luminous_render_add_application(test-soa SOURCES test_soa.cpp)
 luminous_render_add_application(test-parallel SOURCES test_parallel.cpp)
 luminous_render_add_application(test-ptrhelper SOURCES test_ptr_helper.cpp)
+luminous_render_add_application(test-reflection SOURCES test_reflection.cpp)
 
 
 #set(CMAKE_CUDA_STANDARD 17)
