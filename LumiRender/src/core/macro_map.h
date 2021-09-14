@@ -4,6 +4,30 @@
 
 #pragma once
 
+#define GET(index, ...) GET_##index(__VA_ARGS__)
+
+#define GET_20(X,...) GET_19(__VA_ARGS__)
+#define GET_19(X,...) GET_18(__VA_ARGS__)
+#define GET_18(X,...) GET_17(__VA_ARGS__)
+#define GET_17(X,...) GET_16(__VA_ARGS__)
+#define GET_16(X,...) GET_15(__VA_ARGS__)
+#define GET_15(X,...) GET_14(__VA_ARGS__)
+#define GET_14(X,...) GET_13(__VA_ARGS__)
+#define GET_13(X,...) GET_12(__VA_ARGS__)
+#define GET_12(X,...) GET_11(__VA_ARGS__)
+#define GET_11(X,...) GET_10(__VA_ARGS__)
+#define GET_10(X,...) GET_9(__VA_ARGS__)
+#define GET_9(X,...) GET_8(__VA_ARGS__)
+#define GET_8(X,...) GET_7(__VA_ARGS__)
+#define GET_7(X,...) GET_6(__VA_ARGS__)
+#define GET_6(X,...) GET_5(__VA_ARGS__)
+#define GET_5(X,...) GET_4(__VA_ARGS__)
+#define GET_4(X,...) GET_3(__VA_ARGS__)
+#define GET_3(X,...) GET_2(__VA_ARGS__)
+#define GET_2(X,...) GET_1(__VA_ARGS__)
+#define GET_1(X,...) GET_0(__VA_ARGS__)
+#define GET_0(X,...) X
+
 // From: https://github.com/Erlkoenig90/map-macro
 
 #define EVAL0(...) __VA_ARGS__
