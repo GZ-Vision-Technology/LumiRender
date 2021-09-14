@@ -75,6 +75,8 @@ namespace luminous {
 
     class Object {
     public:
+        using PtrMapper = std::map<Object *, size_t>;
+
         NDSC virtual const char *class_name() const {
             return type_name(this);
         }
@@ -85,13 +87,36 @@ namespace luminous {
 
         NDSC virtual size_t ptr_member_size() const { return 0; }
 
+        template<typename ...Args>
+        NDSC static size_t size_sum(Args &&...ptr) {
+            return (... + (ptr == nullptr ? 0 : ptr->real_size()));
+        }
+
         NDSC virtual size_t real_size() const {
             return self_size() + ptr_member_size();
         }
+
+        template<typename ...Args>
+        static size_t mapping_ptr(PtrMapper &mapper, size_t offset, Args &&...ptr) {
+            ((mapper[ptr] = offset, offset += ptr->mapping_member_ptr()), ...);
+            return offset;
+        }
+
+        virtual size_t mapping_member_ptr(PtrMapper &mapper, size_t offset) {
+            mapper[this] = offset;
+            offset += self_size();
+            return offset;
+        }
     };
 
-#define CALL_SIZE_FUNC(ptr) (+ ((ptr) ? (ptr)->real_size() : 0))
-#define GEN_PTR_MEMBER_SIZE_FUNC(...) NDSC size_t ptr_member_size() const override { return MAP(CALL_SIZE_FUNC,__VA_ARGS__) + Super::ptr_member_size(); }
+#define GEN_PTR_MEMBER_SIZE_FUNC(Super, ...) NDSC size_t ptr_member_size() const override { \
+        return size_sum(__VA_ARGS__) + Super::ptr_member_size();                            \
+    }
+
+#define GEN_PTR_MEMBER_SIZE
+
+#define DEFINE_PTR_VAR(Statement) Statement{};
+#define DEFINE_PTR_VARS(...) MAP(DEFINE_PTR_VAR, __VA_ARGS__)
 
 
     template<typename T>
@@ -103,6 +128,45 @@ namespace luminous {
     };
 
 #define REGISTER(T) RegisterAction<T> Register##T;
+
+
+    class A : public Object {
+    public:
+        int b;
+        A *pa{};
+        using Super = Object;
+
+        GEN_PTR_MEMBER_SIZE_FUNC(Object, pa)
+
+
+
+        size_t mapping_member_ptr(PtrMapper &mapper, size_t offset) override {
+            offset = Object::mapping_member_ptr(mapper, offset);
+            offset = mapping_ptr(mapper, offset, pa);
+            return offset;
+        }
+    };
+
+    class B : public A {
+    public:
+        int b;
+    };
+
+    class C : public A {
+    public:
+        int c;
+
+        DEFINE_PTR_VARS(Object *pc, Object *p1)
+
+        GEN_PTR_MEMBER_SIZE_FUNC(A, pc, p1)
+
+
+
+    };
+
+    REGISTER(B)
+    REGISTER(A)
+    REGISTER(C)
 
 
 }
