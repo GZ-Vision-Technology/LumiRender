@@ -7,10 +7,7 @@
 
 using std::cout;
 using std::endl;
-
 using namespace luminous;
-
-//using
 
 class A : public Object {
 public:
@@ -18,9 +15,10 @@ public:
     A *pa{};
     using Super = Object;
 
-    GEN_PTR_MEMBER_SIZE_FUNC(pa)
-};
+    GEN_PTR_MEMBER_SIZE_FUNC(Object, pa)
 
+    GEN_MAPPING_MEMBER_PTR_FUNC(pa)
+};
 
 class B : public A {
 public:
@@ -30,44 +28,26 @@ public:
 class C : public A {
 public:
     int c;
-    A *pc{};
-    using Super = A;
 
-//    [[nodiscard]]size_t ptr_member_size() const override {
-//        return (+((pc) ? (pc)->
-//                real_size() :
-//                  0)) + A::ptr_member_size();
-//    }
-//    B *p2;
-    GEN_PTR_MEMBER_SIZE_FUNC(pc)
+    DEFINE_PTR_VARS(Object *pc, Object *p1)
+
+    GEN_PTR_MEMBER_SIZE_FUNC(A, pc, p1)
+
+
 };
 
 REGISTER(B)
 REGISTER(A)
 REGISTER(C)
 
-void test_reflection() {
-    Object object;
-    A a;
-    C *p = new C;
-//    p = new B;
-    p->pc = new A;
-    p->pa = new A;
+void test() {
 
-    auto cf = ClassFactory::instance();
-    cout << "object size:" << sizeof(Object) << endl;
-    cout << "C size:" << cf->size_of(new C) << endl;
-    cout << "A size:" << cf->size_of(new A) << endl;
-    cout << "B size:" << cf->size_of(new B) << endl;
-
-    cout << "C object:" << p->real_size();
 }
 
 int main() {
 
-//    test_crtp();
+    test();
 
-    test_reflection();
 
     return 0;
 }
