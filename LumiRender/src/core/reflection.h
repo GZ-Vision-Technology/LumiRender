@@ -97,14 +97,19 @@ namespace luminous {
         }
 
         template<typename ...Args>
-        static size_t mapping_ptr(PtrMapper &mapper, size_t offset, Args &&...ptr) {
-            ((mapper[ptr] = offset, offset += ptr->mapping_member_ptr()), ...);
+        NDSC static size_t mapping_ptr(PtrMapper &mapper, size_t offset, Args &&...ptr) {
+            ((mapper[ptr] = offset, offset += ptr->mapping_member_ptr(mapper, offset)), ...);
             return offset;
         }
 
-        virtual size_t mapping_member_ptr(PtrMapper &mapper, size_t offset) {
+        NDSC virtual size_t mapping_member_ptr(PtrMapper &mapper, size_t offset) {
+            return offset;
+        }
+
+        size_t mapping_all_ptr(PtrMapper &mapper, size_t offset) {
             mapper[this] = offset;
             offset += self_size();
+            offset = mapping_member_ptr(mapper, offset);
             return offset;
         }
     };
@@ -113,11 +118,14 @@ namespace luminous {
         return size_sum(__VA_ARGS__) + Super::ptr_member_size();                            \
     }
 
-#define GEN_PTR_MEMBER_SIZE
-
 #define DEFINE_PTR_VAR(Statement) Statement{};
 #define DEFINE_PTR_VARS(...) MAP(DEFINE_PTR_VAR, __VA_ARGS__)
 
+#define GEN_MAPPING_MEMBER_PTR_FUNC(...)                              \
+size_t mapping_member_ptr(PtrMapper &mapper, size_t offset) override {\
+    offset = mapping_ptr(mapper, offset, __VA_ARGS__);                \
+    return offset;                                                    \
+}
 
     template<typename T>
     class RegisterAction {
@@ -138,13 +146,7 @@ namespace luminous {
 
         GEN_PTR_MEMBER_SIZE_FUNC(Object, pa)
 
-
-
-        size_t mapping_member_ptr(PtrMapper &mapper, size_t offset) override {
-            offset = Object::mapping_member_ptr(mapper, offset);
-            offset = mapping_ptr(mapper, offset, pa);
-            return offset;
-        }
+        GEN_MAPPING_MEMBER_PTR_FUNC(pa)
     };
 
     class B : public A {
