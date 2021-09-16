@@ -7,6 +7,7 @@
 
 #include "base_libs/header.h"
 #include <map>
+#include <vector>
 #include <string>
 #include "reflection.h"
 #include "core/macro_map.h"
@@ -14,10 +15,12 @@
 namespace luminous {
 
     inline namespace refl {
-        struct TypeData {
+        class Object;
 
+        struct TypeData {
             const size_t size;
             const size_t align;
+            std::vector<size_t> member_offsets;
 
             explicit TypeData(size_t size = 0, size_t align = 0)
                     : size(size), align(align) {}
@@ -61,10 +64,11 @@ namespace luminous {
             void register_class(const std::string &class_name, const TypeData &type_data);
 
             template<typename T>
-            void register_class() {
+            TypeData &register_class() {
                 auto class_name = type_name<T>();
-                TypeData type_data(sizeof(T), alignof(T));
-                register_class(class_name, type_data);
+                TypeData td(sizeof(T), alignof(T));
+                register_class(class_name, td);
+                return _type_data[class_name];
             }
 
             template<typename ...Args>
@@ -75,11 +79,8 @@ namespace luminous {
 
 
         class Object {
-            REFL_CLASS(Object)
-        protected:
-            std::unique_ptr<Object*> _objects;
         public:
-            using Object_ptr = Object *;
+            REFL_CLASS(Object)
 
             using PtrMapper = std::map<Object *, size_t>;
 
@@ -118,7 +119,10 @@ namespace luminous {
         class RegisterAction {
         public:
             RegisterAction() {
-                ClassFactory::instance()->template register_class<T>();
+                TypeData &type_data = ClassFactory::instance()->template register_class<T>();
+                for_each_ptr_member<T>([&](auto offset, auto name) {
+                    type_data.member_offsets.push_back(offset);
+                });
             }
         };
 

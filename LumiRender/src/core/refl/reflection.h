@@ -64,22 +64,11 @@ namespace luminous {
                     f, std::make_integer_sequence<int, REFL_MAX_MEMBER_COUNT>());
         }
 
-        class Object;
-
         template<typename T, typename F>
-        void for_each_registered_member(T &obj, const F &f) {
+        void for_each_ptr_member(const F &f) {
 #define OFFSET_OF(Class, member) reinterpret_cast<size_t>(&((*(Class *) 0).*member))
             for_each_registered_member<T>([&](auto member_ptr, const char *name) {
-                f(&obj, *((Object**)&(((char*)&obj)[OFFSET_OF(T, member_ptr)])), name);
-            });
-#undef OFFSET_OF
-        }
-
-        template<typename T, typename F>
-        void for_each_registered_member(const T &obj, const F &f) {
-#define OFFSET_OF(Class, member) reinterpret_cast<size_t>(&((*(Class *) 0).*member))
-            for_each_registered_member<T>([&](auto member_ptr, const char *name) {
-                f(&obj, *((Object**)&(((char*)&obj)[OFFSET_OF(T, member_ptr)])), name);
+                f(OFFSET_OF(T, member_ptr), name);
             });
 #undef OFFSET_OF
         }
