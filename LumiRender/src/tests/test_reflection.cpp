@@ -1,83 +1,69 @@
 #pragma once
 
-#include <utility>
+#include "src/core/refl/factory.h"
+
 #include <iostream>
+#include <vector>
 
-#define REFL_BEGIN namespace refl {
-#define REFL_END   }
+using namespace std;
+using namespace luminous;
 
-REFL_BEGIN
-
-#define REFL_MAX_MEMBER_COUNT 128
-
-    template<int N>
-    struct Int : Int<N - 1> {
-    };
-
-    template<>
-    struct Int<0> {
-    };
-
-    template<int N>
-    struct Sizer {
-        char _[N];
-    };
-
-#define REFL_CLASS(NAME)                                                        \
-    using ReflSelf = NAME;                                                      \
-    static ::refl::Sizer<1> _member_counter(...);                               \
-    template<int N>                                                             \
-    struct MemberRegister                                                       \
-    {                                                                           \
-        template<typename F>                                                    \
-        static void process(const F &f) {}                                      \
-    };
-
-#define DEFINE_MEMBER(TYPE, NAME)                                               \
-    TYPE NAME;                                                                  \
-    static constexpr int NAME##_refl_index =                                    \
-        sizeof((_member_counter(                                                \
-            (::refl::Int<REFL_MAX_MEMBER_COUNT>*)nullptr)));                    \
-    static ::refl::Sizer<NAME##_refl_index + 1>                                 \
-        (_member_counter(::refl::Int<NAME##_refl_index + 1> *));                \
-    template<>                                                                  \
-    struct MemberRegister<NAME##_refl_index - 1>                                \
-    {                                                                           \
-        template<typename F>                                                    \
-        static void process(const F &f)                                         \
-        {                                                                       \
-            f(&ReflSelf::NAME, #NAME);                                          \
-        }                                                                       \
-    };
-
-    template<typename T, typename F, int...Is>
-    void forEachMemberAux(const F &f, std::integer_sequence<int, Is...>) {
-        (T::template MemberRegister<Is>::template process<F>(f), ...);
-    }
-
-    template<typename T, typename F>
-    void forEachMember(const F &f) {
-        forEachMemberAux<T>(
-                f, std::make_integer_sequence<int, REFL_MAX_MEMBER_COUNT>());
-    }
-
-REFL_END
-
-struct A {
+class A : public Object {
+public:
     REFL_CLASS(A)
 
-    DEFINE_MEMBER(int, a)
+    DEFINE_AND_REGISTER_MEMBER(Object*, a1)
 
-    DEFINE_MEMBER(float, b)
+    DEFINE_AND_REGISTER_MEMBER(Object *, a2)
 
-    DEFINE_MEMBER(double, c)
+    int iv = 0;
+
+    void fun() {
+        int _count = 0;
+        refl::for_each_registered_member(*this, [&](auto obj, Object *ptr, auto name) {
+            ++ _count;
+        });
+        _count = 0;
+        _objects.reset(new Object_ptr[_count]);
+        refl::for_each_registered_member(*this, [&](auto obj, Object *ptr, auto name) {
+            _objects.get()[_count++] = ptr;
+        });
+    }
 };
 
+REGISTER(A)
+
+class B : public A {
+public:
+    REFL_CLASS(B)
+
+    int iv2 = 0;
+
+
+};
+
+REGISTER(B)
+
 int main() {
-    refl::forEachMember<A>([&](auto member_ptr, const char *name) {
-        std::cout << "name: " << name;
-        std::cout << " , offset: " << reinterpret_cast<size_t>(&((*(A *) 0).*member_ptr));
-        std::cout << " , size: " << sizeof((*(A *) 0).*member_ptr);
-        std::cout << std::endl;
-    });
+
+    A a;
+
+    a.iv = 9;
+    A* pa = new A();
+    a.a1 = pa;
+    a.a2 = pa;
+
+
+    a.fun();
+//
+////    a.a1 = pa;
+////    a.a2 = new B;
+////    cout << pa << endl;
+////
+//    cout << sizeof(std::unique_ptr<Object*>) << endl;
+//    cout << sizeof(std::vector<Object*>) << endl;
+//
+//    refl::for_each_registered_member(a, [&](auto obj, Object *ptr, auto name) {
+//        cout << "name : " << name << ",ptr:" << ptr << "  " << ptr->self_size() << endl;
+//    });
 }
