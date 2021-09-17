@@ -12,7 +12,6 @@
 #include "reflection.h"
 #include "core/macro_map.h"
 #include "base_libs/math/interval.h"
-#include "ptr_mapper.h"
 
 namespace luminous {
 
@@ -92,8 +91,6 @@ namespace luminous {
 
             DECLARE_SUPER(Empty)
 
-            using PtrMapper = std::map<Object *, size_t>;
-
             NDSC virtual const char *class_name() const {
                 return type_name(this);
             }
@@ -109,6 +106,7 @@ namespace luminous {
             NDSC virtual size_t ptr_member_size() const {
                 size_t ret = 0;
                 TypeData type_data = ClassFactory::instance()->type_data(this);
+
 
 
                 return ret;
