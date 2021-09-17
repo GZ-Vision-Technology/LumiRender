@@ -9,7 +9,7 @@
 #include "core/header.h"
 
 namespace luminous {
-    inline namespace utility {
+    inline namespace core {
         /**
           * 2D array optimization, rearrangement of memory structure
           * The arrangement of a two-dimensional array in memory is actually 1-dimensional continuous

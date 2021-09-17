@@ -2,10 +2,10 @@
 // Created by Zero on 2020/11/6.
 //
 
-#include "memory.h"
+#include "arena.h"
 
 namespace luminous {
-    inline namespace utility {
+    inline namespace core {
 
         void *alloc_aligned(size_t size) {
         #if defined(HAVE_ALIGNED_MALLOC)

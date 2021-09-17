@@ -9,10 +9,11 @@
 #include "core/concepts.h"
 #include "base_libs/string_util.h"
 #include "core/logging.h"
+#include "allocator.h"
 
 
 namespace luminous {
-    inline namespace utility {
+    inline namespace core {
 
         void *aligned_alloc(size_t alignment, size_t size) noexcept {
             return _aligned_malloc(size, alignment);
