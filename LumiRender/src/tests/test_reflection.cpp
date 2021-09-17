@@ -12,31 +12,26 @@ class A : public Object {
 public:
     REFL_CLASS(A)
 
+    DECLARE_SUPER(Object);
+
     DEFINE_AND_REGISTER_MEMBER(Object*, a1)
 
-    DEFINE_AND_REGISTER_MEMBER(Object *, a2)
+//    DEFINE_AND_REGISTER_MEMBER(Object *, a2)
 
     int iv = 0;
 };
 
-REGISTER(A)
+//REGISTER(A)
 
-class B : public A {
-public:
-    REFL_CLASS(B)
-
-    int iv2 = 0;
-
-    DEFINE_AND_REGISTER_MEMBER(Object *, a2)
-};
-
-REGISTER(B)
+RegisterAction<A> RegisterA;
 
 int main() {
 
+    auto a = new A;
+    auto a1 = new A;
 
-    for_each_ptr_member<B>([&](auto offset, auto name) {
-        cout << name << endl;
-    });
+//    a->a1 = a;
+
+    cout << ClassFactory::instance()->size_of(type_name(a)) << endl;
 
 }

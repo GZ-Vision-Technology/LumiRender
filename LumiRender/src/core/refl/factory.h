@@ -11,6 +11,8 @@
 #include <string>
 #include "reflection.h"
 #include "core/macro_map.h"
+#include "base_libs/math/interval.h"
+#include "ptr_mapper.h"
 
 namespace luminous {
 
@@ -18,9 +20,10 @@ namespace luminous {
         class Object;
 
         struct TypeData {
-            const size_t size;
-            const size_t align;
+            size_t size;
+            size_t align;
             std::vector<size_t> member_offsets;
+            std::string super_class;
 
             explicit TypeData(size_t size = 0, size_t align = 0)
                     : size(size), align(align) {}
@@ -45,19 +48,26 @@ namespace luminous {
 
             NDSC bool is_registered(const Object *object) const;
 
-            NDSC size_t size_of(const std::string &class_name) const;
-
             NDSC size_t runtime_size_of(const Object *object) const;
 
-            NDSC size_t size_of(const Object *object) const;
+            template<typename ...Args>
+            NDSC size_t size_of(Args &&...args) const {
+                return type_data(std::forward<Args>(args)...).size;
+            }
 
-            NDSC size_t align_of(const std::string &class_name) const;
+            template<typename ...Args>
+            NDSC size_t align_of(Args &&...args) const {
+                return type_data(std::forward<Args>(args)...).align;
+            }
 
-            NDSC size_t align_of(const Object *object) const;
+            NDSC const TypeData& type_data(const Object *object) const;
 
-            NDSC TypeData type_data(const Object *object) const;
+            NDSC const TypeData& type_data(const std::string &class_name) const;
 
-            NDSC TypeData type_data(const std::string &class_name) const;
+            template<typename ...Args>
+            NDSC const std::string &super_class_name(Args &&...args) {
+                return type_data(std::forward<Args>(args)...).super_class;
+            }
 
             NDSC size_t type_num() const { return _type_data.size(); }
 
@@ -70,17 +80,17 @@ namespace luminous {
                 register_class(class_name, td);
                 return _type_data[class_name];
             }
-
-            template<typename ...Args>
-            size_t size_sum(Args &&...args) {
-
-            }
         };
 
+        #define DECLARE_SUPER(ClassName) using Super = ClassName;
 
-        class Object {
+        class Empty {};
+
+        class Object : public Empty {
         public:
             REFL_CLASS(Object)
+
+            DECLARE_SUPER(Empty)
 
             using PtrMapper = std::map<Object *, size_t>;
 
@@ -88,30 +98,24 @@ namespace luminous {
                 return type_name(this);
             }
 
+            NDSC virtual std::string super_class_name() const {
+                return ClassFactory::instance()->super_class_name(this);
+            }
+
             NDSC virtual size_t self_size() const {
                 return ClassFactory::instance()->size_of(this);
             }
 
             NDSC virtual size_t ptr_member_size() const {
-                size_t size = 0;
+                size_t ret = 0;
+                TypeData type_data = ClassFactory::instance()->type_data(this);
 
-                return size;
+
+                return ret;
             }
 
             NDSC virtual size_t real_size() const {
                 return self_size() + ptr_member_size();
-            }
-
-            template<typename ...Args>
-            static size_t mapping_ptr(PtrMapper &mapper, size_t offset, Args &&...ptr) {
-                ((mapper[ptr] = offset, offset += ptr->mapping_member_ptr(mapper, offset)), ...);
-                return offset;
-            }
-
-            virtual size_t mapping_member_ptr(PtrMapper &mapper, size_t offset) {
-                mapper[this] = offset;
-                offset += self_size();
-                return offset;
             }
         };
 
@@ -120,6 +124,8 @@ namespace luminous {
         public:
             RegisterAction() {
                 TypeData &type_data = ClassFactory::instance()->template register_class<T>();
+                using Super = typename T::Super;
+                type_data.super_class = type_name<Super>();
                 for_each_ptr_member<T>([&](auto offset, auto name) {
                     type_data.member_offsets.push_back(offset);
                 });
@@ -127,6 +133,15 @@ namespace luminous {
         };
 
 #define REGISTER(T) RegisterAction<T> Register##T;
+
+#define DEFINE_CLASS_BEGIN(ClassName, mode, Super, ...) \
+    class ClassName : mode Super,__VA_ARGS__ {          \
+    public:                                             \
+        DECLARE_SUPER(Super)                            \
+        REFL_CLASS(ClassName)
+
+#define DEFINE_CLASS_END(ClassName) }; REGISTER(ClassName);
+
     }
 
 }

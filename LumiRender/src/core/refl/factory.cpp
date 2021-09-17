@@ -3,6 +3,7 @@
 //
 
 #include "factory.h"
+#include "core/logging.h"
 
 namespace luminous {
 
@@ -15,28 +16,12 @@ namespace luminous {
         return _instance;
     }
 
-    size_t ClassFactory::size_of(const std::string &class_name) const {
-        return type_data(class_name).size;
-    }
-
-    size_t ClassFactory::align_of(const std::string &class_name) const {
-        return type_data(class_name).align;
-    }
-
-    size_t ClassFactory::size_of(const Object *object) const {
-        return size_of(type_name(object));
-    }
-
     size_t ClassFactory::runtime_size_of(const Object *object) const {
         return object == nullptr ? 0 : size_of(object);
     }
 
-    size_t ClassFactory::align_of(const Object *object) const {
-        return align_of(type_name(object));
-    }
-
     void ClassFactory::register_class(const std::string &class_name, const TypeData &type_data) {
-//        LUMINOUS_INFO("register : ", class_name);
+        LUMINOUS_INFO("register : ", class_name);
         _type_data.insert(std::make_pair(class_name, type_data));
     }
 
@@ -49,11 +34,11 @@ namespace luminous {
         return is_registered(type_name(object));
     }
 
-    TypeData ClassFactory::type_data(const Object *object) const {
+    const TypeData& ClassFactory::type_data(const Object *object) const {
         return type_data(type_name(object));
     }
 
-    TypeData ClassFactory::type_data(const std::string &class_name) const {
+    const TypeData& ClassFactory::type_data(const std::string &class_name) const {
         DCHECK(is_registered(class_name));
         return _type_data.at(class_name);
     }

@@ -76,5 +76,7 @@ namespace luminous {
 
         template<typename T>
         inline XPU bool operator!=(const interval<T> &a, const interval<T> &b) { return !(a == b); }
+
+        using PtrInterval = interval<uint64_t>;
     } // luminous::math
 } // luminous
