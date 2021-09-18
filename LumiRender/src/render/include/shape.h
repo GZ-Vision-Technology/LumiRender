@@ -44,7 +44,7 @@ namespace luminous {
             Box3f aabb;
             mutable uint idx_in_meshes;
 
-            NDSC bool has_material() const {
+            _NODISCARD bool has_material() const {
                 return mat_idx != invalid_uint32;
             }
         };
@@ -54,9 +54,9 @@ namespace luminous {
 
             Model() = default;
 
-            NDSC string full_path(const string &fn) const { return fn.empty() ? fn : (directory / fn).string(); }
+            _NODISCARD string full_path(const string &fn) const { return fn.empty() ? fn : (directory / fn).string(); }
 
-            NDSC bool has_custom_material() const {
+            _NODISCARD bool has_custom_material() const {
                 return !custom_material_name.empty();
             }
 

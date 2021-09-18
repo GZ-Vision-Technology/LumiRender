@@ -22,7 +22,7 @@ namespace luminous {
 
             void load(const std::filesystem::path &fn);
 
-            NDSC SP<SceneGraph> parse() const;
+            _NODISCARD SP<SceneGraph> parse() const;
         };
     }
 }

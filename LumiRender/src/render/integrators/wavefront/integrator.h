@@ -54,7 +54,7 @@ namespace luminous {
 
             void allocate_memory();
 
-            NDSC uint frame_index() const override { return _frame_index; }
+            _NODISCARD uint frame_index() const override { return _frame_index; }
 
             void intersect_closest(int wavefront_depth);
 

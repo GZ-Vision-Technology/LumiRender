@@ -20,9 +20,9 @@ namespace luminous {
 
             XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
-            NDSC XPU float next_1d();
+            _NODISCARD XPU float next_1d();
 
-            NDSC XPU float2 next_2d();
+            _NODISCARD XPU float2 next_2d();
 
             GEN_STRING_FUNC({
                 LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
@@ -40,9 +40,9 @@ namespace luminous {
 
             XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
-            NDSC XPU float next_1d();
+            _NODISCARD XPU float next_1d();
 
-            NDSC XPU float2 next_2d();
+            _NODISCARD XPU float2 next_2d();
 
             GEN_STRING_FUNC({
                 LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())

@@ -22,11 +22,11 @@ namespace luminous {
 
             virtual void copy_from(Dispatcher &dispatcher, const Image &image) = 0;
 
-            NDSC virtual Image download() const = 0;
+            _NODISCARD virtual Image download() const = 0;
 
             virtual void copy_from(const Image &image) = 0;
 
-            NDSC virtual uint64_t tex_handle() const = 0;
+            _NODISCARD virtual uint64_t tex_handle() const = 0;
 
             virtual ~Impl() = default;
         };
@@ -34,15 +34,15 @@ namespace luminous {
         explicit DTexture(std::unique_ptr<Impl> impl)
                 : _impl(move(impl)) {}
 
-        NDSC uint32_t width() const { return _impl->width(); }
+        _NODISCARD uint32_t width() const { return _impl->width(); }
 
-        NDSC uint32_t height() const { return _impl->height(); }
+        _NODISCARD uint32_t height() const { return _impl->height(); }
 
-        NDSC uint2 resolution() const { return _impl->resolution(); }
+        _NODISCARD uint2 resolution() const { return _impl->resolution(); }
 
-        NDSC size_t pixel_num() const { return _impl->pixel_num(); }
+        _NODISCARD size_t pixel_num() const { return _impl->pixel_num(); }
 
-        NDSC PixelFormat pixel_format() const { return _impl->pixel_format(); }
+        _NODISCARD PixelFormat pixel_format() const { return _impl->pixel_format(); }
 
         void copy_from(Dispatcher &dispatcher, const Image &image) {
             _impl->copy_from(dispatcher, image);
@@ -52,12 +52,12 @@ namespace luminous {
             _impl->copy_from(image);
         }
 
-        NDSC Image download() const {
+        _NODISCARD Image download() const {
             return std::move(_impl->download());
         }
 
         template<typename T = uint64_t>
-        NDSC T tex_handle() const {
+        _NODISCARD T tex_handle() const {
             return (T) _impl->tex_handle();
         }
 

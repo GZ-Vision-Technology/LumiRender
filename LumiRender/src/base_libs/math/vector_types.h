@@ -173,7 +173,7 @@ namespace luminous {
 
 #define MAKE_VECTOR_UNARY_OP(op)                                                         \
     template<typename T, uint N>                                                         \
-    XPU [[nodiscard]] constexpr Vector<std::decay_t<decltype(op static_cast<T>(0))>, N>  \
+    XPU _NODISCARD constexpr Vector<std::decay_t<decltype(op static_cast<T>(0))>, N>  \
     operator op(Vector<T, N> v) noexcept {                                               \
         static_assert(N == 2 || N == 3 || N == 4);                                       \
         if constexpr (N == 2) {                                                          \

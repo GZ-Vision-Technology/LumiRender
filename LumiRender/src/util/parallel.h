@@ -81,7 +81,7 @@ namespace luminous {
                 }
             }
 
-            [[nodiscard]] float value() const { return val.load(); }
+            _NODISCARD float value() const { return val.load(); }
 
             explicit operator float() const { return value(); }
 

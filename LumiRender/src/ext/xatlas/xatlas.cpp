@@ -104,7 +104,7 @@ Copyright (c) 2012 Brandon Pelfrey
 #endif
 
 #if defined(__clang__) || defined(__GNUC__)
-#define XA_NODISCARD [[nodiscard]]
+#define XA_NODISCARD _NODISCARD
 #elif defined(_MSC_VER)
 #define XA_NODISCARD _Check_return_
 #else

@@ -87,19 +87,19 @@ namespace luminous {
                 }
             }
 
-            NDSC constexpr int block_size() const {
+            _NODISCARD constexpr int block_size() const {
                 return 1 << logBlockSize;
             }
 
-            NDSC int round_up(int x) const {
+            _NODISCARD int round_up(int x) const {
                 return (x + block_size() - 1) & ~(block_size() - 1);
             }
 
-            NDSC int u_size() const {
+            _NODISCARD int u_size() const {
                 return _u_res;
             }
 
-            NDSC int v_size() const {
+            _NODISCARD int v_size() const {
                 return _v_res;
             }
 
@@ -110,15 +110,15 @@ namespace luminous {
                 free_aligned(_data);
             }
 
-            [[nodiscard]] int block(int a) const {
+            _NODISCARD int block(int a) const {
                 return a >> logBlockSize;
             }
 
-            [[nodiscard]] int offset(int a) const {
+            _NODISCARD int offset(int a) const {
                 return (a & (block_size() - 1));
             }
 
-            [[nodiscard]] int get_total_offset(int u, int v) const {
+            _NODISCARD int get_total_offset(int u, int v) const {
                 int bu = block(u);
                 int bv = block(v);
                 int ou = offset(u);

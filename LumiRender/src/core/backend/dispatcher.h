@@ -30,7 +30,7 @@ namespace luminous {
 
         explicit Dispatcher(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
 
-        NDSC Impl *impl_mut() const { return _impl.get(); }
+        _NODISCARD Impl *impl_mut() const { return _impl.get(); }
 
     protected:
         std::unique_ptr<Impl> _impl;

@@ -20,7 +20,7 @@ namespace luminous {
 
             void init(const SP<SceneGraph> &scene_graph) override;
 
-            NDSC size_t size_in_bytes() const override;
+            _NODISCARD size_t size_in_bytes() const override;
 
             void create_device_memory() override;
 
@@ -32,7 +32,7 @@ namespace luminous {
 
             void build_accel();
 
-            NDSC std::string description() const override;
+            _NODISCARD std::string description() const override;
         };
     }
 }

@@ -22,7 +22,7 @@ namespace luminous {
         class FilterHandle : public Variant<BoxFilter, GaussianFilter, TriangleFilter> {
             using Variant::Variant;
         public:
-            CPU_ONLY(NDSC std::string to_string() const;)
+            CPU_ONLY(_NODISCARD std::string to_string() const;)
 
             NDSC_XPU float2 radius() const;
 

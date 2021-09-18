@@ -35,9 +35,9 @@ namespace luminous {
             template<typename T = std::byte>
             const T *pixel_ptr() const { return reinterpret_cast<const T *>(_pixel.get()); }
 
-            NDSC bool is_8bit() const;
+            _NODISCARD bool is_8bit() const;
 
-            NDSC bool is_32bit() const;
+            _NODISCARD bool is_32bit() const;
 
             static Image load(const std::filesystem::path &fn, ColorSpace color_space);
 

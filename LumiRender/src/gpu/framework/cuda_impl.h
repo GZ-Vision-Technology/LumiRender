@@ -22,20 +22,20 @@ namespace luminous {
             CUarray _array_handle{};
             CUsurfObject _surface_handle{};
 
-            NDSC CUDA_MEMCPY2D common_memcpy_from_desc() const;
+            _NODISCARD CUDA_MEMCPY2D common_memcpy_from_desc() const;
 
-            NDSC CUDA_MEMCPY2D host_src_memcpy_desc(const Image &image) const;
+            _NODISCARD CUDA_MEMCPY2D host_src_memcpy_desc(const Image &image) const;
 
         public:
             CUDATexture(PixelFormat pixel_format, uint2 resolution);
 
             void init();
 
-            NDSC uint64_t tex_handle() const override;
+            _NODISCARD uint64_t tex_handle() const override;
 
             void copy_from(Dispatcher &dispatcher, const Image &image) override;
 
-            NDSC Image download() const override;
+            _NODISCARD Image download() const override;
 
             void copy_from(const Image &image) override;
 
@@ -61,15 +61,15 @@ namespace luminous {
             size_t _size_in_bytes;
             const bool _is_external_ptr;
         public:
-            NDSC void *ptr() const override;
+            _NODISCARD void *ptr() const override;
 
             explicit CUDABuffer(size_t bytes, void *ptr = nullptr);
 
             ~CUDABuffer() override;
 
-            NDSC size_t size() const override;
+            _NODISCARD size_t size() const override;
 
-            NDSC void *address(size_t offset) const override;
+            _NODISCARD void *address(size_t offset) const override;
 
             void memset(uint32_t val) override;
 
@@ -121,7 +121,7 @@ namespace luminous {
 
             std::shared_ptr<Scene> create_scene(Device *device, Context *context) override;
 
-            NDSC bool is_cpu() const override { return false; }
+            _NODISCARD bool is_cpu() const override { return false; }
 
             Dispatcher new_dispatcher() override;
 

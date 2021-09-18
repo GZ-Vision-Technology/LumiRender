@@ -43,15 +43,15 @@ namespace luminous {
                 _sampler.allocate_device( 1);
             }
 
-            NDSC const SceneData * scene_data() const;
+            _NODISCARD const SceneData * scene_data() const;
 
-            NDSC virtual int spp() const { return _sampler->spp(); }
+            _NODISCARD virtual int spp() const { return _sampler->spp(); }
 
-            NDSC virtual uint frame_index() const = 0;
+            _NODISCARD virtual uint frame_index() const = 0;
 
-            NDSC virtual Sensor *camera() { return _camera.data(); }
+            _NODISCARD virtual Sensor *camera() { return _camera.data(); }
 
-            NDSC uint2 resolution() const { return _camera->resolution(); }
+            _NODISCARD uint2 resolution() const { return _camera->resolution(); }
 
             virtual void update() = 0;
 

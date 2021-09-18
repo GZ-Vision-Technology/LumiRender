@@ -246,15 +246,15 @@ namespace luminous {
         }
 
         // Quaternion Functions
-        [[nodiscard]] XPU_INLINE float dot(Quaternion q1, Quaternion q2) noexcept {
+        _NODISCARD XPU_INLINE float dot(Quaternion q1, Quaternion q2) noexcept {
             return dot(q1.v, q2.v) + q1.w * q2.w;
         }
 
-        [[nodiscard]] XPU_INLINE Quaternion normalize(Quaternion q) noexcept {
+        _NODISCARD XPU_INLINE Quaternion normalize(Quaternion q) noexcept {
             return q / std::sqrt(dot(q, q));
         }
 
-        [[nodiscard]] XPU_INLINE Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) {
+        _NODISCARD XPU_INLINE Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) {
             float cosTheta = dot(q1, q2);
             if (cosTheta > .9995f)
                 //If the rotation Angle is too small, treat it as a straight line
@@ -273,14 +273,14 @@ namespace luminous {
 
         // Matrix Functions
         template<typename T>
-        [[nodiscard]] XPU constexpr auto transpose(Matrix3x3 <T> m) noexcept {
+        _NODISCARD XPU constexpr auto transpose(Matrix3x3 <T> m) noexcept {
             return Matrix3x3<T>(m[0].x, m[1].x, m[2].x,
                                 m[0].y, m[1].y, m[2].y,
                                 m[0].z, m[1].z, m[2].z);
         }
 
         template<typename T>
-        [[nodiscard]] XPU constexpr auto transpose(Matrix4x4 <T> m) noexcept {
+        _NODISCARD XPU constexpr auto transpose(Matrix4x4 <T> m) noexcept {
             return Matrix4x4<T>(m[0].x, m[1].x, m[2].x, m[3].x,
                                 m[0].y, m[1].y, m[2].y, m[3].y,
                                 m[0].z, m[1].z, m[2].z, m[3].z,
@@ -288,7 +288,7 @@ namespace luminous {
         }
 
         template<typename T>
-        [[nodiscard]] XPU auto inverse(Matrix3x3 <T> m) noexcept {// from GLM
+        _NODISCARD XPU auto inverse(Matrix3x3 <T> m) noexcept {// from GLM
             T one_over_determinant = 1.0f / (m[0].x * (m[1].y * m[2].z - m[2].y * m[1].z) -
                                              m[1].x * (m[0].y * m[2].z - m[2].y * m[0].z) +
                                              m[2].x * (m[0].y * m[1].z - m[1].y * m[0].z));
@@ -305,7 +305,7 @@ namespace luminous {
         }
 
         template<typename T>
-        [[nodiscard]] XPU constexpr auto inverse(const Matrix4x4 <T> m) noexcept {// from GLM
+        _NODISCARD XPU constexpr auto inverse(const Matrix4x4 <T> m) noexcept {// from GLM
             const T coef00 = m[2].z * m[3].w - m[3].z * m[2].w;
             const T coef02 = m[1].z * m[3].w - m[3].z * m[1].w;
             const T coef03 = m[1].z * m[2].w - m[2].z * m[1].w;
@@ -367,7 +367,7 @@ namespace luminous {
             return dst;
         }
 
-        XPU [[nodiscard]] inline float fast_exp(float x) {
+        XPU _NODISCARD inline float fast_exp(float x) {
 #ifdef IS_GPU_CODE
             return __expf(x);
 #else
@@ -375,12 +375,12 @@ namespace luminous {
 #endif
         }
 
-        [[nodiscard]] XPU_INLINE float gaussian(float x, float mu = 0, float sigma = 1) {
+        _NODISCARD XPU_INLINE float gaussian(float x, float mu = 0, float sigma = 1) {
             return 1 / std::sqrt(2 * Pi * sigma * sigma) *
                    fast_exp(-sqr(x - mu) / (2 * sigma * sigma));
         }
 
-        [[nodiscard]] XPU_INLINE float gaussian_integral(float x0, float x1, float mu = 0,
+        _NODISCARD XPU_INLINE float gaussian_integral(float x0, float x1, float mu = 0,
                                                          float sigma = 1) {
             assert(sigma > 0);
             float sigmaRoot2 = sigma * float(1.414213562373095);
@@ -389,7 +389,7 @@ namespace luminous {
 
 
         template<typename Predicate>
-        [[nodiscard]] XPU inline size_t find_interval(size_t sz, const Predicate &pred) {
+        _NODISCARD XPU inline size_t find_interval(size_t sz, const Predicate &pred) {
             using ssize_t = std::make_signed_t<size_t>;
             ssize_t size = (ssize_t) sz - 2, first = 1;
             while (size > 0) {

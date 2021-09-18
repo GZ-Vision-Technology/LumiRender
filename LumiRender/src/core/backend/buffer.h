@@ -32,28 +32,28 @@ namespace luminous {
 
             virtual void memset(uint32_t val) = 0;
 
-            NDSC virtual void *address(size_t offset) const = 0;
+            _NODISCARD virtual void *address(size_t offset) const = 0;
 
-            NDSC virtual size_t size() const = 0;
+            _NODISCARD virtual size_t size() const = 0;
 
-            NDSC virtual void *ptr() const = 0;
+            _NODISCARD virtual void *ptr() const = 0;
 
             virtual ~Impl() = default;
         };
 
         explicit RawBuffer(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
 
-        NDSC Impl *impl_mut() const {
+        _NODISCARD Impl *impl_mut() const {
             DCHECK(valid());
             return _impl.get();
         }
 
         template<typename U = void *>
-        NDSC auto ptr() const {
+        _NODISCARD auto ptr() const {
             return (U) (_impl == nullptr ? nullptr : _impl->ptr());
         }
 
-        NDSC bool valid() const {
+        _NODISCARD bool valid() const {
 #ifdef DEBUG_BUILD
             if (_impl == nullptr)
                 std::cerr << "invalid buffer !!!" << std::endl;
@@ -78,9 +78,9 @@ namespace luminous {
 
         value_type *data() const { return reinterpret_cast<value_type *>(ptr()); }
 
-        NDSC size_t stride_in_bytes() const { return sizeof(value_type); }
+        _NODISCARD size_t stride_in_bytes() const { return sizeof(value_type); }
 
-        NDSC BufferView <value_type> view(size_t offset = 0, size_t count = -1) const {
+        _NODISCARD BufferView <value_type> view(size_t offset = 0, size_t count = -1) const {
             count = fix_count(offset, count, size());
             return BufferView<value_type>(data() + offset, count);
         }
@@ -96,11 +96,11 @@ namespace luminous {
             _impl->memset(val);
         }
 
-        NDSC size_t size() const {
+        _NODISCARD size_t size() const {
             return size_in_bytes() / sizeof(value_type);
         }
 
-        NDSC size_t size_in_bytes() const {
+        _NODISCARD size_t size_in_bytes() const {
             return _impl == nullptr ? 0 : _impl->size();
         }
 

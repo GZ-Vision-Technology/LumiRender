@@ -34,13 +34,13 @@ namespace luminous {
         mutable std::optional<std::string> _positional_option;
         std::map<std::filesystem::path, DynamicModuleHandle, std::less<>> _loaded_modules;
 
-        [[nodiscard]] const cxxopts::ParseResult &_parse_result() const noexcept;
+        _NODISCARD const cxxopts::ParseResult &_parse_result() const noexcept;
 
-        [[nodiscard]] const std::filesystem::path &_runtime_dir() noexcept;
+        _NODISCARD const std::filesystem::path &_runtime_dir() noexcept;
 
-        [[nodiscard]] const std::filesystem::path &_working_dir() noexcept;
+        _NODISCARD const std::filesystem::path &_working_dir() noexcept;
 
-        [[nodiscard]] const std::filesystem::path &_input_dir() noexcept;
+        _NODISCARD const std::filesystem::path &_input_dir() noexcept;
 
         static bool _create_folder_if_necessary(const std::filesystem::path &path) noexcept;
 
@@ -57,29 +57,29 @@ namespace luminous {
 
         bool create_cache_folder(const std::filesystem::path &name) noexcept;
 
-        [[nodiscard]] std::filesystem::path include_path(const std::filesystem::path &name = {}) noexcept;
+        _NODISCARD std::filesystem::path include_path(const std::filesystem::path &name = {}) noexcept;
 
-        [[nodiscard]] std::filesystem::path working_path(const std::filesystem::path &name = {}) noexcept;
+        _NODISCARD std::filesystem::path working_path(const std::filesystem::path &name = {}) noexcept;
 
-        [[nodiscard]] std::filesystem::path runtime_path(const std::filesystem::path &name = {}) noexcept;
+        _NODISCARD std::filesystem::path runtime_path(const std::filesystem::path &name = {}) noexcept;
 
-        [[nodiscard]] std::filesystem::path input_path(const std::filesystem::path &name = {}) noexcept;
+        _NODISCARD std::filesystem::path input_path(const std::filesystem::path &name = {}) noexcept;
 
-        [[nodiscard]] std::filesystem::path cache_path(const std::filesystem::path &name = {}) noexcept;
+        _NODISCARD std::filesystem::path cache_path(const std::filesystem::path &name = {}) noexcept;
 
-        [[nodiscard]] std::filesystem::path scene_path() noexcept;
+        _NODISCARD std::filesystem::path scene_path() noexcept;
 
-        [[nodiscard]] const std::filesystem::path &scene_file() noexcept;
+        _NODISCARD const std::filesystem::path &scene_file() noexcept;
 
         bool has_help_cmd() const noexcept {
             return _parse_result().count("help") > 0;
         }
 
-        NDSC bool use_gpu() noexcept {
+        _NODISCARD bool use_gpu() noexcept {
             return device() == "cuda";
         }
 
-        NDSC int thread_num() const noexcept {
+        _NODISCARD int thread_num() const noexcept {
             return std::stoi(_parse_result()["thread-num"].as<std::string>());
         }
 
@@ -95,7 +95,7 @@ namespace luminous {
         }
 
         template<typename F>
-        [[nodiscard]] auto load_dynamic_function(const std::filesystem::path &path,
+        _NODISCARD auto load_dynamic_function(const std::filesystem::path &path,
                                                  std::string_view module,
                                                  std::string_view function) {
             LUMINOUS_EXCEPTION_IF(module.empty(), "Empty name given for dynamic module");
@@ -126,17 +126,17 @@ namespace luminous {
         }
 
         template<typename T>
-        [[nodiscard]] T cli_option(const std::string &opt_name) const {
+        _NODISCARD T cli_option(const std::string &opt_name) const {
             return _parse_result()[opt_name].as<T>();
         }
 
-        [[nodiscard]] std::string cli_positional_option() const {
+        _NODISCARD std::string cli_positional_option() const {
             return _parse_result()["positional"].as<std::string>();
         }
 
-        [[nodiscard]] std::string device() noexcept;
+        _NODISCARD std::string device() noexcept;
 
-        [[nodiscard]] bool should_print_generated_source() const noexcept {
+        _NODISCARD bool should_print_generated_source() const noexcept {
             return cli_option<bool>("print-source");
         }
     };

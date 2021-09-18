@@ -24,9 +24,9 @@ namespace luminous {
 
             virtual DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) = 0;
 
-            NDSC virtual std::shared_ptr<Scene> create_scene(Device *device, Context *context) = 0;
+            _NODISCARD virtual std::shared_ptr<Scene> create_scene(Device *device, Context *context) = 0;
 
-            NDSC virtual bool is_cpu() const = 0;
+            _NODISCARD virtual bool is_cpu() const = 0;
 
             virtual Dispatcher new_dispatcher() = 0;
 
@@ -38,7 +38,7 @@ namespace luminous {
             return Buffer<T>(_impl->create_buffer(n_elements * sizeof(T), ptr));
         }
 
-        NDSC std::shared_ptr<Scene> create_scene(Context *context) {
+        _NODISCARD std::shared_ptr<Scene> create_scene(Context *context) {
             return _impl->create_scene(this, context);
         }
 
@@ -67,7 +67,7 @@ namespace luminous {
 
         Dispatcher new_dispatcher() { return _impl->new_dispatcher(); }
 
-        NDSC bool is_cpu() const { return _impl->is_cpu(); }
+        _NODISCARD bool is_cpu() const { return _impl->is_cpu(); }
 
         explicit Device(std::unique_ptr<Impl> impl)
                 : _impl(std::move(impl)) {}

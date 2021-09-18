@@ -65,7 +65,7 @@ namespace luminous {
 
             void clear();
 
-            NDSC virtual size_t size_in_bytes() const;
+            _NODISCARD virtual size_t size_in_bytes() const;
         };
     }
 }

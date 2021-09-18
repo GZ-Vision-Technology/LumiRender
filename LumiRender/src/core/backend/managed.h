@@ -30,7 +30,7 @@ namespace luminous {
                 : BaseClass(std::move(other)),
                   _device_buffer(std::move(other._device_buffer)) {}
 
-        NDSC size_t size_in_bytes() const {
+        _NODISCARD size_t size_in_bytes() const {
             return BaseClass::size() * sizeof(T);
         }
 
@@ -68,7 +68,7 @@ namespace luminous {
             _device_buffer = _device->create_buffer<TDevice>(size, ptr);
         }
 
-        NDSC BufferView<THost> obtain_accessible_buffer_view(size_t offset = 0, size_t count = -1) {
+        _NODISCARD BufferView<THost> obtain_accessible_buffer_view(size_t offset = 0, size_t count = -1) {
             if (_device->is_cpu()) {
                 return host_buffer_view(offset, count);
             } else {
@@ -77,7 +77,7 @@ namespace luminous {
             }
         }
 
-        NDSC BufferView<const THost> obtain_const_accessible_buffer_view(size_t offset = 0, size_t count = -1) {
+        _NODISCARD BufferView<const THost> obtain_const_accessible_buffer_view(size_t offset = 0, size_t count = -1) {
             if (_device->is_cpu()) {
                 return static_cast<BufferView<const Vector<float, 4>> &&>(host_buffer_view(offset, count));
             } else {
@@ -86,21 +86,21 @@ namespace luminous {
             }
         }
 
-        NDSC BufferView<const THost> const_host_buffer_view(size_t offset = 0, size_t count = -1) const {
+        _NODISCARD BufferView<const THost> const_host_buffer_view(size_t offset = 0, size_t count = -1) const {
             count = fix_count(offset, count, BaseClass::size());
             return BufferView<const THost>(((const THost *) BaseClass::data()) + offset, count);
         }
 
-        NDSC BufferView<THost> host_buffer_view(size_t offset = 0, size_t count = -1) const {
+        _NODISCARD BufferView<THost> host_buffer_view(size_t offset = 0, size_t count = -1) const {
             count = fix_count(offset, count, BaseClass::size());
             return BufferView<THost>(((THost *) BaseClass::data()) + offset, count);
         }
 
-        NDSC BufferView<TDevice> device_buffer_view(size_t offset = 0, size_t count = -1) const {
+        _NODISCARD BufferView<TDevice> device_buffer_view(size_t offset = 0, size_t count = -1) const {
             return _device_buffer.view(offset, count);
         }
 
-        NDSC BufferView<const TDevice> const_device_buffer_view(size_t offset = 0, size_t count = -1) const {
+        _NODISCARD BufferView<const TDevice> const_device_buffer_view(size_t offset = 0, size_t count = -1) const {
             return _device_buffer.view(offset, count);
         }
 

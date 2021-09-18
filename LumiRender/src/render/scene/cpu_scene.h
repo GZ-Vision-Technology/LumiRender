@@ -22,9 +22,9 @@ namespace luminous {
 
             void create_device_memory() override;
 
-            NDSC RTCScene rtc_scene() const { return accel<EmbreeAccel>()->rtc_scene(); }
+            _NODISCARD RTCScene rtc_scene() const { return accel<EmbreeAccel>()->rtc_scene(); }
 
-            NDSC uint64_t scene_handle() const { return (uint64_t)rtc_scene(); }
+            _NODISCARD uint64_t scene_handle() const { return (uint64_t)rtc_scene(); }
 
             void fill_scene_data() override;
         };
