@@ -7,6 +7,7 @@
 
 #include "soa.h"
 #include "core/backend/device.h"
+#include "core/atomic.h"
 
 #ifdef __CUDACC__
 #ifdef LUMINOUS_IS_WINDOWS
