@@ -6,6 +6,7 @@
 
 #include <list>
 #include <cstddef>
+#include "arena.h"
 #include "core/header.h"
 
 namespace luminous {
@@ -73,7 +74,7 @@ namespace luminous {
                       _v_res(v_res),
                       _u_blocks(round_up(u_res) >> logBlockSize) {
                 int nAlloc = round_up(_u_res) * round_up(_v_res);
-                _data = alloc_aligned<T>(nAlloc);
+                _data = aligned_alloc<T>(nAlloc);
                 for (int i = 0; i < nAlloc; ++i) {
                     new (&_data[i]) T();
                 }
@@ -86,19 +87,19 @@ namespace luminous {
                 }
             }
 
-            CONSTEXPR int block_size() const {
+            NDSC constexpr int block_size() const {
                 return 1 << logBlockSize;
             }
 
-            int round_up(int x) const {
+            NDSC int round_up(int x) const {
                 return (x + block_size() - 1) & ~(block_size() - 1);
             }
 
-            int u_size() const {
+            NDSC int u_size() const {
                 return _u_res;
             }
 
-            int v_size() const {
+            NDSC int v_size() const {
                 return _v_res;
             }
 
@@ -109,15 +110,15 @@ namespace luminous {
                 free_aligned(_data);
             }
 
-            int block(int a) const {
+            [[nodiscard]] int block(int a) const {
                 return a >> logBlockSize;
             }
 
-            int offset(int a) const {
+            [[nodiscard]] int offset(int a) const {
                 return (a & (block_size() - 1));
             }
 
-            inline int get_total_offset(int u, int v) const {
+            [[nodiscard]] int get_total_offset(int u, int v) const {
                 int bu = block(u);
                 int bv = block(v);
                 int ou = offset(u);

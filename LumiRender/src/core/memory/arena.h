@@ -9,17 +9,18 @@
 #include "core/concepts.h"
 #include "base_libs/string_util.h"
 #include "core/logging.h"
-#include "allocator.h"
 
 
 namespace luminous {
     inline namespace core {
 
-        void *aligned_alloc(size_t alignment, size_t size) noexcept {
-            return _aligned_malloc(size, alignment);
+        template<typename T = void>
+        T *aligned_alloc(size_t alignment, size_t size) noexcept {
+            return reinterpret_cast<T *>(_aligned_malloc(size, alignment));
         }
 
-        void aligned_free(void *p) noexcept {
+        template<typename T = void>
+        void aligned_free(T *p) noexcept {
             _aligned_free(p);
         }
 
@@ -53,7 +54,6 @@ namespace luminous {
 
             template<typename T = std::byte, size_t alignment = alignof(T)>
             [[nodiscard]] auto allocate(size_t n = 1u) {
-
                 static_assert(std::is_trivially_destructible_v<T>);
                 static constexpr auto size = sizeof(T);
 
@@ -66,8 +66,9 @@ namespace luminous {
                                       alloc_alignment;
                     aligned_p = static_cast<std::byte *>(aligned_alloc(alloc_alignment, alloc_size));
                     if (aligned_p == nullptr) {
-                        LUMINOUS_ERROR(string_printf("Failed to allocate memory: size = %d, alignment = %d, count = %d"),
-                                       size, alignment, n)
+                        LUMINOUS_ERROR(
+                                string_printf("Failed to allocate memory: size = %d, alignment = %d, count = %d"),
+                                size, alignment, n)
                     }
                     _blocks.emplace_back(aligned_p);
                     _total += alloc_size;
