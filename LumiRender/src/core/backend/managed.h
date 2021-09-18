@@ -8,17 +8,18 @@
 #include "buffer.h"
 #include "device.h"
 #include "core/concepts.h"
+#include "core/memory/allocator.h"
 
 namespace luminous {
-    template<typename T, typename U = const T>
-    struct Managed : public Noncopyable, public std::vector<T> {
+    template<typename T, typename U = const T, typename AlTy = core::Allocator<T>>
+    struct Managed : public Noncopyable, public std::vector<T, AlTy> {
     public:
-        using BaseClass = std::vector<T>;
+        using BaseClass = std::vector<T, AlTy>;
         using THost = T;
         using TDevice = U;
     private:
         static_assert(!std::is_pointer_v<std::remove_pointer_t<THost>>, "THost can not be the secondary pointer!");
-        Buffer <TDevice> _device_buffer{nullptr};
+        Buffer<TDevice> _device_buffer{nullptr};
         Device *_device{};
     public:
         Managed() = default;
@@ -67,7 +68,7 @@ namespace luminous {
             _device_buffer = _device->create_buffer<TDevice>(size, ptr);
         }
 
-        NDSC BufferView <THost> obtain_accessible_buffer_view(size_t offset = 0, size_t count = -1) {
+        NDSC BufferView<THost> obtain_accessible_buffer_view(size_t offset = 0, size_t count = -1) {
             if (_device->is_cpu()) {
                 return host_buffer_view(offset, count);
             } else {
@@ -76,7 +77,7 @@ namespace luminous {
             }
         }
 
-        NDSC BufferView <const THost> obtain_const_accessible_buffer_view(size_t offset = 0, size_t count = -1) {
+        NDSC BufferView<const THost> obtain_const_accessible_buffer_view(size_t offset = 0, size_t count = -1) {
             if (_device->is_cpu()) {
                 return static_cast<BufferView<const Vector<float, 4>> &&>(host_buffer_view(offset, count));
             } else {
@@ -90,12 +91,12 @@ namespace luminous {
             return BufferView<const THost>(((const THost *) BaseClass::data()) + offset, count);
         }
 
-        NDSC BufferView <THost> host_buffer_view(size_t offset = 0, size_t count = -1) const {
+        NDSC BufferView<THost> host_buffer_view(size_t offset = 0, size_t count = -1) const {
             count = fix_count(offset, count, BaseClass::size());
             return BufferView<THost>(((THost *) BaseClass::data()) + offset, count);
         }
 
-        NDSC BufferView <TDevice> device_buffer_view(size_t offset = 0, size_t count = -1) const {
+        NDSC BufferView<TDevice> device_buffer_view(size_t offset = 0, size_t count = -1) const {
             return _device_buffer.view(offset, count);
         }
 
@@ -103,7 +104,7 @@ namespace luminous {
             return _device_buffer.view(offset, count);
         }
 
-        const Buffer <TDevice> &device_buffer() const {
+        const Buffer<TDevice> &device_buffer() const {
             return _device_buffer;
         }
 

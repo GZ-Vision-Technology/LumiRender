@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include "core/memory/allocator.h"
+#include "render/lights/light.h"
+#include "core/backend/managed.h"
 using namespace std;
 using namespace luminous;
 
@@ -15,12 +17,17 @@ public:
     }
 
 
+
+
+
+
 };
 
 void test() {
-    std::vector<int> a;
-    a.push_back(1);
-
+    Managed<AreaLight, const AreaLight, Allocator<AreaLight>> a;
+    Light l;
+    AreaLight var(0,make_float3(),0,0);
+    a.push_back(var);
 
     auto v = std::vector<A, Allocator<A>>();
     v.reserve(10);

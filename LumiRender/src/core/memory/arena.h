@@ -54,7 +54,7 @@ namespace luminous {
 
             template<typename T = std::byte, size_t alignment = alignof(T)>
             [[nodiscard]] auto allocate(size_t n = 1u) {
-                static_assert(std::is_trivially_destructible_v<T>);
+                // todo call the destructor on destroy
                 static constexpr auto size = sizeof(T);
 
                 auto byte_size = n * size;
