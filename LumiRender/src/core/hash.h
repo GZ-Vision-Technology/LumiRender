@@ -6,7 +6,7 @@
 
 #include <string>
 #include <string_view>
-
+#include "base_libs/header.h"
 #include <core/platform.h>
 
 namespace luminous {
@@ -25,9 +25,9 @@ namespace luminous {
         public:
             explicit SHA1(const std::string &s);
 
-            _NODISCARD auto digest() const noexcept { return _digest; }
+            LM_NODISCARD auto digest() const noexcept { return _digest; }
 
-            _NODISCARD bool operator == (const SHA1 &other) const {
+            LM_NODISCARD bool operator == (const SHA1 &other) const {
                 for (int i = 0; i < _digest.size(); ++i) {
                     if (_digest[i] != other.digest()[i]) {
                         return false;
@@ -36,7 +36,7 @@ namespace luminous {
                 return true;
             }
 
-            _NODISCARD bool operator < (const SHA1 &other) const {
+            LM_NODISCARD bool operator < (const SHA1 &other) const {
                 for (int i = 0; i < _digest.size(); ++i) {
                     if (_digest[i] >= other.digest()[i]) {
                         return false;

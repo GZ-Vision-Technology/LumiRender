@@ -78,20 +78,20 @@ namespace luminous {
 
             void shrink_to_fit();
 
-            _NODISCARD virtual std::string description() const;
+            LM_NODISCARD virtual std::string description() const;
 
-            _NODISCARD virtual size_t size_in_bytes() const;
+            LM_NODISCARD virtual size_t size_in_bytes() const;
 
             virtual void clear();
 
             virtual void fill_scene_data() = 0;
 
-            _NODISCARD const SceneData *scene_data() const { return _scene_data.get(); }
+            LM_NODISCARD const SceneData *scene_data() const { return _scene_data.get(); }
 
-            _NODISCARD uint64_t as_handle() const { return _accelerator->handle(); }
+            LM_NODISCARD uint64_t as_handle() const { return _accelerator->handle(); }
 
             template<typename TAccel>
-            _NODISCARD decltype(auto) accel() const {
+            LM_NODISCARD decltype(auto) accel() const {
                 return reinterpret_cast<TAccel *>(_accelerator.get());
             }
 

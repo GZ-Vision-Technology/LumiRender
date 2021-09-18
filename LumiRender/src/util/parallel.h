@@ -81,7 +81,7 @@ namespace luminous {
                 }
             }
 
-            _NODISCARD float value() const { return val.load(); }
+            LM_NODISCARD float value() const { return val.load(); }
 
             explicit operator float() const { return value(); }
 

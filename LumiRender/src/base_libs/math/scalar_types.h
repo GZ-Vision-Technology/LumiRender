@@ -41,7 +41,7 @@ namespace luminous {
     }
 
     inline namespace functor {
-        _NODISCARD XPU constexpr auto next_pow_of_two(uint v) noexcept {
+        LM_NODISCARD XPU constexpr auto next_pow_of_two(uint v) noexcept {
             v--;
             v |= v >> 1u;
             v |= v >> 2u;
@@ -52,25 +52,25 @@ namespace luminous {
             return v;
         }
 
-        _NODISCARD XPU constexpr float radians(float deg) noexcept {
+        LM_NODISCARD XPU constexpr float radians(float deg) noexcept {
             return deg * constant::Pi / 180.0f;
         }
-        _NODISCARD XPU constexpr float degrees(float rad) noexcept {
+        LM_NODISCARD XPU constexpr float degrees(float rad) noexcept {
             return rad * constant::invPi * 180.0f;
         }
 
         template<typename T, typename F>
-        _NODISCARD XPU constexpr auto select(bool pred, T t, F f) noexcept {
+        LM_NODISCARD XPU constexpr auto select(bool pred, T t, F f) noexcept {
             return pred ? t : f;
         }
 
         template<typename A, typename B>
-        _NODISCARD XPU constexpr auto lerp(float t, A a, B b) noexcept {
+        LM_NODISCARD XPU constexpr auto lerp(float t, A a, B b) noexcept {
             return a + t * (b - a);
         }
 
         template <typename T, typename U, typename V>
-        _NODISCARD XPU constexpr T clamp(T val, U low, V high) noexcept {
+        LM_NODISCARD XPU constexpr T clamp(T val, U low, V high) noexcept {
             if (val < low)
                 return low;
             else if (val > high)

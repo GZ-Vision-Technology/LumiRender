@@ -26,10 +26,10 @@
 #define GPU_INLINE GPU INLINE
 
 #define LM_RESTRICT __restrict
-
-#define NDSC_XPU _NODISCARD XPU
-#define NDSC_INLINE _NODISCARD INLINE
-#define NDSC_XPU_INLINE _NODISCARD XPU_INLINE
+#define LM_NODISCARD [[nodiscard]]
+#define NDSC_XPU LM_NODISCARD XPU
+#define NDSC_INLINE LM_NODISCARD INLINE
+#define NDSC_XPU_INLINE LM_NODISCARD XPU_INLINE
 
 #define TO_STRING(x) TO_STRING2(x)
 #define TO_STRING2(x) #x
@@ -70,7 +70,7 @@
 
     #define CPU_ONLY(arg) arg
 
-    #define GEN_STRING_FUNC(args) _NODISCARD std::string to_string() const args
+    #define GEN_STRING_FUNC(args) LM_NODISCARD std::string to_string() const args
 
     #define GEN_NAME_FUNC NDSC_XPU const std::string name() {       \
                                         return this->dispatch([&, this](auto &&self) { return type_name(&self); });\

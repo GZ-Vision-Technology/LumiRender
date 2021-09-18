@@ -79,9 +79,9 @@ namespace luminous {
                           const Scene *scene, Device *device,
                           const ProgramName &program_name);
 
-            _NODISCARD const OptixShaderBindingTable *sbt_ptr() const { return &_sbt; }
+            LM_NODISCARD const OptixShaderBindingTable *sbt_ptr() const { return &_sbt; }
 
-            _NODISCARD std::vector<OptixProgramGroup> program_groups() const {
+            LM_NODISCARD std::vector<OptixProgramGroup> program_groups() const {
                 return {_program_group_table.raygen_group,
                         _program_group_table.miss_closest_group,
                         _program_group_table.miss_any_group,

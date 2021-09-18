@@ -23,9 +23,9 @@ namespace luminous {
 
             void render_cli() override {}
 
-            _NODISCARD FrameBufferType *get_frame_buffer() override;
+            LM_NODISCARD FrameBufferType *get_frame_buffer() override;
 
-            _NODISCARD float4 *get_accumulate_buffer() override;
+            LM_NODISCARD float4 *get_accumulate_buffer() override;
         };
     }
 }

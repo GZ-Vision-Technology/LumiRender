@@ -19,18 +19,18 @@ namespace luminous {
         private:
 
 
-#define LUMINOUS_MAKE_AS_TYPE_FUNC(type) _NODISCARD type _as_##type() const  {   \
+#define LUMINOUS_MAKE_AS_TYPE_FUNC(type) LM_NODISCARD type _as_##type() const  {   \
             return static_cast<type>(_data);                                                \
         }
 
-#define LUMINOUS_MAKE_AS_TYPE_VEC2(type) _NODISCARD type##2 _as_##type##2() const  { \
+#define LUMINOUS_MAKE_AS_TYPE_VEC2(type) LM_NODISCARD type##2 _as_##type##2() const  { \
             return make_##type##2(this->at(0).as_##type(), this->at(1).as_##type());                                    \
         }                                                                                       \
 
-#define LUMINOUS_MAKE_AS_TYPE_VEC3(type) _NODISCARD type##3 _as_##type##3() const  { \
+#define LUMINOUS_MAKE_AS_TYPE_VEC3(type) LM_NODISCARD type##3 _as_##type##3() const  { \
             return make_##type##3(this->at(0).as_##type(), this->at(1).as_##type(), this->at(2).as_##type());     \
         }
-#define LUMINOUS_MAKE_AS_TYPE_VEC4(type) _NODISCARD type##4 _as_##type##4() const  { \
+#define LUMINOUS_MAKE_AS_TYPE_VEC4(type) LM_NODISCARD type##4 _as_##type##4() const  { \
             return make_##type##4(this->at(0).as_##type(), this->at(1).as_##type(), this->at(2).as_##type(), this->at(3).as_##type());          \
         }                                                                                       \
         template<typename T, std::enable_if_t<std::is_same_v<T, type##4>, int> = 0>            \
@@ -48,7 +48,7 @@ namespace luminous {
         LUMINOUS_MAKE_AS_TYPE_MAT4X4(type)
 
 
-#define LUMINOUS_MAKE_AS_TYPE_MAT3X3(type) _NODISCARD float3x3 _as_##type##3x3() const  { \
+#define LUMINOUS_MAKE_AS_TYPE_MAT3X3(type) LM_NODISCARD float3x3 _as_##type##3x3() const  { \
             if (_data.size() == 3) {                                                                 \
                 return make_##type##3x3(                                                             \
                         this->at(0)._as_##type##3(),                                                 \
@@ -66,7 +66,7 @@ namespace luminous {
                         this->at(8)._as_##type());                                                   \
             }                                                                                        \
         }
-#define LUMINOUS_MAKE_AS_TYPE_MAT4X4(type) _NODISCARD float4x4 _as_##type##4x4() const  { \
+#define LUMINOUS_MAKE_AS_TYPE_MAT4X4(type) LM_NODISCARD float4x4 _as_##type##4x4() const  { \
             if (_data.size() == 4) {                                                                 \
                 return make_##type##4x4(                                                             \
                         this->at(0)._as_##type##4(),                                                 \
@@ -133,29 +133,29 @@ namespace luminous {
 
             void setJson(const DataWrap &json) { _data = json; }
 
-            _NODISCARD DataWrap data() const { return _data; }
+            LM_NODISCARD DataWrap data() const { return _data; }
 
-            _NODISCARD ParameterSet get(const std::string &key) const {
+            LM_NODISCARD ParameterSet get(const std::string &key) const {
                 return ParameterSet(_data[key], key);
             }
 
-            _NODISCARD ParameterSet at(uint idx) const {
+            LM_NODISCARD ParameterSet at(uint idx) const {
                 return ParameterSet(_data.at(idx));
             }
 
-            _NODISCARD ParameterSet operator[](const std::string &key) const {
+            LM_NODISCARD ParameterSet operator[](const std::string &key) const {
                 return ParameterSet(_data.value(key, DataWrap()), key);
             }
 
-            _NODISCARD bool contains(const std::string &key) const {
+            LM_NODISCARD bool contains(const std::string &key) const {
                 return _data.contains(key);
             }
 
-            _NODISCARD ParameterSet operator[](uint i) const {
+            LM_NODISCARD ParameterSet operator[](uint i) const {
                 return ParameterSet(_data[i]);
             }
 
-#define LUMINOUS_MAKE_AS_TYPE_SCALAR(type) _NODISCARD type as_##type(type val = type()) const {                   \
+#define LUMINOUS_MAKE_AS_TYPE_SCALAR(type) LM_NODISCARD type as_##type(type val = type()) const {                   \
             try {                                                                                               \
                 return _as_##type();                                                                            \
             } catch (const std::exception &e) {                                                             \
@@ -168,7 +168,7 @@ namespace luminous {
             return as_##type();                                                            \
         }\
 
-#define LUMINOUS_MAKE_AS_TYPE_VEC2(type) _NODISCARD type##2 as_##type##2(type##2 val = make_##type##2()) const noexcept {      \
+#define LUMINOUS_MAKE_AS_TYPE_VEC2(type) LM_NODISCARD type##2 as_##type##2(type##2 val = make_##type##2()) const noexcept {      \
             try {                                                                                                        \
                 return _as_##type##2();                                                                                  \
             } catch (const std::exception &e) {                                                                      \
@@ -180,7 +180,7 @@ namespace luminous {
         T as() const {                                                                     \
             return as_##type##2();                                                            \
         }
-#define LUMINOUS_MAKE_AS_TYPE_VEC3(type) _NODISCARD type##3 as_##type##3(type##3 val = make_##type##3()) const noexcept {        \
+#define LUMINOUS_MAKE_AS_TYPE_VEC3(type) LM_NODISCARD type##3 as_##type##3(type##3 val = make_##type##3()) const noexcept {        \
             try {                                                                                                          \
                 return _as_##type##3();                                                                                    \
             } catch (const std::exception &e) {                                                                        \
@@ -192,7 +192,7 @@ namespace luminous {
         T as() const {                                                                     \
             return as_##type##3();                                                            \
         }
-#define LUMINOUS_MAKE_AS_TYPE_VEC4(type) _NODISCARD type##4 as_##type##4(type##4 val = make_##type##4()) const noexcept{        \
+#define LUMINOUS_MAKE_AS_TYPE_VEC4(type) LM_NODISCARD type##4 as_##type##4(type##4 val = make_##type##4()) const noexcept{        \
             try {                                                                                                          \
                 return _as_##type##4();                                                                                    \
             } catch (const std::exception &e) {                                                                        \
@@ -204,7 +204,7 @@ namespace luminous {
         T as() const {                                                                     \
             return as_##type##4();                                                            \
         }
-#define LUMINOUS_MAKE_AS_TYPE_MAT3X3(type) _NODISCARD type##3x3 as_##type##3x3(type##3x3 val = make_##type##3x3()) const noexcept{ \
+#define LUMINOUS_MAKE_AS_TYPE_MAT3X3(type) LM_NODISCARD type##3x3 as_##type##3x3(type##3x3 val = make_##type##3x3()) const noexcept{ \
             try {                                                                                                                       \
                 return _as_##type##3x3(); \
             } catch (const std::exception &e) { \
@@ -212,7 +212,7 @@ namespace luminous {
                 return val; \
             } \
         }
-#define LUMINOUS_MAKE_AS_TYPE_MAT4X4(type) _NODISCARD type##4x4 as_##type##4x4(type##4x4 val = make_##type##4x4()) const noexcept { \
+#define LUMINOUS_MAKE_AS_TYPE_MAT4X4(type) LM_NODISCARD type##4x4 as_##type##4x4(type##4x4 val = make_##type##4x4()) const noexcept { \
             try {                                                                                                                       \
                 return _as_##type##4x4(); \
             } catch (const std::exception &e) { \

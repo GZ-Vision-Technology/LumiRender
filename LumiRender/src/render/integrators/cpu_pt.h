@@ -22,11 +22,11 @@ namespace luminous {
             void init(const SP<SceneGraph> &scene_graph) override;
 
             template<typename TScene>
-            _NODISCARD decltype(auto) scene() {
+            LM_NODISCARD decltype(auto) scene() {
                 return reinterpret_cast<TScene*>(_scene.get());
             }
 
-            _NODISCARD uint frame_index() const override { return _frame_index; }
+            LM_NODISCARD uint frame_index() const override { return _frame_index; }
 
             void update() override;
 

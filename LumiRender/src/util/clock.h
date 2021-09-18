@@ -25,17 +25,17 @@ namespace luminous {
 
             void start() noexcept { tic(); }
 
-            _NODISCARD auto toc() const noexcept {
+            LM_NODISCARD auto toc() const noexcept {
                 auto curr = SystemClock::now();
                 using namespace std::chrono_literals;
                 return (curr - _last) / 1ns * 1e-6;
             }
 
-            _NODISCARD auto elapse_ms() const noexcept {
+            LM_NODISCARD auto elapse_ms() const noexcept {
                 return toc();
             }
 
-            _NODISCARD auto elapse_s() const noexcept {
+            LM_NODISCARD auto elapse_s() const noexcept {
                 return elapse_ms() / 1000;
             }
         };

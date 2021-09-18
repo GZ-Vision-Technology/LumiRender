@@ -12,7 +12,7 @@
 namespace luminous {
     inline namespace geometry {
 
-        XPU _NODISCARD static Quaternion matrix_to_quaternion(const float4x4 &m) {
+        XPU LM_NODISCARD static Quaternion matrix_to_quaternion(const float4x4 &m) {
             float x, y, z, w;
             float trace = m[0][0] + m[1][1] + m[2][2];
             if (trace > 0.f) {
@@ -60,7 +60,7 @@ namespace luminous {
             return make_float3(axis_x_angle, axis_y_angle, axis_z_angle);
         }
 
-        XPU _NODISCARD static float4x4 quaternion_to_matrix(const Quaternion &q) noexcept {
+        XPU LM_NODISCARD static float4x4 quaternion_to_matrix(const Quaternion &q) noexcept {
             float x = q.v.x;
             float y = q.v.y;
             float z = q.v.z;

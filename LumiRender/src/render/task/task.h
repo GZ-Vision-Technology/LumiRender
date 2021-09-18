@@ -32,7 +32,7 @@ namespace luminous {
 
         virtual void init(const Parser &parser) = 0;
 
-        _NODISCARD std::shared_ptr<SceneGraph> build_scene_graph(const Parser &parser) {
+        LM_NODISCARD std::shared_ptr<SceneGraph> build_scene_graph(const Parser &parser) {
             auto scene_graph = parser.parse();
             scene_graph->create_shapes();
             _output_config = scene_graph->output_config;
@@ -71,15 +71,15 @@ namespace luminous {
 
         virtual void update_device_buffer() = 0;
 
-        _NODISCARD virtual Sensor *camera() {
+        LM_NODISCARD virtual Sensor *camera() {
             return _integrator->camera();
         }
 
-        _NODISCARD virtual FrameBufferType *get_frame_buffer() = 0;
+        LM_NODISCARD virtual FrameBufferType *get_frame_buffer() = 0;
 
-        _NODISCARD virtual float4 *get_accumulate_buffer() = 0;
+        LM_NODISCARD virtual float4 *get_accumulate_buffer() = 0;
 
-        _NODISCARD uint2 resolution() {
+        LM_NODISCARD uint2 resolution() {
             return camera()->film()->resolution();
         }
 

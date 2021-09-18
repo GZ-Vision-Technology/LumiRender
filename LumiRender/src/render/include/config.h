@@ -35,7 +35,7 @@ namespace luminous {
                 _type = full_type(type);
             }
 
-            _NODISCARD const std::string &type() const {
+            LM_NODISCARD const std::string &type() const {
                 return _type;
             }
         };
@@ -63,7 +63,7 @@ namespace luminous {
             float pitch{};
             float3 position;
 
-            _NODISCARD Transform create() const {
+            LM_NODISCARD Transform create() const {
                 if (type() == "matrix4x4") {
                     return Transform(mat4x4);
                 } else if (type() == "trs") {
@@ -105,7 +105,7 @@ namespace luminous {
         };
 
         struct TextureConfig : Config {
-            _NODISCARD bool is_image() const {
+            LM_NODISCARD bool is_image() const {
                 return !fn.empty();
             }
 

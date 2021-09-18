@@ -824,7 +824,7 @@ struct position_t
     #undef JSON_HEDLEY_WARN_UNUSED_RESULT
 #endif
 #if defined(__cplusplus) && (__cplusplus >= 201703L)
-    #define JSON_HEDLEY_WARN_UNUSED_RESULT _NODISCARD
+    #define JSON_HEDLEY_WARN_UNUSED_RESULT LM_NODISCARD
 #elif \
     JSON_HEDLEY_HAS_ATTRIBUTE(warn_unused_result) || \
     JSON_HEDLEY_GCC_VERSION_CHECK(3,4,0) || \

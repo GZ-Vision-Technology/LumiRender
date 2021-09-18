@@ -20,7 +20,7 @@ namespace luminous {
         public:
             XPU LCG() { init(0, 0); }
 
-            _NODISCARD XPU LCG(uint2 v) {
+            LM_NODISCARD XPU LCG(uint2 v) {
                 init(v);
             }
 
@@ -28,7 +28,7 @@ namespace luminous {
                 init(v.x, v.y);
             }
 
-            _NODISCARD XPU LCG(unsigned int val0, unsigned int val1) {
+            LM_NODISCARD XPU LCG(unsigned int val0, unsigned int val1) {
                 init(val0, val1);
             }
 
@@ -46,7 +46,7 @@ namespace luminous {
             }
 
             // Generate random unsigned int in [0, 2^24)
-            _NODISCARD inline XPU float next() {
+            LM_NODISCARD inline XPU float next() {
                 const uint32_t LCG_A = 1664525u;
                 const uint32_t LCG_C = 1013904223u;
                 state = (LCG_A * state + LCG_C);

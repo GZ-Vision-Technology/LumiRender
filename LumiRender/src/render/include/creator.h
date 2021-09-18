@@ -13,7 +13,7 @@ namespace luminous {
     inline namespace render {
         namespace detail {
             template<typename Handle, typename Config, uint8_t current_index = 0>
-            _NODISCARD Handle create(const Config &config) {
+            LM_NODISCARD Handle create(const Config &config) {
                 using Class = std::tuple_element_t<current_index, typename Handle::TypeTuple>;
                 if (type_name<Class>() == config.type()) {
                     return Handle(Class::create(config));

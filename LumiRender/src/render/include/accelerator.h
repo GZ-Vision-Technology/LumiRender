@@ -23,13 +23,13 @@ namespace luminous {
 
             virtual ~Accelerator() = default;
 
-            _NODISCARD virtual uint64_t handle() const = 0;
+            LM_NODISCARD virtual uint64_t handle() const = 0;
 
-            _NODISCARD size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
+            LM_NODISCARD size_t bvh_size_in_bytes() const { return _bvh_size_in_bytes; }
 
             virtual void clear() = 0;
 
-            _NODISCARD virtual  std::string description() const = 0;
+            LM_NODISCARD virtual  std::string description() const = 0;
 
             virtual void build_bvh(const Managed <float3> &positions, const Managed <TriangleHandle> &triangles,
                                    const Managed <MeshHandle> &meshes, const Managed <uint> &instance_list,

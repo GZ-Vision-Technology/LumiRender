@@ -50,10 +50,10 @@ namespace luminous {
                 for (auto p : _blocks) { aligned_free(p); }
             }
 
-            _NODISCARD auto total_size() const noexcept { return _total; }
+            LM_NODISCARD auto total_size() const noexcept { return _total; }
 
             template<typename T = std::byte, size_t alignment = alignof(T)>
-            _NODISCARD auto allocate(size_t n = 1u) {
+            LM_NODISCARD auto allocate(size_t n = 1u) {
 
                 static constexpr auto size = sizeof(T);
 
@@ -78,7 +78,7 @@ namespace luminous {
             }
 
             template<typename T, typename... Args>
-            _NODISCARD T *create(Args &&...args) {
+            LM_NODISCARD T *create(Args &&...args) {
                 return construct_at(allocate<T>(1u), std::forward<Args>(args)...);
             }
         };

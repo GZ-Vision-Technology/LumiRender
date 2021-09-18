@@ -92,7 +92,7 @@ namespace lstd {
             });
         }
 
-        XPU _NODISCARD int type_index() const { return index; }
+        XPU LM_NODISCARD int type_index() const { return index; }
 
         template<typename U>
         XPU constexpr static int index_of() {
@@ -138,22 +138,22 @@ namespace lstd {
             return *this;
         }
 
-        _NODISCARD XPU bool null() const { return index == -1; }
+        LM_NODISCARD XPU bool null() const { return index == -1; }
 
         template<typename U>
-        _NODISCARD XPU bool isa() const {
+        LM_NODISCARD XPU bool isa() const {
             static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
             return Index::template GetIndex<U>::value == index;
         }
 
         template<typename U>
-        _NODISCARD XPU U *get() {
+        LM_NODISCARD XPU U *get() {
             static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
             return Index::template GetIndex<U>::value != index ? nullptr : reinterpret_cast<U *>(&data);
         }
 
         template<typename U>
-        _NODISCARD XPU const U *get() const {
+        LM_NODISCARD XPU const U *get() const {
             static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
             return Index::template GetIndex<U>::value != index ? nullptr : reinterpret_cast<const U *>(&data);
         }

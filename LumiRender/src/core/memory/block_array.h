@@ -87,19 +87,19 @@ namespace luminous {
                 }
             }
 
-            _NODISCARD constexpr int block_size() const {
+            LM_NODISCARD constexpr int block_size() const {
                 return 1 << logBlockSize;
             }
 
-            _NODISCARD int round_up(int x) const {
+            LM_NODISCARD int round_up(int x) const {
                 return (x + block_size() - 1) & ~(block_size() - 1);
             }
 
-            _NODISCARD int u_size() const {
+            LM_NODISCARD int u_size() const {
                 return _u_res;
             }
 
-            _NODISCARD int v_size() const {
+            LM_NODISCARD int v_size() const {
                 return _v_res;
             }
 
@@ -110,15 +110,15 @@ namespace luminous {
                 free_aligned(_data);
             }
 
-            _NODISCARD int block(int a) const {
+            LM_NODISCARD int block(int a) const {
                 return a >> logBlockSize;
             }
 
-            _NODISCARD int offset(int a) const {
+            LM_NODISCARD int offset(int a) const {
                 return (a & (block_size() - 1));
             }
 
-            _NODISCARD int get_total_offset(int u, int v) const {
+            LM_NODISCARD int get_total_offset(int u, int v) const {
                 int bu = block(u);
                 int bv = block(v);
                 int ou = offset(u);

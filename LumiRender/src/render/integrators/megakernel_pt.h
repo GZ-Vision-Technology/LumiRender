@@ -25,12 +25,12 @@ namespace luminous {
 
             void init_launch_params();
 
-            _NODISCARD uint frame_index() const override {
+            LM_NODISCARD uint frame_index() const override {
                 return _launch_params->frame_index;
             }
 
             template<typename TScene>
-            _NODISCARD decltype(auto) scene() {
+            LM_NODISCARD decltype(auto) scene() {
                 return reinterpret_cast<TScene*>(_scene.get());
             }
 

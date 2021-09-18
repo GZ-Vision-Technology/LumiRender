@@ -34,7 +34,7 @@ namespace luminous {
                 return SHA1(ptx_code);
             }
 
-            _NODISCARD bool is_contain(const SHA1 &key) const {
+            LM_NODISCARD bool is_contain(const SHA1 &key) const {
                 return _module_map.find(key) != _module_map.end();
             }
 
@@ -60,12 +60,12 @@ namespace luminous {
                 return optix_module;
             }
 
-            _NODISCARD OptixBuildInput get_mesh_build_input(const Buffer<const float3> &positions,
+            LM_NODISCARD OptixBuildInput get_mesh_build_input(const Buffer<const float3> &positions,
                                                       const Buffer<const TriangleHandle> &triangles,
                                                       const MeshHandle &mesh,
                                                       std::list<CUdeviceptr> &vert_buffer_ptr);
 
-            _NODISCARD OptixTraversableHandle build_mesh_bvh(const Buffer<const float3> &positions,
+            LM_NODISCARD OptixTraversableHandle build_mesh_bvh(const Buffer<const float3> &positions,
                                                        const Buffer<const TriangleHandle> &triangles,
                                                        const MeshHandle &mesh,
                                                        std::list<CUdeviceptr> &_vert_buffer_ptr);
@@ -75,11 +75,11 @@ namespace luminous {
 
             OptixDeviceContext create_context();
 
-            _NODISCARD uint64_t handle() const override { return _root_as_handle; }
+            LM_NODISCARD uint64_t handle() const override { return _root_as_handle; }
 
             void build_pipeline(const std::vector<OptixProgramGroup> &program_groups);
 
-            _NODISCARD ShaderWrapper create_shader_wrapper(const std::string &ptx_code, const ProgramName &program_name);
+            LM_NODISCARD ShaderWrapper create_shader_wrapper(const std::string &ptx_code, const ProgramName &program_name);
 
             void clear() override {
                 optixPipelineDestroy(_optix_pipeline);
@@ -88,7 +88,7 @@ namespace luminous {
                 optixDeviceContextDestroy(_optix_device_context);
             }
 
-            _NODISCARD std::string description() const override {
+            LM_NODISCARD std::string description() const override {
                 float size_in_M = (_bvh_size_in_bytes * 1.f) / (sqr(1024));
                 return string_printf("bvh size is %f MB\n", size_in_M);
             }

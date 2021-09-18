@@ -20,7 +20,7 @@ namespace luminous {
         public:
             GEN_BASE_NAME(Sampler)
 
-            _NODISCARD XPU int spp() const;
+            LM_NODISCARD XPU int spp() const;
 
             XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
