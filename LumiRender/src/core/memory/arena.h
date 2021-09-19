@@ -52,8 +52,6 @@ namespace luminous {
             uint64_t _ptr{0ul};
             size_t _total{0ul};
 
-            BlockIterator _cur_block{};
-
             BlockList _memory_blocks;
 
         public:
@@ -83,23 +81,41 @@ namespace luminous {
                         min_remain = remain;
                     }
                 }
-                return iter;
+                return best_iter;
             }
 
             template<typename T = std::byte, size_t alignment = alignof(T)>
-            LM_NODISCARD auto allocate2(size_t n = 1u) {
+            LM_NODISCARD T *allocate(size_t n = 1u) {
                 static constexpr auto size = sizeof(T);
-
                 auto byte_size = n * size;
-                auto aligned_p = reinterpret_cast<std::byte *>((_ptr + alignment - 1u) / alignment * alignment);
-                if (_memory_blocks.empty() || _memory_blocks.back().remain() < byte_size) {
+                auto iter = find_suitable_blocks(byte_size, alignment);
+                if (iter == _memory_blocks.end()) {
+                    _memory_blocks.emplace_back();
+                    iter = --_memory_blocks.end();
                     static constexpr auto alloc_alignment = std::max(alignment, sizeof(void *));
                     static_assert((alloc_alignment & (alloc_alignment - 1u)) == 0, "Alignment should be power of two.");
+                    auto alloc_size = (std::max(block_size, byte_size) + alloc_alignment - 1u) / alloc_alignment *
+                            alloc_alignment;
+                    iter->capacity = alloc_size;
+                    auto aligned_p = static_cast<std::byte *>(aligned_alloc(alloc_alignment, alloc_size));
+                    if (aligned_p == nullptr) {
+                        LUMINOUS_ERROR(
+                                string_printf("Failed to allocate memory: size = %d, alignment = %d, count = %d",
+                                              size, alignment, n))
+                    }
+                    iter->address = aligned_p;
+                    iter->next_allocate_ptr = reinterpret_cast<uint64_t>(aligned_p + byte_size);
+                    return reinterpret_cast<T*>(aligned_p);
+                } else {
+                    auto aligned_p = reinterpret_cast<std::byte *>((iter->next_allocate_ptr + alignment - 1u) /
+                            alignment * alignment);
+                    iter->next_allocate_ptr = reinterpret_cast<uint64_t>(aligned_p + byte_size);
+                    return reinterpret_cast<T *>(aligned_p);
                 }
             }
 
             template<typename T = std::byte, size_t alignment = alignof(T)>
-            LM_NODISCARD auto allocate(size_t n = 1u) {
+            LM_NODISCARD auto allocate_old(size_t n = 1u) {
 
                 static constexpr auto size = sizeof(T);
 
