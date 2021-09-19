@@ -30,14 +30,31 @@ namespace luminous {
                     T(std::forward<Args>(args)...);
         }
 
+        struct MemoryBlock {
+        public:
+            std::byte *address{};
+            uint64_t next_allocate_ptr{};
+            size_t capacity{};
+            size_t size{};
+
+            LM_NODISCARD size_t remain() const { return capacity - size; }
+
+            LM_NODISCARD std::byte *end_ptr() const { return address + capacity; }
+        };
+
         class MemoryArena : public Noncopyable {
         public:
             static constexpr auto block_size = static_cast<size_t>(256ul * 1024ul);
-
+            using BlockList = std::list<MemoryBlock>;
+            using BlockIterator = BlockList::iterator;
         private:
             std::list<std::byte *> _blocks;
             uint64_t _ptr{0ul};
             size_t _total{0ul};
+
+            BlockIterator _cur_block{};
+
+            BlockList _memory_blocks;
 
         public:
             MemoryArena() noexcept = default;
@@ -51,6 +68,35 @@ namespace luminous {
             }
 
             LM_NODISCARD auto total_size() const noexcept { return _total; }
+
+            BlockIterator find_suitable_blocks(size_t byte_size, size_t alignment) {
+                auto iter = _memory_blocks.begin();
+                auto best_iter = _memory_blocks.end();
+                auto min_remain = block_size;
+                for (; iter != _memory_blocks.end(); ++iter) {
+                    auto aligned_p = reinterpret_cast<std::byte *>((iter->next_allocate_ptr + alignment - 1u) /
+                                                                   alignment * alignment);
+                    std::byte *next_allocate_ptr = aligned_p + byte_size;
+                    int64_t remain = iter->end_ptr() - next_allocate_ptr;
+                    if (remain > 0 && remain < min_remain) {
+                        best_iter = iter;
+                        min_remain = remain;
+                    }
+                }
+                return iter;
+            }
+
+            template<typename T = std::byte, size_t alignment = alignof(T)>
+            LM_NODISCARD auto allocate2(size_t n = 1u) {
+                static constexpr auto size = sizeof(T);
+
+                auto byte_size = n * size;
+                auto aligned_p = reinterpret_cast<std::byte *>((_ptr + alignment - 1u) / alignment * alignment);
+                if (_memory_blocks.empty() || _memory_blocks.back().remain() < byte_size) {
+                    static constexpr auto alloc_alignment = std::max(alignment, sizeof(void *));
+                    static_assert((alloc_alignment & (alloc_alignment - 1u)) == 0, "Alignment should be power of two.");
+                }
+            }
 
             template<typename T = std::byte, size_t alignment = alignof(T)>
             LM_NODISCARD auto allocate(size_t n = 1u) {
