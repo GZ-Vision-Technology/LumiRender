@@ -41,9 +41,23 @@ void test() {
     }
 }
 
+void test2() {
+    Managed<int> managed;
+    int n = 1;
+    managed.reserve(n);
+    for (int i = 0; i < n; ++i) {
+        managed.push_back(i);
+
+    }
+    cout << managed.size_in_bytes() << endl;
+    cout << get_arena().usage() << endl;
+    cout << sizeof (vector<int>) << endl;
+}
+
 int main() {
 
-    test();
+//    test();
+    test2();
 
 
     return 0;
