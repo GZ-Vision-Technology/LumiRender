@@ -43,7 +43,7 @@ void test() {
 
 void test2() {
     Managed<int> managed;
-    int n = 1;
+    int n = 100;
     managed.reserve(n);
     for (int i = 0; i < n; ++i) {
         managed.push_back(i);
@@ -51,7 +51,15 @@ void test2() {
     }
     cout << managed.size_in_bytes() << endl;
     cout << get_arena().usage() << endl;
-    cout << sizeof (vector<int>) << endl;
+
+    Managed<int> managed2;
+    n = 100;
+    managed2.reserve(n);
+    for (int i = 0; i < n; ++i) {
+        managed2.push_back(i);
+    }
+    cout << managed2.size_in_bytes() << endl;
+    cout << get_arena().usage() << endl;
 }
 
 int main() {
