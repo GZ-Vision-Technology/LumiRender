@@ -9,6 +9,7 @@
 #include "core/concepts.h"
 #include "base_libs/string_util.h"
 #include "core/logging.h"
+#include "base_libs/math/common.h"
 
 
 namespace luminous {
@@ -33,36 +34,64 @@ namespace luminous {
 
         struct MemoryBlock {
         private:
-            std::byte *address{};
-            uint64_t next_allocate_ptr{};
-            size_t capacity{};
+            std::byte *_address{};
+            uint64_t _next_allocate_ptr{};
+            size_t _capacity{};
         public:
+            MemoryBlock() noexcept = default;
+
+            explicit MemoryBlock(size_t byte_size) noexcept {
+                _address = alloc<std::byte>(byte_size);
+            }
+
+            virtual ~MemoryBlock() noexcept {
+                aligned_free(_address);
+            }
+
             template<typename T, size_t alignment = alignof(T)>
-            LM_NODISCARD T *alloc(size_t byte_size) {
+            LM_NODISCARD T *alloc(size_t byte_size) noexcept {
                 static constexpr auto alloc_alignment = std::max(alignment, sizeof(void *));
                 static_assert((alloc_alignment & (alloc_alignment - 1u)) == 0, "Alignment should be power of two.");
                 auto alloc_size = (std::max(block_size, byte_size) + alloc_alignment - 1u) / alloc_alignment *
                                   alloc_alignment;
-                capacity = alloc_size;
-                address = static_cast<std::byte *>(aligned_alloc(alloc_alignment, alloc_size));
-                next_allocate_ptr = reinterpret_cast<uint64_t>(address + byte_size);
-                return reinterpret_cast<T *>(address);
+                _capacity = alloc_size;
+                _address = static_cast<std::byte *>(aligned_alloc(alloc_alignment, alloc_size));
+                if (_address == nullptr) {
+                    LUMINOUS_ERROR(
+                            string_printf("Failed to allocate memory: size = %d, alignment = %d, count = %d",
+                                          byte_size, alignment, byte_size / sizeof(T)));
+                }
+                _next_allocate_ptr = reinterpret_cast<uint64_t>(_address + byte_size);
+                return reinterpret_cast<T *>(_address);
             }
 
             template<typename T, size_t alignment = alignof(T)>
             LM_NODISCARD T *use(size_t byte_size) {
-                auto aligned_p = reinterpret_cast<std::byte *>((next_allocate_ptr + alignment - 1u) /
+                auto aligned_p = reinterpret_cast<std::byte *>((_next_allocate_ptr + alignment - 1u) /
                                                                alignment * alignment);
-                next_allocate_ptr = reinterpret_cast<uint64_t>(aligned_p + byte_size);
+                _next_allocate_ptr = reinterpret_cast<uint64_t>(aligned_p + byte_size);
                 return reinterpret_cast<T *>(aligned_p);
             }
 
             LM_NODISCARD std::byte *aligned_ptr(size_t alignment) const {
-                return reinterpret_cast<std::byte *>((next_allocate_ptr + alignment - 1u) /
+                return reinterpret_cast<std::byte *>((_next_allocate_ptr + alignment - 1u) /
                                                      alignment * alignment);
             }
 
-            LM_NODISCARD std::byte *end_ptr() const { return address + capacity; }
+            LM_NODISCARD size_t usage() const {
+                return _next_allocate_ptr - reinterpret_cast<size_t>(_address);
+            }
+
+            LM_NODISCARD double usage_rate() const {
+                return double(usage()) / double(_capacity);
+            }
+
+            LM_NODISCARD size_t capacity() const { return _capacity; }
+
+            template<typename T = std::byte>
+            LM_NODISCARD T *address() { return reinterpret_cast<T *>(_address); }
+
+            LM_NODISCARD std::byte *end_ptr() const { return _address + _capacity; }
         };
 
         class MemoryArena : public Noncopyable {
@@ -70,12 +99,16 @@ namespace luminous {
 
             using BlockList = std::list<MemoryBlock>;
             using BlockIterator = BlockList::iterator;
+            using ConstBlockIterator = BlockList::const_iterator;
         private:
+            BlockList _memory_blocks;
+
+            /**
+             * deprecated
+             */
             std::list<std::byte *> _blocks;
             uint64_t _ptr{0ul};
             size_t _total{0ul};
-
-            BlockList _memory_blocks;
 
         public:
             MemoryArena() noexcept = default;
@@ -84,24 +117,82 @@ namespace luminous {
 
             MemoryArena &operator=(MemoryArena &&) noexcept = default;
 
-            ~MemoryArena() noexcept {
-                for (auto p : _blocks) { aligned_free(p); }
+            ~MemoryArena() noexcept = default;
+
+            /**
+             * deprecated
+             * @return
+             */
+            LM_NODISCARD auto total_size() const noexcept { return _total; }
+
+            template<typename F>
+            void for_each_block(const F &f) const {
+                for (auto iter = _memory_blocks.cbegin(); iter != _memory_blocks.cend(); ++iter) {
+                    f(iter);
+                }
             }
 
-            LM_NODISCARD auto total_size() const noexcept { return _total; }
+            template<typename F>
+            void for_each_block(const F &f) {
+                for (auto iter = _memory_blocks.begin(); iter != _memory_blocks.end(); ++iter) {
+                    f(iter);
+                }
+            }
+
+            LM_NODISCARD size_t capacity() const {
+                size_t ret{0u};
+                for_each_block([&](ConstBlockIterator iter) {
+                    ret += iter->capacity();
+                });
+                return ret;
+            }
+
+            LM_NODISCARD size_t usage() const {
+                size_t ret{0u};
+                for_each_block([&](ConstBlockIterator iter) {
+                    ret += iter->usage();
+                });
+                return ret;
+            }
+
+            LM_NODISCARD double usage_rate() const {
+                size_t usage{0u};
+                size_t capacity{0u};
+                for_each_block([&](ConstBlockIterator iter) {
+                    usage += iter->usage();
+                    capacity += iter->capacity();
+                });
+                return double(usage) / double(capacity);
+            }
+
+            LM_NODISCARD size_t block_num() const {
+                return _memory_blocks.size();
+            }
+
+            LM_NODISCARD std::string description() const {
+                return string_printf("Memory arena \n "
+                                     "the count of block : %u,\n"
+                                     "total capacity is : %.5f MB,\n"
+                                     "total usage is %.5f MB,\n"
+                                     "usage rate is %3.f%%\n",
+                                     block_num(),
+                                     float(capacity()) / sqr(1024),
+                                     float(usage()) / sqr(1024),
+                                     usage_rate() * 100);
+            }
 
             BlockIterator find_suitable_blocks(size_t byte_size, size_t alignment) {
                 auto best_iter = _memory_blocks.end();
                 auto min_remain = block_size;
-                for (auto iter = _memory_blocks.begin(); iter != _memory_blocks.end(); ++iter) {
+                for_each_block([&](BlockIterator iter) {
                     auto aligned_p = iter->aligned_ptr(alignment);
                     std::byte *next_allocate_ptr = aligned_p + byte_size;
                     int64_t remain = iter->end_ptr() - next_allocate_ptr;
-                    if (remain > 0 && remain < min_remain) {
+                    if (remain >= 0 && remain < min_remain) {
                         best_iter = iter;
                         min_remain = remain;
                     }
-                }
+                });
                 return best_iter;
             }
 
@@ -111,9 +202,9 @@ namespace luminous {
                 auto byte_size = n * size;
                 auto iter = find_suitable_blocks(byte_size, alignment);
                 if (iter == _memory_blocks.end()) {
-                    _memory_blocks.emplace_back();
+                    _memory_blocks.emplace_back(byte_size);
                     MemoryBlock &back = _memory_blocks.back();
-                    return back.template alloc<T>(byte_size);
+                    return back.template address<T>();
                 } else {
                     return iter->template use<T>(byte_size);
                 }

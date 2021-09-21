@@ -75,9 +75,9 @@ namespace luminous {
                 construct_at(ptr, std::forward<Args>(args)...);
             }
 
-            template<class _Uty>
-            void destroy(_Uty *const _Ptr) {
-                _Ptr->~_Uty();
+            template<class Uty>
+            void destroy(Uty *const _Ptr) {
+                _Ptr->~Uty();
             }
 
             LM_NODISCARD size_t max_size() const noexcept {
