@@ -53,7 +53,7 @@
     #define GPU __device__
     #define CPU __host__
 
-    #define CPU_ONLY(arg)
+    #define CPU_ONLY(...)
 
     #define GEN_NAME_FUNC NDSC_XPU const char *name() {             \
                                         LUMINOUS_VAR_DISPATCH(name);\
@@ -68,7 +68,7 @@
     #define CPU
     #define LUMINOUS_DBG(...) fprintf(stderr, __FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
 
-    #define CPU_ONLY(arg) arg
+    #define CPU_ONLY(...) __VA_ARGS__
 
     #define GEN_STRING_FUNC(args) LM_NODISCARD std::string to_string() const args
 

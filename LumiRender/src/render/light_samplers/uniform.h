@@ -10,9 +10,11 @@
 namespace luminous {
     inline namespace render {
 
-        class UniformLightSampler : public LightSamplerBase {
+        class UniformLightSampler : public LightSamplerBase, public ICreator<UniformLightSampler> {
         public:
             UniformLightSampler() = default;
+
+            CPU_ONLY(explicit UniformLightSampler(const LightSamplerConfig &config) {})
 
             NDSC_XPU SampledLight sample(float u) const;
 
@@ -23,10 +25,9 @@ namespace luminous {
             NDSC_XPU float PMF(const LightSampleContext &ctx, const Light &light) const;
 
             GEN_STRING_FUNC({
-                LUMINOUS_TO_STRING("light sampler : %s",type_name(this));
-            })
+                                LUMINOUS_TO_STRING("light sampler : %s", type_name(this));
+                            })
 
-            CPU_ONLY(static UniformLightSampler create(const LightSamplerConfig &config);)
         };
 
     } // luminous::render

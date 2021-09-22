@@ -8,21 +8,21 @@
 #include "render/textures/texture.h"
 #include "render/bxdfs/bsdf.h"
 #include "render/include/config.h"
+#include "core/concepts.h"
 
 
 namespace luminous {
     inline namespace render {
-        class MatteMaterial {
+        class MatteMaterial : public ICreator<MatteMaterial> {
         private:
-            index_t _R;
+            index_t _R{};
         public:
-            MatteMaterial(index_t r) : _R(r) {}
+            explicit MatteMaterial(index_t r) : _R(r) {}
 
-            NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData* scene_data) const;
+            NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
-            CPU_ONLY(static MatteMaterial create(const MaterialConfig &mc) {
-                return MatteMaterial(mc.diffuse_tex.tex_idx);
-            })
+            CPU_ONLY(explicit MatteMaterial(const MaterialConfig &mc)
+                             :MatteMaterial(mc.diffuse_tex.tex_idx) {})
         };
     }
 }

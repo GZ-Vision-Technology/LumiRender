@@ -10,11 +10,14 @@
 
 namespace luminous {
     inline namespace render {
-        class PointLight : public LightBase {
+        class PointLight : public LightBase, public ICreator<PointLight> {
         private:
             float3 _pos;
             Spectrum _intensity;
         public:
+            CPU_ONLY(explicit PointLight(const LightConfig &config)
+                    : PointLight(config.position, config.intensity) {})
+
             PointLight(float3 pos, float3 intensity)
                     : LightBase(LightType::DeltaPosition),
                       _pos(pos),
@@ -37,8 +40,6 @@ namespace luminous {
                                                    type_name(this),
                                                    _intensity.to_string().c_str());
                             })
-
-            CPU_ONLY(static PointLight create(const LightConfig &config);)
         };
     } // luminous::render
 } // luminous

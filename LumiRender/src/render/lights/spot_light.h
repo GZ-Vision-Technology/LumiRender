@@ -11,7 +11,7 @@
 namespace luminous {
     inline namespace render {
 
-        class SpotLight : public LightBase {
+        class SpotLight : public LightBase, public ICreator<SpotLight> {
         private:
             float3 _pos;
             // center direction in world space
@@ -22,6 +22,12 @@ namespace luminous {
             float _cos_theta_o;
             float3 _intensity;
         public:
+            CPU_ONLY(SpotLight(const LightConfig &config)
+                             :SpotLight(config.position,
+                             config.intensity,
+                             std::cos(config.theta_i),
+                             std::cos(config.theta_o)) {})
+
             SpotLight(float3 pos, float3 intensity, float theta_i, float theta_o)
                     : LightBase(LightType::DeltaPosition),
                       _pos(pos),
@@ -53,7 +59,6 @@ namespace luminous {
                                                    _intensity.to_string().c_str());
                             })
 
-            CPU_ONLY(static SpotLight create(const LightConfig &config);)
         };
 
     } // luminous::render

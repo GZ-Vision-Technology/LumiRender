@@ -10,6 +10,7 @@
 #include "render/include/interaction.h"
 #include "render/include/config.h"
 #include "render/scene/scene_data.h"
+#include "core/concepts.h"
 
 namespace luminous {
     inline namespace render {

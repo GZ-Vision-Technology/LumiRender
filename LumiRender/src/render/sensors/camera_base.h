@@ -10,6 +10,7 @@
 #include "../films/film.h"
 #include "../samplers/sampler_base.h"
 #include "render/include/creator.h"
+#include "core/concepts.h"
 
 namespace luminous {
     inline namespace render {

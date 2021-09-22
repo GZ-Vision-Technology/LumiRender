@@ -6,8 +6,9 @@
 #pragma once
 
 #include <utility>
-
+#include "core/concepts.h"
 #include "light_base.h"
+
 #include "base_libs/sampling/distribution.h"
 #include "render/textures/texture.h"
 
@@ -15,7 +16,7 @@ namespace luminous {
     inline namespace render {
         class Scene;
 
-        class Envmap : public LightBase {
+        class Envmap : public LightBase, public ICreator<Envmap> {
         private:
             index_t _tex_idx{invalid_uint32};
             index_t _distribution_idx{invalid_uint32};
@@ -23,6 +24,17 @@ namespace luminous {
             float3 _scene_center{};
             float _scene_diameter{};
         public:
+            CPU_ONLY(explicit Envmap(const LightConfig &config)
+                    : LightBase(LightType::Infinite),
+                      _tex_idx(config.texture_config.tex_idx),
+                      _scene_center(config.scene_box.center()),
+                      _scene_diameter(config.scene_box.radius() * 2.f),
+                      _distribution_idx(config.distribution_idx) {
+                Transform o2w = config.o2w_config.create();
+                Transform rotate_x = Transform::rotation_x(90);
+                _w2o = (o2w * rotate_x).inverse();
+            })
+
             Envmap(index_t tex_idx, Transform w2o, index_t distribution_idx, Box3f scene_box)
                     : LightBase(LightType::Infinite),
                       _tex_idx(tex_idx),
@@ -53,8 +65,6 @@ namespace luminous {
                             })
 
             CPU_ONLY(static std::vector<float> create_distribution(const Image &image));
-
-            CPU_ONLY(static Envmap create(const LightConfig &config);)
         };
     }
 }

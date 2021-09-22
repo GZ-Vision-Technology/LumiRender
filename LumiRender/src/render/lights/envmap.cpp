@@ -95,14 +95,5 @@ namespace luminous {
             });
             return ret;
         })
-
-        CPU_ONLY(Envmap Envmap::create(const LightConfig &config) {
-            Transform o2w = config.o2w_config.create();
-            Transform rotate_x = Transform::rotation_x(90);
-            o2w = o2w * rotate_x;
-            return Envmap(config.texture_config.tex_idx, o2w.inverse(),
-                          config.distribution_idx, config.scene_box);
-        })
-
     }
 }

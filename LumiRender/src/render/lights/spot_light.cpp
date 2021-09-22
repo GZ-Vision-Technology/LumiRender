@@ -50,10 +50,7 @@ namespace luminous {
             return _intensity * 2.f * Pi * (1 - 0.5f * (_cos_theta_i + _cos_theta_o));
         }
 
-        CPU_ONLY(SpotLight SpotLight::create(const LightConfig &config) {
-            return SpotLight(config.position, config.intensity, cos(config.theta_i),
-                             cos(config.theta_o));
-        })
+
 
 
     } // luminous::render

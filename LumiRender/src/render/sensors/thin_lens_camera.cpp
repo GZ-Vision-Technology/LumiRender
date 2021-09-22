@@ -10,7 +10,7 @@
 
 namespace luminous {
     inline namespace render {
-        ThinLensCamera::ThinLensCamera(const float4x4 m, float fov_y, float velocity)
+        ThinLensCamera::ThinLensCamera(const float4x4 &m, float fov_y, float velocity)
                 : CameraBase(m, fov_y, velocity) {}
 
         float ThinLensCamera::generate_ray(const SensorSample &ss, Ray *ray) {
@@ -25,9 +25,5 @@ namespace luminous {
             return 1;
         }
 
-        CPU_ONLY(ThinLensCamera ThinLensCamera::create(const SensorConfig &config) {
-            auto transform = config.transform_config.create();
-            return ThinLensCamera(transform.mat4x4(), config.fov_y, config.velocity);
-        })
     }
 }

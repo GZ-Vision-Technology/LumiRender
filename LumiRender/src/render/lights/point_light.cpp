@@ -35,10 +35,5 @@ namespace luminous {
             lls.wi = normalize(wi);
             return lls;
         }
-
-        CPU_ONLY(PointLight PointLight::create(const LightConfig &config) {
-            return PointLight(config.position, config.intensity);
-        })
-
     } // luminous::render
 } // luminous
