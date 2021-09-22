@@ -24,7 +24,7 @@ namespace luminous {
     public:
         Managed() = default;
 
-        explicit Managed(Device *device) : _device(device) {}
+        explicit Managed(Device *device) : BaseClass(), _device(device) {}
 
         Managed(Managed &&other) noexcept
                 : BaseClass(std::move(other)),

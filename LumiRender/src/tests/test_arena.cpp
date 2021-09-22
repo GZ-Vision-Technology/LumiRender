@@ -52,14 +52,16 @@ void test2() {
     cout << managed.size_in_bytes() << endl;
     cout << get_arena().usage() << endl;
 
-    Managed<int> managed2;
+    vector<int> managed2;
     n = 100;
     managed2.reserve(n);
     for (int i = 0; i < n; ++i) {
         managed2.push_back(i);
     }
-    cout << managed2.size_in_bytes() << endl;
+//    cout << managed2.size_in_bytes() << endl;
     cout << get_arena().usage() << endl;
+
+    managed.append(managed2);
 }
 
 int main() {

@@ -198,16 +198,39 @@ namespace luminous {
 
             template<typename T = std::byte, size_t alignment = alignof(T)>
             LM_NODISCARD T *allocate(size_t n = 1u) {
+
                 static constexpr auto size = sizeof(T);
+
                 auto byte_size = n * size;
-                auto iter = find_suitable_blocks(byte_size, alignment);
-                if (iter == _memory_blocks.end()) {
-                    _memory_blocks.emplace_back(byte_size);
-                    MemoryBlock &back = _memory_blocks.back();
-                    return back.template address<T>();
-                } else {
-                    return iter->template use<T>(byte_size);
+                auto aligned_p = reinterpret_cast<std::byte *>((_ptr + alignment - 1u) / alignment * alignment);
+                if (_memory_blocks.empty() || aligned_p + byte_size > _memory_blocks.back().address() + block_size) {
+                    static constexpr auto alloc_alignment = std::max(alignment, sizeof(void *));
+                    static_assert((alloc_alignment & (alloc_alignment - 1u)) == 0, "Alignment should be power of two.");
+                    auto alloc_size = (std::max(block_size, byte_size) + alloc_alignment - 1u) / alloc_alignment *
+                            alloc_alignment;
+                    aligned_p = static_cast<std::byte *>(aligned_alloc(alloc_alignment, alloc_size));
+                    if (aligned_p == nullptr) {
+                        LUMINOUS_ERROR(
+                                string_printf("Failed to allocate memory: size = %d, alignment = %d, count = %d",
+                                              size, alignment, n))
+                    }
+                    _memory_blocks.emplace_back();
+                    _total += alloc_size;
                 }
+                _ptr = reinterpret_cast<uint64_t>(aligned_p + byte_size);
+                return reinterpret_cast<T *>(aligned_p);
+
+
+//                static constexpr auto size = sizeof(T);
+//                auto byte_size = n * size;
+//                auto iter = find_suitable_blocks(byte_size, alignment);
+//                if (iter == _memory_blocks.end()) {
+//                    _memory_blocks.emplace_back(byte_size);
+//                    MemoryBlock &back = _memory_blocks.back();
+//                    return back.template address<T>();
+//                } else {
+//                    return iter->template use<T>(byte_size);
+//                }
             }
 
             template<typename T = std::byte, size_t alignment = alignof(T)>
