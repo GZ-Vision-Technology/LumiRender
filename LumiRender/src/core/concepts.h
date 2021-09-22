@@ -15,5 +15,24 @@ namespace luminous {
 
         Noncopyable &operator=(const Noncopyable &) = delete;
     };
+
+    template<typename T>
+    class ICreator {
+    public:
+        CPU_ONLY(
+                template<typename ...Args>
+                static T create(Args &&...args) {
+                    return T(std::forward<Args>(args)...);
+                }
+        )
+
+        CPU_ONLY(
+                template<typename ...Args>
+                static T *create_ptr(Args &&...args) {
+                    return new T(std::forward<Args>(args)...);
+                }
+        )
+    };
+
 }
 

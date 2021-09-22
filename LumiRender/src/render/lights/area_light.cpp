@@ -54,10 +54,10 @@ namespace luminous {
             printf("type:AreaLight,L:(%f,%f,%f)\n", _L.x, _L.y, _L.z);
         }
 
-        CPU_ONLY(AreaLight AreaLight::create(const LightConfig &config) {
-            return AreaLight(config.instance_idx, config.emission, config.surface_area,
-                             config.two_sided);
-        })
+//        CPU_ONLY(AreaLight AreaLight::create(const LightConfig &config) {
+//            return AreaLight(config.instance_idx, config.emission, config.surface_area,
+//                             config.two_sided);
+//        })
 
     } //luminous::render
 } // luminous::render

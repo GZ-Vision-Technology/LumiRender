@@ -6,17 +6,24 @@
 #pragma once
 
 #include "light_base.h"
-
+#include "render/include/config.h"
+#include "core/concepts.h"
 
 namespace luminous {
     inline namespace render {
-        class AreaLight : public LightBase {
+        class AreaLight : public LightBase, public ICreator<AreaLight> {
         private:
             uint _inst_idx;
             float3 _L;
             bool _two_sided;
             float _inv_area;
         public:
+            CPU_ONLY(explicit AreaLight(const LightConfig &config)
+                    : AreaLight(config.instance_idx, config.emission, config.surface_area,
+                                config.two_sided) {
+
+            })
+
             AreaLight(uint inst_idx, float3 L, float area, bool two_sided)
                     : LightBase(LightType::Area),
                       _inst_idx(inst_idx),
@@ -46,7 +53,7 @@ namespace luminous {
                                                    _L.to_string().c_str());
                             })
 
-            CPU_ONLY(static AreaLight create(const LightConfig &config);)
+//            CPU_ONLY(static AreaLight create(const LightConfig &config);)
         };
     } //luminous::render
 } // luminous::render

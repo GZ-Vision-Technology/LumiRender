@@ -8,14 +8,17 @@
 #include "base_libs/math/rng.h"
 #include "../include/config.h"
 #include "sampler_base.h"
+#include "core/concepts.h"
 
 namespace luminous {
     inline namespace render {
 
-        class LCGSampler : public SamplerBase {
+        class LCGSampler : public SamplerBase,public ICreator<LCGSampler> {
         private:
             LCG<> _rng;
         public:
+            CPU_ONLY(explicit LCGSampler(const SamplerConfig &config) : LCGSampler(config.spp) {})
+
             XPU explicit LCGSampler(int spp = 1) : SamplerBase(spp) {}
 
             XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
@@ -25,17 +28,17 @@ namespace luminous {
             LM_NODISCARD XPU float2 next_2d();
 
             GEN_STRING_FUNC({
-                LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
-            })
-
-            CPU_ONLY(static LCGSampler create(const SamplerConfig &config);)
+                                LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
+                            })
         };
 
-        class PCGSampler : public SamplerBase {
+        class PCGSampler : public SamplerBase, public ICreator<PCGSampler> {
         private:
             RNG _rng;
-            int _seed;
+            int _seed{};
         public:
+            CPU_ONLY(explicit PCGSampler(const SamplerConfig &sc) : PCGSampler(sc.spp) {})
+
             XPU explicit PCGSampler(int spp = 1) : SamplerBase(spp) {}
 
             XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
@@ -45,10 +48,8 @@ namespace luminous {
             LM_NODISCARD XPU float2 next_2d();
 
             GEN_STRING_FUNC({
-                LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
-            })
-
-            CPU_ONLY(static PCGSampler create(const SamplerConfig &config);)
+                                LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
+                            })
         };
     }
 }
