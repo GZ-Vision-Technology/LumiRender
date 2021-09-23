@@ -12,7 +12,7 @@ class A : public Object {
 public:
     REFL_CLASS(A)
 
-    DECLARE_SUPER(Object);
+    int a0;
 
     DEFINE_AND_REGISTER_MEMBER(Object*, a1)
 
@@ -30,8 +30,19 @@ int main() {
     auto a = new A;
     auto a1 = new A;
 
-//    a->a1 = a;
+    a->a1 = a1;
 
-    cout << ClassFactory::instance()->size_of(type_name(a)) << endl;
+    refl::for_each_ptr_member<A>([&](uint64_t offset, auto name) {
+        cout << offset << "  " << name << endl;
+    });
+
+    cout << uint64_t (a1) << endl;
+    cout << a->get_value(8) << endl;
+
+    a->set_value(8, 15);
+
+    cout << a->a1 << endl;
+
+    cout << a->get_value(8) << endl;
 
 }

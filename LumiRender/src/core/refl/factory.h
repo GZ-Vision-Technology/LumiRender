@@ -22,7 +22,6 @@ namespace luminous {
             size_t size;
             size_t align;
             std::vector<size_t> member_offsets;
-            std::string super_class;
 
             explicit TypeData(size_t size = 0, size_t align = 0)
                     : size(size), align(align) {}
@@ -59,13 +58,18 @@ namespace luminous {
                 return type_data(std::forward<Args>(args)...).align;
             }
 
-            LM_NODISCARD const TypeData& type_data(const Object *object) const;
+            LM_NODISCARD const TypeData &type_data(const Object *object) const;
 
-            LM_NODISCARD const TypeData& type_data(const std::string &class_name) const;
+            LM_NODISCARD const TypeData &type_data(const std::string &class_name) const;
 
             template<typename ...Args>
-            LM_NODISCARD const std::string &super_class_name(Args &&...args) {
+            LM_NODISCARD const std::string &super_class_name(Args &&...args) const {
                 return type_data(std::forward<Args>(args)...).super_class;
+            }
+
+            template<typename ...Args>
+            LM_NODISCARD const std::vector<uint32_t> &member_offsets(Args &&...args) const {
+                return type_data(std::forward<Args>(args)...).member_offsets;
             }
 
             LM_NODISCARD size_t type_num() const { return _type_data.size(); }
@@ -81,39 +85,20 @@ namespace luminous {
             }
         };
 
-        #define DECLARE_SUPER(ClassName) using Super = ClassName;
+#define GET_VALUE(ptr, offset) (reinterpret_cast<uint64_t*>(&((reinterpret_cast<std::byte *>(ptr))[offset]))[0])
 
-        class Empty {};
+#define SET_VALUE(ptr, offset, val) reinterpret_cast<uint64_t*>(&((reinterpret_cast<std::byte*>(ptr))[offset]))[0] = val
 
-        class Object : public Empty {
+        class Object {
         public:
             REFL_CLASS(Object)
 
-            DECLARE_SUPER(Empty)
-
-            LM_NODISCARD virtual const char *class_name() const {
-                return type_name(this);
+            uint64_t get_value(uint32_t offset) {
+                return GET_VALUE(this, offset);
             }
 
-            LM_NODISCARD virtual std::string super_class_name() const {
-                return ClassFactory::instance()->super_class_name(this);
-            }
-
-            LM_NODISCARD virtual size_t self_size() const {
-                return ClassFactory::instance()->size_of(this);
-            }
-
-            LM_NODISCARD virtual size_t ptr_member_size() const {
-                size_t ret = 0;
-                TypeData type_data = ClassFactory::instance()->type_data(this);
-
-
-
-                return ret;
-            }
-
-            LM_NODISCARD virtual size_t real_size() const {
-                return self_size() + ptr_member_size();
+            void set_value(uint32_t offset, uint64_t val) {
+                SET_VALUE(this, offset, val);
             }
         };
 
@@ -122,8 +107,6 @@ namespace luminous {
         public:
             RegisterAction() {
                 TypeData &type_data = ClassFactory::instance()->template register_class<T>();
-                using Super = typename T::Super;
-                type_data.super_class = type_name<Super>();
                 for_each_ptr_member<T>([&](auto offset, auto name) {
                     type_data.member_offsets.push_back(offset);
                 });
