@@ -9,6 +9,7 @@
 #include "render/lights/light.h"
 #include "core/backend/buffer_view.h"
 #include "core/concepts.h"
+#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {
@@ -28,15 +29,19 @@ namespace luminous {
             }
 
             GEN_STRING_FUNC({
-                return string_printf("sampled light :{PMF:%s, light:%s}",
-                                     PMF, light->to_string().c_str());
-            })
+                                return string_printf("sampled light :{PMF:%s, light:%s}",
+                                                     PMF, light->to_string().c_str());
+                            })
         };
 
         class LightSamplerBase {
         protected:
-            BufferView<const Light> _lights;
-            BufferView<const Light> _infinite_lights;
+            REFL_CLASS(LightSamplerBase)
+
+            DEFINE_AND_REGISTER_MEMBER(BufferView<const Light>, _lights)
+
+            DEFINE_AND_REGISTER_MEMBER(BufferView<const Light>, _infinite_lights)
+
         public:
             NDSC_XPU_INLINE BufferView<const Light> lights() const {
                 return _lights;
