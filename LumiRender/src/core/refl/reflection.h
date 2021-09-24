@@ -65,7 +65,6 @@ namespace luminous {
 
         }
 
-
         template<typename T, typename F>
         void for_each_registered_member(const F &f) {
 #define OFFSET_OF(Class, member) reinterpret_cast<size_t>(&((*(Class *) 0).*member))
@@ -74,5 +73,39 @@ namespace luminous {
             });
 #undef OFFSET_OF
         }
+
+//        template<typename...T>
+//        struct BaseBinder : public T ... {
+//            using Bases = std::tuple<T...>;
+//        };
+//
+//        namespace detail {
+//            template<typename T, typename F, int...Is>
+//            void for_each_direct_base_aux(const F &f, std::integer_sequence<int, Is...>) {
+//                (f.template operator()<std::tuple_element_t<Is, typename T::Bases>>(), ...);
+//            }
+//        }
+//
+//        template<typename T, typename F>
+//        void for_each_direct_base(const F &f) {
+//            detail::for_each_direct_base_aux<T>(
+//                    f, std::make_integer_sequence<int, std::tuple_size_v<typename T::Bases>>());
+//        }
+//
+//        template<typename F>
+//        struct Visitor {
+//            template<typename T>
+//            void operator()(T *ptr = nullptr) const {
+//                for_each_direct_base<T>(*this);
+//                F f;
+//                f((T *) nullptr);
+//            }
+//        };
+//
+//        template<typename T, typename F>
+//        void for_each_all_base(const F &f) {
+//            Visitor<F> visitor;
+//            for_each_direct_base<T>(visitor);
+//        }
     }
 }

@@ -8,13 +8,54 @@
 using namespace std;
 using namespace luminous;
 
+namespace luminous {
+    inline namespace refl {
+        template<typename...T>
+        struct BaseBinder : public T ... {
+            using Bases = std::tuple<T...>;
+        };
+
+        namespace detail {
+            template<typename T, typename F, int...Is>
+            void for_each_direct_base_aux(const F &f, std::integer_sequence<int, Is...>) {
+                (f.template operator()<std::tuple_element_t<Is, typename T::Bases>>(), ...);
+            }
+        }
+
+        template<typename T, typename F>
+        void for_each_direct_base(const F &f) {
+            detail::for_each_direct_base_aux<T>(
+                    f, std::make_integer_sequence<int, std::tuple_size_v<typename T::Bases>>());
+        }
+
+        template<typename F>
+        struct Visitor {
+            F func;
+
+            Visitor(const F &f) : func(f) {}
+
+            template<typename T>
+            void operator()(T *ptr = nullptr) const {
+                for_each_direct_base<T>(*this);
+                func((T *) nullptr);
+            }
+        };
+
+        template<typename T, typename F>
+        void for_each_all_base(const F &f) {
+            Visitor<F> visitor(f);
+            for_each_direct_base<T>(visitor);
+        }
+    }
+}
+
 template<typename...Bases>
 struct RegisterBase : Bases ... {
     using Ts = std::tuple<Bases...>;
 };
 
 template<typename T>
-struct A : public RegisterBase<>{
+struct A : public BaseBinder<>{
 
     REFL_CLASS(A)
 
@@ -22,25 +63,25 @@ struct A : public RegisterBase<>{
 };
 
 template<typename T>
-struct B : RegisterBase<A<T>> {
+struct B : BaseBinder<A<T>> {
     REFL_CLASS(B)
 
     DEFINE_AND_REGISTER_MEMBER(void *, pb);
 };
 
-struct C : RegisterBase<> {
+struct C : BaseBinder<> {
     REFL_CLASS(C)
     DEFINE_AND_REGISTER_MEMBER(void *, pc);
 };
 
 template<typename T>
-struct D : RegisterBase<B<T>, C> {
+struct D : BaseBinder<B<T>, C> {
 
 };
 
 template<typename T, typename F, int...Is>
 void forEachDirectBaseAux(const F &f, std::integer_sequence<int, Is...>) {
-    (f.template operator()<std::tuple_element_t<Is, typename T::Ts>>(), ...);
+    (f.template operator()<std::tuple_element_t<Is, typename T::Ts>>(nullptr), ...);
 }
 
 template<typename T, typename F>
@@ -49,9 +90,9 @@ void forEachDirectBase(const F &f) {
             f, std::make_integer_sequence<int, std::tuple_size_v<typename T::Ts>>());
 }
 
-struct Visitor {
+struct callable {
     template<typename T>
-    void operator()() const {
+    void operator()(T *ptr = nullptr) const {
         forEachDirectBase<T>(*this);
         std::cout << typeid(T).name() << std::endl;
         for_each_registered_member<T>([&](auto offset, auto name) {
@@ -66,7 +107,12 @@ struct TT : RegisterBase<C> {
 
 int main() {
 
-    Visitor visitor;
+    for_each_all_base<D<int>>([&](auto p) {
+        using T = std::remove_pointer_t<decltype(p)>;
+        std::cout << typeid(T).name() << std::endl;
+    });
 
-    forEachDirectBase<D<int>>(visitor);
+//    callable visitor;
+
+//    forEachDirectBase<D<int>>(visitor);
 }
