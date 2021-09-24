@@ -22,7 +22,6 @@ namespace luminous {
             size_t size;
             size_t align;
             std::vector<size_t> member_offsets;
-            std::string super_class;
 
             explicit TypeData(size_t size = 0, size_t align = 0)
                     : size(size), align(align) {}
@@ -90,16 +89,9 @@ namespace luminous {
 
 #define SET_VALUE(ptr, offset, val) reinterpret_cast<uint64_t*>(&((reinterpret_cast<std::byte*>(ptr))[offset]))[0] = val
 
-#define DECLARE_SUPER(ClassName) using Super = ClassName;
-
-        class Empty {};
-
-
-        class Object : public Empty {
+        class Object : public BaseBinder<>{
         public:
             REFL_CLASS(Object)
-
-            DECLARE_SUPER(Empty)
 
             uint64_t get_value(uint32_t offset) {
                 return GET_VALUE(this, offset);
@@ -115,7 +107,7 @@ namespace luminous {
         public:
             RegisterAction() {
                 TypeData &type_data = ClassFactory::instance()->template register_class<T>();
-                for_each_registered_member<T>([&](auto offset, auto name) {
+                for_each_all_registered_member<T>([&](auto offset, auto name, auto ptr) {
                     type_data.member_offsets.push_back(offset);
                 });
             }
@@ -126,7 +118,6 @@ namespace luminous {
 #define DEFINE_CLASS_BEGIN(ClassName, mode, Super, ...) \
     class ClassName : mode Super,__VA_ARGS__ {          \
     public:                                             \
-        DECLARE_SUPER(Super)                            \
         REFL_CLASS(ClassName)
 
 #define DEFINE_CLASS_END(ClassName) }; REGISTER(ClassName);
