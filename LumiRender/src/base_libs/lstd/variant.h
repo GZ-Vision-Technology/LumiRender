@@ -71,7 +71,13 @@ namespace luminous {
 
             static constexpr int nTypes = sizeof...(T);
             static constexpr std::size_t alignment_value = std::max({alignof(T)...});
-            typename std::aligned_storage<SizeOf<T...>::value, alignment_value>::type data;
+
+            typename std::aligned_storage<SizeOf<T...>::value, alignment_value>::type data{};
+            static constexpr int data_refl_index = sizeof((_member_counter((refl::Int<128> *)nullptr)));
+            static_assert(data_refl_index <= 128, "index must not greater than REFL_MAX_MEMBER_COUNT");
+            static refl::Sizer<data_refl_index + 1> (_member_counter(refl::Int<data_refl_index + 1> *));
+
+//            typename std::aligned_storage<SizeOf<T...>::value, alignment_value>::type data;
             int index = -1;
 
         public:
