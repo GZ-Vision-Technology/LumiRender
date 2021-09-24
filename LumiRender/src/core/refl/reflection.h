@@ -53,21 +53,23 @@ namespace luminous {
 
         namespace detail {
             template<typename T, typename F, int...Is>
-            void for_each_registered_member(const F &f, std::integer_sequence<int, Is...>) {
+            void for_each_registered_member_aux(const F &f, std::integer_sequence<int, Is...>) {
                 (T::template MemberRegister<Is>::template process<F>(f), ...);
             }
+
+            template<typename T, typename F>
+            void for_each_registered_member(const F &f) {
+                for_each_registered_member_aux<T>(
+                        f, std::make_integer_sequence<int, REFL_MAX_MEMBER_COUNT>());
+            }
+
         }
+
 
         template<typename T, typename F>
         void for_each_registered_member(const F &f) {
-            detail::for_each_registered_member<T>(
-                    f, std::make_integer_sequence<int, REFL_MAX_MEMBER_COUNT>());
-        }
-
-        template<typename T, typename F>
-        void for_each_ptr_member(const F &f) {
 #define OFFSET_OF(Class, member) reinterpret_cast<size_t>(&((*(Class *) 0).*member))
-            for_each_registered_member<T>([&](auto member_ptr, const char *name) {
+            detail::for_each_registered_member<T>([&](auto member_ptr, const char *name) {
                 f(OFFSET_OF(T, member_ptr), name);
             });
 #undef OFFSET_OF

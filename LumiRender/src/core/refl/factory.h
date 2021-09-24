@@ -115,7 +115,7 @@ namespace luminous {
         public:
             RegisterAction() {
                 TypeData &type_data = ClassFactory::instance()->template register_class<T>();
-                for_each_ptr_member<T>([&](auto offset, auto name) {
+                for_each_registered_member<T>([&](auto offset, auto name) {
                     type_data.member_offsets.push_back(offset);
                 });
             }

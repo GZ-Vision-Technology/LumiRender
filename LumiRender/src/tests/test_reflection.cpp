@@ -8,9 +8,6 @@
 using namespace std;
 using namespace luminous;
 
-
-#include <iostream>
-
 template<typename...Bases>
 struct RegisterBase : Bases ... {
     using Ts = std::tuple<Bases...>;
@@ -18,20 +15,22 @@ struct RegisterBase : Bases ... {
 
 template<typename T>
 struct A : public RegisterBase<>{
-    static void foo() {
-        std::cout << "A" << std::endl;
-    }
+
+    REFL_CLASS(A)
+
+    DEFINE_AND_REGISTER_MEMBER(void *, pa);
 };
 
 template<typename T>
 struct B : RegisterBase<A<T>> {
-    static void foo() {
-        std::cout << "B" << std::endl;
-    }
+    REFL_CLASS(B)
+
+    DEFINE_AND_REGISTER_MEMBER(void *, pb);
 };
 
 struct C : RegisterBase<> {
-
+    REFL_CLASS(C)
+    DEFINE_AND_REGISTER_MEMBER(void *, pc);
 };
 
 template<typename T>
@@ -55,7 +54,9 @@ struct Visitor {
     void operator()() const {
         forEachDirectBase<T>(*this);
         std::cout << typeid(T).name() << std::endl;
-
+        for_each_registered_member<T>([&](auto offset, auto name) {
+            cout << name << endl;
+        });
     }
 };
 
