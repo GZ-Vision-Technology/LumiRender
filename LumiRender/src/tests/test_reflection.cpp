@@ -8,41 +8,61 @@
 using namespace std;
 using namespace luminous;
 
-class A : public Object {
-public:
-    REFL_CLASS(A)
 
-    int a0;
+#include <iostream>
 
-    DEFINE_AND_REGISTER_MEMBER(Object*, a1)
-
-//    DEFINE_AND_REGISTER_MEMBER(Object *, a2)
-
-    int iv = 0;
+template<typename...Bases>
+struct RegisterBase : Bases ... {
+    using Ts = std::tuple<Bases...>;
 };
 
-//REGISTER(A)
+template<typename T>
+struct A {
+    static void foo() {
+        std::cout << "A" << std::endl;
+    }
+};
 
-RegisterAction<A> RegisterA;
+template<typename T>
+struct B : RegisterBase<A<T>> {
+    static void foo() {
+        std::cout << "B" << std::endl;
+    }
+};
+
+struct C {
+
+};
+
+template<typename T>
+struct D : RegisterBase<B<T>, C> {
+
+};
+
+template<typename T, typename F, int...Is>
+void forEachDirectBaseAux(const F &f, std::integer_sequence<int, Is...>) {
+    (f((std::tuple_element_t<Is, typename T::Ts> *) nullptr), ...);
+}
+
+template<typename T, typename F>
+void forEachDirectBase(const F &f) {
+    forEachDirectBaseAux<T>(
+            f, std::make_integer_sequence<int, std::tuple_size_v<typename T::Ts>>());
+}
+
+
+struct Visitor {
+    template<typename T>
+    void operator()() {
+        
+    }
+};
 
 int main() {
 
-    auto a = new A;
-    auto a1 = new A;
 
-    a->a1 = a1;
-
-    refl::for_each_ptr_member<A>([&](uint64_t offset, auto name) {
-        cout << offset << "  " << name << endl;
+    forEachDirectBase<D<int>>([&](auto ptr) {
+        using T = std::remove_pointer_t<decltype(ptr)>;
+        std::cout << typeid(T).name() << std::endl;
     });
-
-    cout << uint64_t (a1) << endl;
-    cout << a->get_value(8) << endl;
-
-    a->set_value(8, 15);
-
-    cout << a->a1 << endl;
-
-    cout << a->get_value(8) << endl;
-
 }

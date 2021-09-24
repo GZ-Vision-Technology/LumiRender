@@ -22,6 +22,7 @@ namespace luminous {
             size_t size;
             size_t align;
             std::vector<size_t> member_offsets;
+            std::string super_class;
 
             explicit TypeData(size_t size = 0, size_t align = 0)
                     : size(size), align(align) {}
@@ -89,9 +90,16 @@ namespace luminous {
 
 #define SET_VALUE(ptr, offset, val) reinterpret_cast<uint64_t*>(&((reinterpret_cast<std::byte*>(ptr))[offset]))[0] = val
 
-        class Object {
+#define DECLARE_SUPER(ClassName) using Super = ClassName;
+
+        class Empty {};
+
+
+        class Object : public Empty {
         public:
             REFL_CLASS(Object)
+
+            DECLARE_SUPER(Empty)
 
             uint64_t get_value(uint32_t offset) {
                 return GET_VALUE(this, offset);
