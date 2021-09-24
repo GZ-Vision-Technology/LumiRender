@@ -10,8 +10,10 @@
 namespace luminous {
     inline namespace render {
 
-        class UniformLightSampler : public LightSamplerBase, public ICreator<UniformLightSampler> {
+        class UniformLightSampler : public BaseBinder<LightSamplerBase>, public ICreator<UniformLightSampler> {
         public:
+            REFL_CLASS(UniformLightSampler)
+
             UniformLightSampler() = default;
 
             CPU_ONLY(explicit UniformLightSampler(const LightSamplerConfig &config) {})

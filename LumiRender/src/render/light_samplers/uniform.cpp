@@ -27,5 +27,7 @@ namespace luminous {
         float UniformLightSampler::PMF(const LightSampleContext &ctx, const Light &light) const {
             return PMF(light);
         }
+
+        REGISTER(UniformLightSampler)
     } // luminous::render
 } // luminous

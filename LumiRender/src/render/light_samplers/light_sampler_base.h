@@ -34,10 +34,11 @@ namespace luminous {
                             })
         };
 
-        class LightSamplerBase {
-        protected:
+        class LightSamplerBase : BASE_CLASS() {
+        public:
             REFL_CLASS(LightSamplerBase)
 
+        protected:
             DEFINE_AND_REGISTER_MEMBER(BufferView<const Light>, _lights)
 
             DEFINE_AND_REGISTER_MEMBER(BufferView<const Light>, _infinite_lights)

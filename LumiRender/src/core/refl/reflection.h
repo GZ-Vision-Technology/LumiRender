@@ -79,6 +79,8 @@ namespace luminous {
             using Bases = std::tuple<T...>;
         };
 
+#define BASE_CLASS(...) public BaseBinder<__VA_ARGS__>
+
         namespace detail {
             template<typename T, typename F, int...Is>
             void for_each_direct_base_aux(const F &f, std::integer_sequence<int, Is...>) {

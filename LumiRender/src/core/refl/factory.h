@@ -10,8 +10,8 @@
 #include <vector>
 #include <string>
 #include "reflection.h"
+#include "core/logging.h"
 #include "core/macro_map.h"
-#include "base_libs/math/interval.h"
 
 namespace luminous {
 
@@ -89,7 +89,7 @@ namespace luminous {
 
 #define SET_VALUE(ptr, offset, val) reinterpret_cast<uint64_t*>(&((reinterpret_cast<std::byte*>(ptr))[offset]))[0] = val
 
-        class Object : public BaseBinder<>{
+        class Object : public BaseBinder<> {
         public:
             REFL_CLASS(Object)
 
@@ -107,21 +107,22 @@ namespace luminous {
         public:
             RegisterAction() {
                 TypeData &type_data = ClassFactory::instance()->template register_class<T>();
+                LUMINOUS_INFO(string_printf("Register Class %s begin\n for each registered member:", typeid(T).name()));
                 for_each_all_registered_member<T>([&](auto offset, auto name, auto ptr) {
+                    using Class = std::remove_pointer_t<decltype(ptr)>;
                     type_data.member_offsets.push_back(offset);
+                    LUMINOUS_INFO(string_printf("member name is %s, offset is %u, belong to %s",
+                                                name, offset, typeid(Class).name()));
                 });
+                LUMINOUS_INFO("Register Class ", typeid(T).name(), " end");
             }
         };
 
-#define REGISTER(T) RegisterAction<T> Register##T;
-
-#define DEFINE_CLASS_BEGIN(ClassName, mode, Super, ...) \
-    class ClassName : mode Super,__VA_ARGS__ {          \
-    public:                                             \
-        REFL_CLASS(ClassName)
-
-#define DEFINE_CLASS_END(ClassName) }; REGISTER(ClassName);
-
+#ifdef __CUDACC__
+    #define REGISTER(T)
+#else
+    #define REGISTER(T) RegisterAction<T> Register##T;
+#endif
     }
 
 }

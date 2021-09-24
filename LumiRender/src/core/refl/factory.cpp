@@ -21,7 +21,6 @@ namespace luminous {
     }
 
     void ClassFactory::register_class(const std::string &class_name, const TypeData &type_data) {
-        LUMINOUS_INFO("register : ", class_name);
         _type_data.insert(std::make_pair(class_name, type_data));
     }
 

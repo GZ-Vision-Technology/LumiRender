@@ -39,7 +39,7 @@ struct TT : BaseBinder<> {
 };
 
 template<typename T>
-struct D : BaseBinder<B<T>, C, TT> {
+struct D : BASE_CLASS(B<T>, C, TT) {
     REFL_CLASS(D)
     DEFINE_AND_REGISTER_MEMBER(void *, pd);
 };
