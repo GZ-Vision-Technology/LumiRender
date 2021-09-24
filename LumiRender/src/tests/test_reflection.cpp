@@ -32,7 +32,7 @@ namespace luminous {
         struct Visitor {
             F func;
 
-            Visitor(const F &f) : func(f) {}
+            explicit Visitor(const F &f) : func(f) {}
 
             template<typename T>
             void operator()(T *ptr = nullptr) const {
@@ -46,13 +46,17 @@ namespace luminous {
             Visitor<F> visitor(f);
             for_each_direct_base<T>(visitor);
         }
+
+        template<typename T, typename F>
+        void for_each_all_registered_member(const F &func) {
+            for_each_all_base<T>([&](auto ptr) {
+                using Base = std::remove_pointer_t<decltype(ptr)>;
+                for_each_registered_member<Base>(func);
+            });
+            for_each_registered_member<T>(func);
+        }
     }
 }
-
-template<typename...Bases>
-struct RegisterBase : Bases ... {
-    using Ts = std::tuple<Bases...>;
-};
 
 template<typename T>
 struct A : public BaseBinder<>{
@@ -74,45 +78,26 @@ struct C : BaseBinder<> {
     DEFINE_AND_REGISTER_MEMBER(void *, pc);
 };
 
+struct TT : BaseBinder<> {
+    REFL_CLASS(TT)
+
+    DEFINE_AND_REGISTER_MEMBER(void *, pt);
+};
+
 template<typename T>
-struct D : BaseBinder<B<T>, C> {
-
-};
-
-template<typename T, typename F, int...Is>
-void forEachDirectBaseAux(const F &f, std::integer_sequence<int, Is...>) {
-    (f.template operator()<std::tuple_element_t<Is, typename T::Ts>>(nullptr), ...);
-}
-
-template<typename T, typename F>
-void forEachDirectBase(const F &f) {
-    forEachDirectBaseAux<T>(
-            f, std::make_integer_sequence<int, std::tuple_size_v<typename T::Ts>>());
-}
-
-struct callable {
-    template<typename T>
-    void operator()(T *ptr = nullptr) const {
-        forEachDirectBase<T>(*this);
-        std::cout << typeid(T).name() << std::endl;
-        for_each_registered_member<T>([&](auto offset, auto name) {
-            cout << name << endl;
-        });
-    }
-};
-
-struct TT : RegisterBase<C> {
-
+struct D : BaseBinder<B<T>, C, TT> {
+    REFL_CLASS(D)
+    DEFINE_AND_REGISTER_MEMBER(void *, pd);
 };
 
 int main() {
 
-    for_each_all_base<D<int>>([&](auto p) {
-        using T = std::remove_pointer_t<decltype(p)>;
-        std::cout << typeid(T).name() << std::endl;
+//    for_each_all_base<D<int>>([&](auto p) {
+//        using T = std::remove_pointer_t<decltype(p)>;
+//        std::cout << typeid(T).name() << std::endl;
+//    });
+
+    for_each_all_registered_member<D<int>>([&](auto offset, auto name) {
+        cout << name << endl;
     });
-
-//    callable visitor;
-
-//    forEachDirectBase<D<int>>(visitor);
 }
