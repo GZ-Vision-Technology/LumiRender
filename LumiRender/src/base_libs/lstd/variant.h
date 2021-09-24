@@ -77,6 +77,12 @@ namespace luminous {
             static_assert(data_refl_index <= 128, "index must not greater than REFL_MAX_MEMBER_COUNT");
             static refl::Sizer<data_refl_index + 1> (_member_counter(refl::Int<data_refl_index + 1> *));
 
+            template<>
+            struct MemberRegister<data_refl_index - 1> {
+                template<typename F>
+                static void process(const F &f) { f(&ReflSelf::data, "data"); }
+            };
+
 //            typename std::aligned_storage<SizeOf<T...>::value, alignment_value>::type data;
             int index = -1;
 
