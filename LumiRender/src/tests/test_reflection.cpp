@@ -78,6 +78,9 @@ int main() {
 //        std::cout << typeid(T).name() << std::endl;
 //    });
 
+    uint32_t i;
+    printf("%u\n", i);
+
     for_each_all_registered_member<D<int>>([&](auto offset, auto name, auto ptr) {
         cout << typeid(ptr).name() << "  " << name << endl;
     });

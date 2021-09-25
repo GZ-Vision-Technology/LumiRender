@@ -11,17 +11,17 @@
 
 namespace luminous {
     inline namespace render {
-        class AreaLight : public LightBase, public ICreator<AreaLight> {
+        class AreaLight : public LightBase {
         private:
-            uint _inst_idx;
-            float3 _L;
-            bool _two_sided;
-            float _inv_area;
+            uint _inst_idx{};
+            float3 _L{};
+            bool _two_sided{};
+            float _inv_area{};
         public:
             CPU_ONLY(explicit AreaLight(const LightConfig &config)
                     : AreaLight(config.instance_idx, config.emission, config.surface_area,
                                 config.two_sided) {
-
+                volatile int a = 0;
             })
 
             AreaLight(uint inst_idx, float3 L, float area, bool two_sided)
@@ -29,7 +29,9 @@ namespace luminous {
                       _inst_idx(inst_idx),
                       _L(L),
                       _inv_area(1 / area),
-                      _two_sided(two_sided) {}
+                      _two_sided(two_sided) {
+                volatile int a = 0;
+            }
 
             NDSC_XPU Spectrum L(const SurfaceInteraction &p_light, float3 w) const;
 
@@ -53,7 +55,7 @@ namespace luminous {
                                                    _L.to_string().c_str());
                             })
 
-//            CPU_ONLY(static AreaLight create(const LightConfig &config);)
+            CPU_ONLY(static AreaLight create(const LightConfig &config);)
         };
     } //luminous::render
 } // luminous::render

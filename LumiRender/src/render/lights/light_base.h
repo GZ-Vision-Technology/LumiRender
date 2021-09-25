@@ -17,7 +17,9 @@ namespace luminous {
 
         struct SceneData;
 
-        class LightBase {
+        class LightBase : BASE_CLASS() {
+        public:
+            REFL_CLASS(LightBase)
         protected:
             const LightType _type;
         public:

@@ -11,6 +11,7 @@ namespace luminous {
 
         SurfaceInteraction AreaLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             SurfaceInteraction ret;
+            printf("%u, hahaha\n", _inst_idx);
             auto mesh = scene_data->get_mesh(_inst_idx);
             const Distribution1D &distrib = scene_data->distributions[mesh.distribute_idx];
             float PMF = 0;
@@ -55,10 +56,10 @@ namespace luminous {
             printf("type:AreaLight,L:(%f,%f,%f)\n", _L.x, _L.y, _L.z);
         }
 
-//        CPU_ONLY(AreaLight AreaLight::create(const LightConfig &config) {
-//            return AreaLight(config.instance_idx, config.emission, config.surface_area,
-//                             config.two_sided);
-//        })
+        CPU_ONLY(AreaLight AreaLight::create(const LightConfig &config) {
+            return AreaLight(config.instance_idx, config.emission, config.surface_area,
+                             config.two_sided);
+        })
 
     } //luminous::render
 } // luminous::render
