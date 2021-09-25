@@ -20,7 +20,11 @@ namespace luminous {
 
         class LightSampler : BASE_CLASS(Variant<UniformLightSampler>) {
         public:
-            RENDER_CLASS_HEAD(LightSampler)
+            using BaseBinder::BaseBinder;
+
+            REFL_CLASS(LightSampler)
+
+            GEN_BASE_NAME(LightSampler)
 
             GEN_TO_STRING_FUNC
 

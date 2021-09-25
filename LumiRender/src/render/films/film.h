@@ -13,12 +13,13 @@
 namespace luminous {
     inline namespace render {
 
-        using lstd::Variant;
-        class Film : public Variant<RGBFilm> {
+        class Film : BASE_CLASS(lstd::Variant<RGBFilm>) {
         public:
             GEN_BASE_NAME(Film)
 
-            using Variant::Variant;
+            REFL_CLASS(Film)
+
+            using BaseBinder::BaseBinder;
 
             NDSC_XPU uint2 resolution() const;
 

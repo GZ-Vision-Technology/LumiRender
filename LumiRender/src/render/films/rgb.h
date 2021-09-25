@@ -12,11 +12,13 @@
 namespace luminous {
     inline namespace render {
 
-        class RGBFilm : public FilmBase, public ICreator<RGBFilm> {
+        class RGBFilm : BASE_CLASS(FilmBase), public ICreator<RGBFilm> {
         public:
+            REFL_CLASS(RGBFilm)
+
             CPU_ONLY(explicit RGBFilm(const FilmConfig &config) : RGBFilm(config.resolution) {})
 
-            XPU explicit RGBFilm(uint2 res) : FilmBase(res) {}
+            XPU explicit RGBFilm(uint2 res) : BaseBinder<FilmBase>(res) {}
 
             XPU void add_sample(uint2 pixel, Spectrum color, float weight, uint frame_index = 0u);
 

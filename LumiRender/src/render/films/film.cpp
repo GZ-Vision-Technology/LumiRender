@@ -4,6 +4,7 @@
 
 #include "film.h"
 #include "render/include/creator.h"
+#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {
@@ -31,5 +32,7 @@ namespace luminous {
         void Film::set_frame_buffer_view(BufferView<FrameBufferType> buffer_view) {
             LUMINOUS_VAR_DISPATCH(set_frame_buffer_view, buffer_view);
         }
+
+        REGISTER(Film)
     }
 }

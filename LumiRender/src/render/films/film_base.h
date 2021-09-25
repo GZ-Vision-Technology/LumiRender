@@ -19,7 +19,9 @@ namespace luminous {
 
         using FrameBufferType = uint32_t;
 
-        class FilmBase {
+        class FilmBase : BASE_CLASS() {
+        public:
+            REFL_CLASS(FilmBase)
         protected:
             uint2 _resolution;
             Box2f _screen_window;
@@ -37,7 +39,7 @@ namespace luminous {
                 }
             }
         public:
-            FilmBase(uint2 res)
+            explicit FilmBase(uint2 res)
                 : _resolution(res) {
                 update();
             }
