@@ -12,7 +12,7 @@
 #include "base_libs/math/common.h"
 #include "base_libs/optics/rgb.h"
 #include "render/bxdfs/bsdf.h"
-#include "render/lights/light.h"
+#include "render/lights/light_util.h"
 #include "work_queue.h"
 #include <cuda.h>
 
@@ -181,8 +181,10 @@ namespace luminous {
             }
         };
 
+        class Light;
+
         struct HitAreaLightWorkItem {
-            Light light;
+            Light *light;
             float3 pos;
             float3 ng;
             float2 uv;

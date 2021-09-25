@@ -41,9 +41,9 @@ struct TT : BaseBinder<> {
 
 template<typename T>
 struct D : BASE_CLASS(B<T>, C, TT) {
-    REFL_CLASS(D)
-
-    DEFINE_AND_REGISTER_MEMBER(void *, pd);
+//    REFL_CLASS(D)
+//
+//    DEFINE_AND_REGISTER_MEMBER(void *, pd);
 };
 
 class LS : public BaseBinder<Variant<UniformLightSampler>> {
@@ -69,16 +69,16 @@ int main() {
 //    });
 
 
-    for_each_all_registered_member<LS>([&](auto offset, auto name, auto ptr) {
-        cout << typeid(ptr).name() << "  " << name << "   " <<offset << endl;
-    });
+//    for_each_all_registered_member<LS>([&](auto offset, auto name, auto ptr) {
+//        cout << typeid(ptr).name() << "  " << name << "   " <<offset << endl;
+//    });
 
 //    for_each_all_base<D<int>>([&](auto p) {
 //        using T = std::remove_pointer_t<decltype(p)>;
 //        std::cout << typeid(T).name() << std::endl;
 //    });
 
-//    for_each_all_registered_member<D<int>>([&](auto offset, auto name, auto ptr) {
-//        cout << typeid(ptr).name() << "  " << name << endl;
-//    });
+    for_each_all_registered_member<D<int>>([&](auto offset, auto name, auto ptr) {
+        cout << typeid(ptr).name() << "  " << name << endl;
+    });
 }
