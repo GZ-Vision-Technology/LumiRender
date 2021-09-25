@@ -107,11 +107,11 @@ namespace luminous {
         public:
             RegisterAction() {
                 TypeData &type_data = ClassFactory::instance()->template register_class<T>();
-                LUMINOUS_INFO(string_printf("Register Class %s begin\n for each registered member:", typeid(T).name()));
+                LUMINOUS_INFO(string_printf("Register Class %s begin\n\tfor each registered member:", typeid(T).name()));
                 for_each_all_registered_member<T>([&](auto offset, auto name, auto ptr) {
                     using Class = std::remove_pointer_t<decltype(ptr)>;
                     type_data.member_offsets.push_back(offset);
-                    LUMINOUS_INFO(string_printf("member name is %s, offset is %u, belong to %s",
+                    LUMINOUS_INFO(string_printf("\n\t\tmember name is %s, offset is %u, belong to %s",
                                                 name, offset, typeid(Class).name()));
                 });
                 LUMINOUS_INFO("Register Class ", typeid(T).name(), " end");

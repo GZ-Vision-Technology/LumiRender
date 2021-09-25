@@ -78,7 +78,7 @@ namespace luminous {
         struct BaseBinder : public T ... {
             using Bases = std::tuple<T...>;
 
-            static constexpr auto BaseNum = std::tuple_size_v<Bases>;
+            static constexpr auto base_num = std::tuple_size_v<Bases>;
 
             template<int idx>
             using Base = std::tuple_element_t<idx, Bases>;
@@ -93,7 +93,7 @@ namespace luminous {
         struct BaseBinder<> {
             using Bases = std::tuple<>;
 
-            static constexpr auto BaseNum = std::tuple_size_v<Bases>;
+            static constexpr auto base_num = std::tuple_size_v<Bases>;
 
             template<int idx>
             using Base = void;
@@ -105,18 +105,24 @@ namespace luminous {
         struct BaseBinder<T> : public T {
             using Bases = std::tuple<T>;
 
-            static constexpr auto BaseNum = std::tuple_size_v<Bases>;
+            static constexpr auto base_num = std::tuple_size_v<Bases>;
 
             template<int idx>
             using Base = T;
 
             BaseBinder() = default;
 
+            using T::T;
+
             explicit BaseBinder(T &&t)
                     : T{std::move(t)} {}
         };
 
 #define BASE_CLASS(...) public BaseBinder<__VA_ARGS__>
+
+#define RENDER_CLASS_HEAD(ClassName) using BaseBinder::BaseBinder; \
+                                          GEN_BASE_NAME(ClassName) \
+                                        REFL_CLASS(ClassName)
 
         namespace detail {
             template<typename T, typename F, int...Is>

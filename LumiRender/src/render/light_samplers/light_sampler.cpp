@@ -38,7 +38,7 @@ namespace luminous {
                                                                      traversable_handle, scene_data,
                                                                      NEE_data) / sampled_light.PMF;
             }
-            return Spectrum(0.f);
+            return {0.f};
         }
 
         const Light &LightSampler::light_at(uint idx) const {
@@ -60,5 +60,7 @@ namespace luminous {
         CPU_ONLY(LightSampler LightSampler::create(const LightSamplerConfig &config) {
             return detail::create<LightSampler>(config);
         })
+
+        REGISTER(LightSampler)
     } // luminous::render
 } // luminous

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/refl/factory.h"
-#include "render/light_samplers/uniform.h"
+#include "render/light_samplers/light_sampler.h"
 #include <iostream>
 #include <vector>
 
@@ -46,18 +46,28 @@ struct D : BASE_CLASS(B<T>, C, TT) {
     DEFINE_AND_REGISTER_MEMBER(void *, pd);
 };
 
-class LS : public BaseBinder<Variant<UniformLightSampler*>> {
+class LS : public BaseBinder<Variant<UniformLightSampler>> {
 public:
     using BaseBinder::BaseBinder;
     REFL_CLASS(LS)
+
+    void print() {
+        cout << "coao" << endl;
+    }
 
     DEFINE_AND_REGISTER_MEMBER(void *, pd);
 };
 
 int main() {
 
+    auto u = UniformLightSampler();
 
-    LS a(LS::Base<0>(u));
+    LS a = LS(u);
+
+//    for_each_registered_member<LightSampler>([&](auto offset, auto name) {
+//        cout << "  " << name << "   " <<offset << endl;
+//    });
+
 
     for_each_all_registered_member<LS>([&](auto offset, auto name, auto ptr) {
         cout << typeid(ptr).name() << "  " << name << "   " <<offset << endl;

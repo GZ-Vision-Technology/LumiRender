@@ -18,11 +18,9 @@ namespace luminous {
         using lstd::Variant;
         using lstd::optional;
 
-        class LightSampler : public Variant<UniformLightSampler> {
+        class LightSampler : BASE_CLASS(Variant<UniformLightSampler>) {
         public:
-            using Variant::Variant;
-
-            GEN_BASE_NAME(LightSampler)
+            RENDER_CLASS_HEAD(LightSampler)
 
             GEN_TO_STRING_FUNC
 
