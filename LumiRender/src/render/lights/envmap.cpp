@@ -3,6 +3,7 @@
 //
 
 #include "envmap.h"
+#include "render/scene/scene_data.h"
 
 namespace luminous {
     inline namespace render {

@@ -16,7 +16,7 @@
 #include "render/include/distribution_mgr.h"
 #include "render/materials/material.h"
 #include "render/include/accelerator.h"
-
+#include "render/scene/scene_data.h"
 
 using std::cout;
 using std::endl;

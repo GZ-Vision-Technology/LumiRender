@@ -119,9 +119,7 @@ namespace luminous {
 
         class Light;
 
-        class SceneData;
-
-        class MissData;
+        struct SceneData;
 
         struct SurfaceInteraction : public Interaction {
             float2 uv;

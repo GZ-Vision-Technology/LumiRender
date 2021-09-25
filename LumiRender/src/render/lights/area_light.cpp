@@ -4,6 +4,7 @@
 
 #include "area_light.h"
 #include "base_libs/sampling/distribution.h"
+#include "render/scene/scene_data.h"
 
 namespace luminous {
     inline namespace render {

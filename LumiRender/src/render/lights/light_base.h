@@ -9,8 +9,8 @@
 #include "base_libs/optics/common.h"
 #include "render/include/interaction.h"
 #include "render/include/config.h"
-#include "render/scene/scene_data.h"
 #include "core/concepts.h"
+#include "core/refl/reflection.h"
 
 namespace luminous {
     inline namespace render {
@@ -57,20 +57,21 @@ namespace luminous {
             XPU LightSampleContext(float3 p, float3 ng, float3 ns)
                     : pos(p), ng(ng), ns(ns) {}
         };
-        class Scene;
-        class MissData;
+
+        struct SceneData;
+
         class LightBase {
         protected:
             const LightType _type;
         public:
-            XPU LightBase(LightType type)
-                : _type(type) {}
+            XPU explicit LightBase(LightType type)
+                    : _type(type) {}
 
             NDSC_XPU LightType type() const {
                 return _type;
             }
 
-            NDSC_XPU Spectrum on_miss(Ray ray, const SceneData * data) const {
+            NDSC_XPU Spectrum on_miss(Ray ray, const SceneData *data) const {
                 return {0.f};
             }
 
@@ -83,8 +84,8 @@ namespace luminous {
             }
 
             GEN_STRING_FUNC({
-                return string_printf("type : %d", (int) _type);
-            })
+                                return string_printf("type : %d", (int) _type);
+                            })
         };
     }
 }
