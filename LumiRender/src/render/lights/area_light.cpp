@@ -5,6 +5,7 @@
 #include "area_light.h"
 #include "base_libs/sampling/distribution.h"
 #include "render/scene/scene_data.h"
+#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {
@@ -63,10 +64,7 @@ namespace luminous {
                    _inst_idx, _L.x, _L.y, _L.z);
         }
 
-        CPU_ONLY(AreaLight AreaLight::create(const LightConfig &config) {
-            return AreaLight(config.instance_idx, config.emission, config.surface_area,
-                             config.two_sided);
-        })
+        REGISTER(AreaLight)
 
     } //luminous::render
 } // luminous::render

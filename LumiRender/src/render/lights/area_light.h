@@ -13,6 +13,8 @@ namespace luminous {
     inline namespace render {
         class AreaLight : public LightBase, public ICreator<AreaLight> {
         public:
+            REFL_CLASS(AreaLight)
+        public:
             uint _inst_idx{};
             float3 _L{};
             bool _two_sided{};
@@ -45,8 +47,6 @@ namespace luminous {
                                                    type_name(this),
                                                    _L.to_string().c_str());
                             })
-
-            CPU_ONLY(static AreaLight create(const LightConfig &config);)
         };
     } //luminous::render
 } // luminous::render

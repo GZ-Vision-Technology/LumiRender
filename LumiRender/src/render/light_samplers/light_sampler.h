@@ -38,14 +38,14 @@ namespace luminous {
 
             NDSC_XPU size_t light_num() const;
 
-            template<typename Func>
-            XPU void for_each_light(Func func) const {
-                LUMINOUS_VAR_DISPATCH(for_each_light, func);
+            template<typename ...Args>
+            XPU void for_each_light(Args &&...args) const {
+                LUMINOUS_VAR_DISPATCH(for_each_light, std::forward<Args>(args)...);
             }
 
-            template<typename Func>
-            XPU void for_each_infinite_light(Func func) const {
-                LUMINOUS_VAR_DISPATCH(for_each_infinite_light, func);
+            template<typename ...Args>
+            XPU void for_each_infinite_light(Args &&...args) const {
+                LUMINOUS_VAR_DISPATCH(for_each_infinite_light, std::forward<Args>(args)...);
             }
 
             NDSC_XPU SampledLight sample(float u) const;

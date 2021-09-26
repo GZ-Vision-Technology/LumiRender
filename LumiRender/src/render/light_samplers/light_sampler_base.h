@@ -6,13 +6,18 @@
 #pragma once
 
 #include "base_libs/math/common.h"
-#include "render/lights/light.h"
+#include "render/lights/light_util.h"
 #include "core/backend/buffer_view.h"
 #include "core/concepts.h"
 #include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {
+
+        class Light;
+
+        class Envmap;
+
         struct SampledLight {
             const Light *light{nullptr};
             float PMF{0.f};
@@ -28,10 +33,7 @@ namespace luminous {
                 return light != nullptr;
             }
 
-            GEN_STRING_FUNC({
-                                return string_printf("sampled light :{PMF:%s, light:%s}",
-                                                     PMF, light->to_string().c_str());
-                            })
+            CPU_ONLY(LM_NODISCARD std::string to_string() const;)
         };
 
         class LightSamplerBase : BASE_CLASS() {
@@ -52,27 +54,13 @@ namespace luminous {
                 return _infinite_lights;
             }
 
-            NDSC_XPU_INLINE const Light &light_at(uint idx) const {
-                return _lights[idx];
-            }
+            NDSC_XPU const Light &light_at(uint idx) const;
 
-            NDSC_XPU_INLINE const Light &infinite_light_at(index_t idx) const {
-                return _infinite_lights[idx];
-            }
+            NDSC_XPU const Light &infinite_light_at(index_t idx) const;
 
-            template<typename Func>
-            XPU_INLINE void for_each_light(Func func) const {
-                for (int i = 0; i < light_num(); ++i) {
-                    func(light_at(i), i);
-                }
-            }
+            XPU void for_each_light(const std::function<void(const Light&, int i)> &func) const;
 
-            template<typename Func>
-            XPU_INLINE void for_each_infinite_light(Func func) const {
-                for (int i = 0; i < infinite_light_num(); ++i) {
-                    func(*infinite_light_at(i).template get<Envmap>(), i);
-                }
-            }
+            XPU void for_each_infinite_light(const std::function<void(const Envmap&, int i)> &func) const;
 
             XPU_INLINE void set_lights(BufferView<const Light> lights) {
                 _lights = lights;
