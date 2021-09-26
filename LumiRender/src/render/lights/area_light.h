@@ -11,9 +11,10 @@
 
 namespace luminous {
     inline namespace render {
-        class AreaLight : public LightBase, public ICreator<AreaLight> {
+        class AreaLight : BASE_CLASS(LightBase), public ICreator<AreaLight> {
         public:
             REFL_CLASS(AreaLight)
+
         public:
             uint _inst_idx{};
             float3 _L{};

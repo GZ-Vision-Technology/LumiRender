@@ -38,7 +38,6 @@ namespace luminous {
 
             NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
-
         };
     }
 }

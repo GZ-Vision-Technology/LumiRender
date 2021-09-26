@@ -19,7 +19,7 @@ namespace luminous {
 
         using lstd::Variant;
 
-        class Light : BASE_CLASS( Variant<PointLight, AreaLight, SpotLight, Envmap>) {
+        class Light : BASE_CLASS(Variant<PointLight, AreaLight, SpotLight, Envmap>) {
         private:
             using BaseBinder::BaseBinder;
         public:
@@ -35,7 +35,7 @@ namespace luminous {
 
             NDSC_XPU bool is_infinite() const;
 
-            NDSC_XPU Spectrum on_miss(Ray ray, const SceneData * data) const;
+            NDSC_XPU Spectrum on_miss(Ray ray, const SceneData *data) const;
 
             NDSC_XPU SurfaceInteraction sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const;
 
@@ -50,7 +50,7 @@ namespace luminous {
 
             NDSC_XPU Spectrum MIS_sample_BSDF(const SurfaceInteraction &si,
                                               Sampler &sampler, uint64_t traversable_handle,
-                                              NEEData *NEE_data,const SceneData *data) const;
+                                              NEEData *NEE_data, const SceneData *data) const;
 
             NDSC_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si,
                                                        Sampler &sampler, uint64_t traversable_handle,

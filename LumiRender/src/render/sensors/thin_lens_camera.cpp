@@ -12,7 +12,7 @@
 namespace luminous {
     inline namespace render {
         ThinLensCamera::ThinLensCamera(const float4x4 &m, float fov_y, float velocity)
-                : CameraBase(m, fov_y, velocity) {}
+                : BaseBinder<CameraBase>(m, fov_y, velocity) {}
 
         float ThinLensCamera::generate_ray(const SensorSample &ss, Ray *ray) {
             float3 p_film = make_float3(ss.p_film, 0);

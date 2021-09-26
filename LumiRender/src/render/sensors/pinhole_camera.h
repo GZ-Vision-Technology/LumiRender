@@ -11,8 +11,10 @@
 namespace luminous {
     inline namespace render {
 
-        class PinholeCamera : public CameraBase, public ICreator<PinholeCamera> {
+        class PinholeCamera : BASE_CLASS(CameraBase), public ICreator<PinholeCamera> {
         public:
+            REFL_CLASS(PinholeCamera)
+
             CPU_ONLY(explicit PinholeCamera(const SensorConfig &config)
                              : PinholeCamera(config.transform_config.create().mat4x4(),
                              config.fov_y,

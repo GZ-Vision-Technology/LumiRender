@@ -11,7 +11,7 @@ namespace luminous {
     inline namespace render {
 
         AreaLight::AreaLight(uint inst_idx, float3 L, float area, bool two_sided)
-                : LightBase(LightType::Area),
+                : BaseBinder<LightBase>(LightType::Area),
                   _inst_idx(inst_idx),
                   _L(L),
                   _inv_area(1 / area),

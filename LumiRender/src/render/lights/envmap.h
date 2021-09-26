@@ -16,7 +16,9 @@ namespace luminous {
     inline namespace render {
         class Scene;
 
-        class Envmap : public LightBase, public ICreator<Envmap> {
+        class Envmap : BASE_CLASS(LightBase), public ICreator<Envmap> {
+        public:
+            REFL_CLASS(Envmap)
         private:
             index_t _tex_idx{invalid_uint32};
             index_t _distribution_idx{invalid_uint32};
@@ -25,7 +27,7 @@ namespace luminous {
             float _scene_diameter{};
         public:
             CPU_ONLY(explicit Envmap(const LightConfig &config)
-                    : LightBase(LightType::Infinite),
+                    : BaseBinder<LightBase>(LightType::Infinite),
                       _tex_idx(config.texture_config.tex_idx),
                       _scene_center(config.scene_box.center()),
                       _scene_diameter(config.scene_box.radius() * 2.f),
@@ -36,7 +38,7 @@ namespace luminous {
             })
 
             Envmap(index_t tex_idx, Transform w2o, index_t distribution_idx, Box3f scene_box)
-                    : LightBase(LightType::Infinite),
+                    : BaseBinder<LightBase>(LightType::Infinite),
                       _tex_idx(tex_idx),
                       _w2o(w2o),
                       _scene_center(scene_box.center()),
