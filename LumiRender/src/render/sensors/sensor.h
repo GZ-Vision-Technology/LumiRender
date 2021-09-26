@@ -13,14 +13,15 @@
 #include "thin_lens_camera.h"
 
 
-
 namespace luminous {
     inline namespace render {
         using lstd::Variant;
 
-        class Sensor : public Variant<PinholeCamera, ThinLensCamera> {
+        class Sensor : BASE_CLASS(Variant<PinholeCamera, ThinLensCamera>) {
         public:
-            using Variant::Variant;
+            REFL_CLASS(Sensor)
+
+            using BaseBinder::BaseBinder;
 
             GEN_BASE_NAME(Sensor)
 

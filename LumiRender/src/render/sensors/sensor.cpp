@@ -4,6 +4,7 @@
 
 #include "sensor.h"
 #include "render/include/creator.h"
+#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {
@@ -118,5 +119,7 @@ namespace luminous {
             ret.set_film(Film::create(config.film_config));
             return ret;
         })
+
+        REGISTER(Sensor)
     }
 }

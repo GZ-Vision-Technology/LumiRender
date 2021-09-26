@@ -13,7 +13,9 @@
 
 namespace luminous {
     inline namespace render {
-        class MatteMaterial : public ICreator<MatteMaterial> {
+        class MatteMaterial : BASE_CLASS(), public ICreator<MatteMaterial> {
+        public:
+            REFL_CLASS(MatteMaterial)
         private:
             index_t _R{};
         public:

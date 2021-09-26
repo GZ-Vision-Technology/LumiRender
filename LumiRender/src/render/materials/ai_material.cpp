@@ -4,6 +4,7 @@
 
 #include "render/scene/scene_data.h"
 #include "ai_material.h"
+#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {
@@ -13,5 +14,7 @@ namespace luminous {
             BxDF bxdf = BxDF(IdealDiffuse(tex.eval(ctx)));
             return BSDF(ctx.ng, ctx.ns, ctx.dp_dus, bxdf);
         }
+
+        REGISTER(AssimpMaterial)
     }
 }

@@ -14,9 +14,11 @@ namespace luminous {
     inline namespace render {
 
         using lstd::Variant;
-        class Sampler : public Variant<LCGSampler, PCGSampler> {
+        class Sampler : BASE_CLASS(Variant<LCGSampler, PCGSampler>) {
+        public:
+            REFL_CLASS(Sampler)
         private:
-            using Variant::Variant;
+            using BaseBinder::BaseBinder;
         public:
             GEN_BASE_NAME(Sampler)
 

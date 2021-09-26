@@ -8,14 +8,18 @@
 #include "matte.h"
 #include "ai_material.h"
 #include "base_libs/lstd/variant.h"
+#include "core/refl/reflection.h"
 
 namespace luminous {
     inline namespace render {
 
         using lstd::Variant;
 
-        class Material : public Variant<MatteMaterial, AssimpMaterial> {
-            using Variant::Variant;
+        class Material : BASE_CLASS(Variant<MatteMaterial, AssimpMaterial>) {
+        public:
+            REFL_CLASS(Material)
+
+            using BaseBinder::BaseBinder;
         public:
             GEN_BASE_NAME(Material)
 

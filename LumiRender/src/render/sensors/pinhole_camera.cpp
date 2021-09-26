@@ -6,6 +6,7 @@
 #pragma once
 
 #include "pinhole_camera.h"
+#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {
@@ -20,8 +21,9 @@ namespace luminous {
             auto origin = c2w.apply_point(make_float3(0,0,0));
             auto direction = c2w.apply_vector(normalize(p_sensor));
             *ray = Ray(origin, direction);
-
             return 1;
         }
+
+        REGISTER(PinholeCamera)
     }
 }

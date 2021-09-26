@@ -7,6 +7,7 @@
 
 #include "thin_lens_camera.h"
 #include "render/include/creator.h"
+#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {
@@ -25,5 +26,6 @@ namespace luminous {
             return 1;
         }
 
+        REGISTER(ThinLensCamera)
     }
 }

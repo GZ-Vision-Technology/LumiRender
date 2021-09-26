@@ -6,14 +6,15 @@
 #pragma once
 
 #include "base_libs/geometry/common.h"
+#include "core/refl/reflection.h"
 
 namespace luminous {
     inline namespace render {
 
         struct SensorSample {
-            float2 p_film;
-            float2 p_lens;
-            float time;
+            float2 p_film{};
+            float2 p_lens{};
+            float time{};
             float weight{1.f};
 
             GEN_STRING_FUNC({
@@ -24,7 +25,9 @@ namespace luminous {
             })
         };
 
-        class SamplerBase {
+        class SamplerBase : BASE_CLASS() {
+        public:
+            REFL_CLASS(SamplerBase)
         protected:
             int _spp;
         public:

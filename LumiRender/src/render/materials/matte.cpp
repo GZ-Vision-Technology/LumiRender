@@ -4,6 +4,7 @@
 
 #include "render/scene/scene_data.h"
 #include "matte.h"
+#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {
@@ -14,5 +15,7 @@ namespace luminous {
 
             return BSDF(ctx.ng, ctx.ns, ctx.dp_dus, bxdf);
         }
+
+        REGISTER(MatteMaterial)
     }
 }

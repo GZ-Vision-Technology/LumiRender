@@ -8,17 +8,20 @@
 #include "render/textures/texture.h"
 #include "render/include/config.h"
 #include "render/bxdfs/bsdf.h"
+#include "core/refl/reflection.h"
 
 namespace luminous {
     inline namespace render {
-        class AssimpMaterial : public ICreator<AssimpMaterial> {
+        class AssimpMaterial : BASE_CLASS(), public ICreator<AssimpMaterial> {
+        public:
+            REFL_CLASS(AssimpMaterial)
         private:
-            index_t _Kd_idx;
-            index_t _Ks_idx;
-            index_t _normal_idx;
+            index_t _Kd_idx{};
+            index_t _Ks_idx{};
+            index_t _normal_idx{};
 
-            float4 _Kd;
-            float4 _Ks;
+            float4 _Kd{};
+            float4 _Ks{};
         public:
             CPU_ONLY(explicit AssimpMaterial(const MaterialConfig &mc)
                              :AssimpMaterial(mc.diffuse_tex.tex_idx, mc.specular_tex.tex_idx,

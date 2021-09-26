@@ -11,10 +11,13 @@
 #include "../samplers/sampler_base.h"
 #include "render/include/creator.h"
 #include "core/concepts.h"
+#include "core/refl/reflection.h"
 
 namespace luminous {
     inline namespace render {
-        class CameraBase {
+        class CameraBase : BASE_CLASS() {
+        public:
+            REFL_CLASS(CameraBase)
         protected:
             constexpr static float z_near = 0.01f;
             constexpr static float z_far = 1000.f;
@@ -41,7 +44,7 @@ namespace luminous {
             XPU void _set_resolution(uint2 res);
 
         public:
-            XPU CameraBase(float3 pos = make_float3(0), float fov_y = 30);
+            XPU explicit CameraBase(float3 pos = make_float3(0), float fov_y = 30);
 
             XPU CameraBase(const float4x4 m, float fov_y, float velocity);
 

@@ -13,7 +13,7 @@
 namespace luminous {
     inline namespace render {
 
-        class LCGSampler : public SamplerBase,public ICreator<LCGSampler> {
+        class LCGSampler : public SamplerBase, public ICreator<LCGSampler> {
         private:
             LCG<> _rng;
         public:

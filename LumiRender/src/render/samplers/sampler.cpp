@@ -5,6 +5,7 @@
 
 #include "sampler.h"
 #include "render/include/creator.h"
+#include "core/refl/factory.h"
 
 namespace luminous {
 
@@ -36,5 +37,7 @@ namespace luminous {
         CPU_ONLY(Sampler Sampler::create(const SamplerConfig &config) {
             return detail::create<Sampler>(config);
         })
+
+        REGISTER(Sampler)
     }
 }
