@@ -21,8 +21,6 @@ namespace luminous {
 
         SurfaceInteraction AreaLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             SurfaceInteraction ret;
-            if (padded == 0.f)
-                printf("padded %f \n", padded);
 //            printf("----------alignof area_light:%llu, sizeof:%llu\n", alignof(AreaLight), sizeof(AreaLight));
             auto mesh = scene_data->get_mesh(_inst_idx);
             const Distribution1D &distrib = scene_data->distributions[mesh.distribute_idx];

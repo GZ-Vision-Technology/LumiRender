@@ -109,7 +109,7 @@ void test_memory() {
     config.instance_idx = 0;
     auto light = Light::create(config);
     light.print();
-    printf("%f\n", light.get<AreaLight>()->padded);
+//    printf("%f\n", light.get<AreaLight>()->padded);
     Managed<Light> ml{device.get()};
     ml.push_back(light);
     ml.allocate_device(1);

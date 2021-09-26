@@ -59,10 +59,12 @@ macro(cuda_compile_and_embed output_var cuda_file)
     else ()
         cuda_compile_ptx(ptx_files
                 ${cuda_file}
-                OPTIONS -D _ENABLE_EXTENDED_ALIGNED_STORAGE
+                OPTIONS -O3 -D NDEBUG=1 -D _ENABLE_EXTENDED_ALIGNED_STORAGE
+                -use_fast_math
                 --expt-relaxed-constexpr
                 --std=c++17
                 -arch=sm_70
+                -D__x86_64
                 )
     endif ()
     list(GET ptx_files 0 ptx_file)

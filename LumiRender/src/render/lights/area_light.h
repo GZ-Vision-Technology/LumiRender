@@ -13,7 +13,7 @@ namespace luminous {
     inline namespace render {
         class AreaLight : public LightBase, public ICreator<AreaLight> {
         public:
-            float padded{};
+//            float padded{};
             uint _inst_idx{};
             float3 _L{};
             bool _two_sided{};

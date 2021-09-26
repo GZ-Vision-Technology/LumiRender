@@ -132,13 +132,11 @@ extern "C" {
     __global__ void test_light(luminous::Light*light) {
         using namespace luminous;
 //        light.print();
-        printf("%f\n", light->get<AreaLight>()->padded);
     }
 
     __global__ void test_area_light(luminous::AreaLight*light) {
         using namespace luminous;
         //        light.print();
-        printf("%f\n", light->padded);
     }
 
     __global__ void test_AL(luminous::AL * light) {
