@@ -13,7 +13,7 @@
 #include "render/samplers/independent.cpp"
 #include <cuda.h>
 #include <cuda/atomic>
-//#include "render/samplers/sampler_handle.cpp"
+#include "render/lights/shader_include.h"
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
 class Sub1 {
@@ -38,7 +38,7 @@ public:
     }
 };
 
-using ::lstd::Variant;
+using luminous::lstd::Variant;
 
 class Base : public Variant<Sub1, Sub2> {
 public:
@@ -116,18 +116,6 @@ extern "C" {
     __global__ void testKernel(int *c) {
         printf("%d \n", threadIdx.x);
     }
-    using namespace luminous;
-
-    __global__ void test_sampler(Sampler sh) {
-//        auto s = LCGSampler(6);
-//        printf("%f \n", s.next_1d());
-//        printf("%f \n", sh.next_1d());
-//        LCGSampler s = LCGSampler(6);
-//        SamplerHandle handle = SamplerHandle(s);
-//        printf("%f \n", s.next_1d());
-
-        printf("%f \n", sh.next_1d());
-    }
 
     __global__ void test_tex_sample(CUtexObject handle, float u, float v) {
 //        auto val = tex2D<uint8_t>(handle, 0, v);
@@ -139,9 +127,11 @@ extern "C" {
         printf("tex2D[0] :%f, tex2D[1] : %f\n",val,val2);
     }
 
-    __global__ void test_sampler2(Sampler *sh) {
 
-        printf("%f \n", sh->next_1d());
+    __global__ void test_light(luminous::Light*light) {
+        using namespace luminous;
+//        light.print();
+        printf("%f\n", light->get<AreaLight>()->padded);
     }
 }
 

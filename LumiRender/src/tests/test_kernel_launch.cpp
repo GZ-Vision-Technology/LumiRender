@@ -13,6 +13,7 @@
 #include "gpu/framework/jitify/jitify.hpp"
 
 #include "render/samplers/sampler.h"
+#include "render/lights/light.h"
 #include "base_libs/sampling/distribution.h"
 
 using namespace std;
@@ -92,11 +93,36 @@ void test_managed() {
 
 }
 
+void test_memory() {
+    using namespace luminous;
+    auto device = create_cuda_device();
+    auto dispatcher = device->new_dispatcher();
+
+    auto cudaModule = create_cuda_module(ptxCode);
+    auto kernel = cudaModule->get_kernel("test_light");
+
+    LightConfig config;
+    config.set_full_type("AreaLight");
+    config.instance_idx = 0;
+    auto light = Light::create(config);
+    light.print();
+    printf("%f\n", light.get<AreaLight>()->padded);
+    Managed<Light> ml{device.get()};
+    ml.push_back(light);
+    ml.allocate_device(1);
+    ml.synchronize_to_device();
+    const Light* ptr = ml.device_data();
+    kernel->launch( dispatcher, ptr);
+    dispatcher.wait();
+}
+
 int main() {
 
 //    test_managed();
 
-    test_driver_api();
+//    test_driver_api();
+
+    test_memory();
 //    test_kernel_sampler();
 //    test3();
 //    test2();

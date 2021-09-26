@@ -9,9 +9,21 @@
 namespace luminous {
     inline namespace render {
 
+        AreaLight::AreaLight(uint inst_idx, float3 L, float area, bool two_sided)
+                : LightBase(LightType::Area),
+                  _inst_idx(inst_idx),
+                  _L(L),
+                  _inv_area(1 / area),
+                  _two_sided(two_sided) {
+            volatile int a = 0;
+//            printf("alignof area_light:%llu, sizeof:%llu\n", alignof(AreaLight), sizeof(AreaLight));
+        }
+
         SurfaceInteraction AreaLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             SurfaceInteraction ret;
-            printf("%u, hahaha\n", _inst_idx);
+            if (padded == 0.f)
+                printf("padded %f \n", padded);
+//            printf("----------alignof area_light:%llu, sizeof:%llu\n", alignof(AreaLight), sizeof(AreaLight));
             auto mesh = scene_data->get_mesh(_inst_idx);
             const Distribution1D &distrib = scene_data->distributions[mesh.distribute_idx];
             float PMF = 0;
@@ -53,7 +65,8 @@ namespace luminous {
         }
 
         void AreaLight::print() const {
-            printf("type:AreaLight,L:(%f,%f,%f)\n", _L.x, _L.y, _L.z);
+            printf("type:AreaLight,instance id is %u,L:(%f,%f,%f)\n",
+                   _inst_idx, _L.x, _L.y, _L.z);
         }
 
         CPU_ONLY(AreaLight AreaLight::create(const LightConfig &config) {
