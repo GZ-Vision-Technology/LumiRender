@@ -15,6 +15,7 @@
 #include "render/samplers/sampler.h"
 #include "render/lights/light.h"
 #include "base_libs/sampling/distribution.h"
+#include "test_light.h"
 
 using namespace std;
 
@@ -93,6 +94,7 @@ void test_managed() {
 
 }
 
+
 void test_memory() {
     using namespace luminous;
     auto device = create_cuda_device();
@@ -100,6 +102,7 @@ void test_memory() {
 
     auto cudaModule = create_cuda_module(ptxCode);
     auto kernel = cudaModule->get_kernel("test_light");
+    auto kernel2 = cudaModule->get_kernel("test_area_light");
 
     LightConfig config;
     config.set_full_type("AreaLight");
@@ -111,8 +114,36 @@ void test_memory() {
     ml.push_back(light);
     ml.allocate_device(1);
     ml.synchronize_to_device();
-    const Light* ptr = ml.device_data();
-    kernel->launch( dispatcher, ptr);
+//    const Light* ptr = ml.device_data();
+//    kernel->launch( dispatcher, ptr);
+//    dispatcher.wait();
+
+    auto area_light = luminous::render::AreaLight(config);
+    Managed<AreaLight> mal{device.get()};
+    mal.push_back(area_light);
+    mal.allocate_device(1);
+    mal.synchronize_to_device();
+    auto ptr2 = mal.device_data();
+    kernel2->launch(dispatcher, ptr2);
+    dispatcher.wait();
+}
+
+void test_al() {
+    using namespace luminous;
+    auto device = create_cuda_device();
+    auto dispatcher = device->new_dispatcher();
+
+    auto cudaModule = create_cuda_module(ptxCode);
+    auto kernel = cudaModule->get_kernel("test_AL");
+
+    auto al = AL();
+
+    Managed<AL> mal{device.get()};
+    mal.push_back(al);
+    mal.allocate_device(1);
+    mal.synchronize_to_device();
+    auto ptr = mal.device_data();
+    kernel->launch(dispatcher, ptr);
     dispatcher.wait();
 }
 
@@ -122,7 +153,9 @@ int main() {
 
 //    test_driver_api();
 
-    test_memory();
+//    test_memory();
+
+    test_al();
 //    test_kernel_sampler();
 //    test3();
 //    test2();
