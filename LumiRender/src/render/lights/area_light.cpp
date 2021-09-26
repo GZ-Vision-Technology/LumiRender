@@ -14,14 +14,10 @@ namespace luminous {
                   _inst_idx(inst_idx),
                   _L(L),
                   _inv_area(1 / area),
-                  _two_sided(two_sided) {
-            volatile int a = 0;
-//            printf("alignof area_light:%llu, sizeof:%llu\n", alignof(AreaLight), sizeof(AreaLight));
-        }
+                  _two_sided(two_sided) {}
 
         SurfaceInteraction AreaLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             SurfaceInteraction ret;
-//            printf("----------alignof area_light:%llu, sizeof:%llu\n", alignof(AreaLight), sizeof(AreaLight));
             auto mesh = scene_data->get_mesh(_inst_idx);
             const Distribution1D &distrib = scene_data->distributions[mesh.distribute_idx];
             float PMF = 0;

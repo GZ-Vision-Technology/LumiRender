@@ -13,7 +13,6 @@ namespace luminous {
     inline namespace render {
         class AreaLight : public LightBase, public ICreator<AreaLight> {
         public:
-//            float padded{};
             uint _inst_idx{};
             float3 _L{};
             bool _two_sided{};
@@ -21,9 +20,7 @@ namespace luminous {
         public:
             CPU_ONLY(explicit AreaLight(const LightConfig &config)
                     : AreaLight(config.instance_idx, config.emission, config.surface_area,
-                                config.two_sided) {
-                volatile int a = 0;
-            })
+                                config.two_sided) {})
 
             AreaLight(uint inst_idx, float3 L, float area, bool two_sided);
 

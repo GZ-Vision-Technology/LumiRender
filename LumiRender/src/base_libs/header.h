@@ -115,3 +115,17 @@ constexpr const char * type_name(T * ptr = nullptr) {
 #define BREAK_IF(condition) if((condition)) { break; }
 #define BREAK_IF_TIPS(condition, str) if((condition)) { LUMINOUS_DBG(str); break; }
 
+#if defined(_WIN32)
+
+// work around for nvcc
+// https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#windows-specific
+#define CHECK_PLACEHOLDER private: char placeholder{};
+
+#else
+
+// work around for nvcc
+// https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#windows-specific
+#define CHECK_PLACEHOLDER private: char placeholder{};
+
+#endif
+

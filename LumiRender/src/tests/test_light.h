@@ -23,14 +23,11 @@ namespace luminous {
 
         struct ICreator2 {
         public:
-            int a;
+            char a;
+//            int a;
         };
 
-        struct S3 {
-
-        };
-
-        struct AL : public LB,ICreator2, S3 {
+        struct AL : public LB,ICreator2 {
         public:
             float padded{9};
 

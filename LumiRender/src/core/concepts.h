@@ -5,7 +5,6 @@
 
 #include "base_libs/header.h"
 
-
 namespace luminous {
 
     struct Noncopyable {
@@ -32,6 +31,8 @@ namespace luminous {
                     return new T(std::forward<Args>(args)...);
                 }
         )
+
+    CHECK_PLACEHOLDER
     };
 
 }

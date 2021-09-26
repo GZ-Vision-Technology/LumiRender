@@ -76,6 +76,7 @@ namespace luminous {
 
         template<typename...T>
         struct BaseBinder : public T ... {
+        public:
             using Bases = std::tuple<T...>;
 
             static constexpr auto base_num = std::tuple_size_v<Bases>;
@@ -87,10 +88,13 @@ namespace luminous {
 
             explicit BaseBinder(T &&...args)
                     : T{std::move(args)}... {}
+
+        CHECK_PLACEHOLDER
         };
 
         template<>
         struct BaseBinder<> {
+        public:
             using Bases = std::tuple<>;
 
             static constexpr auto base_num = std::tuple_size_v<Bases>;
@@ -99,10 +103,13 @@ namespace luminous {
             using Base = void;
 
             BaseBinder() = default;
+
+        CHECK_PLACEHOLDER
         };
 
         template<typename T>
         struct BaseBinder<T> : public T {
+        public:
             using Bases = std::tuple<T>;
 
             static constexpr auto base_num = std::tuple_size_v<Bases>;
@@ -116,6 +123,8 @@ namespace luminous {
 
             explicit BaseBinder(T &&t)
                     : T{std::move(t)} {}
+
+        CHECK_PLACEHOLDER
         };
 
 #define BASE_CLASS(...) public BaseBinder<__VA_ARGS__>
