@@ -141,8 +141,9 @@ extern "C" {
 
     __global__ void test_AL(luminous::AL * light) {
         using namespace luminous;
-        //        light.print();
-        printf("%f    %d\n", light->padded, light->_type);
+//        light->padded = 15;
+        printf("device %f    \n", light->padded);
+        printf("size is %llu, align is %llu\n", sizeof(AL), alignof(AL));
     }
 }
 

@@ -15,23 +15,26 @@ namespace luminous {
         };
 
         struct LB : BaseBinder3 {
-        public:
-            int _type{};
-            LB()
-                    : _type(0) {}
+//        public:
+//            int _type{};
+//            LB()
+//            :BaseBinder3(), _type(0) {}
         };
 
         struct ICreator2 {
         public:
+            int a;
         };
 
-        struct AL : public LB, public luminous::ICreator2 {
+        struct S3 {
+
+        };
+
+        struct AL : public LB,ICreator2, S3 {
         public:
             float padded{9};
-            float paohui{};
 
             AL() : LB() {
-                padded = 10;
             }
         };
     }

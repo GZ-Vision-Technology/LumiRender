@@ -145,6 +145,10 @@ void test_al() {
     auto ptr = mal.device_data();
     kernel->launch(dispatcher, ptr);
     dispatcher.wait();
+    mal.synchronize_to_host();
+    auto light = mal[0];
+    printf("host %f    \n", light.padded);
+    printf("size is %llu, align is %llu\n", sizeof(AL), alignof(AL));
 }
 
 int main() {
