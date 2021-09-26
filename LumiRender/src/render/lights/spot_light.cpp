@@ -4,10 +4,10 @@
 
 
 #include "spot_light.h"
+#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {
-
 
         SurfaceInteraction SpotLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             SurfaceInteraction ret;
@@ -50,8 +50,7 @@ namespace luminous {
             return _intensity * 2.f * Pi * (1 - 0.5f * (_cos_theta_i + _cos_theta_o));
         }
 
-
-
+        REGISTER(SpotLight)
 
     } // luminous::render
 } // luminous

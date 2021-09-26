@@ -19,10 +19,11 @@ namespace luminous {
 
         using lstd::Variant;
 
-        class Light : public Variant<PointLight, AreaLight, SpotLight, Envmap> {
+        class Light : BASE_CLASS( Variant<PointLight, AreaLight, SpotLight, Envmap>) {
         private:
-            using Variant::Variant;
+            using BaseBinder::BaseBinder;
         public:
+            REFL_CLASS(Light)
 
             GEN_BASE_NAME(Light)
 

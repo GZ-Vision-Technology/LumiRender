@@ -3,8 +3,7 @@
 //
 
 #include "point_light.h"
-#include "render/include/creator.h"
-#include "render/include/trace.h"
+#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {
@@ -35,5 +34,7 @@ namespace luminous {
             lls.wi = normalize(wi);
             return lls;
         }
+
+        REGISTER(PointLight)
     } // luminous::render
 } // luminous

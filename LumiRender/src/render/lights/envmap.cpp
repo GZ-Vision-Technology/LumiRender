@@ -4,6 +4,7 @@
 
 #include "envmap.h"
 #include "render/scene/scene_data.h"
+#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {
@@ -96,5 +97,7 @@ namespace luminous {
             });
             return ret;
         })
+
+        REGISTER(Envmap)
     }
 }

@@ -3,9 +3,8 @@
 //
 
 #include "light.h"
-#include "render/include/creator.h"
 #include "render/include/trace.h"
-
+#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {
@@ -134,6 +133,8 @@ namespace luminous {
         void Light::print() const {
             LUMINOUS_VAR_DISPATCH(print);
         }
+
+        REGISTER(Light)
 
         CPU_ONLY(Light Light::create(const LightConfig &config) {
             return detail::create<Light>(config);
