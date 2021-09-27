@@ -62,6 +62,15 @@ namespace luminous {
             return detail::create<LightSampler>(config);
         })
 
+        void LightSampler::for_each_light(const std::function<void(const Light &, int)> &func) const {
+            LUMINOUS_VAR_DISPATCH(for_each_light, func);
+        }
+
+        void LightSampler::for_each_infinite_light(const std::function<void(const Envmap &, int)> &func) const {
+            printf("dsaf\n");
+//            LUMINOUS_VAR_DISPATCH(for_each_infinite_light, func);
+        }
+
         REGISTER(LightSampler)
     } // luminous::render
 } // luminous
