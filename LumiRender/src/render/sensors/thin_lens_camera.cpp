@@ -6,7 +6,6 @@
 #pragma once
 
 #include "thin_lens_camera.h"
-#include "render/include/creator.h"
 #include "core/refl/factory.h"
 
 namespace luminous {

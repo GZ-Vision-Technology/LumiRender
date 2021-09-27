@@ -3,7 +3,6 @@
 //
 
 #include "g_buffer.h"
-#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
