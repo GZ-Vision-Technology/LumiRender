@@ -6,6 +6,7 @@
 #include "render/samplers/sampler.h"
 #include "core/backend/managed.h"
 #include "cpu/cpu_impl.h"
+#include "core/refl/reflection.h"
 
 using namespace std;
 using namespace luminous;
@@ -50,21 +51,7 @@ public:
     }
 };
 
-class A {
-public:
-    virtual void func() {
-
-    }
-};
-
-class B : public A {
-public:
-};
-
-REGISTER(TestSampler)
-
-int main() {
-
+void test_upload() {
     auto device = luminous::create_cpu_device();
 
     auto &arena = get_arena();
@@ -73,9 +60,7 @@ int main() {
     sp.reserve(1);
     auto sampler = TestSampler::create();
 
-//    auto offsets = ClassFactory::instance()->member_offsets(&sampler);
-
-//    sp.push_back(sampler);
+    sp.push_back(sampler);
 
     size_t size = 0u;
 
@@ -89,9 +74,52 @@ int main() {
 
     cout << arena.description() << endl;
 
-//    for (int i = 0; i < 10; ++i) {
-//        cout << sp->next_2d().to_string() << endl;
-//    }
+    for (int i = 0; i < 10; ++i) {
+        cout << sp->next_2d().to_string() << endl;
+    }
+
+}
+
+REGISTER(TestSampler)
+
+class A : BASE_CLASS() {
+public:
+    REFL_CLASS(A)
+
+    DEFINE_AND_REGISTER_MEMBER(A *,pa)
+    virtual void func() {
+
+    }
+};
+
+class B : BASE_CLASS(A) {
+public:
+    REFL_CLASS(B)
+    DEFINE_AND_REGISTER_MEMBER(A*,p)
+};
+
+
+void test_ptr_access() {
+    B *p = new B;
+    A *p2 = new A;
+    p->p = p2;
+
+    set_ptr_value(p, 16, ptr_t(p2));
+
+//    p->pa = p2;
+
+    for_each_all_registered_member<B>([&](auto offset, auto name, auto ptr) {
+        cout << offset << "   " << name << "  " << ::get_ptr_value(p, offset) << endl;
+    });
+
+    cout << "pa addr is " << uint64_t(p->pa) << endl;
+    cout << "p addr is " << uint64_t(p->p) << endl;
+
+}
+
+int main() {
+
+    test_ptr_access();
 
     return 0;
 }
