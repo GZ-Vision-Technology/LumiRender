@@ -85,20 +85,20 @@ namespace luminous {
             }
         };
 
-#define GET_VALUE(ptr, offset) (reinterpret_cast<uint64_t*>(&((reinterpret_cast<std::byte *>(ptr))[offset]))[0])
+#define GET_PTR_VALUE(ptr, offset) (reinterpret_cast<luminous::ptr_t*>(&((reinterpret_cast<std::byte *>(ptr))[offset]))[0])
 
-#define SET_VALUE(ptr, offset, val) reinterpret_cast<uint64_t*>(&((reinterpret_cast<std::byte*>(ptr))[offset]))[0] = val
+#define SET_PTR_VALUE(ptr, offset, val) reinterpret_cast<luminous::ptr_t*>(&((reinterpret_cast<std::byte*>(ptr))[offset]))[0] = val
 
         class Object : public BaseBinder<> {
         public:
             REFL_CLASS(Object)
 
-            uint64_t get_value(uint32_t offset) {
-                return GET_VALUE(this, offset);
+            luminous::ptr_t get_ptr_value(uint32_t offset) {
+                return GET_PTR_VALUE(this, offset);
             }
 
-            void set_value(uint32_t offset, uint64_t val) {
-                SET_VALUE(this, offset, val);
+            void set_ptr_value(uint32_t offset, luminous::ptr_t val) {
+                SET_PTR_VALUE(this, offset, val);
             }
         };
 

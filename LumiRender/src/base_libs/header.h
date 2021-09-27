@@ -8,6 +8,7 @@
 
 #include <typeinfo>
 #include <assert.h>
+#include <stdint.h>
 
 #if defined(_MSC_VER)
 #define HAVE_ALIGNED_MALLOC
@@ -48,31 +49,31 @@
 
 #ifdef IS_GPU_CODE
 
-    #define LUMINOUS_DBG(...) printf(__FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
-    #define XPU __host__ __device__
-    #define GPU __device__
-    #define CPU __host__
+#define LUMINOUS_DBG(...) printf(__FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
+#define XPU __host__ __device__
+#define GPU __device__
+#define CPU __host__
 
-    #define CPU_ONLY(...)
+#define CPU_ONLY(...)
 
-    #define GEN_NAME_FUNC NDSC_XPU const char *name() {             \
+#define GEN_NAME_FUNC NDSC_XPU const char *name() {             \
                                         LUMINOUS_VAR_DISPATCH(name);\
                                    }
 
-    #define GEN_STRING_FUNC(args)
+#define GEN_STRING_FUNC(args)
 
 #else
 
-    #define XPU
-    #define GPU
-    #define CPU
-    #define LUMINOUS_DBG(...) fprintf(stderr, __FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
+#define XPU
+#define GPU
+#define CPU
+#define LUMINOUS_DBG(...) fprintf(stderr, __FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
 
-    #define CPU_ONLY(...) __VA_ARGS__
+#define CPU_ONLY(...) __VA_ARGS__
 
-    #define GEN_STRING_FUNC(args) LM_NODISCARD std::string to_string() const args
+#define GEN_STRING_FUNC(args) LM_NODISCARD std::string to_string() const args
 
-    #define GEN_NAME_FUNC NDSC_XPU const std::string name() {       \
+#define GEN_NAME_FUNC NDSC_XPU const std::string name() {       \
                                         return this->dispatch([&, this](auto &&self) { return type_name(&self); });\
                                    }
 #endif
@@ -80,7 +81,7 @@
 #define LUMINOUS_TO_STRING(...) return string_printf(__VA_ARGS__);
 
 template<typename T>
-constexpr const char * type_name(T * ptr = nullptr) {
+constexpr const char *type_name(T *ptr = nullptr) {
     if (ptr == nullptr)
         return typeid(T).name();
     else
@@ -129,3 +130,6 @@ constexpr const char * type_name(T * ptr = nullptr) {
 
 #endif
 
+namespace luminous {
+    using ptr_t = uint64_t;
+}

@@ -35,7 +35,7 @@ namespace luminous {
         struct MemoryBlock {
         private:
             std::byte *_address{};
-            uint64_t _next_allocate_ptr{};
+            ptr_t _next_allocate_ptr{};
             size_t _capacity{};
         public:
             MemoryBlock() noexcept = default;
@@ -47,6 +47,10 @@ namespace luminous {
 
             virtual ~MemoryBlock() noexcept {
                 aligned_free(_address);
+            }
+
+            LM_NODISCARD PtrInterval interval_used() noexcept {
+                return build_interval(reinterpret_cast<ptr_t>(_address), _next_allocate_ptr);
             }
 
             template<typename T, size_t alignment = alignof(T)>
@@ -62,7 +66,7 @@ namespace luminous {
                             string_printf("Failed to allocate memory: size = %d, alignment = %d, count = %d",
                                           byte_size, alignment, byte_size / sizeof(T)));
                 }
-                _next_allocate_ptr = reinterpret_cast<uint64_t>(_address + byte_size);
+                _next_allocate_ptr = reinterpret_cast<ptr_t>(_address + byte_size);
                 return reinterpret_cast<T *>(_address);
             }
 
@@ -70,7 +74,7 @@ namespace luminous {
             LM_NODISCARD T *use(size_t byte_size) {
                 auto aligned_p = reinterpret_cast<std::byte *>((_next_allocate_ptr + alignment - 1u) /
                                                                alignment * alignment);
-                _next_allocate_ptr = reinterpret_cast<uint64_t>(aligned_p + byte_size);
+                _next_allocate_ptr = reinterpret_cast<ptr_t>(aligned_p + byte_size);
                 return reinterpret_cast<T *>(aligned_p);
             }
 
