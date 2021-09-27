@@ -128,14 +128,16 @@ namespace luminous {
 
             template<typename F>
             void for_each_block(const F &f) const {
-                for (auto iter = _memory_blocks.cbegin(); iter != _memory_blocks.cend(); ++iter) {
+                for (auto iter = _memory_blocks.cbegin();
+                     iter != _memory_blocks.cend(); ++iter) {
                     f(iter);
                 }
             }
 
             template<typename F>
             void for_each_block(const F &f) {
-                for (auto iter = _memory_blocks.begin(); iter != _memory_blocks.end(); ++iter) {
+                for (auto iter = _memory_blocks.begin();
+                     iter != _memory_blocks.end(); ++iter) {
                     f(iter);
                 }
             }

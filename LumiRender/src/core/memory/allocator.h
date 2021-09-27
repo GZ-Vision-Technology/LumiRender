@@ -55,7 +55,7 @@ namespace luminous {
             constexpr Allocator(const Allocator &) noexcept = default;
 
             template<class Other>
-            constexpr Allocator(const Allocator<Other> &other) noexcept : arena(other.arena) {}
+            constexpr explicit Allocator(const Allocator<Other> &other) noexcept : arena(other.arena) {}
 
             void deallocate(Ty *const ptr, const size_t count) {
 

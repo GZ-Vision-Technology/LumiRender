@@ -56,19 +56,32 @@ REGISTER(TestSampler)
 int main() {
 
     auto device = luminous::create_cpu_device();
-    Managed<TestSampler> sp{device.get()};
-    sp.reserve(1);
 
     auto &arena = get_arena();
 
+    Managed<TestSampler> sp{device.get()};
+    sp.reserve(1);
     auto sampler = TestSampler::create();
-    sp.push_back(sampler);
+
+//    auto offsets = ClassFactory::instance()->member_offsets(&sampler);
+
+//    sp.push_back(sampler);
+
+    size_t size = 0u;
+
+    arena.for_each_block([&](MemoryArena::ConstBlockIterator block) {
+        size += block->usage();
+    });
+
+    cout << size << endl;
+
+    auto buffer = device->create_buffer(size);
 
     cout << arena.description() << endl;
 
-    for (int i = 0; i < 10; ++i) {
-        cout << sp->next_2d().to_string() << endl;
-    }
+//    for (int i = 0; i < 10; ++i) {
+//        cout << sp->next_2d().to_string() << endl;
+//    }
 
     return 0;
 }
