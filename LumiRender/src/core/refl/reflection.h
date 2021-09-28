@@ -20,14 +20,16 @@ namespace luminous {
         struct Int<0> {
         };
 
-        template<int N>
-        struct Sizer {
-            char _[N];
-        };
+        namespace detail {
+            template<int N>
+            struct Sizer {
+                char _[N];
+            };
+        }
 
 #define REFL_CLASS(NAME)                                                        \
     using ReflSelf = NAME;                                                      \
-    static refl::Sizer<1> _member_counter(...);                                 \
+    static refl::detail::Sizer<1> _member_counter(...);                         \
     template<int N>                                                             \
     struct MemberRegister {                                                     \
         template<typename F>                                                    \
@@ -41,7 +43,7 @@ namespace luminous {
             (refl::Int<REFL_MAX_MEMBER_COUNT>*)nullptr)));                      \
     static_assert(NAME##_refl_index <= REFL_MAX_MEMBER_COUNT,                   \
                 "index must not greater than REFL_MAX_MEMBER_COUNT");           \
-    static refl::Sizer<NAME##_refl_index + 1>                                   \
+    static refl::detail::Sizer<NAME##_refl_index + 1>                           \
         (_member_counter(refl::Int<NAME##_refl_index + 1> *));                  \
     template<>                                                                  \
     struct MemberRegister<NAME##_refl_index - 1> {                              \

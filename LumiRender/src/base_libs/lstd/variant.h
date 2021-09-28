@@ -74,13 +74,23 @@ namespace luminous {
                           "Ts can not be the secondary pointer!");
             static_assert((is_pointer_type) || ((!std::is_pointer_v<Ts>) && ...),
                           "Ts must be consistency!");
-        protected:
-
-            static constexpr int nTypes = sizeof...(Ts);
-            static constexpr std::size_t alignment_value = std::max({alignof(Ts)...});
 
             // size_for_ptr use for pointer type
-            static constexpr std::size_t size_for_ptr = std::max({sizeof(std::remove_pointer_t<Ts>)...});
+            static constexpr std::size_t size_for_ptr() {
+                static_assert(is_pointer_type, "size_for_ptr() must be use for pointer type!");
+                return std::max({sizeof(std::remove_pointer_t<Ts>)...});
+            }
+
+            // size_for_ptr use for pointer type
+            static constexpr std::size_t alignment_for_ptr() {
+                static_assert(is_pointer_type, "alignment_for_ptr() must be use for pointer type!");
+                return std::max({alignof(std::remove_pointer_t<Ts>)...});
+            }
+
+        protected:
+            static constexpr int nTypes = sizeof...(Ts);
+
+            static constexpr std::size_t alignment_value = std::max({alignof(Ts)...});
 
             typename std::aligned_storage<std::max({sizeof(Ts)...}), alignment_value>::type data{};
 
@@ -88,7 +98,7 @@ namespace luminous {
             nullptr)));
             static_assert(data_refl_index <= 128, "index must not greater than REFL_MAX_MEMBER_COUNT");
 
-            static refl::Sizer<data_refl_index + 1> (_member_counter(refl::Int<data_refl_index + 1> *));
+            static refl::detail::Sizer<data_refl_index + 1> (_member_counter(refl::Int<data_refl_index + 1> *));
 
             template<>
             struct MemberRegister<data_refl_index - 1> {
@@ -283,15 +293,22 @@ namespace luminous {
 
 #undef _GEN_CASE_N
 
-#define LUMINOUS_VAR_DISPATCH(method, ...)                                                                             \
+#define LUMINOUS_VAR_DISPATCH(method, ...)                                                                                 \
         return this->dispatch([&](auto &&self)-> decltype(auto) {                                                          \
             return self.method(__VA_ARGS__);                                                                               \
         });
-#define LUMINOUS_VAR_PTR_DISPATCH(method, ...)                                                                         \
+#define LUMINOUS_VAR_PTR_DISPATCH(method, ...)                                                                             \
         return this->dispatch([&](auto &&self)-> decltype(auto) {                                                          \
             return self->method(__VA_ARGS__);                                                                              \
         });
 
+        };
+
+        template<typename T>
+        class Sizer {
+        public:
+            static constexpr size_t max_size = T::size_for_ptr() + T::alignment_for_ptr()
+                                               + sizeof(T) + alignof(T);
         };
 
     }; // lstd

@@ -13,6 +13,7 @@ using namespace luminous;
 
 using lstd::Variant;
 
+
 class TestSampler : BASE_CLASS(Variant<LCGSampler *, PCGSampler *>) {
 public:
     REFL_CLASS(TestSampler)
@@ -51,10 +52,6 @@ public:
     }
 };
 
-class ttt: public Variant<LCGSampler *,PCGSampler *> {
-
-};
-
 void test_upload() {
     auto device = luminous::create_cpu_device();
     auto &arena = get_arena();
@@ -65,21 +62,27 @@ void test_upload() {
 
     sp.push_back(sampler);
 
-    size_t size = 0u;
+    size_t size = TestSampler::size_for_ptr();
 
     arena.for_each_block([&](MemoryArena::ConstBlockIterator block) {
         size += block->usage();
     });
 
-
+    cout << luminous::lstd::Sizer<TestSampler>::max_size << endl;
 
 }
+
+template<typename ...Ts>
+struct VariantWrapper {
+
+};
 
 class A : BASE_CLASS() {
 public:
     REFL_CLASS(A)
 
-    DEFINE_AND_REGISTER_MEMBER(A *,pa)
+    DEFINE_AND_REGISTER_MEMBER(A *, pa)
+
     virtual void func() {
 
     }
@@ -88,7 +91,8 @@ public:
 class B : BASE_CLASS(A) {
 public:
     REFL_CLASS(B)
-    DEFINE_AND_REGISTER_MEMBER(A*,p)
+
+    DEFINE_AND_REGISTER_MEMBER(A*, p)
 };
 
 
