@@ -72,7 +72,11 @@ namespace luminous {
             static constexpr int nTypes = sizeof...(T);
             static constexpr std::size_t alignment_value = std::max({alignof(T)...});
 
-            typename std::aligned_storage<SizeOf<T...>::value, alignment_value>::type data{};
+            // size_for_ptr use for pointer object, that is data used to storage pointer
+            static constexpr std::size_t size_for_ptr = std::max({sizeof(std::remove_pointer_t<T>)...});
+
+            typename std::aligned_storage<std::max({sizeof(T)...}), alignment_value>::type data{};
+
             static constexpr int data_refl_index = sizeof((_member_counter((refl::Int<128> *)nullptr)));
             static_assert(data_refl_index <= 128, "index must not greater than REFL_MAX_MEMBER_COUNT");
             static refl::Sizer<data_refl_index + 1> (_member_counter(refl::Int<data_refl_index + 1> *));
@@ -83,7 +87,6 @@ namespace luminous {
                 static void process(const F &f) { f(&ReflSelf::data, "data"); }
             };
 
-//            typename std::aligned_storage<SizeOf<T...>::value, alignment_value>::type data;
             int index = -1;
 
         public:
@@ -265,7 +268,6 @@ namespace luminous {
         });
 
         };
-
 
     }; // lstd
 }
