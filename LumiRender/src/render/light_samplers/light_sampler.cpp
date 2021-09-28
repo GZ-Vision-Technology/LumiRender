@@ -62,6 +62,5 @@ namespace luminous {
             return detail::create<LightSampler>(config);
         })
 
-        REGISTER(LightSampler)
     } // luminous::render
 } // luminous

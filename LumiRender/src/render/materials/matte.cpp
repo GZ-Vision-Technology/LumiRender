@@ -15,7 +15,5 @@ namespace luminous {
 
             return BSDF(ctx.ng, ctx.ns, ctx.dp_dus, bxdf);
         }
-
-        REGISTER(MatteMaterial)
     }
 }

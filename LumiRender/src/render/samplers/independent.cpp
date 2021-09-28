@@ -21,8 +21,6 @@ namespace luminous {
             return make_float2(next_1d(), next_1d());
         }
 
-        REGISTER(LCGSampler)
-
         void PCGSampler::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
             _rng.set_sequence((pixel.x + pixel.y * 65536) | (uint64_t(_seed) << 32));
             _rng.advance(sample_index * 65536 + dimension);
@@ -36,6 +34,5 @@ namespace luminous {
             return make_float2(next_1d(), next_1d());
         }
 
-        REGISTER(PCGSampler)
     }
 }

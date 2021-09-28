@@ -39,7 +39,6 @@ namespace luminous {
                         si = prd.compute_surface_interaction(ray);
                         L += throughput * si.Le(-ray.direction());
                     } else {
-//                        prd.scene_data()->light_sampler->for_each_infinite_light(9);
                         prd.scene_data()->light_sampler->for_each_infinite_light(
                                 [&](const Light &light, int i) {
                                     L += throughput * light.on_miss(ray, prd.scene_data());

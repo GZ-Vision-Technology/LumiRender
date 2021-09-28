@@ -98,6 +98,5 @@ namespace luminous {
             return ret;
         })
 
-        REGISTER(Envmap)
     }
 }

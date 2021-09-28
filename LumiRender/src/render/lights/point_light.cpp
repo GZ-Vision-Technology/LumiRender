@@ -35,6 +35,5 @@ namespace luminous {
             return lls;
         }
 
-        REGISTER(PointLight)
     } // luminous::render
 } // luminous

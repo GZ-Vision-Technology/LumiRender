@@ -23,7 +23,5 @@ namespace luminous {
             *ray = Ray(origin, direction);
             return 1;
         }
-
-        REGISTER(PinholeCamera)
     }
 }

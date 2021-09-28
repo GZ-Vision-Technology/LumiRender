@@ -64,7 +64,5 @@ namespace luminous {
                    _inst_idx, _L.x, _L.y, _L.z);
         }
 
-        REGISTER(AreaLight)
-
     } //luminous::render
 } // luminous::render

@@ -28,6 +28,5 @@ namespace luminous {
             return PMF(light);
         }
 
-        REGISTER(UniformLightSampler)
     } // luminous::render
 } // luminous

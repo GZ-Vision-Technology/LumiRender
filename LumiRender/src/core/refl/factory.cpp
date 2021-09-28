@@ -41,7 +41,5 @@ namespace luminous {
         DCHECK(is_registered(class_name));
         return _type_data.at(class_name);
     }
-
-    REGISTER(Object)
-
+    
 }

@@ -120,6 +120,5 @@ namespace luminous {
             return ret;
         })
 
-        REGISTER(Sensor)
     }
 }

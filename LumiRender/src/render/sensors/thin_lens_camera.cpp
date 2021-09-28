@@ -24,7 +24,5 @@ namespace luminous {
 
             return 1;
         }
-
-        REGISTER(ThinLensCamera)
     }
 }

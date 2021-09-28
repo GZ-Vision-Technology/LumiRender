@@ -7,6 +7,6 @@
 
 namespace luminous {
     inline namespace render {
-        REGISTER(Material)
+
     }
 }

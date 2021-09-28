@@ -38,6 +38,5 @@ namespace luminous {
             return detail::create<Sampler>(config);
         })
 
-        REGISTER(Sampler)
     }
 }
