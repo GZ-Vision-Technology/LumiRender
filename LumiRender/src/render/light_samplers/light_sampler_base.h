@@ -58,9 +58,19 @@ namespace luminous {
 
             NDSC_XPU const Light &infinite_light_at(index_t idx) const;
 
-            XPU void for_each_light(const std::function<void(const Light&, int i)> &func) const;
+            template<typename Func>
+            XPU void for_each_light(const Func &func) const {
+                for (int i = 0; i < light_num(); ++i) {
+                    func(light_at(i), i);
+                }
+            }
 
-            XPU void for_each_infinite_light(const std::function<void(const Envmap&, int i)> &func) const;
+            template<typename Func>
+            XPU void for_each_infinite_light(const Func &func) const {
+                for (int i = 0; i < infinite_light_num(); ++i) {
+                    func(infinite_light_at(i), i);
+                }
+            }
 
             XPU_INLINE void set_lights(BufferView<const Light> lights) {
                 _lights = lights;

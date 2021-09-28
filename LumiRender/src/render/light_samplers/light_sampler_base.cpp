@@ -20,16 +20,5 @@ namespace luminous {
             return _infinite_lights[idx];
         }
 
-        XPU void LightSamplerBase::for_each_light(const std::function<void(const Light&, int i)> &func) const {
-            for (int i = 0; i < light_num(); ++i) {
-                func(light_at(i), i);
-            }
-        }
-
-        XPU void LightSamplerBase::for_each_infinite_light(const std::function<void(const Envmap&, int i)> &func) const {
-//            for (int i = 0; i < infinite_light_num(); ++i) {
-//                func(*infinite_light_at(i).template get<Envmap>(), i);
-//            }
-        }
     }
 }

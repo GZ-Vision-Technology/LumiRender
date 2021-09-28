@@ -17,15 +17,15 @@
 //				"color_space": "LINEAR"
 //			}
 //		}
-//	,
-//		{
-//			"name": "envmap",
-//			"type": "ImageTexture",
-//			"param": {
-//				"fn": "spruit_sunrise_2k.hdr",
-//				"color_space": "LINEAR"
-//			}
-//		}
+	,
+		{
+			"name": "envmap",
+			"type": "ImageTexture",
+			"param": {
+				"fn": "spruit_sunrise_2k.hdr",
+				"color_space": "LINEAR"
+			}
+		}
 	],
 	"materials": [
 		{
@@ -172,21 +172,21 @@
 		}
 	],
 	"lights" : [
-//		{
-//			"type": "Envmap",
-//			"param": {
-//				"transform" : {
-//					"type" : "yaw_pitch",
-//					"param" : {
-//						"yaw" : 0,
-//						"pitch": 0,
-//						"position": [0,0,0]
-//					}
-//				},
-//				"scale": [1,1,1],
-//				"key" : "envmap"
-//			}
-//		}
+		{
+			"type": "Envmap",
+			"param": {
+				"transform" : {
+					"type" : "yaw_pitch",
+					"param" : {
+						"yaw" : 0,
+						"pitch": 0,
+						"position": [0,0,0]
+					}
+				},
+				"scale": [1,1,1],
+				"key" : "envmap"
+			}
+		}
 //		{
 //			"type": "PointLight",
 //			"param": {
