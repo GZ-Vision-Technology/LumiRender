@@ -51,9 +51,12 @@ public:
     }
 };
 
+class ttt: public Variant<LCGSampler *,PCGSampler *> {
+
+};
+
 void test_upload() {
     auto device = luminous::create_cpu_device();
-
     auto &arena = get_arena();
 
     Managed<TestSampler> sp{device.get()};
@@ -68,19 +71,9 @@ void test_upload() {
         size += block->usage();
     });
 
-    cout << size << endl;
 
-    auto buffer = device->create_buffer(size);
-
-    cout << arena.description() << endl;
-
-    for (int i = 0; i < 10; ++i) {
-        cout << sp->next_2d().to_string() << endl;
-    }
 
 }
-
-REGISTER(TestSampler)
 
 class A : BASE_CLASS() {
 public:
@@ -117,9 +110,12 @@ void test_ptr_access() {
 
 }
 
-int main() {
+void test_allocate_upload() {
 
-    test_ptr_access();
+}
+
+int main() {
+    test_upload();
 
     return 0;
 }

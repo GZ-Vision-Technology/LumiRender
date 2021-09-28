@@ -36,5 +36,6 @@ namespace luminous {
 
             CPU_ONLY(static Sampler create(const SamplerConfig &config);)
         };
+
     }
 }

@@ -37,8 +37,11 @@ namespace luminous {
             std::byte *_address{};
             ptr_t _next_allocate_ptr{};
             size_t _capacity{};
+            //
+            bool _special{false};
         public:
-            MemoryBlock() noexcept = default;
+            explicit MemoryBlock(bool special = false) noexcept
+            : _special(special) {}
 
             explicit MemoryBlock(size_t byte_size) noexcept {
                 //todo strange bug
@@ -48,6 +51,8 @@ namespace luminous {
             virtual ~MemoryBlock() noexcept {
                 aligned_free(_address);
             }
+
+            LM_NODISCARD bool special() const noexcept { return _special; }
 
             LM_NODISCARD PtrInterval interval_used() noexcept {
                 return build_interval(reinterpret_cast<ptr_t>(_address), _next_allocate_ptr);
@@ -116,7 +121,10 @@ namespace luminous {
 
             MemoryArena &operator=(MemoryArena &&) noexcept = default;
 
-            void clear() { _memory_blocks.clear(); _focus_block = nullptr; }
+            void clear() {
+                _memory_blocks.clear();
+                _focus_block = nullptr;
+            }
 
             ~MemoryArena() noexcept = default;
 
@@ -182,9 +190,12 @@ namespace luminous {
                 if (_focus_block) {
                     return _focus_block;
                 }
-                MemoryBlock * best_block = nullptr;
+                MemoryBlock *best_block = nullptr;
                 auto min_remain = block_size;
                 for_each_block([&](BlockIterator iter) {
+                    if (iter->special()) {
+                        return ;
+                    }
                     auto aligned_p = iter->aligned_ptr(alignment);
                     std::byte *next_allocate_ptr = aligned_p + byte_size;
                     int64_t remain = iter->end_ptr() - next_allocate_ptr;
@@ -197,7 +208,7 @@ namespace luminous {
             }
 
             void create_memory_block_and_focus(size_t size_in_bytes) {
-                _memory_blocks.emplace_back();
+                _memory_blocks.emplace_back(true);
                 MemoryBlock &block = _memory_blocks.back();
                 block.alloc(size_in_bytes);
                 _focus_block = &block;
@@ -211,7 +222,7 @@ namespace luminous {
             LM_NODISCARD T *allocate(size_t n = 1u) {
                 static constexpr auto size = sizeof(T);
                 size_t byte_size = n * size;
-                MemoryBlock* block = find_suitable_blocks(byte_size, alignment);
+                MemoryBlock *block = find_suitable_blocks(byte_size, alignment);
 
                 if (block == nullptr) {
                     _memory_blocks.emplace_back();

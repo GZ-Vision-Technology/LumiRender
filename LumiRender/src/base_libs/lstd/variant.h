@@ -63,22 +63,31 @@ namespace luminous {
         }
         using namespace detail;
 
-        template<typename... T>
-        struct Variant : BASE_CLASS(){
+        template<typename... Ts>
+        struct Variant : BASE_CLASS() {
         public:
-            REFL_CLASS(Variant<T...>)
-        private:
+            REFL_CLASS(Variant<Ts...>)
 
-            static constexpr int nTypes = sizeof...(T);
-            static constexpr std::size_t alignment_value = std::max({alignof(T)...});
+            static constexpr bool is_pointer_type = ((std::is_pointer_v<Ts>) && ...);
 
-            // size_for_ptr use for pointer object, that is data used to storage pointer
-            static constexpr std::size_t size_for_ptr = std::max({sizeof(std::remove_pointer_t<T>)...});
+            static_assert(((!std::is_pointer_v<std::remove_pointer_t<Ts>>) && ...),
+                          "Ts can not be the secondary pointer!");
+            static_assert((is_pointer_type) || ((!std::is_pointer_v<Ts>) && ...),
+                          "Ts must be consistency!");
+        protected:
 
-            typename std::aligned_storage<std::max({sizeof(T)...}), alignment_value>::type data{};
+            static constexpr int nTypes = sizeof...(Ts);
+            static constexpr std::size_t alignment_value = std::max({alignof(Ts)...});
 
-            static constexpr int data_refl_index = sizeof((_member_counter((refl::Int<128> *)nullptr)));
+            // size_for_ptr use for pointer type
+            static constexpr std::size_t size_for_ptr = std::max({sizeof(std::remove_pointer_t<Ts>)...});
+
+            typename std::aligned_storage<std::max({sizeof(Ts)...}), alignment_value>::type data{};
+
+            static constexpr int data_refl_index = sizeof((_member_counter((refl::Int < 128 > *)
+            nullptr)));
             static_assert(data_refl_index <= 128, "index must not greater than REFL_MAX_MEMBER_COUNT");
+
             static refl::Sizer<data_refl_index + 1> (_member_counter(refl::Int<data_refl_index + 1> *));
 
             template<>
@@ -90,9 +99,9 @@ namespace luminous {
             int index = -1;
 
         public:
-            using TypeTuple = std::tuple<T...>;
-            using Index = TypeIndex<T...>;
-            using FirstType = typename FirstOf<T...>::type;
+            using TypeTuple = std::tuple<Ts...>;
+            using Index = TypeIndex<Ts...>;
+            using FirstType = typename FirstOf<Ts...>::type;
             static constexpr size_t num_types = nTypes;
 
             Variant() = default;
@@ -165,6 +174,7 @@ namespace luminous {
                 return Index::template GetIndex<U>::value == index;
             }
 
+            // use of prototype
             template<typename U>
             LM_NODISCARD XPU U *get() {
                 static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
@@ -177,7 +187,22 @@ namespace luminous {
                 return Index::template GetIndex<U>::value != index ? nullptr : reinterpret_cast<const U *>(&data);
             }
 
-    #define _GEN_CASE_N(N)                                                                                                 \
+            // use for pointer type
+            template<typename U>
+            NDSC_XPU const U *as() const {
+                static_assert(is_pointer_type, "as<U>() use for pointer type!");
+                static_assert(Index::template GetIndex<U *>::value != -1, "U* is not in T...");
+                return Index::template GetIndex<U *>::value != index ? nullptr : reinterpret_cast<const U *>(data);
+            }
+
+            template<typename U>
+            NDSC_XPU U *as() {
+                static_assert(is_pointer_type, "as<U>() use for pointer type!");
+                static_assert(Index::template GetIndex<U *>::value != -1, "U* is not in T...");
+                return Index::template GetIndex<U *>::value != index ? nullptr : reinterpret_cast<const U *>(data);
+            }
+
+#define _GEN_CASE_N(N)                                                                                                     \
         case N:                                                                                                            \
             if constexpr (N < nTypes) {                                                                                    \
                 using ty = typename Index::template GetType<N>::type;                                                      \
@@ -189,20 +214,20 @@ namespace luminous {
                 }                                                                                                          \
             };                                                                                                             \
             break;
-    #define _GEN_CASES_2()                                                                                                 \
+#define _GEN_CASES_2()                                                                                                     \
         _GEN_CASE_N(0)                                                                                                     \
         _GEN_CASE_N(1)
-    #define _GEN_CASES_4()                                                                                                 \
+#define _GEN_CASES_4()                                                                                                     \
         _GEN_CASES_2()                                                                                                     \
         _GEN_CASE_N(2)                                                                                                     \
         _GEN_CASE_N(3)
-    #define _GEN_CASES_8()                                                                                                 \
+#define _GEN_CASES_8()                                                                                                     \
         _GEN_CASES_4()                                                                                                     \
         _GEN_CASE_N(4)                                                                                                     \
         _GEN_CASE_N(5)                                                                                                     \
         _GEN_CASE_N(6)                                                                                                     \
         _GEN_CASE_N(7)
-    #define _GEN_CASES_16()                                                                                                \
+#define _GEN_CASES_16()                                                                                                    \
         _GEN_CASES_8()                                                                                                     \
         _GEN_CASE_N(8)                                                                                                     \
         _GEN_CASE_N(9)                                                                                                     \
@@ -212,8 +237,8 @@ namespace luminous {
         _GEN_CASE_N(13)                                                                                                    \
         _GEN_CASE_N(14)                                                                                                    \
         _GEN_CASE_N(15)
-    #define _GEN_DISPATCH_BODY()                                                                                           \
-        using Ret = std::invoke_result_t<Visitor, typename FirstOf<T...>::type &>;                                         \
+#define _GEN_DISPATCH_BODY()                                                                                               \
+        using Ret = std::invoke_result_t<Visitor, typename FirstOf<Ts...>::type &>;                                        \
         static_assert(nTypes <= 16, "too many types");                                                                     \
         if constexpr (nTypes <= 2) {                                                                                       \
             switch (index) { _GEN_CASES_2(); }                                                                             \
@@ -256,13 +281,13 @@ namespace luminous {
                 });
             }
 
-    #undef _GEN_CASE_N
+#undef _GEN_CASE_N
 
-    #define LUMINOUS_VAR_DISPATCH(method, ...)                                                                             \
+#define LUMINOUS_VAR_DISPATCH(method, ...)                                                                             \
         return this->dispatch([&](auto &&self)-> decltype(auto) {                                                          \
             return self.method(__VA_ARGS__);                                                                               \
         });
-    #define LUMINOUS_VAR_PTR_DISPATCH(method, ...)                                                                         \
+#define LUMINOUS_VAR_PTR_DISPATCH(method, ...)                                                                         \
         return this->dispatch([&](auto &&self)-> decltype(auto) {                                                          \
             return self->method(__VA_ARGS__);                                                                              \
         });
