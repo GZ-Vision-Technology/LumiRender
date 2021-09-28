@@ -16,7 +16,7 @@ namespace luminous {
     inline namespace render {
         class Scene;
 
-        class Envmap : BASE_CLASS(LightBase), public ICreator<Envmap> {
+        class Envmap : BASE_CLASS(LightBase), public Creator<Envmap> {
         public:
             REFL_CLASS(Envmap)
         private:

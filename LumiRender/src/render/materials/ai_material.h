@@ -12,7 +12,7 @@
 
 namespace luminous {
     inline namespace render {
-        class AssimpMaterial : BASE_CLASS(), public ICreator<AssimpMaterial> {
+        class AssimpMaterial : BASE_CLASS(), public Creator<AssimpMaterial> {
         public:
             REFL_CLASS(AssimpMaterial)
         private:

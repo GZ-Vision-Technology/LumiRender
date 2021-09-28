@@ -12,7 +12,7 @@
 namespace luminous {
     inline namespace render {
 
-        class RGBFilm : BASE_CLASS(FilmBase), public ICreator<RGBFilm> {
+        class RGBFilm : BASE_CLASS(FilmBase), public Creator<RGBFilm> {
         public:
             REFL_CLASS(RGBFilm)
 

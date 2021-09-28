@@ -16,7 +16,7 @@ namespace luminous {
             LM_NODISCARD Handle create(const Config &config) {
                 using Class = std::tuple_element_t<current_index, typename Handle::TypeTuple>;
                 if (type_name<Class>() == config.type()) {
-                    return Handle(Class::create(config));
+                    return Handle(Creator<Class>::create(config));
                 }
                 if constexpr (current_index + 1 == std::tuple_size_v<typename Handle::TypeTuple>) {
                     LUMINOUS_ERROR(string_printf("unknown %s type %s", Handle::base_name(), config.type().c_str()));

@@ -16,7 +16,7 @@ namespace luminous {
     };
 
     template<typename T>
-    class ICreator {
+    class Creator {
     public:
         CPU_ONLY(
                 template<typename ...Args>

@@ -11,7 +11,7 @@
 namespace luminous {
     inline namespace render {
 
-        class SpotLight : BASE_CLASS(LightBase), public ICreator<SpotLight> {
+        class SpotLight : BASE_CLASS(LightBase), public Creator<SpotLight> {
         public:
             REFL_CLASS(SpotLight)
         private:

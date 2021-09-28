@@ -10,7 +10,7 @@
 namespace luminous {
 
     inline namespace render {
-        class ThinLensCamera : BASE_CLASS(CameraBase), public ICreator<ThinLensCamera> {
+        class ThinLensCamera : BASE_CLASS(CameraBase), public Creator<ThinLensCamera> {
         public:
             REFL_CLASS(ThinLensCamera)
         private:

@@ -21,6 +21,9 @@ namespace luminous {
 #endif
             TypeHandle _handle{0};
         public:
+            CPU_ONLY(explicit ImageTexture(const TextureConfig &config)
+                    : ImageTexture((ImageTexture::TypeHandle) config.handle, config.pixel_format) {})
+
             ImageTexture(TypeHandle handle, PixelFormat pixel_format)
                     : TextureBase(pixel_format), _handle(handle) {}
 
@@ -53,12 +56,10 @@ namespace luminous {
             }
 
             GEN_STRING_FUNC({
-                LUMINOUS_TO_STRING("name: %s", type_name(this));
-            })
+                                LUMINOUS_TO_STRING("name: %s", type_name(this));
+                            })
 
-            CPU_ONLY(static ImageTexture create(const TextureConfig &config) {
-                return ImageTexture ((ImageTexture::TypeHandle) config.handle, config.pixel_format);
-            })
+
         };
     }
 }

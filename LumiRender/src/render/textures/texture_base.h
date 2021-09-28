@@ -19,23 +19,22 @@ namespace luminous {
         private:
             float _su, _sv, _du, _dv;
         public:
-            UVMapping2D(float su = 1, float sv = 1, float du = 0, float dv = 0)
+            CPU_ONLY(explicit UVMapping2D(const TextureMappingConfig &tmc)
+                    : UVMapping2D(tmc.su, tmc.sv, tmc.du, tmc.dv) {})
+
+            explicit UVMapping2D(float su = 1, float sv = 1, float du = 0, float dv = 0)
                     : _su(su), _sv(sv), _du(du), _dv(dv) {}
 
             GEN_STRING_FUNC({
-                return string_printf("%s,su:%f, sv:%f,du:%f,dv:%f",
-                                     type_name(this), _su, _sv, _du, _dv);
-            })
+                                return string_printf("%s,su:%f, sv:%f,du:%f,dv:%f",
+                                                     type_name(this), _su, _sv, _du, _dv);
+                            })
 
             XPU float2 map(const TextureEvalContext &ctx, float2 *dst_dx, float2 *dst_dy) const {
                 if (dst_dx) { *dst_dx = float2(_su * ctx.du_dx, _sv * ctx.dv_dx); }
                 if (dst_dy) { *dst_dy = float2(_su * ctx.du_dy, _sv * ctx.dv_dy); }
                 return make_float2(_su * ctx.uv[0] + _du, _sv * ctx.uv[1] + _dv);
             }
-
-            CPU_ONLY(static UVMapping2D create(const TextureMappingConfig tmc) {
-                return UVMapping2D(tmc.su, tmc.sv, tmc.du, tmc.dv);
-            })
         };
 
         using lstd::Variant;
@@ -59,12 +58,12 @@ namespace luminous {
 
         class TextureBase {
         protected:
-            PixelFormat _pixel_format;
+            PixelFormat _pixel_format{};
             TextureMapping2D _mapping;
         public:
             XPU TextureBase() = default;
 
-            XPU TextureBase(PixelFormat pixel_format)
+            XPU explicit TextureBase(PixelFormat pixel_format)
                     : _pixel_format(pixel_format) {}
 
             NDSC_XPU_INLINE PixelFormat pixel_format() const {

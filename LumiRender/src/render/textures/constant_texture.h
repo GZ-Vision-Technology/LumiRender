@@ -15,10 +15,13 @@ namespace luminous {
         private:
             const float4 _val;
         public:
-            ConstantTexture(PixelFormat pixel_format, float4 val)
-                : TextureBase(pixel_format), _val(val) {}
+            CPU_ONLY(explicit ConstantTexture(const TextureConfig &config)
+                    : ConstantTexture(config.pixel_format, config.val) {})
 
-            XPU float4 eval(const TextureEvalContext &tec) const {
+            ConstantTexture(PixelFormat pixel_format, float4 val)
+                    : TextureBase(pixel_format), _val(val) {}
+
+            NDSC_XPU float4 eval(const TextureEvalContext &tec) const {
                 return _val;
             }
 
@@ -27,12 +30,10 @@ namespace luminous {
             }
 
             GEN_STRING_FUNC({
-                LUMINOUS_TO_STRING("name: %s", type_name(this));
-            })
+                                LUMINOUS_TO_STRING("name: %s", type_name(this));
+                            })
 
-            CPU_ONLY(static ConstantTexture create(const TextureConfig &config) {
-                return ConstantTexture(config.pixel_format, config.val);
-            })
+
         };
     }
 }

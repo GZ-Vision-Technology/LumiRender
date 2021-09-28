@@ -11,7 +11,7 @@
 namespace luminous {
     inline namespace render {
 
-        class PinholeCamera : BASE_CLASS(CameraBase), public ICreator<PinholeCamera> {
+        class PinholeCamera : BASE_CLASS(CameraBase), public Creator<PinholeCamera> {
         public:
             REFL_CLASS(PinholeCamera)
 

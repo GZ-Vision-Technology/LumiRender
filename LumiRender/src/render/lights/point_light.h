@@ -10,7 +10,7 @@
 
 namespace luminous {
     inline namespace render {
-        class PointLight : BASE_CLASS(LightBase), public ICreator<PointLight> {
+        class PointLight : BASE_CLASS(LightBase), public Creator<PointLight> {
         public:
             REFL_CLASS(PointLight)
         private:
