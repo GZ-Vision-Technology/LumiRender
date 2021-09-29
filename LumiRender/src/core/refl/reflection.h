@@ -83,6 +83,8 @@ namespace luminous {
 
             static constexpr auto base_num = std::tuple_size_v<Bases>;
 
+            static_assert(base_num == 1, "Temporarily disable multiple inheritance");
+
             template<int idx>
             using Base = std::tuple_element_t<idx, Bases>;
 
@@ -106,7 +108,6 @@ namespace luminous {
 
             BaseBinder() = default;
 
-        CHECK_PLACEHOLDER
         };
 
         template<typename T>
@@ -126,7 +127,6 @@ namespace luminous {
             explicit BaseBinder(T &&t)
                     : T{std::move(t)} {}
 
-        CHECK_PLACEHOLDER
         };
 
 #define BASE_CLASS(...) public BaseBinder<__VA_ARGS__>

@@ -60,16 +60,12 @@ public:
 
 int main() {
 
-    auto u = UniformLightSampler();
-
-    LS a = LS(u);
-
 //    for_each_registered_member<LightSampler>([&](auto offset, auto name) {
 //        cout << "  " << name << "   " <<offset << endl;
 //    });
 
 
-//    for_each_all_registered_member<LS>([&](auto offset, auto name, auto ptr) {
+//    for_each_all_registered_member<D<int>>([&](auto offset, auto name, auto ptr) {
 //        cout << typeid(ptr).name() << "  " << name << "   " <<offset << endl;
 //    });
 

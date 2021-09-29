@@ -9,8 +9,23 @@
 
 #include "base_libs/lstd/lstd.h"
 #include "core/logging.h"
+
 namespace luminous {
     inline namespace render {
+        template<typename T>
+        class Creator {
+        public:
+            template<typename ...Args>
+            static T create(Args &&...args) {
+                return T(std::forward<Args>(args)...);
+            }
+
+            template<typename ...Args>
+            static T *create_ptr(Args &&...args) {
+                return new T(std::forward<Args>(args)...);
+            }
+        };
+
         namespace detail {
             template<typename Handle, typename Config, uint8_t current_index = 0>
             LM_NODISCARD Handle create(const Config &config) {

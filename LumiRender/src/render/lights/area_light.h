@@ -7,11 +7,10 @@
 
 #include "light_base.h"
 #include "render/include/config.h"
-#include "core/concepts.h"
 
 namespace luminous {
     inline namespace render {
-        class AreaLight : BASE_CLASS(LightBase), public Creator<AreaLight> {
+        class AreaLight : BASE_CLASS(LightBase) {
         public:
             REFL_CLASS(AreaLight)
 

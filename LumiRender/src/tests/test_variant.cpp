@@ -7,7 +7,6 @@
 #include <cstdlib>
 #include "util/clock.h"
 #include "iostream"
-using namespace lstd;
 using std::cout;
 using std::endl;
 
@@ -51,7 +50,7 @@ public:
     }
 };
 
-class CD : public lstd::Variant<C, D> {
+class CD : public luminous::lstd::Variant<C, D> {
 public:
     using Variant::Variant;
 

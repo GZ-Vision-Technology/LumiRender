@@ -7,12 +7,11 @@
 
 
 #include "film_base.h"
-#include "core/concepts.h"
 
 namespace luminous {
     inline namespace render {
 
-        class RGBFilm : BASE_CLASS(FilmBase), public Creator<RGBFilm> {
+        class RGBFilm : BASE_CLASS(FilmBase) {
         public:
             REFL_CLASS(RGBFilm)
 

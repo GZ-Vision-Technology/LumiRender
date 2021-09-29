@@ -13,7 +13,7 @@
 
 namespace luminous {
     inline namespace render {
-        class MatteMaterial : BASE_CLASS(), public Creator<MatteMaterial> {
+        class MatteMaterial : BASE_CLASS() {
         public:
             REFL_CLASS(MatteMaterial)
         private:

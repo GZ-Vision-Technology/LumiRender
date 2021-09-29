@@ -6,9 +6,7 @@
 #pragma once
 
 #include <utility>
-#include "core/concepts.h"
 #include "light_base.h"
-
 #include "base_libs/sampling/distribution.h"
 #include "render/textures/texture.h"
 
@@ -16,7 +14,7 @@ namespace luminous {
     inline namespace render {
         class Scene;
 
-        class Envmap : BASE_CLASS(LightBase), public Creator<Envmap> {
+        class Envmap : BASE_CLASS(LightBase) {
         public:
             REFL_CLASS(Envmap)
         private:

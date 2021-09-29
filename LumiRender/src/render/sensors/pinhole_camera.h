@@ -11,7 +11,7 @@
 namespace luminous {
     inline namespace render {
 
-        class PinholeCamera : BASE_CLASS(CameraBase), public Creator<PinholeCamera> {
+        class PinholeCamera : BASE_CLASS(CameraBase) {
         public:
             REFL_CLASS(PinholeCamera)
 
@@ -20,7 +20,7 @@ namespace luminous {
                              config.fov_y,
                              config.velocity) {})
 
-            PinholeCamera(const float4x4 m, float fov_y, float velocity);
+            PinholeCamera(float4x4 m, float fov_y, float velocity);
 
             XPU float generate_ray(const SensorSample &ss, Ray *ray);
 

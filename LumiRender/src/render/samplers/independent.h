@@ -13,7 +13,7 @@
 namespace luminous {
     inline namespace render {
 
-        class LCGSampler : BASE_CLASS(SamplerBase), public Creator<LCGSampler> {
+        class LCGSampler : BASE_CLASS(SamplerBase) {
         public:
             REFL_CLASS(LCGSampler)
         private:
@@ -34,7 +34,7 @@ namespace luminous {
                             })
         };
 
-        class PCGSampler : BASE_CLASS(SamplerBase), public Creator<PCGSampler> {
+        class PCGSampler : BASE_CLASS(SamplerBase) {
         public:
             REFL_CLASS(PCGSampler)
         private:

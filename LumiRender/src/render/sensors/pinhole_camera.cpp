@@ -11,7 +11,7 @@
 namespace luminous {
     inline namespace render {
 
-        PinholeCamera::PinholeCamera(const float4x4 m, float fov_y, float velocity)
+        PinholeCamera::PinholeCamera(float4x4 m, float fov_y, float velocity)
                 : BaseBinder<CameraBase>(m, fov_y, velocity) {}
 
         float PinholeCamera::generate_ray(const SensorSample &ss, Ray *ray) {

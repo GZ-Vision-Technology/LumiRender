@@ -8,7 +8,6 @@
 #include "base_libs/math/common.h"
 #include "render/lights/light_util.h"
 #include "core/backend/buffer_view.h"
-#include "core/concepts.h"
 #include "core/refl/factory.h"
 
 namespace luminous {
