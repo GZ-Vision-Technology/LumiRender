@@ -90,7 +90,7 @@ void test_upload() {
         cout << name << "  " << offset <<endl;
         TestSampler &tss = sp.at(0);
         ptr_t p = get_ptr_value(&tss, offset);
-        set_ptr_value(&tss, offset, PtrMapper::instance()->get_device_ptr(ptr_t(p)));
+        set_ptr_value(&tss, offset, PtrMapper::instance()->get_device_ptr(p));
 //        set_ptr_value(&tss, offset, ptr_t(0));
 
     });

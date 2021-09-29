@@ -34,5 +34,13 @@ namespace luminous {
             DCHECK(0)
             return 0;
         }
+
+        void PtrMapper::add_reverse_mapping(ptr_t device_ptr, ptr_t host_ptr) {
+            _device_to_host[device_ptr] = host_ptr;
+        }
+
+        ptr_t PtrMapper::get_host_ptr(ptr_t device_ptr) const {
+            return _device_to_host.at(device_ptr);
+        }
     }
 }
