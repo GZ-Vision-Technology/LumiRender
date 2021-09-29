@@ -5,7 +5,7 @@
 #include "ptr_mapper.h"
 
 namespace luminous {
-    inline namespace refl {
+    inline namespace core {
 
         PtrMapper *PtrMapper::_instance = nullptr;
 

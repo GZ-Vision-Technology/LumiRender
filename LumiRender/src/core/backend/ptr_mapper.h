@@ -11,7 +11,7 @@
 #include <map>
 
 namespace luminous {
-    inline namespace refl {
+    inline namespace core {
 
 
         class PtrMapper {
