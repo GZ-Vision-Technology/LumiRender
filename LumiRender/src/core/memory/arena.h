@@ -41,7 +41,7 @@ namespace luminous {
             bool _special{false};
         public:
             explicit MemoryBlock(bool special = false) noexcept
-            : _special(special) {}
+                    : _special(special) {}
 
             explicit MemoryBlock(size_t byte_size) noexcept {
                 //todo strange bug
@@ -54,7 +54,7 @@ namespace luminous {
 
             LM_NODISCARD bool special() const noexcept { return _special; }
 
-            LM_NODISCARD PtrInterval interval_used() noexcept {
+            LM_NODISCARD PtrInterval interval_used() const noexcept {
                 return build_interval(reinterpret_cast<ptr_t>(_address), _next_allocate_ptr);
             }
 
@@ -100,6 +100,9 @@ namespace luminous {
 
             template<typename T = std::byte>
             LM_NODISCARD T *address() { return reinterpret_cast<T *>(_address); }
+
+            template<typename T = std::byte>
+            LM_NODISCARD const T *address() const { return reinterpret_cast<const T *>(_address); }
 
             LM_NODISCARD std::byte *end_ptr() const { return _address + _capacity; }
         };
@@ -194,7 +197,7 @@ namespace luminous {
                 auto min_remain = block_size;
                 for_each_block([&](BlockIterator iter) {
                     if (iter->special()) {
-                        return ;
+                        return;
                     }
                     auto aligned_p = iter->aligned_ptr(alignment);
                     std::byte *next_allocate_ptr = aligned_p + byte_size;

@@ -12,6 +12,7 @@
 #include <utility>
 #include "dispatcher.h"
 #include "buffer_view.h"
+#include "base_libs/math/common.h"
 
 namespace luminous {
 
@@ -49,7 +50,12 @@ namespace luminous {
         }
 
         template<typename U = void *>
-        LM_NODISCARD auto ptr() const {
+        LM_NODISCARD U ptr() const {
+            return (U) (_impl == nullptr ? nullptr : _impl->ptr());
+        }
+
+        template<typename U = void *>
+        LM_NODISCARD U ptr() {
             return (U) (_impl == nullptr ? nullptr : _impl->ptr());
         }
 
@@ -80,7 +86,7 @@ namespace luminous {
 
         LM_NODISCARD size_t stride_in_bytes() const { return sizeof(value_type); }
 
-        LM_NODISCARD BufferView <value_type> view(size_t offset = 0, size_t count = -1) const {
+        LM_NODISCARD BufferView<value_type> view(size_t offset = 0, size_t count = -1) const {
             count = fix_count(offset, count, size());
             return BufferView<value_type>(data() + offset, count);
         }
@@ -102,6 +108,11 @@ namespace luminous {
 
         LM_NODISCARD size_t size_in_bytes() const {
             return _impl == nullptr ? 0 : _impl->size();
+        }
+
+        LM_NODISCARD PtrInterval ptr_interval() const {
+            return build_interval(ptr_t(ptr<const std::byte *>()),
+                                  ptr_t(ptr<const std::byte *>() + size_in_bytes()));
         }
 
         void download(std::remove_const_t<T> *host_ptr, size_t n_elements = -1, size_t offset = 0) {

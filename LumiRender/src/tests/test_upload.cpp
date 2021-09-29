@@ -7,6 +7,7 @@
 #include "core/backend/managed.h"
 #include "cpu/cpu_impl.h"
 #include "core/refl/reflection.h"
+#include "core/backend/ptr_mapper.h"
 
 using namespace std;
 using namespace luminous;
@@ -62,20 +63,42 @@ void test_upload() {
 
     sp.push_back(sampler);
 
-    size_t size = TestSampler::size_for_ptr();
+    size_t size = luminous::lstd::Sizer<TestSampler>::max_size;
 
-    arena.for_each_block([&](MemoryArena::ConstBlockIterator block) {
-        size += block->usage();
+    cout << size << endl;
+
+    arena.create_memory_block_and_focus(size);
+
+    auto ts = TestSampler::create();
+
+    cout << ts.next_2d().to_string() << endl;
+
+    size_t s = 0;
+    arena.for_each_block([&](MemoryArena::ConstBlockIterator iter){
+
+        s += iter->usage();
+        Buffer<std::byte>  buffer = device->create_buffer<std::byte>(s);
+
+        buffer.upload(iter->address());
+
+        PtrMapper::instance()->add_pair(iter->interval_used(),buffer.ptr_interval());
+
     });
 
-    cout << luminous::lstd::Sizer<TestSampler>::max_size << endl;
+
+    for_each_all_registered_member<TestSampler>([&](auto offset, auto name, auto ptr) {
+        cout << name << "  " << offset <<endl;
+        TestSampler &tss = sp.at(0);
+        ptr_t p = get_ptr_value(&tss, offset);
+        set_ptr_value(&tss, offset, PtrMapper::instance()->get_device_ptr(ptr_t(p)));
+//        set_ptr_value(&tss, offset, ptr_t(0));
+
+    });
+
+    cout << sp->next_2d().to_string() << endl;
+
 
 }
-
-template<typename ...Ts>
-struct VariantWrapper {
-
-};
 
 class A : BASE_CLASS() {
 public:
