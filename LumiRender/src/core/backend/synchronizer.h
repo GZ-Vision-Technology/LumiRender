@@ -8,6 +8,8 @@
 #include "managed.h"
 #include "ptr_mapper.h"
 #include "core/memory/arena.h"
+#include "core/refl/reflection.h"
+#include "base_libs/lstd/variant.h"
 
 namespace luminous {
     inline namespace core {
@@ -18,25 +20,41 @@ namespace luminous {
          * @tparam T
          */
         template<typename T>
-        class Synchronizer {
+        class Synchronizer : public Managed<T> {
         public:
             using element_type = T;
         private:
             MemoryBlock *_memory_block{};
-            Device * _device{};
-            Managed<T> _managed{_device};
         public:
             explicit Synchronizer(Device *device)
-                : _device(device) {}
+                    : Managed<T>(device) {}
 
-            void reserve(size_t n_element);
+            void init(int n_element = 1) {
+                static constexpr auto size = lstd::Sizer<T>::max_size;
+                _memory_block = get_arena().create_memory_block_and_focus(size * n_element);
+                Managed<T>::reserve(n_element);
+            }
 
-            void synchronize_to_device();
+            void remapping_ptr_field() {
 
-            void synchronize_to_host();
+            }
 
             void for_each_all_ptr_field() {
+                for (int i = 0; i < Managed<T>::size(); ++i) {
+                    for_each_all_registered_member<T>([&](size_t offset, char *name, auto ptr) {
 
+                    });
+                }
+            }
+
+            void synchronize_all_to_host() {
+
+                Managed<T>::synchronize_to_host();
+            }
+
+            void synchronize_all_to_device() {
+
+                Managed<T>::synchronize_to_device();
             }
         };
     }
