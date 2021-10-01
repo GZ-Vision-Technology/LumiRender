@@ -38,8 +38,8 @@ namespace luminous {
 
             template<typename U>
             void add_element(const U &config) {
-                auto elm = render::detail::create_ptr(config);
-                Managed<T>::push_back(T(elm));
+                auto elm = render::detail::create_ptr<T>(config);
+                Managed<T>::push_back(elm);
             }
 
             void remapping_ptr_field() {

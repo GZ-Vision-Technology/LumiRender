@@ -43,7 +43,7 @@ namespace luminous {
 
             template<typename Handle, typename Config, uint8_t current_index = 0>
             LM_NODISCARD Handle create_ptr(const Config &config) {
-                using Class = std::tuple_element_t<current_index, typename Handle::TypeTuple>;
+                using Class = std::remove_pointer_t<std::tuple_element_t<current_index, typename Handle::TypeTuple>>;
                 if (type_name<Class>() == config.type()) {
                     return Handle(Creator<Class>::create_ptr(config));
                 }
