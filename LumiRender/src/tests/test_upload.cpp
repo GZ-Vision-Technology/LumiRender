@@ -8,6 +8,7 @@
 #include "cpu/cpu_impl.h"
 #include "core/refl/reflection.h"
 #include "core/backend/ptr_mapper.h"
+#include "core/backend/synchronizer.h"
 
 using namespace std;
 using namespace luminous;

@@ -10,6 +10,7 @@
 #include "core/memory/arena.h"
 #include "core/refl/reflection.h"
 #include "base_libs/lstd/variant.h"
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace core {
@@ -33,6 +34,12 @@ namespace luminous {
                 static constexpr auto size = lstd::Sizer<T>::max_size;
                 _memory_block = get_arena().create_memory_block_and_focus(size * n_element);
                 Managed<T>::reserve(n_element);
+            }
+
+            template<typename U>
+            void add_element(const U &config) {
+                auto elm = render::detail::create_ptr(config);
+                Managed<T>::push_back(T(elm));
             }
 
             void remapping_ptr_field() {
