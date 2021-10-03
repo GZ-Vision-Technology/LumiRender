@@ -17,7 +17,7 @@ namespace luminous {
         using BaseClass = std::vector<T, AlTy>;
         using THost = T;
         using TDevice = U;
-    private:
+    protected:
         static_assert(!std::is_pointer_v<std::remove_pointer_t<THost>>, "THost can not be the secondary pointer!");
         Buffer<TDevice> _device_buffer{nullptr};
         Device *_device{};
@@ -59,13 +59,14 @@ namespace luminous {
             BaseClass::insert(BaseClass::cend(), v.cbegin(), v.cend());
         }
 
+        template<typename T = TDevice>
         void allocate_device(size_t size = 0) {
             size = size == 0 ? BaseClass::size() : size;
             if (size == 0) {
                 return;
             }
             void *ptr = _device->is_cpu() ? BaseClass::data() : nullptr;
-            _device_buffer = _device->create_buffer<TDevice>(size, ptr);
+            _device_buffer = _device->create_buffer<T>(size, ptr);
         }
 
         LM_NODISCARD BufferView<THost> obtain_accessible_buffer_view(size_t offset = 0, size_t count = -1) {

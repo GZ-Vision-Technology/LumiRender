@@ -30,10 +30,12 @@ namespace luminous {
             explicit Synchronizer(Device *device)
                     : Managed<T>(device) {}
 
-            void init(int n_element = 1) {
+            void init(size_t n_element = 1) {
                 static constexpr auto size = lstd::Sizer<T>::max_size;
                 _memory_block = get_arena().create_memory_block_and_focus(size * n_element);
                 Managed<T>::reserve(n_element);
+                allocate_device(size);
+//                Managed<T>::_device_buffer = Managed<T>::_device->create_buffer(size);
             }
 
             template<typename U>
@@ -49,7 +51,8 @@ namespace luminous {
             void for_each_all_ptr_field() {
                 for (int i = 0; i < Managed<T>::size(); ++i) {
                     for_each_all_registered_member<T>([&](size_t offset, char *name, auto ptr) {
-
+                        auto &elm = Managed<T>::at(i);
+//                        set_ptr_value(&elm, )
                     });
                 }
             }

@@ -101,6 +101,7 @@ void test_upload() {
 
     auto synchronizer = Synchronizer<TestSampler>(device.get());
     auto config = SamplerConfig();
+    synchronizer.init(1);
     config.set_full_type("PCGSampler");
     synchronizer.add_element(config);
 

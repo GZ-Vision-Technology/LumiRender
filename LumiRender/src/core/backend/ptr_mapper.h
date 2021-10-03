@@ -36,7 +36,7 @@ namespace luminous {
 
             void add_reverse_mapping(ptr_t device_ptr, ptr_t host_ptr);
 
-            ptr_t get_host_ptr(ptr_t device_ptr) const;
+            LM_NODISCARD ptr_t get_host_ptr(ptr_t device_ptr) const;
 
             template<typename T>
             LM_NODISCARD ptr_t get_device_ptr(T host_ptr) const {

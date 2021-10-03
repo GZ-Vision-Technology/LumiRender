@@ -91,6 +91,11 @@ namespace luminous {
             return BufferView<value_type>(data() + offset, count);
         }
 
+        template<typename T>
+        LM_NODISCARD Buffer<T> cast() {
+            return Buffer<T>(std::move(_impl));
+        }
+
         template<typename U = void *>
         auto address(size_t offset = 0) const {
             DCHECK(valid());
