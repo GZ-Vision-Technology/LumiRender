@@ -213,7 +213,7 @@ namespace luminous {
             MemoryBlock * create_memory_block_and_focus(size_t size_in_bytes) {
                 _memory_blocks.emplace_back(true);
                 MemoryBlock &block = _memory_blocks.back();
-                block.alloc(size_in_bytes);
+                block.alloc(0);
                 _focus_block = &block;
                 return _focus_block;
             }

@@ -37,7 +37,7 @@ namespace luminous {
                 _size_in_bytes = size * n_element;
                 _memory_block = get_arena().create_memory_block_and_focus(_size_in_bytes);
                 BaseClass::reserve(n_element);
-                allocate_device(_size_in_bytes);
+                BaseClass::allocate_device(_size_in_bytes);
                 PtrMapper::instance()->add_pair(_memory_block->interval_used(), BaseClass::device_interval());
             }
 
@@ -64,7 +64,7 @@ namespace luminous {
 
             void synchronize_all_to_device() {
                 remapping_ptr_to_device();
-//                BaseClass::_device_buffer.upload(_memory_block->template address<std::byte>(), _size_in_bytes);
+                BaseClass::_device_buffer.upload(_memory_block->template address<std::byte>(), _size_in_bytes);
             }
         };
     }
