@@ -58,55 +58,16 @@ void test_upload() {
     auto device = luminous::create_cpu_device();
     auto &arena = get_arena();
 
-    Managed<TestSampler> sp{device.get()};
-    sp.reserve(1);
-    auto sampler = TestSampler::create();
-
-    sp.push_back(sampler);
-
-    size_t size = luminous::lstd::Sizer<TestSampler>::max_size;
-
-    cout << size << endl;
-
-    arena.create_memory_block_and_focus(size);
-
-    auto ts = TestSampler::create();
-
-    cout << ts.next_2d().to_string() << endl;
-
-    size_t s = 0;
-    arena.for_each_block([&](MemoryArena::ConstBlockIterator iter){
-
-        s += iter->usage();
-        Buffer<std::byte>  buffer = device->create_buffer<std::byte>(s);
-
-        buffer.upload(iter->address());
-
-        PtrMapper::instance()->add_pair(iter->interval_used(),buffer.ptr_interval());
-
-    });
-
-
-    for_each_all_registered_member<TestSampler>([&](auto offset, auto name, auto ptr) {
-        cout << name << "  " << offset <<endl;
-        TestSampler &tss = sp.at(0);
-        ptr_t p = get_ptr_value(&tss, offset);
-        set_ptr_value(&tss, offset, PtrMapper::instance()->get_device_ptr(p));
-//        set_ptr_value(&tss, offset, ptr_t(0));
-
-    });
-
-    cout << sp->next_2d().to_string() << endl;
-
-
     auto synchronizer = Synchronizer<TestSampler>(device.get());
     auto config = SamplerConfig();
     synchronizer.init(1);
     config.set_full_type("PCGSampler");
     synchronizer.add_element(config);
+//
+    synchronizer.synchronize_all_to_device();
 
-    cout << sp->next_2d().to_string() << endl;
-
+    cout << synchronizer->next_1d() << endl;
+    cout << synchronizer->next_2d().to_string() << endl;
 }
 
 class A : BASE_CLASS() {

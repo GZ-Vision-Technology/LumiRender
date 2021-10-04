@@ -23,7 +23,7 @@ namespace luminous {
 
             template<typename ...Args>
             static T *create_ptr(Args &&...args) {
-                return new T(std::forward<Args>(args)...);
+                return get_arena().template create<T>(std::forward<Args>(args)...);
             }
         };
 

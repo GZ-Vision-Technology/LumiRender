@@ -27,7 +27,7 @@ namespace luminous {
                 PtrInterval host_interval = val.first;
                 PtrInterval device_interval = val.second;
                 if (host_interval.contains(host_ptr)) {
-                    uint64_t offset = host_ptr - device_interval.begin;
+                    uint64_t offset = host_ptr - host_interval.begin;
                     return device_interval.begin + offset;
                 }
             }

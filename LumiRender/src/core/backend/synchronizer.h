@@ -21,50 +21,50 @@ namespace luminous {
          * @tparam T
          */
         template<typename T>
-        class Synchronizer : public Managed<T> {
+        class Synchronizer : public Managed<T, std::byte> {
         public:
             using element_type = T;
+            using BaseClass = Managed<T, std::byte>;
         private:
             MemoryBlock *_memory_block{};
+            size_t _size_in_bytes{};
         public:
             explicit Synchronizer(Device *device)
-                    : Managed<T>(device) {}
+                    : BaseClass(device) {}
 
             void init(size_t n_element = 1) {
                 static constexpr auto size = lstd::Sizer<T>::max_size;
-                _memory_block = get_arena().create_memory_block_and_focus(size * n_element);
-                Managed<T>::reserve(n_element);
-                allocate_device(size);
-//                Managed<T>::_device_buffer = Managed<T>::_device->create_buffer(size);
+                _size_in_bytes = size * n_element;
+                _memory_block = get_arena().create_memory_block_and_focus(_size_in_bytes);
+                BaseClass::reserve(n_element);
+                allocate_device(_size_in_bytes);
+                PtrMapper::instance()->add_pair(_memory_block->interval_used(), BaseClass::device_interval());
             }
 
             template<typename U>
             void add_element(const U &config) {
                 auto elm = render::detail::create_ptr<T>(config);
-                Managed<T>::push_back(elm);
+                BaseClass::push_back(elm);
             }
 
-            void remapping_ptr_field() {
-
-            }
-
-            void for_each_all_ptr_field() {
-                for (int i = 0; i < Managed<T>::size(); ++i) {
-                    for_each_all_registered_member<T>([&](size_t offset, char *name, auto ptr) {
-                        auto &elm = Managed<T>::at(i);
-//                        set_ptr_value(&elm, )
+            void remapping_ptr_to_device() {
+                for (int i = 0; i < BaseClass::size(); ++i) {
+                    for_each_all_registered_member<T>([&](size_t offset, const char *name, auto ptr) {
+                        auto &elm = BaseClass::at(i);
+                        ptr_t host_ptr = get_ptr_value(&elm, offset);
+                        auto device_ptr = PtrMapper::instance()->get_device_ptr(host_ptr);
+                        set_ptr_value(&elm, offset, device_ptr);
                     });
                 }
             }
 
             void synchronize_all_to_host() {
 
-                Managed<T>::synchronize_to_host();
             }
 
             void synchronize_all_to_device() {
-
-                Managed<T>::synchronize_to_device();
+                remapping_ptr_to_device();
+//                BaseClass::_device_buffer.upload(_memory_block->template address<std::byte>(), _size_in_bytes);
             }
         };
     }

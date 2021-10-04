@@ -59,14 +59,22 @@ namespace luminous {
             BaseClass::insert(BaseClass::cend(), v.cbegin(), v.cend());
         }
 
-        template<typename T = TDevice>
+        LM_NODISCARD PtrInterval host_interval() const {
+            auto origin = reinterpret_cast<ptr_t>(BaseClass::data());
+            return build_interval(origin, origin + BaseClass::capacity() * sizeof(THost));
+        }
+
+        LM_NODISCARD PtrInterval device_interval() const {
+            return _device_buffer.ptr_interval();
+        }
+
         void allocate_device(size_t size = 0) {
             size = size == 0 ? BaseClass::size() : size;
             if (size == 0) {
                 return;
             }
             void *ptr = _device->is_cpu() ? BaseClass::data() : nullptr;
-            _device_buffer = _device->create_buffer<T>(size, ptr);
+            _device_buffer = _device->create_buffer<TDevice>(size, ptr);
         }
 
         LM_NODISCARD BufferView<THost> obtain_accessible_buffer_view(size_t offset = 0, size_t count = -1) {
