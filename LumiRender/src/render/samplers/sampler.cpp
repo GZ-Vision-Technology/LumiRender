@@ -38,5 +38,34 @@ namespace luminous {
             return detail::create<Sampler>(config);
         })
 
+
+        int SamplerP::spp() const {
+            LUMINOUS_VAR_PTR_DISPATCH(spp)
+        }
+
+        SensorSample SamplerP::sensor_sample(uint2 p_raster) {
+            SensorSample ss;
+            ss.p_film = make_float2(p_raster) + next_2d();
+            ss.p_lens = next_2d();
+            ss.time = next_1d();
+            return ss;
+        }
+
+        void SamplerP::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
+            LUMINOUS_VAR_PTR_DISPATCH(start_pixel_sample, pixel, sample_index, dimension)
+        }
+
+        float SamplerP::next_1d() {
+            LUMINOUS_VAR_PTR_DISPATCH(next_1d)
+        }
+
+        float2 SamplerP::next_2d() {
+            LUMINOUS_VAR_PTR_DISPATCH(next_2d)
+        }
+
+        CPU_ONLY(SamplerP SamplerP::create(const SamplerConfig &config) {
+            return detail::create_ptr<SamplerP>(config);
+        })
+
     }
 }
