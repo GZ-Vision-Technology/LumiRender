@@ -9,7 +9,7 @@
 
 #include "base_libs/lstd/lstd.h"
 #include "core/logging.h"
-#include "core/memory/arena.h"
+#include "core/memory/allocator.h"
 
 namespace luminous {
     inline namespace render {
