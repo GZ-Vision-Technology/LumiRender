@@ -37,11 +37,8 @@ namespace luminous {
             std::byte *_address{};
             ptr_t _next_allocate_ptr{};
             size_t _capacity{};
-            //
-            bool _special{false};
         public:
-            explicit MemoryBlock(bool special = false) noexcept
-                    : _special(special) {}
+            explicit MemoryBlock() noexcept = default;
 
             explicit MemoryBlock(size_t byte_size) noexcept {
                 //todo strange bug
@@ -51,8 +48,6 @@ namespace luminous {
             virtual ~MemoryBlock() noexcept {
                 aligned_free(_address);
             }
-
-            LM_NODISCARD bool special() const noexcept { return _special; }
 
             LM_NODISCARD PtrInterval interval_used() const noexcept {
                 return build_interval(reinterpret_cast<ptr_t>(_address), _next_allocate_ptr);
@@ -115,7 +110,6 @@ namespace luminous {
             using ConstBlockIterator = BlockList::const_iterator;
         private:
             BlockList _memory_blocks{};
-            MemoryBlock *_focus_block{nullptr};
 
         public:
             MemoryArena() noexcept = default;
@@ -126,7 +120,6 @@ namespace luminous {
 
             void clear() {
                 _memory_blocks.clear();
-                _focus_block = nullptr;
             }
 
             ~MemoryArena() noexcept = default;
@@ -190,15 +183,9 @@ namespace luminous {
             }
 
             LM_NODISCARD MemoryBlock *find_suitable_blocks(size_t byte_size, size_t alignment) {
-                if (_focus_block) {
-                    return _focus_block;
-                }
                 MemoryBlock *best_block = nullptr;
                 auto min_remain = block_size;
                 for_each_block([&](BlockIterator iter) {
-                    if (iter->special()) {
-                        return;
-                    }
                     auto aligned_p = iter->aligned_ptr(alignment);
                     std::byte *next_allocate_ptr = aligned_p + byte_size;
                     int64_t remain = iter->end_ptr() - next_allocate_ptr;
@@ -208,18 +195,6 @@ namespace luminous {
                     }
                 });
                 return best_block;
-            }
-
-            MemoryBlock * create_memory_block_and_focus(size_t size_in_bytes) {
-                _memory_blocks.emplace_back(true);
-                MemoryBlock &block = _memory_blocks.back();
-                block.alloc(0);
-                _focus_block = &block;
-                return _focus_block;
-            }
-
-            void cancel_focus() {
-                _focus_block = nullptr;
             }
 
             template<typename T = std::byte, size_t alignment = alignof(T)>

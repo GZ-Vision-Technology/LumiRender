@@ -35,7 +35,6 @@ namespace luminous {
             void init(size_t n_element = 1) {
                 static constexpr auto size = lstd::Sizer<T>::max_size;
                 _size_in_bytes = size * n_element;
-                _memory_block = get_arena().create_memory_block_and_focus(_size_in_bytes);
                 BaseClass::reserve(n_element);
                 BaseClass::allocate_device(_size_in_bytes);
                 PtrMapper::instance()->add_pair(_memory_block->interval_used(), BaseClass::device_interval());
