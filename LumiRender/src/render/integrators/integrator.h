@@ -8,7 +8,7 @@
 #include "core/concepts.h"
 #include "render/scene/scene_graph.h"
 #include "render/sensors/sensor.h"
-#include "core/backend/managed.h"
+#include "core/backend/synchronizer.h"
 #include "render/samplers/sampler.h"
 
 // todo compile error
@@ -29,6 +29,7 @@ namespace luminous {
             Context *_context{};
             Managed<Sampler, Sampler> _sampler{_device};
             Managed<Sensor, Sensor> _camera{_device};
+            Synchronizer<SamplerP> _sampler_p{_device};
         public:
             Integrator(Device *device, Context *context)
                     : _device(device),

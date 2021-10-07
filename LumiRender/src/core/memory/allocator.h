@@ -84,5 +84,18 @@ namespace luminous {
                 return static_cast<size_t>(-1) / sizeof(Ty);
             }
         };
+
+        class BlockGuard {
+        public:
+            explicit BlockGuard(MemoryBlock *memory_block) {
+                get_arena().reset_external_block(memory_block);
+            }
+
+            ~BlockGuard() {
+                get_arena().reset_external_block();
+            }
+        };
+
+#define USE_BLOCK(block) BlockGuard __block_guard((block));
     }
 }

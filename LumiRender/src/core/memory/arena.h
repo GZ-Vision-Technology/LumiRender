@@ -46,8 +46,19 @@ namespace luminous {
             }
 
             virtual ~MemoryBlock() noexcept {
-                aligned_free(_address);
+                clear();
             }
+
+            void clear() noexcept {
+                if (_address) {
+                    aligned_free(_address);
+                }
+                _address = nullptr;
+                _next_allocate_ptr = 0;
+                _capacity = 0;
+            }
+
+            LM_NODISCARD bool valid() const noexcept { return bool(_address); }
 
             LM_NODISCARD PtrInterval interval_used() const noexcept {
                 return build_interval(reinterpret_cast<ptr_t>(_address), _next_allocate_ptr);
@@ -104,13 +115,12 @@ namespace luminous {
 
         class MemoryArena : public Noncopyable {
         public:
-
             using BlockList = std::list<MemoryBlock>;
             using BlockIterator = BlockList::iterator;
             using ConstBlockIterator = BlockList::const_iterator;
         private:
             BlockList _memory_blocks{};
-
+            MemoryBlock *_external_block{nullptr};
         public:
             MemoryArena() noexcept = default;
 
@@ -120,6 +130,10 @@ namespace luminous {
 
             void clear() {
                 _memory_blocks.clear();
+            }
+
+            void reset_external_block(MemoryBlock *memory_block = nullptr) noexcept {
+                _external_block = memory_block;
             }
 
             ~MemoryArena() noexcept = default;
@@ -183,6 +197,9 @@ namespace luminous {
             }
 
             LM_NODISCARD MemoryBlock *find_suitable_blocks(size_t byte_size, size_t alignment) {
+                if (_external_block) {
+                    return _external_block;
+                }
                 MemoryBlock *best_block = nullptr;
                 auto min_remain = block_size;
                 for_each_block([&](BlockIterator iter) {

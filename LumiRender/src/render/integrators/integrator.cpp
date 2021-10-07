@@ -23,6 +23,10 @@ namespace luminous {
             _scene->init(scene_graph);
             _camera.push_back(Sensor::create(scene_graph->sensor_config));
             _sampler.push_back(Sampler::create(scene_graph->sampler_config));
+
+            _sampler_p.init(1);
+            _sampler_p.add_element(scene_graph->sampler_config);
+
             init_on_device();
             LUMINOUS_INFO(get_arena().description());
         }
