@@ -36,7 +36,7 @@ namespace luminous {
                 static constexpr auto size = lstd::Sizer<T>::max_size;
                 _size_in_bytes = size * n_element;
                 USE_BLOCK(&_memory_block);
-                _memory_block.alloc(0);
+                _memory_block.allocate(_size_in_bytes);
                 BaseClass::reserve(n_element);
                 BaseClass::allocate_device(_size_in_bytes);
                 PtrMapper::instance()->add_pair(_memory_block.interval_used(), BaseClass::device_interval());
@@ -44,6 +44,7 @@ namespace luminous {
 
             template<typename U>
             void add_element(const U &config) {
+                USE_BLOCK(&_memory_block);
                 auto elm = render::detail::create_ptr<T>(config);
                 BaseClass::push_back(elm);
             }

@@ -42,7 +42,7 @@ namespace luminous {
 
             explicit MemoryBlock(size_t byte_size) noexcept {
                 //todo strange bug
-                _address = alloc<std::byte>(byte_size);
+                _address = allocate_and_use<std::byte>(byte_size);
             }
 
             virtual ~MemoryBlock() noexcept {
@@ -64,8 +64,19 @@ namespace luminous {
                 return build_interval(reinterpret_cast<ptr_t>(_address), _next_allocate_ptr);
             }
 
+            void *allocate(size_t byte_size) noexcept {
+                _capacity = byte_size;
+                _address = reinterpret_cast<std::byte *>(aligned_alloc(alignof(std::byte), byte_size));
+                if (_address == nullptr) {
+                    LUMINOUS_ERROR(
+                            string_printf("Failed to allocate memory: size = %u",byte_size));
+                }
+                _next_allocate_ptr = reinterpret_cast<ptr_t>(_address);
+                return _address;
+            }
+
             template<typename T = std::byte, size_t alignment = alignof(T)>
-            T *alloc(size_t byte_size) noexcept {
+            T *allocate_and_use(size_t byte_size) noexcept {
                 static constexpr auto alloc_alignment = std::max(alignment, sizeof(void *));
                 static_assert((alloc_alignment & (alloc_alignment - 1u)) == 0, "Alignment should be power of two.");
                 auto alloc_size = (std::max(block_size, byte_size) + alloc_alignment - 1u) / alloc_alignment *
@@ -223,7 +234,7 @@ namespace luminous {
                 if (block == nullptr) {
                     _memory_blocks.emplace_back();
                     MemoryBlock &back = _memory_blocks.back();
-                    return back.template alloc<T>(byte_size);
+                    return back.template allocate_and_use<T>(byte_size);
                 } else {
                     return block->template use<T>(byte_size);
                 }
