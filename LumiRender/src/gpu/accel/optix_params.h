@@ -21,6 +21,7 @@ namespace luminous {
             float rr_threshold;
             Sensor *camera;
             const Sampler *sampler;
+            SamplerP *sampler_p;
         };
     }
 }

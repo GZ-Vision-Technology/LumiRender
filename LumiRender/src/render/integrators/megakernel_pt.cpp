@@ -15,6 +15,7 @@ namespace luminous {
             LaunchParams lp{};
 
             lp.sampler = _sampler.device_data();
+            lp.sampler_p = reinterpret_cast<luminous::render::SamplerP *>(_sampler_p.device_data());
             lp.camera = _camera.device_data();
             lp.frame_index = 0u;
             lp.max_depth = _max_depth;
