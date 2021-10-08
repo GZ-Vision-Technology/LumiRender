@@ -39,7 +39,6 @@ namespace luminous {
             {
                 // texture data
                 _textures.allocate_device();
-//                _materials.allocate_device();
             }
         }
 

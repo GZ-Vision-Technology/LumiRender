@@ -122,6 +122,15 @@ namespace luminous {
             clear_host();
         }
 
+        void shrink_to_fit() {
+#ifndef NDEBUG
+            if (BaseClass::size() != BaseClass::capacity()) {
+                volatile int a = 0;
+            }
+#endif
+            BaseClass::shrink_to_fit();
+        }
+
         void clear_host() {
             BaseClass::clear();
         }

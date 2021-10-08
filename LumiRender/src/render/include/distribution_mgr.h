@@ -49,7 +49,7 @@ namespace luminous {
             Managed<Distribution1D> distributions{_device};
             Managed<Distribution2D> distribution2ds{_device};
 
-            DistributionMgr(Device *device) : _device(device) {}
+            explicit DistributionMgr(Device *device) : _device(device) {}
 
             void add_distribution(const Distribution1DBuilder &builder, bool need_count = false);
 
