@@ -4,7 +4,6 @@
 
 #include "render/scene/scene_data.h"
 #include "ai_material.h"
-#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {

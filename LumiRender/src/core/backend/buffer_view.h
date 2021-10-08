@@ -34,6 +34,12 @@ namespace luminous {
 
         NDSC_XPU T *ptr() { return _ptr; }
 
+        template<typename target_type>
+        NDSC_XPU BufferView<target_type> cast() const {
+            size_t num = _num * float(sizeof(value_type)) / sizeof(target_type);
+            return BufferView<target_type>(reinterpret_cast<target_type *>(_ptr), num);
+        }
+
         NDSC_XPU iterator begin() { return _ptr; }
 
         NDSC_XPU iterator end() { return _ptr + _num; }
@@ -44,7 +50,7 @@ namespace luminous {
 
         template<typename Index>
         NDSC_XPU T &operator[](Index i) {
-            EXE_DEBUG(i >= size(), printf("ptr = %p, size:%d,index:%d\n",_ptr, int(size()), int(i)));
+            EXE_DEBUG(i >= size(), printf("ptr = %p, size:%d,index:%d\n", _ptr, int(size()), int(i)));
 #ifndef NDEBUG
             if (i >= size()) {
                 volatile int a = 0;
@@ -56,7 +62,7 @@ namespace luminous {
 
         template<typename Index>
         NDSC_XPU const T &operator[](Index i) const {
-            EXE_DEBUG(i >= size(), printf("ptr = %p, size:%d,index:%d\n",_ptr, int(size()), int(i)));
+            EXE_DEBUG(i >= size(), printf("ptr = %p, size:%d,index:%d\n", _ptr, int(size()), int(i)));
 #ifndef NDEBUG
             if (i >= size()) {
                 volatile int a = 0;

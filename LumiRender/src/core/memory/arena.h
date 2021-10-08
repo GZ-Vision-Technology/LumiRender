@@ -64,6 +64,12 @@ namespace luminous {
                 return build_interval(reinterpret_cast<ptr_t>(_address), _next_allocate_ptr);
             }
 
+            LM_NODISCARD PtrInterval interval_allocated() const noexcept {
+                ptr_t begin = reinterpret_cast<ptr_t>(_address);
+                ptr_t end = begin + capacity();
+                return build_interval(begin, end);
+            }
+
             void *allocate(size_t byte_size) noexcept {
                 _capacity = byte_size;
                 _address = reinterpret_cast<std::byte *>(aligned_alloc(alignof(std::byte), byte_size));

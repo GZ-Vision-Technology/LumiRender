@@ -64,8 +64,7 @@ namespace luminous {
             Managed<Texture> _textures{_device};
 
             // material data, the last element is light material, black diffuse
-            Managed<Material> _materials{_device};
-//            Synchronizer<Material> _materials{_device};
+            Synchronizer<Material> _materials{_device};
 
             // prepare for texture out of core render
             vector<TextureConfig> _tex_configs;

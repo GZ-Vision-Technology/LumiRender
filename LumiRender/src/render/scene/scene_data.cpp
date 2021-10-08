@@ -5,6 +5,7 @@
 #include "scene_data.h"
 #include "render/materials/material.h"
 #include "render/light_samplers/light_sampler.h"
+#include "render/textures/texture.h"
 
 namespace luminous {
     inline namespace render {

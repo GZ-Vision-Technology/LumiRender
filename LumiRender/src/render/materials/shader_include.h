@@ -7,7 +7,7 @@
 
 // this file just for cuda shader include
 #if defined(__CUDACC__)
-    #include "material.h"
+    #include "material.cpp"
     #include "matte.cpp"
     #include "ai_material.cpp"
 #else

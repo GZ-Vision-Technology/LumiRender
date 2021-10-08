@@ -39,7 +39,7 @@ namespace luminous {
                 _memory_block.allocate(_size_in_bytes);
                 BaseClass::reserve(n_element);
                 BaseClass::allocate_device(_size_in_bytes);
-                PtrMapper::instance()->add_pair(_memory_block.interval_used(), BaseClass::device_interval());
+                PtrMapper::instance()->add_pair(_memory_block.interval_allocated(), BaseClass::device_interval());
             }
 
             template<typename U>
@@ -47,6 +47,16 @@ namespace luminous {
                 USE_BLOCK(&_memory_block);
                 auto elm = render::detail::create_ptr<T>(config);
                 BaseClass::push_back(elm);
+            }
+
+            template<typename T = element_type>
+            LM_NODISCARD BufferView<T> device_buffer_view(size_t offset = 0, size_t count = -1) const {
+                return this->_device_buffer.view(offset, count).template cast<T>();
+            }
+
+            template<typename T = element_type>
+            LM_NODISCARD BufferView<const T> const_device_buffer_view(size_t offset = 0, size_t count = -1) const {
+                return this->_device_buffer.view(offset, count).template cast<const T>();
             }
 
             void remapping_ptr_to_device() {

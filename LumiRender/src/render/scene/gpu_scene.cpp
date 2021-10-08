@@ -39,7 +39,7 @@ namespace luminous {
             {
                 // texture data
                 _textures.allocate_device();
-                _materials.allocate_device();
+//                _materials.allocate_device();
             }
         }
 
@@ -58,8 +58,8 @@ namespace luminous {
             _scene_data->distributions = this->_distribution_mgr.distributions.const_device_buffer_view();
             _scene_data->distribution2ds = this->_distribution_mgr.distribution2ds.const_device_buffer_view();
 
-            _scene_data->textures = this->_textures.const_device_buffer_view();
             _scene_data->materials = this->_materials.const_device_buffer_view();
+            _scene_data->textures = this->_textures.const_device_buffer_view();
         }
 
         void GPUScene::synchronize_to_gpu() {
@@ -88,7 +88,7 @@ namespace luminous {
             {
                 // texture data
                 _textures.synchronize_to_device();
-                _materials.synchronize_to_device();
+                _materials.synchronize_all_to_device();
             }
         }
 

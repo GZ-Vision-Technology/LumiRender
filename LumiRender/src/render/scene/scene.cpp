@@ -5,6 +5,8 @@
 #include "scene.h"
 #include "util/stats.h"
 #include "base_libs/lstd/common.h"
+#include "render/materials/matte.h"
+#include "render/materials/ai_material.h"
 
 namespace luminous {
     inline namespace render {
@@ -215,9 +217,9 @@ namespace luminous {
         }
 
         void Scene::init_materials(const SP<SceneGraph> &scene_graph) {
-            _materials.reserve(scene_graph->material_configs.size());
+            _materials.init(scene_graph->material_configs.size());
             for (const auto &mat_config : scene_graph->material_configs) {
-                _materials.push_back(Material::create(mat_config));
+                _materials.add_element(mat_config);
             }
         }
 
