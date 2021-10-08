@@ -39,7 +39,6 @@ GLOBAL __raygen__rg() {
     float weight = camera->generate_ray(ss, &ray);
     uint spp = sampler.spp();
     Spectrum L(0.f);
-    printf("%f \n", params.sampler_p->next_1d());
     for (int i = 0; i < spp; ++i) {
         L += Li(ray, params.traversable_handle, sampler,
                 params.max_depth, params.rr_threshold, debug);

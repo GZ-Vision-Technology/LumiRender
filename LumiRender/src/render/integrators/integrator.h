@@ -29,7 +29,6 @@ namespace luminous {
             Context *_context{};
             Managed<Sampler, Sampler> _sampler{_device};
             Managed<Sensor, Sensor> _camera{_device};
-            Synchronizer<SamplerP> _sampler_p{_device};
         public:
             Integrator(Device *device, Context *context)
                     : _device(device),
@@ -40,11 +39,11 @@ namespace luminous {
             virtual void init(const std::shared_ptr<SceneGraph> &scene_graph);
 
             virtual void init_on_device() {
-                _camera.allocate_device( 1);
-                _sampler.allocate_device( 1);
+                _camera.allocate_device(1);
+                _sampler.allocate_device(1);
             }
 
-            LM_NODISCARD const SceneData * scene_data() const;
+            LM_NODISCARD const SceneData *scene_data() const;
 
             LM_NODISCARD virtual int spp() const { return _sampler->spp(); }
 
@@ -63,7 +62,7 @@ namespace luminous {
 
         public:
             GPUIntegrator(Device *device, Context *context)
-            : Integrator(device, context) {}
+                    : Integrator(device, context) {}
         };
     }
 }
