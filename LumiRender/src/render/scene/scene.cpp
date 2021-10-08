@@ -9,6 +9,18 @@
 namespace luminous {
     inline namespace render {
 
+        void Scene::reserve_geometry(const SP<SceneGraph> &scene_graph) {
+            _positions.reserve(scene_graph->position_num);
+            _meshes.reserve(scene_graph->mesh_num);
+            _tex_coords.reserve(scene_graph->tex_coords_num);
+            _normals.reserve(scene_graph->normal_num);
+            _triangles.reserve(scene_graph->tri_num);
+
+            _transforms.reserve(scene_graph->model_list.size());
+            _inst_to_mesh_idx.reserve(scene_graph->instance_num);
+            _inst_to_transform_idx.reserve(scene_graph->instance_num);
+        }
+
         void Scene::append_light_material(vector<MaterialConfig> &material_configs) {
             TextureConfig tc;
             tc.set_full_type("ConstantTexture");
@@ -94,6 +106,7 @@ namespace luminous {
             index_t tri_offset = 0u;
             vector<TextureConfig> tex_configs;
             index_t material_count = scene_graph->material_configs.size();
+            reserve_geometry(scene_graph);
             for (const SP<const Model> &model : scene_graph->model_list) {
                 int64_t model_mat_idx = lstd::find_index_if(scene_graph->material_configs,
                                                             [&](const MaterialConfig &val) {
@@ -180,6 +193,7 @@ namespace luminous {
 
         void Scene::preload_textures(const SP<SceneGraph> &scene_graph) {
             TASK_TAG("preload_textures")
+            _textures.reserve(_tex_configs.size());
             for (auto &tc : _tex_configs) {
                 if (tc.type() == type_name<ImageTexture>() && !tc.fn.empty()) {
                     if (std::filesystem::path(tc.fn).is_relative()) {
@@ -201,6 +215,7 @@ namespace luminous {
         }
 
         void Scene::init_materials(const SP<SceneGraph> &scene_graph) {
+            _materials.reserve(scene_graph->material_configs.size());
             for (const auto &mat_config : scene_graph->material_configs) {
                 _materials.push_back(Material::create(mat_config));
             }

@@ -24,6 +24,7 @@ namespace luminous {
             if (config.type() == "model") {
                 config.fn = (_context->scene_path() / config.fn).string();
                 auto model = std::make_shared<Model>(config);
+                update_counter(*model.get());
                 return model;
             } else if (config.type() == "quad") {
                 auto model = std::make_shared<Model>();
@@ -52,6 +53,7 @@ namespace luminous {
                 auto mesh = std::make_shared<Mesh>(move(P),move(N), move(UV), move(triangles), aabb);
                 model->meshes.push_back(mesh);
                 model->custom_material_name = config.material_name;
+                update_counter(*model.get());
                 return model;
             } else {
                 LUMINOUS_ERROR("unknown shape type !")
@@ -69,6 +71,7 @@ namespace luminous {
             uint idx = _key_to_idx[key];
             Transform o2w = config.o2w.create();
             auto instance = std::make_shared<ModelInstance>(idx, o2w, config.name.c_str(), config.emission);
+            instance_num += model_list[instance->model_idx]->meshes.size();
             instance_list.push_back(instance);
         }
 

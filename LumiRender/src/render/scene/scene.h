@@ -86,6 +86,8 @@ namespace luminous {
 
             virtual void clear();
 
+            virtual void reserve_geometry(const SP<SceneGraph> &scene_graph);
+
             virtual void fill_scene_data() = 0;
 
             LM_NODISCARD const SceneData *scene_data() const { return _scene_data.get(); }

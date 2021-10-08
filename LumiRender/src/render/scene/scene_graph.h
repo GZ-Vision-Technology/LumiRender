@@ -30,9 +30,26 @@ namespace luminous {
             vector <TextureConfig> tex_configs;
             vector <MaterialConfig> material_configs;
             OutputConfig output_config;
+
+            size_t mesh_num{};
+            size_t position_num{};
+            size_t tri_num{};
+            size_t normal_num{};
+            size_t tex_coords_num{};
+            size_t instance_num{};
         private:
             bool is_contain(const string &key) {
                 return _key_to_idx.find(key) != _key_to_idx.end();
+            }
+
+            void update_counter(const Model &model) {
+                mesh_num += model.meshes.size();
+                for (auto &mesh : model.meshes) {
+                    position_num += mesh->positions.size();
+                    normal_num += mesh->normals.size();
+                    tex_coords_num += mesh->tex_coords.size();
+                    tri_num += mesh->triangles.size();
+                }
             }
 
         public:
