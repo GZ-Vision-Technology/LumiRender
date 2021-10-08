@@ -56,7 +56,7 @@ namespace luminous {
             Managed<TriangleHandle> _triangles{_device};
 
             // light data
-            Managed<Light> _lights{_device};
+            Synchronizer<Light> _lights{_device};
             Managed<LightSampler> _light_sampler{_device};
             DistributionMgr _distribution_mgr{_device};
 

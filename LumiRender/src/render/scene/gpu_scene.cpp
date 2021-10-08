@@ -32,7 +32,7 @@ namespace luminous {
             }
             {
                 // light data
-                _lights.allocate_device();
+//                _lights.allocate_device();
                 _distribution_mgr.init_on_device(_device);
                 _light_sampler.allocate_device();
             }
@@ -78,10 +78,10 @@ namespace luminous {
             }
             {
                 // light data
-                _lights.synchronize_to_device();
+                _lights.synchronize_all_to_device();
                 _distribution_mgr.synchronize_to_device();
-                _light_sampler->set_lights(_lights.device_buffer_view());
-                _light_sampler->set_infinite_lights(_lights.device_buffer_view(0,_infinite_light_num));
+                _light_sampler->set_lights(_lights.const_device_buffer_view());
+                _light_sampler->set_infinite_lights(_lights.const_device_buffer_view(0,_infinite_light_num));
                 _light_sampler.synchronize_to_device();
             }
             {

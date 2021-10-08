@@ -11,7 +11,7 @@
 namespace luminous {
     inline namespace render {
         Spectrum SurfaceInteraction::Le(float3 w) const {
-            return has_emission() ? light->get<AreaLight>()->L(*this, w) : 0.f;
+            return has_emission() ? (*light->get<AreaLight*>())->L(*this, w) : 0.f;
         }
 
         SurfaceInteraction PerRayData::compute_surface_interaction(Ray ray) const {

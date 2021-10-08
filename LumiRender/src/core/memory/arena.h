@@ -150,6 +150,7 @@ namespace luminous {
             }
 
             void reset_external_block(MemoryBlock *memory_block = nullptr) noexcept {
+                DCHECK(memory_block == nullptr || _external_block == nullptr);
                 _external_block = memory_block;
             }
 

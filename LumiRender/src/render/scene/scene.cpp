@@ -46,14 +46,17 @@ namespace luminous {
         }
 
         void Scene::load_lights(const vector<LightConfig> &light_configs, const LightSamplerConfig &lsc) {
-            _lights.reserve(light_configs.size());
+
+            _lights.init(light_configs.size());
+
             for (const auto &lc : light_configs) {
                 lc.scene_box = _scene_box;
                 if (lc.type() == type_name<Envmap>()) {
                     ++_infinite_light_num;
                 }
-                _lights.push_back(Light::create(lc));
+                _lights.add_element(lc);
             }
+
             // put the infinite light to first
             std::sort(_lights.begin(), _lights.end(), [](const Light &v1, const Light &v2) {
                 return v1.is_infinite() > v2.is_infinite();
@@ -232,7 +235,7 @@ namespace luminous {
             ret += _inst_to_mesh_idx.size_in_bytes();
             ret += _inst_to_transform_idx.size_in_bytes();
 
-            ret += _lights.size_in_bytes();
+//            ret += _lights.size_in_bytes();
             ret += _distribution_mgr.size_in_bytes();
             ret += _texture_size_in_byte;
 

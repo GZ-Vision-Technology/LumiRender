@@ -209,7 +209,7 @@ namespace luminous {
             NDSC_XPU U *as() {
                 static_assert(is_pointer_type, "as<U>() use for pointer type!");
                 static_assert(Index::template GetIndex<U *>::value != -1, "U* is not in T...");
-                return Index::template GetIndex<U *>::value != index ? nullptr : reinterpret_cast<const U *>(data);
+                return Index::template GetIndex<U *>::value != index ? nullptr : reinterpret_cast<U *>(data);
             }
 
 #define _GEN_CASE_N(N)                                                                                                     \

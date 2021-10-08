@@ -49,14 +49,14 @@ namespace luminous {
                 BaseClass::push_back(elm);
             }
 
-            template<typename T = element_type>
-            LM_NODISCARD BufferView<T> device_buffer_view(size_t offset = 0, size_t count = -1) const {
-                return this->_device_buffer.view(offset, count).template cast<T>();
+            LM_NODISCARD BufferView<element_type> device_buffer_view(size_t offset = 0, size_t count = -1) {
+                count = fix_count(offset, count, BaseClass::size());
+                return BufferView<element_type>(BaseClass::_device_buffer.template ptr<element_type *>() + offset, count);
             }
 
-            template<typename T = element_type>
-            LM_NODISCARD BufferView<const T> const_device_buffer_view(size_t offset = 0, size_t count = -1) const {
-                return this->_device_buffer.view(offset, count).template cast<const T>();
+            LM_NODISCARD BufferView<const element_type> const_device_buffer_view(size_t offset = 0, size_t count = -1) const {
+                count = fix_count(offset, count, BaseClass::size());
+                return BufferView<const element_type>(BaseClass::_device_buffer.template ptr<element_type *>() + offset, count);
             }
 
             void remapping_ptr_to_device() {

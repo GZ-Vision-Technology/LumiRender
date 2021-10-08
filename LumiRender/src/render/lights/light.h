@@ -5,10 +5,7 @@
 
 #pragma once
 
-#include "point_light.h"
-#include "spot_light.h"
-#include "area_light.h"
-#include "envmap.h"
+#include "common.h"
 #include "render/samplers/sampler.h"
 #include "base_libs/lstd/lstd.h"
 #include "render/include/config.h"
@@ -19,7 +16,15 @@ namespace luminous {
 
         using lstd::Variant;
 
-        class Light : BASE_CLASS(Variant<PointLight, AreaLight, SpotLight, Envmap>) {
+        class PointLight;
+
+        class AreaLight;
+
+        class Envmap;
+
+        class SpotLight;
+
+        class Light : BASE_CLASS(Variant<PointLight *, AreaLight *, SpotLight *, Envmap *>) {
         private:
             using BaseBinder::BaseBinder;
         public:
@@ -29,7 +34,9 @@ namespace luminous {
 
             NDSC_XPU LightType type() const;
 
-            GEN_TO_STRING_FUNC
+            CPU_ONLY(LM_NODISCARD std::string to_string() const {
+                LUMINOUS_VAR_PTR_DISPATCH(to_string);
+            })
 
             NDSC_XPU bool is_delta() const;
 
