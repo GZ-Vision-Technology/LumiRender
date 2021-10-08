@@ -4,9 +4,7 @@
 
 #include "scene.h"
 #include "util/stats.h"
-#include "base_libs/lstd/common.h"
-#include "render/materials/matte.h"
-#include "render/materials/ai_material.h"
+#include "render/materials/common.h"
 
 namespace luminous {
     inline namespace render {

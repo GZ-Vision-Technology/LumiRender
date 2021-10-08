@@ -3,8 +3,7 @@
 //
 
 #include "material.h"
-#include "matte.h"
-#include "ai_material.h"
+#include "common.h"
 
 namespace luminous {
     inline namespace render {
