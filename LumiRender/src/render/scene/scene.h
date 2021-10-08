@@ -14,6 +14,7 @@
 #include "render/light_samplers/light_sampler.h"
 #include "render/textures/texture.h"
 #include "render/include/distribution_mgr.h"
+#include "core/backend/synchronizer.h"
 #include "render/materials/material.h"
 #include "render/include/accelerator.h"
 #include "render/scene/scene_data.h"
@@ -64,6 +65,7 @@ namespace luminous {
 
             // material data, the last element is light material, black diffuse
             Managed<Material> _materials{_device};
+//            Synchronizer<Material> _materials{_device};
 
             // prepare for texture out of core render
             vector<TextureConfig> _tex_configs;

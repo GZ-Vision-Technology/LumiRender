@@ -3,7 +3,6 @@
 //
 
 #include "cuda_impl.h"
-#include "render/scene/gpu_scene.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -250,10 +249,6 @@ namespace luminous {
 
         CUDADevice::~CUDADevice() {
             CU_CHECK(cuCtxDestroy(_cu_context));
-        }
-
-        std::shared_ptr<Scene> CUDADevice::create_scene(Device *device,Context *context) {
-            return nullptr;
         }
 
         CUDAModule::CUDAModule(const std::string &ptx_code) {

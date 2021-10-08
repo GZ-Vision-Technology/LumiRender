@@ -24,8 +24,6 @@ namespace luminous {
 
             virtual DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) = 0;
 
-            LM_NODISCARD virtual std::shared_ptr<Scene> create_scene(Device *device, Context *context) = 0;
-
             LM_NODISCARD virtual bool is_cpu() const = 0;
 
             virtual Dispatcher new_dispatcher() = 0;
@@ -36,10 +34,6 @@ namespace luminous {
         template<typename T = std::byte>
         Buffer<T> create_buffer(size_t n_elements, void *ptr = nullptr) {
             return Buffer<T>(_impl->create_buffer(n_elements * sizeof(T), ptr));
-        }
-
-        LM_NODISCARD std::shared_ptr<Scene> create_scene(Context *context) {
-            return _impl->create_scene(this, context);
         }
 
         template<typename T = std::byte>

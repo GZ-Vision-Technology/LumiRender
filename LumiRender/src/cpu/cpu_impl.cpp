@@ -5,7 +5,6 @@
 #include "cpu_impl.h"
 
 #include <utility>
-#include "render/scene/cpu_scene.h"
 
 namespace luminous {
     inline namespace cpu {
@@ -84,10 +83,6 @@ namespace luminous {
             async(n_items, [&](uint idx, uint tid) {
                 _func(args, idx);
             });
-        }
-
-        std::shared_ptr<Scene> CPUDevice::create_scene(Device *device, Context *context) {
-            return nullptr;
         }
 
         CPUTexture::CPUTexture(PixelFormat pixel_format, uint2 resolution) : Impl(pixel_format, resolution) {

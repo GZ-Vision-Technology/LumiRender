@@ -119,8 +119,6 @@ namespace luminous {
 
             DTexture allocate_texture(PixelFormat pixel_format, uint2 resolution) override;
 
-            std::shared_ptr<Scene> create_scene(Device *device, Context *context) override;
-
             LM_NODISCARD bool is_cpu() const override { return false; }
 
             Dispatcher new_dispatcher() override;
