@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "common.h"
 #include "render/samplers/sampler.h"
 #include "base_libs/lstd/lstd.h"
+#include "light_util.h"
 #include "render/include/config.h"
 #include "render/bxdfs/bsdf.h"
 
@@ -34,9 +34,7 @@ namespace luminous {
 
             NDSC_XPU LightType type() const;
 
-            CPU_ONLY(LM_NODISCARD std::string to_string() const {
-                LUMINOUS_VAR_PTR_DISPATCH(to_string);
-            })
+            CPU_ONLY(LM_NODISCARD std::string to_string() const;)
 
             NDSC_XPU bool is_delta() const;
 

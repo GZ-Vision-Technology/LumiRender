@@ -2,6 +2,7 @@
 // Created by Zero on 2021/4/7.
 //
 
+#include "common.h"
 #include "light.h"
 #include "render/include/trace.h"
 #include "core/refl/factory.h"
@@ -133,6 +134,10 @@ namespace luminous {
         void Light::print() const {
             LUMINOUS_VAR_PTR_DISPATCH(print);
         }
+
+        CPU_ONLY(LM_NODISCARD std::string Light::to_string() const {
+            LUMINOUS_VAR_PTR_DISPATCH(to_string);
+        })
 
         CPU_ONLY(Light Light::create(const LightConfig &config) {
             return detail::create_ptr<Light>(config);

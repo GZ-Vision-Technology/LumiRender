@@ -5,6 +5,7 @@
 #include "scene.h"
 #include "util/stats.h"
 #include "render/materials/common.h"
+#include "render/lights/common.h"
 
 namespace luminous {
     inline namespace render {
