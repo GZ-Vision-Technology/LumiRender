@@ -2,6 +2,7 @@
 // Created by Zero on 2021/4/9.
 //
 
+#include "common.h"
 #include "light_sampler.h"
 #include "render/include/creator.h"
 #include "render/lights/light.h"

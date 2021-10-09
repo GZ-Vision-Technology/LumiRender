@@ -5,18 +5,30 @@
 
 #pragma once
 
-#include "uniform.h"
-#include "power.h"
-#include "bvh.h"
 #include "base_libs/lstd/lstd.h"
 #include "render/bxdfs/bsdf.h"
 #include "render/samplers/sampler.h"
+
 
 namespace luminous {
     inline namespace render {
 
         using lstd::Variant;
         using lstd::optional;
+
+        class UniformLightSampler;
+
+        class Light;
+
+        struct SampledLight;
+
+        struct NEEData;
+
+        struct LightSampleContext;
+
+        struct SceneData;
+
+        class SurfaceInteraction;
 
         class LightSampler : BASE_CLASS(Variant<UniformLightSampler *>) {
         public:

@@ -6,6 +6,8 @@
 #include "render/samplers/sampler.h"
 #include "render/include/trace.h"
 #include "render/materials/material.h"
+#include "render/light_samplers/common.h"
+#include "render/light_samplers/uniform.h"
 #include "render/light_samplers/light_sampler.h"
 #include "render/scene/scene_data.h"
 #include "render/lights/light.h"

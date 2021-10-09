@@ -9,6 +9,7 @@
 #include "ptr_mapper.h"
 #include "core/memory/arena.h"
 #include "core/refl/reflection.h"
+#include "core/refl/factory.h"
 #include "base_libs/lstd/variant.h"
 #include "render/include/creator.h"
 

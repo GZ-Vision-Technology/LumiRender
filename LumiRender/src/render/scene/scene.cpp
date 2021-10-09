@@ -6,6 +6,7 @@
 #include "util/stats.h"
 #include "render/materials/common.h"
 #include "render/lights/common.h"
+#include "render/light_samplers/common.h"
 
 namespace luminous {
     inline namespace render {
