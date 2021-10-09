@@ -57,20 +57,6 @@ namespace luminous {
 
             LM_ND_XPU const Light &infinite_light_at(index_t idx) const;
 
-            template<typename Func>
-            LM_XPU void for_each_light(const Func &func) const {
-                for (int i = 0; i < light_num(); ++i) {
-                    func(light_at(i), i);
-                }
-            }
-
-            template<typename Func>
-            LM_XPU void for_each_infinite_light(const Func &func) const {
-                for (int i = 0; i < infinite_light_num(); ++i) {
-                    func(infinite_light_at(i), i);
-                }
-            }
-
             LM_XPU_INLINE void set_lights(BufferView<const Light> lights) {
                 _lights = lights;
             }

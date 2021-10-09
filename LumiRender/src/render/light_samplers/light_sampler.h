@@ -34,23 +34,17 @@ namespace luminous {
 
             LM_ND_XPU BufferView<const Light> lights() const;
 
+            LM_ND_XPU BufferView<const Light> infinite_lights() const;
+
             LM_ND_XPU const Light &light_at(uint idx) const;
 
             LM_ND_XPU size_t light_num() const;
 
-            template<typename Func>
-            LM_XPU void for_each_light(const Func &func) const {
-                LUMINOUS_VAR_DISPATCH(for_each_light, func)
-            }
-
-            template<typename Func>
-            LM_XPU void for_each_infinite_light(const Func &func) const  {
-                LUMINOUS_VAR_DISPATCH(for_each_infinite_light, func)
-            }
-
             LM_ND_XPU SampledLight sample(float u) const;
 
             LM_ND_XPU SampledLight sample(const LightSampleContext &ctx, float u) const;
+
+            LM_ND_XPU Spectrum on_miss(Ray ray, const SceneData *scene_data, Spectrum throughput) const;
 
             LM_ND_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
                                                         uint64_t traversable_handle,

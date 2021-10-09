@@ -54,6 +54,10 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(lights);
         }
 
+        BufferView<const Light> LightSampler::infinite_lights() const {
+            LUMINOUS_VAR_DISPATCH(infinite_lights);
+        }
+
         float LightSampler::PMF(const LightSampleContext &ctx, const Light &light) const {
             LUMINOUS_VAR_DISPATCH(PMF, ctx, light);
         }
@@ -61,6 +65,15 @@ namespace luminous {
         CPU_ONLY(LightSampler LightSampler::create(const LightSamplerConfig &config) {
             return detail::create<LightSampler>(config);
         })
+
+        Spectrum LightSampler::on_miss(Ray ray, const SceneData *scene_data, Spectrum throughput) const {
+            Spectrum L{0.f};
+            BufferView<const Light> lights = infinite_lights();
+            for (auto &light : lights) {
+                L += throughput * light.on_miss(ray, scene_data);
+            }
+            return L;
+        }
 
     } // luminous::render
 } // luminous
