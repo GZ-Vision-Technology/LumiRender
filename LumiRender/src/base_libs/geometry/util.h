@@ -10,7 +10,7 @@
 namespace luminous {
     inline namespace geometry {
 
-        LM_ND_XPU_INLINE bool same_hemisphere(float3 w1, float3 w2) {
+        ND_XPU_INLINE bool same_hemisphere(float3 w1, float3 w2) {
             return w1.z * w2.z > 0;
         }
 
@@ -34,23 +34,23 @@ namespace luminous {
             return select(functor::abs(p) < origin, p + float_scale * n, p_i);
         }
 
-        LM_ND_XPU_INLINE float3 spherical_direction(float sin_theta, float cos_theta, float sin_phi, float cos_phi) {
+        ND_XPU_INLINE float3 spherical_direction(float sin_theta, float cos_theta, float sin_phi, float cos_phi) {
             return make_float3(sin_theta * cos_phi, sin_theta * sin_phi, cos_theta);
         }
 
-        LM_ND_XPU_INLINE float3 spherical_direction(float sin_theta, float cos_theta, float phi) {
+        ND_XPU_INLINE float3 spherical_direction(float sin_theta, float cos_theta, float phi) {
             return make_float3(sin_theta * std::cosf(phi), sin_theta * std::sinf(phi), cos_theta);
         }
 
-        LM_ND_XPU_INLINE float3 spherical_direction(float theta, float phi) {
+        ND_XPU_INLINE float3 spherical_direction(float theta, float phi) {
             return spherical_direction(std::sinf(theta), std::cosf(theta), phi);
         }
 
-        LM_ND_XPU_INLINE float spherical_theta(float3 v) {
+        ND_XPU_INLINE float spherical_theta(float3 v) {
             return safe_acos(v.z);
         }
 
-        LM_ND_XPU_INLINE float spherical_phi(float3 v) {
+        ND_XPU_INLINE float spherical_phi(float3 v) {
             float p = std::atan2f(v.y, v.x);
             return (p < 0) ? (p + 2 * Pi) : p;
         }

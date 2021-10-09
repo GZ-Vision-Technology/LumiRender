@@ -66,7 +66,7 @@ namespace luminous {
             LM_XPU explicit TextureBase(PixelFormat pixel_format)
                     : _pixel_format(pixel_format) {}
 
-            LM_ND_XPU_INLINE PixelFormat pixel_format() const {
+            ND_XPU_INLINE PixelFormat pixel_format() const {
                 return _pixel_format;
             }
 

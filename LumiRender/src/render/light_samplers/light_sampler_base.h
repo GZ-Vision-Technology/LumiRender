@@ -28,7 +28,7 @@ namespace luminous {
                 DCHECK(PMF > 0)
             }
 
-            LM_ND_XPU_INLINE bool is_valid() const {
+            ND_XPU_INLINE bool is_valid() const {
                 return light != nullptr;
             }
 
@@ -45,11 +45,11 @@ namespace luminous {
             DEFINE_AND_REGISTER_MEMBER(BufferView<const Light>, _infinite_lights)
 
         public:
-            LM_ND_XPU_INLINE BufferView<const Light> lights() const {
+            ND_XPU_INLINE BufferView<const Light> lights() const {
                 return _lights;
             }
 
-            LM_ND_XPU_INLINE BufferView<const Light> infinite_lights() const {
+            ND_XPU_INLINE BufferView<const Light> infinite_lights() const {
                 return _infinite_lights;
             }
 
@@ -83,7 +83,7 @@ namespace luminous {
                 return _lights.size();
             }
 
-            LM_ND_XPU_INLINE size_t infinite_light_num() const {
+            ND_XPU_INLINE size_t infinite_light_num() const {
                 return _infinite_lights.size();
             }
         };

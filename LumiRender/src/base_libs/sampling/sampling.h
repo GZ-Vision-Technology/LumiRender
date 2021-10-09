@@ -12,7 +12,7 @@ namespace luminous {
 
     inline namespace sampling {
 
-        LM_ND_XPU_INLINE float linear_PDF(float x, float a, float b) {
+        ND_XPU_INLINE float linear_PDF(float x, float a, float b) {
             assert(a > 0 && b > 0);
             if (x < 0 || x > 1)
                 return 0;
@@ -20,7 +20,7 @@ namespace luminous {
         }
 
 
-        LM_ND_XPU_INLINE float sample_linear(float u, float a, float b) {
+        ND_XPU_INLINE float sample_linear(float u, float a, float b) {
             assert(a > 0 && b > 0);
             if (u == 0 && a == 0)
                 return 0;
@@ -28,7 +28,7 @@ namespace luminous {
             return std::min(x, one_minus_epsilon);
         }
 
-        LM_ND_XPU_INLINE float fast_exp(float x) {
+        ND_XPU_INLINE float fast_exp(float x) {
 #ifdef IS_GPU_CODE
             return __expf(x);
 #else
@@ -36,8 +36,8 @@ namespace luminous {
 #endif
         }
 
-        LM_ND_XPU_INLINE int sample_discrete(BufferView<const float> weights, float u,
-                                             float *pmf, float *uRemapped) {
+        ND_XPU_INLINE int sample_discrete(BufferView<const float> weights, float u,
+                                          float *pmf, float *uRemapped) {
             // Handle empty _weights_ for discrete sampling
             if (weights.empty()) {
                 if (pmf != nullptr)
@@ -75,14 +75,14 @@ namespace luminous {
                    fast_exp(-sqr(x - mu) / (2 * sigma * sigma));
         }
 
-        LM_ND_XPU_INLINE float gaussian_integral(float x0, float x1, float mu = 0,
-                                                 float sigma = 1) {
+        ND_XPU_INLINE float gaussian_integral(float x0, float x1, float mu = 0,
+                                              float sigma = 1) {
             assert(sigma > 0);
             float sigmaRoot2 = sigma * float(1.414213562373095);
             return 0.5f * (std::erf((mu - x0) / sigmaRoot2) - std::erf((mu - x1) / sigmaRoot2));
         }
 
-        LM_ND_XPU_INLINE float2 sample_bilinear(float2 u, BufferView<const float> w) {
+        ND_XPU_INLINE float2 sample_bilinear(float2 u, BufferView<const float> w) {
             assert(4 == w.size());
             float2 p;
             // Sample $v$ for bilinear marginal distribution

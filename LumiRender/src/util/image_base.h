@@ -43,7 +43,7 @@ namespace luminous {
 #undef MAKE_PIXEL_FORMAT_OF_TYPE
         }
 
-        LM_ND_XPU_INLINE size_t pixel_size(PixelFormat pixel_format) {
+        ND_XPU_INLINE size_t pixel_size(PixelFormat pixel_format) {
             switch (pixel_format) {
                 case PixelFormat::R8U:
                     return sizeof(uchar);
@@ -62,7 +62,7 @@ namespace luminous {
             }
         }
 
-        LM_ND_XPU_INLINE int channel_num(PixelFormat pixel_format) {
+        ND_XPU_INLINE int channel_num(PixelFormat pixel_format) {
             if (pixel_format == PixelFormat::R8U || pixel_format == PixelFormat::R32F) { return 1u; }
             if (pixel_format == PixelFormat::RG8U || pixel_format == PixelFormat::RG32F) { return 2u; }
             return 4u;

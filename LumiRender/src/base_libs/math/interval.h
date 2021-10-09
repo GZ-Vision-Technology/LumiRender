@@ -52,30 +52,30 @@ namespace luminous {
         };
 
         template<typename T>
-        LM_ND_XPU_INLINE interval<T> build_interval(const T &a, const T &b) { return interval<T>(min(a, b), max(a, b)); }
+        ND_XPU_INLINE interval<T> build_interval(const T &a, const T &b) { return interval<T>(min(a, b), max(a, b)); }
 
         template<typename T>
-        LM_ND_XPU_INLINE interval<T> intersect(const interval<T> &a, const interval<T> &b) {
+        ND_XPU_INLINE interval<T> intersect(const interval<T> &a, const interval<T> &b) {
             return interval<T>(max(a.begin, b.begin), min(a.end, b.end));
         }
 
         template<typename T>
-        LM_ND_XPU_INLINE interval<T> operator-(const interval<T> &a, const T &b) {
+        ND_XPU_INLINE interval<T> operator-(const interval<T> &a, const T &b) {
             return interval<T>(a.begin - b, a.end - b);
         }
 
         template<typename T>
-        LM_ND_XPU_INLINE interval<T> operator*(const interval<T> &a, const T &b) {
+        ND_XPU_INLINE interval<T> operator*(const interval<T> &a, const T &b) {
             return build_interval<T>(a.begin * b, a.end * b);
         }
 
         template<typename T>
-        LM_ND_XPU_INLINE bool operator==(const interval<T> &a, const interval<T> &b) {
+        ND_XPU_INLINE bool operator==(const interval<T> &a, const interval<T> &b) {
             return a.begin == b.begin && a.end == b.end;
         }
 
         template<typename T>
-        LM_ND_XPU_INLINE bool operator!=(const interval<T> &a, const interval<T> &b) { return !(a == b); }
+        ND_XPU_INLINE bool operator!=(const interval<T> &a, const interval<T> &b) { return !(a == b); }
 
         using PtrInterval = interval<uint64_t>;
     } // luminous::math

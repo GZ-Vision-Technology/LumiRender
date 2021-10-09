@@ -25,17 +25,17 @@ namespace luminous {
                       upper(v) {}
 
             /*! construct a new, origin-oriented box of given size */
-            LM_ND_XPU_INLINE TBox(const vector_t &lo, const vector_t &hi)
+            ND_XPU_INLINE TBox(const vector_t &lo, const vector_t &hi)
                     : lower(lo),
                       upper(hi) {}
 
             /*! returns new box including both ourselves _and_ the given point */
-            LM_ND_XPU_INLINE TBox including(const vector_t &other) const {
+            ND_XPU_INLINE TBox including(const vector_t &other) const {
                 return TBox(min(lower, other), max(upper, other));
             }
 
             /*! returns new box including both ourselves _and_ the given point */
-            LM_ND_XPU_INLINE TBox including(const TBox &other) const {
+            ND_XPU_INLINE TBox including(const TBox &other) const {
                 return TBox(min(lower, other.lower), max(upper, other.upper));
             }
 
@@ -54,47 +54,47 @@ namespace luminous {
             }
 
             /*! get the d-th dimensional slab (lo[dim]..hi[dim] */
-            LM_ND_XPU_INLINE interval <scalar_t> get_slab(const uint32_t dim) {
+            ND_XPU_INLINE interval <scalar_t> get_slab(const uint32_t dim) {
                 return interval<scalar_t>(lower[dim], upper[dim]);
             }
 
-            LM_ND_XPU_INLINE vector_t offset(vector_t p) const {
+            ND_XPU_INLINE vector_t offset(vector_t p) const {
                 return (p - lower) / span();
             }
 
-            LM_ND_XPU_INLINE bool contains(const vector_t &point) const {
+            ND_XPU_INLINE bool contains(const vector_t &point) const {
                 return all(point >= lower) && all(upper >= point);
             }
 
-            LM_ND_XPU_INLINE bool contains(const TBox &other) const {
+            ND_XPU_INLINE bool contains(const TBox &other) const {
                 return all(other.lower >= lower) && all(upper >= other.upper);
             }
 
-            LM_ND_XPU_INLINE bool overlap(const TBox &other) const {
+            ND_XPU_INLINE bool overlap(const TBox &other) const {
                 return contains(other.lower) || contains(other.upper);
             }
 
-            LM_ND_XPU_INLINE scalar_t radius() const {
+            ND_XPU_INLINE scalar_t radius() const {
                 return length(upper - lower) * 0.5f;
             }
 
-            LM_ND_XPU_INLINE vector_t center() const {
+            ND_XPU_INLINE vector_t center() const {
                 return (lower + upper) * 0.5f;
             }
 
-            LM_ND_XPU_INLINE vector_t span() const {
+            ND_XPU_INLINE vector_t span() const {
                 return upper - lower;
             }
 
-            LM_ND_XPU_INLINE vector_t size() const {
+            ND_XPU_INLINE vector_t size() const {
                 return upper - lower;
             }
 
-            LM_ND_XPU_INLINE scalar_t volume() const {
+            ND_XPU_INLINE scalar_t volume() const {
                 return luminous::functor::volume(upper - lower);
             }
 
-            LM_ND_XPU_INLINE scalar_t area() const {
+            ND_XPU_INLINE scalar_t area() const {
                 static_assert(N == 2 || N == 3);
                 vector_t diag = upper - lower;
                 if constexpr (N == 2) {
@@ -106,11 +106,11 @@ namespace luminous {
                 }
             }
 
-            LM_ND_XPU_INLINE bool empty() const {
+            ND_XPU_INLINE bool empty() const {
                 return any(upper < lower);
             }
 
-            LM_ND_XPU_INLINE auto advance(Vector<scalar_t, 2> p) const {
+            ND_XPU_INLINE auto advance(Vector<scalar_t, 2> p) const {
                 ++p.x;
                 if (p.x == upper.x) {
                     p.x = lower.x;

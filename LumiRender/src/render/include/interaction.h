@@ -48,15 +48,15 @@ namespace luminous {
             index_t material_idx;
             index_t light_idx;
 
-            LM_ND_XPU_INLINE bool has_material() const {
+            ND_XPU_INLINE bool has_material() const {
                 return material_idx != invalid_uint32;
             }
 
-            LM_ND_XPU_INLINE bool has_distribute() const {
+            ND_XPU_INLINE bool has_distribute() const {
                 return distribute_idx != invalid_uint32;
             }
 
-            LM_ND_XPU_INLINE bool has_light() const {
+            ND_XPU_INLINE bool has_light() const {
                 return light_idx != invalid_uint32;
             }
 
@@ -82,7 +82,7 @@ namespace luminous {
                 normal = n;
             }
 
-            LM_ND_XPU_INLINE bool valid() const {
+            ND_XPU_INLINE bool valid() const {
                 return nonzero(normal);
             }
         };
@@ -97,19 +97,19 @@ namespace luminous {
 
             LM_XPU explicit Interaction(float3 pos) : pos(pos) {}
 
-            LM_ND_XPU_INLINE bool is_on_surface() const {
+            ND_XPU_INLINE bool is_on_surface() const {
                 return g_uvn.valid();
             }
 
-            LM_ND_XPU_INLINE Ray spawn_ray(float3 dir) const {
+            ND_XPU_INLINE Ray spawn_ray(float3 dir) const {
                 return Ray::spawn_ray(pos, g_uvn.normal, dir);
             }
 
-            LM_ND_XPU_INLINE Ray spawn_ray_to(float3 p) const {
+            ND_XPU_INLINE Ray spawn_ray_to(float3 p) const {
                 return Ray::spawn_ray_to(pos, g_uvn.normal, p);
             }
 
-            LM_ND_XPU_INLINE Ray spawn_ray_to(const Interaction &it) const {
+            ND_XPU_INLINE Ray spawn_ray_to(const Interaction &it) const {
                 return Ray::spawn_ray_to(pos, g_uvn.normal, it.pos, it.g_uvn.normal);
             }
         };
@@ -135,11 +135,11 @@ namespace luminous {
 
             LM_XPU explicit SurfaceInteraction(float3 pos) : Interaction(pos) {}
 
-            LM_ND_XPU_INLINE bool has_emission() const {
+            ND_XPU_INLINE bool has_emission() const {
                 return light != nullptr;
             }
 
-            LM_ND_XPU_INLINE bool has_material() const {
+            ND_XPU_INLINE bool has_material() const {
                 return material != nullptr;
             }
 
@@ -163,13 +163,13 @@ namespace luminous {
             LM_XPU explicit PerRayData(const SceneData *data)
                     : data(data) {}
 
-            LM_ND_XPU_INLINE bool is_hit() const {
+            ND_XPU_INLINE bool is_hit() const {
                 return hit_point.is_hit();
             }
 
             LM_ND_XPU SurfaceInteraction compute_surface_interaction(Ray ray) const;
 
-            LM_ND_XPU_INLINE const SceneData *scene_data() const { return data; }
+            ND_XPU_INLINE const SceneData *scene_data() const { return data; }
         };
 
         struct NEEData {

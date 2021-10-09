@@ -9,7 +9,7 @@
 
 namespace luminous {
 
-    LM_ND_XPU_INLINE size_t fix_count(size_t offset, size_t count, size_t size) {
+    ND_XPU_INLINE size_t fix_count(size_t offset, size_t count, size_t size) {
         count = count < (size - offset) ? count : (size - offset);
         return count;
     }

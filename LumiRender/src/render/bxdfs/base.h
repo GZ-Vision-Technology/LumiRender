@@ -43,52 +43,52 @@ namespace luminous {
             All = Reflection | Transmission
         };
 
-        LM_ND_XPU_INLINE BxDFFlags operator|(BxDFFlags a, BxDFFlags b) {
+        ND_XPU_INLINE BxDFFlags operator|(BxDFFlags a, BxDFFlags b) {
             return BxDFFlags((int) a | (int) b);
         }
 
-        LM_ND_XPU_INLINE int operator&(BxDFFlags a, BxDFFlags b) {
+        ND_XPU_INLINE int operator&(BxDFFlags a, BxDFFlags b) {
             return ((int) a & (int) b);
         }
 
-        LM_ND_XPU_INLINE int operator&(BxDFFlags a, BxDFReflTransFlags b) {
+        ND_XPU_INLINE int operator&(BxDFFlags a, BxDFReflTransFlags b) {
             return ((int) a & (int) b);
         }
 
-        LM_ND_XPU_INLINE int operator&(BxDFReflTransFlags a, BxDFFlags b) {
+        ND_XPU_INLINE int operator&(BxDFReflTransFlags a, BxDFFlags b) {
             return ((int) a & (int) b);
         }
 
-        LM_ND_XPU_INLINE int operator&(BxDFReflTransFlags a, BxDFReflTransFlags b) {
+        ND_XPU_INLINE int operator&(BxDFReflTransFlags a, BxDFReflTransFlags b) {
             return ((int) a & (int) b);
         }
 
-        LM_ND_XPU_INLINE BxDFFlags &operator|=(BxDFFlags &a, BxDFFlags b) {
+        ND_XPU_INLINE BxDFFlags &operator|=(BxDFFlags &a, BxDFFlags b) {
             (int &) a |= int(b);
             return a;
         }
 
-        LM_ND_XPU_INLINE bool is_reflective(BxDFFlags f) {
+        ND_XPU_INLINE bool is_reflective(BxDFFlags f) {
             return f & BxDFFlags::Reflection;
         }
 
-        LM_ND_XPU_INLINE bool is_transmissive(BxDFFlags f) {
+        ND_XPU_INLINE bool is_transmissive(BxDFFlags f) {
             return f & BxDFFlags::Transmission;
         }
 
-        LM_ND_XPU_INLINE bool is_diffuse(BxDFFlags f) {
+        ND_XPU_INLINE bool is_diffuse(BxDFFlags f) {
             return f & BxDFFlags::Diffuse;
         }
 
-        LM_ND_XPU_INLINE bool is_glossy(BxDFFlags f) {
+        ND_XPU_INLINE bool is_glossy(BxDFFlags f) {
             return f & BxDFFlags::Glossy;
         }
 
-        LM_ND_XPU_INLINE bool is_specular(BxDFFlags f) {
+        ND_XPU_INLINE bool is_specular(BxDFFlags f) {
             return f & BxDFFlags::Specular;
         }
 
-        LM_ND_XPU_INLINE bool is_non_specular(BxDFFlags f) {
+        ND_XPU_INLINE bool is_non_specular(BxDFFlags f) {
             return (f & (BxDFFlags::Diffuse | BxDFFlags::Glossy));
         }
 

@@ -64,16 +64,16 @@ namespace luminous {
         }                                                                      \
     }                                                                          \
     template<typename T, uint32_t N>                                           \
-    LM_ND_XPU_INLINE bool has_##func(Vector<T, N> v) noexcept {                 \
+    ND_XPU_INLINE bool has_##func(Vector<T, N> v) noexcept {                 \
         return any(is_##func##_v(v));                                          \
     }                                                                          \
     template<typename T>                                                       \
-    LM_ND_XPU_INLINE bool has_##func(Matrix3x3<T> mat) noexcept {               \
+    ND_XPU_INLINE bool has_##func(Matrix3x3<T> mat) noexcept {               \
         return has_##func(mat.cols[0]) || has_##func(mat.cols[1])              \
             || has_##func(mat.cols[2]);                                        \
     }                                                                          \
     template<typename T>                                                       \
-    LM_ND_XPU_INLINE bool has_##func(Matrix4x4<T> mat) noexcept {               \
+    ND_XPU_INLINE bool has_##func(Matrix4x4<T> mat) noexcept {               \
         return has_##func(mat.cols[0]) || has_##func(mat.cols[1])              \
             || has_##func(mat.cols[2]) || has_##func(mat.cols[3]);             \
     }
@@ -82,12 +82,12 @@ namespace luminous {
         MAKE_VECTOR_UNARY_FUNC_BOOL(nan)
 
         template<typename T, uint32_t N>
-        LM_ND_XPU_INLINE bool is_zero(Vector<T, N> v) noexcept {
+        ND_XPU_INLINE bool is_zero(Vector<T, N> v) noexcept {
             return all(v == T(0));
         }
 
         template<typename T, uint32_t N>
-        LM_ND_XPU_INLINE bool nonzero(Vector<T, N> v) noexcept {
+        ND_XPU_INLINE bool nonzero(Vector<T, N> v) noexcept {
             return any(v != T(0));
         }
 
@@ -213,7 +213,7 @@ namespace luminous {
         }
 
         template<typename T, uint N>
-        LM_ND_XPU_INLINE T triangle_area(Vector<T, N> p0, Vector<T, N> p1, Vector<T, N> p2) {
+        ND_XPU_INLINE T triangle_area(Vector<T, N> p0, Vector<T, N> p1, Vector<T, N> p2) {
             static_assert(N == 3 || N == 2 , "N must be greater than 1!");
             if constexpr (N == 2) {
                 Vector<T, 3> pp0 = Vector<T, 3>{p0.x, p0.y, 0};

@@ -54,14 +54,14 @@ namespace luminous {
             BufferView<const Distribution2D> distribution2ds;
 
 #define GEN_GET_FUNCTION(attribute)                                                     \
-            LM_ND_XPU_INLINE auto get_##attribute(const MeshHandle &mesh) const {        \
+            ND_XPU_INLINE auto get_##attribute(const MeshHandle &mesh) const {        \
                 return (attribute).sub_view(mesh.vertex_offset, mesh.vertex_count);     \
             }                                                                           \
-            LM_ND_XPU_INLINE auto get_##attribute##_by_mesh_idx(index_t mesh_idx) const {\
+            ND_XPU_INLINE auto get_##attribute##_by_mesh_idx(index_t mesh_idx) const {\
                 MeshHandle mesh = meshes[mesh_idx];                                     \
                 return get_##attribute(mesh);                                           \
             }                                                                           \
-            LM_ND_XPU_INLINE auto get_##attribute(index_t inst_idx) const {              \
+            ND_XPU_INLINE auto get_##attribute(index_t inst_idx) const {              \
                 auto mesh_idx = inst_to_mesh_idx[inst_idx];                             \
                 return get_##attribute##_by_mesh_idx(mesh_idx);                         \
             }
@@ -74,21 +74,21 @@ namespace luminous {
 
 #undef GEN_GET_FUNCTION
 
-            LM_ND_XPU_INLINE const MeshHandle &get_mesh(index_t inst_idx) const {
+            ND_XPU_INLINE const MeshHandle &get_mesh(index_t inst_idx) const {
                 index_t mesh_idx = inst_to_mesh_idx[inst_idx];
                 return meshes[mesh_idx];
             }
 
-            LM_ND_XPU_INLINE const Transform &get_transform(index_t inst_id) const {
+            ND_XPU_INLINE const Transform &get_transform(index_t inst_id) const {
                 index_t transform_idx = inst_to_transform_idx[inst_id];
                 return transforms[transform_idx];
             }
 
-            LM_ND_XPU_INLINE const TriangleHandle &get_triangle(const MeshHandle &mesh, index_t triangle_id) const {
+            ND_XPU_INLINE const TriangleHandle &get_triangle(const MeshHandle &mesh, index_t triangle_id) const {
                 return triangles[mesh.triangle_offset + triangle_id];
             }
 
-            LM_ND_XPU_INLINE const TriangleHandle &get_triangle(const HitPoint &closest_hit) const {
+            ND_XPU_INLINE const TriangleHandle &get_triangle(const HitPoint &closest_hit) const {
                 auto mesh = get_mesh(closest_hit.instance_id);
                 return get_triangle(mesh, closest_hit.triangle_id);
             }

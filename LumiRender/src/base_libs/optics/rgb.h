@@ -15,11 +15,11 @@ namespace luminous {
             SRGB
         };
 
-        LM_ND_XPU_INLINE float luminance(float3 v) {
+        ND_XPU_INLINE float luminance(float3 v) {
             return dot(v, make_float3(0.212671f, 0.715160f, 0.072169f));
         }
 
-        LM_ND_XPU_INLINE float luminance(float4 v) {
+        ND_XPU_INLINE float luminance(float4 v) {
             return dot(make_float3(v), make_float3(0.212671f, 0.715160f, 0.072169f));
         }
 
@@ -40,41 +40,41 @@ namespace luminous {
             LM_XPU RGBSpectrum(float4 vec)
                     : RGBSpectrum(make_float3(vec)) {}
 
-            LM_ND_XPU_INLINE scalar_t R() const noexcept { return x; }
+            ND_XPU_INLINE scalar_t R() const noexcept { return x; }
 
-            LM_ND_XPU_INLINE scalar_t G() const noexcept { return y; }
+            ND_XPU_INLINE scalar_t G() const noexcept { return y; }
 
-            LM_ND_XPU_INLINE scalar_t B() const noexcept { return z; }
+            ND_XPU_INLINE scalar_t B() const noexcept { return z; }
 
-            LM_ND_XPU_INLINE vector_t vec() const noexcept {
+            ND_XPU_INLINE vector_t vec() const noexcept {
                 return make_float3(x, y, z);
             }
 
-            LM_ND_XPU_INLINE scalar_t X() const noexcept {
+            ND_XPU_INLINE scalar_t X() const noexcept {
                 return dot(*this, vector_t(0.412453f, 0.357580f, 0.180423f));
             }
 
-            LM_ND_XPU_INLINE scalar_t Y() const noexcept {
+            ND_XPU_INLINE scalar_t Y() const noexcept {
                 return dot(*this, vector_t(0.212671f, 0.715160f, 0.072169f));
             }
 
-            LM_ND_XPU_INLINE scalar_t Z() const noexcept {
+            ND_XPU_INLINE scalar_t Z() const noexcept {
                 return dot(*this, vector_t(0.019334f, 0.119193f, 0.950227f));
             }
 
-            LM_ND_XPU_INLINE scalar_t luminance() const noexcept {
+            ND_XPU_INLINE scalar_t luminance() const noexcept {
                 return Y();
             };
 
-            LM_ND_XPU_INLINE scalar_t max_comp() const noexcept {
+            ND_XPU_INLINE scalar_t max_comp() const noexcept {
                 return max({x, y, z});
             }
 
-            LM_ND_XPU_INLINE vector_t XYZ() const noexcept {
+            ND_XPU_INLINE vector_t XYZ() const noexcept {
                 return vector_t(X(), Y(), Z());
             }
 
-            LM_ND_XPU_INLINE scalar_t average() const noexcept {
+            ND_XPU_INLINE scalar_t average() const noexcept {
                 return dot(*this, vector_t(1.f, 1.f, 1.f)) / 3;
             }
 
@@ -102,28 +102,28 @@ namespace luminous {
                 return RGBSpectrum(srgb_to_linear(vec));
             }
 
-            LM_ND_XPU_INLINE bool is_black() const noexcept {
+            ND_XPU_INLINE bool is_black() const noexcept {
                 return is_zero(*this);
             }
 
-            LM_ND_XPU_INLINE bool not_black() const noexcept {
+            ND_XPU_INLINE bool not_black() const noexcept {
                 return nonzero(*this);
             }
 
         };
 
-        LM_ND_XPU_INLINE uint32_t make_8bit(const float f) {
+        ND_XPU_INLINE uint32_t make_8bit(const float f) {
             return min(255, max(0, int(f * 256.f)));
         }
 
-        LM_ND_XPU_INLINE uint32_t make_rgba(const float3 color) {
+        ND_XPU_INLINE uint32_t make_rgba(const float3 color) {
             return (make_8bit(color.x) << 0) +
                    (make_8bit(color.y) << 8) +
                    (make_8bit(color.z) << 16) +
                    (0xffU << 24);
         }
 
-        LM_ND_XPU_INLINE uint32_t make_rgba(const float4 color) {
+        ND_XPU_INLINE uint32_t make_rgba(const float4 color) {
             return (make_8bit(color.x) << 0) +
                    (make_8bit(color.y) << 8) +
                    (make_8bit(color.z) << 16) +
