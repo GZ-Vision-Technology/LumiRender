@@ -16,85 +16,85 @@ namespace luminous {
 
             vector_t lower, upper;
 
-            XPU TBox() :
+            LM_XPU TBox() :
                     lower(empty_bounds_lower<scalar_t>()),
                     upper(empty_bounds_upper<scalar_t>()) {}
 
-            explicit inline XPU TBox(const vector_t &v)
+            explicit inline LM_XPU TBox(const vector_t &v)
                     : lower(v),
                       upper(v) {}
 
             /*! construct a new, origin-oriented box of given size */
-            NDSC_XPU_INLINE TBox(const vector_t &lo, const vector_t &hi)
+            LM_ND_XPU_INLINE TBox(const vector_t &lo, const vector_t &hi)
                     : lower(lo),
                       upper(hi) {}
 
             /*! returns new box including both ourselves _and_ the given point */
-            NDSC_XPU_INLINE TBox including(const vector_t &other) const {
+            LM_ND_XPU_INLINE TBox including(const vector_t &other) const {
                 return TBox(min(lower, other), max(upper, other));
             }
 
             /*! returns new box including both ourselves _and_ the given point */
-            NDSC_XPU_INLINE TBox including(const TBox &other) const {
+            LM_ND_XPU_INLINE TBox including(const TBox &other) const {
                 return TBox(min(lower, other.lower), max(upper, other.upper));
             }
 
             /*! returns new box including both ourselves _and_ the given point */
-            XPU_INLINE TBox &extend(const vector_t &other) {
+            LM_XPU_INLINE TBox &extend(const vector_t &other) {
                 lower = min(lower, other);
                 upper = max(upper, other);
                 return *this;
             }
 
             /*! returns new box including both ourselves _and_ the given point */
-            XPU_INLINE TBox &extend(const TBox &other) {
+            LM_XPU_INLINE TBox &extend(const TBox &other) {
                 lower = min(lower, other.lower);
                 upper = max(upper, other.upper);
                 return *this;
             }
 
             /*! get the d-th dimensional slab (lo[dim]..hi[dim] */
-            NDSC_XPU_INLINE interval <scalar_t> get_slab(const uint32_t dim) {
+            LM_ND_XPU_INLINE interval <scalar_t> get_slab(const uint32_t dim) {
                 return interval<scalar_t>(lower[dim], upper[dim]);
             }
 
-            NDSC_XPU_INLINE vector_t offset(vector_t p) const {
+            LM_ND_XPU_INLINE vector_t offset(vector_t p) const {
                 return (p - lower) / span();
             }
 
-            NDSC_XPU_INLINE bool contains(const vector_t &point) const {
+            LM_ND_XPU_INLINE bool contains(const vector_t &point) const {
                 return all(point >= lower) && all(upper >= point);
             }
 
-            NDSC_XPU_INLINE bool contains(const TBox &other) const {
+            LM_ND_XPU_INLINE bool contains(const TBox &other) const {
                 return all(other.lower >= lower) && all(upper >= other.upper);
             }
 
-            NDSC_XPU_INLINE bool overlap(const TBox &other) const {
+            LM_ND_XPU_INLINE bool overlap(const TBox &other) const {
                 return contains(other.lower) || contains(other.upper);
             }
 
-            NDSC_XPU_INLINE scalar_t radius() const {
+            LM_ND_XPU_INLINE scalar_t radius() const {
                 return length(upper - lower) * 0.5f;
             }
 
-            NDSC_XPU_INLINE vector_t center() const {
+            LM_ND_XPU_INLINE vector_t center() const {
                 return (lower + upper) * 0.5f;
             }
 
-            NDSC_XPU_INLINE vector_t span() const {
+            LM_ND_XPU_INLINE vector_t span() const {
                 return upper - lower;
             }
 
-            NDSC_XPU_INLINE vector_t size() const {
+            LM_ND_XPU_INLINE vector_t size() const {
                 return upper - lower;
             }
 
-            NDSC_XPU_INLINE scalar_t volume() const {
+            LM_ND_XPU_INLINE scalar_t volume() const {
                 return luminous::functor::volume(upper - lower);
             }
 
-            NDSC_XPU_INLINE scalar_t area() const {
+            LM_ND_XPU_INLINE scalar_t area() const {
                 static_assert(N == 2 || N == 3);
                 vector_t diag = upper - lower;
                 if constexpr (N == 2) {
@@ -106,11 +106,11 @@ namespace luminous {
                 }
             }
 
-            NDSC_XPU_INLINE bool empty() const {
+            LM_ND_XPU_INLINE bool empty() const {
                 return any(upper < lower);
             }
 
-            NDSC_XPU_INLINE auto advance(Vector<scalar_t, 2> p) const {
+            LM_ND_XPU_INLINE auto advance(Vector<scalar_t, 2> p) const {
                 ++p.x;
                 if (p.x == upper.x) {
                     p.x = lower.x;
@@ -125,7 +125,7 @@ namespace luminous {
              * @param func
              */
             template<typename Func>
-            XPU_INLINE void for_each(Func func) const {
+            LM_XPU_INLINE void for_each(Func func) const {
                 static_assert(std::is_integral_v<scalar_t> || std::is_unsigned_v<scalar_t>,
                         "scalar_t must be unsigned or integral!");
                 auto p = lower;
@@ -143,17 +143,17 @@ namespace luminous {
         };
 
         template<typename T, uint N>
-        NDSC_XPU auto intersection(const TBox<T, N> &a, const TBox<T, N> &b) {
+        LM_ND_XPU auto intersection(const TBox<T, N> &a, const TBox<T, N> &b) {
             return TBox<T, N>(max(a.lower, b.lower), min(a.upper, b.upper));
         }
 
         template<typename T, uint N>
-        NDSC_XPU bool operator==(const TBox<T, N> &a, const TBox<T, N> &b) {
+        LM_ND_XPU bool operator==(const TBox<T, N> &a, const TBox<T, N> &b) {
             return a.lower == b.lower && a.upper == b.upper;
         }
 
         template<typename T, uint N>
-        NDSC_XPU bool operator!=(const TBox<T, N> &a, const TBox<T, N> &b) {
+        LM_ND_XPU bool operator!=(const TBox<T, N> &a, const TBox<T, N> &b) {
             return !(a == b);
         }
 

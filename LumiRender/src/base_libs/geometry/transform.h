@@ -12,7 +12,7 @@
 namespace luminous {
     inline namespace geometry {
 
-        XPU LM_NODISCARD static Quaternion matrix_to_quaternion(const float4x4 &m) {
+        LM_XPU LM_NODISCARD static Quaternion matrix_to_quaternion(const float4x4 &m) {
             float x, y, z, w;
             float trace = m[0][0] + m[1][1] + m[2][2];
             if (trace > 0.f) {
@@ -52,7 +52,7 @@ namespace luminous {
          * @param m
          * @return
          */
-        NDSC_XPU static float3 matrix_to_Euler_angle(const float4x4 &m) {
+        LM_ND_XPU static float3 matrix_to_Euler_angle(const float4x4 &m) {
             float sy = sqrt(sqr(m[1][2]) + sqr(m[2][2]));
             auto axis_x_angle = degrees(std::atan2(m[1][2], m[2][2]));
             auto axis_y_angle = degrees(std::atan2(-m[0][2], sy));
@@ -60,7 +60,7 @@ namespace luminous {
             return make_float3(axis_x_angle, axis_y_angle, axis_z_angle);
         }
 
-        XPU LM_NODISCARD static float4x4 quaternion_to_matrix(const Quaternion &q) noexcept {
+        LM_XPU LM_NODISCARD static float4x4 quaternion_to_matrix(const Quaternion &q) noexcept {
             float x = q.v.x;
             float y = q.v.y;
             float z = q.v.z;
@@ -76,7 +76,7 @@ namespace luminous {
             return transpose(ret);
         }
 
-        XPU_INLINE void decompose(const float4x4 &matrix, float3 *t, Quaternion *r, float3 *s) {
+        LM_XPU_INLINE void decompose(const float4x4 &matrix, float3 *t, Quaternion *r, float3 *s) {
 
             auto M = matrix;
             for (int i = 0; i < 3; ++i) {
@@ -117,45 +117,45 @@ namespace luminous {
             float4x4 _inv_mat;
 
         public:
-            XPU explicit Transform(float4x4 mat = float4x4(1))
+            LM_XPU explicit Transform(float4x4 mat = float4x4(1))
                     : _mat(mat),
                       _inv_mat(::luminous::inverse(mat)) {}
 
-            XPU Transform(float4x4 mat, float4x4 inv)
+            LM_XPU Transform(float4x4 mat, float4x4 inv)
                     : _mat(mat),
                       _inv_mat(inv) {}
 
-            NDSC_XPU auto mat4x4() const {
+            LM_ND_XPU auto mat4x4() const {
                 return _mat;
             }
 
-            NDSC_XPU const float4x4 *mat4x4_ptr() const {
+            LM_ND_XPU const float4x4 *mat4x4_ptr() const {
                 return &_mat;
             }
 
-            NDSC_XPU auto mat3x3() const {
+            LM_ND_XPU auto mat3x3() const {
                 return make_float3x3(_mat);
             }
 
-            NDSC_XPU auto inv_mat3x3() const {
+            LM_ND_XPU auto inv_mat3x3() const {
                 return luminous::inverse(mat3x3());
             }
 
-            NDSC_XPU float3 apply_point(float3 point) const {
+            LM_ND_XPU float3 apply_point(float3 point) const {
                 float4 homo_point = make_float4(point, 1.f);
                 homo_point = _mat * homo_point;
                 return make_float3(homo_point);
             }
 
-            NDSC_XPU float3 apply_vector(float3 vec) const {
+            LM_ND_XPU float3 apply_vector(float3 vec) const {
                 return mat3x3() * vec;
             }
 
-            NDSC_XPU float3 apply_normal(float3 normal) const {
+            LM_ND_XPU float3 apply_normal(float3 normal) const {
                 return transpose(inv_mat3x3()) * normal;
             }
 
-            NDSC_XPU Box3f apply_box(const Box3f &b) const {
+            LM_ND_XPU Box3f apply_box(const Box3f &b) const {
                 const auto &mat = mat4x4();
                 float3 minPoint = make_float3(mat[3][0], mat[3][1], mat[3][2]);
                 float3 maxPoint = minPoint;
@@ -176,17 +176,17 @@ namespace luminous {
                 return Box3f(minPoint, maxPoint);
             }
 
-            XPU Ray apply_ray(Ray ray) const {
+            LM_XPU Ray apply_ray(Ray ray) const {
                 ray.update_origin(apply_point(ray.origin()));
                 ray.update_direction(apply_vector(ray.direction()));
                 return ray;
             }
 
-            NDSC_XPU Transform operator*(const Transform &t) const {
+            LM_ND_XPU Transform operator*(const Transform &t) const {
                 return Transform(_mat * t.mat4x4());
             }
 
-            NDSC_XPU Transform inverse() const {
+            LM_ND_XPU Transform inverse() const {
                 return Transform(_inv_mat, _mat);
             }
 
@@ -201,7 +201,7 @@ namespace luminous {
                                      ss.to_string().c_str());
             })
 
-            NDSC_XPU static Transform translation(float3 t) {
+            LM_ND_XPU static Transform translation(float3 t) {
                 auto mat = make_float4x4(
                         1.f, 0.f, 0.f, 0.f,
                         0.f, 1.f, 0.f, 0.f,
@@ -215,11 +215,11 @@ namespace luminous {
                 return Transform(mat, inv);
             }
 
-            NDSC_XPU static Transform translation(float x, float y, float z) {
+            LM_ND_XPU static Transform translation(float x, float y, float z) {
                 return translation(make_float3(x, y, z));
             }
 
-            NDSC_XPU static Transform scale(float3 s) {
+            LM_ND_XPU static Transform scale(float3 s) {
                 auto mat = make_float4x4(
                         s.x, 0.f, 0.f, 0.f,
                         0.f, s.y, 0.f, 0.f,
@@ -233,15 +233,15 @@ namespace luminous {
                 return Transform(mat, inv);
             }
 
-            NDSC_XPU static Transform scale(float x, float y, float z) {
+            LM_ND_XPU static Transform scale(float x, float y, float z) {
                 return scale(make_float3(x, y, z));
             }
 
-            NDSC_XPU static Transform scale(float s) {
+            LM_ND_XPU static Transform scale(float s) {
                 return scale(make_float3(s));
             }
 
-            NDSC_XPU static Transform perspective(float fov_y, float z_near, float z_far, bool radian = false) {
+            LM_ND_XPU static Transform perspective(float fov_y, float z_near, float z_far, bool radian = false) {
                 fov_y = radian ? fov_y : radians(fov_y);
                 float inv_tan = 1 / std::tan(fov_y / 2.f);
                 auto mat = make_float4x4(
@@ -252,7 +252,7 @@ namespace luminous {
                 return Transform(mat);
             }
 
-            NDSC_XPU static Transform rotation(const float3 axis, float angle, bool radian = false) noexcept {
+            LM_ND_XPU static Transform rotation(const float3 axis, float angle, bool radian = false) noexcept {
                 angle = radian ? angle : radians(angle);
 
                 auto c = cos(angle);
@@ -269,22 +269,22 @@ namespace luminous {
                 return Transform(mat, transpose(mat));
             }
 
-            NDSC_XPU static Transform trs(float3 t, float4 r, float3 s) {
+            LM_ND_XPU static Transform trs(float3 t, float4 r, float3 s) {
                 auto T = translation(t);
                 auto R = rotation(make_float3(r), r.w);
                 auto S = scale(s);
                 return T * R * S;
             }
 
-            NDSC_XPU static Transform rotation_x(float angle, bool radian = false) noexcept {
+            LM_ND_XPU static Transform rotation_x(float angle, bool radian = false) noexcept {
                 return rotation(make_float3(1, 0, 0), angle, radian);
             }
 
-            NDSC_XPU static Transform rotation_y(float angle, bool radian = false) noexcept {
+            LM_ND_XPU static Transform rotation_y(float angle, bool radian = false) noexcept {
                 return rotation(make_float3(0, 1, 0), angle, radian);
             }
 
-            NDSC_XPU static Transform rotation_z(float angle, bool radian = false) noexcept {
+            LM_ND_XPU static Transform rotation_z(float angle, bool radian = false) noexcept {
                 return rotation(make_float3(0, 0, 1), angle, radian);
             }
         };

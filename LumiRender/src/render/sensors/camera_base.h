@@ -37,66 +37,66 @@ namespace luminous {
             Transform _camera_to_screen{};
             Transform _raster_to_camera{};
             Film _film;
-            XPU void _update(const float4x4 &m);
+            LM_XPU void _update(const float4x4 &m);
 
-            XPU void _update_raster();
+            LM_XPU void _update_raster();
 
-            XPU void _set_resolution(uint2 res);
+            LM_XPU void _set_resolution(uint2 res);
 
         public:
-            XPU explicit CameraBase(float3 pos = make_float3(0), float fov_y = 30);
+            LM_XPU explicit CameraBase(float3 pos = make_float3(0), float fov_y = 30);
 
-            XPU CameraBase(const float4x4 m, float fov_y, float velocity);
+            LM_XPU CameraBase(const float4x4 m, float fov_y, float velocity);
 
-            XPU void update_film_resolution(uint2 res);
+            LM_XPU void update_film_resolution(uint2 res);
 
-            XPU void set_film(const Film &film);
+            LM_XPU void set_film(const Film &film);
 
-            NDSC_XPU Film *film();
+            LM_ND_XPU Film *film();
 
-            NDSC_XPU uint2 resolution() const;
+            LM_ND_XPU uint2 resolution() const;
 
-            NDSC_XPU Transform camera_to_world() const;
+            LM_ND_XPU Transform camera_to_world() const;
 
-            NDSC_XPU Transform camera_to_world_rotation() const;
+            LM_ND_XPU Transform camera_to_world_rotation() const;
 
-            NDSC_XPU float3 forward() const;
+            LM_ND_XPU float3 forward() const;
 
-            NDSC_XPU float3 up() const;
+            LM_ND_XPU float3 up() const;
 
-            NDSC_XPU float3 right() const;
+            LM_ND_XPU float3 right() const;
 
-            NDSC_XPU float3 position() const;
+            LM_ND_XPU float3 position() const;
 
-            XPU void set_position(float3 pos);
+            LM_XPU void set_position(float3 pos);
 
-            XPU void move(float3 delta);
+            LM_XPU void move(float3 delta);
 
-            NDSC_XPU float yaw() const;
+            LM_ND_XPU float yaw() const;
 
-            XPU void set_yaw(float yaw);
+            LM_XPU void set_yaw(float yaw);
 
-            XPU void update_yaw(float val);
+            LM_XPU void update_yaw(float val);
 
-            NDSC_XPU float pitch() const;
+            LM_ND_XPU float pitch() const;
 
-            XPU void set_pitch(float pitch);
+            LM_XPU void set_pitch(float pitch);
 
-            XPU void update_pitch(float val);
+            LM_XPU void update_pitch(float val);
 
-            NDSC_XPU float fov_y() const;
+            LM_ND_XPU float fov_y() const;
 
-            XPU void set_fov_y(float val);
+            LM_XPU void set_fov_y(float val);
 
-            XPU void update_fov_y(float val);
+            LM_XPU void update_fov_y(float val);
 
-            NDSC_XPU float velocity() const;
+            LM_ND_XPU float velocity() const;
 
-            XPU void set_velocity(float val);
+            LM_XPU void set_velocity(float val);
 
-            NDSC_XPU float sensitivity() const;
+            LM_ND_XPU float sensitivity() const;
 
-            XPU void set_sensitivity(float val);
+            LM_XPU void set_sensitivity(float val);
 
             GEN_STRING_FUNC({
                 return string_printf("{fov_y:%f, position:%s, yaw:%f, pitch:%f, velocity : %f}",

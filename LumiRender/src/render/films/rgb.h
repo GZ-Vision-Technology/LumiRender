@@ -17,9 +17,9 @@ namespace luminous {
 
             CPU_ONLY(explicit RGBFilm(const FilmConfig &config) : RGBFilm(config.resolution) {})
 
-            XPU explicit RGBFilm(uint2 res) : BaseBinder<FilmBase>(res) {}
+            LM_XPU explicit RGBFilm(uint2 res) : BaseBinder<FilmBase>(res) {}
 
-            XPU void add_sample(uint2 pixel, Spectrum color, float weight, uint frame_index = 0u);
+            LM_XPU void add_sample(uint2 pixel, Spectrum color, float weight, uint frame_index = 0u);
 
             GEN_STRING_FUNC({
                                 LUMINOUS_TO_STRING("%s : {resolution :%s}", type_name<RGBFilm>(),

@@ -19,7 +19,7 @@ namespace luminous {
             index_t i;
             index_t j;
             index_t k;
-            XPU void print() const {
+            LM_XPU void print() const {
                 printf("i:%u, j:%u, k:%u \n", i, j, k);
             }
         };
@@ -48,19 +48,19 @@ namespace luminous {
             index_t material_idx;
             index_t light_idx;
 
-            NDSC_XPU_INLINE bool has_material() const {
+            LM_ND_XPU_INLINE bool has_material() const {
                 return material_idx != invalid_uint32;
             }
 
-            NDSC_XPU_INLINE bool has_distribute() const {
+            LM_ND_XPU_INLINE bool has_distribute() const {
                 return distribute_idx != invalid_uint32;
             }
 
-            NDSC_XPU_INLINE bool has_light() const {
+            LM_ND_XPU_INLINE bool has_light() const {
                 return light_idx != invalid_uint32;
             }
 
-            XPU void print() const {
+            LM_XPU void print() const {
                 printf("vert offset:%u, tri offset:%u, vert num:%u, tri num:%u, distribute idx: %u, mat idx %u\n",
                        vertex_offset,
                        triangle_offset,
@@ -76,13 +76,13 @@ namespace luminous {
             float3 dp_dv;
             float3 normal;
 
-            XPU void set(float3 u, float3 v, float3 n) {
+            LM_XPU void set(float3 u, float3 v, float3 n) {
                 dp_du = u;
                 dp_dv = v;
                 normal = n;
             }
 
-            NDSC_XPU_INLINE bool valid() const {
+            LM_ND_XPU_INLINE bool valid() const {
                 return nonzero(normal);
             }
         };
@@ -93,23 +93,23 @@ namespace luminous {
             float time{};
             UVN g_uvn;
 
-            XPU Interaction() = default;
+            LM_XPU Interaction() = default;
 
-            XPU explicit Interaction(float3 pos) : pos(pos) {}
+            LM_XPU explicit Interaction(float3 pos) : pos(pos) {}
 
-            NDSC_XPU_INLINE bool is_on_surface() const {
+            LM_ND_XPU_INLINE bool is_on_surface() const {
                 return g_uvn.valid();
             }
 
-            NDSC_XPU_INLINE Ray spawn_ray(float3 dir) const {
+            LM_ND_XPU_INLINE Ray spawn_ray(float3 dir) const {
                 return Ray::spawn_ray(pos, g_uvn.normal, dir);
             }
 
-            NDSC_XPU_INLINE Ray spawn_ray_to(float3 p) const {
+            LM_ND_XPU_INLINE Ray spawn_ray_to(float3 p) const {
                 return Ray::spawn_ray_to(pos, g_uvn.normal, p);
             }
 
-            NDSC_XPU_INLINE Ray spawn_ray_to(const Interaction &it) const {
+            LM_ND_XPU_INLINE Ray spawn_ray_to(const Interaction &it) const {
                 return Ray::spawn_ray_to(pos, g_uvn.normal, it.pos, it.g_uvn.normal);
             }
         };
@@ -131,23 +131,23 @@ namespace luminous {
             const Material *material = nullptr;
             float du_dx = 0, dv_dx = 0, du_dy = 0, dv_dy = 0;
 
-            XPU SurfaceInteraction() = default;
+            LM_XPU SurfaceInteraction() = default;
 
-            XPU explicit SurfaceInteraction(float3 pos) : Interaction(pos) {}
+            LM_XPU explicit SurfaceInteraction(float3 pos) : Interaction(pos) {}
 
-            NDSC_XPU_INLINE bool has_emission() const {
+            LM_ND_XPU_INLINE bool has_emission() const {
                 return light != nullptr;
             }
 
-            NDSC_XPU_INLINE bool has_material() const {
+            LM_ND_XPU_INLINE bool has_material() const {
                 return material != nullptr;
             }
 
-            NDSC_XPU Spectrum Le(float3 w) const;
+            LM_ND_XPU Spectrum Le(float3 w) const;
 
-            NDSC_XPU lstd::optional<BSDF> get_BSDF(const SceneData *scene_data) const;
+            LM_ND_XPU lstd::optional<BSDF> get_BSDF(const SceneData *scene_data) const;
 
-            XPU_INLINE void init_BSDF(const SceneData *scene_data) {
+            LM_XPU_INLINE void init_BSDF(const SceneData *scene_data) {
                 op_bsdf = get_BSDF(scene_data);
             }
         };
@@ -160,16 +160,16 @@ namespace luminous {
 
             PerRayData() = default;
 
-            XPU explicit PerRayData(const SceneData *data)
+            LM_XPU explicit PerRayData(const SceneData *data)
                     : data(data) {}
 
-            NDSC_XPU_INLINE bool is_hit() const {
+            LM_ND_XPU_INLINE bool is_hit() const {
                 return hit_point.is_hit();
             }
 
-            NDSC_XPU SurfaceInteraction compute_surface_interaction(Ray ray) const;
+            LM_ND_XPU SurfaceInteraction compute_surface_interaction(Ray ray) const;
 
-            NDSC_XPU_INLINE const SceneData *scene_data() const { return data; }
+            LM_ND_XPU_INLINE const SceneData *scene_data() const { return data; }
         };
 
         struct NEEData {
@@ -182,12 +182,12 @@ namespace luminous {
         };
 
         struct TextureEvalContext {
-            XPU TextureEvalContext() = default;
+            LM_XPU TextureEvalContext() = default;
 
-            XPU explicit TextureEvalContext(float2 uv)
+            LM_XPU explicit TextureEvalContext(float2 uv)
                     : uv(uv) {}
 
-            XPU TextureEvalContext(const SurfaceInteraction &si)
+            LM_XPU TextureEvalContext(const SurfaceInteraction &si)
                     : p(si.pos),
                       uv(si.uv),
                       du_dx(si.du_dx),
@@ -201,9 +201,9 @@ namespace luminous {
         };
 
         struct MaterialEvalContext : public TextureEvalContext {
-            XPU MaterialEvalContext() = default;
+            LM_XPU MaterialEvalContext() = default;
 
-            XPU MaterialEvalContext(const SurfaceInteraction &si)
+            LM_XPU MaterialEvalContext(const SurfaceInteraction &si)
                     : TextureEvalContext(si),
                       wo(si.wo),
                       ng(si.g_uvn.normal),

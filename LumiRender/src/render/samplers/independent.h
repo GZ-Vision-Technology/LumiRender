@@ -21,13 +21,13 @@ namespace luminous {
         public:
             CPU_ONLY(explicit LCGSampler(const SamplerConfig &config) : LCGSampler(config.spp) {})
 
-            XPU explicit LCGSampler(int spp = 1) : BaseBinder<SamplerBase>(spp) {}
+            LM_XPU explicit LCGSampler(int spp = 1) : BaseBinder<SamplerBase>(spp) {}
 
-            XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
+            LM_XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
-            LM_NODISCARD XPU float next_1d();
+            LM_NODISCARD LM_XPU float next_1d();
 
-            LM_NODISCARD XPU float2 next_2d();
+            LM_NODISCARD LM_XPU float2 next_2d();
 
             GEN_STRING_FUNC({
                                 LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())
@@ -43,13 +43,13 @@ namespace luminous {
         public:
             CPU_ONLY(explicit PCGSampler(const SamplerConfig &sc) : PCGSampler(sc.spp) {})
 
-            XPU explicit PCGSampler(int spp = 1) : BaseBinder<SamplerBase>(spp) {}
+            LM_XPU explicit PCGSampler(int spp = 1) : BaseBinder<SamplerBase>(spp) {}
 
-            XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
+            LM_XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
-            LM_NODISCARD XPU float next_1d();
+            LM_NODISCARD LM_XPU float next_1d();
 
-            LM_NODISCARD XPU float2 next_2d();
+            LM_NODISCARD LM_XPU float2 next_2d();
 
             GEN_STRING_FUNC({
                                 LUMINOUS_TO_STRING("%s:{spp=%d}", type_name(this), spp())

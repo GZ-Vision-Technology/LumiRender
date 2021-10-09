@@ -15,7 +15,7 @@ namespace luminous {
         public:
             explicit BoxFilter(float2 r):FilterBase(r) {}
 
-            NDSC_XPU float evaluate(const float2 &p) const {
+            LM_ND_XPU float evaluate(const float2 &p) const {
                 return (std::abs(p.x) <= _radius.x && std::abs(p.y) <= _radius.y) ? 1 : 0;
             }
 
@@ -24,9 +24,9 @@ namespace luminous {
                 return {p, 1.f};
             }
 
-            NDSC_XPU Float integral() const { return 4 * _radius.x * _radius.y; }
+            LM_ND_XPU Float integral() const { return 4 * _radius.x * _radius.y; }
 
-            NDSC_XPU std::string to_string() const;
+            LM_ND_XPU std::string to_string() const;
 
             static BoxFilter *create(const FilterConfig &config);
         }

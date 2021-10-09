@@ -118,14 +118,14 @@ void test_memory() {
 //    kernel->launch( dispatcher, ptr);
 //    dispatcher.wait();
 
-    auto area_light = luminous::render::AreaLight(config);
-    Managed<AreaLight> mal{device.get()};
-    mal.push_back(area_light);
-    mal.allocate_device(1);
-    mal.synchronize_to_device();
-    auto ptr2 = mal.device_data();
-    kernel2->launch(dispatcher, ptr2);
-    dispatcher.wait();
+//    auto area_light = luminous::render::AreaLight(config);
+//    Managed<AreaLight> mal{device.get()};
+//    mal.push_back(area_light);
+//    mal.allocate_device(1);
+//    mal.synchronize_to_device();
+//    auto ptr2 = mal.device_data();
+//    kernel2->launch(dispatcher, ptr2);
+//    dispatcher.wait();
 }
 
 void test_al() {

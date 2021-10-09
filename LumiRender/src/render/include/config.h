@@ -17,7 +17,7 @@
 namespace luminous {
     inline namespace render {
 
-        NDSC_INLINE std::string full_type(const std::string &type) {
+        LM_ND_INLINE std::string full_type(const std::string &type) {
             return "class luminous::render::" + type;
         }
 
@@ -122,7 +122,7 @@ namespace luminous {
             uint64_t handle{0};
         };
 
-        NDSC_INLINE bool operator==(const TextureConfig &t1, const TextureConfig &t2) {
+        LM_ND_INLINE bool operator==(const TextureConfig &t1, const TextureConfig &t2) {
             return t1.type() == t2.type()
                    && t1.fn == t2.fn
                    && t1.color_space == t2.color_space

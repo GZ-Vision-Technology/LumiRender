@@ -20,7 +20,7 @@ namespace luminous {
 #endif
 
         template <typename T, std::enable_if_t<std::is_floating_point<T>::value, bool> = false>
-        inline XPU bool is_nan(T v) {
+        inline LM_XPU bool is_nan(T v) {
 #if defined(__CUDACC__)
             return ::isnan(v);
 #else
@@ -29,12 +29,12 @@ namespace luminous {
         }
 
         template <typename T, std::enable_if_t<std::is_integral<T>::value, bool> = false>
-        inline XPU bool is_nan(T v) {
+        inline LM_XPU bool is_nan(T v) {
             return false;
         }
 
         template <typename T, std::enable_if_t<std::is_floating_point<T>::value, bool> = false>
-        inline XPU bool is_inf(T v) {
+        inline LM_XPU bool is_inf(T v) {
 #if defined(__CUDACC__)
             return ::isinf(v);
 #else
@@ -43,15 +43,15 @@ namespace luminous {
         }
 
         template <typename T, std::enable_if_t<std::is_integral<T>::value, bool> = false>
-        inline XPU bool is_inf(T v) {
+        inline LM_XPU bool is_inf(T v) {
             return false;
         }
 
-        XPU_INLINE float FMA(float a, float b, float c) {
+        LM_XPU_INLINE float FMA(float a, float b, float c) {
             return std::fma(a, b, c);
         }
 
-        XPU_INLINE double FMA(double a, double b, double c) {
+        LM_XPU_INLINE double FMA(double a, double b, double c) {
             return std::fma(a, b, c);
         }
 

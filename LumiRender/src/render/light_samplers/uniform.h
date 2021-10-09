@@ -19,13 +19,13 @@ namespace luminous {
 
             CPU_ONLY(explicit UniformLightSampler(const LightSamplerConfig &config) {})
 
-            NDSC_XPU SampledLight sample(float u) const;
+            LM_ND_XPU SampledLight sample(float u) const;
 
-            NDSC_XPU SampledLight sample(const LightSampleContext &ctx, float u) const;
+            LM_ND_XPU SampledLight sample(const LightSampleContext &ctx, float u) const;
 
-            NDSC_XPU float PMF(const Light &light) const;
+            LM_ND_XPU float PMF(const Light &light) const;
 
-            NDSC_XPU float PMF(const LightSampleContext &ctx, const Light &light) const;
+            LM_ND_XPU float PMF(const LightSampleContext &ctx, const Light &light) const;
 
             GEN_STRING_FUNC({
                                 LUMINOUS_TO_STRING("light sampler : %s", type_name(this));

@@ -36,15 +36,15 @@ namespace luminous {
             BufferView<const_value_type> _CDF{};
             float _func_integral{};
         public:
-            XPU Distribution1D() = default;
+            LM_XPU Distribution1D() = default;
 
-            XPU Distribution1D(BufferView<const_value_type> func,
-                               BufferView<const_value_type> CDF, float integral)
+            LM_XPU Distribution1D(BufferView<const_value_type> func,
+                                  BufferView<const_value_type> CDF, float integral)
                     : _func(func), _CDF(CDF), _func_integral(integral) {}
 
-            NDSC_XPU size_t size() const { return _func.size(); }
+            LM_ND_XPU size_t size() const { return _func.size(); }
 
-            NDSC_XPU float sample_continuous(float u, float *pdf = nullptr, int *ofs = nullptr) const {
+            LM_ND_XPU float sample_continuous(float u, float *pdf = nullptr, int *ofs = nullptr) const {
                 auto predicate = [&](int index) {
                     return _CDF[index] <= u;
                 };
@@ -65,7 +65,7 @@ namespace luminous {
                 return (offset + du) / size();
             }
 
-            NDSC_XPU int sample_discrete(float u, float *PMF = nullptr, float *u_remapped = nullptr) const {
+            LM_ND_XPU int sample_discrete(float u, float *PMF = nullptr, float *u_remapped = nullptr) const {
                 auto predicate = [&](int index) {
                     return _CDF[index] <= u;
                 };
@@ -80,13 +80,13 @@ namespace luminous {
                 return offset;
             }
 
-            NDSC_XPU float integral() const { return _func_integral; }
+            LM_ND_XPU float integral() const { return _func_integral; }
 
             template<typename Index>
-            NDSC_XPU float func_at(Index i) const { return _func[i]; }
+            LM_ND_XPU float func_at(Index i) const { return _func[i]; }
 
             template<typename Index>
-            NDSC_XPU float PMF(Index i) const {
+            LM_ND_XPU float PMF(Index i) const {
                 DCHECK(i >= 0 && i < size());
                 return func_at(i) / (integral() * size());
             }
@@ -126,12 +126,12 @@ namespace luminous {
             BufferView<const Distribution1D> _conditional_v{};
             Distribution1D _marginal{};
         public:
-            XPU Distribution2D() = default;
+            LM_XPU Distribution2D() = default;
 
-            XPU Distribution2D(BufferView<const Distribution1D> conditional_v, Distribution1D marginal)
+            LM_XPU Distribution2D(BufferView<const Distribution1D> conditional_v, Distribution1D marginal)
                     : _conditional_v(conditional_v), _marginal(marginal) {}
 
-            NDSC_XPU float2 sample_continuous(float2 u, float *PDF) const {
+            LM_ND_XPU float2 sample_continuous(float2 u, float *PDF) const {
                 float PDFs[2];
                 int v;
                 float d1 = _marginal.sample_continuous(u[1], &PDFs[1], &v);
@@ -140,7 +140,7 @@ namespace luminous {
                 return make_float2(d0, d1);
             }
 
-            NDSC_XPU float PDF(float2 p) const {
+            LM_ND_XPU float PDF(float2 p) const {
                 size_t iu = clamp(size_t(p[0] * _conditional_v[0].size()), 0, _conditional_v[0].size() - 1);
                 size_t iv = clamp(size_t(p[1] * _marginal.size()), 0, _marginal.size() - 1);
                 return _conditional_v[iv].func_at(iu) / _marginal.integral();

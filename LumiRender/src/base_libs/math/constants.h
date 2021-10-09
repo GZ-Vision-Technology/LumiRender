@@ -39,29 +39,29 @@ namespace luminous {
             __device__ operator          double   ( ) const { return -CUDART_INF; }
             __device__ operator          float    ( ) const { return -CUDART_INF_F; }
 #else
-            XPU operator double() const { return -std::numeric_limits<double>::infinity(); }
+            LM_XPU operator double() const { return -std::numeric_limits<double>::infinity(); }
 
-            XPU operator float() const { return -std::numeric_limits<float>::infinity(); }
+            LM_XPU operator float() const { return -std::numeric_limits<float>::infinity(); }
 
-            XPU operator long long() const { return std::numeric_limits<long long>::min(); }
+            LM_XPU operator long long() const { return std::numeric_limits<long long>::min(); }
 
-            XPU operator unsigned long long() const { return std::numeric_limits<unsigned long long>::min(); }
+            LM_XPU operator unsigned long long() const { return std::numeric_limits<unsigned long long>::min(); }
 
-            XPU operator long() const { return std::numeric_limits<long>::min(); }
+            LM_XPU operator long() const { return std::numeric_limits<long>::min(); }
 
-            XPU operator unsigned long() const { return std::numeric_limits<unsigned long>::min(); }
+            LM_XPU operator unsigned long() const { return std::numeric_limits<unsigned long>::min(); }
 
-            XPU operator int() const { return std::numeric_limits<int>::min(); }
+            LM_XPU operator int() const { return std::numeric_limits<int>::min(); }
 
-            XPU operator unsigned int() const { return std::numeric_limits<unsigned int>::min(); }
+            LM_XPU operator unsigned int() const { return std::numeric_limits<unsigned int>::min(); }
 
-            XPU operator short() const { return std::numeric_limits<short>::min(); }
+            LM_XPU operator short() const { return std::numeric_limits<short>::min(); }
 
-            XPU operator unsigned short() const { return std::numeric_limits<unsigned short>::min(); }
+            LM_XPU operator unsigned short() const { return std::numeric_limits<unsigned short>::min(); }
 
-            XPU operator char() const { return std::numeric_limits<char>::min(); }
+            LM_XPU operator char() const { return std::numeric_limits<char>::min(); }
 
-            XPU operator unsigned char() const { return std::numeric_limits<unsigned char>::min(); }
+            LM_XPU operator unsigned char() const { return std::numeric_limits<unsigned char>::min(); }
 
 #endif
         } neg_inf MAYBE_UNUSED;
@@ -71,29 +71,29 @@ namespace luminous {
             __device__ operator          double   ( ) const { return CUDART_INF; }
             __device__ operator          float    ( ) const { return CUDART_INF_F; }
 #else
-            XPU operator double() const { return std::numeric_limits<double>::infinity(); }
+            LM_XPU operator double() const { return std::numeric_limits<double>::infinity(); }
 
-            XPU operator float() const { return std::numeric_limits<float>::infinity(); }
+            LM_XPU operator float() const { return std::numeric_limits<float>::infinity(); }
 
-            XPU operator long long() const { return std::numeric_limits<long long>::max(); }
+            LM_XPU operator long long() const { return std::numeric_limits<long long>::max(); }
 
-            XPU operator unsigned long long() const { return std::numeric_limits<unsigned long long>::max(); }
+            LM_XPU operator unsigned long long() const { return std::numeric_limits<unsigned long long>::max(); }
 
-            XPU operator long() const { return std::numeric_limits<long>::max(); }
+            LM_XPU operator long() const { return std::numeric_limits<long>::max(); }
 
-            XPU operator unsigned long() const { return std::numeric_limits<unsigned long>::max(); }
+            LM_XPU operator unsigned long() const { return std::numeric_limits<unsigned long>::max(); }
 
-            XPU operator int() const { return std::numeric_limits<int>::max(); }
+            LM_XPU operator int() const { return std::numeric_limits<int>::max(); }
 
-            XPU operator unsigned int() const { return std::numeric_limits<unsigned int>::max(); }
+            LM_XPU operator unsigned int() const { return std::numeric_limits<unsigned int>::max(); }
 
-            XPU operator short() const { return std::numeric_limits<short>::max(); }
+            LM_XPU operator short() const { return std::numeric_limits<short>::max(); }
 
-            XPU operator unsigned short() const { return std::numeric_limits<unsigned short>::max(); }
+            LM_XPU operator unsigned short() const { return std::numeric_limits<unsigned short>::max(); }
 
-            XPU operator char() const { return std::numeric_limits<char>::max(); }
+            LM_XPU operator char() const { return std::numeric_limits<char>::max(); }
 
-            XPU operator unsigned char() const { return std::numeric_limits<unsigned char>::max(); }
+            LM_XPU operator unsigned char() const { return std::numeric_limits<unsigned char>::max(); }
 
 #endif
         } inf MAYBE_UNUSED, pos_inf MAYBE_UNUSED;
@@ -103,9 +103,9 @@ namespace luminous {
             __device__ operator double( ) const { return CUDART_NAN; }
             __device__ operator float ( ) const { return CUDART_NAN_F; }
 #else
-            XPU operator double() const { return std::numeric_limits<double>::quiet_NaN(); }
+            LM_XPU operator double() const { return std::numeric_limits<double>::quiet_NaN(); }
 
-            XPU operator float() const { return std::numeric_limits<float>::quiet_NaN(); }
+            LM_XPU operator float() const { return std::numeric_limits<float>::quiet_NaN(); }
 
 #endif
         } nan MAYBE_UNUSED;
@@ -114,9 +114,9 @@ namespace luminous {
 #ifdef __CUDA_ARCH__
             // todo
 #else
-            XPU operator double() const { return std::numeric_limits<double>::epsilon(); }
+            LM_XPU operator double() const { return std::numeric_limits<double>::epsilon(); }
 
-            XPU operator float() const { return std::numeric_limits<float>::epsilon(); }
+            LM_XPU operator float() const { return std::numeric_limits<float>::epsilon(); }
 
 #endif
         } ulp MAYBE_UNUSED;
@@ -128,104 +128,104 @@ namespace luminous {
         template<>
         struct limits_traits<true> {
             template<typename T>
-            static inline XPU T value_limits_lower(T) { return std::numeric_limits<T>::min(); }
+            static inline LM_XPU T value_limits_lower(T) { return std::numeric_limits<T>::min(); }
 
             template<typename T>
-            static inline XPU T value_limits_upper(T) { return std::numeric_limits<T>::max(); }
+            static inline LM_XPU T value_limits_upper(T) { return std::numeric_limits<T>::max(); }
         };
 
         template<>
         struct limits_traits<false> {
             template<typename T>
-            static inline XPU T value_limits_lower(T) { return (T) NegInfTy(); }
+            static inline LM_XPU T value_limits_lower(T) { return (T) NegInfTy(); }
 
             template<typename T>
-            static inline XPU T value_limits_upper(T) { return (T) PosInfTy(); }
+            static inline LM_XPU T value_limits_upper(T) { return (T) PosInfTy(); }
         };
 
         /*! lower value of a completely *empty* range [+inf..-inf] */
         template<typename T>
-        inline XPU T empty_bounds_lower() {
+        inline LM_XPU T empty_bounds_lower() {
             return limits_traits<std::numeric_limits<T>::is_integer>::value_limits_upper(T());
         }
 
         /*! upper value of a completely *empty* range [+inf..-inf] */
         template<typename T>
-        inline XPU T empty_bounds_upper() {
+        inline LM_XPU T empty_bounds_upper() {
             return limits_traits<std::numeric_limits<T>::is_integer>::value_limits_lower(T());
         }
 
         /*! lower value of a completely *empty* range [+inf..-inf] */
         template<typename T>
-        inline XPU T empty_range_lower() {
+        inline LM_XPU T empty_range_lower() {
             return limits_traits<std::numeric_limits<T>::is_integer>::value_limits_upper(T());
         }
 
         /*! upper value of a completely *empty* range [+inf..-inf] */
         template<typename T>
-        inline XPU T empty_range_upper() {
+        inline LM_XPU T empty_range_upper() {
             return limits_traits<std::numeric_limits<T>::is_integer>::value_limits_lower(T());
         }
 
         /*! lower value of a completely open range [-inf..+inf] */
         template<typename T>
-        inline XPU T open_range_lower() {
+        inline LM_XPU T open_range_lower() {
             return limits_traits<std::numeric_limits<T>::is_integer>::value_limits_lower(T());
         }
 
         /*! upper value of a completely open range [-inf..+inf] */
         template<typename T>
-        inline XPU T open_range_upper() {
+        inline LM_XPU T open_range_upper() {
             return limits_traits<std::numeric_limits<T>::is_integer>::value_limits_upper(T());
         }
 
         template<>
-        inline XPU uint16_t empty_bounds_lower<uint16_t>() { return uint16_t(USHRT_MAX); }
+        inline LM_XPU uint16_t empty_bounds_lower<uint16_t>() { return uint16_t(USHRT_MAX); }
 
         template<>
-        inline XPU uint16_t empty_bounds_upper<uint16_t>() { return uint16_t(0); }
+        inline LM_XPU uint16_t empty_bounds_upper<uint16_t>() { return uint16_t(0); }
 
         template<>
-        inline XPU uint16_t open_range_lower<uint16_t>() { return uint16_t(0); }
+        inline LM_XPU uint16_t open_range_lower<uint16_t>() { return uint16_t(0); }
 
         template<>
-        inline XPU uint16_t open_range_upper<uint16_t>() { return uint16_t(USHRT_MAX); }
+        inline LM_XPU uint16_t open_range_upper<uint16_t>() { return uint16_t(USHRT_MAX); }
 
         template<>
-        inline XPU int16_t empty_bounds_lower<int16_t>() { return int16_t(SHRT_MAX); }
+        inline LM_XPU int16_t empty_bounds_lower<int16_t>() { return int16_t(SHRT_MAX); }
 
         template<>
-        inline XPU int16_t empty_bounds_upper<int16_t>() { return int16_t(SHRT_MIN); }
+        inline LM_XPU int16_t empty_bounds_upper<int16_t>() { return int16_t(SHRT_MIN); }
 
         template<>
-        inline XPU int16_t open_range_lower<int16_t>() { return int16_t(SHRT_MIN); }
+        inline LM_XPU int16_t open_range_lower<int16_t>() { return int16_t(SHRT_MIN); }
 
         template<>
-        inline XPU int16_t open_range_upper<int16_t>() { return int16_t(SHRT_MAX); }
+        inline LM_XPU int16_t open_range_upper<int16_t>() { return int16_t(SHRT_MAX); }
 
         template<>
-        inline XPU uint8_t empty_bounds_lower<uint8_t>() { return uint8_t(CHAR_MAX); }
+        inline LM_XPU uint8_t empty_bounds_lower<uint8_t>() { return uint8_t(CHAR_MAX); }
 
         template<>
-        inline XPU uint8_t empty_bounds_upper<uint8_t>() { return uint8_t(CHAR_MIN); }
+        inline LM_XPU uint8_t empty_bounds_upper<uint8_t>() { return uint8_t(CHAR_MIN); }
 
         template<>
-        inline XPU uint8_t open_range_lower<uint8_t>() { return uint8_t(CHAR_MIN); }
+        inline LM_XPU uint8_t open_range_lower<uint8_t>() { return uint8_t(CHAR_MIN); }
 
         template<>
-        inline XPU uint8_t open_range_upper<uint8_t>() { return uint8_t(CHAR_MAX); }
+        inline LM_XPU uint8_t open_range_upper<uint8_t>() { return uint8_t(CHAR_MAX); }
 
         template<>
-        inline XPU int8_t empty_bounds_lower<int8_t>() { return int8_t(SCHAR_MIN); }
+        inline LM_XPU int8_t empty_bounds_lower<int8_t>() { return int8_t(SCHAR_MIN); }
 
         template<>
-        inline XPU int8_t empty_bounds_upper<int8_t>() { return int8_t(SCHAR_MAX); }
+        inline LM_XPU int8_t empty_bounds_upper<int8_t>() { return int8_t(SCHAR_MAX); }
 
         template<>
-        inline XPU int8_t open_range_lower<int8_t>() { return int8_t(SCHAR_MAX); }
+        inline LM_XPU int8_t open_range_lower<int8_t>() { return int8_t(SCHAR_MAX); }
 
         template<>
-        inline XPU int8_t open_range_upper<int8_t>() { return int8_t(SCHAR_MIN); }
+        inline LM_XPU int8_t open_range_upper<int8_t>() { return int8_t(SCHAR_MIN); }
 
 
     } // luminous::constant

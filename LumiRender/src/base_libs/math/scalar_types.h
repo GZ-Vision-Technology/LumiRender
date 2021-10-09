@@ -41,7 +41,7 @@ namespace luminous {
     }
 
     inline namespace functor {
-        LM_NODISCARD XPU constexpr auto next_pow_of_two(uint v) noexcept {
+        LM_NODISCARD LM_XPU constexpr auto next_pow_of_two(uint v) noexcept {
             v--;
             v |= v >> 1u;
             v |= v >> 2u;
@@ -52,25 +52,25 @@ namespace luminous {
             return v;
         }
 
-        LM_NODISCARD XPU constexpr float radians(float deg) noexcept {
+        LM_NODISCARD LM_XPU constexpr float radians(float deg) noexcept {
             return deg * constant::Pi / 180.0f;
         }
-        LM_NODISCARD XPU constexpr float degrees(float rad) noexcept {
+        LM_NODISCARD LM_XPU constexpr float degrees(float rad) noexcept {
             return rad * constant::invPi * 180.0f;
         }
 
         template<typename T, typename F>
-        LM_NODISCARD XPU constexpr auto select(bool pred, T t, F f) noexcept {
+        LM_NODISCARD LM_XPU constexpr auto select(bool pred, T t, F f) noexcept {
             return pred ? t : f;
         }
 
         template<typename A, typename B>
-        LM_NODISCARD XPU constexpr auto lerp(float t, A a, B b) noexcept {
+        LM_NODISCARD LM_XPU constexpr auto lerp(float t, A a, B b) noexcept {
             return a + t * (b - a);
         }
 
         template <typename T, typename U, typename V>
-        LM_NODISCARD XPU constexpr T clamp(T val, U low, V high) noexcept {
+        LM_NODISCARD LM_XPU constexpr T clamp(T val, U low, V high) noexcept {
             if (val < low)
                 return low;
             else if (val > high)
@@ -84,14 +84,14 @@ namespace luminous {
             ::sincosf(theta, sin, cos);
         }
 #else
-        inline XPU void sincos(float theta, float *_sin, float *_cos) {
+        inline LM_XPU void sincos(float theta, float *_sin, float *_cos) {
             *_sin = sinf(theta);
             *_cos = cosf(theta);
         }
 #endif
 
         template<typename FloatType>
-        NDSC_XPU_INLINE FloatType safe_sqrt(FloatType x) noexcept {
+        LM_ND_XPU_INLINE FloatType safe_sqrt(FloatType x) noexcept {
             if constexpr (std::is_same_v<FloatType, float>) {
                 return std::sqrtf(std::max(x, 0.f));
             } else {
@@ -100,7 +100,7 @@ namespace luminous {
         }
 
         template<typename FloatType>
-        NDSC_XPU_INLINE FloatType safe_acos(FloatType x) noexcept {
+        LM_ND_XPU_INLINE FloatType safe_acos(FloatType x) noexcept {
             if constexpr (std::is_same_v<FloatType, float>) {
                 return std::acosf(clamp(x, -1.f, 1.f));
             } else {
@@ -109,7 +109,7 @@ namespace luminous {
         }
 
         template<typename FloatType>
-        NDSC_XPU_INLINE FloatType safe_asin(FloatType x) noexcept {
+        LM_ND_XPU_INLINE FloatType safe_asin(FloatType x) noexcept {
             if constexpr (std::is_same_v<FloatType, float>) {
                 return std::asinf(clamp(x, -1.f, 1.f));
             } else {
@@ -118,12 +118,12 @@ namespace luminous {
         }
 
         template <typename T>
-        inline XPU constexpr auto sqr(T v) {
+        inline LM_XPU constexpr auto sqr(T v) {
             return v * v;
         }
 
         template <int n>
-        XPU constexpr float Pow(float v) {
+        LM_XPU constexpr float Pow(float v) {
             if constexpr (n < 0) {
                 return 1 / Pow<-n>(v);
             } else if constexpr (n == 1) {
@@ -136,17 +136,17 @@ namespace luminous {
         }
 
         template <typename IntegerType>
-        XPU_INLINE IntegerType round_up(IntegerType x, IntegerType y) {
+        LM_XPU_INLINE IntegerType round_up(IntegerType x, IntegerType y) {
             return ( ( x + y - 1 ) / y ) * y;
         }
 
-        XPU_INLINE bool is_power_of_two(uint32_t i) noexcept { return (i & (i-1)) == 0; }
+        LM_XPU_INLINE bool is_power_of_two(uint32_t i) noexcept { return (i & (i - 1)) == 0; }
 
-        XPU_INLINE bool is_power_of_two(int32_t i) noexcept { return i > 0 && (i & (i-1)) == 0; }
+        LM_XPU_INLINE bool is_power_of_two(int32_t i) noexcept { return i > 0 && (i & (i - 1)) == 0; }
 
-        XPU_INLINE bool is_power_of_two(uint64_t i) noexcept { return (i & (i-1)) == 0; }
+        LM_XPU_INLINE bool is_power_of_two(uint64_t i) noexcept { return (i & (i - 1)) == 0; }
 
-        XPU_INLINE bool is_power_of_two(int64_t i) noexcept { return i > 0 && (i & (i-1)) == 0; }
+        LM_XPU_INLINE bool is_power_of_two(int64_t i) noexcept { return i > 0 && (i & (i - 1)) == 0; }
 
     }
 }

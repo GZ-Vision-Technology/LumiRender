@@ -21,23 +21,23 @@ namespace luminous {
 
             using BaseBinder::BaseBinder;
 
-            NDSC_XPU uint2 resolution() const;
+            LM_ND_XPU uint2 resolution() const;
 
-            NDSC_XPU Box2f screen_window() const;
+            LM_ND_XPU Box2f screen_window() const;
 
-            XPU void add_sample(uint2 pixel, Spectrum color, float weight, uint frame_index = 0u);
+            LM_XPU void add_sample(uint2 pixel, Spectrum color, float weight, uint frame_index = 0u);
 
-            XPU void set_resolution(uint2 res);
+            LM_XPU void set_resolution(uint2 res);
 
-            XPU void set_accumulate_buffer_view(BufferView<float4> buffer_view);
+            LM_XPU void set_accumulate_buffer_view(BufferView<float4> buffer_view);
 
-            XPU void set_frame_buffer_view(BufferView<FrameBufferType> buffer_view);
+            LM_XPU void set_frame_buffer_view(BufferView<FrameBufferType> buffer_view);
 
-            NDSC_XPU float4 *accumulate_buffer_ptr() {
+            LM_ND_XPU float4 *accumulate_buffer_ptr() {
                 LUMINOUS_VAR_DISPATCH(accumulate_buffer_ptr);
             }
 
-            NDSC_XPU FrameBufferType *frame_buffer_ptr() {
+            LM_ND_XPU FrameBufferType *frame_buffer_ptr() {
                 LUMINOUS_VAR_DISPATCH(frame_buffer_ptr);
             }
 

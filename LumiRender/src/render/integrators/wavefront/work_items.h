@@ -129,7 +129,7 @@ namespace luminous {
             RayQueue(const RayQueue &other)
                     : WorkQueue<RayWorkItem>(other) {}
 
-            NDSC_XPU_INLINE int push_primary_ray(const Ray &ray, int pixel_index) {
+            LM_ND_XPU_INLINE int push_primary_ray(const Ray &ray, int pixel_index) {
                 int index = allocate_entry();
                 this->ray[index] = ray;
                 this->depth[index] = 0;
@@ -141,9 +141,9 @@ namespace luminous {
                 return index;
             }
 
-            NDSC_XPU_INLINE int push_secondary_ray(const Ray &ray, int depth, const LightSampleContext &prev_lsc,
-                                                   const Spectrum &throughput, float eta_scale, bool specular_bounce,
-                                                   bool any_non_specular_bounces, int pixel_index) {
+            LM_ND_XPU_INLINE int push_secondary_ray(const Ray &ray, int depth, const LightSampleContext &prev_lsc,
+                                                    const Spectrum &throughput, float eta_scale, bool specular_bounce,
+                                                    bool any_non_specular_bounces, int pixel_index) {
                 int index = allocate_entry();
                 this->ray[index] = ray;
                 this->depth[index] = depth;
@@ -174,7 +174,7 @@ namespace luminous {
         public:
             using WorkQueue::WorkQueue;
 
-            NDSC_XPU_INLINE int push(RayWorkItem r) {
+            LM_ND_XPU_INLINE int push(RayWorkItem r) {
                 EscapedRayWorkItem item{r.ray.origin(), r.ray.direction(), r.depth,
                                         r.pixel_index, r.throughput, r.specular_bounce, r.prev_lsc};
                 return WorkQueue::push(item);

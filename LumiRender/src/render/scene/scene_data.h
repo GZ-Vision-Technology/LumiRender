@@ -54,14 +54,14 @@ namespace luminous {
             BufferView<const Distribution2D> distribution2ds;
 
 #define GEN_GET_FUNCTION(attribute)                                                     \
-            NDSC_XPU_INLINE auto get_##attribute(const MeshHandle &mesh) const {        \
+            LM_ND_XPU_INLINE auto get_##attribute(const MeshHandle &mesh) const {        \
                 return (attribute).sub_view(mesh.vertex_offset, mesh.vertex_count);     \
             }                                                                           \
-            NDSC_XPU_INLINE auto get_##attribute##_by_mesh_idx(index_t mesh_idx) const {\
+            LM_ND_XPU_INLINE auto get_##attribute##_by_mesh_idx(index_t mesh_idx) const {\
                 MeshHandle mesh = meshes[mesh_idx];                                     \
                 return get_##attribute(mesh);                                           \
             }                                                                           \
-            NDSC_XPU_INLINE auto get_##attribute(index_t inst_idx) const {              \
+            LM_ND_XPU_INLINE auto get_##attribute(index_t inst_idx) const {              \
                 auto mesh_idx = inst_to_mesh_idx[inst_idx];                             \
                 return get_##attribute##_by_mesh_idx(mesh_idx);                         \
             }
@@ -74,51 +74,51 @@ namespace luminous {
 
 #undef GEN_GET_FUNCTION
 
-            NDSC_XPU_INLINE const MeshHandle &get_mesh(index_t inst_idx) const {
+            LM_ND_XPU_INLINE const MeshHandle &get_mesh(index_t inst_idx) const {
                 index_t mesh_idx = inst_to_mesh_idx[inst_idx];
                 return meshes[mesh_idx];
             }
 
-            NDSC_XPU_INLINE const Transform &get_transform(index_t inst_id) const {
+            LM_ND_XPU_INLINE const Transform &get_transform(index_t inst_id) const {
                 index_t transform_idx = inst_to_transform_idx[inst_id];
                 return transforms[transform_idx];
             }
 
-            NDSC_XPU_INLINE const TriangleHandle &get_triangle(const MeshHandle &mesh, index_t triangle_id) const {
+            LM_ND_XPU_INLINE const TriangleHandle &get_triangle(const MeshHandle &mesh, index_t triangle_id) const {
                 return triangles[mesh.triangle_offset + triangle_id];
             }
 
-            NDSC_XPU_INLINE const TriangleHandle &get_triangle(const HitPoint &closest_hit) const {
+            LM_ND_XPU_INLINE const TriangleHandle &get_triangle(const HitPoint &closest_hit) const {
                 auto mesh = get_mesh(closest_hit.instance_id);
                 return get_triangle(mesh, closest_hit.triangle_id);
             }
 
-            XPU SurfaceInteraction compute_surface_interaction(index_t inst_id,
-                                                               index_t tri_id,
-                                                               float2 bary) const;
+            LM_XPU SurfaceInteraction compute_surface_interaction(index_t inst_id,
+                                                                  index_t tri_id,
+                                                                  float2 bary) const;
 
-            LM_NODISCARD XPU_INLINE SurfaceInteraction compute_surface_interaction(const HitPoint &closest_hit) const {
+            LM_NODISCARD LM_XPU_INLINE SurfaceInteraction compute_surface_interaction(const HitPoint &closest_hit) const {
                 return compute_surface_interaction(closest_hit.instance_id, closest_hit.triangle_id, closest_hit.bary);
             }
 
-            XPU void fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
-                                    float3 *world_p, float3 *world_ng = nullptr,
-                                    float3 *world_ns = nullptr, float2 *tex_coord = nullptr) const;
+            LM_XPU void fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
+                                       float3 *world_p, float3 *world_ng = nullptr,
+                                       float3 *world_ns = nullptr, float2 *tex_coord = nullptr) const;
 
-            XPU_INLINE void fill_attribute(const HitPoint &closest_hit,
-                                           float3 *world_p, float3 *world_ng = nullptr,
-                                           float3 *world_ns = nullptr, float2 *tex_coord = nullptr) const {
+            LM_XPU_INLINE void fill_attribute(const HitPoint &closest_hit,
+                                              float3 *world_p, float3 *world_ng = nullptr,
+                                              float3 *world_ns = nullptr, float2 *tex_coord = nullptr) const {
                 fill_attribute(closest_hit.instance_id, closest_hit.triangle_id, closest_hit.bary,
                                world_p, world_ng, world_ns, tex_coord);
             }
 
-            NDSC_XPU const Material &get_material(index_t inst_id) const;
+            LM_ND_XPU const Material &get_material(index_t inst_id) const;
 
-            NDSC_XPU const Texture &get_texture(index_t idx) const;
+            LM_ND_XPU const Texture &get_texture(index_t idx) const;
 
-            NDSC_XPU const Distribution1D &get_distrib(index_t inst_id) const;
+            LM_ND_XPU const Distribution1D &get_distrib(index_t inst_id) const;
 
-            NDSC_XPU const Distribution2D &get_distribution2d(index_t idx) const;
+            LM_ND_XPU const Distribution2D &get_distribution2d(index_t idx) const;
         };
     }
 }

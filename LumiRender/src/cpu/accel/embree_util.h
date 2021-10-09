@@ -14,7 +14,7 @@ using std::endl;
 
 namespace luminous {
     inline namespace cpu {
-        NDSC_INLINE RTCRay to_RTCRay(Ray r) {
+        LM_ND_INLINE RTCRay to_RTCRay(Ray r) {
             RTCRay ray{};
             ray.org_x = r.org_x;
             ray.org_y = r.org_y;
@@ -28,7 +28,7 @@ namespace luminous {
             return ray;
         }
 
-        NDSC_INLINE RTCRayHit to_RTCRayHit(Ray ray) {
+        LM_ND_INLINE RTCRayHit to_RTCRayHit(Ray ray) {
             RTCRay rtc_ray = to_RTCRay(ray);
             RTCRayHit rh{};
             rh.ray = rtc_ray;
@@ -134,12 +134,12 @@ namespace luminous {
             to_prd<ray_num>(rh, prd);
         }
 
-        NDSC_INLINE RTCBounds to_RTCBounds(Box3f box) {
+        LM_ND_INLINE RTCBounds to_RTCBounds(Box3f box) {
             return RTCBounds{box.lower.x, box.lower.y, box.lower.z, 0,
                              box.upper.x, box.upper.y, box.upper.z, 0};
         }
 
-        NDSC_INLINE bool rtc_intersect(RTCScene scene, Ray ray, PerRayData *prd) {
+        LM_ND_INLINE bool rtc_intersect(RTCScene scene, Ray ray, PerRayData *prd) {
             RTCIntersectContext context{};
             rtcInitIntersectContext(&context);
             RTCRayHit rh = to_RTCRayHit(ray);
@@ -151,7 +151,7 @@ namespace luminous {
             return prd->is_hit();
         }
 
-        NDSC_INLINE bool rtc_occlusion(RTCScene scene, Ray ray) {
+        LM_ND_INLINE bool rtc_occlusion(RTCScene scene, Ray ray) {
             RTCIntersectContext context{};
             rtcInitIntersectContext(&context);
             RTCRay rtc_ray = to_RTCRay(ray);

@@ -10,11 +10,11 @@
 namespace luminous {
     inline namespace geometry {
 
-        NDSC_XPU_INLINE bool same_hemisphere(float3 w1, float3 w2) {
+        LM_ND_XPU_INLINE bool same_hemisphere(float3 w1, float3 w2) {
             return w1.z * w2.z > 0;
         }
 
-        XPU inline float3 offset_ray_origin(const float3 &p_in, const float3 &n_in) noexcept {
+        LM_XPU inline float3 offset_ray_origin(const float3 &p_in, const float3 &n_in) noexcept {
 
             constexpr auto origin = 1.0f / 32.0f;
             constexpr auto float_scale = 1.0f / 65536.0f;
@@ -34,23 +34,23 @@ namespace luminous {
             return select(functor::abs(p) < origin, p + float_scale * n, p_i);
         }
 
-        NDSC_XPU_INLINE float3 spherical_direction(float sin_theta, float cos_theta, float sin_phi, float cos_phi) {
+        LM_ND_XPU_INLINE float3 spherical_direction(float sin_theta, float cos_theta, float sin_phi, float cos_phi) {
             return make_float3(sin_theta * cos_phi, sin_theta * sin_phi, cos_theta);
         }
 
-        NDSC_XPU_INLINE float3 spherical_direction(float sin_theta, float cos_theta, float phi) {
+        LM_ND_XPU_INLINE float3 spherical_direction(float sin_theta, float cos_theta, float phi) {
             return make_float3(sin_theta * std::cosf(phi), sin_theta * std::sinf(phi), cos_theta);
         }
 
-        NDSC_XPU_INLINE float3 spherical_direction(float theta, float phi) {
+        LM_ND_XPU_INLINE float3 spherical_direction(float theta, float phi) {
             return spherical_direction(std::sinf(theta), std::cosf(theta), phi);
         }
 
-        NDSC_XPU_INLINE float spherical_theta(float3 v) {
+        LM_ND_XPU_INLINE float spherical_theta(float3 v) {
             return safe_acos(v.z);
         }
 
-        NDSC_XPU_INLINE float spherical_phi(float3 v) {
+        LM_ND_XPU_INLINE float spherical_phi(float3 v) {
             float p = std::atan2f(v.y, v.x);
             return (p < 0) ? (p + 2 * Pi) : p;
         }
@@ -65,63 +65,63 @@ namespace luminous {
             float dir_z{0.f};
             float t_max{0.f};
         public:
-            explicit XPU Ray(float t_max = ray_t_max) noexcept:
+            explicit LM_XPU Ray(float t_max = ray_t_max) noexcept:
                     t_max(t_max) {}
 
-            XPU Ray(const float3 origin, const float3 direction,
-                    float t_max = ray_t_max) noexcept:
+            LM_XPU Ray(const float3 origin, const float3 direction,
+                       float t_max = ray_t_max) noexcept:
                     t_max(t_max) {
                 update_origin(origin);
                 update_direction(direction);
             }
 
-            XPU void update_origin(const float3 origin) noexcept {
+            LM_XPU void update_origin(const float3 origin) noexcept {
                 org_x = origin.x;
                 org_y = origin.y;
                 org_z = origin.z;
             }
 
-            XPU void update_direction(const float3 direction) noexcept {
+            LM_XPU void update_direction(const float3 direction) noexcept {
                 dir_x = direction.x;
                 dir_y = direction.y;
                 dir_z = direction.z;
             }
 
-            NDSC_XPU float3 origin() const noexcept {
+            LM_ND_XPU float3 origin() const noexcept {
                 return make_float3(org_x, org_y, org_z);
             }
 
-            NDSC_XPU float3 direction() const noexcept {
+            LM_ND_XPU float3 direction() const noexcept {
                 return make_float3(dir_x, dir_y, dir_z);
             }
 
-            NDSC_XPU bool has_nan() const noexcept {
+            LM_ND_XPU bool has_nan() const noexcept {
                 return luminous::has_nan(origin()) || luminous::has_nan(direction());
             }
 
-            NDSC_XPU bool has_inf() const noexcept {
+            LM_ND_XPU bool has_inf() const noexcept {
                 return luminous::has_inf(origin()) || luminous::has_inf(direction());
             }
 
-            XPU void print() const noexcept {
+            LM_XPU void print() const noexcept {
                 printf("origin:[%f,%f,%f],direction[%f,%f,%f]\n",
                        org_x, org_y, org_z, dir_x, dir_y, dir_z);
             }
 
-            NDSC_XPU static Ray spawn_ray(float3 pos, float3 normal, float3 dir) {
+            LM_ND_XPU static Ray spawn_ray(float3 pos, float3 normal, float3 dir) {
                 normal *= dot(normal, dir) > 0 ? 1 : -1;
                 float3 org = offset_ray_origin(pos, normal);
                 return Ray(org, dir);
             }
 
-            NDSC_XPU static Ray spawn_ray_to(float3 p_start, float3 n_start, float3 p_target) {
+            LM_ND_XPU static Ray spawn_ray_to(float3 p_start, float3 n_start, float3 p_target) {
                 float3 dir = p_target - p_start;
                 float3 org = offset_ray_origin(p_start, n_start);
                 n_start *= dot(n_start, dir) > 0 ? 1 : -1;
                 return Ray(org, dir, 1 - shadow_epsilon);
             }
 
-            NDSC_XPU static Ray spawn_ray_to(float3 p_start, float3 n_start, float3 p_target, float3 n_target) {
+            LM_ND_XPU static Ray spawn_ray_to(float3 p_start, float3 n_start, float3 p_target, float3 n_target) {
                 p_target = offset_ray_origin(p_target, n_target);
                 float3 dir = p_target - p_start;
                 n_start *= dot(n_start, dir) > 0 ? 1 : -1;
@@ -142,11 +142,11 @@ namespace luminous {
             index_t triangle_id{invalid_uint32};
             float2 bary{};
 
-            NDSC_XPU bool is_hit() const {
+            LM_ND_XPU bool is_hit() const {
                 return triangle_id != invalid_uint32;
             }
 
-            XPU void print() const {
+            LM_XPU void print() const {
                 printf("instance_id:%u,triangle id:%u, bary:(%f,%f)\n",
                        instance_id, triangle_id, bary.x, bary.y);
             }

@@ -23,23 +23,23 @@ namespace luminous {
 
             GEN_TO_STRING_FUNC
 
-            XPU void print() const {
+            LM_XPU void print() const {
                 LUMINOUS_VAR_DISPATCH(print)
             }
 
-            NDSC_XPU float4 eval(const TextureEvalContext &tec) const {
+            LM_ND_XPU float4 eval(const TextureEvalContext &tec) const {
                 LUMINOUS_VAR_DISPATCH(eval, tec)
             }
 
-            NDSC_XPU float4 eval(float2 uv) const {
+            LM_ND_XPU float4 eval(float2 uv) const {
                 return eval(TextureEvalContext(uv));
             }
 
-            NDSC_XPU PixelFormat pixel_format() const {
+            LM_ND_XPU PixelFormat pixel_format() const {
                 LUMINOUS_VAR_DISPATCH(pixel_format)
             }
 
-            XPU void set_mapping(const TextureMapping2D &mapping) {
+            LM_XPU void set_mapping(const TextureMapping2D &mapping) {
                 LUMINOUS_VAR_DISPATCH(set_mapping, mapping)
             }
 

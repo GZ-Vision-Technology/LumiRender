@@ -21,11 +21,11 @@ namespace luminous {
             ConstantTexture(PixelFormat pixel_format, float4 val)
                     : TextureBase(pixel_format), _val(val) {}
 
-            NDSC_XPU float4 eval(const TextureEvalContext &tec) const {
+            LM_ND_XPU float4 eval(const TextureEvalContext &tec) const {
                 return _val;
             }
 
-            XPU void print() const {
+            LM_XPU void print() const {
                 printf("ConstantTexture: %f,%f,%f,%f\n", _val.x, _val.y, _val.z, _val.w);
             }
 

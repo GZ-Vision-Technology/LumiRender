@@ -43,20 +43,20 @@ namespace luminous {
                       _scene_diameter(scene_box.radius() * 2.f),
                       _distribution_idx(distribution_idx) {}
 
-            NDSC_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
+            LM_ND_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 
-            NDSC_XPU Spectrum L(float3 dir_in_obj, const SceneData *data) const;
+            LM_ND_XPU Spectrum L(float3 dir_in_obj, const SceneData *data) const;
 
-            NDSC_XPU SurfaceInteraction sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const;
+            LM_ND_XPU SurfaceInteraction sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const;
 
-            NDSC_XPU float PDF_Li(const Interaction &p_ref, const SurfaceInteraction &p_light,
-                                  float3 wi, const SceneData *data) const;
+            LM_ND_XPU float PDF_Li(const Interaction &p_ref, const SurfaceInteraction &p_light,
+                                   float3 wi, const SceneData *data) const;
 
-            NDSC_XPU Spectrum on_miss(Ray ray, const SceneData *data) const;
+            LM_ND_XPU Spectrum on_miss(Ray ray, const SceneData *data) const;
 
-            NDSC_XPU Spectrum power() const;
+            LM_ND_XPU Spectrum power() const;
 
-            XPU void print() const;
+            LM_XPU void print() const;
 
             GEN_STRING_FUNC({
                                 LUMINOUS_TO_STRING("light Base : %s,name:%s",

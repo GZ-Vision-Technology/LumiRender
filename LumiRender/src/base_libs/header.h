@@ -22,15 +22,15 @@
 
 #define INLINE inline
 
-#define XPU_INLINE XPU INLINE
+#define LM_XPU_INLINE LM_XPU INLINE
 
-#define GPU_INLINE GPU INLINE
+#define LM_GPU_INLINE LM_GPU INLINE
 
 #define LM_RESTRICT __restrict
 #define LM_NODISCARD [[nodiscard]]
-#define NDSC_XPU LM_NODISCARD XPU
-#define NDSC_INLINE LM_NODISCARD INLINE
-#define NDSC_XPU_INLINE LM_NODISCARD XPU_INLINE
+#define LM_ND_XPU LM_NODISCARD LM_XPU
+#define LM_ND_INLINE LM_NODISCARD INLINE
+#define LM_ND_XPU_INLINE LM_NODISCARD LM_XPU_INLINE
 
 #define TO_STRING(x) TO_STRING2(x)
 #define TO_STRING2(x) #x
@@ -50,13 +50,12 @@
 #ifdef IS_GPU_CODE
 
 #define LUMINOUS_DBG(...) printf(__FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
-#define XPU __host__ __device__
-#define GPU __device__
-#define CPU __host__
+#define LM_XPU __host__ __device__
+#define LM_GPU __device__
 
 #define CPU_ONLY(...)
 
-#define GEN_NAME_FUNC NDSC_XPU const char *name() {             \
+#define GEN_NAME_FUNC LM_ND_XPU const char *name() {             \
                                         LUMINOUS_VAR_DISPATCH(name);\
                                    }
 
@@ -64,16 +63,15 @@
 
 #else
 
-#define XPU
-#define GPU
-#define CPU
+#define LM_XPU
+#define LM_GPU
 #define LUMINOUS_DBG(...) fprintf(stderr, __FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
 
 #define CPU_ONLY(...) __VA_ARGS__
 
 #define GEN_STRING_FUNC(args) LM_NODISCARD std::string to_string() const args
 
-#define GEN_NAME_FUNC NDSC_XPU const std::string name() {       \
+#define GEN_NAME_FUNC LM_ND_XPU const std::string name() {       \
                                         return this->dispatch([&, this](auto &&self) { return type_name(&self); });\
                                    }
 #endif
@@ -88,7 +86,7 @@ constexpr const char *type_name(T *ptr = nullptr) {
         return typeid(*ptr).name();
 }
 
-#define GEN_BASE_NAME(arg) XPU static constexpr const char *base_name() { return #arg; }
+#define GEN_BASE_NAME(arg) LM_XPU static constexpr const char *base_name() { return #arg; }
 
 #define GEN_TO_STRING_FUNC GEN_STRING_FUNC({LUMINOUS_VAR_DISPATCH(to_string);})
 

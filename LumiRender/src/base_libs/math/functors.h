@@ -17,16 +17,16 @@ namespace luminous {
         using std::max;
         using std::min;
 
-        inline XPU float rcp(float f) noexcept { return 1.f / f; }
+        inline LM_XPU float rcp(float f) noexcept { return 1.f / f; }
 
-        inline XPU double rcp(double d) noexcept { return 1. / d; }
+        inline LM_XPU double rcp(double d) noexcept { return 1. / d; }
 
-        XPU_INLINE float saturate(const float &f) { return std::min(1.f, std::max(0.f, f)); }
+        LM_XPU_INLINE float saturate(const float &f) { return std::min(1.f, std::max(0.f, f)); }
 
         // Vector Functions
 #define MAKE_VECTOR_UNARY_FUNC(func)                                          \
     template<typename T, uint N>                                              \
-    NDSC_XPU constexpr auto func(Vector<T, N> v) noexcept {                   \
+    LM_ND_XPU constexpr auto func(Vector<T, N> v) noexcept {                   \
         static_assert(N == 2 || N == 3 || N == 4);                            \
         if constexpr (N == 2) {                                               \
             return Vector<T, 2>{func(v.x), func(v.y)};                        \
@@ -51,7 +51,7 @@ namespace luminous {
 
 #define MAKE_VECTOR_UNARY_FUNC_BOOL(func)                                      \
     template<typename T, uint N>                                               \
-        NDSC_XPU constexpr auto is_##func##_v(Vector<T, N> v) noexcept {       \
+        LM_ND_XPU constexpr auto is_##func##_v(Vector<T, N> v) noexcept {       \
         static_assert(N == 2 || N == 3 || N == 4);                             \
         if constexpr (N == 2) {                                                \
             return Vector<bool, 2>{is_##func(v.x), is_##func(v.y)};            \
@@ -64,16 +64,16 @@ namespace luminous {
         }                                                                      \
     }                                                                          \
     template<typename T, uint32_t N>                                           \
-    NDSC_XPU_INLINE bool has_##func(Vector<T, N> v) noexcept {                 \
+    LM_ND_XPU_INLINE bool has_##func(Vector<T, N> v) noexcept {                 \
         return any(is_##func##_v(v));                                          \
     }                                                                          \
     template<typename T>                                                       \
-    NDSC_XPU_INLINE bool has_##func(Matrix3x3<T> mat) noexcept {               \
+    LM_ND_XPU_INLINE bool has_##func(Matrix3x3<T> mat) noexcept {               \
         return has_##func(mat.cols[0]) || has_##func(mat.cols[1])              \
             || has_##func(mat.cols[2]);                                        \
     }                                                                          \
     template<typename T>                                                       \
-    NDSC_XPU_INLINE bool has_##func(Matrix4x4<T> mat) noexcept {               \
+    LM_ND_XPU_INLINE bool has_##func(Matrix4x4<T> mat) noexcept {               \
         return has_##func(mat.cols[0]) || has_##func(mat.cols[1])              \
             || has_##func(mat.cols[2]) || has_##func(mat.cols[3]);             \
     }
@@ -82,19 +82,19 @@ namespace luminous {
         MAKE_VECTOR_UNARY_FUNC_BOOL(nan)
 
         template<typename T, uint32_t N>
-        NDSC_XPU_INLINE bool is_zero(Vector<T, N> v) noexcept {
+        LM_ND_XPU_INLINE bool is_zero(Vector<T, N> v) noexcept {
             return all(v == T(0));
         }
 
         template<typename T, uint32_t N>
-        NDSC_XPU_INLINE bool nonzero(Vector<T, N> v) noexcept {
+        LM_ND_XPU_INLINE bool nonzero(Vector<T, N> v) noexcept {
             return any(v != T(0));
         }
 
 #undef MAKE_VECTOR_UNARY_FUNC_BOOL
 
         template<typename T, uint N, std::enable_if_t<scalar::is_scalar < T>, int> = 0>
-        NDSC_XPU constexpr auto select(Vector<bool, N> pred, Vector <T, N> t, Vector <T, N> f) noexcept {
+        LM_ND_XPU constexpr auto select(Vector<bool, N> pred, Vector <T, N> t, Vector <T, N> f) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
                 return Vector < T, N > {select(pred.x, t.x, f.x), select(pred.y, t.y, f.y)};
@@ -108,7 +108,7 @@ namespace luminous {
 
 #define MAKE_VECTOR_BINARY_FUNC(func)                                                             \
     template<typename T, uint N>                                                                  \
-    NDSC_XPU constexpr auto func(Vector<T, N> v, Vector<T, N> u) noexcept {                       \
+    LM_ND_XPU constexpr auto func(Vector<T, N> v, Vector<T, N> u) noexcept {                       \
         static_assert(N == 2 || N == 3 || N == 4);                                                \
         if constexpr (N == 2) {                                                                   \
             return Vector<T, 2>{func(v.x, u.x), func(v.y, u.y)};                                  \
@@ -119,7 +119,7 @@ namespace luminous {
         }                                                                                         \
     }                                                                                             \
     template<typename T, uint N>                                                                  \
-    NDSC_XPU constexpr auto func(T v, Vector<T, N> u) noexcept {                                  \
+    LM_ND_XPU constexpr auto func(T v, Vector<T, N> u) noexcept {                                  \
         static_assert(N == 2 || N == 3 || N == 4);                                                \
         if constexpr (N == 2) {                                                                   \
             return Vector<T, 2>{func(v, u.x), func(v, u.y)};                                      \
@@ -130,7 +130,7 @@ namespace luminous {
         }                                                                                         \
     }                                                                                             \
     template<typename T, uint N>                                                                  \
-    NDSC_XPU constexpr auto func(Vector<T, N> v, T u) noexcept {                                  \
+    LM_ND_XPU constexpr auto func(Vector<T, N> v, T u) noexcept {                                  \
         static_assert(N == 2 || N == 3 || N == 4);                                                \
         if constexpr (N == 2) {                                                                   \
             return Vector<T, 2>{func(v.x, u), func(v.y, u)};                                      \
@@ -152,7 +152,7 @@ namespace luminous {
 #undef MAKE_VECTOR_UNARY_FUNC
 
         template<typename T, uint N>
-        NDSC_XPU constexpr auto volume(Vector <T, N> v) noexcept {
+        LM_ND_XPU constexpr auto volume(Vector <T, N> v) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
                 return v.x * v.y;
@@ -164,7 +164,7 @@ namespace luminous {
         }
 
         template<typename T, uint N>
-        NDSC_XPU constexpr auto dot(Vector <T, N> u, Vector <T, N> v) noexcept {
+        LM_ND_XPU constexpr auto dot(Vector <T, N> u, Vector <T, N> v) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
                 return u.x * v.x + u.y * v.y;
@@ -176,44 +176,44 @@ namespace luminous {
         }
 
         template<typename T, uint N>
-        NDSC_XPU constexpr auto abs_dot(Vector <T, N> u, Vector <T, N> v) noexcept {
+        LM_ND_XPU constexpr auto abs_dot(Vector <T, N> u, Vector <T, N> v) noexcept {
             return abs(dot(u, v));
         }
 
         template<typename T, uint N>
-        NDSC_XPU constexpr auto length(Vector <T, N> u) noexcept {
+        LM_ND_XPU constexpr auto length(Vector <T, N> u) noexcept {
             return sqrt(dot(u, u));
         }
 
         template<typename T, uint N>
-        NDSC_XPU constexpr auto length_squared(Vector <T, N> u) noexcept {
+        LM_ND_XPU constexpr auto length_squared(Vector <T, N> u) noexcept {
             return dot(u, u);
         }
 
         template<typename T, uint N>
-        NDSC_XPU constexpr auto normalize(Vector <T, N> u) noexcept {
+        LM_ND_XPU constexpr auto normalize(Vector <T, N> u) noexcept {
             return u * (1.0f / length(u));
         }
 
         template<typename T, uint N>
-        NDSC_XPU constexpr auto distance(Vector <T, N> u, Vector <T, N> v) noexcept {
+        LM_ND_XPU constexpr auto distance(Vector <T, N> u, Vector <T, N> v) noexcept {
             return length(u - v);
         }
 
         template<typename T, uint N>
-        NDSC_XPU constexpr auto distance_squared(Vector <T, N> u, Vector <T, N> v) noexcept {
+        LM_ND_XPU constexpr auto distance_squared(Vector <T, N> u, Vector <T, N> v) noexcept {
             return length_squared(u - v);
         }
 
         template<typename T>
-        NDSC_XPU constexpr auto cross(Vector<T, 3> u, Vector<T, 3> v) noexcept {
+        LM_ND_XPU constexpr auto cross(Vector<T, 3> u, Vector<T, 3> v) noexcept {
             return Vector<T, 3>(u.y * v.z - v.y * u.z,
                                 u.z * v.x - v.z * u.x,
                                 u.x * v.y - v.x * u.y);
         }
 
         template<typename T, uint N>
-        NDSC_XPU_INLINE T triangle_area(Vector<T, N> p0, Vector<T, N> p1, Vector<T, N> p2) {
+        LM_ND_XPU_INLINE T triangle_area(Vector<T, N> p0, Vector<T, N> p1, Vector<T, N> p2) {
             static_assert(N == 3 || N == 2 , "N must be greater than 1!");
             if constexpr (N == 2) {
                 Vector<T, 3> pp0 = Vector<T, 3>{p0.x, p0.y, 0};
@@ -226,7 +226,7 @@ namespace luminous {
         }
 
         template<typename T>
-        NDSC_XPU T triangle_lerp(float2 barycentric, T v0, T v1, T v2) {
+        LM_ND_XPU T triangle_lerp(float2 barycentric, T v0, T v1, T v2) {
             auto u = barycentric.x;
             auto v = barycentric.y;
             auto w = 1 - barycentric.x - barycentric.y;
@@ -234,9 +234,9 @@ namespace luminous {
         }
 
         template<typename T>
-        XPU void coordinate_system(Vector<T, 3> v1,
-                                   Vector<T, 3> *v2,
-                                   Vector<T, 3> *v3) {
+        LM_XPU void coordinate_system(Vector<T, 3> v1,
+                                      Vector<T, 3> *v2,
+                                      Vector<T, 3> *v3) {
             if (abs(v1.x) > abs(v1.y)) {
                 *v2 = Vector < T, 3 > (-v1.z, 0, v1.x) / sqrt(v1.x * v1.x + v1.z * v1.z);
             } else {
@@ -246,15 +246,15 @@ namespace luminous {
         }
 
         // Quaternion Functions
-        LM_NODISCARD XPU_INLINE float dot(Quaternion q1, Quaternion q2) noexcept {
+        LM_NODISCARD LM_XPU_INLINE float dot(Quaternion q1, Quaternion q2) noexcept {
             return dot(q1.v, q2.v) + q1.w * q2.w;
         }
 
-        LM_NODISCARD XPU_INLINE Quaternion normalize(Quaternion q) noexcept {
+        LM_NODISCARD LM_XPU_INLINE Quaternion normalize(Quaternion q) noexcept {
             return q / std::sqrt(dot(q, q));
         }
 
-        LM_NODISCARD XPU_INLINE Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) {
+        LM_NODISCARD LM_XPU_INLINE Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) {
             float cosTheta = dot(q1, q2);
             if (cosTheta > .9995f)
                 //If the rotation Angle is too small, treat it as a straight line
@@ -273,14 +273,14 @@ namespace luminous {
 
         // Matrix Functions
         template<typename T>
-        LM_NODISCARD XPU constexpr auto transpose(Matrix3x3 <T> m) noexcept {
+        LM_NODISCARD LM_XPU constexpr auto transpose(Matrix3x3 <T> m) noexcept {
             return Matrix3x3<T>(m[0].x, m[1].x, m[2].x,
                                 m[0].y, m[1].y, m[2].y,
                                 m[0].z, m[1].z, m[2].z);
         }
 
         template<typename T>
-        LM_NODISCARD XPU constexpr auto transpose(Matrix4x4 <T> m) noexcept {
+        LM_NODISCARD LM_XPU constexpr auto transpose(Matrix4x4 <T> m) noexcept {
             return Matrix4x4<T>(m[0].x, m[1].x, m[2].x, m[3].x,
                                 m[0].y, m[1].y, m[2].y, m[3].y,
                                 m[0].z, m[1].z, m[2].z, m[3].z,
@@ -288,7 +288,7 @@ namespace luminous {
         }
 
         template<typename T>
-        LM_NODISCARD XPU auto inverse(Matrix3x3 <T> m) noexcept {// from GLM
+        LM_NODISCARD LM_XPU auto inverse(Matrix3x3 <T> m) noexcept {// from GLM
             T one_over_determinant = 1.0f / (m[0].x * (m[1].y * m[2].z - m[2].y * m[1].z) -
                                              m[1].x * (m[0].y * m[2].z - m[2].y * m[0].z) +
                                              m[2].x * (m[0].y * m[1].z - m[1].y * m[0].z));
@@ -305,7 +305,7 @@ namespace luminous {
         }
 
         template<typename T>
-        LM_NODISCARD XPU constexpr auto inverse(const Matrix4x4 <T> m) noexcept {// from GLM
+        LM_NODISCARD LM_XPU constexpr auto inverse(const Matrix4x4 <T> m) noexcept {// from GLM
             const T coef00 = m[2].z * m[3].w - m[3].z * m[2].w;
             const T coef02 = m[1].z * m[3].w - m[3].z * m[1].w;
             const T coef03 = m[1].z * m[2].w - m[2].z * m[1].w;
@@ -355,9 +355,9 @@ namespace luminous {
 
         // other functions
         template<class To, class From>
-        XPU typename std::enable_if_t<sizeof(To) == sizeof(From) &&
-                                      std::is_trivially_copyable_v<From> &&
-                                      std::is_trivially_copyable_v<To>, To>
+        LM_XPU typename std::enable_if_t<sizeof(To) == sizeof(From) &&
+                                         std::is_trivially_copyable_v<From> &&
+                                         std::is_trivially_copyable_v<To>, To>
         bit_cast(const From &src) noexcept {
             static_assert(std::is_trivially_constructible_v<To>,
                           "This implementation requires the destination type to be trivially "
@@ -367,7 +367,7 @@ namespace luminous {
             return dst;
         }
 
-        XPU LM_NODISCARD inline float fast_exp(float x) {
+        LM_XPU LM_NODISCARD inline float fast_exp(float x) {
 #ifdef IS_GPU_CODE
             return __expf(x);
 #else
@@ -375,13 +375,13 @@ namespace luminous {
 #endif
         }
 
-        LM_NODISCARD XPU_INLINE float gaussian(float x, float mu = 0, float sigma = 1) {
+        LM_NODISCARD LM_XPU_INLINE float gaussian(float x, float mu = 0, float sigma = 1) {
             return 1 / std::sqrt(2 * Pi * sigma * sigma) *
                    fast_exp(-sqr(x - mu) / (2 * sigma * sigma));
         }
 
-        LM_NODISCARD XPU_INLINE float gaussian_integral(float x0, float x1, float mu = 0,
-                                                         float sigma = 1) {
+        LM_NODISCARD LM_XPU_INLINE float gaussian_integral(float x0, float x1, float mu = 0,
+                                                           float sigma = 1) {
             assert(sigma > 0);
             float sigmaRoot2 = sigma * float(1.414213562373095);
             return 0.5f * (std::erf((mu - x0) / sigmaRoot2) - std::erf((mu - x1) / sigmaRoot2));
@@ -389,7 +389,7 @@ namespace luminous {
 
 
         template<typename Predicate>
-        LM_NODISCARD XPU inline size_t find_interval(size_t sz, const Predicate &pred) {
+        LM_NODISCARD LM_XPU inline size_t find_interval(size_t sz, const Predicate &pred) {
             using ssize_t = std::make_signed_t<size_t>;
             ssize_t size = (ssize_t) sz - 2, first = 1;
             while (size > 0) {

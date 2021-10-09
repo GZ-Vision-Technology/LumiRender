@@ -14,7 +14,7 @@ namespace luminous {
             const float2 _radius;
         public:
             FilterBase(const float2 r) : _radius(r){}
-            NDSC_XPU float2 radius() {
+            LM_ND_XPU float2 radius() {
                 return _radius;
             }
         }

@@ -27,7 +27,7 @@ namespace luminous {
             ImageTexture(TypeHandle handle, PixelFormat pixel_format)
                     : TextureBase(pixel_format), _handle(handle) {}
 
-            NDSC_XPU luminous::float4 eval(const TextureEvalContext &tec) const {
+            LM_ND_XPU luminous::float4 eval(const TextureEvalContext &tec) const {
 #ifdef IS_GPU_CODE
                 switch (_pixel_format) {
                     case utility::PixelFormat::RGBA8U:
@@ -51,7 +51,7 @@ namespace luminous {
 #endif
             }
 
-            XPU void print() const {
+            LM_XPU void print() const {
                 printf("ImageTexture\n");
             }
 

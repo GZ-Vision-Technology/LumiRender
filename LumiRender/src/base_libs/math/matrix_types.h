@@ -18,21 +18,21 @@ namespace luminous {
 
             vector_t cols[3];
 
-            XPU explicit constexpr Matrix3x3(scalar_t s = 1) noexcept
+            LM_XPU explicit constexpr Matrix3x3(scalar_t s = 1) noexcept
                     : cols{vector_t(s, (scalar_t) 0, (scalar_t) 0),
                            vector_t((scalar_t) 0, s, (scalar_t) 0),
                            vector_t((scalar_t) 0, (scalar_t) 0, s)} {
 
             }
 
-            XPU explicit constexpr Matrix3x3(vector_t c0, vector_t c1, vector_t c2) noexcept
+            LM_XPU explicit constexpr Matrix3x3(vector_t c0, vector_t c1, vector_t c2) noexcept
                     : cols{c0, c1, c2} {
 
             }
 
-            XPU explicit constexpr Matrix3x3(scalar_t m00, scalar_t m01, scalar_t m02,
-                                             scalar_t m10, scalar_t m11, scalar_t m12,
-                                             scalar_t m20, scalar_t m21, scalar_t m22) noexcept
+            LM_XPU explicit constexpr Matrix3x3(scalar_t m00, scalar_t m01, scalar_t m02,
+                                                scalar_t m10, scalar_t m11, scalar_t m12,
+                                                scalar_t m20, scalar_t m21, scalar_t m22) noexcept
                     : cols{vector_t(m00, m01, m02),
                            vector_t(m10, m11, m12),
                            vector_t(m20, m21, m22)} {
@@ -40,16 +40,16 @@ namespace luminous {
             }
 
             template<typename Index>
-            XPU LM_NODISCARD vector_t &operator[](Index i) noexcept {
+            LM_XPU LM_NODISCARD vector_t &operator[](Index i) noexcept {
                 return cols[i];
             }
 
             template<typename Index>
-            XPU LM_NODISCARD constexpr vector_t operator[](Index i) const noexcept {
+            LM_XPU LM_NODISCARD constexpr vector_t operator[](Index i) const noexcept {
                 return cols[i];
             }
 
-            XPU void print() const noexcept {
+            LM_XPU void print() const noexcept {
                 printf("[%f,%f,%f]\n[%f,%f,%f]\n[%f,%f,%f]\n",
                        cols[0].x, cols[0].y, cols[0].z,
                        cols[1].x, cols[1].y, cols[1].z,
@@ -70,35 +70,35 @@ namespace luminous {
 
             vector_t cols[4];
 
-            XPU explicit constexpr Matrix4x4(scalar_t s = 1) noexcept
+            LM_XPU explicit constexpr Matrix4x4(scalar_t s = 1) noexcept
                     : cols{vector_t(s, (scalar_t) 0, (scalar_t) 0, (scalar_t) 0),
                            vector_t((scalar_t) 0, s, (scalar_t) 0, (scalar_t) 0),
                            vector_t((scalar_t) 0, (scalar_t) 0, s, (scalar_t) 0),
                            vector_t((scalar_t) 0, (scalar_t) 0, (scalar_t) 0, s)} {}
 
-            XPU constexpr Matrix4x4(vector_t c0, vector_t c1, vector_t c2, vector_t c3) noexcept
+            LM_XPU constexpr Matrix4x4(vector_t c0, vector_t c1, vector_t c2, vector_t c3) noexcept
                     : cols{c0, c1, c2, c3} {}
 
-            XPU constexpr Matrix4x4(scalar_t m00, scalar_t m01, scalar_t m02, scalar_t m03,
-                                    scalar_t m10, scalar_t m11, scalar_t m12, scalar_t m13,
-                                    scalar_t m20, scalar_t m21, scalar_t m22, scalar_t m23,
-                                    scalar_t m30, scalar_t m31, scalar_t m32, scalar_t m33) noexcept
+            LM_XPU constexpr Matrix4x4(scalar_t m00, scalar_t m01, scalar_t m02, scalar_t m03,
+                                       scalar_t m10, scalar_t m11, scalar_t m12, scalar_t m13,
+                                       scalar_t m20, scalar_t m21, scalar_t m22, scalar_t m23,
+                                       scalar_t m30, scalar_t m31, scalar_t m32, scalar_t m33) noexcept
                     : cols{vector_t(m00, m01, m02, m03),
                            vector_t(m10, m11, m12, m13),
                            vector_t(m20, m21, m22, m23),
                            vector_t(m30, m31, m32, m33)} {}
 
             template<typename Index>
-            XPU LM_NODISCARD vector_t &operator[](Index i) noexcept {
+            LM_XPU LM_NODISCARD vector_t &operator[](Index i) noexcept {
                 return cols[i];
             }
 
             template<typename Index>
-            XPU LM_NODISCARD constexpr vector_t operator[](Index i) const noexcept {
+            LM_XPU LM_NODISCARD constexpr vector_t operator[](Index i) const noexcept {
                 return cols[i];
             }
 
-            XPU void print() const noexcept {
+            LM_XPU void print() const noexcept {
                 printf("[%f,%f,%f,%f]\n[%f,%f,%f,%f]\n[%f,%f,%f,%f]\n[%f,%f,%f,%f]\n",
                        cols[0].x, cols[0].y, cols[0].z,cols[0].w,
                        cols[1].x, cols[1].y, cols[1].z,cols[1].w,
@@ -116,36 +116,36 @@ namespace luminous {
 
 #define _define_matrix3x3(type)                                                                          \
         using type##3x3 = Matrix3x3<type>;                                                               \
-        XPU LM_NODISCARD constexpr auto make_##type##3x3(type val = 1) {                                \
+        LM_XPU LM_NODISCARD constexpr auto make_##type##3x3(type val = 1) {                                \
             return type##3x3(val);                                                                       \
         }                                                                                                \
-        XPU LM_NODISCARD constexpr auto make_##type##3x3(type##3x3::vector_t c0,                        \
+        LM_XPU LM_NODISCARD constexpr auto make_##type##3x3(type##3x3::vector_t c0,                        \
                                                             type##3x3::vector_t  c1,                     \
                                                             type##3x3::vector_t  c2) noexcept {          \
             return type##3x3{c0, c1, c2};                                                                \
         }                                                                                                \
-        XPU LM_NODISCARD constexpr auto make_##type##3x3(                                               \
+        LM_XPU LM_NODISCARD constexpr auto make_##type##3x3(                                               \
                                     type m00, type m01, type m02,                                        \
                                     type m10, type m11, type m12,                                        \
                                     type m20, type m21, type m22) noexcept {                             \
             return type##3x3{m00, m01, m02, m10, m11, m12, m20, m21, m22};                               \
         }                                                                                                \
-        XPU LM_NODISCARD constexpr auto make_##type##3x3(const Matrix4x4<type> m) noexcept {            \
+        LM_XPU LM_NODISCARD constexpr auto make_##type##3x3(const Matrix4x4<type> m) noexcept {            \
             return type##3x3(make_##type##3(m[0]),make_##type##3(m[1]),make_##type##3(m[2]));            \
         }
 
 #define _define_matrix4x4(type)                                                                         \
         using type##4x4 = Matrix4x4<type>;                                                              \
-        XPU LM_NODISCARD constexpr auto make_##type##4x4(type val = 1) noexcept {                      \
+        LM_XPU LM_NODISCARD constexpr auto make_##type##4x4(type val = 1) noexcept {                      \
             return type##4x4{val};                                                                      \
         }                                                                                               \
-        XPU LM_NODISCARD constexpr auto make_##type##4x4(type##4x4::vector_t c0,                       \
+        LM_XPU LM_NODISCARD constexpr auto make_##type##4x4(type##4x4::vector_t c0,                       \
                                         type##4x4::vector_t c1,                                         \
                                         type##4x4::vector_t c2,                                         \
                                         type##4x4::vector_t c3) noexcept {                              \
             return type##4x4{c0, c1, c2, c3};                                                           \
         }                                                                                               \
-        XPU LM_NODISCARD constexpr auto make_##type##4x4(                                              \
+        LM_XPU LM_NODISCARD constexpr auto make_##type##4x4(                                              \
                 type m00, type m01, type m02, type m03,                                                 \
                 type m10, type m11, type m12, type m13,                                                 \
                 type m20, type m21, type m22, type m23,                                                 \
@@ -155,7 +155,7 @@ namespace luminous {
                 m20, m21, m22, m23,                                                                     \
                 m30, m31, m32, m33};                                                                    \
         }                                                                                               \
-        XPU LM_NODISCARD constexpr auto make_##type##4x4(const type##3x3 m) noexcept {                 \
+        LM_XPU LM_NODISCARD constexpr auto make_##type##4x4(const type##3x3 m) noexcept {                 \
             return make_##type##4x4(                                                                    \
                     make_##type##4(m[0], (type)0),                                                      \
                     make_##type##4(m[1], (type)0),                                                      \
@@ -176,47 +176,47 @@ namespace luminous {
 #undef _define_matrix4x4
 
         template<typename T>
-        XPU LM_NODISCARD constexpr Vector<T, 3> operator*(const Matrix3x3<T> m, Vector<T, 3> v) noexcept {
+        LM_XPU LM_NODISCARD constexpr Vector<T, 3> operator*(const Matrix3x3<T> m, Vector<T, 3> v) noexcept {
             return v.x * m[0] + v.y * m[1] + v.z * m[2];
         }
 
         template<typename T>
-        XPU LM_NODISCARD constexpr Matrix4x4<T> operator*(const Matrix4x4<T> lhs, T v) noexcept {
+        LM_XPU LM_NODISCARD constexpr Matrix4x4<T> operator*(const Matrix4x4<T> lhs, T v) noexcept {
             return Matrix4x4<T>(v * lhs[0], v * lhs[1], v * lhs[2], v * lhs[3]);
         }
 
         template<typename T>
-        XPU LM_NODISCARD constexpr Matrix4x4<T> operator*(T v, const Matrix4x4<T> rhs) noexcept {
+        LM_XPU LM_NODISCARD constexpr Matrix4x4<T> operator*(T v, const Matrix4x4<T> rhs) noexcept {
             return Matrix4x4<T>(v * rhs[0], v * rhs[1], v * rhs[2], v * rhs[3]);
         }
 
         template<typename T>
-        XPU LM_NODISCARD constexpr Matrix3x3<T> operator*(const Matrix3x3<T> lhs, T v) noexcept {
+        LM_XPU LM_NODISCARD constexpr Matrix3x3<T> operator*(const Matrix3x3<T> lhs, T v) noexcept {
             return Matrix3x3<T>(v * lhs[0], v * lhs[1], v * lhs[2]);
         }
 
         template<typename T>
-        XPU LM_NODISCARD constexpr Matrix3x3<T> operator*(T v, const Matrix3x3<T> rhs) noexcept {
+        LM_XPU LM_NODISCARD constexpr Matrix3x3<T> operator*(T v, const Matrix3x3<T> rhs) noexcept {
             return Matrix3x3<T>(v * rhs[0], v * rhs[1], v * rhs[2]);
         }
 
         template<typename T>
-        XPU LM_NODISCARD constexpr Matrix3x3<T> operator*(const Matrix3x3<T> lhs, const Matrix3x3<T> rhs) noexcept {
+        LM_XPU LM_NODISCARD constexpr Matrix3x3<T> operator*(const Matrix3x3<T> lhs, const Matrix3x3<T> rhs) noexcept {
             return Matrix3x3<T>(lhs * rhs[0], lhs * rhs[1], lhs * rhs[2]);
         }
 
         template<typename T>
-        XPU LM_NODISCARD constexpr Vector<T, 4> operator*(const Matrix4x4<T> m, Vector<T, 4> v) noexcept {
+        LM_XPU LM_NODISCARD constexpr Vector<T, 4> operator*(const Matrix4x4<T> m, Vector<T, 4> v) noexcept {
             return v.x * m[0] + v.y * m[1] + v.z * m[2] + v.w * m[3];
         }
 
         template<typename T>
-        XPU LM_NODISCARD constexpr Matrix4x4<T> operator*(const Matrix4x4<T> lhs, const Matrix4x4<T> rhs) noexcept {
+        LM_XPU LM_NODISCARD constexpr Matrix4x4<T> operator*(const Matrix4x4<T> lhs, const Matrix4x4<T> rhs) noexcept {
             return Matrix4x4<T>(lhs * rhs[0], lhs * rhs[1], lhs * rhs[2], lhs * rhs[3]);
         }
 
         template<typename T>
-        XPU LM_NODISCARD constexpr Matrix4x4<T> operator+(const Matrix4x4<T> lhs, const Matrix4x4<T> rhs) noexcept {
+        LM_XPU LM_NODISCARD constexpr Matrix4x4<T> operator+(const Matrix4x4<T> lhs, const Matrix4x4<T> rhs) noexcept {
             return Matrix4x4<T>(lhs[0] + rhs[0], lhs[1] + rhs[1], lhs[2] + rhs[2], lhs[3] + rhs[3]);
         }
     }

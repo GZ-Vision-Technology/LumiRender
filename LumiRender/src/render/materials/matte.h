@@ -21,7 +21,7 @@ namespace luminous {
         public:
             explicit MatteMaterial(index_t r) : _R(r) {}
 
-            NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
+            LM_ND_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(explicit MatteMaterial(const MaterialConfig &mc)
                              :MatteMaterial(mc.diffuse_tex.tex_idx) {})

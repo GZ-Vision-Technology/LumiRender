@@ -25,15 +25,15 @@ private:
 public:
     GEN_BASE_NAME(TestSampler)
 
-    LM_NODISCARD XPU int spp() const {
+    LM_NODISCARD LM_XPU int spp() const {
         LUMINOUS_VAR_PTR_DISPATCH(spp)
     }
 
-    XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
+    LM_XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
         LUMINOUS_VAR_PTR_DISPATCH(start_pixel_sample, pixel, sample_index, dimension)
     }
 
-    XPU SensorSample sensor_sample(uint2 p_raster) {
+    LM_XPU SensorSample sensor_sample(uint2 p_raster) {
         SensorSample ss;
         ss.p_film = make_float2(p_raster) + next_2d();
         ss.p_lens = next_2d();
@@ -41,11 +41,11 @@ public:
         return ss;
     }
 
-    NDSC_XPU float next_1d() {
+    LM_ND_XPU float next_1d() {
         LUMINOUS_VAR_PTR_DISPATCH(next_1d)
     }
 
-    NDSC_XPU float2 next_2d() {
+    LM_ND_XPU float2 next_2d() {
         LUMINOUS_VAR_PTR_DISPATCH(next_2d)
     }
 

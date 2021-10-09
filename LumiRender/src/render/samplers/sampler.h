@@ -24,17 +24,17 @@ namespace luminous {
         public:
             GEN_BASE_NAME(Sampler)
 
-            LM_NODISCARD XPU int spp() const;
+            LM_NODISCARD LM_XPU int spp() const;
 
-            XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
+            LM_XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
-            XPU SensorSample sensor_sample(uint2 p_raster);
+            LM_XPU SensorSample sensor_sample(uint2 p_raster);
 
             GEN_TO_STRING_FUNC
 
-            NDSC_XPU float next_1d();
+            LM_ND_XPU float next_1d();
 
-            NDSC_XPU float2 next_2d();
+            LM_ND_XPU float2 next_2d();
 
             CPU_ONLY(static Sampler create(const SamplerConfig &config);)
         };

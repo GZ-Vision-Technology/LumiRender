@@ -36,7 +36,7 @@ namespace luminous {
                       _Kd(diffuse),
                       _Ks(specular) {}
 
-            NDSC_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
+            LM_ND_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
         };
     }
 }

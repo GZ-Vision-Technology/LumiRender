@@ -117,27 +117,27 @@ namespace luminous {
             Variant() = default;
 
             template<typename U>
-            XPU explicit Variant(const U &u) {
+            LM_XPU explicit Variant(const U &u) {
                 static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
                 new(&data) U(u);
                 index = Index::template GetIndex<U>::value;
             }
 
-            XPU Variant(const Variant &v) : index(v.index) {
+            LM_XPU Variant(const Variant &v) : index(v.index) {
                 v.dispatch([&](const auto &item) {
                     using U = std::decay_t<decltype(item)>;
                     new(&data) U(item);
                 });
             }
 
-            XPU LM_NODISCARD int type_index() const { return index; }
+            LM_XPU LM_NODISCARD int type_index() const { return index; }
 
             template<typename U>
-            XPU constexpr static int index_of() {
+            LM_XPU constexpr static int index_of() {
                 return Index::template GetIndex<U>::value;
             }
 
-            XPU Variant &operator=(const Variant &v) noexcept {
+            LM_XPU Variant &operator=(const Variant &v) noexcept {
                 if (this == &v)
                     return *this;
                 if (index != -1)
@@ -150,13 +150,13 @@ namespace luminous {
                 return *this;
             }
 
-            XPU Variant(Variant &&v) noexcept: index(v.index) {
+            LM_XPU Variant(Variant &&v) noexcept: index(v.index) {
                 index = v.index;
                 v.index = -1;
                 std::memcpy(&data, &v.data, sizeof(data));
             }
 
-            XPU Variant &operator=(Variant &&v) noexcept {
+            LM_XPU Variant &operator=(Variant &&v) noexcept {
                 if (index != -1)
                     _drop();
                 index = v.index;
@@ -166,7 +166,7 @@ namespace luminous {
             }
 
             template<typename U>
-            XPU Variant &operator=(const U &u) {
+            LM_XPU Variant &operator=(const U &u) {
                 if (index != -1) {
                     _drop();
                 }
@@ -176,37 +176,37 @@ namespace luminous {
                 return *this;
             }
 
-            LM_NODISCARD XPU bool null() const { return index == -1; }
+            LM_NODISCARD LM_XPU bool null() const { return index == -1; }
 
             template<typename U>
-            LM_NODISCARD XPU bool isa() const {
+            LM_NODISCARD LM_XPU bool isa() const {
                 static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
                 return Index::template GetIndex<U>::value == index;
             }
 
             // use of prototype
             template<typename U>
-            LM_NODISCARD XPU U *get() {
+            LM_NODISCARD LM_XPU U *get() {
                 static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
                 return Index::template GetIndex<U>::value != index ? nullptr : reinterpret_cast<U *>(&data);
             }
 
             template<typename U>
-            LM_NODISCARD XPU const U *get() const {
+            LM_NODISCARD LM_XPU const U *get() const {
                 static_assert(Index::template GetIndex<U>::value != -1, "U is not in T...");
                 return Index::template GetIndex<U>::value != index ? nullptr : reinterpret_cast<const U *>(&data);
             }
 
             // use for pointer type
             template<typename U>
-            NDSC_XPU const U *as() const {
+            LM_ND_XPU const U *as() const {
                 static_assert(is_pointer_type, "as<U>() use for pointer type!");
                 static_assert(Index::template GetIndex<U *>::value != -1, "U* is not in T...");
                 return Index::template GetIndex<U *>::value != index ? nullptr : reinterpret_cast<const U *>(data);
             }
 
             template<typename U>
-            NDSC_XPU U *as() {
+            LM_ND_XPU U *as() {
                 static_assert(is_pointer_type, "as<U>() use for pointer type!");
                 static_assert(Index::template GetIndex<U *>::value != -1, "U* is not in T...");
                 return Index::template GetIndex<U *>::value != index ? nullptr : reinterpret_cast<U *>(data);
@@ -268,22 +268,22 @@ namespace luminous {
         }
 
             template<class Visitor>
-            XPU decltype(auto) dispatch(Visitor &&visitor) {
+            LM_XPU decltype(auto) dispatch(Visitor &&visitor) {
                 _GEN_DISPATCH_BODY()
             }
 
             template<class Visitor>
-            XPU decltype(auto) dispatch(Visitor &&visitor) const {
+            LM_XPU decltype(auto) dispatch(Visitor &&visitor) const {
                 _GEN_DISPATCH_BODY()
             }
 
-            XPU ~Variant() {
+            LM_XPU ~Variant() {
                 if (index != -1)
                     _drop();
             }
 
         private:
-            XPU void _drop() {
+            LM_XPU void _drop() {
                 auto *that = this; // prevent gcc ICE
                 dispatch([=](auto &&self) {
                     using U = std::decay_t<decltype(self)>;

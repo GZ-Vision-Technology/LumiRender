@@ -30,7 +30,7 @@ namespace luminous {
                                                      type_name(this), _su, _sv, _du, _dv);
                             })
 
-            XPU float2 map(const TextureEvalContext &ctx, float2 *dst_dx, float2 *dst_dy) const {
+            LM_XPU float2 map(const TextureEvalContext &ctx, float2 *dst_dx, float2 *dst_dy) const {
                 if (dst_dx) { *dst_dx = float2(_su * ctx.du_dx, _sv * ctx.dv_dx); }
                 if (dst_dy) { *dst_dy = float2(_su * ctx.du_dy, _sv * ctx.dv_dy); }
                 return make_float2(_su * ctx.uv[0] + _du, _sv * ctx.uv[1] + _dv);
@@ -45,7 +45,7 @@ namespace luminous {
         public:
             GEN_BASE_NAME(TextureMapping2D)
 
-            XPU float2 map(const TextureEvalContext &ctx, float2 *dst_dx, float2 *dst_dy) const {
+            LM_XPU float2 map(const TextureEvalContext &ctx, float2 *dst_dx, float2 *dst_dy) const {
                 LUMINOUS_VAR_DISPATCH(map, ctx, dst_dx, dst_dy)
             }
 
@@ -61,16 +61,16 @@ namespace luminous {
             PixelFormat _pixel_format{};
             TextureMapping2D _mapping;
         public:
-            XPU TextureBase() = default;
+            LM_XPU TextureBase() = default;
 
-            XPU explicit TextureBase(PixelFormat pixel_format)
+            LM_XPU explicit TextureBase(PixelFormat pixel_format)
                     : _pixel_format(pixel_format) {}
 
-            NDSC_XPU_INLINE PixelFormat pixel_format() const {
+            LM_ND_XPU_INLINE PixelFormat pixel_format() const {
                 return _pixel_format;
             }
 
-            XPU_INLINE void set_mapping(const TextureMapping2D &mapping) {
+            LM_XPU_INLINE void set_mapping(const TextureMapping2D &mapping) {
                 _mapping = mapping;
             }
         };

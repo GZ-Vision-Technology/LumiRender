@@ -45,7 +45,7 @@ namespace luminous {
 #endif
         public:
 
-            NDSC_XPU T value() {
+            LM_ND_XPU T value() {
 #ifdef __CUDACC__
     #ifdef LUMINOUS_USE_LEGACY_CUDA_ATOMICS
                 return _val;
@@ -57,7 +57,7 @@ namespace luminous {
 #endif
             }
 
-            XPU void reset() {
+            LM_XPU void reset() {
 #ifdef __CUDACC__
     #ifdef LUMINOUS_USE_LEGACY_CUDA_ATOMICS
                 _val = 0;
@@ -69,7 +69,7 @@ namespace luminous {
 #endif
             }
 
-            NDSC_XPU T fetch_add(T delta) {
+            LM_ND_XPU T fetch_add(T delta) {
 #ifdef __CUDACC__
     #ifdef LUMINOUS_USE_LEGACY_CUDA_ATOMICS
                 return atomicAdd(&_val, delta);

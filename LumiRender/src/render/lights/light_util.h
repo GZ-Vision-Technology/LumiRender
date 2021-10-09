@@ -30,13 +30,13 @@ namespace luminous {
             float PDF_dir{-1.f};
             SurfaceInteraction p_light{};
             Interaction p_ref{};
-            XPU LightLiSample() = default;
+            LM_XPU LightLiSample() = default;
 
-            XPU LightLiSample(const float3 &L, float3 wi,
-                              float PDF, const SurfaceInteraction &si)
+            LM_XPU LightLiSample(const float3 &L, float3 wi,
+                                 float PDF, const SurfaceInteraction &si)
                               : L(L), wi(wi), PDF_dir(PDF), p_light(si) {}
 
-                              NDSC_XPU bool has_contribution() const {
+                              LM_ND_XPU bool has_contribution() const {
                 return nonzero(L) && PDF_dir != 0;
             }
         };
@@ -45,12 +45,12 @@ namespace luminous {
             float3 pos;
             float3 ng;
             float3 ns;
-            XPU LightSampleContext() = default;
+            LM_XPU LightSampleContext() = default;
 
-            XPU LightSampleContext(const SurfaceInteraction &si)
+            LM_XPU LightSampleContext(const SurfaceInteraction &si)
             : pos(si.pos), ng(si.g_uvn.normal), ns(si.s_uvn.normal) {}
 
-            XPU LightSampleContext(float3 p, float3 ng, float3 ns)
+            LM_XPU LightSampleContext(float3 p, float3 ng, float3 ns)
             : pos(p), ng(ng), ns(ns) {}
         };
     }

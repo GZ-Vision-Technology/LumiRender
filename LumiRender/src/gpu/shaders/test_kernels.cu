@@ -19,22 +19,22 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
 class Sub1 {
 public:
-    XPU int fun1() {
+    LM_XPU int fun1() {
         return 0;
     }
 
-    XPU int fun2(int a) {
+    LM_XPU int fun2(int a) {
         return a;
     }
 };
 
 class Sub2 {
 public:
-    XPU int fun1() {
+    LM_XPU int fun1() {
         return 1;
     }
 
-    XPU int fun2(int a) {
+    LM_XPU int fun2(int a) {
         return 2 * a;
     }
 };
@@ -45,11 +45,11 @@ class Base : public Variant<Sub1, Sub2> {
 public:
     using Variant::Variant;
 
-    XPU int fun1() {
+    LM_XPU int fun1() {
         return dispatch([](auto &&arg) { return arg.fun1(); });
     }
 
-    XPU int fun2(int a) {
+    LM_XPU int fun2(int a) {
         LUMINOUS_VAR_DISPATCH(fun2, a);
     }
 };
@@ -58,18 +58,18 @@ class BaseP : public Variant<Sub1 *, Sub2 *> {
 public:
     using Variant::Variant;
 
-    XPU int fun1() {
+    LM_XPU int fun1() {
         return dispatch([](auto &&arg) { return arg->fun1(); });
     }
 
-    XPU int fun2(int a) {
+    LM_XPU int fun2(int a) {
         LUMINOUS_VAR_PTR_DISPATCH(fun2, a);
     }
 };
 
 
 
-XPU void testVariant() {
+LM_XPU void testVariant() {
     using namespace std;
 
     Sub1 s1 = Sub1();
@@ -154,14 +154,14 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size) {
     int *dev_c = 0;
     cudaError_t cudaStatus;
 
-    // Choose which GPU to run on, change this on a multi-GPU system.
+    // Choose which LM_GPU to run on, change this on a multi-LM_GPU system.
     cudaStatus = cudaSetDevice(0);
     if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaSetDevice failed!  Do you have a CUDA-capable GPU installed?");
+        fprintf(stderr, "cudaSetDevice failed!  Do you have a CUDA-capable LM_GPU installed?");
         goto Error;
     }
 
-    // Allocate GPU buffers for three vectors (two input, one output)    .
+    // Allocate LM_GPU buffers for three vectors (two input, one output)    .
     cudaStatus = cudaMalloc((void **) &dev_c, size * sizeof(int));
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMalloc failed!");
@@ -180,7 +180,7 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size) {
         goto Error;
     }
 
-    // Copy input vectors from host memory to GPU buffers.
+    // Copy input vectors from host memory to LM_GPU buffers.
     cudaStatus = cudaMemcpy(dev_a, a, size * sizeof(int), cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMemcpy failed!");
@@ -193,7 +193,7 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size) {
         goto Error;
     }
 
-    // Launch a kernel on the GPU with one thread for each element.
+    // Launch a kernel on the LM_GPU with one thread for each element.
     addKernel<<<1, size>>>(dev_c, dev_a, dev_b);
 
     // Check for any errors launching the kernel
@@ -211,7 +211,7 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size) {
         goto Error;
     }
 
-    // Copy output vector from GPU buffer to host memory.
+    // Copy output vector from LM_GPU buffer to host memory.
     cudaStatus = cudaMemcpy(c, dev_c, size * sizeof(int), cudaMemcpyDeviceToHost);
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMemcpy failed!");

@@ -18,21 +18,21 @@ namespace luminous {
         private:
             uint32_t state{};
         public:
-            XPU LCG() { init(0, 0); }
+            LM_XPU LCG() { init(0, 0); }
 
-            LM_NODISCARD XPU LCG(uint2 v) {
+            LM_NODISCARD LM_XPU LCG(uint2 v) {
                 init(v);
             }
 
-            XPU void init(uint2 v) {
+            LM_XPU void init(uint2 v) {
                 init(v.x, v.y);
             }
 
-            LM_NODISCARD XPU LCG(unsigned int val0, unsigned int val1) {
+            LM_NODISCARD LM_XPU LCG(unsigned int val0, unsigned int val1) {
                 init(val0, val1);
             }
 
-            inline XPU void init(unsigned int val0, unsigned int val1) {
+            inline LM_XPU void init(unsigned int val0, unsigned int val1) {
                 unsigned int v0 = val0;
                 unsigned int v1 = val1;
                 unsigned int s0 = 0;
@@ -46,7 +46,7 @@ namespace luminous {
             }
 
             // Generate random unsigned int in [0, 2^24)
-            LM_NODISCARD inline XPU float next() {
+            LM_NODISCARD inline LM_XPU float next() {
                 const uint32_t LCG_A = 1664525u;
                 const uint32_t LCG_C = 1013904223u;
                 state = (LCG_A * state + LCG_C);
@@ -62,7 +62,7 @@ namespace luminous {
 
         // Hashing Inline Functions
         // http://zimbry.blogspot.ch/2011/09/better-bit-mixing-improving-on.html
-        XPU inline uint64_t MixBits(uint64_t v);
+        LM_XPU inline uint64_t MixBits(uint64_t v);
 
         inline uint64_t MixBits(uint64_t v) {
             v ^= (v >> 31);
@@ -76,23 +76,23 @@ namespace luminous {
         class RNG {
         public:
             // RNG Public Methods
-            XPU RNG() : _state(PCG32_DEFAULT_STATE), _inc(PCG32_DEFAULT_STREAM) {}
+            LM_XPU RNG() : _state(PCG32_DEFAULT_STATE), _inc(PCG32_DEFAULT_STREAM) {}
 
-            XPU RNG(uint64_t seqIndex, uint64_t start) { set_sequence(seqIndex, start); }
+            LM_XPU RNG(uint64_t seqIndex, uint64_t start) { set_sequence(seqIndex, start); }
 
-            XPU RNG(uint64_t seqIndex) { set_sequence(seqIndex); }
+            LM_XPU RNG(uint64_t seqIndex) { set_sequence(seqIndex); }
 
-            XPU void set_sequence(uint64_t sequenceIndex, uint64_t seed);
+            LM_XPU void set_sequence(uint64_t sequenceIndex, uint64_t seed);
 
-            XPU void set_sequence(uint64_t sequenceIndex) {
+            LM_XPU void set_sequence(uint64_t sequenceIndex) {
                 set_sequence(sequenceIndex, MixBits(sequenceIndex));
             }
 
             template<typename T>
-            XPU T uniform();
+            LM_XPU T uniform();
 
             template<typename T>
-            XPU typename std::enable_if_t<std::is_integral_v<T>, T> Uniform(T b) {
+            LM_XPU typename std::enable_if_t<std::is_integral_v<T>, T> Uniform(T b) {
                 T threshold = (~b + 1u) % b;
                 while (true) {
                     T r = uniform<T>();
@@ -101,9 +101,9 @@ namespace luminous {
                 }
             }
 
-            XPU void advance(int64_t idelta);
+            LM_XPU void advance(int64_t idelta);
 
-            XPU int64_t operator-(const RNG &other) const;
+            LM_XPU int64_t operator-(const RNG &other) const;
 
             GEN_STRING_FUNC({
                 return string_printf("[ RNG state: %" PRIu64 " inc: %" PRIu64 " ]", _state, _inc);
@@ -194,7 +194,7 @@ namespace luminous {
             _state = accMult * _state + accPlus;
         }
 
-        XPU inline int64_t RNG::operator-(const RNG &other) const {
+        LM_XPU inline int64_t RNG::operator-(const RNG &other) const {
             DCHECK_EQ(_inc, other._inc);
             uint64_t curMult = PCG32_MULT, curPlus = _inc, curState = other._state;
             uint64_t theBit = 1u, distance = 0u;
@@ -217,7 +217,7 @@ namespace luminous {
         public:
             /*! initialize the random number generator with a new seed (usually
               per pixel) */
-            inline XPU void init(int seed = 0) {
+            inline LM_XPU void init(int seed = 0) {
                 state = seed;
                 for (int warmUp = 0; warmUp < 10; warmUp++) {
                     next();
@@ -225,7 +225,7 @@ namespace luminous {
             }
 
             /*! get the next 'random' number in the sequence */
-            inline XPU float next() {
+            inline LM_XPU float next() {
                 const uint64_t a = 0x5DEECE66DULL;
                 const uint64_t c = 0xBULL;
                 const uint64_t mask = 0xFFFFFFFFFFFFULL;

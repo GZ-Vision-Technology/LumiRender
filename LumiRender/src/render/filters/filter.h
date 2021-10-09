@@ -24,13 +24,13 @@ namespace luminous {
         public:
             CPU_ONLY(LM_NODISCARD std::string to_string() const;)
 
-            NDSC_XPU float2 radius() const;
+            LM_ND_XPU float2 radius() const;
 
-            NDSC_XPU float integral() const;
+            LM_ND_XPU float integral() const;
 
-            NDSC_XPU float evaluate(float2 p) const;
+            LM_ND_XPU float evaluate(float2 p) const;
 
-            NDSC_XPU FilterSample sample(float2 u) const;
+            LM_ND_XPU FilterSample sample(float2 u) const;
 
             static FilterHandle create(const FilterConfig &config);
         }
