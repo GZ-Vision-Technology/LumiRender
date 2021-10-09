@@ -18,7 +18,7 @@ namespace luminous {
         using lstd::Variant;
         using lstd::optional;
 
-        class LightSampler : BASE_CLASS(Variant<UniformLightSampler>) {
+        class LightSampler : BASE_CLASS(Variant<UniformLightSampler *>) {
         public:
             using BaseBinder::BaseBinder;
 
@@ -26,7 +26,7 @@ namespace luminous {
 
             GEN_BASE_NAME(LightSampler)
 
-            GEN_TO_STRING_FUNC
+            CPU_ONLY(LM_NODISCARD std::string to_string() const;)
 
             LM_XPU void set_lights(BufferView<const Light> lights);
 

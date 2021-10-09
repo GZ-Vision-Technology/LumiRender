@@ -10,23 +10,27 @@ namespace luminous {
     inline namespace render {
 
         void LightSampler::set_lights(BufferView<const Light> lights) {
-            LUMINOUS_VAR_DISPATCH(set_lights, lights);
+            LUMINOUS_VAR_PTR_DISPATCH(set_lights, lights);
         }
 
         void LightSampler::set_infinite_lights(BufferView<const Light> lights) {
-            LUMINOUS_VAR_DISPATCH(set_infinite_lights, lights);
+            LUMINOUS_VAR_PTR_DISPATCH(set_infinite_lights, lights);
         }
 
         size_t LightSampler::light_num() const {
-            LUMINOUS_VAR_DISPATCH(light_num);
+            LUMINOUS_VAR_PTR_DISPATCH(light_num);
         }
 
         SampledLight LightSampler::sample(float u) const {
-            LUMINOUS_VAR_DISPATCH(sample, u);
+            LUMINOUS_VAR_PTR_DISPATCH(sample, u);
         }
 
+        CPU_ONLY(LM_NODISCARD std::string LightSampler::to_string() const {
+            LUMINOUS_VAR_PTR_DISPATCH(to_string);
+        })
+
         SampledLight LightSampler::sample(const LightSampleContext &ctx, float u) const {
-            LUMINOUS_VAR_DISPATCH(sample, ctx, u);
+            LUMINOUS_VAR_PTR_DISPATCH(sample, ctx, u);
         }
 
         Spectrum LightSampler::estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
@@ -43,27 +47,27 @@ namespace luminous {
         }
 
         const Light &LightSampler::light_at(uint idx) const {
-            LUMINOUS_VAR_DISPATCH(light_at, idx);
+            LUMINOUS_VAR_PTR_DISPATCH(light_at, idx);
         }
 
         float LightSampler::PMF(const Light &light) const {
-            LUMINOUS_VAR_DISPATCH(PMF, light);
+            LUMINOUS_VAR_PTR_DISPATCH(PMF, light);
         }
 
         BufferView<const Light> LightSampler::lights() const {
-            LUMINOUS_VAR_DISPATCH(lights);
+            LUMINOUS_VAR_PTR_DISPATCH(lights);
         }
 
         BufferView<const Light> LightSampler::infinite_lights() const {
-            LUMINOUS_VAR_DISPATCH(infinite_lights);
+            LUMINOUS_VAR_PTR_DISPATCH(infinite_lights);
         }
 
         float LightSampler::PMF(const LightSampleContext &ctx, const Light &light) const {
-            LUMINOUS_VAR_DISPATCH(PMF, ctx, light);
+            LUMINOUS_VAR_PTR_DISPATCH(PMF, ctx, light);
         }
 
         CPU_ONLY(LightSampler LightSampler::create(const LightSamplerConfig &config) {
-            return detail::create<LightSampler>(config);
+            return detail::create_ptr<LightSampler>(config);
         })
 
         Spectrum LightSampler::on_miss(Ray ray, const SceneData *scene_data, Spectrum throughput) const {

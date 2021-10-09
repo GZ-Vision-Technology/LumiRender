@@ -47,9 +47,7 @@ namespace luminous {
         }
 
         void Scene::load_lights(const vector<LightConfig> &light_configs, const LightSamplerConfig &lsc) {
-
             _lights.init(light_configs.size());
-
             for (const auto &lc : light_configs) {
                 lc.scene_box = _scene_box;
                 if (lc.type() == type_name<Envmap>()) {
@@ -63,8 +61,10 @@ namespace luminous {
                 return v1.is_infinite() > v2.is_infinite();
             });
 
-            auto light_sampler = LightSampler::create(lsc);
-            _light_sampler.reset(&light_sampler);
+//            auto light_sampler = LightSampler::create(lsc);
+//            _light_sampler.reset(&light_sampler);
+            _light_sampler.init(1);
+            _light_sampler.add_element(lsc);
         }
 
         void Scene::preprocess_meshes() {

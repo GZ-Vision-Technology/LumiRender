@@ -48,6 +48,14 @@ namespace luminous {
                 BaseClass::push_back(elm);
             }
 
+            LM_NODISCARD const element_type *device_ptr() const {
+                return BaseClass::_device_buffer.template ptr<const element_type *>();
+            }
+
+            LM_NODISCARD element_type *device_ptr() {
+                return BaseClass::_device_buffer.template ptr<element_type *>();
+            }
+
             LM_NODISCARD BufferView<element_type> device_buffer_view(size_t offset = 0, size_t count = -1) {
                 count = fix_count(offset, count, BaseClass::size());
                 return BufferView<element_type>(BaseClass::_device_buffer.template ptr<element_type *>() + offset, count);

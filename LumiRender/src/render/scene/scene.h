@@ -57,7 +57,7 @@ namespace luminous {
 
             // light data
             Synchronizer<Light> _lights{_device};
-            Managed<LightSampler> _light_sampler{_device};
+            Synchronizer<LightSampler> _light_sampler{_device};
             DistributionMgr _distribution_mgr{_device};
 
             // texture data
