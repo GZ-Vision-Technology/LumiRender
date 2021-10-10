@@ -37,13 +37,11 @@ namespace luminous {
         }
 
         FrameBufferType *CUDATask::get_frame_buffer() {
-            _frame_buffer.synchronize_to_host();
-            return _frame_buffer.data();
+            return _frame_buffer.synchronize_and_get_host_data();
         }
 
         float4 *CUDATask::get_accumulate_buffer() {
-            _accumulate_buffer.synchronize_to_host();
-            return _accumulate_buffer.data();
+            return _accumulate_buffer.synchronize_and_get_host_data();
         }
     }
 }

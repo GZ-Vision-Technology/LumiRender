@@ -113,6 +113,23 @@ namespace luminous {
             return _device_buffer.view(offset, count);
         }
 
+        LM_NODISCARD BufferView<TDevice>
+        synchronize_and_get_device_view(size_t offset = 0, size_t count = -1) {
+            synchronize_to_device();
+            return device_buffer_view(offset, count);
+        }
+
+        LM_NODISCARD BufferView<const TDevice>
+        synchronize_and_get_const_device_view(size_t offset = 0, size_t count = -1) {
+            synchronize_to_device();
+            return device_buffer_view(offset, count);
+        }
+
+        LM_NODISCARD THost *synchronize_and_get_host_data() {
+            synchronize_to_host();
+            return BaseClass::data();
+        }
+
         const Buffer<TDevice> &device_buffer() const {
             return _device_buffer;
         }
