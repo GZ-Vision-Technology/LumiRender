@@ -60,13 +60,40 @@ namespace luminous {
                 BaseClass::push_back(elm);
             }
 
-            const element_type *operator->() const {
+            LM_NODISCARD const element_type *operator->() const {
                 return BaseClass::data();
             }
 
-            element_type *operator->() {
-                remapping_ptr_to_host();
-                return BaseClass::data();
+            LM_NODISCARD element_type *operator->() {
+                auto &ret = BaseClass::at(0);
+                remapping_ptr_to_host(ret);
+                return &ret;
+            }
+
+            template<typename Index>
+            LM_NODISCARD const element_type &at(Index i) const {
+                return BaseClass::at(i);
+            }
+
+            template<typename Index>
+            LM_NODISCARD element_type &at(Index i) {
+                auto &ret = BaseClass::at(i);
+                remapping_ptr_to_host(ret);
+                return ret;
+            }
+
+            template<typename Index>
+            LM_NODISCARD element_type at(Index i) {
+                auto ret = BaseClass::at(i);
+                remapping_ptr_to_host(ret);
+                return ret;
+            }
+
+            template<typename Index>
+            LM_NODISCARD element_type& operator[](Index i) {
+                auto &ret = BaseClass::at(i);
+                remapping_ptr_to_host(ret);
+                return ret;
             }
 
             LM_NODISCARD const element_type *device_ptr() const {
@@ -98,7 +125,7 @@ namespace luminous {
                 return _memory_block.interval_allocated().contains(ptr);
             }
 
-            void remapping_ptr_to_host(element_type &elm) {
+            void remapping_ptr_to_host(element_type &elm) const {
                 for_each_all_registered_member<T>([&](size_t offset, const char *name, auto __) {
                     ptr_t ptr = get_ptr_value(&elm, offset);
                     if (is_host_ptr(ptr)) {
