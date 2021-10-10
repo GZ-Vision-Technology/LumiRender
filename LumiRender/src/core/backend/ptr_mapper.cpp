@@ -21,7 +21,7 @@ namespace luminous {
             _map[key] = std::make_pair(host, device);
         }
 
-        uint64_t PtrMapper::get_device_ptr(ptr_t host_ptr) const {
+        ptr_t PtrMapper::get_device_ptr(ptr_t host_ptr) const {
             for (auto elm : _map) {
                 auto val = elm.second;
                 PtrInterval host_interval = val.first;
@@ -35,8 +35,9 @@ namespace luminous {
             return 0;
         }
 
-        void PtrMapper::add_reverse_mapping(ptr_t device_ptr, ptr_t host_ptr) {
+        void PtrMapper::add_fast_mapping(ptr_t device_ptr, ptr_t host_ptr) {
             _device_to_host[device_ptr] = host_ptr;
+            _host_to_device[host_ptr] = device_ptr;
         }
 
         ptr_t PtrMapper::get_host_ptr(ptr_t device_ptr) const {

@@ -34,9 +34,9 @@ namespace luminous {
 
         struct MemoryBlock {
         private:
-            std::byte *_address{};
-            ptr_t _next_allocate_ptr{};
-            size_t _capacity{};
+            std::byte *_address{0};
+            ptr_t _next_allocate_ptr{0};
+            size_t _capacity{0};
         public:
             explicit MemoryBlock() noexcept = default;
 

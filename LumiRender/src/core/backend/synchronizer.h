@@ -28,7 +28,7 @@ namespace luminous {
             using BaseClass = Managed<T, std::byte>;
         private:
             MemoryBlock _memory_block{};
-            size_t _size_in_bytes{};
+            size_t _size_in_bytes{0};
         public:
             explicit Synchronizer(Device *device)
                     : BaseClass(device) {}
@@ -49,6 +49,15 @@ namespace luminous {
                 BaseClass::push_back(elm);
             }
 
+            const element_type *operator->() const {
+                return BaseClass::data();
+            }
+
+            element_type *operator->() {
+                remapping_ptr_to_host();
+                return BaseClass::data();
+            }
+
             LM_NODISCARD const element_type *device_ptr() const {
                 return BaseClass::_device_buffer.template ptr<const element_type *>();
             }
@@ -59,27 +68,62 @@ namespace luminous {
 
             LM_NODISCARD BufferView<element_type> device_buffer_view(size_t offset = 0, size_t count = -1) {
                 count = fix_count(offset, count, BaseClass::size());
-                return BufferView<element_type>(BaseClass::_device_buffer.template ptr<element_type *>() + offset, count);
+                return BufferView<element_type>(BaseClass::_device_buffer.template ptr<element_type *>() + offset,
+                                                count);
             }
 
-            LM_NODISCARD BufferView<const element_type> const_device_buffer_view(size_t offset = 0, size_t count = -1) const {
+            LM_NODISCARD BufferView<const element_type>
+            const_device_buffer_view(size_t offset = 0, size_t count = -1) const {
                 count = fix_count(offset, count, BaseClass::size());
-                return BufferView<const element_type>(BaseClass::_device_buffer.template ptr<element_type *>() + offset, count);
+                return BufferView<const element_type>(BaseClass::_device_buffer.template ptr<element_type *>() + offset,
+                                                      count);
             }
 
-            void remapping_ptr_to_device() {
+            LM_NODISCARD bool is_device_ptr(ptr_t ptr) const {
+                return BaseClass::device_interval().contains(ptr);
+            }
+
+            LM_NODISCARD bool is_host_ptr(ptr_t ptr) const {
+                return _memory_block.interval_allocated().contains(ptr);
+            }
+
+            void remapping_ptr_to_host(element_type &elm) {
+                for_each_all_registered_member<T>([&](size_t offset, const char *name, auto __) {
+                    ptr_t ptr = get_ptr_value(&elm, offset);
+                    if (is_host_ptr(ptr)) {
+                        return;
+                    }
+                    auto host_ptr = PtrMapper::instance()->get_host_ptr(ptr);
+                    set_ptr_value(&elm, offset, host_ptr);
+                });
+            }
+
+            void remapping_ptr_to_host() {
                 for (int i = 0; i < BaseClass::size(); ++i) {
-                    for_each_all_registered_member<T>([&](size_t offset, const char *name, auto ptr) {
-                        auto &elm = BaseClass::at(i);
-                        ptr_t host_ptr = get_ptr_value(&elm, offset);
-                        auto device_ptr = PtrMapper::instance()->get_device_ptr(host_ptr);
-                        set_ptr_value(&elm, offset, device_ptr);
-                    });
+                    auto &elm = BaseClass::at(i);
+                    remapping_ptr_to_host(elm);
                 }
             }
 
             void synchronize_all_to_host() {
+                remapping_ptr_to_host();
+                BaseClass::_device_buffer.download(_memory_block.template address<std::byte>(), _size_in_bytes);
+            }
 
+            void remapping_ptr_to_device(element_type &elm) {
+                for_each_all_registered_member<T>([&](size_t offset, const char *name, auto ptr) {
+                    ptr_t host_ptr = get_ptr_value(&elm, offset);
+                    auto device_ptr = PtrMapper::instance()->get_device_ptr(host_ptr);
+                    PtrMapper::instance()->add_fast_mapping(device_ptr, host_ptr);
+                    set_ptr_value(&elm, offset, device_ptr);
+                });
+            }
+
+            void remapping_ptr_to_device() {
+                for (int i = 0; i < BaseClass::size(); ++i) {
+                    auto &elm = BaseClass::at(i);
+                    remapping_ptr_to_device(elm);
+                }
             }
 
             void synchronize_all_to_device() {

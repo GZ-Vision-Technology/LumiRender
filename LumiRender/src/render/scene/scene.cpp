@@ -7,6 +7,7 @@
 #include "render/materials/common.h"
 #include "render/lights/common.h"
 #include "render/light_samplers/common.h"
+#include "render/sensors/sensor.h"
 
 namespace luminous {
     inline namespace render {

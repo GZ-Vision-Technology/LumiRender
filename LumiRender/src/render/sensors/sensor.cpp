@@ -11,111 +11,115 @@ namespace luminous {
 
 
         float3 Sensor::position() const {
-            LUMINOUS_VAR_DISPATCH(position);
+            LUMINOUS_VAR_PTR_DISPATCH(position);
         }
 
         void Sensor::set_film(const Film &film) {
-            LUMINOUS_VAR_DISPATCH(set_film, film);
+            LUMINOUS_VAR_PTR_DISPATCH(set_film, film);
         }
 
         void Sensor::update_film_resolution(uint2 res) {
-            LUMINOUS_VAR_DISPATCH(update_film_resolution, res);
+            LUMINOUS_VAR_PTR_DISPATCH(update_film_resolution, res);
         }
 
         Film *Sensor::film() {
-            LUMINOUS_VAR_DISPATCH(film);
+            LUMINOUS_VAR_PTR_DISPATCH(film);
         }
 
         uint2 Sensor::resolution() const {
-            LUMINOUS_VAR_DISPATCH(resolution);
+            LUMINOUS_VAR_PTR_DISPATCH(resolution);
         }
 
         void Sensor::set_fov_y(float val) {
-            LUMINOUS_VAR_DISPATCH(set_fov_y, val);
+            LUMINOUS_VAR_PTR_DISPATCH(set_fov_y, val);
         }
 
         void Sensor::set_pitch(float val) {
-            LUMINOUS_VAR_DISPATCH(set_pitch, val);
+            LUMINOUS_VAR_PTR_DISPATCH(set_pitch, val);
         }
 
         void Sensor::set_yaw(float val) {
-            LUMINOUS_VAR_DISPATCH(set_yaw, val);
+            LUMINOUS_VAR_PTR_DISPATCH(set_yaw, val);
         }
 
         float Sensor::yaw() const {
-            LUMINOUS_VAR_DISPATCH(yaw);
+            LUMINOUS_VAR_PTR_DISPATCH(yaw);
         }
 
         void Sensor::update_yaw(float val) {
-            LUMINOUS_VAR_DISPATCH(update_yaw, val);
+            LUMINOUS_VAR_PTR_DISPATCH(update_yaw, val);
         }
 
         float Sensor::pitch() const {
-            LUMINOUS_VAR_DISPATCH(pitch);
+            LUMINOUS_VAR_PTR_DISPATCH(pitch);
         }
 
         void Sensor::update_pitch(float val) {
-            LUMINOUS_VAR_DISPATCH(update_pitch, val);
+            LUMINOUS_VAR_PTR_DISPATCH(update_pitch, val);
         }
 
         float Sensor::fov_y() const {
-            LUMINOUS_VAR_DISPATCH(fov_y);
+            LUMINOUS_VAR_PTR_DISPATCH(fov_y);
         }
 
         void Sensor::update_fov_y(float val) {
-            LUMINOUS_VAR_DISPATCH(update_fov_y, val);
+            LUMINOUS_VAR_PTR_DISPATCH(update_fov_y, val);
         }
 
         float Sensor::velocity() const {
-            LUMINOUS_VAR_DISPATCH(velocity);
+            LUMINOUS_VAR_PTR_DISPATCH(velocity);
         }
 
         void Sensor::set_velocity(float val) {
-            LUMINOUS_VAR_DISPATCH(set_velocity, val);
+            LUMINOUS_VAR_PTR_DISPATCH(set_velocity, val);
         }
 
         float Sensor::sensitivity() const {
-            LUMINOUS_VAR_DISPATCH(sensitivity);
+            LUMINOUS_VAR_PTR_DISPATCH(sensitivity);
         }
 
         void Sensor::set_sensitivity(float val) {
-            LUMINOUS_VAR_DISPATCH(set_sensitivity, val);
+            LUMINOUS_VAR_PTR_DISPATCH(set_sensitivity, val);
         }
 
         void Sensor::set_position(float3 pos) {
-            LUMINOUS_VAR_DISPATCH(set_position, pos);
+            LUMINOUS_VAR_PTR_DISPATCH(set_position, pos);
         }
 
         void Sensor::move(float3 delta) {
-            LUMINOUS_VAR_DISPATCH(move, delta);
+            LUMINOUS_VAR_PTR_DISPATCH(move, delta);
         }
 
         Transform Sensor::camera_to_world() const {
-            LUMINOUS_VAR_DISPATCH(camera_to_world)
+            LUMINOUS_VAR_PTR_DISPATCH(camera_to_world)
         }
 
         Transform Sensor::camera_to_world_rotation() const {
-            LUMINOUS_VAR_DISPATCH(camera_to_world_rotation)
+            LUMINOUS_VAR_PTR_DISPATCH(camera_to_world_rotation)
         }
 
         float Sensor::generate_ray(const SensorSample &ss, Ray *ray) {
-            LUMINOUS_VAR_DISPATCH(generate_ray, ss, ray);
+            LUMINOUS_VAR_PTR_DISPATCH(generate_ray, ss, ray);
         }
 
         float3 Sensor::forward() const {
-            LUMINOUS_VAR_DISPATCH(forward)
+            LUMINOUS_VAR_PTR_DISPATCH(forward)
         }
 
         float3 Sensor::up() const {
-            LUMINOUS_VAR_DISPATCH(up)
+            LUMINOUS_VAR_PTR_DISPATCH(up)
         }
 
         float3 Sensor::right() const {
-            LUMINOUS_VAR_DISPATCH(right)
+            LUMINOUS_VAR_PTR_DISPATCH(right)
         }
 
+        CPU_ONLY(std::string Sensor::to_string() const {
+            LUMINOUS_VAR_PTR_DISPATCH(to_string);
+        })
+
         CPU_ONLY(Sensor Sensor::create(const SensorConfig &config) {
-            auto ret = detail::create<Sensor>(config);
+            auto ret = detail::create_ptr<Sensor>(config);
             ret.set_film(Film::create(config.film_config));
             return ret;
         })

@@ -15,7 +15,7 @@ namespace luminous {
             LaunchParams lp{};
 
             lp.sampler = _sampler.device_data();
-            lp.camera = _camera.device_data();
+            lp.camera = _camera.device_ptr();
             lp.frame_index = 0u;
             lp.max_depth = _max_depth;
             lp.rr_threshold = _rr_threshold;
@@ -36,7 +36,7 @@ namespace luminous {
         }
 
         void MegakernelPT::synchronize_to_gpu() {
-            _camera.synchronize_to_device();
+            _camera.synchronize_all_to_device();
             _sampler.synchronize_to_device();
         }
 

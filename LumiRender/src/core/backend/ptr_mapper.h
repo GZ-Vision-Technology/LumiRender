@@ -22,6 +22,7 @@ namespace luminous {
 
             // for fast mapping
             std::map<ptr_t, ptr_t> _device_to_host;
+            std::map<ptr_t, ptr_t> _host_to_device;
 
             PtrMapper() = default;
 
@@ -34,7 +35,7 @@ namespace luminous {
 
             void add_pair(PtrInterval host, PtrInterval device);
 
-            void add_reverse_mapping(ptr_t device_ptr, ptr_t host_ptr);
+            void add_fast_mapping(ptr_t device_ptr, ptr_t host_ptr);
 
             LM_NODISCARD ptr_t get_host_ptr(ptr_t device_ptr) const;
 

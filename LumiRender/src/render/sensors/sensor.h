@@ -17,7 +17,7 @@ namespace luminous {
     inline namespace render {
         using lstd::Variant;
 
-        class Sensor : BASE_CLASS(Variant<PinholeCamera, ThinLensCamera>) {
+        class Sensor : BASE_CLASS(Variant<PinholeCamera *, ThinLensCamera *>) {
         public:
             REFL_CLASS(Sensor)
 
@@ -29,7 +29,7 @@ namespace luminous {
 
             LM_XPU void set_position(float3 pos);
 
-            LM_XPU float generate_ray(const SensorSample &ss, Ray * ray);
+            LM_XPU float generate_ray(const SensorSample &ss, Ray *ray);
 
             LM_XPU void set_film(const Film &film);
 
@@ -77,7 +77,7 @@ namespace luminous {
 
             LM_XPU void set_sensitivity(float val);
 
-            GEN_TO_STRING_FUNC
+            CPU_ONLY(LM_NODISCARD std::string to_string() const;)
 
             CPU_ONLY(static Sensor create(const SensorConfig &config);)
         };

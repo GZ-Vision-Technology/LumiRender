@@ -21,8 +21,12 @@ namespace luminous {
             _max_depth = scene_graph->integrator_config.max_depth;
             _rr_threshold = scene_graph->integrator_config.rr_threshold;
             _scene->init(scene_graph);
-            _camera.push_back(Sensor::create(scene_graph->sensor_config));
             _sampler.push_back(Sampler::create(scene_graph->sampler_config));
+
+            _camera.init(1);
+            _camera.add_element(scene_graph->sensor_config);
+            _camera->set_film(Film::create(scene_graph->sensor_config.film_config));
+
             init_on_device();
             LUMINOUS_INFO(get_arena().description());
         }
