@@ -4,9 +4,8 @@
 
 #include "interaction.h"
 #include "render/scene/scene_data.h"
-#include "render/lights/common.h"
+#include "render/lights/area_light.h"
 #include "render/lights/light.h"
-#include "render/bxdfs/bsdf.h"
 #include "render/materials/material.h"
 
 namespace luminous {
