@@ -2,9 +2,11 @@
 // Created by Zero on 2021/3/4.
 //
 
+#include "common.h"
 #include "sensor.h"
 #include "render/include/creator.h"
 #include "core/refl/factory.h"
+
 
 namespace luminous {
     inline namespace render {

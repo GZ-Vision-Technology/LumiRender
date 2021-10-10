@@ -12,6 +12,7 @@
 #include "render/sensors/sensor.h"
 #include "render/integrators/integrator.h"
 #include "core/backend/managed.h"
+#include "render/sensors/common.h"
 
 namespace luminous {
     using std::unique_ptr;

@@ -17,8 +17,6 @@ namespace luminous {
             float weight_sum;
         };
 
-        using FrameBufferType = uint32_t;
-
         class FilmBase : BASE_CLASS() {
         public:
             REFL_CLASS(FilmBase)

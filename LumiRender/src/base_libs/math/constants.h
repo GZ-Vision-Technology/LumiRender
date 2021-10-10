@@ -34,6 +34,8 @@ namespace luminous {
         constexpr uint32_t invalid_uint32 = uint32_t(-1);
         constexpr uint64_t invalid_uint64 = uint64_t(-1);
 
+        using FrameBufferType = uint32_t;
+
         static struct NegInfTy {
 #ifdef __CUDA_ARCH__
             __device__ operator          double   ( ) const { return -CUDART_INF; }

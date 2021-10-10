@@ -5,6 +5,7 @@
 #include "cpu_pt.h"
 #include "render/integrators/pt_func.h"
 #include "render/scene/cpu_scene.h"
+#include "render/sensors/common.h"
 
 using std::cout;
 
