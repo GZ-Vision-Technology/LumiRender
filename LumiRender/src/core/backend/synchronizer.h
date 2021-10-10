@@ -56,7 +56,7 @@ namespace luminous {
             template<typename U>
             void add_element(const U &config) {
                 USE_BLOCK(&_memory_block);
-                auto elm = render::detail::create_ptr<T>(config);
+                auto elm = element_type::create(config);
                 BaseClass::push_back(elm);
             }
 

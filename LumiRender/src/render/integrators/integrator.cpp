@@ -25,7 +25,6 @@ namespace luminous {
 
             _camera.init(1);
             _camera.add_element(scene_graph->sensor_config);
-            _camera->set_film(Film::create(scene_graph->sensor_config.film_config));
 
             init_on_device();
             LUMINOUS_INFO(get_arena().description());
