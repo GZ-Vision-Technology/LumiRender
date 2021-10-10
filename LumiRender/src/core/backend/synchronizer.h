@@ -39,7 +39,18 @@ namespace luminous {
                 _memory_block.allocate(_size_in_bytes);
                 BaseClass::reserve(n_element);
                 BaseClass::allocate_device(_size_in_bytes);
-                PtrMapper::instance()->add_pair(_memory_block.interval_allocated(), BaseClass::device_interval());
+            }
+
+            LM_NODISCARD ptr_t to_host_ptr(ptr_t ptr) const {
+                DCHECK(is_device_ptr(ptr));
+                std::ptrdiff_t ptrdiff = ptr - BaseClass::_device_buffer.template ptr<ptr_t>();
+                return reinterpret_cast<ptr_t>(BaseClass::data()) + ptrdiff;
+            }
+
+            LM_NODISCARD ptr_t to_device_ptr(ptr_t ptr) const {
+                DCHECK(is_host_ptr(ptr));
+                std::ptrdiff_t ptrdiff = ptr - reinterpret_cast<ptr_t>(BaseClass::data());
+                return BaseClass::_device_buffer.template ptr<ptr_t>() + ptrdiff;
             }
 
             template<typename U>
@@ -93,7 +104,7 @@ namespace luminous {
                     if (is_host_ptr(ptr)) {
                         return;
                     }
-                    auto host_ptr = PtrMapper::instance()->get_host_ptr(ptr);
+                    auto host_ptr = to_host_ptr(ptr);
                     set_ptr_value(&elm, offset, host_ptr);
                 });
             }
@@ -113,8 +124,7 @@ namespace luminous {
             void remapping_ptr_to_device(element_type &elm) {
                 for_each_all_registered_member<T>([&](size_t offset, const char *name, auto ptr) {
                     ptr_t host_ptr = get_ptr_value(&elm, offset);
-                    auto device_ptr = PtrMapper::instance()->get_device_ptr(host_ptr);
-                    PtrMapper::instance()->add_fast_mapping(device_ptr, host_ptr);
+                    auto device_ptr = to_device_ptr(host_ptr);
                     set_ptr_value(&elm, offset, device_ptr);
                 });
             }
