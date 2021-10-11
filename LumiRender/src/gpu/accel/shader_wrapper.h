@@ -6,8 +6,6 @@
 #pragma once
 
 #include <optix.h>
-
-#include <utility>
 #include "core/concepts.h"
 #include "core/backend/buffer.h"
 #include "optix_params.h"

@@ -14,7 +14,6 @@
 #include "core/concepts.h"
 #include "image_base.h"
 #include "parallel.h"
-#include <utility>
 
 namespace luminous {
     inline namespace utility {

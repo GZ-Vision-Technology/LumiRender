@@ -4,8 +4,6 @@
 
 #include "cpu_impl.h"
 
-#include <utility>
-
 namespace luminous {
     inline namespace cpu {
 

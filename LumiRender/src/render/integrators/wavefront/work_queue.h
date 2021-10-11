@@ -26,7 +26,6 @@
 #else
 
 #include <atomic>
-#include <utility>
 
 #endif
 
