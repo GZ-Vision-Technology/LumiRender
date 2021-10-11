@@ -33,19 +33,13 @@ namespace luminous {
 
             LM_XPU void set_frame_buffer_view(BufferView<FrameBufferType> buffer_view);
 
-            LM_ND_XPU float4 *accumulate_buffer_ptr() {
-                LUMINOUS_VAR_DISPATCH(accumulate_buffer_ptr);
-            }
+            LM_ND_XPU float4 *accumulate_buffer_ptr();
 
-            LM_ND_XPU FrameBufferType *frame_buffer_ptr() {
-                LUMINOUS_VAR_DISPATCH(frame_buffer_ptr);
-            }
+            LM_ND_XPU FrameBufferType *frame_buffer_ptr();
 
-            GEN_TO_STRING_FUNC
+            CPU_ONLY(LM_NODISCARD std::string to_string() const;)
 
-            CPU_ONLY(static Film create(const FilmConfig &fc) {
-                return detail::create<Film>(fc);
-            })
+            CPU_ONLY(static Film create(const FilmConfig &fc);)
         };
     }
 }

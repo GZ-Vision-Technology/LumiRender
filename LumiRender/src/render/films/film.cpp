@@ -31,5 +31,22 @@ namespace luminous {
         void Film::set_frame_buffer_view(BufferView<FrameBufferType> buffer_view) {
             LUMINOUS_VAR_DISPATCH(set_frame_buffer_view, buffer_view);
         }
+
+        float4 *Film::accumulate_buffer_ptr() {
+            LUMINOUS_VAR_DISPATCH(accumulate_buffer_ptr);
+        }
+
+        FrameBufferType *Film::frame_buffer_ptr() {
+            LUMINOUS_VAR_DISPATCH(frame_buffer_ptr);
+        }
+
+        CPU_ONLY(std::string Film::to_string() const {
+            LUMINOUS_VAR_DISPATCH(to_string);
+        })
+
+        CPU_ONLY(Film Film::create(const FilmConfig &fc) {
+            return detail::create<Film>(fc);
+        })
+
     }
 }
