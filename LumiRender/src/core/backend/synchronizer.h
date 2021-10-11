@@ -138,17 +138,6 @@ namespace luminous {
                 return _memory_block.interval_allocated().contains(ptr);
             }
 
-            void remapping_ptr_to_host(element_type &elm) const {
-                for_each_all_registered_member<T>([&](size_t offset, const char *name, auto __) {
-                    ptr_t ptr = get_ptr_value(&elm, offset);
-                    if (is_host_ptr(ptr)) {
-                        return;
-                    }
-                    auto host_ptr = to_host_ptr(ptr);
-                    set_ptr_value(ptr_t(0), ptr_t(&elm) +offset, host_ptr);
-                });
-            }
-
             void remapping_ptr_to_host() {
                 for (auto elm : _address) {
                     ptr_t *point_to_ptr = reinterpret_cast<ptr_t *>(elm);
@@ -166,14 +155,6 @@ namespace luminous {
             void synchronize_all_to_host() {
                 remapping_ptr_to_host();
                 BaseClass::_device_buffer.download(_memory_block.template address<std::byte>(), _size_in_bytes);
-            }
-
-            void remapping_ptr_to_device(element_type &elm) {
-                for_each_all_registered_member<T>([&](size_t offset, const char *name, auto ptr) {
-                    ptr_t host_ptr = get_ptr_value(&elm, offset);
-                    auto device_ptr = to_device_ptr(host_ptr);
-                    set_ptr_value(&elm, offset, device_ptr);
-                });
             }
 
             void remapping_ptr_to_device() {

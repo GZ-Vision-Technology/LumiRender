@@ -122,8 +122,8 @@ namespace luminous {
 
         CPU_ONLY(std::pair<Sensor, std::vector<size_t>> Sensor::create(const SensorConfig &config) {
             auto ret = detail::create_ptr<Sensor>(config);
-            Film film = Creator<Film>::create(config.film_config);
-            ret.first.set_film(&film);
+            auto film = Creator<Film>::create_ptr(config.film_config).first;
+            ret.first.set_film(film);
             return ret;
         })
 

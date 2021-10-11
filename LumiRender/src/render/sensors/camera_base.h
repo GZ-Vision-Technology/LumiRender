@@ -18,6 +18,7 @@ namespace luminous {
         class CameraBase : BASE_CLASS() {
         public:
             REFL_CLASS(CameraBase)
+
         protected:
             constexpr static float z_near = 0.01f;
             constexpr static float z_far = 1000.f;
@@ -37,7 +38,7 @@ namespace luminous {
             Transform _camera_to_screen{};
             Transform _raster_to_camera{};
 
-            Film _film{};
+            DEFINE_AND_REGISTER_MEMBER(Film *, _film);
 
             LM_XPU void _update(const float4x4 &m);
 
@@ -48,7 +49,7 @@ namespace luminous {
         public:
             LM_XPU explicit CameraBase(float3 pos = make_float3(0), float fov_y = 30);
 
-            LM_XPU CameraBase(const float4x4 m, float fov_y, float velocity);
+            LM_XPU CameraBase(float4x4 m, float fov_y, float velocity);
 
             LM_XPU void update_film_resolution(uint2 res);
 
@@ -101,13 +102,13 @@ namespace luminous {
             LM_XPU void set_sensitivity(float val);
 
             GEN_STRING_FUNC({
-                return string_printf("{fov_y:%f, position:%s, yaw:%f, pitch:%f, velocity : %f}",
-                                     fov_y(),
-                                     position().to_string().c_str(),
-                                     yaw(),
-                                     pitch(),
-                                     velocity());
-            })
+                                return string_printf("{fov_y:%f, position:%s, yaw:%f, pitch:%f, velocity : %f}",
+                                                     fov_y(),
+                                                     position().to_string().c_str(),
+                                                     yaw(),
+                                                     pitch(),
+                                                     velocity());
+                            })
         }; // luminous::render::CameraBase
     } // luminous::render
 } // luminous

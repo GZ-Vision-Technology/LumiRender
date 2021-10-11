@@ -10,7 +10,7 @@ namespace luminous {
         CameraBase::CameraBase(float3 pos, float fov_y)
                 : _position(pos), _fov_y(fov_y) {}
 
-        CameraBase::CameraBase(const float4x4 m, float fov_y, float velocity)
+        CameraBase::CameraBase(float4x4 m, float fov_y, float velocity)
                 : _velocity(velocity) {
             _update(m);
             set_fov_y(fov_y);
@@ -29,12 +29,12 @@ namespace luminous {
         }
 
         void CameraBase::update_film_resolution(uint2 res) {
-            _film.set_resolution(res);
+            _film->set_resolution(res);
             _set_resolution(res);
         }
 
         void CameraBase::_set_resolution(uint2 res) {
-            Box2f scrn = _film.screen_window();
+            Box2f scrn = _film->screen_window();
             float2 span = scrn.span();
             Transform screen_to_raster = Transform::scale(res.x, res.y, 1) *
                                          Transform::scale(1 / span.x, 1 / -span.y, 1) *
@@ -44,17 +44,17 @@ namespace luminous {
         }
 
         void CameraBase::set_film(Film *film) {
-            _film = *film;
-            _set_resolution(_film.resolution());
+            _film = film;
+            _set_resolution(_film->resolution());
             _update_raster();
         }
 
         uint2 CameraBase::resolution() const {
-            return _film.resolution();
+            return _film->resolution();
         }
 
         Film *CameraBase::film() {
-            return &_film;
+            return _film;
         }
 
         float3 CameraBase::position() const {
