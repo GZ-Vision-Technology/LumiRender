@@ -6,7 +6,6 @@
 #pragma once
 
 #include "managed.h"
-#include "ptr_mapper.h"
 #include "core/memory/arena.h"
 #include "core/refl/reflection.h"
 #include "core/refl/factory.h"

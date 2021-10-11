@@ -19,8 +19,6 @@ namespace luminous {
 
         class ThinLensCamera;
 
-        class FilmOld;
-
         struct SensorSample;
 
         class Sensor : BASE_CLASS(Variant<PinholeCamera *, ThinLensCamera *>) {
