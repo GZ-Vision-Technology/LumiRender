@@ -169,6 +169,23 @@
 					}
 				}
 			}
+		},
+		{
+			"name" : "nanosuit",
+			"type": "model",
+			"param" : {
+				//				"material": "quad",
+				"fn": "nanosuit/nanosuit.obj",
+				"subdiv_level": 0,
+				"transform" : {
+					"type" : "trs",
+					"param" : {
+						"t" : [-1, 0, 1],
+						"r" : [0, 1, 0, 180],
+						"s" : [0.1,0.1,0.1]
+					}
+				}
+			}
 		}
 	],
 	"lights" : [
