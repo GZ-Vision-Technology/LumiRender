@@ -39,8 +39,6 @@ namespace luminous {
 
             Film _film{};
 
-            DEFINE_AND_REGISTER_MEMBER(int*,pa);
-
             LM_XPU void _update(const float4x4 &m);
 
             LM_XPU void _update_raster();
