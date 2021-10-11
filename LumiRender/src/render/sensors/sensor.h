@@ -83,7 +83,7 @@ namespace luminous {
 
             CPU_ONLY(LM_NODISCARD std::string to_string() const;)
 
-            CPU_ONLY(static Sensor create(const SensorConfig &config);)
+            CPU_ONLY(static std::pair<Sensor, std::vector<size_t>> create(const SensorConfig &config);)
         };
     }
 }

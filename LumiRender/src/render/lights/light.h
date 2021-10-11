@@ -68,7 +68,7 @@ namespace luminous {
 
             LM_XPU void print() const;
 
-            CPU_ONLY(static Light create(const LightConfig &config);)
+            CPU_ONLY(static std::pair<Light, std::vector<size_t>> create(const LightConfig &config);)
         };
     } // luminous::render
 } // luminous

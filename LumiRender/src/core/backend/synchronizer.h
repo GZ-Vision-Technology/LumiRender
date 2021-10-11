@@ -56,7 +56,7 @@ namespace luminous {
             void add_element(const U &config) {
                 USE_BLOCK(&_memory_block);
                 auto elm = element_type::create(config);
-                BaseClass::push_back(elm);
+                BaseClass::push_back(elm.first);
             }
 
             LM_NODISCARD const element_type *operator->() const {

@@ -10,9 +10,11 @@
 #include "base_libs/lstd/lstd.h"
 #include "core/logging.h"
 #include "core/memory/allocator.h"
+#include "core/refl/reflection.h"
 
 namespace luminous {
     inline namespace render {
+
         template<typename T>
         class Creator {
         public:
@@ -22,8 +24,13 @@ namespace luminous {
             }
 
             template<typename ...Args>
-            static T *create_ptr(Args &&...args) {
-                return get_arena().template create<T>(std::forward<Args>(args)...);
+            static auto create_ptr(Args &&...args) {
+                auto ptr = get_arena().template create<T>(std::forward<Args>(args)...);
+                std::vector<size_t> addresses;
+                refl::for_each_all_registered_member<T>([&](size_t offset, const char *name, auto ptr) {
+                    addresses.push_back(ptr_t(ptr) + offset);
+                });
+                return std::make_pair(ptr, addresses);
             }
         };
 
@@ -42,10 +49,11 @@ namespace luminous {
             }
 
             template<typename Handle, typename Config, uint8_t current_index = 0>
-            LM_NODISCARD Handle create_ptr(const Config &config) {
+            LM_NODISCARD auto create_ptr(const Config &config) {
                 using Class = std::remove_pointer_t<std::tuple_element_t<current_index, typename Handle::TypeTuple>>;
                 if (type_name<Class>() == config.type()) {
-                    return Handle(Creator<Class>::create_ptr(config));
+                    auto ret = Creator<Class>::create_ptr(config);
+                    return std::make_pair(Handle(ret.first), ret.second);
                 }
                 if constexpr (current_index + 1 == std::tuple_size_v<typename Handle::TypeTuple>) {
                     LUMINOUS_ERROR(string_printf("unknown %s type %s", Handle::base_name(), config.type().c_str()));

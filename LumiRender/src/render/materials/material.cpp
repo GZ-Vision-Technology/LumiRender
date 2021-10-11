@@ -12,7 +12,7 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(get_BSDF, ctx, scene_data)
         }
 
-        CPU_ONLY(Material Material::create(const MaterialConfig &mc) {
+        CPU_ONLY(std::pair<Material, std::vector<size_t>> Material::create(const MaterialConfig &mc) {
             return detail::create_ptr<Material>(mc);
         })
     }

@@ -40,9 +40,9 @@ namespace luminous {
             REFL_CLASS(LightSamplerBase)
 
         protected:
-            DEFINE_AND_REGISTER_MEMBER(BufferView<const Light>, _lights)
+            BufferView<const Light> _lights;
 
-            DEFINE_AND_REGISTER_MEMBER(BufferView<const Light>, _infinite_lights)
+            BufferView<const Light> _infinite_lights;
 
         public:
             ND_XPU_INLINE BufferView<const Light> lights() const {

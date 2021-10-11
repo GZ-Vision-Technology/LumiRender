@@ -66,7 +66,7 @@ namespace luminous {
 
             LM_ND_XPU float PMF(const LightSampleContext &ctx, const Light &light) const;
 
-            CPU_ONLY(static LightSampler create(const LightSamplerConfig &config);)
+            CPU_ONLY(static std::pair<LightSampler, std::vector<size_t>> create(const LightSamplerConfig &config);)
         };
 
     } // luminous::render

@@ -120,10 +120,10 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(to_string);
         })
 
-        CPU_ONLY(Sensor Sensor::create(const SensorConfig &config) {
+        CPU_ONLY(std::pair<Sensor, std::vector<size_t>> Sensor::create(const SensorConfig &config) {
             auto ret = detail::create_ptr<Sensor>(config);
             Film film = Creator<Film>::create(config.film_config);
-            ret.set_film(&film);
+            ret.first.set_film(&film);
             return ret;
         })
 

@@ -67,10 +67,6 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(PMF, ctx, light);
         }
 
-        CPU_ONLY(LightSampler LightSampler::create(const LightSamplerConfig &config) {
-            return detail::create_ptr<LightSampler>(config);
-        })
-
         Spectrum LightSampler::on_miss(Ray ray, const SceneData *scene_data, Spectrum throughput) const {
             Spectrum L{0.f};
             BufferView<const Light> lights = infinite_lights();
@@ -79,6 +75,10 @@ namespace luminous {
             }
             return L;
         }
+
+        CPU_ONLY(std::pair<LightSampler, std::vector<size_t>> LightSampler::create(const LightSamplerConfig &config) {
+            return detail::create_ptr<LightSampler>(config);
+        })
 
     } // luminous::render
 } // luminous

@@ -139,7 +139,7 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(to_string);
         })
 
-        CPU_ONLY(Light Light::create(const LightConfig &config) {
+        CPU_ONLY(std::pair<Light, std::vector<size_t>> Light::create(const LightConfig &config) {
             return detail::create_ptr<Light>(config);
         })
 
