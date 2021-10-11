@@ -7,7 +7,6 @@
 
 #include "task.h"
 #include "gpu/framework/cuda_impl.h"
-#include "render/films/film.h"
 #include "core/backend/managed.h"
 
 namespace luminous {

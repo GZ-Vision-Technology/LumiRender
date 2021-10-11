@@ -7,15 +7,15 @@
 
 #include "base_libs/math/common.h"
 #include "base_libs/lstd/lstd.h"
-#include "render//include/config.h"
+#include "render/include/config.h"
 #include "core/backend/buffer_view.h"
 
 namespace luminous {
     inline namespace render {
-//        struct Pixel {
-//            float4 rgb;
-//            float weight_sum;
-//        };
+        struct Pixel {
+            float4 rgb;
+            float weight_sum;
+        };
 
         class Film : BASE_CLASS() {
         public:

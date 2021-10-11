@@ -7,8 +7,7 @@
 
 #include "base_libs/optics/common.h"
 #include "base_libs/geometry/common.h"
-#include "../films/film.h"
-#include "../samplers/sampler_base.h"
+#include "render/samplers/sampler_base.h"
 #include "render/include/creator.h"
 #include "core/concepts.h"
 #include "core/refl/reflection.h"
