@@ -16,7 +16,7 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(position);
         }
 
-        void Sensor::set_film(const Film &film) {
+        void Sensor::set_film(Film *film) {
             LUMINOUS_VAR_PTR_DISPATCH(set_film, film);
         }
 
@@ -122,7 +122,8 @@ namespace luminous {
 
         CPU_ONLY(Sensor Sensor::create(const SensorConfig &config) {
             auto ret = detail::create_ptr<Sensor>(config);
-            ret.set_film(Film::create(config.film_config));
+            Film film = Creator<Film>::create(config.film_config);
+            ret.set_film(&film);
             return ret;
         })
 

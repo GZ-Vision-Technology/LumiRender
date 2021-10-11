@@ -12,6 +12,7 @@
 #include "render/include/creator.h"
 #include "core/concepts.h"
 #include "core/refl/reflection.h"
+#include "film.h"
 
 namespace luminous {
     inline namespace render {
@@ -36,7 +37,9 @@ namespace luminous {
             Transform _raster_to_screen{};
             Transform _camera_to_screen{};
             Transform _raster_to_camera{};
-            Film _film;
+
+            Film _film{};
+
             LM_XPU void _update(const float4x4 &m);
 
             LM_XPU void _update_raster();
@@ -50,7 +53,7 @@ namespace luminous {
 
             LM_XPU void update_film_resolution(uint2 res);
 
-            LM_XPU void set_film(const Film &film);
+            LM_XPU void set_film(Film *film);
 
             LM_ND_XPU Film *film();
 

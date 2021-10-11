@@ -9,7 +9,7 @@
 #include "base_libs/math/common.h"
 #include "base_libs/lstd/lstd.h"
 #include "../include/config.h"
-
+#include "film.h"
 
 namespace luminous {
     inline namespace render {
@@ -19,7 +19,7 @@ namespace luminous {
 
         class ThinLensCamera;
 
-        class Film;
+        class FilmOld;
 
         struct SensorSample;
 
@@ -37,7 +37,7 @@ namespace luminous {
 
             LM_XPU float generate_ray(const SensorSample &ss, Ray *ray);
 
-            LM_XPU void set_film(const Film &film);
+            LM_XPU void set_film(Film *film);
 
             LM_XPU void update_film_resolution(uint2 res);
 

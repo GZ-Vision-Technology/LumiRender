@@ -28,7 +28,7 @@ GLOBAL __raygen__rg() {
     using namespace luminous;
     luminous::uint2 pixel = getPixelCoords();
     Sensor *camera = params.camera;
-    Film *film = camera->film();
+    auto film = camera->film();
     Sampler sampler = *params.sampler;
     auto frame_index = params.frame_index;
     // todo single frame multi sample and single sample multi frame can not reach a same result

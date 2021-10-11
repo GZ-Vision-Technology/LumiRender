@@ -13,11 +13,11 @@
 namespace luminous {
     inline namespace render {
 
-        class Film : BASE_CLASS(lstd::Variant<RGBFilm>) {
+        class FilmOld : BASE_CLASS(lstd::Variant<RGBFilm>) {
         public:
-            GEN_BASE_NAME(Film)
+            GEN_BASE_NAME(FilmOld)
 
-            REFL_CLASS(Film)
+            REFL_CLASS(FilmOld)
 
             using BaseBinder::BaseBinder;
 
@@ -39,7 +39,7 @@ namespace luminous {
 
             CPU_ONLY(LM_NODISCARD std::string to_string() const;)
 
-            CPU_ONLY(static Film create(const FilmConfig &fc);)
+            CPU_ONLY(static FilmOld create(const FilmConfig &fc);)
         };
     }
 }

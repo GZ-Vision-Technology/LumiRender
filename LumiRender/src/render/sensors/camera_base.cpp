@@ -43,8 +43,8 @@ namespace luminous {
             _update_raster();
         }
 
-        void CameraBase::set_film(const Film &film) {
-            _film = film;
+        void CameraBase::set_film(Film *film) {
+            _film = *film;
             _set_resolution(_film.resolution());
             _update_raster();
         }

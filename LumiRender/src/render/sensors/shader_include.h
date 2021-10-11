@@ -11,6 +11,7 @@
     #include "sensor.cpp"
     #include "thin_lens_camera.cpp"
     #include "pinhole_camera.cpp"
+    #include "film.cpp"
 #else
     #error "this file just for cuda shader include"
 #endif
