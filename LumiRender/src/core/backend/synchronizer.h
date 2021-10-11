@@ -28,6 +28,7 @@ namespace luminous {
         private:
             MemoryBlock _memory_block{};
             size_t _size_in_bytes{0};
+            std::vector<size_t> _offsets;
         public:
             explicit Synchronizer(Device *device)
                     : BaseClass(device) {}
@@ -52,11 +53,28 @@ namespace luminous {
                 return BaseClass::_device_buffer.template ptr<ptr_t>() + ptrdiff;
             }
 
+            LM_NODISCARD ptr_t host_ptr_head() const {
+                return reinterpret_cast<ptr_t>(BaseClass::data());
+            }
+
+            LM_NODISCARD ptr_t device_ptr_head() const {
+                return BaseClass::_device_buffer.template ptr<ptr_t>();
+            }
+
             template<typename U>
             void add_element(const U &config) {
                 USE_BLOCK(&_memory_block);
-                auto elm = element_type::create(config);
+                std::pair<element_type, std::vector<size_t>> elm = element_type::create(config);
+                lstd::append(_offsets, elm.second);
+
+                for (auto address : elm.second) {
+                    _offsets.push_back(address - host_ptr_head());
+                }
                 BaseClass::push_back(elm.first);
+                refl::for_each_all_registered_member<T>([&](size_t offset, const char *name, auto __) {
+                    auto &element = BaseClass::back();
+                    _offsets.push_back(ptr_t(&element) + offset - host_ptr_head());
+                });
             }
 
             LM_NODISCARD const element_type *operator->() const {
@@ -65,7 +83,7 @@ namespace luminous {
 
             LM_NODISCARD element_type *operator->() {
                 auto &ret = BaseClass::at(0);
-                remapping_ptr_to_host(ret);
+                remapping_ptr_to_host();
                 return &ret;
             }
 
@@ -77,21 +95,21 @@ namespace luminous {
             template<typename Index>
             LM_NODISCARD element_type &at(Index i) {
                 auto &ret = BaseClass::at(i);
-                remapping_ptr_to_host(ret);
+                remapping_ptr_to_host();
                 return ret;
             }
 
             template<typename Index>
             LM_NODISCARD element_type at(Index i) {
                 auto ret = BaseClass::at(i);
-                remapping_ptr_to_host(ret);
+                remapping_ptr_to_host();
                 return ret;
             }
 
             template<typename Index>
             LM_NODISCARD element_type& operator[](Index i) {
                 auto &ret = BaseClass::at(i);
-                remapping_ptr_to_host(ret);
+                remapping_ptr_to_host();
                 return ret;
             }
 
@@ -136,6 +154,14 @@ namespace luminous {
             }
 
             void remapping_ptr_to_host() {
+//                for (auto offset : _offsets) {
+//                    auto ptr = offset + device_ptr_head();
+//                    if (is_host_ptr(ptr)) {
+//                        continue;
+//                    }
+//                    auto host_ptr = to_host_ptr(ptr);
+//                    set_ptr_value(host_ptr_head(), offset, host_ptr);
+//                }
                 for (int i = 0; i < BaseClass::size(); ++i) {
                     auto &elm = BaseClass::at(i);
                     remapping_ptr_to_host(elm);
@@ -156,6 +182,14 @@ namespace luminous {
             }
 
             void remapping_ptr_to_device() {
+//                for (auto offset : _offsets) {
+//                    auto ptr = offset + host_ptr_head();
+//                    if (is_device_ptr(ptr)) {
+//                        continue;
+//                    }
+//                    auto device_ptr = to_device_ptr(ptr);
+//                    set_ptr_value(ptr_t(0), ptr, device_ptr);
+//                }
                 for (int i = 0; i < BaseClass::size(); ++i) {
                     auto &elm = BaseClass::at(i);
                     remapping_ptr_to_device(elm);

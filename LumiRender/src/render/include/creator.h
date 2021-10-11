@@ -27,7 +27,7 @@ namespace luminous {
             static auto create_ptr(Args &&...args) {
                 auto ptr = get_arena().template create<T>(std::forward<Args>(args)...);
                 std::vector<size_t> addresses;
-                refl::for_each_all_registered_member<T>([&](size_t offset, const char *name, auto ptr) {
+                refl::for_each_all_registered_member<T>([&](size_t offset, const char *name, auto __) {
                     addresses.push_back(ptr_t(ptr) + offset);
                 });
                 return std::make_pair(ptr, addresses);
