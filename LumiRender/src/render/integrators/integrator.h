@@ -7,12 +7,9 @@
 
 #include "core/concepts.h"
 #include "render/scene/scene_graph.h"
-#include "render/sensors/sensor.h"
 #include "core/backend/synchronizer.h"
 #include "render/samplers/sampler.h"
-
-// todo compile error
-//#include "render/include/scene_data.h"
+#include "render/sensors/sensor.h"
 
 
 namespace luminous {
@@ -39,7 +36,6 @@ namespace luminous {
             virtual void init(const std::shared_ptr<SceneGraph> &scene_graph);
 
             virtual void init_on_device() {
-//                _camera.allocate_device(1);
                 _sampler.allocate_device(1);
             }
 
@@ -49,9 +45,9 @@ namespace luminous {
 
             LM_NODISCARD virtual uint frame_index() const = 0;
 
-            LM_NODISCARD virtual Sensor *camera() { return _camera.data(); }
+            LM_NODISCARD virtual Sensor *camera();
 
-            LM_NODISCARD uint2 resolution() const { return _camera->resolution(); }
+            LM_NODISCARD uint2 resolution() const;
 
             virtual void update() = 0;
 

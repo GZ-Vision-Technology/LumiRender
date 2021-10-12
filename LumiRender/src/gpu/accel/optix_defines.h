@@ -7,6 +7,7 @@
 
 #include <optix.h>
 #include "base_libs/math/common.h"
+#include "render/scene/scene_data.h"
 
 namespace luminous {
     inline namespace gpu {

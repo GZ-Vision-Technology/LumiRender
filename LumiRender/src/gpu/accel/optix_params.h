@@ -7,12 +7,15 @@
 
 #include <optix.h>
 #include "base_libs/math/common.h"
-#include "render/sensors/sensor.h"
 #include "render/samplers/sampler.h"
-#include "render/scene/scene_data.h"
 #include "optix_defines.h"
 
 namespace luminous {
+
+    inline namespace render {
+        class Sensor;
+    }
+
     inline namespace gpu {
         struct LaunchParams {
             OptixTraversableHandle traversable_handle;

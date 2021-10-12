@@ -7,7 +7,6 @@
 
 #include "render/integrators/integrator.h"
 #include "render/samplers/sampler.h"
-#include "render/sensors/sensor.h"
 
 namespace luminous {
     inline namespace cpu {

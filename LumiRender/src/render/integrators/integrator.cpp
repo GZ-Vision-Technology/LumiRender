@@ -4,12 +4,18 @@
 
 #include "integrator.h"
 #include "render/scene/scene.h"
+#include "render/sensors/sensor.h"
 #include "render/scene/cpu_scene.h"
 #include "render/scene/gpu_scene.h"
 
 
 namespace luminous {
     inline namespace render {
+
+        uint2 Integrator::resolution() const { return _camera->resolution(); }
+
+        Sensor *Integrator::camera() { return _camera.data(); }
+
         const SceneData* Integrator::scene_data() const { return _scene->scene_data();}
 
         void Integrator::init(const std::shared_ptr<SceneGraph> &scene_graph) {
