@@ -34,6 +34,8 @@ namespace luminous {
 
         LM_ND_XPU T *ptr() { return _ptr; }
 
+        LM_ND_XPU const T *ptr() const { return _ptr; }
+
         template<typename target_type>
         LM_ND_XPU BufferView<target_type> cast() const {
             size_t num = _num * float(sizeof(value_type)) / sizeof(target_type);

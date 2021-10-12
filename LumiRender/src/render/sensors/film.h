@@ -18,6 +18,12 @@ namespace luminous {
             float weight_sum{};
         };
 
+        enum FBState {
+            Render,
+            Normal,
+            Albedo
+        };
+
         class Film : BASE_CLASS() {
         public:
             REFL_CLASS(Film)
@@ -25,12 +31,17 @@ namespace luminous {
         protected:
             uint2 _resolution;
             Box2f _screen_window;
+            FBState _fb_state{Render};
             BufferView<float4> _normal_buffer_view;
             BufferView<float4> _albedo_buffer_view;
             BufferView<float4> _render_buffer_view;
             BufferView<FrameBufferType> _frame_buffer_view;
 
-            LM_XPU void update();
+            LM_XPU void _update();
+
+            LM_ND_XPU uint _pixel_index(uint2 pixel) const {
+                return pixel.y * _resolution.x + pixel.x;
+            }
 
         public:
             CPU_ONLY(explicit Film(const FilmConfig &config) : Film(config.resolution) {})
@@ -39,14 +50,47 @@ namespace luminous {
 
             explicit Film(uint2 res)
                     : _resolution(res) {
-                update();
+                _update();
             }
 
-            LM_XPU void add_render_sample(uint2 pixel, Spectrum color, float weight, uint frame_index = 0u);
+            template<typename ...Args>
+            LM_XPU void add_render_sample(uint2 pixel, Args &&...args) {
+                add_render_sample(_pixel_index(pixel), std::forward<Args>(args)...);
+            }
+
+            LM_XPU void add_render_sample(uint pixel_index, Spectrum color, float weight, uint frame_index = 0u);
+
+            template<typename ...Args>
+            LM_XPU void add_normal_sample(uint2 pixel, Args &&...args) {
+                add_normal_sample(_pixel_index(pixel), std::forward<Args>(args)...);
+            }
+
+            LM_XPU void add_normal_sample(uint pixel_index, float3 normal, float weight, uint frame_index = 0u);
+
+            template<typename ...Args>
+            LM_XPU void add_albedo_sample(uint2 pixel, Args &&...args) {
+                add_albedo_sample(_pixel_index(pixel), std::forward<Args>(args)...);
+            }
+
+            LM_XPU void add_albedo_sample(uint pixel_index, float3 albedo, float weight, uint frame_index = 0u);
+
+            LM_XPU void fill_frame_buffer(uint2 pixel) {
+                fill_frame_buffer(_pixel_index(pixel));
+            }
+
+            LM_XPU void fill_frame_buffer(uint pixel_index);
 
             LM_XPU void set_resolution(uint2 resolution) {
                 _resolution = resolution;
-                update();
+                _update();
+            }
+
+            LM_XPU void set_normal_buffer_view(BufferView<float4> buffer_view) {
+                _normal_buffer_view = buffer_view;
+            }
+
+            LM_XPU void set_albedo_buffer_view(BufferView<float4> buffer_view) {
+                _albedo_buffer_view = buffer_view;
             }
 
             LM_XPU void set_render_buffer_view(BufferView<float4> buffer_view) {
@@ -55,14 +99,6 @@ namespace luminous {
 
             LM_XPU void set_frame_buffer_view(BufferView<FrameBufferType> buffer_view) {
                 _frame_buffer_view = buffer_view;
-            }
-
-            LM_ND_XPU float4 *render_buffer_ptr() {
-                return _render_buffer_view.ptr();
-            }
-
-            LM_ND_XPU FrameBufferType *frame_buffer_ptr() {
-                return _frame_buffer_view.ptr();
             }
 
             LM_ND_XPU uint2 resolution() const { return _resolution; }
