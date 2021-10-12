@@ -18,8 +18,6 @@ namespace luminous {
 
             void init(const Parser &parser) override;
 
-            void update_device_buffer() override;
-
             void render_cli() override {}
 
             LM_NODISCARD FrameBufferType *get_frame_buffer() override;

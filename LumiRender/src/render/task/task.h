@@ -72,7 +72,7 @@ namespace luminous {
 
             virtual void render_cli() = 0;
 
-            virtual void update_device_buffer() = 0;
+            virtual void update_device_buffer();
 
             LM_NODISCARD virtual Sensor *camera() {
                 return _integrator->camera();

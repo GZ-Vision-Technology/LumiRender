@@ -55,5 +55,17 @@ namespace luminous {
             camera()->update_film_resolution(res);
             update_device_buffer();
         }
+
+        void Task::update_device_buffer() {
+            auto res = camera()->film()->resolution();
+            auto num = res.x * res.y;
+            _accumulate_buffer.resize(num, make_float4(0.f));
+            _accumulate_buffer.allocate_device(num);
+            camera()->film()->set_render_buffer_view(_accumulate_buffer.device_buffer_view());
+
+            _frame_buffer.reset(num);
+            _frame_buffer.synchronize_to_device();
+            camera()->film()->set_frame_buffer_view(_frame_buffer.device_buffer_view());
+        }
     }
 }
