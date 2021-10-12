@@ -43,7 +43,7 @@ GLOBAL __raygen__rg() {
                 params.max_depth, params.rr_threshold, debug);
     }
     L = L / float(spp);
-    film->add_sample(pixel, L, weight, frame_index);
+    film->add_render_sample(pixel, L, weight, frame_index);
 }
 
 GLOBAL __miss__closest() {

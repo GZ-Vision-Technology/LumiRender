@@ -30,7 +30,7 @@ namespace luminous {
             auto num = res.x * res.y;
             _accumulate_buffer.resize(num, make_float4(0.f));
             _accumulate_buffer.allocate_device(num);
-            camera()->film()->set_accumulate_buffer_view(_accumulate_buffer.device_buffer_view());
+            camera()->film()->set_render_buffer_view(_accumulate_buffer.device_buffer_view());
 
             _frame_buffer.reset(num);
             _frame_buffer.synchronize_to_device();

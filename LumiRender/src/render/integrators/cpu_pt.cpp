@@ -47,7 +47,7 @@ namespace luminous {
                                               scene<CPUScene>()->scene_data());
                 }
                 L = L / float(spp);
-                film->add_sample(pixel, L, weight, _frame_index);
+                film->add_render_sample(pixel, L, weight, _frame_index);
             });
             ++_frame_index;
         }

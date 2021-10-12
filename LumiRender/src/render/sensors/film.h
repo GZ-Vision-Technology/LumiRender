@@ -25,7 +25,9 @@ namespace luminous {
         protected:
             uint2 _resolution;
             Box2f _screen_window;
-            BufferView<float4> _accumulate_buffer_view;
+            BufferView<float4> _normal_buffer_view;
+            BufferView<float4> _albedo_buffer_view;
+            BufferView<float4> _render_buffer_view;
             BufferView<FrameBufferType> _frame_buffer_view;
 
             LM_XPU void update();
@@ -40,23 +42,23 @@ namespace luminous {
                 update();
             }
 
-            LM_XPU void add_sample(uint2 pixel, Spectrum color, float weight, uint frame_index = 0u);
+            LM_XPU void add_render_sample(uint2 pixel, Spectrum color, float weight, uint frame_index = 0u);
 
             LM_XPU void set_resolution(uint2 resolution) {
                 _resolution = resolution;
                 update();
             }
 
-            LM_XPU void set_accumulate_buffer_view(BufferView<float4> buffer_view) {
-                _accumulate_buffer_view = buffer_view;
+            LM_XPU void set_render_buffer_view(BufferView<float4> buffer_view) {
+                _render_buffer_view = buffer_view;
             }
 
             LM_XPU void set_frame_buffer_view(BufferView<FrameBufferType> buffer_view) {
                 _frame_buffer_view = buffer_view;
             }
 
-            LM_ND_XPU float4 *accumulate_buffer_ptr() {
-                return _accumulate_buffer_view.ptr();
+            LM_ND_XPU float4 *render_buffer_ptr() {
+                return _render_buffer_view.ptr();
             }
 
             LM_ND_XPU FrameBufferType *frame_buffer_ptr() {
