@@ -7,6 +7,7 @@
 
 #include "base_libs/geometry/common.h"
 #include "base_libs/optics/common.h"
+#include "render/include/pixel_info.h"
 
 namespace luminous {
     inline namespace render {
@@ -15,7 +16,9 @@ namespace luminous {
 
         struct SceneData;
 
-        LM_ND_XPU Spectrum Li(Ray ray, uint64_t scene_handle, Sampler &sampler,
+        struct PixelInfo;
+
+        LM_ND_XPU PixelInfo Li(Ray ray, uint64_t scene_handle, Sampler &sampler,
                               uint max_depth, float rr_threshold, bool debug = false,
                               const SceneData *scene_data = nullptr);
 

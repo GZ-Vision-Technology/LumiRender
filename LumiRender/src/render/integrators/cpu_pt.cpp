@@ -44,7 +44,7 @@ namespace luminous {
                 for (int i = 0; i < spp; ++i) {
                     L += luminous::render::Li(ray, scene<CPUScene>()->scene_handle(), sampler,
                                               _max_depth, _rr_threshold, false,
-                                              scene<CPUScene>()->scene_data());
+                                              scene<CPUScene>()->scene_data()).Li;
                 }
                 L = L / float(spp);
                 film->add_render_sample(pixel, L, weight, _frame_index);

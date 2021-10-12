@@ -40,7 +40,7 @@ GLOBAL __raygen__rg() {
     Spectrum L(0.f);
     for (int i = 0; i < spp; ++i) {
         L += Li(ray, params.traversable_handle, sampler,
-                params.max_depth, params.rr_threshold, debug);
+                params.max_depth, params.rr_threshold, debug).Li;
     }
     L = L / float(spp);
     film->add_render_sample(pixel, L, weight, frame_index);

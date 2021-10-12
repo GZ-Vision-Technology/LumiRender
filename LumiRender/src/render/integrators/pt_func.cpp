@@ -14,18 +14,11 @@
 namespace luminous {
     inline namespace render {
 
-        LM_ND_XPU Spectrum Li(Ray ray, uint64_t scene_handle, Sampler &sampler,
+        LM_ND_XPU PixelInfo Li(Ray ray, uint64_t scene_handle, Sampler &sampler,
                               uint max_depth, float rr_threshold, bool debug,
                               const SceneData *scene_data) {
             PerRayData prd{scene_data};
-//            luminous::intersect_closest(scene_handle, ray, &prd);
-//            if (prd.is_hit()) {
-//                auto si = prd.compute_surface_interaction(ray);
-//                auto bsdf = si.op_bsdf.value();
-//                auto color = bsdf.base_color();
-//                return color;
-//            }
-//            return 0;
+
             Spectrum L(0.f);
             Spectrum throughput(1.f);
             SurfaceInteraction si;
@@ -33,11 +26,14 @@ namespace luminous {
             int bounces;
             bool found_intersection = luminous::intersect_closest(scene_handle, ray, &prd);
 
+            PixelInfo pixel_info;
+
             for (bounces = 0; bounces < max_depth; ++bounces) {
                 if (bounces == 0) {
                     if (found_intersection) {
                         si = prd.compute_surface_interaction(ray);
                         L += throughput * si.Le(-ray.direction());
+                        pixel_info.normal = si.g_uvn.normal;
                     } else {
                         L += prd.scene_data()->light_sampler->on_miss(ray, prd.scene_data(), throughput);
                     }
@@ -71,7 +67,9 @@ namespace luminous {
                 si = NEE_data.next_si;
             }
 
-            return L;
+            pixel_info.Li = L;
+
+            return pixel_info;
         }
 
     } // luminous::render
