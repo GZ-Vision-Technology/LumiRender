@@ -137,6 +137,8 @@ namespace luminous {
             });
         }
 
+
+
         struct MaterialConfig : Config {
 
             // Assimp or matte
@@ -150,18 +152,36 @@ namespace luminous {
 
             void fill_tex_configs(std::vector<TextureConfig> &tex_configs) {
                 if (type() == full_type("AssimpMaterial")) {
-                    if (!is_contain(tex_configs, diffuse_tex)) {
+                    int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config){
+                        return tex_config == diffuse_tex;
+                    });
+                    if (index == -1) {
                         diffuse_tex.tex_idx = tex_configs.size();
                         tex_configs.push_back(diffuse_tex);
+                    } else {
+                        diffuse_tex.tex_idx = index;
                     }
-                    if (!is_contain(tex_configs, specular_tex)) {
+
+                    index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config){
+                        return tex_config == specular_tex;
+                    });
+                    if (index == -1) {
                         specular_tex.tex_idx = tex_configs.size();
                         tex_configs.push_back(specular_tex);
+                    } else {
+                        specular_tex.tex_idx = index;
                     }
-                    if (!is_contain(tex_configs, normal_tex)) {
+
+                    index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config){
+                        return tex_config == normal_tex;
+                    });
+                    if (index == -1) {
                         normal_tex.tex_idx = tex_configs.size();
                         tex_configs.push_back(normal_tex);
+                    } else {
+                        normal_tex.tex_idx = index;
                     }
+
                 } else if (type() == full_type("MatteMaterial")) {
                     auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config.name == diffuse_tex.name;
