@@ -9,7 +9,6 @@
 #include "base_libs/math/common.h"
 #include "base_libs/lstd/lstd.h"
 #include "../include/config.h"
-#include "film.h"
 
 namespace luminous {
     inline namespace render {
@@ -20,6 +19,8 @@ namespace luminous {
         class ThinLensCamera;
 
         struct SensorSample;
+
+        class Film;
 
         class Sensor : BASE_CLASS(Variant<PinholeCamera *, ThinLensCamera *>) {
         public:

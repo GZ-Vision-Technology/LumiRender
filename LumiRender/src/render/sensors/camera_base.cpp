@@ -3,6 +3,7 @@
 //
 
 #include "camera_base.h"
+#include "film.h"
 
 namespace luminous {
     inline namespace render {

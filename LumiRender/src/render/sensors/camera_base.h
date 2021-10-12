@@ -11,10 +11,13 @@
 #include "render/include/creator.h"
 #include "core/concepts.h"
 #include "core/refl/reflection.h"
-#include "film.h"
+
 
 namespace luminous {
     inline namespace render {
+
+        class Film;
+
         class CameraBase : BASE_CLASS() {
         public:
             REFL_CLASS(CameraBase)
