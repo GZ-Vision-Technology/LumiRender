@@ -32,10 +32,10 @@ namespace luminous {
             uint2 _resolution;
             Box2f _screen_window;
             FBState _fb_state{Render};
-            BufferView<float4> _normal_buffer_view;
-            BufferView<float4> _albedo_buffer_view;
-            BufferView<float4> _render_buffer_view;
-            BufferView<FrameBufferType> _frame_buffer_view;
+            BufferView <float4> _normal_buffer_view;
+            BufferView <float4> _albedo_buffer_view;
+            BufferView <float4> _render_buffer_view;
+            BufferView <FrameBufferType> _frame_buffer_view;
 
             LM_XPU void _update();
 
@@ -51,6 +51,15 @@ namespace luminous {
             explicit Film(uint2 res)
                     : _resolution(res) {
                 _update();
+            }
+
+            LM_XPU void add_samples(uint2 pixel, Spectrum color, float3 albedo,
+                                    float3 normal, float weight, uint frame_index = 0u) {
+                uint pixel_index = _pixel_index(pixel);
+                add_render_sample(pixel_index, color, weight, frame_index);
+                add_albedo_sample(pixel_index, albedo, weight, frame_index);
+                add_normal_sample(pixel_index, normal, weight, frame_index);
+                fill_frame_buffer(pixel_index);
             }
 
             template<typename ...Args>
@@ -85,19 +94,19 @@ namespace luminous {
                 _update();
             }
 
-            LM_XPU void set_normal_buffer_view(BufferView<float4> buffer_view) {
+            LM_XPU void set_normal_buffer_view(BufferView <float4> buffer_view) {
                 _normal_buffer_view = buffer_view;
             }
 
-            LM_XPU void set_albedo_buffer_view(BufferView<float4> buffer_view) {
+            LM_XPU void set_albedo_buffer_view(BufferView <float4> buffer_view) {
                 _albedo_buffer_view = buffer_view;
             }
 
-            LM_XPU void set_render_buffer_view(BufferView<float4> buffer_view) {
+            LM_XPU void set_render_buffer_view(BufferView <float4> buffer_view) {
                 _render_buffer_view = buffer_view;
             }
 
-            LM_XPU void set_frame_buffer_view(BufferView<FrameBufferType> buffer_view) {
+            LM_XPU void set_frame_buffer_view(BufferView <FrameBufferType> buffer_view) {
                 _frame_buffer_view = buffer_view;
             }
 

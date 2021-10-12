@@ -14,6 +14,16 @@ namespace luminous {
                     _frame_buffer_view[pixel_index] = make_rgba(Spectrum::linear_to_srgb(color));
                     break;
                 }
+                case Albedo: {
+                    float4 color = _albedo_buffer_view[pixel_index];
+                    _frame_buffer_view[pixel_index] = make_rgba(Spectrum::linear_to_srgb(color));
+                    break;
+                }
+                case Normal: {
+                    float3 normal = make_float3(_normal_buffer_view[pixel_index]);
+                    _frame_buffer_view[pixel_index] = make_rgba((normal + 1.f) / 2.f);
+                    break;
+                }
                 default: {
                     DCHECK(0);
                 }
