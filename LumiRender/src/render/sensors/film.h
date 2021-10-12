@@ -58,8 +58,8 @@ namespace luminous {
                                     float3 normal, float weight, uint frame_index = 0u) {
                 uint pixel_index = _pixel_index(pixel);
                 add_render_sample(pixel_index, color, weight, frame_index);
-//                add_albedo_sample(pixel_index, albedo, weight, frame_index);
-//                add_normal_sample(pixel_index, normal, weight, frame_index);
+                add_albedo_sample(pixel_index, albedo, weight, frame_index);
+                add_normal_sample(pixel_index, normal, weight, frame_index);
                 fill_frame_buffer(pixel_index);
             }
 

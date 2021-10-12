@@ -23,13 +23,5 @@ namespace luminous {
             _integrator->init(scene_graph);
             update_device_buffer();
         }
-
-        FrameBufferType *CUDATask::get_frame_buffer() {
-            return _frame_buffer.synchronize_and_get_host_data();
-        }
-
-        float4 *CUDATask::get_accumulate_buffer() {
-            return _accumulate_buffer.synchronize_and_get_host_data();
-        }
     }
 }

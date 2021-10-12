@@ -59,13 +59,31 @@ namespace luminous {
         void Task::update_device_buffer() {
             auto res = camera()->film()->resolution();
             auto num = res.x * res.y;
-            _accumulate_buffer.resize(num, make_float4(0.f));
-            _accumulate_buffer.allocate_device(num);
-            camera()->film()->set_render_buffer_view(_accumulate_buffer.device_buffer_view());
+
+            _render_buffer.resize(num, make_float4(0.f));
+            _render_buffer.allocate_device(num);
+            camera()->film()->set_render_buffer_view(_render_buffer.device_buffer_view());
+
+            _normal_buffer.resize(num, make_float4(0.f));
+            _normal_buffer.allocate_device(num);
+            camera()->film()->set_normal_buffer_view(_normal_buffer.device_buffer_view());
+
+            _albedo_buffer.resize(num, make_float4(0.f));
+            _albedo_buffer.allocate_device(num);
+            camera()->film()->set_albedo_buffer_view(_albedo_buffer.device_buffer_view());
 
             _frame_buffer.reset(num);
             _frame_buffer.synchronize_to_device();
             camera()->film()->set_frame_buffer_view(_frame_buffer.device_buffer_view());
+
+        }
+
+        FrameBufferType *Task::get_frame_buffer() {
+            return _frame_buffer.synchronize_and_get_host_data();;
+        }
+
+        float4 *Task::get_render_buffer() {
+            return _render_buffer.synchronize_and_get_host_data();
         }
     }
 }

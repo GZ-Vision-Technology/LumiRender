@@ -26,7 +26,9 @@ namespace luminous {
             UP<Integrator> _integrator;
             double _dt{0};
             OutputConfig _output_config;
-            Managed<float4, float4> _accumulate_buffer{_device.get()};
+            Managed<float4, float4> _render_buffer{_device.get()};
+            Managed<float4, float4> _normal_buffer{_device.get()};
+            Managed<float4, float4> _albedo_buffer{_device.get()};
             Managed<FrameBufferType, FrameBufferType> _frame_buffer{_device.get()};
         public:
             Task(std::unique_ptr<Device> device, Context *context)
@@ -47,7 +49,7 @@ namespace luminous {
             }
 
             void save_to_file() {
-                float4 *buffer = get_accumulate_buffer();
+                float4 *buffer = get_render_buffer();
                 auto res = resolution();
                 size_t size = res.x * res.y * pixel_size(PixelFormat::RGBA32F);
                 auto p = new std::byte[size];
@@ -78,9 +80,9 @@ namespace luminous {
                 return _integrator->camera();
             }
 
-            LM_NODISCARD virtual FrameBufferType *get_frame_buffer() = 0;
+            LM_NODISCARD virtual FrameBufferType *get_frame_buffer();
 
-            LM_NODISCARD virtual float4 *get_accumulate_buffer() = 0;
+            LM_NODISCARD virtual float4 *get_render_buffer();
 
             LM_NODISCARD uint2 resolution();
 

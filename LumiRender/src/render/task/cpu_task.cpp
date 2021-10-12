@@ -25,15 +25,5 @@ namespace luminous {
 
         }
 
-        FrameBufferType *CPUTask::get_frame_buffer() {
-            _frame_buffer.synchronize_to_host();
-            return _frame_buffer.data();
-        }
-
-        float4 *CPUTask::get_accumulate_buffer() {
-            _accumulate_buffer.synchronize_to_host();
-            return _accumulate_buffer.data();
-        }
-
     } // luminous::cpu
 } // luminous
