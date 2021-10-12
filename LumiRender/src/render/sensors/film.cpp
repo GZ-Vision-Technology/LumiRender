@@ -38,7 +38,6 @@ namespace luminous {
                 color = lerp(a, accum_color_prev, color);
             }
             _render_buffer_view[pixel_index] = make_float4(color, 1.f);
-            fill_frame_buffer(pixel_index);
         }
 
         void Film::add_normal_sample(uint pixel_index, float3 normal, float weight, uint frame_index) {

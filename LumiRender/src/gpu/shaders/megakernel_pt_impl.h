@@ -37,13 +37,16 @@ GLOBAL __raygen__rg() {
     Ray ray{};
     float weight = camera->generate_ray(ss, &ray);
     uint spp = sampler.spp();
-    Spectrum L(0.f);
+
+    PixelInfo pixel_info;
+
     for (int i = 0; i < spp; ++i) {
-        L += Li(ray, params.traversable_handle, sampler,
-                params.max_depth, params.rr_threshold, debug).Li;
+        pixel_info += path_tracing(ray, params.traversable_handle, sampler,
+                params.max_depth, params.rr_threshold, debug);
     }
-    L = L / float(spp);
-    film->add_render_sample(pixel, L, weight, frame_index);
+    pixel_info /= float(spp);
+    film->add_sample(pixel, pixel_info, weight, frame_index);
+//    film->add_render_sample(pixel, L, weight, frame_index);
 }
 
 GLOBAL __miss__closest() {

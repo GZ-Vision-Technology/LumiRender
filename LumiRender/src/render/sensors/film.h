@@ -9,14 +9,11 @@
 #include "base_libs/lstd/lstd.h"
 #include "render/include/config.h"
 #include "core/backend/buffer_view.h"
+#include "render/include/pixel_info.h"
 
 namespace luminous {
     inline namespace render {
 
-        struct Pixel {
-            float4 rgb{};
-            float weight_sum{};
-        };
 
         enum FBState {
             Render,
@@ -53,12 +50,16 @@ namespace luminous {
                 _update();
             }
 
+            LM_XPU void add_sample(uint2 pixel, PixelInfo pixel_info, float weight, uint frame_index = 0u) {
+                add_samples(pixel, pixel_info.Li, pixel_info.albedo, pixel_info.normal, weight, frame_index);
+            }
+
             LM_XPU void add_samples(uint2 pixel, Spectrum color, float3 albedo,
                                     float3 normal, float weight, uint frame_index = 0u) {
                 uint pixel_index = _pixel_index(pixel);
                 add_render_sample(pixel_index, color, weight, frame_index);
-                add_albedo_sample(pixel_index, albedo, weight, frame_index);
-                add_normal_sample(pixel_index, normal, weight, frame_index);
+//                add_albedo_sample(pixel_index, albedo, weight, frame_index);
+//                add_normal_sample(pixel_index, normal, weight, frame_index);
                 fill_frame_buffer(pixel_index);
             }
 
