@@ -124,6 +124,7 @@ namespace luminous {
             fc.set_full_type("RGBFilm");
             ParameterSet param(ps["param"]);
             fc.resolution = param["resolution"].as_uint2(make_uint2(500, 500));
+            fc.state = param["fb_state"].as_int(0);
             return fc;
         }
 

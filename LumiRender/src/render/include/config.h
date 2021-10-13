@@ -202,7 +202,8 @@ namespace luminous {
         };
 
         struct FilmConfig : Config {
-            uint2 resolution;
+            int state{0};
+            uint2 resolution{};
         };
 
         struct SensorConfig : Config {
