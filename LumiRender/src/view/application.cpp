@@ -108,6 +108,8 @@ namespace luminous {
         }
         _task->init(parser);
 
+        _show_window = context->show_window();
+
         if (_show_window) {
             init_with_gui(title);
         }

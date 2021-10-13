@@ -65,15 +65,16 @@ namespace luminous {
               _cli_options{std::filesystem::path{argv[0]}.filename().string()} {
 
         _cli_options.add_options()
-                ("d, device", "Select compute device", cxxopts::value<std::string>()->default_value("cuda"))
+                ("d, device", "Select compute device: cuda or cpu",
+                        cxxopts::value<std::string>()->default_value("cuda"))
                 ("r, runtime-dir", "Specify runtime directory",
                  cxxopts::value<std::filesystem::path>()->default_value(
                          std::filesystem::canonical(argv[0]).parent_path().parent_path().string()))
-                ("w,working-dir",
-                 "Specify working directory",
+                ("w,working-dir", "Specify working directory",
                  cxxopts::value<std::filesystem::path>()->default_value(
                          std::filesystem::canonical(std::filesystem::current_path()).string()))
                 ("c, clear-cache", "Clear cached", cxxopts::value<bool>())
+                ("m, mode", "run mode: cli or gui",cxxopts::value<std::string>()->default_value("cli"))
                 ("t, thread-num", "the num of threads to render", cxxopts::value<std::string>()->default_value("0"))
                 ("s, scene", "The scene to render,file name end with json", cxxopts::value<std::string>())
                 ("positional", "Specify input file", cxxopts::value<std::string>())
@@ -145,6 +146,10 @@ namespace luminous {
             }
         }
         return _in_dir;
+    }
+
+    bool Context::show_window() noexcept {
+        return _parse_result()["mode"].as<std::string>() == "gui";
     }
 
 }// namespace luminous
