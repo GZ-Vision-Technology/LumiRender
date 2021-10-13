@@ -52,7 +52,6 @@ namespace luminous {
         return scene_file().parent_path();
     }
 
-
     Context::~Context() noexcept {
         for (auto &&module_item : _loaded_modules) {
             destroy_dynamic_module(module_item.second);
@@ -76,10 +75,9 @@ namespace luminous {
                 ("c, clear-cache", "Clear cached", cxxopts::value<bool>())
                 ("m, mode", "run mode: cli or gui",cxxopts::value<std::string>()->default_value("cli"))
                 ("t, thread-num", "the num of threads to render", cxxopts::value<std::string>()->default_value("0"))
-                ("s, scene", "The scene to render,file name end with json", cxxopts::value<std::string>())
+                ("s, scene", "The scene to render,file name end with json or scene supported by assimp", cxxopts::value<std::string>())
                 ("positional", "Specify input file", cxxopts::value<std::string>())
                 ("h,help", "Print usage");
-
     }
 
     const cxxopts::ParseResult &Context::_parse_result() const noexcept {
@@ -151,5 +149,4 @@ namespace luminous {
     bool Context::show_window() noexcept {
         return _parse_result()["mode"].as<std::string>() == "gui";
     }
-
 }// namespace luminous
