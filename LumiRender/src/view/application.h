@@ -51,19 +51,18 @@ namespace luminous {
     public:
         App(const std::string &title, const int2 &size, Context *context, const Parser &parser);
 
+        void init_with_gui(const std::string &title) {
+            init_window(title, _task->resolution());
+            init_event_cb();
+            init_imgui();
+            init_gl_context();
+        }
+
         void init_gl_context();
 
         void update_render_texture();
 
         void init_window(const std::string &title, const uint2 &size);
-
-        LM_NODISCARD bool window_should_close() const {
-            if (_show_window) {
-                return glfwWindowShouldClose(_handle);
-            } else {
-                return _task->complete();
-            }
-        }
 
         void init_event_cb();
 
@@ -92,5 +91,9 @@ namespace luminous {
         void imgui_end();
 
         int run();
+
+        int run_with_gui();
+
+        int run_with_cli();
     };
 }

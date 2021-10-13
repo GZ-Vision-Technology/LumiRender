@@ -66,10 +66,6 @@ namespace luminous {
         get_user_ptr(window)->on_scroll_event(scroll_x, scroll_y);
     }
 
-    auto get_cur_time() {
-        return std::chrono::system_clock::now();
-    }
-
     void App::on_cursor_move(int2 new_pos) {
         int2 delta = new_pos - _last_mouse_pos;
         if (nonzero(_last_mouse_pos) && _left_key_press) {
@@ -112,17 +108,13 @@ namespace luminous {
         }
         _task->init(parser);
 
-        init_window(title, _task->resolution());
-        init_event_cb();
-        init_imgui();
-        init_gl_context();
+        if (_show_window) {
+            init_with_gui(title);
+        }
         _clock.start();
     }
 
     void App::init_gl_context() {
-        if (!_show_window) {
-            return;
-        }
         auto res = make_int2(_size);
         glGenTextures(1, &_gl_ctx.fb_texture);
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
@@ -158,10 +150,6 @@ namespace luminous {
     }
 
     void App::imgui_begin() {
-        if (!_show_window) {
-            return;
-        }
-
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -191,33 +179,41 @@ namespace luminous {
         cout << d << "  " << acc_t / test_count <<"   " << test_count << endl;
     }
 
-    int App::run() {
+    int App::run_with_gui() {
         Clock clock;
-        while (!window_should_close()) {
-//            imgui_begin();
-            if (_show_window) {
-                glfwPollEvents();
-                glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
-                glClear(GL_COLOR_BUFFER_BIT);
-            }
+        while (!glfwWindowShouldClose(_handle)) {
+            //            imgui_begin();
+            glfwPollEvents();
+            glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
+            glClear(GL_COLOR_BUFFER_BIT);
             render();
             update_render_texture();
             draw();
-//            imgui_end();
-//            clock.start();
-            if (_show_window) {
-                glfwSwapBuffers(_handle);
-            }
-//            cout << clock.elapse_ms() << endl;
+            //            imgui_end();
+            //            clock.start();
+            glfwSwapBuffers(_handle);
+            //            cout << clock.elapse_ms() << endl;
         }
         return 0;
     }
 
-    void App::init_event_cb() {
-        if (!_show_window) {
-            return;
-        }
 
+    int App::run_with_cli() {
+        while (!_task->complete()) {
+            render();
+        }
+        return 0;
+    }
+
+    int App::run() {
+        if (_show_window) {
+            return run_with_gui();
+        } else {
+            return run_with_cli();
+        }
+    }
+
+    void App::init_event_cb() {
         glfwSetFramebufferSizeCallback(_handle, glfw_resize);
         glfwSetMouseButtonCallback(_handle, glfw_mouse_event);
         glfwSetKeyCallback(_handle, glfw_key_event);
@@ -227,10 +223,6 @@ namespace luminous {
     }
 
     void App::draw() const {
-        if (!_show_window) {
-            return;
-        }
-
         glUniform1i(_gl_ctx.program_tex, 0);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
@@ -267,10 +259,6 @@ namespace luminous {
     }
 
     void App::init_imgui() {
-        if (!_show_window) {
-            return;
-        }
-
 //        const char *glsl_version = "#version 130";
 //        IMGUI_CHECKVERSION();
 //        ImGui::CreateContext();
@@ -280,21 +268,17 @@ namespace luminous {
     }
 
     void App::set_title(const std::string &s) {
-        if (!_show_window) {
-            return;
-        }
         glfwSetWindowTitle(_handle, s.c_str());
     }
 
     void App::update_render_texture() {
-        if (!_show_window) {
-            return;
-        }
-
         auto res = _task->resolution();
         test_color = _task->get_frame_buffer();
 
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, res.x, res.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, test_color);
     }
+
+
+
 }
