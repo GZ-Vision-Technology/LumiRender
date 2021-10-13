@@ -38,9 +38,9 @@ int main() {
     cout << &t << endl;
     func(t, "Adsfasdf");
 
-//    st[0] = t;
-//
-//    Test ss = st[1];
+    st[0] = t;
+
+    Test ss = st[0];
 
     return 0;
 }

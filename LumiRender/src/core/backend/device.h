@@ -5,6 +5,8 @@
 
 #pragma once
 
+#ifndef __CUDACC__
+
 #include "dispatcher.h"
 #include "buffer.h"
 #include "texture.h"
@@ -72,3 +74,5 @@ namespace luminous {
         std::vector<RawBuffer> _raw_buffers;
     };
 }
+
+#endif

@@ -7,7 +7,7 @@
 
 
 #include "gpu/accel/optix_defines.h"
-#include "render/integrators/wavefront/work_queue.h"
+#include "render/integrators/wavefront/work_items.h"
 
 namespace luminous {
     inline namespace render {

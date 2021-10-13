@@ -123,8 +123,10 @@ namespace luminous {
 
         class RayQueue : public WorkQueue<RayWorkItem> {
         public:
+#ifndef __CUDACC__
             RayQueue(int n, Device *device)
                     : WorkQueue<RayWorkItem>(n, device) {}
+#endif
 
             RayQueue(const RayQueue &other)
                     : WorkQueue<RayWorkItem>(other) {}

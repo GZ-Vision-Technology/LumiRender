@@ -19,15 +19,16 @@ namespace luminous {
         public:
             WorkQueue() = default;
 
+#ifndef __CUDACC__
             WorkQueue(int n, Device *device)
                     : SOA<WorkItem>(n, device) {}
-
+#endif
             WorkQueue(const WorkQueue &other)
                     : SOA<WorkItem>(other) {
                 _size.store(other._size.value());
             }
 
-            WorkQueue &operator=(const WorkQueue &other) {
+            LM_XPU WorkQueue &operator=(const WorkQueue &other) {
                 SOA<WorkItem>::operator=(other);
                 _size.store(other._size.value());
                 return *this;

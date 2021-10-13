@@ -16,6 +16,7 @@ namespace luminous {
 
         template<typename T, typename TDevice>
         struct SOAMember {
+#ifndef __CUDACC__
             static auto create(int n, const TDevice &device) {
                 if constexpr (SOA<T>::definitional) {
                     return SOA<T>(n, device);
@@ -23,6 +24,18 @@ namespace luminous {
                     return device->template obtain_restrict_ptr<T>(n);
                 }
             }
+
+#else
+            static auto create(int n, const TDevice &device) {
+                if constexpr (SOA<T>::definitional) {
+                    return SOA<T>();
+                } else {
+                    return reinterpret_cast<T*>(nullptr);
+                }
+            }
+#endif
+
+
 
             using type = decltype(create(0, nullptr));
         };
