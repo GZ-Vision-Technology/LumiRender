@@ -96,21 +96,6 @@ namespace luminous {
             }
         }
 
-        template<typename F>
-        LM_NODISCARD auto load_dynamic_function(const std::filesystem::path &path,
-                                                 std::string_view module,
-                                                 std::string_view function) {
-            LUMINOUS_EXCEPTION_IF(module.empty(), "Empty name given for dynamic module");
-            auto module_path = std::filesystem::canonical(
-                    path / serialize(LUMINOUS_DLL_PREFIX, module, LUMINOUS_DLL_EXTENSION));
-            auto iter = _loaded_modules.find(module_path);
-            LUMINOUS_INFO(module_path);
-            if (iter == _loaded_modules.cend()) {
-                iter = _loaded_modules.emplace(module_path, load_dynamic_module(module_path)).first;
-            }
-            return load_dynamic_symbol<F>(iter->second, std::string{function});
-        }
-
         template<typename T>
         void add_cli_option(const std::string &opt_name, const std::string &desc, const std::string &default_val = {},
                             const std::string &implicit_val = {}) {

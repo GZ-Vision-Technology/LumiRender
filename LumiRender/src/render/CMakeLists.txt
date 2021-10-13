@@ -1,7 +1,14 @@
 file(GLOB_RECURSE HEADER_FILES *.h*)
 file(GLOB_RECURSE SOURCE_FILES *.c*)
 
-add_library(luminous-render SHARED ${HEADER_FILES} ${SOURCE_FILES})
+
+include_directories(${OptiX_INCLUDE})
+
+cuda_compile_and_embed(intersect ${PROJECT_SOURCE_DIR}/src/render/integrators/shaders/intersect.cu)
+
+add_library(luminous-render SHARED ${HEADER_FILES} ${SOURCE_FILES} ${intersect})
+
+
 target_link_libraries(luminous-render
         PUBLIC
         assimp_config

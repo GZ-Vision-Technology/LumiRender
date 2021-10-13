@@ -3,7 +3,6 @@
 //
 
 #include "context.h"
-//#include "rt_util/sampling.h"
 
 namespace luminous {
 

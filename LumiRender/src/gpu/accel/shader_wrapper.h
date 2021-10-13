@@ -8,8 +8,8 @@
 #include <optix.h>
 #include "core/concepts.h"
 #include "core/backend/buffer.h"
-#include "optix_params.h"
 #include "gpu/framework/cuda_impl.h"
+#include "gpu/accel/optix_defines.h"
 
 namespace luminous {
     inline namespace render {

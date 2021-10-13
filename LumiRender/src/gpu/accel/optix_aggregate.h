@@ -7,6 +7,7 @@
 
 #include "optix_accel.h"
 #include "render/integrators/wavefront/aggregate.h"
+#include "render/integrators/wavefront/params.h"
 
 namespace luminous {
     inline namespace gpu {
