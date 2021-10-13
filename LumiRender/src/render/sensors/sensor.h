@@ -34,7 +34,9 @@ namespace luminous {
 
             LM_XPU void set_position(float3 pos);
 
-            LM_XPU float generate_ray(const SensorSample &ss, Ray *ray);
+            LM_ND_XPU float generate_ray(const SensorSample &ss, Ray *ray);
+
+            LM_ND_XPU std::pair<float, Ray> generate_ray(const SensorSample &ss);
 
             LM_XPU void set_film(Film *film);
 

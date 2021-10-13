@@ -100,6 +100,12 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(camera_to_world_rotation)
         }
 
+        std::pair<float, Ray> Sensor::generate_ray(const SensorSample &ss) {
+            Ray ray{};
+            float weight = this->dispatch([&](auto &&self) -> decltype(auto) { return self->generate_ray(ss, &ray); });
+            return {weight, ray};
+        }
+
         float Sensor::generate_ray(const SensorSample &ss, Ray *ray) {
             LUMINOUS_VAR_PTR_DISPATCH(generate_ray, ss, ray);
         }

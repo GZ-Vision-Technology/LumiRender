@@ -34,19 +34,16 @@ GLOBAL __raygen__rg() {
     sampler.start_pixel_sample(pixel, frame_index, 0);
     auto ss = sampler.sensor_sample(pixel);
     bool debug = pixel.x == 383 && pixel.y == 383;
-    Ray ray{};
-    float weight = camera->generate_ray(ss, &ray);
+
+    auto [weight, ray] = camera->generate_ray(ss);
     uint spp = sampler.spp();
-
     PixelInfo pixel_info;
-
     for (int i = 0; i < spp; ++i) {
         pixel_info += path_tracing(ray, params.traversable_handle, sampler,
                 params.max_depth, params.rr_threshold, debug);
     }
     pixel_info /= float(spp);
     film->add_sample(pixel, pixel_info, weight, frame_index);
-//    film->add_render_sample(pixel, L, weight, frame_index);
 }
 
 GLOBAL __miss__closest() {
