@@ -6,7 +6,7 @@
 #include "application.h"
 #include <iostream>
 #include "util/stats.h"
-#include "render/task/task.h"
+#include "render/include/task.h"
 #include "gpu/framework/cuda_impl.h"
 #include "cpu/cpu_impl.h"
 

@@ -100,9 +100,7 @@ namespace luminous {
             fill_scene_data();
             shrink_to_fit();
         }
-
-
-
+        
         void GPUScene::clear() {
             Scene::clear();
         }
