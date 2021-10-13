@@ -13,10 +13,11 @@ namespace luminous {
         struct SOA {
             static constexpr bool definitional = false;
         };
+#ifndef __CUDACC__
 
         template<typename T, typename TDevice>
         struct SOAMember {
-#ifndef __CUDACC__
+
             static auto create(int n, const TDevice &device) {
                 if constexpr (SOA<T>::definitional) {
                     return SOA<T>(n, device);
@@ -25,20 +26,24 @@ namespace luminous {
                 }
             }
 
+            using type = decltype(create(0, nullptr));
+        };
+
 #else
-            static auto create(int n, const TDevice &device) {
+        template<typename T>
+        struct SOAMember {
+            static auto create() {
                 if constexpr (SOA<T>::definitional) {
                     return SOA<T>();
                 } else {
-                    return reinterpret_cast<T*>(nullptr);
+                    return static_cast<T *>(nullptr);
                 }
             }
+
+            using type = decltype(create());
+        };
 #endif
 
-
-
-            using type = decltype(create(0, nullptr));
-        };
     }
 }
 
@@ -50,16 +55,26 @@ using element_type = StructName;                   \
 SOA() = default;                                   \
 int capacity;
 
-// todo add LM_RESTRICT
-// member definition
-#define LUMINOUS_SOA_MEMBER(MemberName) SOAMember<decltype(element_type::MemberName),Device*>::type MemberName;
+#ifndef __CUDACC__
+    // member definition
+    #define LUMINOUS_SOA_MEMBER(MemberName) SOAMember<decltype(element_type::MemberName),Device*>::type MemberName;
+#else
+    #define LUMINOUS_SOA_MEMBER(MemberName) SOAMember<decltype(element_type::MemberName)>::type MemberName;
+#endif
+
 #define LUMINOUS_SOA_MEMBERS(...) MAP(LUMINOUS_SOA_MEMBER,__VA_ARGS__)
 
-// constructor definition
-#define LUMINOUS_SOA_MEMBER_ASSIGNMENT(MemberName) MemberName = SOAMember<decltype(element_type::MemberName),Device*>::create(n, device);
-#define LUMINOUS_SOA_CONSTRUCTOR(...)                             \
-SOA(int n, Device *device) : capacity(n) {                        \
-MAP(LUMINOUS_SOA_MEMBER_ASSIGNMENT,__VA_ARGS__) }
+#ifndef __CUDACC__
+    // constructor definition
+    #define LUMINOUS_SOA_MEMBER_ASSIGNMENT(MemberName) MemberName =          \
+    SOAMember<decltype(element_type::MemberName),Device*>::create(n, device);
+    #define LUMINOUS_SOA_CONSTRUCTOR(...)                                    \
+    SOA(int n, Device *device) : capacity(n) {                               \
+    MAP(LUMINOUS_SOA_MEMBER_ASSIGNMENT,__VA_ARGS__) }
+
+#else
+    #define LUMINOUS_SOA_CONSTRUCTOR(...)
+#endif
 
 
 // assignment function definition

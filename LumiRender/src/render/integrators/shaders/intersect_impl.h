@@ -6,15 +6,15 @@
 #pragma once
 
 #include "gpu/shaders/optix_util.h"
-//#include "render/integrators/wavefront/params.h"
-//
-//#define GLOBAL extern "C" __global__ void
-//
-//extern "C" {
-//__constant__ luminous::WavefrontParams
-//params;
-//}
-//
-//GLOBAL void __raygen__find_closest() {
-//
-//}
+#include "render/integrators/wavefront/params.h"
+
+#define GLOBAL extern "C" __global__ void
+
+extern "C" {
+__constant__ luminous::WavefrontParams
+params;
+}
+
+GLOBAL __raygen__find_closest() {
+
+}
