@@ -44,7 +44,7 @@ namespace luminous {
 #endif
         public:
 
-            LM_ND_XPU T value() {
+            LM_ND_XPU T value() const {
 #ifdef __CUDACC__
     #ifdef LUMINOUS_USE_LEGACY_CUDA_ATOMICS
                 return _val;
@@ -56,15 +56,15 @@ namespace luminous {
 #endif
             }
 
-            LM_XPU void reset() {
+            LM_XPU void store(int val) {
 #ifdef __CUDACC__
     #ifdef LUMINOUS_USE_LEGACY_CUDA_ATOMICS
-                _val = 0;
+                _val = val;
     #else
-                _val.store(0, cuda::std::memory_order_relaxed);
+                _val.store(val, cuda::std::memory_order_relaxed);
     #endif
 #else
-                _val.store(0, std::memory_order_relaxed);
+                _val.store(val, std::memory_order_relaxed);
 #endif
             }
 
