@@ -36,6 +36,8 @@ namespace luminous {
 
         unique_ptr<Task> _task;
 
+        bool _show_window{false};
+
         Clock _clock;
 
         bool _left_key_press{false};
@@ -54,6 +56,14 @@ namespace luminous {
         void update_render_texture();
 
         void init_window(const std::string &title, const uint2 &size);
+
+        LM_NODISCARD bool window_should_close() const {
+            if (_show_window) {
+                return glfwWindowShouldClose(_handle);
+            } else {
+                return _task->complete();
+            }
+        }
 
         void init_event_cb();
 

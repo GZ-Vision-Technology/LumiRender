@@ -120,7 +120,9 @@ namespace luminous {
     }
 
     void App::init_gl_context() {
-
+        if (!_show_window) {
+            return;
+        }
         auto res = make_int2(_size);
         glGenTextures(1, &_gl_ctx.fb_texture);
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
@@ -156,6 +158,10 @@ namespace luminous {
     }
 
     void App::imgui_begin() {
+        if (!_show_window) {
+            return;
+        }
+
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -187,23 +193,31 @@ namespace luminous {
 
     int App::run() {
         Clock clock;
-        while (!glfwWindowShouldClose(_handle)) {
+        while (!window_should_close()) {
 //            imgui_begin();
-            glfwPollEvents();
-            glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
-            glClear(GL_COLOR_BUFFER_BIT);
+            if (_show_window) {
+                glfwPollEvents();
+                glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
+                glClear(GL_COLOR_BUFFER_BIT);
+            }
             render();
             update_render_texture();
             draw();
 //            imgui_end();
 //            clock.start();
-            glfwSwapBuffers(_handle);
+            if (_show_window) {
+                glfwSwapBuffers(_handle);
+            }
 //            cout << clock.elapse_ms() << endl;
         }
         return 0;
     }
 
     void App::init_event_cb() {
+        if (!_show_window) {
+            return;
+        }
+
         glfwSetFramebufferSizeCallback(_handle, glfw_resize);
         glfwSetMouseButtonCallback(_handle, glfw_mouse_event);
         glfwSetKeyCallback(_handle, glfw_key_event);
@@ -213,6 +227,10 @@ namespace luminous {
     }
 
     void App::draw() const {
+        if (!_show_window) {
+            return;
+        }
+
         glUniform1i(_gl_ctx.program_tex, 0);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
@@ -222,6 +240,10 @@ namespace luminous {
     }
 
     void App::init_window(const std::string &title, const uint2 &size) {
+        if (!_show_window) {
+            return;
+        }
+
         glfwSetErrorCallback(on_glfw_error);
         if (!glfwInit())
             exit(EXIT_FAILURE);
@@ -245,6 +267,10 @@ namespace luminous {
     }
 
     void App::init_imgui() {
+        if (!_show_window) {
+            return;
+        }
+
 //        const char *glsl_version = "#version 130";
 //        IMGUI_CHECKVERSION();
 //        ImGui::CreateContext();
@@ -254,10 +280,17 @@ namespace luminous {
     }
 
     void App::set_title(const std::string &s) {
+        if (!_show_window) {
+            return;
+        }
         glfwSetWindowTitle(_handle, s.c_str());
     }
 
     void App::update_render_texture() {
+        if (!_show_window) {
+            return;
+        }
+
         auto res = _task->resolution();
         test_color = _task->get_frame_buffer();
 
