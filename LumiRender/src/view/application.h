@@ -13,7 +13,6 @@
 #include "core/logging.h"
 #include "base_libs/math/common.h"
 #include "gl_helper.h"
-#include "gpu/gpu_include.h"
 #include "util/clock.h"
 #include "render/task/task.h"
 

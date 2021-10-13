@@ -7,7 +7,7 @@
 #include "render/sensors/sensor.h"
 #include "render/scene/cpu_scene.h"
 #include "render/scene/gpu_scene.h"
-
+#include "render/sensors/common.h"
 
 namespace luminous {
     inline namespace render {

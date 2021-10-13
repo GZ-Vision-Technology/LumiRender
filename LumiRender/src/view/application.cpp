@@ -6,7 +6,9 @@
 #include "application.h"
 #include <iostream>
 #include "util/stats.h"
-#include "render/task/cpu_task.h"
+#include "render/task/task.h"
+#include "gpu/framework/cuda_impl.h"
+#include "cpu/cpu_impl.h"
 
 using std::cout;
 using std::endl;
@@ -104,9 +106,9 @@ namespace luminous {
             : _size(size) {
         TASK_TAG("launch app")
         if (context->use_gpu()) {
-            _task = std::make_unique<CUDATask>(context);
+            _task = std::make_unique<Task>(create_cuda_device(), context);
         } else {
-            _task = std::make_unique<CPUTask>(context);
+            _task = std::make_unique<Task>(create_cpu_device(), context);
         }
         _task->init(parser);
 

@@ -3,7 +3,9 @@
 //
 
 #include "task.h"
-#include "render/sensors/sensor.h"
+#include "render/integrators/megakernel_pt.h"
+#include "render/integrators/cpu_pt.h"
+#include "render/integrators/wavefront/integrator.h"
 
 namespace luminous {
     inline namespace render {
@@ -84,6 +86,22 @@ namespace luminous {
 
         float4 *Task::get_render_buffer() {
             return _render_buffer.synchronize_and_get_host_data();
+        }
+
+        void Task::init(const Parser &parser) {
+            auto scene_graph = build_scene_graph(parser);
+            const std::string type = scene_graph->integrator_config.type();
+            if (type == "PT") {
+                if (_device->is_cpu()) {
+                    _integrator = std::make_unique<CPUPathTracer>(_device.get(), _context);
+                } else {
+                    _integrator = std::make_unique<MegakernelPT>(_device.get(), _context);
+                }
+            } else if(type == "WavefrontPT") {
+                _integrator = std::make_unique<WavefrontPT>(_device.get(), _context);
+            }
+            _integrator->init(scene_graph);
+            update_device_buffer();
         }
     }
 }

@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     }
     std::unique_ptr<luminous::Task> task;
     if (context.device() == "cuda") {
-        task = std::make_unique<CUDATask>(&context);
+//        task = std::make_unique<Task>(&context);
     } else if (context.device() == "cpu") {
         LUMINOUS_INFO("cpu is not support");
     }

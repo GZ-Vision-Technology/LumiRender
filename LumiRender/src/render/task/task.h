@@ -35,7 +35,7 @@ namespace luminous {
             : _device(move(device)),
             _context(context) {}
 
-            virtual void init(const Parser &parser) = 0;
+            virtual void init(const Parser &parser);
 
             LM_NODISCARD std::shared_ptr<SceneGraph> build_scene_graph(const Parser &parser) {
                 auto scene_graph = parser.parse();
@@ -71,8 +71,6 @@ namespace luminous {
                     save_to_file();
                 }
             }
-
-            virtual void render_cli() = 0;
 
             virtual void update_device_buffer();
 
