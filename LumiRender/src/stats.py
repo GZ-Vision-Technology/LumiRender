@@ -13,9 +13,11 @@ num_file = 0
 for root,dirs,files in os.walk(os.path.join(os.getcwd(), "LumiRender/src")):
     for file in files:
         fn = os.path.join(root,file)
-        if "ext" in fn:
+        if "ext\\" in fn:
             continue
         if "gui" in fn:
+            continue
+        if "stats.py" in fn:
             continue
         if "jitify" in fn:
             continue
@@ -26,6 +28,9 @@ for root,dirs,files in os.walk(os.path.join(os.getcwd(), "LumiRender/src")):
             count += len(f.readlines())
         except :
             print(fn)
+
+        
+        
         num_file += 1
 
 
