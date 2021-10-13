@@ -63,7 +63,7 @@ namespace luminous {
             }
 
             LM_NODISCARD bool complete() const {
-                return _integrator->frame_index() >= _output_config.frame_num && _output_config.frame_num != 0;
+                return _integrator->frame_index() >= _output_config.frame_num;
             }
 
             virtual void render_gui(double dt) {
