@@ -6,9 +6,10 @@
 #include "gpu_scene.h"
 #include <cassert>
 #include <iostream>
-#include "util/stats.h"
+
 using std::cout;
 using std::endl;
+
 namespace luminous {
     inline namespace gpu {
 
@@ -32,9 +33,7 @@ namespace luminous {
             }
             {
                 // light data
-//                _lights.allocate_device();
                 _distribution_mgr.init_on_device(_device);
-//                _light_sampler.allocate_device();
             }
             {
                 // texture data
@@ -100,7 +99,7 @@ namespace luminous {
             fill_scene_data();
             shrink_to_fit();
         }
-        
+
         void GPUScene::clear() {
             Scene::clear();
         }
