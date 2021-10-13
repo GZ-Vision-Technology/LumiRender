@@ -33,7 +33,7 @@ namespace luminous {
             explicit Synchronizer(Device *device)
                     : BaseClass(device) {}
 
-            void init(size_t n_element = 1, size_t size = lstd::Sizer<T>::max_size) {
+            void init(size_t n_element = 1, size_t size = lstd::Sizer<T>::compound_size()) {
                 _size_in_bytes = size * n_element;
                 USE_BLOCK(&_memory_block);
                 _memory_block.allocate(_size_in_bytes);

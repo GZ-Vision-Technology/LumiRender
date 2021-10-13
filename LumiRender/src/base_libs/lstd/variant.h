@@ -94,8 +94,8 @@ namespace luminous {
 
             typename std::aligned_storage<std::max({sizeof(Ts)...}), alignment_value>::type data{};
 
-            static constexpr int data_refl_index = sizeof((_member_counter((refl::Int < 128 > *)
-            nullptr)));
+            static constexpr int data_refl_index = sizeof((_member_counter((refl::Int<128> *)
+                                                                                   nullptr)));
             static_assert(data_refl_index <= 128, "index must not greater than REFL_MAX_MEMBER_COUNT");
 
             static refl::detail::Sizer<data_refl_index + 1> (_member_counter(refl::Int<data_refl_index + 1> *));
@@ -307,8 +307,12 @@ namespace luminous {
         template<typename T>
         class Sizer {
         public:
-            static constexpr size_t max_size = T::size_for_ptr() + T::alignment_for_ptr()
-                                               + sizeof(T) + alignof(T);
+            static constexpr size_t compound_size() {
+                return T::size_for_ptr() + T::alignment_for_ptr()
+                       + sizeof(T) + alignof(T);
+            }
+
+            static constexpr size_t size = sizeof(T) + alignof(T);
         };
 
     }; // lstd

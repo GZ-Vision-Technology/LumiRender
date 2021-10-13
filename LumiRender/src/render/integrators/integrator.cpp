@@ -29,7 +29,7 @@ namespace luminous {
             _scene->init(scene_graph);
             _sampler.push_back(Sampler::create(scene_graph->sampler_config));
 
-            _camera.init(1, lstd::Sizer<Sensor>::max_size + sizeof(Film) + alignof(Film));
+            _camera.init(1, lstd::Sizer<Sensor>::compound_size() + lstd::Sizer<Film>::size);
             _camera.add_element(scene_graph->sensor_config);
 
             init_on_device();
