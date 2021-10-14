@@ -4,7 +4,7 @@
 
 #include "integrator.h"
 #include "cpu/accel/embree_aggregate.h"
-#include "render/integrators/accel/optix_aggregate.h"
+#include "gpu/accel/optix_aggregate.h"
 
 namespace luminous {
     inline namespace gpu {

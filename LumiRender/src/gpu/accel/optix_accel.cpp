@@ -4,7 +4,7 @@
 
 #include "optix_accel.h"
 #include "util/stats.h"
-#include "core/hash.h"
+#include <optix_function_table_definition.h>
 #include <iosfwd>
 
 

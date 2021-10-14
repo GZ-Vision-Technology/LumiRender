@@ -4,9 +4,7 @@ file(GLOB_RECURSE SOURCE_FILES *.c*)
 
 include_directories(${OptiX_INCLUDE})
 
-cuda_compile_and_embed(intersect_shader ${PROJECT_SOURCE_DIR}/src/render/integrators/shaders/intersect.cu)
-
-add_library(luminous-render SHARED ${HEADER_FILES} ${SOURCE_FILES} ${intersect_shader})
+add_library(luminous-render SHARED ${HEADER_FILES} ${SOURCE_FILES})
 
 
 target_link_libraries(luminous-render

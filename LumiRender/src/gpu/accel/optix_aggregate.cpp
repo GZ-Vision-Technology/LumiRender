@@ -3,7 +3,6 @@
 //
 
 #include "optix_aggregate.h"
-#include <optix_function_table_definition.h>
 #include <iosfwd>
 
 extern "C" char intersect_shader[];
