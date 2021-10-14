@@ -211,7 +211,7 @@ namespace luminous {
         }
 
         OptixModule OptixAccel::create_module(const string &ptx_code) {
-            OptixModule optix_module = 0;
+            OptixModule optix_module = nullptr;
 
             // OptiX module
 

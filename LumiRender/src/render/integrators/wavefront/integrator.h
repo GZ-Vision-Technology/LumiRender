@@ -34,7 +34,7 @@ namespace luminous {
             int _frame_index{};
 
             // kernels
-            shared_ptr<Kernel> _generate_ray{};
+            shared_ptr<Kernel> _generate_primary_ray{};
             shared_ptr<Kernel> _queues_reset{};
             shared_ptr<Kernel> _generate_ray_samples{};
             shared_ptr<Kernel> _process_escape_ray{};
