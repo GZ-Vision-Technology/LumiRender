@@ -3,6 +3,7 @@
 //
 
 #include "optix_aggregate.h"
+#include <optix_function_table_definition.h>
 #include <iosfwd>
 
 extern "C" char intersect_shader[];
@@ -23,10 +24,9 @@ namespace luminous {
                                        "__miss__any"};
 
         OptixAggregate::OptixAggregate(Device *device, Context *context, const Scene *scene)
-                : OptixAccel(device, context, scene)
-//                _intersect_any(create_shader_wrapper(intersect_shader, intersect_any_func))
-//                _intersect_closet(create_shader_wrapper(intersect_shader, intersect_closest_func))
-                {
+                : OptixAccel(device, context, scene),
+                  _intersect_any(create_shader_wrapper(intersect_shader, intersect_any_func)),
+                  _intersect_closet(create_shader_wrapper(intersect_shader, intersect_closest_func)) {
 
         }
 

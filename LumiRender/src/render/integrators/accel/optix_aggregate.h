@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "optix_accel.h"
+#include "gpu/accel/optix_accel.h"
 #include "render/integrators/wavefront/aggregate.h"
 #include "render/integrators/wavefront/params.h"
 
