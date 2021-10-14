@@ -13,7 +13,8 @@ namespace luminous {
     inline namespace gpu {
         class OptixAggregate : public OptixAccel, public WavefrontAggregate {
         private:
-
+            ShaderWrapper _intersect_closet;
+            ShaderWrapper _intersect_any;
         public:
             OptixAggregate(Device *device, Context *context, const Scene *scene);
 

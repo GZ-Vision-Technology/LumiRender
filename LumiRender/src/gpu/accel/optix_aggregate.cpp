@@ -3,12 +3,30 @@
 //
 
 #include "optix_aggregate.h"
+#include <iosfwd>
+
+extern "C" char intersect_shader[];
 
 namespace luminous {
     inline namespace gpu {
 
+        ProgramName intersect_closest_func{"__raygen__find_closest",
+                                           "__closesthit__closest",
+                                           "__closesthit__any",
+                                           "__miss__closest",
+                                           "__miss__any"};
+
+        ProgramName intersect_any_func{"__raygen__occlusion",
+                                       "__closesthit__closest",
+                                       "__closesthit__any",
+                                       "__miss__closest",
+                                       "__miss__any"};
+
         OptixAggregate::OptixAggregate(Device *device, Context *context, const Scene *scene)
-                : OptixAccel(device, context, scene) {
+                : OptixAccel(device, context, scene)
+//                _intersect_any(create_shader_wrapper(intersect_shader, intersect_any_func))
+//                _intersect_closet(create_shader_wrapper(intersect_shader, intersect_closest_func))
+                {
 
         }
 

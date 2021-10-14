@@ -10,7 +10,7 @@ extern "C" char megakernel_pt[];
 
 namespace luminous {
     inline namespace gpu {
-        ProgramName program_name{"__raygen__rg",
+        ProgramName megakernel_shader{"__raygen__rg",
                                  "__closesthit__closest",
                                  "__closesthit__any",
                                  "__miss__closest",
@@ -18,7 +18,7 @@ namespace luminous {
 
         MegakernelOptixAccel::MegakernelOptixAccel(Device *device, Context *context, const Scene *scene)
                 : OptixAccel(device, context, scene),
-                _shader_wrapper((create_shader_wrapper(megakernel_pt, program_name))) {
+                _shader_wrapper(create_shader_wrapper(megakernel_pt, megakernel_shader)) {
             build_pipeline(_shader_wrapper.program_groups());
         }
 
