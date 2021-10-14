@@ -79,30 +79,30 @@ int capacity;
 
 // assignment function definition
 #define LUMINOUS_SOA_ASSIGNMENT_BODY_MEMBER_ASSIGNMENT(MemberName) this->MemberName = s.MemberName;
-#define LUMINOUS_SOA_ASSIGNMENT(...)                            \
+#define LUMINOUS_SOA_ASSIGNMENT(...)                               \
 LM_XPU SOA &operator=(const SOA &s) { capacity = s.capacity;       \
-MAP(LUMINOUS_SOA_ASSIGNMENT_BODY_MEMBER_ASSIGNMENT,__VA_ARGS__) \
+MAP(LUMINOUS_SOA_ASSIGNMENT_BODY_MEMBER_ASSIGNMENT,__VA_ARGS__)    \
 return *this; }
 
 
 // access function definition
 #define LUMINOUS_SOA_ACCESSOR_BODY_MEMBER_ASSIGNMENT(MemberName) r.MemberName = this->MemberName[i];
-#define LUMINOUS_SOA_ACCESSOR(...)                                                  \
+#define LUMINOUS_SOA_ACCESSOR(...)                                                     \
 LM_XPU element_type operator[](int i) const { DCHECK_LT(i, capacity); element_type r;  \
 MAP(LUMINOUS_SOA_ACCESSOR_BODY_MEMBER_ASSIGNMENT,__VA_ARGS__) return r; }
 
 // get set struct
 #define LUMINOUS_SOA_GET_SET_CASTER_IMPL(MemberName) r.MemberName = soa->MemberName[i];
 #define LUMINOUS_SOA_GET_SET_ASSIGNMENT_IMPL(MemberName) soa->MemberName[i] = a.MemberName;
-#define LUMINOUS_SOA_SET_GET_STRUCT(...) struct GetSetIndirector { SOA *soa;int i; \
+#define LUMINOUS_SOA_SET_GET_STRUCT(...) struct GetSetIndirector { SOA *soa;int i;    \
 LM_XPU operator element_type() const { element_type r;                                \
-MAP(LUMINOUS_SOA_GET_SET_CASTER_IMPL, __VA_ARGS__) return r;}                      \
+MAP(LUMINOUS_SOA_GET_SET_CASTER_IMPL, __VA_ARGS__) return r;}                         \
 LM_XPU void operator=(const element_type &a) const {                                  \
 MAP(LUMINOUS_SOA_GET_SET_ASSIGNMENT_IMPL, __VA_ARGS__) }};
 
 // get set accessor
 #define LUMINOUS_SOA_INDIRECTOR_ACCESSOR LM_XPU GetSetIndirector operator[](int i) { \
-DCHECK_LT(i, capacity);                                                           \
+DCHECK_LT(i, capacity);                                                              \
 return GetSetIndirector{this, i};}
 
 #define LUMINOUS_SOA_END  };

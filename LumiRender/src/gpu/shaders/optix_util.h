@@ -24,7 +24,7 @@ static LM_GPU_INLINE void setPayloadOcclusion(bool occluded) {
     optixSetPayload_0(static_cast<unsigned int>( occluded ));
 }
 
-static LM_GPU_INLINE luminous::uint3 getLaunchIndex() {
+static LM_GPU_INLINE luminous::uint3 getLaunchIndex3D() {
     auto idx = optixGetLaunchIndex();
     return luminous::make_uint3(idx.x, idx.y, idx.z);
 }
@@ -32,6 +32,11 @@ static LM_GPU_INLINE luminous::uint3 getLaunchIndex() {
 static LM_GPU_INLINE luminous::uint2 getPixelCoords() {
     auto idx = optixGetLaunchIndex();
     return luminous::make_uint2(idx.x, idx.y);
+}
+
+static LM_GPU_INLINE int getLaunchIndex() {
+    auto idx = optixGetLaunchIndex();
+    return idx.x;
 }
 
 template<typename T>

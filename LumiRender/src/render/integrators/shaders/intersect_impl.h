@@ -16,5 +16,13 @@ params;
 }
 
 GLOBAL __raygen__find_closest() {
+    if (getLaunchIndex() >= params.ray_queue->size()) {
+        return ;
+    }
+}
 
+GLOBAL __raygen__occlusion() {
+    if (getLaunchIndex() >= params.ray_queue->size()) {
+        return ;
+    }
 }
