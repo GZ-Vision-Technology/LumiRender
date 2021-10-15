@@ -105,15 +105,6 @@ void test_memory() {
     auto kernel2 = cudaModule->get_kernel("test_area_light");
 
     LightConfig config;
-    config.set_full_type("AreaLight");
-    config.instance_idx = 0;
-    auto light = Light::create(config);
-    light.print();
-//    printf("%f\n", light.get<AreaLight>()->padded);
-    Managed<Light> ml{device.get()};
-    ml.push_back(light);
-    ml.allocate_device(1);
-    ml.synchronize_to_device();
 //    const Light* ptr = ml.device_data();
 //    kernel->launch( dispatcher, ptr);
 //    dispatcher.wait();
