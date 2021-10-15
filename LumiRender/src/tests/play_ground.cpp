@@ -8,31 +8,6 @@
 #include <functional>
 #include <type_traits>
 
-
-template<typename func_type>
-class Kernel {
-protected:
-    func_type _func{};
-public:
-    explicit Kernel(func_type func) : _func(func) {}
-
-    template<typename Ret, typename...Args, size_t...Is>
-    void call_impl(Ret(*f)(Args...), void *args[], std::index_sequence<Is...>) {
-        f(*static_cast<std::tuple_element_t<Is, std::tuple<Args...>> *>(args[Is])...);
-    }
-
-    template<typename Ret, typename...Args>
-    void call(Ret(*f)(Args...), void *args[]) {
-        call_impl(f, args, std::make_index_sequence<sizeof...(Args)>());
-    }
-
-    template<typename...Args>
-    void launch(Args &...args) {
-        void *array[]{(&args)...};
-        call(_func, array);
-    }
-};
-
 int foo(int x, float y) {
     std::cout << x << " " << y << std::endl;
     return x;
@@ -66,6 +41,44 @@ private:
 public:
     using Ret = typename Impl::R;
     using Args = typename Impl::As;
+
+    template<int idx>
+    using arg_type = std::tuple_element_t<idx, Args>;
+};
+
+template<typename func_type>
+class Kernel {
+public:
+    using function_trait = FunctionTrait<func_type>;
+protected:
+    func_type _func{};
+public:
+    explicit Kernel(func_type func) : _func(func) {}
+
+    template<typename Ret, typename...Args, size_t...Is>
+    void call_impl(Ret(*f)(Args...), void *args[], std::index_sequence<Is...>) {
+        f(*static_cast<std::tuple_element_t<Is, std::tuple<Args...>> *>(args[Is])...);
+    }
+
+    template<typename Ret, typename...Args, size_t...Is>
+    void check_signature(Ret(*f)(Args...), std::index_sequence<Is...>) {
+//        static_assert();
+    }
+
+    template<typename Ret, typename...Args>
+    void call(Ret(*f)(Args...), void *args[]) {
+        call_impl(f, args, std::make_index_sequence<sizeof...(Args)>());
+    }
+
+    template<typename...Args>
+    void launch(Args &...args) {
+        using ArgsTuple = std::tuple<Args...>;
+
+        static_assert(std::is_same_v<ArgsTuple, function_trait::Args>);
+
+        void *array[]{(&args)...};
+        call(_func, array);
+    }
 };
 
 using namespace std;
@@ -74,7 +87,6 @@ using namespace std;
 int main() {
     int x = 4;
     float y = 6.5f;
-    void *args[] = {&x, &y};
 
     Kernel kernel(foo);
 
