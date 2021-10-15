@@ -64,19 +64,19 @@ namespace luminous {
         };
 
         class CPUKernel : public Kernel::Impl {
-        private:
-            std::function<void(void *[], uint)> _func;
         public:
-            explicit CPUKernel(std::function<void(void *[], uint)> func);
+            using func_type = std::function<void(uint, void *[])>;
+        private:
+            func_type _func;
+        public:
+            explicit CPUKernel(func_type func);
 
             void configure(uint3 grid_size, uint3 local_size, size_t sm) override {}
 
             void launch(Dispatcher &dispatcher, void *args[]) override;
-
-            void launch(Dispatcher &dispatcher, int n_items, void *args[]) override;
         };
 
-        inline std::shared_ptr<Kernel> create_cpu_kernel(const std::function<void(void *[], uint)> &func) {
+        inline std::shared_ptr<Kernel> create_cpu_kernel(const CPUKernel::func_type &func) {
             return std::make_shared<Kernel>(std::make_unique<CPUKernel>(func));
         }
 

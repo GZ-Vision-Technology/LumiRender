@@ -21,9 +21,6 @@ namespace luminous {
             virtual void launch(Dispatcher &dispatcher,
                                 void *args[]) = 0;
 
-            virtual void launch(Dispatcher &dispatcher, int n_items,
-                                void *args[]) = 0;
-
             virtual ~Impl() = default;
         };
 
@@ -34,12 +31,12 @@ namespace luminous {
             return *this;
         }
 
-        template<typename... Args>
-        void launch(int n_items, Dispatcher &dispatcher, Args &...args) {
-            void *array[]{(&args)...};
-            _impl->launch(dispatcher, n_items, array);
-        }
-
+        /**
+         * The first parameter must be the number of item
+         * @tparam Args : n_item, ...
+         * @param dispatcher
+         * @param args
+         */
         template<typename... Args>
         void launch(Dispatcher &dispatcher, Args &...args) {
             void *array[]{(&args)...};

@@ -97,9 +97,6 @@ namespace luminous {
 
             void configure(uint3 grid_size, uint3 local_size, size_t sm) override;
 
-            void launch(Dispatcher &dispatcher, int n_items,
-                        void *args[]) override;
-
             void launch(Dispatcher &dispatcher, void *args[]) override;
         };
 

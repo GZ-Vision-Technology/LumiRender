@@ -68,18 +68,12 @@ namespace luminous {
             return Dispatcher(std::make_unique<CPUDispatcher>());
         }
 
-        CPUKernel::CPUKernel(std::function<void(void *[], uint)> func)
+        CPUKernel::CPUKernel(func_type func)
                 : _func(std::move(func)) {}
 
         void CPUKernel::launch(Dispatcher &dispatcher, void **args) {
             async(1, [&](uint idx, uint tid) {
-                _func(args, idx);
-            });
-        }
-
-        void CPUKernel::launch(Dispatcher &dispatcher, int n_items, void **args) {
-            async(n_items, [&](uint idx, uint tid) {
-                _func(args, idx);
+                _func(idx, args);
             });
         }
 
