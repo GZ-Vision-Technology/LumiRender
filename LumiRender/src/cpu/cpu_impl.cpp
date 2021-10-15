@@ -33,26 +33,26 @@ namespace luminous {
 
         void CPUBuffer::download_async(Dispatcher &dispatcher, void *host_ptr, size_t size, size_t offset) {
             if (host_ptr == _ptr) { return; }
-            async(1, [&](uint, uint){
+            async(1, [&](uint, uint) {
                 download(host_ptr, size, offset);
             });
         }
 
         void CPUBuffer::upload_async(Dispatcher &dispatcher, const void *host_ptr, size_t size, size_t offset) {
             if (host_ptr == _ptr) { return; }
-            async(1, [&](uint, uint){
+            async(1, [&](uint, uint) {
                 upload(host_ptr, size, offset);
             });
         }
 
         void CPUBuffer::download(void *host_ptr, size_t size, size_t offset) {
             if (host_ptr == _ptr) { return; }
-            ::memcpy(host_ptr, (void*)(reinterpret_cast<uint64_t>(_ptr) + offset), size);
+            ::memcpy(host_ptr, (void *) (reinterpret_cast<uint64_t>(_ptr) + offset), size);
         }
 
         void CPUBuffer::upload(const void *host_ptr, size_t size, size_t offset) {
             if (host_ptr == _ptr) { return; }
-            ::memcpy((void*)(reinterpret_cast<uint64_t>(_ptr) + offset), host_ptr, size);
+            ::memcpy((void *) (reinterpret_cast<uint64_t>(_ptr) + offset), host_ptr, size);
         }
 
         RawBuffer CPUDevice::create_buffer(size_t bytes, void *ptr) {
@@ -72,12 +72,17 @@ namespace luminous {
                 : _func(std::move(func)) {}
 
         void CPUKernel::launch(Dispatcher &dispatcher, void **args) {
-            async(1, [&](uint idx, uint tid) {
+            int n_item = *(reinterpret_cast<int *>(args[0]));
+            async(n_item, [&](uint idx, uint tid) {
+                if (idx >= n_item) {
+                    return;
+                }
                 _func(idx, args);
             });
         }
 
-        CPUTexture::CPUTexture(PixelFormat pixel_format, uint2 resolution) : Impl(pixel_format, resolution) {
+        CPUTexture::CPUTexture(PixelFormat pixel_format, uint2 resolution)
+                : Impl(pixel_format, resolution) {
             init();
         }
 

@@ -10,7 +10,7 @@
 
 namespace luminous {
     inline namespace render {
-        LM_XPU void generate_primary_ray(int n_item, RayQueue *ray_queue, const Sampler *sampler,
+        LM_XPU void generate_primary_ray(int n_item, int idx, RayQueue *ray_queue, const Sampler *sampler,
                                          SOA<PixelSampleState> *pixel_sample_state);
     }
 }
