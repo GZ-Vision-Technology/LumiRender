@@ -32,7 +32,7 @@ namespace luminous {
                     break;
             }
             float4 color = make_float4(ai_color.r, ai_color.g, ai_color.b, 0);
-            return make_pair(fn, color);
+            return std::make_pair(fn, color);
         }
 
         MaterialConfig process_material(const aiMaterial *ai_material, Model *model) {

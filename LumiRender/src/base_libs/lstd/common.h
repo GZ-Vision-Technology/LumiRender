@@ -10,7 +10,7 @@
 #include "../header.h"
 
 namespace luminous {
-    namespace lstd {
+    inline namespace lstd {
 
         template<typename T>
         LM_XPU inline void luminous_swap(T &a, T &b) {
@@ -27,7 +27,7 @@ namespace luminous {
         template<typename Iter, typename Predict>
         LM_ND_XPU Iter find_if(const Iter begin, const Iter end, Predict predict) {
             Iter iter;
-            for(iter = begin; iter != end; ++iter) {
+            for (iter = begin; iter != end; ++iter) {
                 if (predict(*iter)) {
                     break;
                 }
@@ -43,7 +43,7 @@ namespace luminous {
          * @return element index , if not found return -1
          */
         template<typename T, typename Predict>
-        LM_ND_XPU int64_t find_index_if(const T& v, Predict predict) {
+        LM_ND_XPU int64_t find_index_if(const T &v, Predict predict) {
             auto iter = lstd::find_if(v.cbegin(), v.cend(), predict);
             if (iter == v.cend()) {
                 return -1;
@@ -53,35 +53,8 @@ namespace luminous {
 
         LM_ND_XPU inline constexpr size_t max(size_t a, size_t b) { return a < b ? b : a; }
 
-        template<typename T1, typename T2>
-        struct alignas(max(alignof(T1), alignof(T2))) pair {
-            T1 first;
-            T2 second;
+        struct nullopt_t {
         };
-        template<typename T1, typename T2>
-        pair(T1 &&, T2 &&) -> pair<T1, T2>;
-
-        template<typename T1, typename T2>
-        LM_XPU pair<T1, T2> make_pair(T1 a, T2 b) {
-            return pair<T1, T2>{a, b};
-        }
-
-        template<class To, class From>
-                LM_XPU typename std::enable_if_t<sizeof(To) == sizeof(From) &&
-                                                 std::is_trivially_copyable_v<From> &&
-                                                 std::is_trivially_copyable_v<To>,
-                To>
-                bit_cast(const From &src) noexcept {
-                    static_assert(std::is_trivially_constructible_v<To>,
-                            "This implementation requires the destination type to be trivially "
-                            "constructible");
-                    To dst;
-                    std::memcpy(&dst, &src, sizeof(To));
-                    return dst;
-                }
-
-                struct nullopt_t {
-                    };
         inline constexpr nullopt_t nullopt{};
 
         template<typename T>

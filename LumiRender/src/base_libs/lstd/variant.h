@@ -11,7 +11,7 @@
 #include <algorithm>
 
 namespace luminous {
-    namespace lstd {
+    inline namespace lstd {
 
         namespace detail {
             template<typename... T>
