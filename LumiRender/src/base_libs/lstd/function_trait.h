@@ -41,6 +41,10 @@ namespace luminous {
         public:
             using Ret = typename Impl::R;
             using Args = typename Impl::As;
+
+            template<int idx>
+            using arg_type = std::tuple_element_t<idx, Args>;
         };
+
     }
 }

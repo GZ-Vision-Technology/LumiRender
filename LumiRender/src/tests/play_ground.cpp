@@ -52,18 +52,14 @@ public:
     using function_trait = FunctionTrait<func_type>;
 protected:
     func_type _func{};
-public:
-    explicit Kernel(func_type func) : _func(func) {}
 
     template<typename Ret, typename...Args, size_t...Is>
     void call_impl(Ret(*f)(Args...), void *args[], std::index_sequence<Is...>) {
         f(*static_cast<std::tuple_element_t<Is, std::tuple<Args...>> *>(args[Is])...);
     }
 
-    template<typename Ret, typename...Args, size_t...Is>
-    void check_signature(Ret(*f)(Args...), std::index_sequence<Is...>) {
-//        static_assert();
-    }
+public:
+    explicit Kernel(func_type func) : _func(func) {}
 
     template<typename Ret, typename...Args>
     void call(Ret(*f)(Args...), void *args[]) {
@@ -72,10 +68,7 @@ public:
 
     template<typename...Args>
     void launch(Args &...args) {
-        using ArgsTuple = std::tuple<Args...>;
-
-        static_assert(std::is_same_v<ArgsTuple, function_trait::Args>);
-
+        static_assert(std::is_same_v<std::tuple<Args...>, typename function_trait::Args>);
         void *array[]{(&args)...};
         call(_func, array);
     }
@@ -92,7 +85,9 @@ int main() {
 
     auto func = std::function(foo);
 
-    func(x, y);
+//    func(x, y);
+
+    cout << typeid(decltype(foo)).name() << endl;
 
     cout << typeid(FunctionTrait<decltype(foo)>::Args).name() << endl;
 
