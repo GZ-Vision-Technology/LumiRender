@@ -247,7 +247,7 @@ namespace luminous {
             CU_CHECK(cuModuleLoadData(&_module, ptx_code.c_str()));
         }
 
-        SP<Kernel> CUDAModule::get_kernel(const std::string &name) {
+        SP<KernelOld> CUDAModule::get_kernel(const std::string &name) {
             CUfunction func;
             CU_CHECK(cuModuleGetFunction(&func, _module, name.c_str()));
             return create_cuda_kernel(func);

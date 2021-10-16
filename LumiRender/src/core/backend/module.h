@@ -14,10 +14,10 @@ namespace luminous {
     public:
         class Impl {
         public:
-            virtual SP<Kernel> get_kernel(const std::string &name) = 0;
+            virtual SP<KernelOld> get_kernel(const std::string &name) = 0;
         };
 
-        SP<Kernel> get_kernel(const std::string &name) {
+        SP<KernelOld> get_kernel(const std::string &name) {
             return _impl->get_kernel(name);
         }
 

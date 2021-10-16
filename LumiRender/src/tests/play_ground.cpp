@@ -7,59 +7,37 @@
 #include <utility>
 #include <functional>
 #include <type_traits>
+#include "base_libs/common.h"
+#include "base_libs/lstd/lstd.h"
+
+
+using namespace luminous;
 
 int foo(int x, float y) {
     std::cout << x << " " << y << std::endl;
     return x;
 }
 
-template<class T>
-struct remove_cvref {
-    using type = std::remove_cv_t<std::remove_reference_t<T>>;
-};
-
 template<typename T>
-using remove_cvref_t = typename remove_cvref<T>::type;
-
-namespace detail {
-    template<typename F>
-    struct FunctionTraitImpl {
-
-    };
-
-    template<typename Ret, typename...Args>
-    struct FunctionTraitImpl<std::function<Ret(Args...)>> {
-        using R = Ret;
-        using As = std::tuple<Args...>;
-    };
-}
-
-template<typename F>
-struct FunctionTrait {
-private:
-    using Impl = detail::FunctionTraitImpl<decltype(std::function{std::declval<remove_cvref_t<F>>()})>;
+class TKernel {
 public:
-    using Ret = typename Impl::R;
-    using Args = typename Impl::As;
-
-    template<int idx>
-    using arg_type = std::tuple_element_t<idx, Args>;
-};
-
-template<typename func_type>
-class Kernel {
-public:
+    using func_type = T;
     using function_trait = FunctionTrait<func_type>;
 protected:
     func_type _func{};
+    uint64_t _handle{};
+public:
+
+    explicit TKernel(func_type func) : _func(func) {}
+
+    void configure(uint3 grid_size,
+                           uint3 local_size,
+                           size_t sm) {}
 
     template<typename Ret, typename...Args, size_t...Is>
     void call_impl(Ret(*f)(Args...), void *args[], std::index_sequence<Is...>) {
         f(*static_cast<std::tuple_element_t<Is, std::tuple<Args...>> *>(args[Is])...);
     }
-
-public:
-    explicit Kernel(func_type func) : _func(func) {}
 
     template<typename Ret, typename...Args>
     void call(Ret(*f)(Args...), void *args[]) {
@@ -74,6 +52,21 @@ public:
     }
 };
 
+template<typename T>
+class CUDAKernel : TKernel<T> {
+
+public:
+    template<typename...Args>
+    void launch(Args &...args) {
+        printf("adfafasfsd");
+        static_assert(std::is_same_v<std::tuple<Args...>, typename function_trait::Args>);
+        void *array[]{(&args)...};
+        call(_func, array);
+    }
+
+};
+
+
 using namespace std;
 
 
@@ -81,15 +74,9 @@ int main() {
     int x = 4;
     float y = 6.5f;
 
-    Kernel kernel(foo);
-
-    auto func = std::function(foo);
-
-//    func(x, y);
-
-    cout << typeid(decltype(foo)).name() << endl;
-
-    cout << typeid(FunctionTrait<decltype(foo)>::Args).name() << endl;
+    TKernel kernel(foo);
 
     kernel.launch(x, y);
+
+
 }

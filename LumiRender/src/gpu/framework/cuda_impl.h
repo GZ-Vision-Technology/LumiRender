@@ -82,7 +82,7 @@ namespace luminous {
             void upload(const void *host_ptr, size_t size, size_t offset) override;
         };
 
-        class CUDAKernel : public Kernel::Impl {
+        class CUDAKernel : public KernelOld::Impl {
         private:
             CUfunction _func{};
             uint3 _grid_size = make_uint3(1);
@@ -100,8 +100,8 @@ namespace luminous {
             void launch(Dispatcher &dispatcher, void *args[]) override;
         };
 
-        inline std::shared_ptr<Kernel> create_cuda_kernel(CUfunction func) {
-            return std::make_shared<Kernel>(std::make_unique<CUDAKernel>(func));
+        inline std::shared_ptr<KernelOld> create_cuda_kernel(CUfunction func) {
+            return std::make_shared<KernelOld>(std::make_unique<CUDAKernel>(func));
         }
 
         class CUDADevice : public Device::Impl {
@@ -133,7 +133,7 @@ namespace luminous {
         public:
             explicit CUDAModule(const std::string &ptx_code);
 
-            SP<Kernel> get_kernel(const std::string &name) override;
+            SP<KernelOld> get_kernel(const std::string &name) override;
         };
 
         inline SP<Module> create_cuda_module(const std::string &ptx_code) {

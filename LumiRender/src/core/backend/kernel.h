@@ -8,9 +8,11 @@
 #include "core/concepts.h"
 #include "base_libs/math/common.h"
 #include "dispatcher.h"
+#include "base_libs/lstd/function_trait.h"
 
 namespace luminous {
-    class Kernel {
+    
+    class KernelOld {
     public:
         class Impl {
         public:
@@ -24,9 +26,9 @@ namespace luminous {
             virtual ~Impl() = default;
         };
 
-        Kernel &configure(uint3 grid_size,
-                          uint3 block_size,
-                          size_t sm = 0) {
+        KernelOld &configure(uint3 grid_size,
+                             uint3 block_size,
+                             size_t sm = 0) {
             _impl->configure(grid_size, block_size, sm);
             return *this;
         }
@@ -43,7 +45,7 @@ namespace luminous {
             _impl->launch(dispatcher, array);
         }
 
-        explicit Kernel(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
+        explicit KernelOld(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
 
     protected:
         std::unique_ptr<Impl> _impl;

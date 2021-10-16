@@ -63,7 +63,7 @@ namespace luminous {
             ~CPUTexture() override;
         };
 
-        class CPUKernel : public Kernel::Impl {
+        class CPUKernel : public KernelOld::Impl {
         public:
             using func_type = std::function<void(uint, void *[])>;
         private:
@@ -76,8 +76,8 @@ namespace luminous {
             void launch(Dispatcher &dispatcher, void *args[]) override;
         };
 
-        inline std::shared_ptr<Kernel> create_cpu_kernel(const CPUKernel::func_type &func) {
-            return std::make_shared<Kernel>(std::make_unique<CPUKernel>(func));
+        inline std::shared_ptr<KernelOld> create_cpu_kernel(const CPUKernel::func_type &func) {
+            return std::make_shared<KernelOld>(std::make_unique<CPUKernel>(func));
         }
 
         class CPUDispatcher : public Dispatcher::Impl {
