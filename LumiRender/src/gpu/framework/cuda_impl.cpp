@@ -253,5 +253,11 @@ namespace luminous {
             return create_cuda_kernel(func);
         }
 
+        uint64_t CUDAModule::get_kernel_handle(const std::string &name) {
+            CUfunction func;
+            CU_CHECK(cuModuleGetFunction(&func, _module, name.c_str()));
+            return reinterpret_cast<uint64_t>(func);
+        }
+
     }
 }

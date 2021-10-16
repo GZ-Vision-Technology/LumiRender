@@ -14,7 +14,9 @@ namespace luminous {
     public:
         class Impl {
         public:
-            virtual SP<KernelOld> get_kernel(const std::string &name) = 0;
+            LM_NODISCARD virtual SP<KernelOld> get_kernel(const std::string &name) = 0;
+
+            LM_NODISCARD virtual uint64_t get_kernel_handle(const std::string &name) = 0;
         };
 
         SP<KernelOld> get_kernel(const std::string &name) {

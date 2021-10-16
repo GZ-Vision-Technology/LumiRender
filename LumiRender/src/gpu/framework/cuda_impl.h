@@ -133,7 +133,9 @@ namespace luminous {
         public:
             explicit CUDAModule(const std::string &ptx_code);
 
-            SP<KernelOld> get_kernel(const std::string &name) override;
+            LM_NODISCARD uint64_t get_kernel_handle(const std::string &name) override;
+
+            LM_NODISCARD SP<KernelOld> get_kernel(const std::string &name) override;
         };
 
         inline SP<Module> create_cuda_module(const std::string &ptx_code) {
