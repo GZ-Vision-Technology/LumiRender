@@ -13,7 +13,7 @@
 
 using namespace luminous;
 
-int foo(int x, float y) {
+int foo(int x, const float *y) {
     std::cout << x << " " << y << std::endl;
     return x;
 }
@@ -31,12 +31,19 @@ public:
     explicit TKernel(func_type func) : _func(func) {}
 
     void configure(uint3 grid_size,
-                           uint3 local_size,
-                           size_t sm) {}
+                   uint3 local_size,
+                   size_t sm) {}
+
+    template<typename Ret, typename...Args, size_t...Is>
+    void check_signature(Ret(*f)(Args...), std::index_sequence<Is...>) {
+        using OutArgs = std::tuple<Args...>;
+        using inArgs = typename function_trait::Args;
+//        std::is_same_v<std::tuple_element_t<Is, OutArgs>, std::tuple_element_t<Is, inArgs>>...;
+    }
 
     template<typename Ret, typename...Args, size_t...Is>
     void call_impl(Ret(*f)(Args...), void *args[], std::index_sequence<Is...>) {
-        f(*static_cast<std::tuple_element_t<Is, std::tuple<Args...>> *>(args[Is])...);
+//        f(*static_cast<std::tuple_element_t<Is, std::tuple<Args...>> *>(args[Is])...);
     }
 
     template<typename Ret, typename...Args>
@@ -46,24 +53,13 @@ public:
 
     template<typename...Args>
     void launch(Args &...args) {
-        static_assert(std::is_same_v<std::tuple<Args...>, typename function_trait::Args>);
+
+        check_signature(_func, std::make_index_sequence<sizeof...(Args)>());
+
+//        static_assert(std::is_same_v<std::tuple<Args...>, typename function_trait::Args>);
         void *array[]{(&args)...};
         call(_func, array);
     }
-};
-
-template<typename T>
-class CUDAKernel : TKernel<T> {
-
-public:
-    template<typename...Args>
-    void launch(Args &...args) {
-        printf("adfafasfsd");
-        static_assert(std::is_same_v<std::tuple<Args...>, typename function_trait::Args>);
-        void *array[]{(&args)...};
-        call(_func, array);
-    }
-
 };
 
 
@@ -76,7 +72,11 @@ int main() {
 
     TKernel kernel(foo);
 
-    kernel.launch(x, y);
+    cout << typeid(foo).name() << endl;
+
+    const float *p = &y;
+
+    kernel.launch(x, p);
 
 
 }
