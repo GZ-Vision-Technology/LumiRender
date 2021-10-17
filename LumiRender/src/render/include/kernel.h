@@ -38,6 +38,35 @@ namespace luminous {
                 call_impl(f, args, std::make_index_sequence<sizeof...(Args)>());
             }
 
+            template<typename Ret, typename...Args, size_t...Is>
+            void check_signature(Ret(*f)(Args...), std::index_sequence<Is...>) {
+                using OutArgs = std::tuple<Args...>;
+                static_assert(std::is_invocable_v<func_type, std::tuple_element_t<Is, OutArgs>...>);
+            }
+
+            template<typename...Args>
+            void launch_func_impl(Dispatcher &dispatcher, Args &&...args) {
+                check_signature(_func, std::make_index_sequence<sizeof...(Args)>());
+                void *array[]{(&args)...};
+                if (on_cpu()) {
+                    call(_func, array);
+                } else {
+                    cu_launch(dispatcher, array);
+                }
+            }
+
+            template<typename Ret, typename...Args, typename ...OutArgs>
+            void launch_func(Dispatcher &dispatcher, Ret(*f)(Args...), OutArgs &&...args) {
+                launch_func_impl(dispatcher, (static_cast<Args>(std::forward<OutArgs>(args)))...);
+            }
+
+            void cu_launch(Dispatcher &dispatcher, void *args[]) {
+                auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
+                CU_CHECK(cuLaunchKernel(_func, _grid_size.x, _grid_size.y, _grid_size.z,
+                                        _block_size.x, _block_size.y, _block_size.z,
+                                        _shared_mem, stream, args, nullptr));
+            }
+
         public:
 
             explicit Kernel(func_type func) : _func(func) {}
@@ -69,22 +98,9 @@ namespace luminous {
                 _cu_func = reinterpret_cast<CUfunction>(handle);
             }
 
-            void cu_launch(Dispatcher &dispatcher, void *args[]) {
-                auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CU_CHECK(cuLaunchKernel(_func, _grid_size.x, _grid_size.y, _grid_size.z,
-                                        _block_size.x, _block_size.y, _block_size.z,
-                                        _shared_mem, stream, args, nullptr));
-            }
-
             template<typename...Args>
-            void launch(Dispatcher &dispatcher, Args &...args) {
-                static_assert(std::is_same_v<std::tuple<Args...>, typename function_trait::Args>);
-                void *array[]{(&args)...};
-                if (on_cpu()) {
-                    call(_func, array);
-                } else {
-                    cu_launch(dispatcher, array);
-                }
+            void launch(Dispatcher &dispatcher, Args &&...args) {
+                launch_func(dispatcher, _func, std::forward<Args>(args)...);
             }
         };
     }
