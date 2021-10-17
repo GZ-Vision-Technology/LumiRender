@@ -23,7 +23,7 @@ luminous_render_add_application(test-parallel SOURCES test_parallel.cpp)
 luminous_render_add_application(test-arena SOURCES test_arena.cpp)
 luminous_render_add_application(test-reflection SOURCES test_reflection.cpp)
 luminous_render_add_application(test-upload SOURCES test_upload.cpp)
-add_executable(play_ground play_ground.cpp)
+luminous_render_add_application(play_ground SOURCES play_ground.cpp)
 
 #set(CMAKE_CUDA_STANDARD 17)
 #project(cuda_test CUDA)

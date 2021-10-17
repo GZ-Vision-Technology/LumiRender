@@ -9,6 +9,7 @@
 #include <type_traits>
 #include "base_libs/common.h"
 #include "base_libs/lstd/lstd.h"
+#include "render/include/kernel.h"
 
 
 using namespace luminous;
@@ -33,9 +34,6 @@ public:
 
     explicit TKernel(func_type func) : _func(func) {}
 
-    void configure(uint3 grid_size,
-                   uint3 local_size,
-                   size_t sm) {}
 
     template<typename Ret, typename...Args, size_t...Is>
     void call_impl(Ret(*f)(Args...), void *args[], std::index_sequence<Is...>) {
@@ -56,8 +54,7 @@ public:
     template<typename...Args>
     void launch_func_impl(Args &&...args) {
         check_signature(_func, std::make_index_sequence<sizeof...(Args)>());
-        void *array[]{(&args)...};
-        call(_func, array);
+        _func(std::forward<Args>(args)...);
     }
 
     template<typename Ret, typename...Args, typename ...OutArgs>
@@ -82,13 +79,13 @@ int main() {
     int x = 4;
     const float y = 6.5f;
 
-    TKernel kernel(foo);
+    auto device = create_cpu_device();
 
-    cout << typeid(foo).name() << endl;
+    auto dispatcher = device->new_dispatcher();
 
-    A a;
+    luminous::Kernel kernel{foo};
 
-    kernel.launch(x, y);
+    kernel.launch(dispatcher, x, y);
 
 //    cout << bit_cast<float>(4) << endl;
 

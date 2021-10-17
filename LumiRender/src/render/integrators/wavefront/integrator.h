@@ -11,8 +11,9 @@
 #include "render/samplers/sampler.h"
 #include "work_items.h"
 #include "core/backend/device.h"
-#include "core/backend/kernel.h"
+#include "render/include/kernel.h"
 #include "aggregate.h"
+//#include "kernels.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -34,6 +35,7 @@ namespace luminous {
             int _frame_index{};
 
             // kernels
+//            Kernel<decltype(&generate_primary_ray)> _generate_primary_ray{generate_primary_ray};
 //            shared_ptr<Kernel> _generate_primary_ray{};
 //            shared_ptr<Kernel> _queues_reset{};
 //            shared_ptr<Kernel> _generate_ray_samples{};

@@ -28,6 +28,9 @@ namespace luminous {
             int _min_grid_size = 0;
             size_t _shared_mem = 1024;
         private:
+            // n_item_idx is the index of n_item arg in Args
+            static constexpr int n_item_idx = 0;
+
             template<typename Ret, typename...Args, size_t...Is>
             void call_impl(Ret(*f)(Args...), void *args[], std::index_sequence<Is...>) {
                 f(*static_cast<std::tuple_element_t<Is, std::tuple<Args...>> *>(args[Is])...);
@@ -44,27 +47,37 @@ namespace luminous {
                 static_assert(std::is_invocable_v<func_type, std::tuple_element_t<Is, OutArgs>...>);
             }
 
+            template<typename ...Args>
+            void cpu_launch(Args &&...args) {
+//                async(1, [&](uint idx, uint tid) {
+                    _func(std::forward<Args>(args)...);
+//                });
+            }
+
+            template<typename ...Args>
+            void cuda_launch(Dispatcher &dispatcher, Args &&...args) {
+                void *array[]{(&args)...};
+                auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
+//                CU_CHECK(cuLaunchKernel(_cu_func, _grid_size.x, _grid_size.y, _grid_size.z,
+//                                        _block_size.x, _block_size.y, _block_size.z,
+//                                        _shared_mem, stream, array, nullptr));
+            }
+
             template<typename...Args>
             void launch_func_impl(Dispatcher &dispatcher, Args &&...args) {
                 check_signature(_func, std::make_index_sequence<sizeof...(Args)>());
-                void *array[]{(&args)...};
+
                 if (on_cpu()) {
-                    call(_func, array);
+                    
+                    cpu_launch(std::forward<Args>(args)...);
                 } else {
-                    cu_launch(dispatcher, array);
+                    cuda_launch(dispatcher, std::forward<Args>(args)...);
                 }
             }
 
             template<typename Ret, typename...Args, typename ...OutArgs>
             void launch_func(Dispatcher &dispatcher, Ret(*f)(Args...), OutArgs &&...args) {
                 launch_func_impl(dispatcher, (static_cast<Args>(std::forward<OutArgs>(args)))...);
-            }
-
-            void cu_launch(Dispatcher &dispatcher, void *args[]) {
-                auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CU_CHECK(cuLaunchKernel(_func, _grid_size.x, _grid_size.y, _grid_size.z,
-                                        _block_size.x, _block_size.y, _block_size.z,
-                                        _shared_mem, stream, args, nullptr));
             }
 
         public:
@@ -98,6 +111,11 @@ namespace luminous {
                 _cu_func = reinterpret_cast<CUfunction>(handle);
             }
 
+            /**
+             * @tparam Args : The first two parameters are num of item and index, respectively
+             * @param dispatcher
+             * @param args
+             */
             template<typename...Args>
             void launch(Dispatcher &dispatcher, Args &&...args) {
                 launch_func(dispatcher, _func, std::forward<Args>(args)...);
