@@ -13,7 +13,7 @@
 
 using namespace luminous;
 
-int foo(int x, const float *y) {
+int foo(int x, float y) {
     std::cout << x << " " << y << std::endl;
     return x;
 }
@@ -37,13 +37,12 @@ public:
     template<typename Ret, typename...Args, size_t...Is>
     void check_signature(Ret(*f)(Args...), std::index_sequence<Is...>) {
         using OutArgs = std::tuple<Args...>;
-        using inArgs = typename function_trait::Args;
-//        std::is_same_v<std::tuple_element_t<Is, OutArgs>, std::tuple_element_t<Is, inArgs>>...;
+        static_assert(std::is_invocable_v<func_type, std::tuple_element_t<Is, OutArgs>...>);
     }
 
     template<typename Ret, typename...Args, size_t...Is>
     void call_impl(Ret(*f)(Args...), void *args[], std::index_sequence<Is...>) {
-//        f(*static_cast<std::tuple_element_t<Is, std::tuple<Args...>> *>(args[Is])...);
+        f(*static_cast<std::tuple_element_t<Is, std::tuple<Args...>> *>(args[Is])...);
     }
 
     template<typename Ret, typename...Args>
@@ -52,11 +51,8 @@ public:
     }
 
     template<typename...Args>
-    void launch(Args &...args) {
-
+    void launch(Args &&...args) {
         check_signature(_func, std::make_index_sequence<sizeof...(Args)>());
-
-//        static_assert(std::is_same_v<std::tuple<Args...>, typename function_trait::Args>);
         void *array[]{(&args)...};
         call(_func, array);
     }
@@ -74,9 +70,9 @@ int main() {
 
     cout << typeid(foo).name() << endl;
 
-    const float *p = &y;
+    kernel.launch(x, x);
 
-    kernel.launch(x, p);
+    cout << bit_cast<float>(4) << endl;
 
 
 }
