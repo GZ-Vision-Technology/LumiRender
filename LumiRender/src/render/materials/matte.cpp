@@ -10,7 +10,7 @@ namespace luminous {
     inline namespace render {
 
         BSDF MatteMaterial::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
-            Texture tex = scene_data->textures[_R];
+            Texture tex = scene_data->textures[R];
             BxDF bxdf = BxDF(IdealDiffuse(tex.eval(ctx)));
 
             return BSDF(ctx.ng, ctx.ns, ctx.dp_dus, bxdf);
