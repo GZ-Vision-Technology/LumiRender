@@ -36,19 +36,19 @@ namespace luminous {
             }
 
             template<typename TIndex, typename TCount, typename ...Args>
-            void cpu_launch(TIndex idx, TCount n_item, Args &&...args) {
-//                async(1, [&](uint tid, uint tid) {
-                _func(idx, n_item, std::forward<Args>(args)...);
-//                });
+            void cpu_launch(TIndex _, TCount n_item, Args &&...args) {
+                async(1, [&](uint idx, uint tid) {
+                    _func(idx, n_item, std::forward<Args>(args)...);
+                });
             }
 
             template<typename ...Args>
             void cuda_launch(Dispatcher &dispatcher, Args &&...args) {
                 void *array[]{(&args)...};
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-//                CU_CHECK(cuLaunchKernel(_cu_func, _grid_size.x, _grid_size.y, _grid_size.z,
-//                                        _block_size.x, _block_size.y, _block_size.z,
-//                                        _shared_mem, stream, array, nullptr));
+                CU_CHECK(cuLaunchKernel(_cu_func, _grid_size.x, _grid_size.y, _grid_size.z,
+                                        _block_size.x, _block_size.y, _block_size.z,
+                                        _shared_mem, stream, array, nullptr));
             }
 
             template<typename...Args>
@@ -98,7 +98,7 @@ namespace luminous {
             }
 
             /**
-             * @tparam Args : The first two parameters are thread index and num of item, respectively
+             * @tparam Args : The first two parameters are task index and num of item, respectively
              * @param dispatcher
              * @param args
              */
