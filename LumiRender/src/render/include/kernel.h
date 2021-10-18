@@ -28,18 +28,6 @@ namespace luminous {
             int _min_grid_size = 0;
             size_t _shared_mem = 1024;
         private:
-            // n_item_idx is the index of n_item arg in Args
-            static constexpr int n_item_idx = 0;
-
-            template<typename Ret, typename...Args, size_t...Is>
-            void call_impl(Ret(*f)(Args...), void *args[], std::index_sequence<Is...>) {
-                f(*static_cast<std::tuple_element_t<Is, std::tuple<Args...>> *>(args[Is])...);
-            }
-
-            template<typename Ret, typename...Args>
-            void call(Ret(*f)(Args...), void *args[]) {
-                call_impl(f, args, std::make_index_sequence<sizeof...(Args)>());
-            }
 
             template<typename Ret, typename...Args, size_t...Is>
             void check_signature(Ret(*f)(Args...), std::index_sequence<Is...>) {
@@ -47,10 +35,10 @@ namespace luminous {
                 static_assert(std::is_invocable_v<func_type, std::tuple_element_t<Is, OutArgs>...>);
             }
 
-            template<typename ...Args>
-            void cpu_launch(Args &&...args) {
-//                async(1, [&](uint idx, uint tid) {
-                    _func(std::forward<Args>(args)...);
+            template<typename TIndex, typename TCount, typename ...Args>
+            void cpu_launch(TIndex idx, TCount n_item, Args &&...args) {
+//                async(1, [&](uint tid, uint tid) {
+                _func(idx, n_item, std::forward<Args>(args)...);
 //                });
             }
 
@@ -66,9 +54,7 @@ namespace luminous {
             template<typename...Args>
             void launch_func_impl(Dispatcher &dispatcher, Args &&...args) {
                 check_signature(_func, std::make_index_sequence<sizeof...(Args)>());
-
                 if (on_cpu()) {
-                    
                     cpu_launch(std::forward<Args>(args)...);
                 } else {
                     cuda_launch(dispatcher, std::forward<Args>(args)...);
@@ -112,13 +98,13 @@ namespace luminous {
             }
 
             /**
-             * @tparam Args : The first two parameters are num of item and index, respectively
+             * @tparam Args : The first two parameters are thread index and num of item, respectively
              * @param dispatcher
              * @param args
              */
             template<typename...Args>
             void launch(Dispatcher &dispatcher, Args &&...args) {
-                launch_func(dispatcher, _func, std::forward<Args>(args)...);
+                launch_func(dispatcher, _func, 0, std::forward<Args>(args)...);
             }
         };
     }

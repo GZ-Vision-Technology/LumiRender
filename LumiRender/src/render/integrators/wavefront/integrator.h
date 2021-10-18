@@ -11,7 +11,7 @@
 #include "render/samplers/sampler.h"
 #include "work_items.h"
 #include "core/backend/device.h"
-#include "render/include/kernel.h"
+//#include "render/include/kernel.h"
 #include "aggregate.h"
 //#include "kernels.h"
 
