@@ -11,7 +11,7 @@
 #include "render/samplers/sampler.h"
 #include "work_items.h"
 #include "core/backend/device.h"
-//#include "render/include/kernel.h"
+#include "render/include/kernel.h"
 #include "aggregate.h"
 #include "kernels.h"
 
@@ -35,13 +35,12 @@ namespace luminous {
             int _frame_index{};
 
             // kernels
-//            Kernel<decltype(&generate_primary_ray)> _generate_primary_ray{generate_primary_ray};
-//            shared_ptr<Kernel> _generate_primary_ray{};
-//            shared_ptr<Kernel> _queues_reset{};
-//            shared_ptr<Kernel> _generate_ray_samples{};
-//            shared_ptr<Kernel> _process_escape_ray{};
-//            shared_ptr<Kernel> _process_emission{};
-//            shared_ptr<Kernel> _eval_BSDFs{};
+            Kernel<decltype(&generate_primary_ray)> _generate_primary_ray{generate_primary_ray};
+            Kernel<decltype(&queues_reset)> _queues_reset{queues_reset};
+            Kernel<decltype(&generate_ray_samples)> _generate_ray_samples{generate_ray_samples};
+            Kernel<decltype(&process_escape_ray)> _process_escape_ray{process_escape_ray};
+            Kernel<decltype(&process_emission)> _process_emission{process_emission};
+            Kernel<decltype(&eval_BSDFs)> _eval_BSDFs{eval_BSDFs};
 
             // accelerate structure
             WavefrontAggregate *_aggregate{};

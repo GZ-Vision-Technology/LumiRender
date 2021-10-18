@@ -63,8 +63,6 @@ namespace luminous {
                 return v1.is_infinite() > v2.is_infinite();
             });
 
-//            auto light_sampler = LightSampler::create(lsc);
-//            _light_sampler.reset(&light_sampler);
             _light_sampler.init(1);
             _light_sampler.add_element(lsc);
         }
