@@ -33,29 +33,29 @@ namespace luminous {
         private:
             // todo change to indice mode, reduce memory usage
             BufferView<const_value_type> _func{};
-            BufferView<const_value_type> _CDF{};
+            BufferView<const_value_type> CDF{};
             float _func_integral{};
         public:
             LM_XPU Distribution1D() = default;
 
             LM_XPU Distribution1D(BufferView<const_value_type> func,
                                   BufferView<const_value_type> CDF, float integral)
-                    : _func(func), _CDF(CDF), _func_integral(integral) {}
+                    : _func(func), CDF(CDF), _func_integral(integral) {}
 
             LM_ND_XPU size_t size() const { return _func.size(); }
 
             LM_ND_XPU float sample_continuous(float u, float *pdf = nullptr, int *ofs = nullptr) const {
                 auto predicate = [&](int index) {
-                    return _CDF[index] <= u;
+                    return CDF[index] <= u;
                 };
-                size_t offset = find_interval((int) _CDF.size(), predicate);
+                size_t offset = find_interval((int) CDF.size(), predicate);
                 if (ofs) {
                     *ofs = offset;
                 }
-                float du = u - _CDF[offset];
-                if ((_CDF[offset + 1] - _CDF[offset]) > 0) {
-                    DCHECK_GT(_CDF[offset + 1], _CDF[offset]);
-                    du /= (_CDF[offset + 1] - _CDF[offset]);
+                float du = u - CDF[offset];
+                if ((CDF[offset + 1] - CDF[offset]) > 0) {
+                    DCHECK_GT(CDF[offset + 1], CDF[offset]);
+                    du /= (CDF[offset + 1] - CDF[offset]);
                 }
                 DCHECK(!is_nan(du));
 
@@ -67,14 +67,14 @@ namespace luminous {
 
             LM_ND_XPU int sample_discrete(float u, float *PMF = nullptr, float *u_remapped = nullptr) const {
                 auto predicate = [&](int index) {
-                    return _CDF[index] <= u;
+                    return CDF[index] <= u;
                 };
-                int offset = find_interval(_CDF.size(), predicate);
+                int offset = find_interval(CDF.size(), predicate);
                 if (PMF) {
                     *PMF = (_func_integral > 0) ? _func[offset] / (_func_integral * size()) : 0;
                 }
                 if (u_remapped) {
-                    *u_remapped = (u - _CDF[offset]) / (_CDF[offset + 1] - _CDF[offset]);
+                    *u_remapped = (u - CDF[offset]) / (CDF[offset + 1] - CDF[offset]);
                     DCHECK(*u_remapped >= 0.f && *u_remapped <= 1.f);
                 }
                 return offset;
