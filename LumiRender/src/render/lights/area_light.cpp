@@ -13,7 +13,7 @@ namespace luminous {
         AreaLight::AreaLight(uint inst_idx, float3 L, float area, bool two_sided)
                 : BaseBinder<LightBase>(LightType::Area),
                   _inst_idx(inst_idx),
-                  _L(L),
+                  L(L),
                   _inv_area(1 / area),
                   _two_sided(two_sided) {}
 
@@ -32,7 +32,7 @@ namespace luminous {
         LightLiSample AreaLight::Li(LightLiSample lls, const SceneData *data) const {
             float3 wi = lls.p_light.pos - lls.p_ref.pos;
             lls.wi = normalize(wi);
-            lls.L = L(lls.p_light, -lls.wi);
+            lls.L = radiance(lls.p_light, -lls.wi);
             lls.PDF_dir = PDF_Li(lls.p_ref, lls.p_light, wi, data);
             return lls;
         }
@@ -52,16 +52,16 @@ namespace luminous {
         }
 
         Spectrum AreaLight::power() const {
-            return (_two_sided ? _2Pi : Pi) * _L * (1.f / _inv_area);
+            return (_two_sided ? _2Pi : Pi) * L * (1.f / _inv_area);
         }
 
-        Spectrum AreaLight::L(const SurfaceInteraction &p_light, float3 w) const {
-            return (_two_sided || dot(w, p_light.g_uvn.normal) > 0) ? _L : make_float3(0.f);
+        Spectrum AreaLight::radiance(const SurfaceInteraction &p_light, float3 w) const {
+            return (_two_sided || dot(w, p_light.g_uvn.normal) > 0) ? L : make_float3(0.f);
         }
 
         void AreaLight::print() const {
             printf("type:AreaLight,instance id is %u,L:(%f,%f,%f)\n",
-                   _inst_idx, _L.x, _L.y, _L.z);
+                   _inst_idx, L.x, L.y, L.z);
         }
 
     } //luminous::render

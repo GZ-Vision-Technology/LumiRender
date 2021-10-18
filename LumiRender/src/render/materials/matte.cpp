@@ -13,7 +13,7 @@ namespace luminous {
             Texture tex = scene_data->textures[R];
             BxDF bxdf = BxDF(IdealDiffuse(tex.eval(ctx)));
 
-            return BSDF(ctx.ng, ctx.ns, ctx.dp_dus, bxdf);
+            return {ctx.ng, ctx.ns, ctx.dp_dus, bxdf};
         }
     }
 }

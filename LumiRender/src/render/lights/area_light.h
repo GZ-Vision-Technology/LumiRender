@@ -16,7 +16,7 @@ namespace luminous {
 
         public:
             uint _inst_idx{};
-            float3 _L{};
+            float3 L{};
             bool _two_sided{};
             float _inv_area{};
         public:
@@ -26,7 +26,7 @@ namespace luminous {
 
             AreaLight(uint inst_idx, float3 L, float area, bool two_sided);
 
-            LM_ND_XPU Spectrum L(const SurfaceInteraction &p_light, float3 w) const;
+            LM_ND_XPU Spectrum radiance(const SurfaceInteraction &p_light, float3 w) const;
 
             LM_ND_XPU float inv_area() const;
 
@@ -45,7 +45,7 @@ namespace luminous {
                                 LUMINOUS_TO_STRING("light Base : %s,name:%s, L : %s",
                                                    LightBase::to_string().c_str(),
                                                    type_name(this),
-                                                   _L.to_string().c_str());
+                                                   L.to_string().c_str());
                             })
         };
     } //luminous::render
