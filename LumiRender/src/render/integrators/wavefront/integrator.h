@@ -13,7 +13,7 @@
 #include "core/backend/device.h"
 //#include "render/include/kernel.h"
 #include "aggregate.h"
-//#include "kernels.h"
+#include "kernels.h"
 
 namespace luminous {
     inline namespace gpu {

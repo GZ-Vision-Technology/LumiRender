@@ -34,9 +34,11 @@ int main() {
 
     auto dispatcher = device->new_dispatcher();
 
-    luminous::Kernel kernel{foo};
+    luminous::Kernel<decltype(&foo)> kernel{foo};
 
-    kernel.launch(dispatcher,  y, y);
+    kernel.launch(dispatcher,  x, y);
+
+    dispatcher.wait();
 
 //    cout << bit_cast<float>(4) << endl;
 
