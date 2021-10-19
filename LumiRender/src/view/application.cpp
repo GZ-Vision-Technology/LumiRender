@@ -196,6 +196,7 @@ namespace luminous {
             glfwSwapBuffers(_handle);
             //            cout << clock.elapse_ms() << endl;
         }
+        glfwTerminate();
         return 0;
     }
 

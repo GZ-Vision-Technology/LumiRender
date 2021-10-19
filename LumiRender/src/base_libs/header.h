@@ -9,6 +9,9 @@
 #include <typeinfo>
 #include <assert.h>
 #include <stdint.h>
+#include <vld.h>
+
+#include "crtdbg.h"
 
 #if defined(_MSC_VER)
 #define HAVE_ALIGNED_MALLOC

@@ -1,6 +1,6 @@
 #define _CRTDBG_MAP_ALLOC // Do not include <malloc.h>
 #include "crtdbg.h"
-
+#include <malloc.h>
 #ifdef _DEBUG
 #define DEBUG_NEW   new( _NORMAL_BLOCK, __FILE__, __LINE__)
 #else
