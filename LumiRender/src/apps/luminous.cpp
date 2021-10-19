@@ -7,12 +7,14 @@
 #include "util/parser.h"
 #include <memory>
 #include "view/application.h"
+#define _CRTDBG_MAP_ALLOC // Do not include <malloc.h>
+#include "crtdbg.h"
 
 using std::cout;
 using std::endl;
 using namespace luminous;
 
-int main(int argc, char *argv[]) {
+int execute(int argc, char *argv[]) {
     logging::set_log_level(spdlog::level::info);
     Context context{argc, argv};
     context.try_print_help_and_exit();
@@ -31,4 +33,12 @@ int main(int argc, char *argv[]) {
 
     App app("luminous", luminous::make_int2(1280,720), &context, sp);
     return app.run();
+}
+
+int main(int argc, char *argv[]) {
+    auto ret = execute(argc, argv);
+
+    int flags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+    _CrtSetDbgFlag(flags | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
+    return ret;
 }
