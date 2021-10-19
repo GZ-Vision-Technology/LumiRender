@@ -1,50 +1,33 @@
-//
-// Created by Zero on 15/10/2021.
-//
+#define _CRTDBG_MAP_ALLOC // Do not include <malloc.h>
+#include "crtdbg.h"
 
-#include <iostream>
-#include <tuple>
-#include <utility>
-#include <functional>
-#include <type_traits>
-#include "base_libs/common.h"
-#include "base_libs/lstd/lstd.h"
-#include "render/include/kernel.h"
+#ifdef _DEBUG
+#define DEBUG_NEW   new( _NORMAL_BLOCK, __FILE__, __LINE__)
+#else
+#define DEBUG_NEW
+#endif
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif
 
-using namespace luminous;
+class mem_leak {
 
-int foo(int x, int y, float a) {
-    std::cout << x << " " << y << "  " << a << std::endl;
-    return x;
-}
+public:
+    mem_leak() {
+        p = malloc(100);
+    }
 
-
-using namespace std;
-
-struct A {
-
+private:
+    void *p;
 };
 
+mem_leak g_a;
+
 int main() {
-    int x = 4;
-    const float y = 6.5f;
 
-    auto device = create_cpu_device();
+    int flags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+    _CrtSetDbgFlag(flags | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
 
-    auto dispatcher = device->new_dispatcher();
-
-    luminous::Kernel<decltype(&foo)> kernel{foo};
-
-    kernel.launch(dispatcher,  x, y);
-
-    dispatcher.wait();
-
-//    cout << bit_cast<float>(4) << endl;
-
-
-
-//    cout << a  << endl;
-
-
+    int *a = new int[4];
 }
