@@ -7,8 +7,6 @@
 #include "util/parser.h"
 #include <memory>
 #include "view/application.h"
-#define _CRTDBG_MAP_ALLOC // Do not include <malloc.h>
-#include "crtdbg.h"
 
 using std::cout;
 using std::endl;
@@ -37,8 +35,5 @@ int execute(int argc, char *argv[]) {
 
 int main(int argc, char *argv[]) {
     auto ret = execute(argc, argv);
-
-    int flags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
-    _CrtSetDbgFlag(flags | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
     return ret;
 }

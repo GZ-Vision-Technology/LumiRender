@@ -26,7 +26,9 @@ namespace luminous {
                 : OptixAccel(device, context, scene),
                   _intersect_any(create_shader_wrapper(intersect_shader, intersect_any_func)),
                   _intersect_closet(create_shader_wrapper(intersect_shader, intersect_closest_func)) {
-
+            auto program_groups = _intersect_closet.program_groups();
+            append(program_groups, _intersect_any.program_groups());
+            build_pipeline(program_groups);
         }
 
         void OptixAggregate::intersect_closest(int max_rays, const RayQueue *ray_queue,

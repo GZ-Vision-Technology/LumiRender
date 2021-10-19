@@ -213,7 +213,7 @@
 //		}
 	],
 	"integrator" : {
-		"type" : "PT",
+		"type" : "WavefrontPT",
 		"param" : {
 			"max_depth" : 3,
 			"rr_threshold" : 1
@@ -256,7 +256,7 @@
 	},
 	"output" : {
 		"fn":"cornell-box.png",
-		"frame_num" : 5
+		"frame_num" : 0
 	},
 	"filter" : {
 		"type" : "triangle",

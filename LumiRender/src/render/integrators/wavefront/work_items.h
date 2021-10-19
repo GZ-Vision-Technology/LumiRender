@@ -206,7 +206,7 @@ namespace luminous {
         struct ShadowRayWorkItem {
             Ray ray;
             Spectrum Ld;
-            int pixel_index;
+            int pixel_index{};
         };
 
         LUMINOUS_SOA(ShadowRayWorkItem, ray, Ld, pixel_index)
@@ -219,8 +219,8 @@ namespace luminous {
             float3 ns;
             float2 uv;
             float3 wo;
-            bool any_non_specular_bounces;
-            int pixel_index;
+            bool any_non_specular_bounces{};
+            int pixel_index{};
             Spectrum throughput;
         };
 
@@ -232,7 +232,7 @@ namespace luminous {
         struct PixelSampleState {
             uint2 pixel;
             Spectrum L;
-            float filter_weight;
+            float filter_weight{};
             Spectrum sensor_ray_weight;
             RaySamples samples;
         };

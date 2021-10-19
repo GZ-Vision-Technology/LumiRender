@@ -12,7 +12,7 @@ namespace luminous {
 
         }
 
-        void queues_reset(int task_id, int n_item, RayQueue *ray_queue,
+        void reset_queues(int task_id, int n_item, RayQueue *ray_queue,
                           HitAreaLightQueue *hit_area_light_queue,
                           ShadowRayQueue *shadow_ray_queue,
                           EscapedRayQueue *escaped_ray_queue,
