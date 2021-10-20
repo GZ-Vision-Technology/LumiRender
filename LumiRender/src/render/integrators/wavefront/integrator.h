@@ -53,6 +53,8 @@ namespace luminous {
 
             void init_aggregate();
 
+            void init_rt_param();
+
             void allocate_memory();
 
             LM_NODISCARD uint frame_index() const override { return _frame_index; }
@@ -74,6 +76,8 @@ namespace luminous {
             }
 
             void render() override;
+
+            void render_per_sample(int sample_idx);
 
         };
     }

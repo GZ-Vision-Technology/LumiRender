@@ -18,7 +18,7 @@ namespace luminous {
 
         void WavefrontPT::init(const std::shared_ptr<SceneGraph> &scene_graph) {
             Integrator::init(scene_graph);
-            // todo: make this configurable. Base it on the amount of LM_GPU memory?
+            // todo: make this configurable. Base it on the amount of GPU memory?
             int max_samples = 1024 * 1024;
             uint2 res = resolution();
             _scanline_per_pass = std::max(1, int(max_samples / res.x));
@@ -27,6 +27,7 @@ namespace luminous {
             _max_queue_size = res.x * _scanline_per_pass;
             allocate_memory();
             init_aggregate();
+            init_rt_param();
         }
 
         void WavefrontPT::allocate_memory() {
@@ -48,8 +49,24 @@ namespace luminous {
 
         }
 
-        void WavefrontPT::render() {
+        void WavefrontPT::render_per_sample(int sample_idx) {
+            auto res = _camera->resolution();
+            for (int y0 = 0; y0 < res.y; y0 += _scanline_per_pass) {
+                
+            }
+        }
 
+        void WavefrontPT::render() {
+            auto spp = _sampler->spp();
+            for (int sample_idx = 0; sample_idx < spp; ++sample_idx) {
+                render_per_sample(sample_idx);
+            }
+        }
+
+        void WavefrontPT::init_rt_param() {
+            if (_device->is_cpu()) {
+
+            }
         }
 
         void WavefrontPT::init_aggregate() {

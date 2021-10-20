@@ -5,11 +5,20 @@
 
 #pragma once
 
+#include <render/sensors/shader_include.h>
 #include "base_libs/math/common.h"
 #include "work_items.h"
 
 namespace luminous {
     inline namespace render {
+
+        struct RTParam {
+            Sampler *sampler;
+            Sensor *camera;
+        };
+
+        void update_rt_param(RTParam param);
+
         LM_XPU void generate_primary_ray(int task_id, int n_item, RayQueue *ray_queue, const Sampler *sampler,
                                          SOA<PixelSampleState> *pixel_sample_state);
 

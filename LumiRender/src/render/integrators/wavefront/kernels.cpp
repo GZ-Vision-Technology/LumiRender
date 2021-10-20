@@ -4,8 +4,21 @@
 
 #include "kernels.h"
 
+#ifdef __CUDACC__
+#define GLOBAL_PREFIX extern "C" __constant__
+#else
+#define GLOBAL_PREFIX static
+#endif
+
 namespace luminous {
     inline namespace render {
+
+
+        GLOBAL_PREFIX RTParam rt_param;
+
+        void update_rt_param(RTParam param) {
+            rt_param = param;
+        }
 
         void generate_primary_ray(int task_id, int n_item, RayQueue *ray_queue, const Sampler *sampler,
                                   SOA<PixelSampleState> *pixel_sample_state) {

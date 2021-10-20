@@ -13,6 +13,10 @@
     #include "pinhole_camera.cpp"
     #include "film.cpp"
 #else
-    #error "this file just for cuda shader include"
+    #include "camera_base.h"
+    #include "sensor.h"
+    #include "thin_lens_camera.h"
+    #include "pinhole_camera.h"
+    #include "film.h"
 #endif
 
