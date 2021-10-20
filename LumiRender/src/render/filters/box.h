@@ -24,11 +24,10 @@ namespace luminous {
                 return {p, 1.f};
             }
 
-            LM_ND_XPU Float integral() const { return 4 * _radius.x * _radius.y; }
+            LM_ND_XPU float integral() const { return 4 * _radius.x * _radius.y; }
 
-            LM_ND_XPU std::string to_string() const;
+            CPU_ONLY(LM_ND_XPU std::string to_string() const;)
 
-            static BoxFilter *create(const FilterConfig &config);
-        }
+        };
     }
 }

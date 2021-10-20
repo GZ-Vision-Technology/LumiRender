@@ -13,7 +13,7 @@ namespace luminous {
     inline namespace render {
         class TriangleFilter : public FilterBase {
         public:
-            explicit TriangleFilter(float2 r):FilterBase(r) {}
+            explicit TriangleFilter(float2 r) : FilterBase(r) {}
 
             // LM_ND_XPU float evaluate(const float2 &p) const {
             //     return (std::abs(p.x) <= _radius.x && std::abs(p.y) <= _radius.y) ? 1 : 0;
@@ -26,9 +26,8 @@ namespace luminous {
 
             // LM_ND_XPU Float integral() const { return 4 * _radius.x * _radius.y; }
 
-            LM_ND_XPU std::string to_string() const;
+            CPU_ONLY(LM_ND_XPU std::string to_string() const;)
 
-            static TriangleFilter *create(const FilterConfig &config);
-        }
+        };
     }
 }

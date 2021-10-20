@@ -9,14 +9,19 @@
 
 namespace luminous {
     inline namespace render {
+        struct FilterSample {
+            float2 p;
+            float weight{};
+        };
+
         struct FilterBase {
         protected:
             const float2 _radius;
         public:
-            FilterBase(const float2 r) : _radius(r){}
+            explicit FilterBase(const float2 r) : _radius(r){}
             LM_ND_XPU float2 radius() {
                 return _radius;
             }
-        }
+        };
     }
 }

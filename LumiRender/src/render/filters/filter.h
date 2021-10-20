@@ -6,20 +6,21 @@
 
 #include "base_libs/math/common.h"
 #include "base_libs/lstd/lstd.h"
-#include "gaussian.h"
-#include "triangle.h"
-#include "box.h"
-#include "config.h"
+#include "render/include/config.h"
+#include "filter_base.h"
 
 namespace luminous {
     inline namespace render {
-        struct FilterSample {
-            float2 p;
-            float weight;
-        };
+
+        class BoxFilter;
+
+        class GaussianFilter;
+
+        class TriangleFilter;
 
         using lstd::Variant;
-        class FilterHandle : public Variant<BoxFilter, GaussianFilter, TriangleFilter> {
+
+        class FilterHandle : public Variant<BoxFilter *, GaussianFilter *, TriangleFilter *> {
             using Variant::Variant;
         public:
             CPU_ONLY(LM_NODISCARD std::string to_string() const;)
@@ -33,6 +34,6 @@ namespace luminous {
             LM_ND_XPU FilterSample sample(float2 u) const;
 
             static FilterHandle create(const FilterConfig &config);
-        }
+        };
     }
 }
