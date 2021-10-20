@@ -16,7 +16,7 @@ namespace luminous {
 
         GLOBAL_PREFIX RTParam rt_param;
 
-        void update_rt_param(RTParam param) {
+        void set_rt_param(RTParam param) {
             rt_param = param;
         }
 

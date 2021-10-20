@@ -16,6 +16,13 @@ namespace luminous {
 
         }
 
+        void WavefrontPT::load_module() {
+            if (_device->is_cpu()) {
+                return;
+            }
+            _module = create_cuda_module(wavefront_kernels);
+        }
+
         void WavefrontPT::init(const std::shared_ptr<SceneGraph> &scene_graph) {
             Integrator::init(scene_graph);
             // todo: make this configurable. Base it on the amount of GPU memory?
@@ -27,6 +34,7 @@ namespace luminous {
             _max_queue_size = res.x * _scanline_per_pass;
             allocate_memory();
             init_aggregate();
+            load_module();
             init_rt_param();
         }
 
@@ -65,7 +73,12 @@ namespace luminous {
 
         void WavefrontPT::init_rt_param() {
             if (_device->is_cpu()) {
-
+                RTParam param{};
+                param.sampler = _sampler.data();
+                param.camera = _camera.data();
+                set_rt_param(param);
+            } else {
+//                cuModuleGetGlobal(_module.)
             }
         }
 
@@ -90,5 +103,6 @@ namespace luminous {
             _aggregate->intersect_any(_max_queue_size, _shadow_ray_queue.device_data(),
                                       _pixel_sample_state.device_data());
         }
+
     }
 }

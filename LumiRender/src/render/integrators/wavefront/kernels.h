@@ -17,7 +17,7 @@ namespace luminous {
             Sensor *camera;
         };
 
-        void update_rt_param(RTParam param);
+        void set_rt_param(RTParam param);
 
         LM_XPU void generate_primary_ray(int task_id, int n_item, RayQueue *ray_queue, const Sampler *sampler,
                                          SOA<PixelSampleState> *pixel_sample_state);

@@ -45,6 +45,8 @@ namespace luminous {
 
             // accelerate structure
             WavefrontAggregate *_aggregate{};
+
+            std::shared_ptr<Module> _module;
         public:
 
             WavefrontPT(Device *device, Context *context);
@@ -54,6 +56,8 @@ namespace luminous {
             void init_aggregate();
 
             void init_rt_param();
+
+            void load_module();
 
             void allocate_memory();
 
