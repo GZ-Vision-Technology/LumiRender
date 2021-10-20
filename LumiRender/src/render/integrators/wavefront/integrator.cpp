@@ -6,6 +6,8 @@
 #include "cpu/accel/embree_aggregate.h"
 #include "gpu/accel/optix_aggregate.h"
 
+extern "C" char wavefront_kernels[];
+
 namespace luminous {
     inline namespace gpu {
 

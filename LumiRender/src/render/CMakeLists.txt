@@ -4,7 +4,9 @@ file(GLOB_RECURSE SOURCE_FILES *.c*)
 
 include_directories(${OptiX_INCLUDE})
 
-add_library(luminous-render SHARED ${HEADER_FILES} ${SOURCE_FILES})
+cuda_compile_and_embed(wavefront_kernels ${PROJECT_SOURCE_DIR}/src/render/integrators/wavefront/kernels.cu)
+
+add_library(luminous-render SHARED ${HEADER_FILES} ${SOURCE_FILES} ${wavefront_kernels})
 
 
 target_link_libraries(luminous-render

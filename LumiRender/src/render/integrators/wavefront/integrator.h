@@ -37,6 +37,7 @@ namespace luminous {
             // kernels
             Kernel<decltype(&generate_primary_ray)> _generate_primary_ray{generate_primary_ray};
             Kernel<decltype(&reset_queues)> _reset_queues{reset_queues};
+            Kernel<decltype(&reset_ray_queue)> _reset_ray_queue{reset_ray_queue};
             Kernel<decltype(&generate_ray_samples)> _generate_ray_samples{generate_ray_samples};
             Kernel<decltype(&process_escape_ray)> _process_escape_ray{process_escape_ray};
             Kernel<decltype(&process_emission)> _process_emission{process_emission};
