@@ -37,7 +37,7 @@ namespace luminous {
 
 
         template<typename T>
-        void upload_data_to_global_var(const std::string &name, const T *data) {
+        void upload_data_to_global_var(const std::string &name, const T &data) {
             _impl->upload_data_to_global_var(name, data, sizeof(T));
         }
 

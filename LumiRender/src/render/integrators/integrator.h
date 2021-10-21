@@ -26,10 +26,12 @@ namespace luminous {
             Context *_context{};
             Managed<Sampler, Sampler> _sampler{_device};
             Synchronizer<Sensor> _camera{_device};
+            Dispatcher _dispatcher;
         public:
             Integrator(Device *device, Context *context)
                     : _device(device),
-                      _context(context) {}
+                      _context(context),
+                      _dispatcher(_device->new_dispatcher()) {}
 
             virtual ~Integrator() = default;
 

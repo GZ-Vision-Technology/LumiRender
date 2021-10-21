@@ -49,8 +49,6 @@ namespace luminous {
             WavefrontAggregate *_aggregate{};
 
             std::shared_ptr<Module> _module;
-
-
         public:
 
             WavefrontPT(Device *device, Context *context);

@@ -61,7 +61,7 @@ namespace luminous {
         void WavefrontPT::render_per_sample(int sample_idx) {
             auto res = _camera->resolution();
             for (int y0 = 0; y0 < res.y; y0 += _scanline_per_pass) {
-                
+//                _generate_primary_ray.launch()
             }
         }
 
@@ -85,12 +85,16 @@ namespace luminous {
             SET_CU_FUNC(process_escape_ray);
             SET_CU_FUNC(process_emission);
             SET_CU_FUNC(eval_BSDFs);
-#define undef SET_CU_FUNC
+#undef SET_CU_FUNC
 
+            _generate_primary_ray.compute_fit_size();
+            int a = 0;
         }
 
         void WavefrontPT::init_rt_param() {
             _rt_param.emplace_back(_sampler.device_data(), _camera.device_ptr(), 0);
+            _rt_param.allocate_device(1);
+            _rt_param.synchronize_to_device();
             if (_device->is_cpu()) {
                 set_rt_param(_rt_param.data());
             } else {
