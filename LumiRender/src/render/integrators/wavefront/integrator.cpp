@@ -36,6 +36,7 @@ namespace luminous {
             init_aggregate();
             load_module();
             init_rt_param();
+            init_kernels();
         }
 
         void WavefrontPT::allocate_memory() {
@@ -69,6 +70,23 @@ namespace luminous {
             for (int sample_idx = 0; sample_idx < spp; ++sample_idx) {
                 render_per_sample(sample_idx);
             }
+        }
+
+        void WavefrontPT::init_kernels() {
+            if (_device->is_cpu()) {
+                return;
+            }
+
+#define SET_CU_FUNC(arg) _##arg.set_cu_function(_module->get_kernel_handle("kernel_"#arg));
+            SET_CU_FUNC(generate_primary_ray);
+            SET_CU_FUNC(reset_ray_queue);
+            SET_CU_FUNC(reset_queues);
+            SET_CU_FUNC(generate_ray_samples);
+            SET_CU_FUNC(process_escape_ray);
+            SET_CU_FUNC(process_emission);
+            SET_CU_FUNC(eval_BSDFs);
+#define undef SET_CU_FUNC
+
         }
 
         void WavefrontPT::init_rt_param() {
