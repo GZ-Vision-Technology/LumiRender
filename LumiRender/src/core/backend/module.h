@@ -16,17 +16,21 @@ namespace luminous {
         public:
             LM_NODISCARD virtual SP<KernelOld> get_kernel(const std::string &name) = 0;
 
-            
+            LM_NODISCARD virtual std::pair<ptr_t, size_t> get_global_var(const std::string &name) = 0;
 
             LM_NODISCARD virtual uint64_t get_kernel_handle(const std::string &name) = 0;
         };
 
-        SP<KernelOld> get_kernel(const std::string &name) {
+        LM_NODISCARD SP<KernelOld> get_kernel(const std::string &name) {
             return _impl->get_kernel(name);
         }
 
         LM_NODISCARD uint64_t get_kernel_handle(const std::string &name) {
             return _impl->get_kernel_handle(name);
+        }
+
+        LM_NODISCARD std::pair<ptr_t, size_t> get_global_var(const std::string &name) {
+            return _impl->get_global_var(name);
         }
 
         explicit Module(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}

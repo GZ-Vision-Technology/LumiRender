@@ -73,13 +73,13 @@ namespace luminous {
 
         void WavefrontPT::init_rt_param() {
             if (_device->is_cpu()) {
-                RTParam param{};
-                param.sampler = _sampler.data();
-                param.camera = _camera.data();
-                set_rt_param(param);
+                _rt_param.emplace_back(_sampler.data(), _camera.data());
             } else {
-//                cuModuleGetGlobal(_module.)
+                auto [ptr, size] = _module->get_global_var("rt_param");
+                _rt_param.emplace_back(_sampler.device_data(), _camera.device_ptr());
             }
+            _rt_param.allocate_device(1);
+            _rt_param.synchronize_to_device();
         }
 
         void WavefrontPT::init_aggregate() {

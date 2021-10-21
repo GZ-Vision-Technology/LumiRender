@@ -135,6 +135,8 @@ namespace luminous {
 
             LM_NODISCARD uint64_t get_kernel_handle(const std::string &name) override;
 
+            LM_NODISCARD std::pair<ptr_t, size_t> get_global_var(const std::string &name) override;
+
             LM_NODISCARD SP<KernelOld> get_kernel(const std::string &name) override;
         };
 

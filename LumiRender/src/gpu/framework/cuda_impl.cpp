@@ -259,5 +259,12 @@ namespace luminous {
             return reinterpret_cast<uint64_t>(func);
         }
 
+        std::pair<ptr_t, size_t> CUDAModule::get_global_var(const std::string &name) {
+            CUdeviceptr ptr{};
+            size_t size{};
+            CU_CHECK(cuModuleGetGlobal(&ptr, &size, _module, name.c_str()));
+            return {ptr, size};
+        }
+
     }
 }

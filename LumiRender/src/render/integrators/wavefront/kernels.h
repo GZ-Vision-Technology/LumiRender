@@ -15,6 +15,11 @@ namespace luminous {
         struct RTParam {
             Sampler *sampler;
             Sensor *camera;
+
+            RTParam() = default;
+
+            RTParam(Sampler *sampler, Sensor *camera)
+                    : sampler(sampler), camera(camera) {}
         };
 
         void set_rt_param(RTParam param);
