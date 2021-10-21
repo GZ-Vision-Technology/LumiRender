@@ -68,12 +68,12 @@ namespace luminous {
             return _device_buffer.ptr_interval();
         }
 
-        void allocate_device(size_t size = 0) {
+        void allocate_device(size_t size = 0, void *ptr = nullptr) {
             size = size == 0 ? BaseClass::size() : size;
             if (size == 0) {
                 return;
             }
-            void *ptr = _device->is_cpu() ? BaseClass::data() : nullptr;
+            ptr = _device->is_cpu() && ptr == nullptr ? BaseClass::data() : ptr;
             _device_buffer = _device->create_buffer<TDevice>(size, ptr);
         }
 

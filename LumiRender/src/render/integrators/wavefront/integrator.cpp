@@ -95,9 +95,9 @@ namespace luminous {
             } else {
                 auto [ptr, size] = _module->get_global_var("rt_param");
                 _rt_param.emplace_back(_sampler.device_data(), _camera.device_ptr());
+                _rt_param.allocate_device(1, (void *)ptr);
+                _rt_param.synchronize_to_device();
             }
-            _rt_param.allocate_device(1);
-            _rt_param.synchronize_to_device();
         }
 
         void WavefrontPT::init_aggregate() {
