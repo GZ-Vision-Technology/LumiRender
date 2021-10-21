@@ -138,6 +138,8 @@ namespace luminous {
             LM_NODISCARD std::pair<ptr_t, size_t> get_global_var(const std::string &name) override;
 
             LM_NODISCARD SP<KernelOld> get_kernel(const std::string &name) override;
+
+            virtual void upload_data_to_global_var(const std::string &name, const void *data, size_t size) override;
         };
 
         inline SP<Module> create_cuda_module(const std::string &ptx_code) {

@@ -266,5 +266,13 @@ namespace luminous {
             return {ptr, size};
         }
 
+        void CUDAModule::upload_data_to_global_var(const std::string &name, const void *data, size_t size) {
+            CUdeviceptr ptr{};
+            size_t size2{};
+            CU_CHECK(cuModuleGetGlobal(&ptr, &size2, _module, name.c_str()));
+            DCHECK(size == size2);
+            CU_CHECK(cuMemcpyHtoD(ptr, data, size));
+        }
+
     }
 }

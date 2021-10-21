@@ -14,11 +14,11 @@ namespace luminous {
     inline namespace render {
 
 
-        GLOBAL_PREFIX RTParam rt_param;
+        GLOBAL_PREFIX RTParam *rt_param;
 
-        void set_rt_param(RTParam param) {
+        CPU_ONLY(void set_rt_param(RTParam *param) {
             rt_param = param;
-        }
+        })
 
         void generate_primary_ray(int task_id, int n_item, RayQueue *ray_queue, const Sampler *sampler,
                                   SOA<PixelSampleState> *pixel_sample_state) {

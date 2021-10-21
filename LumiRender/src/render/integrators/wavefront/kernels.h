@@ -15,14 +15,15 @@ namespace luminous {
         struct RTParam {
             Sampler *sampler;
             Sensor *camera;
+            int frame_index;
 
             RTParam() = default;
 
-            RTParam(Sampler *sampler, Sensor *camera)
-                    : sampler(sampler), camera(camera) {}
+            RTParam(Sampler *sampler, Sensor *camera, int frame_index)
+                    : sampler(sampler), camera(camera), frame_index(frame_index) {}
         };
 
-        void set_rt_param(RTParam param);
+        CPU_ONLY(void set_rt_param(RTParam *param);)
 
         LM_XPU void generate_primary_ray(int task_id, int n_item, RayQueue *ray_queue, const Sampler *sampler,
                                          SOA<PixelSampleState> *pixel_sample_state);

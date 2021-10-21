@@ -32,7 +32,7 @@ namespace luminous {
             // base params
             int _scanline_per_pass{};
             int _max_queue_size{};
-            int _frame_index{};
+            Managed<RTParam> _rt_param{_device};
 
 #define DEFINE_KERNEL(arg) Kernel<decltype(&(arg))> _##arg{arg};
             // kernels
@@ -50,7 +50,7 @@ namespace luminous {
 
             std::shared_ptr<Module> _module;
 
-            Managed<RTParam> _rt_param{_device};
+
         public:
 
             WavefrontPT(Device *device, Context *context);
@@ -67,14 +67,15 @@ namespace luminous {
 
             void allocate_memory();
 
-            LM_NODISCARD uint frame_index() const override { return _frame_index; }
+            LM_NODISCARD uint frame_index() const override { return _rt_param->frame_index; }
 
             void intersect_closest(int wavefront_depth);
 
             void trace_shadow_ray(int wavefront_depth);
 
             void update() override {
-
+                _rt_param->frame_index += 1;
+                _rt_param.synchronize_to_device();
             }
 
             RayQueue *current_ray_queue(int wavefrontDepth) {
