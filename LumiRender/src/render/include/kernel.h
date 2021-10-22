@@ -39,9 +39,9 @@ namespace luminous {
             }
 
             template<typename TIndex, typename TCount, typename ...Args>
-            void cpu_launch(TIndex _, TCount n_item, Args &&...args) const {
-                async(n_item, [&, n_item](uint idx, uint tid) {
-                    _func(idx, n_item, std::forward<Args>(args)...);
+            void cpu_launch(TIndex _, TCount n_item, Args ...args) const {
+                async(n_item, [=](uint idx, uint tid) {
+                    _func(idx, n_item, args...);
                 });
             }
 

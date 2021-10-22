@@ -1,33 +1,35 @@
-#define _CRTDBG_MAP_ALLOC // Do not include <malloc.h>
-#include "crtdbg.h"
-#include <malloc.h>
-#ifdef _DEBUG
-#define DEBUG_NEW   new( _NORMAL_BLOCK, __FILE__, __LINE__)
-#else
-#define DEBUG_NEW
-#endif
+#include "util/parallel.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
+#include "iostream"
 
-class mem_leak {
+using namespace luminous;
 
-public:
-    mem_leak() {
-        p = malloc(100);
-    }
+using namespace std;
 
-private:
-    void *p;
+struct A {
+
 };
 
-mem_leak g_a;
+void func(const A *p1, A *p2) {
+    printf("p1 = %p, p2 = %p\n", p1, p2);
+}
+
+template<typename ...Args>
+void func2(Args&&...args) {
+    auto l = [&](uint ,uint) {
+        func(std::forward<Args>(args)...);
+    };
+
+    l(0,0);
+    luminous::parallel_for(1000, [&](uint ,uint) {
+        func(std::forward<Args>(args)...);
+    });
+}
 
 int main() {
 
-    int flags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
-    _CrtSetDbgFlag(flags | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
+    auto pa = new A;
 
-    int *a = new int[4];
+    func2(pa, pa);
+
 }

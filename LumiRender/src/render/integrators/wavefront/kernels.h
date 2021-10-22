@@ -25,7 +25,7 @@ namespace luminous {
 
         CPU_ONLY(void set_rt_param(RTParam *param);)
 
-        LM_XPU void generate_primary_ray(int task_id, int n_item,int y0, RayQueue *ray_queue, Sampler *_sampler,
+        LM_XPU void generate_primary_ray(int task_id, int n_item,int y0, RayQueue *ray_queue, const Sampler *_sampler,
                                          SOA<PixelSampleState> *pixel_sample_state);
 
         LM_XPU void reset_ray_queue(int task_id, int n_item, RayQueue *ray_queue);

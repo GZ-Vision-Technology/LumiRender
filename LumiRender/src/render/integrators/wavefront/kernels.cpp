@@ -22,7 +22,7 @@ namespace luminous {
         })
 
         void generate_primary_ray(int task_id, int n_item, int y0,
-                                  RayQueue *ray_queue, Sampler *_sampler,
+                                  RayQueue *ray_queue, const Sampler *_sampler,
                                   SOA<PixelSampleState> *pixel_sample_state) {
             Sampler sampler = *_sampler;
             printf("%f\n", sampler.next_1d());
