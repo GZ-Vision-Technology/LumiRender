@@ -10,6 +10,8 @@
 #include <core/concepts.h>
 #include <core/platform.h>
 
+namespace fs = std::filesystem;
+
 namespace luminous {
 
     template<typename T>

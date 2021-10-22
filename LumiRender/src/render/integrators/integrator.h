@@ -39,6 +39,7 @@ namespace luminous {
 
             virtual void init_on_device() {
                 _sampler.allocate_device(1);
+                _sampler.synchronize_to_device();
             }
 
             LM_NODISCARD const SceneData *scene_data() const;

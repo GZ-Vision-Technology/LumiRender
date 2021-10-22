@@ -74,6 +74,7 @@ namespace luminous {
             void update() override {
                 _rt_param->frame_index += 1;
                 _rt_param.synchronize_to_device();
+                _camera.synchronize_all_to_device();
             }
 
             RayQueue *current_ray_queue(int wavefrontDepth) {
