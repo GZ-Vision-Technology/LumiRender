@@ -101,20 +101,20 @@ namespace luminous {
                 float2 u{};
                 float uc{}, rr{};
             } indirect;
-            RaySampleFlag flag;
+            RaySampleFlag flag{};
         };
 
         LUMINOUS_SOA(RaySamples, direct, indirect, flag)
 
         struct RayWorkItem {
             Ray ray;
-            int depth;
-            int pixel_index;
+            int depth{};
+            int pixel_index{};
             Spectrum throughput;
             LightSampleContext prev_lsc;
-            float eta_scale;
-            bool specular_bounce;
-            bool any_non_specular_bounces;
+            float eta_scale{};
+            bool specular_bounce{};
+            bool any_non_specular_bounces{};
         };
 
         LUMINOUS_SOA(RayWorkItem, ray, depth, pixel_index, throughput,
@@ -162,10 +162,10 @@ namespace luminous {
         struct EscapedRayWorkItem {
             float3 ray_o;
             float3 ray_d;
-            int depth;
-            int pixel_index;
+            int depth{};
+            int pixel_index{};
             Spectrum throughput;
-            int specular_bounce;
+            int specular_bounce{};
             LightSampleContext prev_lsc;
         };
 
@@ -186,16 +186,16 @@ namespace luminous {
         class Light;
 
         struct HitAreaLightWorkItem {
-            Light *light;
+            Light *light{};
             float3 pos;
             float3 ng;
             float2 uv;
             float3 wo;
-            int depth;
+            int depth{};
             Spectrum throughput;
             LightSampleContext prev_lsc;
-            int specular_bounce;
-            int pixel_index;
+            int specular_bounce{};
+            int pixel_index{};
         };
 
         LUMINOUS_SOA(HitAreaLightWorkItem, light, pos, ng, uv, wo, depth,
