@@ -3,6 +3,7 @@
 //
 
 #include "kernels.h"
+#include "render/samplers/shader_include.h"
 
 #ifdef __CUDACC__
 #define GLOBAL_PREFIX extern "C" __constant__
@@ -21,9 +22,10 @@ namespace luminous {
         })
 
         void generate_primary_ray(int task_id, int n_item, int y0,
-                                  RayQueue *ray_queue, const Sampler *sampler,
+                                  RayQueue *ray_queue, Sampler *_sampler,
                                   SOA<PixelSampleState> *pixel_sample_state) {
-            printf("%d\n", task_id);
+            Sampler sampler = *_sampler;
+            printf("%f\n", sampler.next_1d());
         }
 
         void reset_ray_queue(int task_id, int n_item, RayQueue *ray_queue) {

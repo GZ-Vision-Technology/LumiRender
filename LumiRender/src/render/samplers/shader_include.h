@@ -10,5 +10,6 @@
     #include "sampler.cpp"
     #include "independent.cpp"
 #else
-    #error "this file just for cuda shader include"
+    #include "sampler.h"
+    #include "independent.h"
 #endif
