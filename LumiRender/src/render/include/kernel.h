@@ -22,12 +22,15 @@ namespace luminous {
 
             // for cuda backend
             CUfunction _cu_func{};
-            uint3 _grid_size = make_uint3(1);
-            uint3 _block_size = make_uint3(5);
+            uint3 _grid_size = {};
+            uint3 _block_size = {};
             int _auto_block_size = 0;
-            int _min_grid_size = 0;
             size_t _shared_mem = 1024;
         private:
+
+            LM_NODISCARD bool has_configure() const {
+                return is_zero(_grid_size);
+            }
 
             template<typename Ret, typename...Args, size_t...Is>
             void check_signature(Ret(*f)(Args...), std::index_sequence<Is...>) {
@@ -42,13 +45,23 @@ namespace luminous {
                 });
             }
 
-            template<typename ...Args>
-            void cuda_launch(Dispatcher &dispatcher, Args &&...args) {
-                void *array[]{(&args)...};
+            template<typename TIndex, typename TCount, typename ...Args>
+            void cuda_launch(Dispatcher &dispatcher, TIndex idx, TCount n_item, Args &&...args) {
+                void *array[]{&idx, &n_item, (&args)...};
                 auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-                CU_CHECK(cuLaunchKernel(_cu_func, _grid_size.x, _grid_size.y, _grid_size.z,
-                                        _block_size.x, _block_size.y, _block_size.z,
+                uint3 grid_size = make_uint3(1);
+                uint3 block_size = make_uint3(1);
+                if (has_configure()) {
+                    grid_size = _grid_size;
+                    block_size = _block_size;
+                } else {
+                    grid_size.x = (n_item + _auto_block_size - 1) / _auto_block_size;;
+                    block_size.x = _auto_block_size;
+                }
+                CU_CHECK(cuLaunchKernel(_cu_func, grid_size.x, grid_size.y, grid_size.z,
+                                        block_size.x, block_size.y, block_size.z,
                                         _shared_mem, stream, array, nullptr));
+
             }
 
             template<typename...Args>
@@ -78,7 +91,8 @@ namespace luminous {
                 if (on_cpu()) {
                     return;
                 }
-                cuOccupancyMaxPotentialBlockSize(&_min_grid_size, &_auto_block_size,
+                int min_grid_size;
+                cuOccupancyMaxPotentialBlockSize(&min_grid_size, &_auto_block_size,
                                                  _cu_func, 0, _shared_mem, 0);
             }
 
@@ -95,6 +109,7 @@ namespace luminous {
 
             void set_cu_function(uint64_t handle) {
                 _cu_func = reinterpret_cast<CUfunction>(handle);
+                compute_fit_size();
             }
 
             /**
