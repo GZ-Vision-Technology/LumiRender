@@ -20,9 +20,10 @@ namespace luminous {
             rt_param = param;
         })
 
-        void generate_primary_ray(int task_id, int n_item, RayQueue *ray_queue, const Sampler *sampler,
+        void generate_primary_ray(int task_id, int n_item, int y0,
+                                  RayQueue *ray_queue, const Sampler *sampler,
                                   SOA<PixelSampleState> *pixel_sample_state) {
-
+            printf("%d\n", task_id);
         }
 
         void reset_ray_queue(int task_id, int n_item, RayQueue *ray_queue) {

@@ -29,7 +29,7 @@ namespace luminous {
         private:
 
             LM_NODISCARD bool has_configure() const {
-                return is_zero(_grid_size);
+                return all(_grid_size != make_uint3(0u));
             }
 
             template<typename Ret, typename...Args, size_t...Is>
@@ -41,7 +41,7 @@ namespace luminous {
             template<typename TIndex, typename TCount, typename ...Args>
             void cpu_launch(TIndex _, TCount n_item, Args &&...args) const {
                 async(n_item, [&, n_item](uint idx, uint tid) {
-                    _func(0, n_item, std::forward<Args>(args)...);
+                    _func(idx, n_item, std::forward<Args>(args)...);
                 });
             }
 

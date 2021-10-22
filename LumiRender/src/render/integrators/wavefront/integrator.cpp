@@ -61,7 +61,10 @@ namespace luminous {
         void WavefrontPT::render_per_sample(int sample_idx) {
             auto res = _camera->resolution();
             for (int y0 = 0; y0 < res.y; y0 += _scanline_per_pass) {
-//                _generate_primary_ray.launch()
+                _generate_primary_ray.launch(_dispatcher, _max_queue_size,y0,
+                                             _ray_queues.device_data(),_sampler.device_data(),
+                                             _pixel_sample_state.device_data());
+                _dispatcher.wait();
             }
         }
 
