@@ -3,7 +3,7 @@
 //
 
 #include "integrator.h"
-#include "cpu/accel/embree_aggregate.h"
+#include "embree_aggregate.h"
 #include "gpu/accel/optix_aggregate.h"
 
 extern "C" char wavefront_kernels[];

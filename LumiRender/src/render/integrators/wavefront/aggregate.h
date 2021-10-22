@@ -25,13 +25,13 @@ namespace luminous {
                                            EscapedRayQueue *escaped_ray_queue,
                                            HitAreaLightQueue *hit_area_light_queue,
                                            MaterialEvalQueue *material_eval_queue,
-                                           RayQueue *next_ray_queue) = 0;
+                                           RayQueue *next_ray_queue) const = 0;
 
             virtual void intersect_any(int max_rays, ShadowRayQueue *shadow_ray_queue,
-                                       SOA<PixelSampleState> *pixel_sample_state) = 0;
+                                       SOA<PixelSampleState> *pixel_sample_state) const = 0;
 
             virtual void intersect_any_tr(int max_rays, ShadowRayQueue *shadow_ray_queue,
-                                          SOA<PixelSampleState> *pixel_sample_state) = 0;
+                                          SOA<PixelSampleState> *pixel_sample_state) const = 0;
 
             virtual ~WavefrontAggregate() = default;
         };

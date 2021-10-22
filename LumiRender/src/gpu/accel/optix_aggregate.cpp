@@ -35,17 +35,17 @@ namespace luminous {
                                                EscapedRayQueue *escaped_ray_queue,
                                                HitAreaLightQueue *hit_area_light_queue,
                                                MaterialEvalQueue *material_eval_queue,
-                                               RayQueue *next_ray_queue) {
+                                               RayQueue *next_ray_queue) const {
 
         }
 
         void OptixAggregate::intersect_any(int max_rays, ShadowRayQueue *shadow_ray_queue,
-                                           SOA<PixelSampleState> *pixel_sample_state) {
+                                           SOA<PixelSampleState> *pixel_sample_state) const {
 
         }
 
         void OptixAggregate::intersect_any_tr(int max_rays, ShadowRayQueue *shadow_ray_queue,
-                                              SOA<PixelSampleState> *pixel_sample_state) {
+                                              SOA<PixelSampleState> *pixel_sample_state) const {
 
         }
 
