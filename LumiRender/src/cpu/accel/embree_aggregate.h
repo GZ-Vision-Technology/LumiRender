@@ -11,8 +11,6 @@
 namespace luminous {
     inline namespace cpu {
         class EmbreeAggregate : public EmbreeAccel, public WavefrontAggregate {
-        private:
-
         public:
             EmbreeAggregate(Device *device, Context *context, const Scene *scene);
 

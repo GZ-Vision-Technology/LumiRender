@@ -11,8 +11,16 @@
 
 namespace luminous {
     inline namespace render {
+
+        class SceneData;
+
         class WavefrontAggregate : public Noncopyable {
+        protected:
+            const SceneData *_scene_data;
         public:
+            explicit WavefrontAggregate(const SceneData *scene_data)
+                    : _scene_data(scene_data) {}
+
             virtual void intersect_closest(int max_rays, const RayQueue *ray_queue,
                                            EscapedRayQueue *escaped_ray_queue,
                                            HitAreaLightQueue *hit_area_light_queue,
