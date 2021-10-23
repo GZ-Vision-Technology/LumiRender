@@ -67,8 +67,12 @@ namespace luminous {
                 _dispatcher.wait();
 
                 for (int depth = 0; true; ++depth) {
-                    RayQueue *next_ray_queue = _next_ray_queue(depth);
-
+                    reset_queues(depth);
+                    RayQueue *cur_ray_queue = _current_ray_queue(depth);
+                    _generate_ray_samples.launch(_dispatcher, _max_queue_size,
+                                                 sample_idx, cur_ray_queue,
+                                                 _pixel_sample_state.device_data());
+                    _dispatcher.wait();
                 }
             }
         }
@@ -81,9 +85,16 @@ namespace luminous {
         }
 
         void WavefrontPT::reset_queues(int depth) {
-            RayQueue *next_ray_queue = _next_ray_queue(depth);
-            next_ray_queue->reset();
+            _reset_next_ray_queue(depth);
 
+            _escaped_ray_queue->reset();
+            _escaped_ray_queue.synchronize_to_device();
+
+            _hit_area_light_queue->reset();
+            _hit_area_light_queue.synchronize_to_device();
+
+            _material_eval_queue->reset();
+            _material_eval_queue.synchronize_to_device();
         }
 
         void WavefrontPT::init_kernels() {
@@ -93,7 +104,6 @@ namespace luminous {
 
 #define SET_CU_FUNC(arg) _##arg.set_cu_function(_module->get_kernel_handle("kernel_"#arg));
             SET_CU_FUNC(generate_primary_ray);
-            SET_CU_FUNC(reset_ray_queue);
             SET_CU_FUNC(generate_ray_samples);
             SET_CU_FUNC(process_escape_ray);
             SET_CU_FUNC(process_emission);

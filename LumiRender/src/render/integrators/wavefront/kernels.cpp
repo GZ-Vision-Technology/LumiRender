@@ -50,9 +50,23 @@ namespace luminous {
 
         }
 
-        void generate_ray_samples(int task_id, int n_item, const RayQueue *ray_queue,
+        void generate_ray_samples(int task_id, int n_item, int sample_index,
+                                  const RayQueue *ray_queue,
                                   SOA<PixelSampleState> *pixel_sample_state) {
+            Sampler sampler = *(rt_param->sampler);
+            RayWorkItem item = (*ray_queue)[task_id];
+            uint2 pixel = pixel_sample_state->pixel[item.pixel_index];
+            int dimension = 5 + 7 * item.depth;
+            sampler.start_pixel_sample(pixel, sample_index, dimension);
 
+            RaySamples ray_samples;
+            ray_samples.direct.uc = sampler.next_1d();
+            ray_samples.direct.u = sampler.next_2d();
+            ray_samples.indirect.uc = sampler.next_1d();
+            ray_samples.indirect.u = sampler.next_2d();
+            ray_samples.indirect.rr = sampler.next_1d();
+
+            pixel_sample_state->ray_samples[item.pixel_index] = ray_samples;
         }
 
         void process_escape_ray(int task_id, int n_item,

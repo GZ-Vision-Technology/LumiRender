@@ -33,10 +33,12 @@ GLOBAL kernel_reset_queues(int task_id, int n_item, RayQueue *ray_queue,
                  escaped_ray_queue, material_eval_queue);
 }
 
-GLOBAL kernel_generate_ray_samples(int task_id, int n_item, const RayQueue *ray_queue,
+GLOBAL kernel_generate_ray_samples(int task_id, int n_item, int sample_index, const RayQueue *ray_queue,
                                    SOA<PixelSampleState> *pixel_sample_state) {
     task_id = task_id_g3_b3();
-    generate_ray_samples(task_id, n_item, ray_queue, pixel_sample_state);
+    if (task_id < n_item) {
+        generate_ray_samples(task_id, n_item, sample_index ,ray_queue, pixel_sample_state);
+    }
 }
 
 GLOBAL kernel_process_escape_ray(int task_id, int n_item,

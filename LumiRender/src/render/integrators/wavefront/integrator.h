@@ -37,7 +37,6 @@ namespace luminous {
 #define DEFINE_KERNEL(arg) Kernel<decltype(&(arg))> _##arg{arg};
             // kernels
             DEFINE_KERNEL(generate_primary_ray);
-            DEFINE_KERNEL(reset_ray_queue);
             DEFINE_KERNEL(generate_ray_samples);
             DEFINE_KERNEL(process_escape_ray);
             DEFINE_KERNEL(process_emission);
@@ -49,16 +48,28 @@ namespace luminous {
 
             std::shared_ptr<Module> _module;
         private:
-            LM_NODISCARD int cur_index(int depth) const { return depth & 1; }
+            LM_NODISCARD static int _cur_index(int depth) { return depth & 1; }
 
-            LM_NODISCARD int next_index(int depth) const { return (depth + 1) & 1; }
+            LM_NODISCARD static int _next_index(int depth) { return (depth + 1) & 1; }
 
             LM_NODISCARD RayQueue *_current_ray_queue(int depth) {
-                return _ray_queues.device_buffer().address<RayQueue *>(depth & 1);
+                return _ray_queues.device_buffer().address<RayQueue *>(_cur_index(depth));
             }
 
             LM_NODISCARD RayQueue *_next_ray_queue(int depth) {
-                return _ray_queues.device_buffer().address<RayQueue *>((depth + 1) & 1);
+                return _ray_queues.device_buffer().address<RayQueue *>(_next_index(depth));
+            }
+
+            void _reset_cur_ray_queue(int depth) {
+                RayQueue *current_ray_queue = _current_ray_queue(depth);
+                current_ray_queue->reset();
+                _ray_queues.synchronize_to_device(_cur_index(depth), 1);
+            }
+
+            void _reset_next_ray_queue(int depth) {
+                RayQueue *next_ray_queue = _next_ray_queue(depth);
+                next_ray_queue->reset();
+                _ray_queues.synchronize_to_device(_next_index(depth), 1);
             }
         public:
 

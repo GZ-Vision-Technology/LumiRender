@@ -236,9 +236,9 @@ namespace luminous {
             Spectrum L;
             float filter_weight{};
             Spectrum sensor_ray_weight;
-            RaySamples samples;
+            RaySamples ray_samples;
         };
 
-        LUMINOUS_SOA(PixelSampleState, pixel, L, filter_weight, sensor_ray_weight, samples)
+        LUMINOUS_SOA(PixelSampleState, pixel, L, filter_weight, sensor_ray_weight, ray_samples)
     }
 }
