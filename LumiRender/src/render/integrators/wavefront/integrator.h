@@ -37,7 +37,6 @@ namespace luminous {
 #define DEFINE_KERNEL(arg) Kernel<decltype(&(arg))> _##arg{arg};
             // kernels
             DEFINE_KERNEL(generate_primary_ray);
-            DEFINE_KERNEL(reset_queues);
             DEFINE_KERNEL(reset_ray_queue);
             DEFINE_KERNEL(generate_ray_samples);
             DEFINE_KERNEL(process_escape_ray);
@@ -49,11 +48,25 @@ namespace luminous {
             WavefrontAggregate *_aggregate{};
 
             std::shared_ptr<Module> _module;
+        private:
+            LM_NODISCARD int cur_index(int depth) const { return depth & 1; }
+
+            LM_NODISCARD int next_index(int depth) const { return (depth + 1) & 1; }
+
+            LM_NODISCARD RayQueue *_current_ray_queue(int depth) {
+                return _ray_queues.device_buffer().address<RayQueue *>(depth & 1);
+            }
+
+            LM_NODISCARD RayQueue *_next_ray_queue(int depth) {
+                return _ray_queues.device_buffer().address<RayQueue *>((depth + 1) & 1);
+            }
         public:
 
             WavefrontPT(Device *device, Context *context);
 
             void init(const shared_ptr<SceneGraph> &scene_graph) override;
+
+            void reset_queues(int depth);
 
             void init_aggregate();
 
@@ -75,14 +88,6 @@ namespace luminous {
                 _rt_param->frame_index += 1;
                 _rt_param.synchronize_to_device();
                 _camera.synchronize_all_to_device();
-            }
-
-            RayQueue *current_ray_queue(int wavefrontDepth) {
-                return _ray_queues.device_buffer().address<RayQueue *>(wavefrontDepth & 1);
-            }
-
-            RayQueue *next_ray_queue(int wavefrontDepth) {
-                return _ray_queues.device_buffer().address<RayQueue *>((wavefrontDepth + 1) & 1);
             }
 
             void render() override;

@@ -213,6 +213,7 @@
 //		}
 	],
 	"integrator" : {
+//		"type" : "WavefrontPT",
 		"type" : "PT",
 		"param" : {
 			"max_depth" : 3,

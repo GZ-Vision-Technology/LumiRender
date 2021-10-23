@@ -65,6 +65,11 @@ namespace luminous {
                                              _ray_queues.device_data(),
                                              _pixel_sample_state.device_data());
                 _dispatcher.wait();
+
+                for (int depth = 0; true; ++depth) {
+                    RayQueue *next_ray_queue = _next_ray_queue(depth);
+
+                }
             }
         }
 
@@ -75,6 +80,12 @@ namespace luminous {
             }
         }
 
+        void WavefrontPT::reset_queues(int depth) {
+            RayQueue *next_ray_queue = _next_ray_queue(depth);
+            next_ray_queue->reset();
+
+        }
+
         void WavefrontPT::init_kernels() {
             if (_device->is_cpu()) {
                 return;
@@ -83,7 +94,6 @@ namespace luminous {
 #define SET_CU_FUNC(arg) _##arg.set_cu_function(_module->get_kernel_handle("kernel_"#arg));
             SET_CU_FUNC(generate_primary_ray);
             SET_CU_FUNC(reset_ray_queue);
-            SET_CU_FUNC(reset_queues);
             SET_CU_FUNC(generate_ray_samples);
             SET_CU_FUNC(process_escape_ray);
             SET_CU_FUNC(process_emission);
@@ -113,11 +123,11 @@ namespace luminous {
         }
 
         void WavefrontPT::intersect_closest(int wavefront_depth) {
-            _aggregate->intersect_closest(_max_queue_size, current_ray_queue(wavefront_depth),
+            _aggregate->intersect_closest(_max_queue_size, _current_ray_queue(wavefront_depth),
                                           _escaped_ray_queue.device_data(),
                                           _hit_area_light_queue.device_data(),
                                           _material_eval_queue.device_data(),
-                                          next_ray_queue(wavefront_depth));
+                                          _next_ray_queue(wavefront_depth));
         }
 
         void WavefrontPT::trace_shadow_ray(int wavefront_depth) {

@@ -173,18 +173,20 @@ namespace luminous {
             return BaseClass::data();
         }
 
-        void synchronize_to_device() {
+        void synchronize_to_device(size_t offset = 0, size_t count = -1) {
             if (BaseClass::size() == 0) {
                 return;
             }
-            _device_buffer.upload(BaseClass::data());
+            count = fix_count(offset, count, BaseClass::size());
+            _device_buffer.upload(BaseClass::data(), count, offset);
         }
 
-        void synchronize_to_host() {
+        void synchronize_to_host(size_t offset = 0, size_t count = -1) {
             if (BaseClass::size() == 0) {
                 BaseClass::resize(_device_buffer.size());
             }
-            _device_buffer.download(BaseClass::data());
+            count = fix_count(offset, count, BaseClass::size());
+            _device_buffer.download(BaseClass::data(), count, offset);
         }
     };
 }
