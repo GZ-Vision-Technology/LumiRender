@@ -9,11 +9,12 @@
 
 using namespace luminous;
 
-GLOBAL kernel_generate_primary_ray(int task_id, int n_item, int y0, RayQueue *ray_queue, Sampler *sampler,
-                                   SOA<PixelSampleState> *pixel_sample_state) {
+GLOBAL kernel_generate_primary_ray(int task_id, int n_item, int y0, int sample_index,
+                                   RayQueue *ray_queue, SOA<PixelSampleState> *pixel_sample_state) {
     task_id = task_id_g3_b3();
     if (task_id < n_item) {
-        generate_primary_ray(task_id, n_item, y0, ray_queue, sampler, pixel_sample_state);
+        generate_primary_ray(task_id, n_item, y0, sample_index,
+                             ray_queue, pixel_sample_state);
     }
 }
 

@@ -7,6 +7,7 @@
 
 #include "gpu/shaders/optix_util.h"
 #include "render/integrators/wavefront/params.h"
+#include "render/integrators/wavefront/process_queue.cpp"
 
 #define GLOBAL extern "C" __global__ void
 
