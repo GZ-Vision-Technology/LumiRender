@@ -91,7 +91,7 @@ namespace luminous {
 
             LM_NODISCARD uint frame_index() const override { return _rt_param->frame_index; }
 
-            void intersect_closest(int wavefront_depth);
+            void intersect_closest(int depth);
 
             void trace_shadow_ray(int wavefront_depth);
 

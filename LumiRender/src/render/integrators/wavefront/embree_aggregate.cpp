@@ -34,7 +34,8 @@ namespace luminous {
                                                 HitAreaLightQueue *hit_area_light_queue,
                                                 MaterialEvalQueue *material_eval_queue,
                                                 RayQueue *next_ray_queue) const {
-            parallel_for(ray_queue->size(), [=](uint task_id, uint tid) {
+            cout << "wocaonima" << endl;
+            series(ray_queue->size(), [=](uint task_id, uint tid) {
                 RayWorkItem ray_work_item = (*ray_queue)[task_id];
                 auto op_si = _intersect_closest(ray_work_item.ray);
                 if (op_si) {

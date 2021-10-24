@@ -97,6 +97,12 @@ namespace luminous {
             std::call_once(flag, [&]() { pool = std::make_unique<ParallelForWorkPool>(); });
         }
 
+        void series(int count, const std::function<void(uint32_t, uint32_t)> &func) {
+            for (int i = 0; i < count; ++i) {
+                func(i, 0);
+            }
+        }
+
         void async(int count, const std::function<void(uint32_t, uint32_t)> &func, size_t chunk_size) {
             using namespace thread_internal;
             init_thread_pool();

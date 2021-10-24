@@ -35,6 +35,7 @@ namespace luminous {
                                                    r.specular_bounce,
                                                    r.any_non_specular_bounces,
                                                    r.pixel_index);
+                return;
             }
 
             if (si.has_emission()) {

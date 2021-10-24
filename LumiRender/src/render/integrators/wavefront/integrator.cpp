@@ -67,12 +67,14 @@ namespace luminous {
                 _dispatcher.wait();
 
                 for (int depth = 0; true; ++depth) {
-                    reset_queues(depth);
-                    RayQueue *cur_ray_queue = _current_ray_queue(depth);
-                    _generate_ray_samples.launch(_dispatcher, _max_queue_size,
-                                                 sample_idx, cur_ray_queue,
-                                                 _pixel_sample_state.device_data());
-                    _dispatcher.wait();
+//                    reset_queues(depth);
+//                    RayQueue *cur_ray_queue = _current_ray_queue(depth);
+//                    _generate_ray_samples.launch(_dispatcher, _max_queue_size,
+//                                                 sample_idx, cur_ray_queue,
+//                                                 _pixel_sample_state.device_data());
+//                    _dispatcher.wait();
+
+                    intersect_closest(depth);
                 }
             }
         }
@@ -132,12 +134,17 @@ namespace luminous {
             _aggregate = _scene->accel<WavefrontAggregate>();
         }
 
-        void WavefrontPT::intersect_closest(int wavefront_depth) {
-            _aggregate->intersect_closest(_max_queue_size, _current_ray_queue(wavefront_depth),
-                                          _escaped_ray_queue.device_data(),
-                                          _hit_area_light_queue.device_data(),
-                                          _material_eval_queue.device_data(),
-                                          _next_ray_queue(wavefront_depth));
+        void WavefrontPT::intersect_closest(int depth) {
+            auto rq = _current_ray_queue(depth);
+            auto eq = _escaped_ray_queue.device_data();
+            auto hq = _hit_area_light_queue.device_data();
+            auto mq = _material_eval_queue.device_data();
+            auto nrq = _next_ray_queue(depth);
+            _aggregate->intersect_closest(_max_queue_size, rq,
+                                          eq,
+                                          hq,
+                                          mq,
+                                          nrq);
         }
 
         void WavefrontPT::trace_shadow_ray(int wavefront_depth) {

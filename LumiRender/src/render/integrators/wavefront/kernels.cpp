@@ -38,25 +38,13 @@ namespace luminous {
             ray_queue->push_primary_ray(ray, task_id);
         }
 
-        void reset_ray_queue(int task_id, int n_item, RayQueue *ray_queue) {
-            ray_queue->reset();
-        }
-
-        void reset_queues(int task_id, int n_item, RayQueue *ray_queue,
-                          HitAreaLightQueue *hit_area_light_queue,
-                          ShadowRayQueue *shadow_ray_queue,
-                          EscapedRayQueue *escaped_ray_queue,
-                          MaterialEvalQueue *material_eval_queue) {
-
-        }
-
         void generate_ray_samples(int task_id, int n_item, int sample_index,
                                   const RayQueue *ray_queue,
                                   SOA<PixelSampleState> *pixel_sample_state) {
             Sampler sampler = *(rt_param->sampler);
             RayWorkItem item = (*ray_queue)[task_id];
             uint2 pixel = pixel_sample_state->pixel[item.pixel_index];
-            int dimension = 5 + 7 * item.depth;
+            int dimension = sampler.compute_dimension(item.depth);
             sampler.start_pixel_sample(pixel, sample_index, dimension);
 
             RaySamples ray_samples;

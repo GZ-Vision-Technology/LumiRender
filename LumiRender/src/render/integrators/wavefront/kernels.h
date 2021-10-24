@@ -28,14 +28,6 @@ namespace luminous {
         LM_XPU void generate_primary_ray(int task_id, int n_item, int y0, int sample_index,
                                          RayQueue *ray_queue, SOA<PixelSampleState> *pixel_sample_state);
 
-        LM_XPU void reset_ray_queue(int task_id, int n_item, RayQueue *ray_queue);
-
-        LM_XPU void reset_queues(int task_id, int n_item, RayQueue *ray_queue,
-                                 HitAreaLightQueue *hit_area_light_queue,
-                                 ShadowRayQueue *shadow_ray_queue,
-                                 EscapedRayQueue *escaped_ray_queue,
-                                 MaterialEvalQueue *material_eval_queue);
-
         LM_XPU void generate_ray_samples(int task_id, int n_item, int sample_index,
                                          const RayQueue *ray_queue,
                                          SOA<PixelSampleState> *pixel_sample_state);

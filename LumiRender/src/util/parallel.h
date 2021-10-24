@@ -102,6 +102,8 @@ namespace luminous {
                     chunkSize);
         }
 
+        void series(int count, const std::function<void(uint32_t, uint32_t)> &func);
+
         void async(int count, const std::function<void(uint32_t, uint32_t)> &func, size_t chunkSize = 1);
 
 
