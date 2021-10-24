@@ -22,6 +22,10 @@ namespace luminous {
             return ss;
         }
 
+        int Sampler::compute_dimension(int depth) const {
+            LUMINOUS_VAR_DISPATCH(compute_dimension, depth)
+        }
+
         void Sampler::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
             LUMINOUS_VAR_DISPATCH(start_pixel_sample, pixel, sample_index, dimension)
         }

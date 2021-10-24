@@ -25,6 +25,8 @@ namespace luminous {
 
             LM_XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
+            LM_ND_XPU int compute_dimension(int depth) const;
+
             LM_NODISCARD LM_XPU float next_1d();
 
             LM_NODISCARD LM_XPU float2 next_2d();
@@ -46,6 +48,8 @@ namespace luminous {
             LM_XPU explicit PCGSampler(int spp = 1) : BaseBinder<SamplerBase>(spp) {}
 
             LM_XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
+
+            LM_ND_XPU int compute_dimension(int depth) const;
 
             LM_NODISCARD LM_XPU float next_1d();
 

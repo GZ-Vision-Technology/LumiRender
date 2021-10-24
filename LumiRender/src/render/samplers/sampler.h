@@ -30,6 +30,8 @@ namespace luminous {
 
             LM_XPU SensorSample sensor_sample(uint2 p_raster);
 
+            LM_ND_XPU int compute_dimension(int depth) const;
+
             GEN_TO_STRING_FUNC
 
             LM_ND_XPU float next_1d();
