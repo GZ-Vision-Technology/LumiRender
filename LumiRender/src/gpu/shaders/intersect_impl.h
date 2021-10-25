@@ -8,6 +8,7 @@
 #include "gpu/shaders/optix_util.h"
 #include "render/integrators/wavefront/params.h"
 #include "render/integrators/wavefront/process_queue.cpp"
+#include "render/integrators/wavefront/work_items.h"
 
 #define GLOBAL extern "C" __global__ void
 
@@ -17,10 +18,16 @@ params;
 }
 
 GLOBAL __raygen__find_closest() {
-    if (getLaunchIndex() >= params.ray_queue->size()) {
+    using namespace luminous;
+    int task_id = getLaunchIndex();
+    if (task_id >= params.ray_queue->size()) {
         return ;
     }
-
+    RayWorkItem r = (*params.ray_queue)[task_id];
+    Ray ray = r.ray;
+    PerRayData prd;
+    bool hit = traceClosestHit(params.traversable_handle, ray, &prd);
+    printf("%d \n", int(hit));
 }
 
 GLOBAL __raygen__occlusion() {

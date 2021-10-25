@@ -23,6 +23,7 @@ namespace luminous {
 
         void generate_primary_ray(int task_id, int n_item, int y0, int sample_index,
                                   RayQueue *ray_queue, SOA<PixelSampleState> *pixel_sample_state) {
+
             uint res_x = rt_param->camera->resolution().x;
             uint2 pixel = make_uint2(task_id % res_x, y0 + task_id / res_x);
             pixel_sample_state->pixel[task_id] = pixel;
@@ -34,7 +35,6 @@ namespace luminous {
             auto[weight, ray] = camera->generate_ray(ss);
             pixel_sample_state->L[task_id] = {0.f};
             pixel_sample_state->filter_weight[task_id] = 1.f;
-
             ray_queue->push_primary_ray(ray, task_id);
         }
 

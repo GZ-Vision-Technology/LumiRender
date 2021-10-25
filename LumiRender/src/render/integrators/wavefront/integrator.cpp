@@ -124,7 +124,8 @@ namespace luminous {
             if (_device->is_cpu()) {
                 set_rt_param(_rt_param.data());
             } else {
-                _module->upload_data_to_global_var("rt_param", _rt_param.device_data());
+                auto data = _rt_param.device_data();
+                _module->upload_data_to_global_var("rt_param", &data);
             }
         }
 
