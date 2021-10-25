@@ -15,6 +15,7 @@ namespace luminous {
         private:
             ShaderWrapper _intersect_closet;
             ShaderWrapper _intersect_any;
+            Managed<WavefrontParams, WavefrontParams> _params{_device};
         public:
             OptixAggregate(Device *device, Context *context, const Scene *scene);
 

@@ -75,6 +75,9 @@ namespace luminous {
                     _dispatcher.wait();
 
                     intersect_closest(depth);
+
+                    _process_escape_ray.launch(_dispatcher, _max_queue_size,
+                                               _escaped_ray_queue.device_data());
                 }
             }
         }

@@ -12,14 +12,16 @@
 namespace luminous {
     inline namespace render {
         struct WavefrontParams {
+        public:
             const RayQueue *ray_queue;
             RayQueue *next_ray_queue;
             uint64_t traversable_handle;
-            ShadowRayQueue *shadow_ray_queue;
             HitAreaLightQueue *hit_area_light_queue;
             EscapedRayQueue *escaped_ray_queue;
             MaterialEvalQueue *material_eval_queue;
             SOA <PixelSampleState> *pixel_sample_state;
+        public:
+            WavefrontParams() = default;
         };
     }
 }

@@ -29,7 +29,7 @@ namespace luminous {
 
             LM_NODISCARD RTCScene rtc_scene() const { return _rtc_scene; }
 
-            static RTCDevice rtc_device() { return _rtc_device; }
+            LM_NODISCARD static RTCDevice rtc_device() { return _rtc_device; }
 
             void clear() override {}
 
@@ -37,7 +37,7 @@ namespace luminous {
 
             LM_NODISCARD std::string description() const override;
 
-            RTCScene build_mesh(const Managed<float3> &positions,
+            LM_NODISCARD RTCScene build_mesh(const Managed<float3> &positions,
                                 const Managed<TriangleHandle> &triangles,
                                 const MeshHandle &mesh);
 
