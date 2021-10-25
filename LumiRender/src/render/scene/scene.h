@@ -94,8 +94,9 @@ namespace luminous {
             LM_NODISCARD uint64_t as_handle() const { return _accelerator->handle(); }
 
             template<typename TAccel>
-            LM_NODISCARD decltype(auto) accel() const {
-                return reinterpret_cast<TAccel *>(_accelerator.get());
+            LM_NODISCARD TAccel *accel() const {
+                DCHECK(dynamic_cast<TAccel *>(_accelerator.get()));
+                return dynamic_cast<TAccel *>(_accelerator.get());
             }
 
             void init_materials(const SP<SceneGraph> &scene_graph);
