@@ -3,8 +3,9 @@
 //
 
 #include "scene_data.h"
+#include "base_libs/sampling/distribution.h"
 #include "render/materials/material.h"
-#include "render/light_samplers/light_sampler.h"
+#include "render/light_samplers/shader_include.h"
 #include "render/textures/texture.h"
 
 namespace luminous {

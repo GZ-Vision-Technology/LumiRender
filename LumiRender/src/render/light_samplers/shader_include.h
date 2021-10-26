@@ -5,11 +5,10 @@
 
 #pragma once
 
-// this file just for cuda shader include
 #if defined(__CUDACC__)
     #include "uniform.cpp"
     #include "light_sampler.cpp"
     #include "light_sampler_base.cpp"
 #else
-    #error "this file just for cuda shader include"
+    #include "light_sampler.h"
 #endif
