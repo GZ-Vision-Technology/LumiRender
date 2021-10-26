@@ -61,13 +61,13 @@ namespace luminous {
             }
 
             void _reset_cur_ray_queue(int depth) {
-                RayQueue *current_ray_queue = _current_ray_queue(depth);
+                RayQueue *current_ray_queue = &_ray_queues[_cur_index(depth)];
                 current_ray_queue->reset();
                 _ray_queues.synchronize_to_device(_cur_index(depth), 1);
             }
 
             void _reset_next_ray_queue(int depth) {
-                RayQueue *next_ray_queue = _next_ray_queue(depth);
+                RayQueue *next_ray_queue = &_ray_queues[_next_index(depth)];
                 next_ray_queue->reset();
                 _ray_queues.synchronize_to_device(_next_index(depth), 1);
             }
