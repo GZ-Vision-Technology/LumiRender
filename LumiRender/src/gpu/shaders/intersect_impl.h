@@ -21,18 +21,25 @@ GLOBAL __raygen__find_closest() {
     using namespace luminous;
     int task_id = getLaunchIndex();
     if (task_id >= params.ray_queue->size()) {
-        return ;
+        return;
     }
     RayWorkItem r = (*params.ray_queue)[task_id];
     Ray ray = r.ray;
     PerRayData prd;
     bool hit = traceClosestHit(params.traversable_handle, ray, &prd);
-    printf("%d \n", int(hit));
+    if (hit) {
+        SurfaceInteraction si = prd.compute_surface_interaction(ray);
+        enqueue_item_after_intersect(r, si, params.next_ray_queue,
+                                     params.hit_area_light_queue,
+                                     params.material_eval_queue);
+    } else {
+        enqueue_item_after_miss(r, params.escaped_ray_queue);
+    }
 }
 
 GLOBAL __raygen__occlusion() {
     if (getLaunchIndex() >= params.ray_queue->size()) {
-        return ;
+        return;
     }
 }
 
@@ -49,7 +56,7 @@ GLOBAL __miss__any() {
 GLOBAL __closesthit__closest() {
     using namespace luminous;
     PerRayData *prd = getPRD();
-    const SceneData &data = getSbtData<SceneData>();
+    const auto &data = getSbtData<SceneData>();
     prd->data = &data;
     prd->hit_point = getClosestHit();
 }

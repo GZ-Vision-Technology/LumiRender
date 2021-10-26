@@ -3,6 +3,8 @@
 //
 
 #include "process_queue.h"
+#include "render/include/shader_include.h"
+#include "render/materials/shader_include.h"
 
 namespace luminous {
     inline namespace render {
