@@ -20,12 +20,12 @@ namespace luminous {
 
         class Image : public Noncopyable, public ImageBase {
         private:
-            std::filesystem::path _path;
+            luminous_fs::path _path;
             std::unique_ptr<const std::byte[]> _pixel;
         public:
             Image() = default;
 
-            Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res, const std::filesystem::path &path);
+            Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res, const luminous_fs::path &path);
 
             Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res);
 
@@ -38,16 +38,16 @@ namespace luminous {
 
             LM_NODISCARD bool is_32bit() const;
 
-            static Image load(const std::filesystem::path &fn, ColorSpace color_space);
+            static Image load(const luminous_fs::path &fn, ColorSpace color_space);
 
-            static Image load_hdr(const std::filesystem::path &fn, ColorSpace color_space);
+            static Image load_hdr(const luminous_fs::path &fn, ColorSpace color_space);
 
-            static Image load_exr(const std::filesystem::path &fn, ColorSpace color_space);
+            static Image load_exr(const luminous_fs::path &fn, ColorSpace color_space);
 
             /**
              * ".bmp" or ".png" or ".tga" or ".jpg" or ".jpeg"
              */
-            static Image load_other(const std::filesystem::path &fn, ColorSpace color_space);
+            static Image load_other(const luminous_fs::path &fn, ColorSpace color_space);
 
             void convert_to_32bit();
 
@@ -73,16 +73,16 @@ namespace luminous {
                 });
             }
 
-            void save_image(const std::filesystem::path &fn);
+            void save_image(const luminous_fs::path &fn);
 
-            void save_hdr(const std::filesystem::path &fn);
+            void save_hdr(const luminous_fs::path &fn);
 
-            void save_exr(const std::filesystem::path &fn);
+            void save_exr(const luminous_fs::path &fn);
 
             /**
              * ".bmp" or ".png" or ".tga" or ".jpg" or ".jpeg"
              */
-            void save_other(const std::filesystem::path &fn);
+            void save_other(const luminous_fs::path &fn);
         };
     } // luminous::utility
 } // luminous

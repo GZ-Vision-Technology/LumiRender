@@ -200,7 +200,7 @@ namespace luminous {
             _textures.reserve(_tex_configs.size());
             for (auto &tc : _tex_configs) {
                 if (tc.type() == type_name<ImageTexture>() && !tc.fn.empty()) {
-                    if (std::filesystem::path(tc.fn).is_relative()) {
+                    if (luminous_fs::path(tc.fn).is_relative()) {
                         auto path = _context->scene_path() / tc.fn;
                         tc.fn = path.string();
                     }

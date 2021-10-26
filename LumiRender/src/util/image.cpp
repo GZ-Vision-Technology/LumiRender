@@ -21,7 +21,7 @@ namespace luminous {
 
     inline namespace utility {
 
-        Image::Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res, const std::filesystem::path &path)
+        Image::Image(PixelFormat pixel_format, const std::byte *pixel, uint2 res, const luminous_fs::path &path)
                 : ImageBase(pixel_format, res),
                   _path(path) {
             _pixel.reset(pixel);
@@ -37,7 +37,7 @@ namespace luminous {
             _pixel = move(other._pixel);
         }
 
-        Image Image::load(const std::filesystem::path &path, ColorSpace color_space) {
+        Image Image::load(const luminous_fs::path &path, ColorSpace color_space) {
             auto extension = to_lower(path.extension().string());
             LUMINOUS_INFO("load picture ", path.string());
             if (extension == ".exr") {
@@ -49,10 +49,10 @@ namespace luminous {
             }
         }
 
-        Image Image::load_hdr(const std::filesystem::path &path, ColorSpace color_space) {
+        Image Image::load_hdr(const luminous_fs::path &path, ColorSpace color_space) {
             int w, h;
             int comp;
-            auto path_str = std::filesystem::absolute(path).string();
+            auto path_str = luminous_fs::absolute(path).string();
             float *rgb = stbi_loadf(path_str.c_str(), &w, &h, &comp, 3);
             int pixel_num = w * h;
             PixelFormat pixel_format = detail::PixelFormatImpl<float4>::format;
@@ -80,10 +80,10 @@ namespace luminous {
             return Image(pixel_format, pixel, make_uint2(w, h), path);
         }
 
-        Image Image::load_exr(const std::filesystem::path &fn, ColorSpace color_space) {
+        Image Image::load_exr(const luminous_fs::path &fn, ColorSpace color_space) {
             // Parse OpenEXR
             EXRVersion exr_version;
-            auto path_str = std::filesystem::absolute(fn).string();
+            auto path_str = luminous_fs::absolute(fn).string();
             if (auto ret = ParseEXRVersionFromFile(&exr_version, path_str.c_str()); ret != 0) {
                 LUMINOUS_EXCEPTION("Failed to parse OpenEXR version for file: ", fn.string());
             }
@@ -186,7 +186,7 @@ namespace luminous {
             }
         }
 
-        Image Image::load_other(const std::filesystem::path &path, ColorSpace color_space) {
+        Image Image::load_other(const luminous_fs::path &path, ColorSpace color_space) {
             uint8_t *rgba;
             int w, h;
             int channel;
@@ -220,7 +220,7 @@ namespace luminous {
             return Image(pixel_format, pixel, resolution, path);
         }
 
-        void Image::save_image(const std::filesystem::path &path) {
+        void Image::save_image(const luminous_fs::path &path) {
             auto extension = to_lower(path.extension().string());
             if (extension == ".exr") {
                 save_exr(path);
@@ -232,14 +232,14 @@ namespace luminous {
             LUMINOUS_INFO("save picture ",path);
         }
 
-        void Image::save_hdr(const std::filesystem::path &path) {
+        void Image::save_hdr(const luminous_fs::path &path) {
             convert_to_32bit();
-            auto path_str = std::filesystem::absolute(path).string();
+            auto path_str = luminous_fs::absolute(path).string();
             stbi_write_hdr(path_str.c_str(), _resolution.x, _resolution.y, 4,
                            reinterpret_cast<const float *>(_pixel.get()));
         }
 
-        void Image::save_exr(const std::filesystem::path &fn) {
+        void Image::save_exr(const luminous_fs::path &fn) {
             convert_to_32bit();
             EXRHeader header;
             InitEXRHeader(&header);
@@ -285,8 +285,8 @@ namespace luminous {
             }
         }
 
-        void Image::save_other(const std::filesystem::path &path) {
-            auto path_str = std::filesystem::absolute(path).string();
+        void Image::save_other(const luminous_fs::path &path) {
+            auto path_str = luminous_fs::absolute(path).string();
             auto extension = to_lower(path.extension().string());
             convert_to_8bit();
             if (extension == ".png") {

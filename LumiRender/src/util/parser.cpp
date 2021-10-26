@@ -9,7 +9,7 @@
 
 namespace luminous {
     inline namespace utility {
-        DataWrap create_json_from_file(const std::filesystem::path &fn) {
+        DataWrap create_json_from_file(const luminous_fs::path &fn) {
             std::ifstream fst;
             fst.open(fn.c_str());
             std::stringstream buffer;
@@ -197,7 +197,7 @@ namespace luminous {
             return ret;
         }
 
-        void Parser::load(const std::filesystem::path &fn) {
+        void Parser::load(const luminous_fs::path &fn) {
             _data = create_json_from_file(fn);
         }
 

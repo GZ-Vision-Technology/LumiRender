@@ -14,6 +14,7 @@
 #include <array>
 #include <regex>
 #include <filesystem>
+#include "core/platform.h"
 
 namespace luminous {
     inline namespace utility {
@@ -41,7 +42,7 @@ namespace luminous {
             return result;
         }
 
-        inline std::string text_file_contents(const std::filesystem::path &file_path) {
+        inline std::string text_file_contents(const luminous_fs::path &file_path) {
             std::ifstream file{file_path};
             if (!file.is_open()) {
                 std::ostringstream ss;

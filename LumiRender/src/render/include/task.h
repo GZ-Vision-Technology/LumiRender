@@ -58,7 +58,7 @@ namespace luminous {
                     auto fp = reinterpret_cast<float4 *>(pixel);
                     *fp = Spectrum::linear_to_srgb(buffer[i]);
                 });
-                std::filesystem::path path = _context->scene_path() / _output_config.fn;
+                luminous_fs::path path = _context->scene_path() / _output_config.fn;
                 image.save_image(path);
             }
 

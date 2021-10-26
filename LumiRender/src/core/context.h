@@ -25,26 +25,25 @@ namespace luminous {
     private:
         int _argc;
         const char **_argv;
-        std::filesystem::path _run_dir;
-        std::filesystem::path _work_dir;
-        std::filesystem::path _in_dir;
-        std::filesystem::path _scene_file;
+        luminous_fs::path _run_dir;
+        luminous_fs::path _work_dir;
+        luminous_fs::path _in_dir;
+        luminous_fs::path _scene_file;
         std::string _device;
         int _thread_num{0};
         mutable cxxopts::Options _cli_options;
         mutable std::optional<cxxopts::ParseResult> _parsed_cli_options;
         mutable std::optional<std::string> _positional_option;
-        std::map<std::filesystem::path, DynamicModuleHandle, std::less<>> _loaded_modules;
 
         LM_NODISCARD const cxxopts::ParseResult &_parse_result() const noexcept;
 
-        LM_NODISCARD const std::filesystem::path &_runtime_dir() noexcept;
+        LM_NODISCARD const luminous_fs::path &_runtime_dir() noexcept;
 
-        LM_NODISCARD const std::filesystem::path &_working_dir() noexcept;
+        LM_NODISCARD const luminous_fs::path &_working_dir() noexcept;
 
-        LM_NODISCARD const std::filesystem::path &_input_dir() noexcept;
+        LM_NODISCARD const luminous_fs::path &_input_dir() noexcept;
 
-        static bool _create_folder_if_necessary(const std::filesystem::path &path) noexcept;
+        static bool _create_folder_if_necessary(const luminous_fs::path &path) noexcept;
 
     public:
         Context(int argc, char *argv[]);
@@ -55,23 +54,23 @@ namespace luminous {
             return _parse_result().count("scene") > 0;
         }
 
-        bool create_working_folder(const std::filesystem::path &name) noexcept;
+        bool create_working_folder(const luminous_fs::path &name) noexcept;
 
-        bool create_cache_folder(const std::filesystem::path &name) noexcept;
+        bool create_cache_folder(const luminous_fs::path &name) noexcept;
 
-        LM_NODISCARD std::filesystem::path include_path(const std::filesystem::path &name = {}) noexcept;
+        LM_NODISCARD luminous_fs::path include_path(const luminous_fs::path &name = {}) noexcept;
 
-        LM_NODISCARD std::filesystem::path working_path(const std::filesystem::path &name = {}) noexcept;
+        LM_NODISCARD luminous_fs::path working_path(const luminous_fs::path &name = {}) noexcept;
 
-        LM_NODISCARD std::filesystem::path runtime_path(const std::filesystem::path &name = {}) noexcept;
+        LM_NODISCARD luminous_fs::path runtime_path(const luminous_fs::path &name = {}) noexcept;
 
-        LM_NODISCARD std::filesystem::path input_path(const std::filesystem::path &name = {}) noexcept;
+        LM_NODISCARD luminous_fs::path input_path(const luminous_fs::path &name = {}) noexcept;
 
-        LM_NODISCARD std::filesystem::path cache_path(const std::filesystem::path &name = {}) noexcept;
+        LM_NODISCARD luminous_fs::path cache_path(const luminous_fs::path &name = {}) noexcept;
 
-        LM_NODISCARD std::filesystem::path scene_path() noexcept;
+        LM_NODISCARD luminous_fs::path scene_path() noexcept;
 
-        LM_NODISCARD const std::filesystem::path &scene_file() noexcept;
+        LM_NODISCARD const luminous_fs::path &scene_file() noexcept;
 
         bool has_help_cmd() const noexcept {
             return _parse_result().count("help") > 0;
