@@ -48,6 +48,6 @@ GLOBAL kernel_eval_BSDFs(int task_id, int n_item,
                          MaterialEvalQueue *material_eval_queue) {
     task_id = task_id_g3_b3();
     if (task_id < n_item) {
-        eval_BSDFs(task_id, n_item, material_eval_queue);
+        eval_BSDFs(task_id, n_item, shadow_ray_queue, material_eval_queue);
     }
 }
