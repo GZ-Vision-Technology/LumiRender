@@ -52,24 +52,34 @@ namespace luminous {
 
             LM_NODISCARD static int _next_index(int depth) { return (depth + 1) & 1; }
 
+            LM_NODISCARD RayQueue * get_ray_queue(int index) {
+                return _ray_queues.device_buffer().address<RayQueue *>(index);
+            }
+
             LM_NODISCARD RayQueue *_current_ray_queue(int depth) {
-                return _ray_queues.device_buffer().address<RayQueue *>(_cur_index(depth));
+                return get_ray_queue(_cur_index(depth));
             }
 
             LM_NODISCARD RayQueue *_next_ray_queue(int depth) {
-                return _ray_queues.device_buffer().address<RayQueue *>(_next_index(depth));
+                return get_ray_queue(_next_index(depth));
+            }
+
+            LM_NODISCARD RayQueue *_ray_queue_host_ptr(int index) {
+                return &_ray_queues[index];
+            }
+
+            void _reset_ray_queue(int index) {
+                RayQueue *ray_queue = _ray_queue_host_ptr(index);
+                ray_queue->reset();
+                _ray_queues.synchronize_to_device(index, 1);
             }
 
             void _reset_cur_ray_queue(int depth) {
-                RayQueue *current_ray_queue = &_ray_queues[_cur_index(depth)];
-                current_ray_queue->reset();
-                _ray_queues.synchronize_to_device(_cur_index(depth), 1);
+                _reset_ray_queue(_cur_index(depth));
             }
 
             void _reset_next_ray_queue(int depth) {
-                RayQueue *next_ray_queue = &_ray_queues[_next_index(depth)];
-                next_ray_queue->reset();
-                _ray_queues.synchronize_to_device(_next_index(depth), 1);
+                _reset_ray_queue(_next_index(depth));
             }
         public:
 

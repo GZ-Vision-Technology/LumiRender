@@ -153,12 +153,13 @@ namespace luminous {
         }
 
         CUDABuffer::CUDABuffer(size_t bytes, void *ptr)
-        : _size_in_bytes(bytes), _is_external_ptr(ptr ? true : false) {
+            : _size_in_bytes(bytes), _is_external_ptr(ptr ? true : false) {
             DCHECK_GT(bytes, 0)
             if (ptr) {
                 _ptr = reinterpret_cast<CUdeviceptr>(ptr);
             } else {
                 CU_CHECK(cuMemAlloc(&_ptr, bytes));
+                memset(0);
             }
         }
 

@@ -12,7 +12,11 @@ namespace luminous {
         CPUBuffer::CPUBuffer(size_t bytes, void *ptr)
                 : _size_in_bytes(bytes),
                   _is_external_ptr(bool(ptr)),
-                  _ptr(ptr ? ptr : ::malloc(bytes)) {}
+                  _ptr(ptr ? ptr : ::malloc(bytes)) {
+            if (!_is_external_ptr) {
+                this->memset(0);
+            }
+        }
 
         CPUBuffer::~CPUBuffer() {
             if (!_is_external_ptr) {
