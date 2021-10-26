@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <type_traits>
+#include "gpu/framework/helper/cuda.h"
 #include "core/macro_map.h"
 
 namespace luminous {
@@ -23,6 +25,17 @@ namespace luminous {
                     return SOA<T>(n, device);
                 } else {
                     return device->template obtain_restrict_ptr<T>(n);
+                }
+            }
+
+            template<typename TParam>
+            static auto clone_to_host(TParam param, int n, TDevice device) {
+                if constexpr(!std::is_pointer_v<TParam>) {
+                    return param.to_host(device);
+                } else {
+                    TParam p = device->template obtain_restrict_ptr<std::remove_pointer_t<TParam>>(n);
+                    download(p, reinterpret_cast<ptr_t>(param), n);
+                    return p;
                 }
             }
 
@@ -84,6 +97,16 @@ LM_XPU SOA &operator=(const SOA &s) { capacity = s.capacity;       \
 MAP(LUMINOUS_SOA_ASSIGNMENT_BODY_MEMBER_ASSIGNMENT,__VA_ARGS__)    \
 return *this; }
 
+// clone to host function definition
+#define LUMINOUS_SOA_TO_HOST_BODY_MEMBER_CLONE(MemberName) \
+ret.MemberName = SOAMember<decltype(element_type::MemberName), TDevice*>::clone_to_host(MemberName, capacity, device);
+#define LUMINOUS_SOA_TO_HOST(...)                               \
+template<typename TDevice>                                      \
+SOA<element_type> to_host(TDevice * device) const {             \
+DCHECK(device->is_cpu())                                        \
+auto ret = SOA<element_type>(capacity, device);                 \
+MAP(LUMINOUS_SOA_TO_HOST_BODY_MEMBER_CLONE,__VA_ARGS__)         \
+return ret; }
 
 // access function definition
 #define LUMINOUS_SOA_ACCESSOR_BODY_MEMBER_ASSIGNMENT(MemberName) r.MemberName = this->MemberName[i];
@@ -116,6 +139,7 @@ return GetSetIndirector{this, i};}
         LUMINOUS_SOA_ACCESSOR(__VA_ARGS__)                          \
         LUMINOUS_SOA_SET_GET_STRUCT(__VA_ARGS__)                    \
         LUMINOUS_SOA_INDIRECTOR_ACCESSOR                            \
+        LUMINOUS_SOA_TO_HOST(__VA_ARGS__)                           \
         LUMINOUS_SOA_END
 
 

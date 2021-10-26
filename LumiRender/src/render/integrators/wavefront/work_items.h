@@ -24,10 +24,10 @@ namespace luminous {
 
         LUMINOUS_SOA(int3, x, y, z)
         template<>
-        struct SOA<luminous::int3> {
+        struct SOA<int3> {
         public:
             static constexpr bool definitional = true;
-            using element_type = luminous::int3;
+            using element_type = int3;
             SOA() = default;
             int capacity;
             SOAMember<decltype(element_type::x), Device *>::type x;
@@ -46,7 +46,7 @@ namespace luminous {
                 return *this;
             }
             element_type operator[](int i) const {
-                (void) ((!!(i < capacity)) || (_wassert(L"i < capacity", L"_file_name_", (unsigned) (21)), 0));;;
+                (void) ((!!(i < capacity)) || (_wassert(L"i < capacity", L"_file_name_", (unsigned) (23)), 0));;;
                 element_type r;
                 r.x = this->x[i];
                 r.y = this->y[i];
@@ -70,8 +70,17 @@ namespace luminous {
                 }
             };
             GetSetIndirector operator[](int i) {
-                (void) ((!!(i < capacity)) || (_wassert(L"i < capacity", L"_file_name_", (unsigned) (21)), 0));;;
+                (void) ((!!(i < capacity)) || (_wassert(L"i < capacity", L"_file_name_", (unsigned) (23)), 0));;;
                 return GetSetIndirector{this, i};
+            }
+            template<typename TDevice>
+            SOA<element_type> to_host(TDevice *device) const {
+                DCHECK(device->is_cpu())
+                auto ret = SOA<element_type>(capacity, device);
+                ret.x = SOAMember<decltype(element_type::x), TDevice *>::clone_to_host(x, capacity, device);
+                ret.y = SOAMember<decltype(element_type::y), TDevice *>::clone_to_host(y, capacity, device);
+                ret.z = SOAMember<decltype(element_type::z), TDevice *>::clone_to_host(z, capacity, device);
+                return ret;
             }
         };
 

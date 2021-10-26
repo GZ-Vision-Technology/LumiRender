@@ -42,6 +42,22 @@ namespace luminous {
             CU_CHECK(cuMemcpyDtoH(host_ptr, device_ptr + offset * sizeof(T), num * sizeof(T)));
         }
 
+        /**
+         * for debug, watch GPU memory content
+         * @tparam T
+         * @param ptr
+         * @param num
+         * @param offset
+         * @return
+         */
+        template<typename T>
+        std::vector<T> get_cuda_data(ptr_t ptr, size_t num = 1, size_t offset = 0) {
+            std::vector<T> ret;
+            ret.resize(num);
+            download(ret.data(), ptr, num, offset);
+            return ret;
+        }
+
         template<typename T>
         T download(CUdeviceptr device_ptr, size_t offset = 0) {
             T ret;
