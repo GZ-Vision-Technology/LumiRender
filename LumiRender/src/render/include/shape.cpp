@@ -84,7 +84,7 @@ namespace luminous {
 
         Model::Model(const ShapeConfig &sc) {
             Assimp::Importer ai_importer;
-            std::filesystem::path path = sc.fn;
+            luminous_fs::path path = sc.fn;
             directory = path.parent_path();
             ai_importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
                                            aiComponent_COLORS |

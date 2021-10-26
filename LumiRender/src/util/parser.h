@@ -20,7 +20,7 @@ namespace luminous {
         public:
             explicit Parser(Context *context) : _context(context) {}
 
-            void load(const std::filesystem::path &fn);
+            void load(const luminous_fs::path &fn);
 
             LM_NODISCARD SP<SceneGraph> parse() const;
         };

@@ -7,7 +7,6 @@
 #include <string>
 #include <string_view>
 #include "base_libs/header.h"
-#include <core/platform.h>
 
 namespace luminous {
     inline namespace utility {
