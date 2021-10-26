@@ -159,7 +159,6 @@ namespace luminous {
                 _ptr = reinterpret_cast<CUdeviceptr>(ptr);
             } else {
                 CU_CHECK(cuMemAlloc(&_ptr, bytes));
-                memset(0);
             }
         }
 

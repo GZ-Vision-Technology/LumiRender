@@ -63,7 +63,8 @@ namespace luminous {
         }
 
         void process_emission(int task_id, int n_item,
-                              HitAreaLightQueue *hit_area_light_queue) {
+                              HitAreaLightQueue *hit_area_light_queue,
+                              SOA<PixelSampleState> *pixel_sample_state) {
 
         }
 

@@ -36,7 +36,8 @@ namespace luminous {
                                        EscapedRayQueue *escaped_ray_queue);
 
         LM_XPU void process_emission(int task_id, int n_item,
-                                     HitAreaLightQueue *hit_area_light_queue);
+                                     HitAreaLightQueue *hit_area_light_queue,
+                                     SOA<PixelSampleState> *pixel_sample_state);
 
         LM_XPU void eval_BSDFs(int task_id, int n_item,
                                MaterialEvalQueue *material_eval_queue);

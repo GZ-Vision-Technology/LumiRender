@@ -22,7 +22,7 @@ GLOBAL kernel_generate_ray_samples(int task_id, int n_item, int sample_index, co
                                    SOA<PixelSampleState> *pixel_sample_state) {
     task_id = task_id_g3_b3();
     if (task_id < n_item) {
-        generate_ray_samples(task_id, n_item, sample_index ,ray_queue, pixel_sample_state);
+        generate_ray_samples(task_id, n_item, sample_index, ray_queue, pixel_sample_state);
     }
 }
 
@@ -35,10 +35,11 @@ GLOBAL kernel_process_escape_ray(int task_id, int n_item,
 }
 
 GLOBAL kernel_process_emission(int task_id, int n_item,
-                               HitAreaLightQueue *hit_area_light_queue) {
+                               HitAreaLightQueue *hit_area_light_queue,
+                               SOA<PixelSampleState> *pixel_sample_state) {
     task_id = task_id_g3_b3();
     if (task_id < n_item) {
-        process_emission(task_id, n_item, hit_area_light_queue);
+        process_emission(task_id, n_item, hit_area_light_queue, pixel_sample_state);
     }
 }
 
