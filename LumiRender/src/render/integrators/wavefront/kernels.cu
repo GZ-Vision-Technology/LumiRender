@@ -44,6 +44,7 @@ GLOBAL kernel_process_emission(int task_id, int n_item,
 }
 
 GLOBAL kernel_eval_BSDFs(int task_id, int n_item,
+                         ShadowRayQueue *shadow_ray_queue,
                          MaterialEvalQueue *material_eval_queue) {
     task_id = task_id_g3_b3();
     if (task_id < n_item) {

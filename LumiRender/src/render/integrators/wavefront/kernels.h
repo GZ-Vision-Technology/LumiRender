@@ -39,6 +39,7 @@ namespace luminous {
                                      SOA<PixelSampleState> *pixel_sample_state);
 
         LM_XPU void eval_BSDFs(int task_id, int n_item,
+                               ShadowRayQueue *shadow_ray_queue,
                                MaterialEvalQueue *material_eval_queue);
     }
 }
