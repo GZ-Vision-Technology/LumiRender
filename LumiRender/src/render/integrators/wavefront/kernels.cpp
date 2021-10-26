@@ -4,6 +4,7 @@
 
 #include "kernels.h"
 #include "render/samplers/shader_include.h"
+#include "render/light_samplers/shader_include.h"
 
 #ifdef __CUDACC__
 #define GLOBAL_PREFIX extern "C" __constant__
@@ -65,7 +66,7 @@ namespace luminous {
         void process_emission(int task_id, int n_item,
                               HitAreaLightQueue *hit_area_light_queue,
                               SOA<PixelSampleState> *pixel_sample_state) {
-
+            auto light_sampler = rt_param->scene_data.light_sampler;
         }
 
         void eval_BSDFs(int task_id, int n_item,

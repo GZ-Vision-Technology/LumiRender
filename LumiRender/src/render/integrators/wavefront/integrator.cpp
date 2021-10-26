@@ -79,6 +79,10 @@ namespace luminous {
 
                     _process_escape_ray.launch(_dispatcher, _max_queue_size,
                                                _escaped_ray_queue.device_data());
+
+                    _process_emission.launch(_dispatcher, _max_queue_size,
+                                             _hit_area_light_queue.device_data(),
+                                             _pixel_sample_state.device_data());
                 }
             }
         }
@@ -119,7 +123,8 @@ namespace luminous {
         }
 
         void WavefrontPT::init_rt_param() {
-            _rt_param.emplace_back(_sampler.device_data(), _camera.device_ptr(), 0);
+            _rt_param.push_back({_sampler.device_data(), _camera.device_ptr(),
+                                 0, *_scene->scene_data()});
             _rt_param.allocate_device(1);
             _rt_param.synchronize_to_device();
             if (_device->is_cpu()) {

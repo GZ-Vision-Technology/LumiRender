@@ -7,6 +7,7 @@
 
 #include <render/sensors/shader_include.h>
 #include "base_libs/math/common.h"
+#include "render/scene/shader_include.h"
 #include "work_items.h"
 
 namespace luminous {
@@ -16,11 +17,9 @@ namespace luminous {
             Sampler *sampler;
             Sensor *camera;
             int frame_index;
+            SceneData scene_data;
 
             RTParam() = default;
-
-            RTParam(Sampler *sampler, Sensor *camera, int frame_index)
-                    : sampler(sampler), camera(camera), frame_index(frame_index) {}
         };
 
         CPU_ONLY(void set_rt_param(RTParam *param);)
