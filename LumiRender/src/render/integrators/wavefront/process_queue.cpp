@@ -24,7 +24,7 @@ namespace luminous {
             pixel_sample_state->L[w.pixel_index] = L_pixel + L;
         }
 
-        void enqueue_item_after_intersect(RayWorkItem r, SurfaceInteraction si,
+        void enqueue_item_after_intersect(RayWorkItem r, const SurfaceInteraction& si,
                                           RayQueue *next_ray_queue,
                                           HitAreaLightQueue *hit_area_light_queue,
                                           MaterialEvalQueue *material_eval_queue) {

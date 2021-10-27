@@ -80,10 +80,12 @@ namespace luminous {
                     _process_escape_ray.launch(_dispatcher, _max_queue_size,
                                                _escaped_ray_queue.device_data(),
                                                _pixel_sample_state.device_data());
+                    _dispatcher.wait();
 
                     _process_emission.launch(_dispatcher, _max_queue_size,
                                              _hit_area_light_queue.device_data(),
                                              _pixel_sample_state.device_data());
+                    _dispatcher.wait();
 
                     if (depth == _max_depth) {
                         break;
@@ -92,6 +94,7 @@ namespace luminous {
                     _eval_BSDFs.launch(_dispatcher, _max_queue_size,
                                        _shadow_ray_queue.device_data(),
                                        _material_eval_queue.device_data());
+                    _dispatcher.wait();
 
                     trace_shadow_ray(depth);
 

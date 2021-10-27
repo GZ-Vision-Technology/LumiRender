@@ -66,18 +66,7 @@ namespace luminous {
             const LightSampler *light_sampler = scene_data->light_sampler;
             EscapedRayWorkItem item = (*escaped_ray_queue)[task_id];
             Spectrum L = pixel_sample_state->L[item.pixel_index];
-            for (int i = 0; i < light_sampler->infinite_light_num(); ++i) {
-                const Light &light = light_sampler->infinite_light_at(i);
-                Spectrum Le = light.on_miss(item.ray_d, scene_data);
-                CONTINUE_IF(Le.is_black())
-                if (item.depth == 0) {
-                    L += Le * item.throughput;
-                } else {
-                    float light_choice_PMF = light_sampler->PMF(light);
-                    LightSampleContext ctx = item.prev_lsc;
-//                    float light_PDF = light.
-                }
-            }
+            L += light_sampler->on_miss(item.ray_d, scene_data, item.throughput);
             pixel_sample_state->L[item.pixel_index] = L;
         }
 
@@ -85,6 +74,8 @@ namespace luminous {
                               HitAreaLightQueue *hit_area_light_queue,
                               SOA<PixelSampleState> *pixel_sample_state) {
             auto light_sampler = rt_param->scene_data.light_sampler;
+            HitAreaLightWorkItem item = (*hit_area_light_queue)[task_id];
+
         }
 
         void eval_BSDFs(int task_id, int n_item,
