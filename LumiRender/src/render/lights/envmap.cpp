@@ -10,7 +10,7 @@ namespace luminous {
     inline namespace render {
 
         LightLiSample Envmap::Li(LightLiSample lls, const SceneData *data) const {
-            float3 wi = lls.p_light.pos - lls.p_ref.pos;
+            float3 wi = lls.p_light.pos - lls.ctx.pos;
             lls.wi = normalize(wi);
             lls.L = L(_w2o.apply_vector(lls.wi), data);
             return lls;
@@ -30,7 +30,7 @@ namespace luminous {
             sincos(theta, &sin_theta, &cos_theta);
             float3 dir_in_world = _w2o.inverse().apply_vector(spherical_direction(sin_theta, cos_theta, phi));
             lls->PDF_dir = map_PDF / (2 * Pi * Pi * sin_theta);
-            lls->p_light.pos = lls->p_ref.pos + dir_in_world;
+            lls->p_light.pos = lls->ctx.pos + dir_in_world;
             return SurfaceInteraction(lls->p_light.pos);
         }
 
@@ -46,7 +46,7 @@ namespace luminous {
             return L(d, data);
         }
 
-        float Envmap::PDF_Li(const Interaction &p_ref, const SurfaceInteraction &p_light,
+        float Envmap::PDF_Li(const LightSampleContext &p_ref, const SurfaceInteraction &p_light,
                              float3 wi, const SceneData *data) const {
             float3 w = _w2o.apply_vector(wi);
             float theta = spherical_theta(w);

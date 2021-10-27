@@ -14,7 +14,7 @@ namespace luminous {
             return ret;
         }
 
-        float PointLight::PDF_Li(const Interaction &ref_p, const SurfaceInteraction &p_light,
+        float PointLight::PDF_Li(const LightSampleContext &ref_p, const SurfaceInteraction &p_light,
                                  float3 wi, const SceneData *data) const {
             return 0;
         }
@@ -28,7 +28,7 @@ namespace luminous {
         }
 
         LightLiSample PointLight::Li(LightLiSample lls, const SceneData *data) const {
-            float3 wi = lls.p_light.pos - lls.p_ref.pos;
+            float3 wi = lls.p_light.pos - lls.ctx.pos;
             lls.L = _intensity / length_squared(wi);
             lls.PDF_dir = 0;
             lls.wi = normalize(wi);

@@ -26,23 +26,6 @@ namespace luminous {
             WithoutMIS
         };
 
-        struct LightLiSample {
-            Spectrum L{};
-            float3 wi{};
-            float PDF_dir{-1.f};
-            SurfaceInteraction p_light{};
-            Interaction p_ref{};
-            LM_XPU LightLiSample() = default;
-
-            LM_XPU LightLiSample(const float3 &L, float3 wi,
-                                 float PDF, SurfaceInteraction si)
-                    : L(L), wi(wi), PDF_dir(PDF), p_light(std::move(si)) {}
-
-            LM_ND_XPU bool has_contribution() const {
-                return nonzero(L) && PDF_dir != 0;
-            }
-        };
-
         struct LightSampleContext {
             float3 pos;
             float3 ng;
@@ -57,6 +40,35 @@ namespace luminous {
 
             LM_XPU LightSampleContext(float3 p, float3 ng, float3 ns)
                     : pos(p), ng(ng), ns(ns) {}
+
+            ND_XPU_INLINE Ray spawn_ray(float3 dir) const {
+                return Ray::spawn_ray(pos, ng, dir);
+            }
+
+            ND_XPU_INLINE Ray spawn_ray_to(float3 p) const {
+                return Ray::spawn_ray_to(pos, ng, p);
+            }
+
+            ND_XPU_INLINE Ray spawn_ray_to(const LightSampleContext &it) const {
+                return Ray::spawn_ray_to(pos, ng, it.pos, it.ng);
+            }
+        };
+
+        struct LightLiSample {
+            Spectrum L{};
+            float3 wi{};
+            float PDF_dir{-1.f};
+            SurfaceInteraction p_light{};
+            LightSampleContext ctx{};
+            LM_XPU LightLiSample() = default;
+
+            LM_XPU LightLiSample(const float3 &L, float3 wi,
+                                 float PDF, SurfaceInteraction si)
+                    : L(L), wi(wi), PDF_dir(PDF), p_light(std::move(si)) {}
+
+            LM_ND_XPU bool has_contribution() const {
+                return nonzero(L) && PDF_dir != 0;
+            }
         };
     }
 }

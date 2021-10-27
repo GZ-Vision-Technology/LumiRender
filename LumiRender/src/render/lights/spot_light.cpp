@@ -31,7 +31,7 @@ namespace luminous {
         }
 
         LightLiSample SpotLight::Li(LightLiSample lls, const SceneData *data) const {
-            float3 wi = lls.p_ref.pos - lls.p_light.pos;
+            float3 wi = lls.ctx.pos - lls.p_light.pos;
             float3 L = _intensity / length_squared(wi);
             wi = normalize(wi);
             float f = fall_off(wi);
@@ -41,7 +41,7 @@ namespace luminous {
             return lls;
         }
 
-        float SpotLight::PDF_Li(const Interaction &ref_p, const SurfaceInteraction &p_light,
+        float SpotLight::PDF_Li(const LightSampleContext &ref_p, const SurfaceInteraction &p_light,
                                 float3 wi, const SceneData *data) const {
             return 0;
         }

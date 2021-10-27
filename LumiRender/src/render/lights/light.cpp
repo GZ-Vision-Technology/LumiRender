@@ -27,7 +27,7 @@ namespace luminous {
                                                        const SceneData *scene_data) const {
             lls.p_light = sample(&lls, u, scene_data);
             float factor = lls.PDF_dir == 0 ? 0 : 1;
-            Ray ray = lls.p_ref.spawn_ray_to(lls.p_light);
+            Ray ray = lls.ctx.spawn_ray_to(LightSampleContext(lls.p_light));
             bool occluded = intersect_any(traversable_handle, ray);
             if (occluded) {
                 return {};
@@ -48,7 +48,7 @@ namespace luminous {
             LightLiSample lls;
             auto si = (const SurfaceInteraction &)it;
             auto bsdf = si.op_bsdf.value();
-            lls.p_ref = it;
+            lls.ctx = LightSampleContext(it);
             auto op_lls = sample_Li(sampler.next_2d(), lls, traversable_handle, scene_data);
             if (op_lls && op_lls->has_contribution()) {
                 bsdf_val = bsdf.eval(si.wo, op_lls->wi);
@@ -92,10 +92,10 @@ namespace luminous {
                     if (prd.is_hit() && (NEE_data->next_si = prd.compute_surface_interaction(ray)).light == this) {
                         NEE_data->next_si.PDF_pos = (*get<AreaLight *>())->inv_area();
                         Li = NEE_data->next_si.Le(-NEE_data->wi);
-                        light_PDF = PDF_Li(si, NEE_data->next_si, NEE_data->wi, data);
+                        light_PDF = PDF_Li(LightSampleContext(si), NEE_data->next_si, NEE_data->wi, data);
                     } else if (!NEE_data->found_intersection && is_infinite()) {
                         Li = (*get<Envmap *>())->on_miss(ray.direction(), prd.scene_data());
-                        light_PDF = (*get<Envmap *>())->PDF_Li(si, NEE_data->next_si, NEE_data->wi, data);
+                        light_PDF = (*get<Envmap *>())->PDF_Li(LightSampleContext(si), NEE_data->next_si, NEE_data->wi, data);
                     }
                     weight = MIS_weight(bsdf_PDF, light_PDF);
                     Ld = bsdf_val * Li * weight / bsdf_PDF;
@@ -124,7 +124,7 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(on_miss, dir, data);
         }
 
-        float Light::PDF_Li(const Interaction &ref_p, const SurfaceInteraction &p_light,
+        float Light::PDF_Li(const LightSampleContext &ref_p, const SurfaceInteraction &p_light,
                             float3 wi, const SceneData *data) const {
             LUMINOUS_VAR_PTR_DISPATCH(PDF_Li, ref_p, p_light, wi, data);
         }

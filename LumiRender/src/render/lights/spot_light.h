@@ -47,7 +47,7 @@ namespace luminous {
              */
             LM_ND_XPU float fall_off(float3 w_world) const;
 
-            LM_ND_XPU float PDF_Li(const Interaction &ref_p, const SurfaceInteraction &p_light,
+            LM_ND_XPU float PDF_Li(const LightSampleContext &ref_p, const SurfaceInteraction &p_light,
                                    float3 wi, const SceneData *data) const;
 
             LM_ND_XPU Spectrum power() const;
