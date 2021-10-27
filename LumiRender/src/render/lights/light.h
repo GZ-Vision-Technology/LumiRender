@@ -40,7 +40,7 @@ namespace luminous {
 
             LM_ND_XPU bool is_infinite() const;
 
-            LM_ND_XPU Spectrum on_miss(Ray ray, const SceneData *data) const;
+            LM_ND_XPU Spectrum on_miss(float3 dir, const SceneData *data) const;
 
             LM_ND_XPU SurfaceInteraction sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const;
 

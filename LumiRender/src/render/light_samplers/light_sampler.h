@@ -56,7 +56,7 @@ namespace luminous {
 
             LM_ND_XPU SampledLight sample(const LightSampleContext &ctx, float u) const;
 
-            LM_ND_XPU Spectrum on_miss(Ray ray, const SceneData *scene_data, Spectrum throughput) const;
+            LM_ND_XPU Spectrum on_miss(float3 dir, const SceneData *scene_data, Spectrum throughput) const;
 
             LM_ND_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
                                                         uint64_t traversable_handle,

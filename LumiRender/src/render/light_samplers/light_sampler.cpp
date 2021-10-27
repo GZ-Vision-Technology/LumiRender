@@ -67,11 +67,11 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(PMF, ctx, light);
         }
 
-        Spectrum LightSampler::on_miss(Ray ray, const SceneData *scene_data, Spectrum throughput) const {
+        Spectrum LightSampler::on_miss(float3 dir, const SceneData *scene_data, Spectrum throughput) const {
             Spectrum L{0.f};
             BufferView<const Light> lights = infinite_lights();
             for (auto &light : lights) {
-                L += throughput * light.on_miss(ray, scene_data);
+                L += throughput * light.on_miss(dir, scene_data);
             }
             return L;
         }

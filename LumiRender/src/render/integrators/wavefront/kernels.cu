@@ -27,10 +27,11 @@ GLOBAL kernel_generate_ray_samples(int task_id, int n_item, int sample_index, co
 }
 
 GLOBAL kernel_process_escape_ray(int task_id, int n_item,
-                                 EscapedRayQueue *escaped_ray_queue) {
+                                 EscapedRayQueue *escaped_ray_queue,
+                                 SOA<PixelSampleState> *pixel_sample_state) {
     task_id = task_id_g3_b3();
     if (task_id < n_item) {
-        process_escape_ray(task_id, n_item, escaped_ray_queue);
+        process_escape_ray(task_id, n_item, escaped_ray_queue, pixel_sample_state);
     }
 }
 

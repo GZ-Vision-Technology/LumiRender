@@ -59,8 +59,13 @@ namespace luminous {
         }
 
         void process_escape_ray(int task_id, int n_item,
-                                EscapedRayQueue *escaped_ray_queue) {
-
+                                EscapedRayQueue *escaped_ray_queue,
+                                SOA<PixelSampleState> *pixel_sample_state) {
+            const SceneData *scene_data = &(rt_param->scene_data);
+            EscapedRayWorkItem item = (*escaped_ray_queue)[task_id];
+            Spectrum L = pixel_sample_state->L[item.pixel_index];
+//            Spectrum Le = scene_data->light_sampler->on_miss()
+            pixel_sample_state->L[item.pixel_index] = L;
         }
 
         void process_emission(int task_id, int n_item,

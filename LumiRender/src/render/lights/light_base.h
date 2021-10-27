@@ -29,7 +29,7 @@ namespace luminous {
                 return _type;
             }
 
-            LM_ND_XPU Spectrum on_miss(Ray ray, const SceneData *data) const {
+            LM_ND_XPU Spectrum on_miss(float3 dir, const SceneData *data) const {
                 return {0.f};
             }
 

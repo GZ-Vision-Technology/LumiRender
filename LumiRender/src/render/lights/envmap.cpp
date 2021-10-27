@@ -41,8 +41,8 @@ namespace luminous {
             return {make_float3(ret)};
         }
 
-        Spectrum Envmap::on_miss(Ray ray, const SceneData *data) const {
-            float3 d = normalize(_w2o.apply_vector(ray.direction()));
+        Spectrum Envmap::on_miss(float3 dir, const SceneData *data) const {
+            float3 d = normalize(dir);
             return L(d, data);
         }
 

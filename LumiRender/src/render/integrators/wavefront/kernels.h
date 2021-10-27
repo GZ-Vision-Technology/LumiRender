@@ -32,7 +32,8 @@ namespace luminous {
                                          SOA<PixelSampleState> *pixel_sample_state);
 
         LM_XPU void process_escape_ray(int task_id, int n_item,
-                                       EscapedRayQueue *escaped_ray_queue);
+                                       EscapedRayQueue *escaped_ray_queue,
+                                       SOA<PixelSampleState> *pixel_sample_state);
 
         LM_XPU void process_emission(int task_id, int n_item,
                                      HitAreaLightQueue *hit_area_light_queue,

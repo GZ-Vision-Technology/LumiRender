@@ -78,7 +78,8 @@ namespace luminous {
                     intersect_closest(depth);
 
                     _process_escape_ray.launch(_dispatcher, _max_queue_size,
-                                               _escaped_ray_queue.device_data());
+                                               _escaped_ray_queue.device_data(),
+                                               _pixel_sample_state.device_data());
 
                     _process_emission.launch(_dispatcher, _max_queue_size,
                                              _hit_area_light_queue.device_data(),
