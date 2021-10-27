@@ -124,9 +124,9 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(on_miss, dir, data);
         }
 
-        float Light::PDF_Li(const LightSampleContext &ref_p, const SurfaceInteraction &p_light,
+        float Light::PDF_Li(const LightSampleContext &ctx, const SurfaceInteraction &p_light,
                             float3 wi, const SceneData *data) const {
-            LUMINOUS_VAR_PTR_DISPATCH(PDF_Li, ref_p, p_light, wi, data);
+            LUMINOUS_VAR_PTR_DISPATCH(PDF_Li, ctx, p_light, wi, data);
         }
 
         Spectrum Light::power() const {
