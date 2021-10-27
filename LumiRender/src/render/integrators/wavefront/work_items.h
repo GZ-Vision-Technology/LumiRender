@@ -194,10 +194,10 @@ namespace luminous {
             }
         };
 
-        class Light;
+        class AreaLight;
 
         struct HitAreaLightWorkItem {
-            Light *light{};
+            const AreaLight *light{};
             float3 pos;
             float3 ng;
             float2 uv;

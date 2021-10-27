@@ -4,6 +4,7 @@
 
 #include "process_queue.h"
 #include "render/include/shader_include.h"
+#include "render/lights/shader_include.h"
 #include "render/materials/shader_include.h"
 
 namespace luminous {
@@ -41,7 +42,7 @@ namespace luminous {
             }
 
             if (si.has_emission()) {
-                HitAreaLightWorkItem item{const_cast<Light *>(si.light), si.pos, si.g_uvn.normal,
+                HitAreaLightWorkItem item{(*si.light->get<AreaLight*>()), si.pos, si.g_uvn.normal,
                                           si.uv, si.wo, r.depth, r.throughput, r.prev_lsc,
                                           r.specular_bounce, r.pixel_index};
                 hit_area_light_queue->push(item);
