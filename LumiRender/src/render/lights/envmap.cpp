@@ -42,7 +42,7 @@ namespace luminous {
         }
 
         Spectrum Envmap::on_miss(float3 dir, const SceneData *data) const {
-            float3 d = normalize(dir);
+            float3 d = _w2o.apply_vector(normalize(dir));
             return L(d, data);
         }
 

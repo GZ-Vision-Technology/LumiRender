@@ -38,7 +38,7 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(sample, ctx, u);
         }
 
-        Spectrum LightSampler::estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
+        Spectrum LightSampler::estimate_direct_lighting(const Interaction &si, Sampler &sampler,
                                                         uint64_t traversable_handle,
                                                         const SceneData *scene_data,
                                                         NEEData *NEE_data) const {
