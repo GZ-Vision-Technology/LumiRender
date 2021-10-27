@@ -26,7 +26,7 @@ namespace luminous {
                 return {};
             }
             auto bsdf = material->get_BSDF(*this, scene_data);
-            return lstd::optional<BSDF>(bsdf);
+            return {bsdf};
         }
     } // luminous::render
 } // luminous

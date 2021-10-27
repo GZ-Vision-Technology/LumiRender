@@ -255,10 +255,10 @@ namespace luminous {
             LM_ND_XPU static Transform rotation(const float3 axis, float angle, bool radian = false) noexcept {
                 angle = radian ? angle : radians(angle);
 
-                auto c = cos(angle);
-                auto s = sin(angle);
-                auto a = normalize(axis);
-                auto t = (1.0f - c) * a;
+                float c = cos(angle);
+                float s = sin(angle);
+                float3 a = normalize(axis);
+                float3 t = (1.0f - c) * a;
 
                 auto mat = make_float4x4(
                         c + t.x * a.x, t.x * a.y + s * a.z, t.x * a.z - s * a.y, 0.0f,
@@ -266,7 +266,7 @@ namespace luminous {
                         t.z * a.x + s * a.y, t.z * a.y - s * a.x, c + t.z * a.z, 0.0f,
                         0.0f, 0.0f, 0.0f, 1.0f);
 
-                return Transform(mat, transpose(mat));
+                return {mat, transpose(mat)};
             }
 
             LM_ND_XPU static Transform trs(float3 t, float4 r, float3 s) {

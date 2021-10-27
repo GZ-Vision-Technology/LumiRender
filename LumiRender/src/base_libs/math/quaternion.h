@@ -9,7 +9,7 @@
 
 namespace luminous {
     inline namespace math {
-        
+
         /**
          * as complex number, 
          * quaternion is used to represent rotation
@@ -32,52 +32,49 @@ namespace luminous {
         struct Quaternion {
             float3 v;
             float w;
-            LM_XPU Quaternion(float3 v = make_float3(0), float w = 1) :
-            v(v),
-            w(w) {
+            LM_XPU explicit Quaternion(float3 v = make_float3(0), float w = 1) :
+                    v(v), w(w) {}
 
+            ND_XPU_INLINE Quaternion conj() const {
+                return Quaternion{-v, w};
             }
 
-            ND_XPU_INLINE Quaternion conj() {
-                return Quaternion(-v, w);
-            }
-
-            ND_XPU_INLINE Quaternion &operator += (const Quaternion &q) {
+            ND_XPU_INLINE Quaternion &operator+=(const Quaternion &q) {
                 v += q.v;
                 w += q.w;
                 return *this;
             }
 
-            ND_XPU_INLINE friend Quaternion operator + (const Quaternion &q1, const Quaternion &q2) {
+            ND_XPU_INLINE friend Quaternion operator+(const Quaternion &q1, const Quaternion &q2) {
                 Quaternion ret = q1;
                 return ret += q2;
             }
 
-            ND_XPU_INLINE Quaternion &operator -= (const Quaternion &q) {
+            ND_XPU_INLINE Quaternion &operator-=(const Quaternion &q) {
                 v -= q.v;
                 w -= q.w;
                 return *this;
             }
 
-            ND_XPU_INLINE Quaternion operator - () const {
+            ND_XPU_INLINE Quaternion operator-() const {
                 Quaternion ret;
                 ret.v = -v;
                 ret.w = -w;
                 return ret;
             }
 
-            ND_XPU_INLINE friend Quaternion operator - (const Quaternion &q1, const Quaternion &q2) {
+            ND_XPU_INLINE friend Quaternion operator-(const Quaternion &q1, const Quaternion &q2) {
                 Quaternion ret = q1;
                 return ret -= q2;
             }
 
-            ND_XPU_INLINE Quaternion &operator *= (float f) {
+            ND_XPU_INLINE Quaternion &operator*=(float f) {
                 v *= f;
                 w *= f;
                 return *this;
             }
 
-            ND_XPU_INLINE Quaternion operator * (float f) const {
+            ND_XPU_INLINE Quaternion operator*(float f) const {
                 Quaternion ret = *this;
                 ret.v *= f;
                 ret.w *= f;
@@ -90,7 +87,7 @@ namespace luminous {
                 return *this;
             }
 
-            ND_XPU_INLINE Quaternion operator / (float f) const {
+            ND_XPU_INLINE Quaternion operator/(float f) const {
                 Quaternion ret = *this;
                 ret.v /= f;
                 ret.w /= f;
@@ -98,9 +95,10 @@ namespace luminous {
             }
 
             GEN_STRING_FUNC({
-                auto theta = degrees(acos(w));
-                return string_printf("quaternion:{ v:%s, angle:%f}", v.to_string().c_str(), (theta * 2));
-            })
+                                auto theta = degrees(acos(w));
+                                return string_printf("quaternion:{ v:%s, angle:%f}", v.to_string().c_str(),
+                                                     (theta * 2));
+                            })
         };
 
         ND_XPU_INLINE bool has_nan(Quaternion q) noexcept {

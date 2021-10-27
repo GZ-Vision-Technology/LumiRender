@@ -75,7 +75,11 @@ namespace luminous {
                               SOA<PixelSampleState> *pixel_sample_state) {
             auto light_sampler = rt_param->scene_data.light_sampler;
             HitAreaLightWorkItem item = (*hit_area_light_queue)[task_id];
-
+            const SceneData *scene_data = &(rt_param->scene_data);
+            Spectrum Le = item.light->radiance(item.uv, item.ng, item.wo, scene_data);
+            Spectrum L = pixel_sample_state->L[item.pixel_index];
+            L += Le * item.throughput;
+            pixel_sample_state->L[item.pixel_index] = L;
         }
 
         void eval_BSDFs(int task_id, int n_item,
