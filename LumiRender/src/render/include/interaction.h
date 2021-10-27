@@ -144,7 +144,7 @@ namespace luminous {
                 return material != nullptr;
             }
 
-            LM_ND_XPU Spectrum Le(float3 w) const;
+            LM_ND_XPU Spectrum Le(float3 w, const SceneData *scene_data) const;
 
             LM_ND_XPU lstd::optional<BSDF> get_BSDF(const SceneData *scene_data) const;
 

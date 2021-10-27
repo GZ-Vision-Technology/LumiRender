@@ -32,7 +32,7 @@ namespace luminous {
                 if (bounces == 0) {
                     if (found_intersection) {
                         si = prd.compute_surface_interaction(ray);
-                        L += throughput * si.Le(-ray.direction());
+                        L += throughput * si.Le(-ray.direction(), scene_data);
                         pixel_info.normal = si.s_uvn.normal;
                     } else {
                         L += prd.scene_data()->light_sampler->on_miss(ray.direction(), prd.scene_data(), throughput);

@@ -32,7 +32,7 @@ namespace luminous {
         LightLiSample AreaLight::Li(LightLiSample lls, const SceneData *data) const {
             float3 wi = lls.p_light.pos - lls.ctx.pos;
             lls.wi = normalize(wi);
-            lls.L = radiance(lls.p_light, -lls.wi);
+            lls.L = radiance(lls.p_light, -lls.wi, data);
             lls.PDF_dir = PDF_Li(lls.ctx, lls.p_light, wi, data);
             return lls;
         }
@@ -55,14 +55,20 @@ namespace luminous {
             return (_two_sided ? _2Pi : Pi) * L * (1.f / _inv_area);
         }
 
-        Spectrum AreaLight::radiance(const SurfaceInteraction &p_light, float3 w) const {
-            return (_two_sided || dot(w, p_light.g_uvn.normal) > 0) ? L : make_float3(0.f);
+        Spectrum AreaLight::radiance(const SurfaceInteraction &p_light, float3 w,
+                                     const SceneData *scene_data) const {
+            return radiance(p_light.uv, p_light.g_uvn.normal, w, scene_data);
+        }
+
+        Spectrum AreaLight::radiance(float2 uv, float3 ng, float3 w, const SceneData *scene_data) const {
+            return (_two_sided || dot(w, ng) > 0) ? L : make_float3(0.f);
         }
 
         void AreaLight::print() const {
             printf("type:AreaLight,instance id is %u,L:(%f,%f,%f)\n",
                    _inst_idx, L.x, L.y, L.z);
         }
+
 
     } //luminous::render
 } // luminous::render
