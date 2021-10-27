@@ -38,13 +38,13 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(sample, ctx, u);
         }
 
-        Spectrum LightSampler::estimate_direct_lighting(const Interaction &si, Sampler &sampler,
+        Spectrum LightSampler::estimate_direct_lighting(const Interaction &it, Sampler &sampler,
                                                         uint64_t traversable_handle,
                                                         const SceneData *scene_data,
                                                         NEEData *NEE_data) const {
-            auto sampled_light = sample(si, sampler.next_1d());
+            auto sampled_light = sample(LightSampleContext(it), sampler.next_1d());
             if (sampled_light.is_valid()) {
-                return sampled_light.light->estimate_direct_lighting(si, sampler,
+                return sampled_light.light->estimate_direct_lighting(it, sampler,
                                                                      traversable_handle, scene_data,
                                                                      NEE_data) / sampled_light.PMF;
             }
