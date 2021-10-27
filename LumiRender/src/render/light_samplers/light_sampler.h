@@ -14,6 +14,7 @@ namespace luminous {
     inline namespace render {
 
         using lstd::Variant;
+
         using lstd::optional;
 
         class UniformLightSampler;
@@ -50,7 +51,11 @@ namespace luminous {
 
             LM_ND_XPU const Light &light_at(uint idx) const;
 
+            LM_ND_XPU const Light &infinite_light_at(uint idx) const;
+
             LM_ND_XPU size_t light_num() const;
+
+            LM_ND_XPU size_t infinite_light_num() const;
 
             LM_ND_XPU SampledLight sample(float u) const;
 

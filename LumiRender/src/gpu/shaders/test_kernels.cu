@@ -130,20 +130,20 @@ extern "C" {
 
 
     __global__ void test_light(luminous::Light*light) {
-        using namespace luminous;
+//        using namespace luminous;
 //        light.print();
     }
 
     __global__ void test_area_light(luminous::AreaLight*light) {
-        using namespace luminous;
+//        using namespace luminous;
         //        light.print();
     }
 
     __global__ void test_AL(luminous::AL * light) {
-        using namespace luminous;
+//        using namespace luminous;
 //        light->padded = 15;
-        printf("device %f    \n", light->padded);
-        printf("size is %llu, align is %llu\n", sizeof(AL), alignof(AL));
+//        printf("device %f    \n", light->padded);
+//        printf("size is %llu, align is %llu\n", sizeof(AL), alignof(AL));
     }
 }
 

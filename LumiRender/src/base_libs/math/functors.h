@@ -225,8 +225,8 @@ namespace luminous {
             }
         }
 
-        template<typename T>
-        LM_ND_XPU T triangle_lerp(float2 barycentric, T v0, T v1, T v2) {
+        template<typename T, typename F2>
+        LM_ND_XPU T triangle_lerp(F2 barycentric, T v0, T v1, T v2) {
             auto u = barycentric.x;
             auto v = barycentric.y;
             auto w = 1 - barycentric.x - barycentric.y;

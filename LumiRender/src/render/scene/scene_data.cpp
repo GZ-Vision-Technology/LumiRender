@@ -13,7 +13,7 @@ namespace luminous {
 
         SurfaceInteraction SceneData::compute_surface_interaction(index_t inst_id,
                                                                   index_t tri_id,
-                                                                  float2 bary) const {
+                                                                  luminous::float2 bary) const {
             auto mesh = get_mesh(inst_id);
             TriangleHandle tri = get_triangle(mesh, tri_id);
             const auto &mesh_tex_coords = get_tex_coords(mesh);

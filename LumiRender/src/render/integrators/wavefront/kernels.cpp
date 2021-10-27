@@ -5,6 +5,7 @@
 #include "kernels.h"
 #include "render/samplers/shader_include.h"
 #include "render/light_samplers/shader_include.h"
+#include "render/lights/shader_include.h"
 
 #ifdef __CUDACC__
 #define GLOBAL_PREFIX extern "C" __constant__
@@ -62,9 +63,21 @@ namespace luminous {
                                 EscapedRayQueue *escaped_ray_queue,
                                 SOA<PixelSampleState> *pixel_sample_state) {
             const SceneData *scene_data = &(rt_param->scene_data);
+            const LightSampler *light_sampler = scene_data->light_sampler;
             EscapedRayWorkItem item = (*escaped_ray_queue)[task_id];
             Spectrum L = pixel_sample_state->L[item.pixel_index];
-//            Spectrum Le = scene_data->light_sampler->on_miss()
+            for (int i = 0; i < light_sampler->infinite_light_num(); ++i) {
+                const Light &light = light_sampler->infinite_light_at(i);
+                Spectrum Le = light.on_miss(item.ray_d, scene_data);
+                CONTINUE_IF(Le.is_black())
+                if (item.depth == 0) {
+                    L += Le * item.throughput;
+                } else {
+                    float light_choice_PMF = light_sampler->PMF(light);
+                    LightSampleContext ctx = item.prev_lsc;
+//                    float light_PDF = light.
+                }
+            }
             pixel_sample_state->L[item.pixel_index] = L;
         }
 

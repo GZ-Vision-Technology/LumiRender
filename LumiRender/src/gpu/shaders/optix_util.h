@@ -59,8 +59,8 @@ static LM_GPU_INLINE void trace(OptixTraversableHandle handle,
                                 uint32_t SBTstride,
                                 uint32_t missSBTIndex,
                                 Args &&... payload) {
-    float3 origin = make_float3(ray.org_x, ray.org_y, ray.org_z);
-    float3 direction = make_float3(ray.dir_x, ray.dir_y, ray.dir_z);
+    auto origin = ::make_float3(ray.org_x, ray.org_y, ray.org_z);
+    auto direction = ::make_float3(ray.dir_x, ray.dir_y, ray.dir_z);
 
     optixTrace(
             handle,

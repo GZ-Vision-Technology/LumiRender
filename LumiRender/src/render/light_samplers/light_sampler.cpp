@@ -22,6 +22,10 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(light_num);
         }
 
+        size_t LightSampler::infinite_light_num() const {
+            LUMINOUS_VAR_PTR_DISPATCH(infinite_light_num);
+        }
+
         SampledLight LightSampler::sample(float u) const {
             LUMINOUS_VAR_PTR_DISPATCH(sample, u);
         }
@@ -49,6 +53,10 @@ namespace luminous {
 
         const Light &LightSampler::light_at(uint idx) const {
             LUMINOUS_VAR_PTR_DISPATCH(light_at, idx);
+        }
+
+        const Light &LightSampler::infinite_light_at(uint idx) const {
+            LUMINOUS_VAR_PTR_DISPATCH(infinite_light_at, idx);
         }
 
         float LightSampler::PMF(const Light &light) const {
