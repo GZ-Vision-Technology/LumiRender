@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "vector_types.h"
+#include "matrix_types.h"
 
 namespace luminous {
     inline namespace math {
@@ -106,7 +106,7 @@ namespace luminous {
         }
 
         ND_XPU_INLINE bool has_inf(Quaternion q) noexcept {
-            return has_inf(q.v) || is_inf(q.w);
+            return luminous::has_inf(q.v) || is_inf(q.w);
         }
 
         ND_XPU_INLINE Quaternion operator*(float f, const Quaternion &q) {

@@ -49,38 +49,6 @@ namespace luminous {
 
 #undef MAKE_VECTOR_UNARY_FUNC
 
-#define MAKE_VECTOR_UNARY_FUNC_BOOL(func)                                      \
-    template<typename T, uint N>                                               \
-        LM_ND_XPU constexpr auto is_##func##_v(Vector<T, N> v) noexcept {       \
-        static_assert(N == 2 || N == 3 || N == 4);                             \
-        if constexpr (N == 2) {                                                \
-            return Vector<bool, 2>{is_##func(v.x), is_##func(v.y)};            \
-        } else if constexpr (N == 3) {                                         \
-            return Vector<bool, 3>(is_##func(v.x), is_##func(v.y),             \
-                                    is_##func(v.z));                           \
-        } else {                                                               \
-            return Vector<bool, 4>(is_##func(v.x), is_##func(v.y),             \
-                                    is_##func(v.z), is_##func(v.w));           \
-        }                                                                      \
-    }                                                                          \
-    template<typename T, uint32_t N>                                           \
-    ND_XPU_INLINE bool has_##func(Vector<T, N> v) noexcept {                 \
-        return any(is_##func##_v(v));                                          \
-    }                                                                          \
-    template<typename T>                                                       \
-    ND_XPU_INLINE bool has_##func(Matrix3x3<T> mat) noexcept {               \
-        return has_##func(mat.cols[0]) || has_##func(mat.cols[1])              \
-            || has_##func(mat.cols[2]);                                        \
-    }                                                                          \
-    template<typename T>                                                       \
-    ND_XPU_INLINE bool has_##func(Matrix4x4<T> mat) noexcept {               \
-        return has_##func(mat.cols[0]) || has_##func(mat.cols[1])              \
-            || has_##func(mat.cols[2]) || has_##func(mat.cols[3]);             \
-    }
-
-        MAKE_VECTOR_UNARY_FUNC_BOOL(inf)
-        MAKE_VECTOR_UNARY_FUNC_BOOL(nan)
-
         template<typename T, uint32_t N>
         ND_XPU_INLINE bool is_zero(Vector<T, N> v) noexcept {
             return all(v == T(0));

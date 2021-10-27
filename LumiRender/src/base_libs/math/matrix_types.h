@@ -57,10 +57,10 @@ namespace luminous {
             }
 
             GEN_STRING_FUNC({
-                return serialize("[", serialize(cols[0].to_string()), "\n",
-                                 serialize(cols[1].to_string()), "\n",
-                                 serialize(cols[2].to_string()), "]\n");
-            })
+                                return serialize("[", serialize(cols[0].to_string()), "\n",
+                                                 serialize(cols[1].to_string()), "\n",
+                                                 serialize(cols[2].to_string()), "]\n");
+                            })
         };
 
         template<typename T>
@@ -100,18 +100,18 @@ namespace luminous {
 
             LM_XPU void print() const noexcept {
                 printf("[%f,%f,%f,%f]\n[%f,%f,%f,%f]\n[%f,%f,%f,%f]\n[%f,%f,%f,%f]\n",
-                       cols[0].x, cols[0].y, cols[0].z,cols[0].w,
-                       cols[1].x, cols[1].y, cols[1].z,cols[1].w,
-                       cols[2].x, cols[2].y, cols[2].z,cols[2].w,
-                       cols[3].x, cols[3].y, cols[3].z,cols[3].w);
+                       cols[0].x, cols[0].y, cols[0].z, cols[0].w,
+                       cols[1].x, cols[1].y, cols[1].z, cols[1].w,
+                       cols[2].x, cols[2].y, cols[2].z, cols[2].w,
+                       cols[3].x, cols[3].y, cols[3].z, cols[3].w);
             }
 
             GEN_STRING_FUNC({
-                return serialize("[", serialize(cols[0].to_string()), "\n",
-                                 serialize(cols[1].to_string()), "\n",
-                                 serialize(cols[2].to_string()), "\n",
-                                 serialize(cols[3].to_string()), "]\n");
-            })
+                                return serialize("[", serialize(cols[0].to_string()), "\n",
+                                                 serialize(cols[1].to_string()), "\n",
+                                                 serialize(cols[2].to_string()), "\n",
+                                                 serialize(cols[3].to_string()), "]\n");
+                            })
         };
 
 #define _define_matrix3x3(type)                                                                          \
@@ -219,5 +219,38 @@ namespace luminous {
         LM_XPU LM_NODISCARD constexpr Matrix4x4<T> operator+(const Matrix4x4<T> lhs, const Matrix4x4<T> rhs) noexcept {
             return Matrix4x4<T>(lhs[0] + rhs[0], lhs[1] + rhs[1], lhs[2] + rhs[2], lhs[3] + rhs[3]);
         }
+#define MAKE_VECTOR_UNARY_FUNC_BOOL(func)                                      \
+    template<typename T, uint N>                                               \
+    LM_ND_XPU constexpr auto is_##func##_v(Vector<T, N> v) noexcept {          \
+        static_assert(N == 2 || N == 3 || N == 4);                             \
+        if constexpr (N == 2) {                                                \
+            return Vector<bool, 2>{is_##func(v.x), is_##func(v.y)};            \
+        } else if constexpr (N == 3) {                                         \
+            return Vector<bool, 3>(is_##func(v.x), is_##func(v.y),             \
+                                    is_##func(v.z));                           \
+        } else {                                                               \
+            return Vector<bool, 4>(is_##func(v.x), is_##func(v.y),             \
+                                    is_##func(v.z), is_##func(v.w));           \
+        }                                                                      \
+    }                                                                          \
+    template<typename T, uint32_t N>                                           \
+    ND_XPU_INLINE bool has_##func(Vector<T, N> v) noexcept {                   \
+        return any(is_##func##_v(v));                                          \
+    }                                                                          \
+    template<typename T>                                                       \
+    ND_XPU_INLINE bool has_##func(Matrix3x3<T> mat) noexcept {                 \
+        return has_##func(mat.cols[0]) || has_##func(mat.cols[1])              \
+            || has_##func(mat.cols[2]);                                        \
+    }                                                                          \
+    template<typename T>                                                       \
+    ND_XPU_INLINE bool has_##func(Matrix4x4<T> mat) noexcept {                 \
+        return has_##func(mat.cols[0]) || has_##func(mat.cols[1])              \
+            || has_##func(mat.cols[2]) || has_##func(mat.cols[3]);             \
+    }
+
+        MAKE_VECTOR_UNARY_FUNC_BOOL(inf)
+        MAKE_VECTOR_UNARY_FUNC_BOOL(nan)
+
+#undef MAKE_VECTOR_UNARY_FUNC_BOOL
     }
 }
