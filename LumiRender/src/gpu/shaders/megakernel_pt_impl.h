@@ -30,7 +30,6 @@ GLOBAL __raygen__rg() {
     auto film = camera->film();
     Sampler sampler = *params.sampler;
     auto frame_index = params.frame_index;
-    // todo single frame multi sample and single sample multi frame can not reach a same result
     sampler.start_pixel_sample(pixel, frame_index, 0);
     auto ss = sampler.sensor_sample(pixel);
     bool debug = pixel.x == 383 && pixel.y == 383;

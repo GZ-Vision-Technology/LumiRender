@@ -6,7 +6,6 @@
 #pragma once
 
 #ifdef __CUDACC__
-#ifdef LUMINOUS_IS_WINDOWS
 #if (__CUDA_ARCH__ < 700)
 #define LUMINOUS_USE_LEGACY_CUDA_ATOMICS
 #endif
@@ -18,7 +17,6 @@
 
 #ifndef LUMINOUS_USE_LEGACY_CUDA_ATOMICS
 #include <cuda/atomic>
-#endif
 #else
 
 #include <atomic>

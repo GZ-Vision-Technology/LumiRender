@@ -108,28 +108,11 @@ constexpr const char *type_name(T *ptr = nullptr) {
 #define DCHECK_LT(a, b) DCHECK(a < b);
 #define DCHECK_LE(a, b) DCHECK(a <= b);
 
-// todo change to cross platform
-#define LUMINOUS_IS_WINDOWS
-
 #define CONTINUE_IF(condition) if((condition)) { continue; }
 #define CONTINUE_IF_TIPS(condition, str) if((condition)) { LUMINOUS_DBG(str); continue; }
 
 #define BREAK_IF(condition) if((condition)) { break; }
 #define BREAK_IF_TIPS(condition, str) if((condition)) { LUMINOUS_DBG(str); break; }
-
-#if defined(_WIN32)
-
-// work around for nvcc
-// https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#windows-specific
-#define CHECK_PLACEHOLDER private: char placeholder{};
-
-#else
-
-// work around for nvcc
-// https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#windows-specific
-#define CHECK_PLACEHOLDER private: char placeholder{};
-
-#endif
 
 namespace luminous {
     using ptr_t = uint64_t;

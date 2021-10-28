@@ -92,7 +92,6 @@ namespace luminous {
             explicit BaseBinder(T &&...args)
                     : T{std::move(args)}... {}
 
-        CHECK_PLACEHOLDER
         };
 
         template<>
