@@ -94,11 +94,11 @@ namespace luminous {
 
             typename std::aligned_storage<std::max({sizeof(Ts)...}), alignment_value>::type data{};
 
-            static constexpr int data_refl_index = sizeof((_member_counter((refl::Int<128> *)
+            static constexpr int data_refl_index = sizeof((_member_counter(0, (refl::Int<128> *)
                                                                                    nullptr)));
             static_assert(data_refl_index <= 128, "index must not greater than REFL_MAX_MEMBER_COUNT");
 
-            static refl::detail::Sizer<data_refl_index + 1> (_member_counter(refl::Int<data_refl_index + 1> *));
+            static refl::detail::Sizer<data_refl_index + 1> (_member_counter(int, refl::Int<data_refl_index + 1> *));
 
             template<>
             struct MemberRegister<data_refl_index - 1> {
@@ -130,7 +130,7 @@ namespace luminous {
                 });
             }
 
-            LM_XPU LM_NODISCARD int type_index() const { return index; }
+            LM_ND_XPU int type_index() const { return index; }
 
             template<typename U>
             LM_XPU constexpr static int index_of() {

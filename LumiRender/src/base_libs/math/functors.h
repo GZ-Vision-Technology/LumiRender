@@ -335,7 +335,7 @@ namespace luminous {
             return dst;
         }
 
-        LM_XPU LM_NODISCARD inline float fast_exp(float x) {
+        LM_ND_XPU inline float fast_exp(float x) {
 #ifdef IS_GPU_CODE
             return __expf(x);
 #else

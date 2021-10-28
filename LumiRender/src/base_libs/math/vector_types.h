@@ -121,40 +121,40 @@ namespace luminous {
                 }
             })
 
-#define MAKE_ASSIGN_OP(op)                           \
+#define MAKE_ASSIGN_OP(op)                                  \
     LM_XPU Vector &operator op(Vector<T, N> rhs) noexcept { \
-        static_assert(N == 2 || N == 3 || N == 4);   \
-        if constexpr (N == 2) {                      \
-            Storage::x op rhs.x;                     \
-            Storage::y op rhs.y;                     \
-        } else if constexpr (N == 3) {               \
-            Storage::x op rhs.x;                     \
-            Storage::y op rhs.y;                     \
-            Storage::z op rhs.z;                     \
-        } else {                                     \
-            Storage::x op rhs.x;                     \
-            Storage::y op rhs.y;                     \
-            Storage::z op rhs.z;                     \
-            Storage::w op rhs.w;                     \
-        }                                            \
-        return *this;                                \
-    }                                                \
-    LM_XPU Vector &operator op(T rhs) noexcept {        \
-        static_assert(N == 2 || N == 3 || N == 4);   \
-        if constexpr (N == 2) {                      \
-            Storage::x op rhs;                       \
-            Storage::y op rhs;                       \
-        } else if constexpr (N == 3) {               \
-            Storage::x op rhs;                       \
-            Storage::y op rhs;                       \
-            Storage::z op rhs;                       \
-        } else {                                     \
-            Storage::x op rhs;                       \
-            Storage::y op rhs;                       \
-            Storage::z op rhs;                       \
-            Storage::w op rhs;                       \
-        }                                            \
-        return *this;                                \
+        static_assert(N == 2 || N == 3 || N == 4);          \
+        if constexpr (N == 2) {                             \
+            Storage::x op rhs.x;                            \
+            Storage::y op rhs.y;                            \
+        } else if constexpr (N == 3) {                      \
+            Storage::x op rhs.x;                            \
+            Storage::y op rhs.y;                            \
+            Storage::z op rhs.z;                            \
+        } else {                                            \
+            Storage::x op rhs.x;                            \
+            Storage::y op rhs.y;                            \
+            Storage::z op rhs.z;                            \
+            Storage::w op rhs.w;                            \
+        }                                                   \
+        return *this;                                       \
+    }                                                       \
+    LM_XPU Vector &operator op(T rhs) noexcept {            \
+        static_assert(N == 2 || N == 3 || N == 4);          \
+        if constexpr (N == 2) {                             \
+            Storage::x op rhs;                              \
+            Storage::y op rhs;                              \
+        } else if constexpr (N == 3) {                      \
+            Storage::x op rhs;                              \
+            Storage::y op rhs;                              \
+            Storage::z op rhs;                              \
+        } else {                                            \
+            Storage::x op rhs;                              \
+            Storage::y op rhs;                              \
+            Storage::z op rhs;                              \
+            Storage::w op rhs;                              \
+        }                                                   \
+        return *this;                                       \
     }
 
             MAKE_ASSIGN_OP(+=)
@@ -173,7 +173,7 @@ namespace luminous {
 
 #define MAKE_VECTOR_UNARY_OP(op)                                                         \
     template<typename T, uint N>                                                         \
-    LM_XPU LM_NODISCARD constexpr Vector<std::decay_t<decltype(op static_cast<T>(0))>, N>  \
+    LM_ND_XPU constexpr Vector<std::decay_t<decltype(op static_cast<T>(0))>, N>          \
     operator op(Vector<T, N> v) noexcept {                                               \
         static_assert(N == 2 || N == 3 || N == 4);                                       \
         if constexpr (N == 2) {                                                          \
@@ -198,7 +198,7 @@ namespace luminous {
 
 #define MAKE_VECTOR_BINARY_OP(op)                                                                 \
     template<typename T, uint32_t N, std::enable_if_t<scalar::is_scalar<T>, int> = 0>             \
-    LM_XPU constexpr Vector<T, N> operator op(Vector<T, N> lhs, Vector<T, N> rhs) noexcept {         \
+    LM_XPU constexpr Vector<T, N> operator op(Vector<T, N> lhs, Vector<T, N> rhs) noexcept {      \
         static_assert(N == 2 || N == 3 || N == 4);                                                \
         if constexpr (N == 2) {                                                                   \
             return Vector<T, 2>{lhs.x op rhs.x, lhs.y op rhs.y};                                  \
@@ -209,7 +209,7 @@ namespace luminous {
         }                                                                                         \
     }                                                                                             \
     template<typename T, uint32_t N, std::enable_if_t<scalar::is_scalar<T>, int> = 0>             \
-    LM_XPU constexpr Vector<T, N> operator op(T lhs, Vector<T, N> rhs) noexcept {                    \
+    LM_XPU constexpr Vector<T, N> operator op(T lhs, Vector<T, N> rhs) noexcept {                 \
         static_assert(N == 2 || N == 3 || N == 4);                                                \
         if constexpr (N == 2) {                                                                   \
             return Vector<T, 2>{lhs op rhs.x, lhs op rhs.y};                                      \
@@ -220,7 +220,7 @@ namespace luminous {
         }                                                                                         \
     }                                                                                             \
     template<typename T, uint32_t N, std::enable_if_t<scalar::is_scalar<T>, int> = 0>             \
-    LM_XPU constexpr Vector<T, N> operator op(Vector<T, N> lhs, T rhs) noexcept {                    \
+    LM_XPU constexpr Vector<T, N> operator op(Vector<T, N> lhs, T rhs) noexcept {                 \
         static_assert(N == 2 || N == 3 || N == 4);                                                \
         if constexpr (N == 2) {                                                                   \
             return Vector<T, 2>{lhs.x op rhs, lhs.y op rhs};                                      \
@@ -245,7 +245,7 @@ namespace luminous {
 
 #define MAKE_VECTOR_RELATIONAL_OP(op)                                                                \
     template<typename T, uint N>                                                                     \
-    LM_XPU constexpr auto operator op(Vector<T, N> lhs, Vector<T, N> rhs) noexcept {                    \
+    LM_XPU constexpr auto operator op(Vector<T, N> lhs, Vector<T, N> rhs) noexcept {                 \
         static_assert(N == 2 || N == 3 || N == 4);                                                   \
         if constexpr (N == 2) {                                                                      \
             return Vector<bool, 2>{lhs.x op rhs.x, lhs.y op rhs.y};                                  \
@@ -256,7 +256,7 @@ namespace luminous {
         }                                                                                            \
     }                                                                                                \
     template<typename T, uint N>                                                                     \
-    LM_XPU constexpr auto operator op(T lhs, Vector<T, N> rhs) noexcept {                               \
+    LM_XPU constexpr auto operator op(T lhs, Vector<T, N> rhs) noexcept {                            \
         static_assert(N == 2 || N == 3 || N == 4);                                                   \
         if constexpr (N == 2) {                                                                      \
             return Vector<bool, 2>{lhs op rhs.x, lhs op rhs.y};                                      \
@@ -267,7 +267,7 @@ namespace luminous {
         }                                                                                            \
     }                                                                                                \
     template<typename T, uint N>                                                                     \
-    LM_XPU constexpr auto operator op(Vector<T, N> lhs, T rhs) noexcept {                               \
+    LM_XPU constexpr auto operator op(Vector<T, N> lhs, T rhs) noexcept {                            \
         static_assert(N == 2 || N == 3 || N == 4);                                                   \
         if constexpr (N == 2) {                                                                      \
             return Vector<bool, 2>{lhs.x op rhs, lhs.y op rhs};                                      \
@@ -292,40 +292,40 @@ namespace luminous {
 
 #undef MAKE_VECTOR_RELATIONAL_OP
 
-#define MAKE_VECTOR_MAKE_TYPE2(type)                                                      \
+#define MAKE_VECTOR_MAKE_TYPE2(type)                                                         \
     LM_XPU constexpr auto make_##type##2() noexcept { return type##2{}; }                    \
     LM_XPU constexpr auto make_##type##2(type s) noexcept { return type##2{s}; }             \
     LM_XPU constexpr auto make_##type##2(type x, type y) noexcept { return type##2{x, y}; }  \
-    template<typename T>                                                                  \
+    template<typename T>                                                                     \
     LM_XPU constexpr auto make_##type##2(T v[]) noexcept {                                   \
-        return type##2{static_cast<type>(v[0]), static_cast<type>(v[1])};                 \
-    }                                                                                     \
-                                                                                          \
-    template<typename U, uint N>                                                          \
+        return type##2{static_cast<type>(v[0]), static_cast<type>(v[1])};                    \
+    }                                                                                        \
+                                                                                             \
+    template<typename U, uint N>                                                             \
     LM_XPU constexpr auto make_##type##2(Vector<U, N> v) noexcept {                          \
-        static_assert(N == 2 || N == 3 || N == 4);                                        \
-        return type##2{static_cast<type>(v.x), static_cast<type>(v.y)};                   \
+        static_assert(N == 2 || N == 3 || N == 4);                                           \
+        return type##2{static_cast<type>(v.x), static_cast<type>(v.y)};                      \
     }
 
-#define MAKE_VECTOR_MAKE_TYPE3(type)                                                                   \
+#define MAKE_VECTOR_MAKE_TYPE3(type)                                                                      \
     LM_XPU constexpr auto make_##type##3() noexcept { return type##3{}; }                                 \
     LM_XPU constexpr auto make_##type##3(type s) noexcept { return type##3{s}; }                          \
     LM_XPU constexpr auto make_##type##3(type x, type y, type z) noexcept { return type##3 {x, y, z}; }   \
     LM_XPU constexpr auto make_##type##3(type##2 v, type z) noexcept { return type##3 {v.x, v.y, z}; }    \
     LM_XPU constexpr auto make_##type##3(type x, type##2 v) noexcept { return type##3 {x, v.x, v.y}; }    \
-                                                                                                       \
-    template<typename U, uint N>                                                                       \
+                                                                                                          \
+    template<typename U, uint N>                                                                          \
     LM_XPU constexpr auto make_##type##3(Vector<U, N> v) noexcept {                                       \
-        static_assert(N == 3 || N == 4);                                                               \
-        return type##3 {static_cast<type>(v.x), static_cast<type>(v.y), static_cast<type>(v.z)};       \
-    }                                                                                                  \
-                                                                                                       \
-    template<typename U>                                                                               \
+        static_assert(N == 3 || N == 4);                                                                  \
+        return type##3 {static_cast<type>(v.x), static_cast<type>(v.y), static_cast<type>(v.z)};          \
+    }                                                                                                     \
+                                                                                                          \
+    template<typename U>                                                                                  \
     LM_XPU constexpr auto make_##type##3(U v[]) noexcept {                                                \
-        return type##3{static_cast<type>(v[0]), static_cast<type>(v[1]), static_cast<type>(v[2])};     \
-    }                                                                                                  \
+        return type##3{static_cast<type>(v[0]), static_cast<type>(v[1]), static_cast<type>(v[2])};        \
+    }                                                                                                     \
 
-#define MAKE_VECTOR_MAKE_TYPE4(type)                                                                             \
+#define MAKE_VECTOR_MAKE_TYPE4(type)                                                                                \
     LM_XPU constexpr auto make_##type##4() noexcept { return type##4 {}; }                                          \
     LM_XPU constexpr auto make_##type##4(type s) noexcept { return type##4 {s}; }                                   \
     LM_XPU constexpr auto make_##type##4(type x, type y, type z, type w) noexcept { return type##4 {x, y, z, w}; }  \
@@ -335,22 +335,22 @@ namespace luminous {
     LM_XPU constexpr auto make_##type##4(type##2 v, type##2 u) noexcept { return type##4 {v.x, v.y, u.x, u.y}; }    \
     LM_XPU constexpr auto make_##type##4(type##3 v, type w) noexcept { return type##4 {v.x, v.y, v.z, w}; }         \
     LM_XPU constexpr auto make_##type##4(type x, type##3 v) noexcept { return type##4 {x, v.x, v.y, v.z}; }         \
-    template<typename U>                                                                                         \
+    template<typename U>                                                                                            \
     LM_XPU constexpr auto make_##type##4(Vector<U, 4> v) noexcept {                                                 \
-        return type##4 {                                                                                         \
-            static_cast<type>(v.x),                                                                              \
-            static_cast<type>(v.y),                                                                              \
-            static_cast<type>(v.z),                                                                              \
-            static_cast<type>(v.w)};                                                                             \
-    }                                                                                                            \
-                                                                                                                 \
-    template<typename U>                                                                                         \
+        return type##4 {                                                                                            \
+            static_cast<type>(v.x),                                                                                 \
+            static_cast<type>(v.y),                                                                                 \
+            static_cast<type>(v.z),                                                                                 \
+            static_cast<type>(v.w)};                                                                                \
+    }                                                                                                               \
+                                                                                                                    \
+    template<typename U>                                                                                            \
     LM_XPU constexpr auto make_##type##4(U v[]) noexcept {                                                          \
-        return type##4 {                                                                                         \
-            static_cast<type>(v[0]),                                                                             \
-            static_cast<type>(v[1]),                                                                             \
-            static_cast<type>(v[2]),                                                                             \
-            static_cast<type>(v[3])};                                                                            \
+        return type##4 {                                                                                            \
+            static_cast<type>(v[0]),                                                                                \
+            static_cast<type>(v[1]),                                                                                \
+            static_cast<type>(v[2]),                                                                                \
+            static_cast<type>(v[3])};                                                                               \
     }
 
 

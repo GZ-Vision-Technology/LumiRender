@@ -28,7 +28,7 @@ namespace luminous {
 
 #define REFL_CLASS(NAME)                                                        \
     using ReflSelf = NAME;                                                      \
-    static refl::detail::Sizer<1> _member_counter(...);                         \
+    static refl::detail::Sizer<1> _member_counter(int, ...);                    \
     template<int N>                                                             \
     struct MemberRegister {                                                     \
         template<typename F>                                                    \
@@ -38,12 +38,12 @@ namespace luminous {
 #define DEFINE_AND_REGISTER_MEMBER(TYPE, NAME, ...)                             \
     TYPE NAME{__VA_ARGS__};                                                     \
     static constexpr int NAME##_refl_index =                                    \
-        sizeof((_member_counter(                                                \
+        sizeof((_member_counter(0,                                              \
             (refl::Int<REFL_MAX_MEMBER_COUNT>*)nullptr)));                      \
     static_assert(NAME##_refl_index <= REFL_MAX_MEMBER_COUNT,                   \
                 "index must not greater than REFL_MAX_MEMBER_COUNT");           \
     static refl::detail::Sizer<NAME##_refl_index + 1>                           \
-        (_member_counter(refl::Int<NAME##_refl_index + 1> *));                  \
+        (_member_counter(int, refl::Int<NAME##_refl_index + 1> *));             \
     template<>                                                                  \
     struct MemberRegister<NAME##_refl_index - 1> {                              \
         template<typename F>                                                    \

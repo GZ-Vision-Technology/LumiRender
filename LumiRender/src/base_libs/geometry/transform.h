@@ -12,7 +12,7 @@
 namespace luminous {
     inline namespace geometry {
 
-        LM_XPU LM_NODISCARD static Quaternion matrix_to_quaternion(const float4x4 &m) {
+        LM_ND_XPU static Quaternion matrix_to_quaternion(const float4x4 &m) {
             float x, y, z, w;
             float trace = m[0][0] + m[1][1] + m[2][2];
             if (trace > 0.f) {
@@ -60,7 +60,7 @@ namespace luminous {
             return make_float3(axis_x_angle, axis_y_angle, axis_z_angle);
         }
 
-        LM_XPU LM_NODISCARD static float4x4 quaternion_to_matrix(const Quaternion &q) noexcept {
+        LM_ND_XPU static float4x4 quaternion_to_matrix(const Quaternion &q) noexcept {
             float x = q.v.x;
             float y = q.v.y;
             float z = q.v.z;
@@ -176,7 +176,7 @@ namespace luminous {
                 return Box3f(minPoint, maxPoint);
             }
 
-            LM_XPU Ray apply_ray(Ray ray) const {
+            LM_ND_XPU Ray apply_ray(Ray ray) const {
                 ray.update_origin(apply_point(ray.origin()));
                 ray.update_direction(apply_vector(ray.direction()));
                 return ray;
@@ -187,7 +187,7 @@ namespace luminous {
             }
 
             LM_ND_XPU Transform inverse() const {
-                return Transform(_inv_mat, _mat);
+                return {_inv_mat, _mat};
             }
 
             GEN_STRING_FUNC({
@@ -212,7 +212,7 @@ namespace luminous {
                         0.0f, 1.0f, 0.0f, 0.0f,
                         0.0f, 0.0f, 1.0f, 0.0f,
                         -t.x, -t.y, -t.z, 1.0f);
-                return Transform(mat, inv);
+                return {mat, inv};
             }
 
             LM_ND_XPU static Transform translation(float x, float y, float z) {
@@ -230,7 +230,7 @@ namespace luminous {
                         0.0f, 1 / s.y, 0.0f, 0.0f,
                         0.0f, 0.0f, 1 / s.z, 0.0f,
                         0.0f, 0.0f, 0.0f, 1.0f);
-                return Transform(mat, inv);
+                return {mat, inv};
             }
 
             LM_ND_XPU static Transform scale(float x, float y, float z) {
