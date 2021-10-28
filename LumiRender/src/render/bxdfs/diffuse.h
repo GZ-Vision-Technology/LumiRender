@@ -15,27 +15,27 @@ namespace luminous {
 
         class IdealDiffuse {
         private:
-            float4 _R = make_float4(-1.f);
+            float4 R = make_float4(-1.f);
 
             LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const {
-                return _R * constant::invPi;
+                return Spectrum{R * constant::invPi};
             }
 
             LM_ND_XPU bool valid() const {
-                return any(_R != make_float4(-1.f));
+                return any(R != make_float4(-1.f));
             }
 
         public:
             LM_XPU IdealDiffuse() = default;
 
-            LM_XPU IdealDiffuse(float4 R) : _R(R) {}
+            LM_XPU IdealDiffuse(float4 R) : R(R) {}
 
             LM_ND_XPU float4 base_color() const {
-                return _R;
+                return R;
             }
 
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const {
-                return same_hemisphere(wo, wi) ? _eval(wo, wi) : make_float4(0.f);
+                return same_hemisphere(wo, wi) ? _eval(wo, wi) : Spectrum{make_float4(0.f)};
             }
 
             LM_ND_XPU float PDF(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance,
@@ -63,11 +63,11 @@ namespace luminous {
             }
 
             LM_XPU void print() const {
-                printf("ideal diffuse r(%f,%f,%f,%f)", _R.x, _R.y, _R.z, _R.w);
+                printf("ideal diffuse r(%f,%f,%f,%f)", R.x, R.y, R.z, R.w);
             }
 
             GEN_STRING_FUNC({
-                LUMINOUS_TO_STRING("IdealDiffuse R : %s", _R.to_string().c_str());
+                LUMINOUS_TO_STRING("IdealDiffuse R : %s", R.to_string().c_str());
             })
         };
     } // luminous::render
