@@ -82,7 +82,7 @@ namespace luminous {
             pixel_sample_state->L[item.pixel_index] = L;
         }
 
-        void eval_BSDFs(int task_id, int n_item,
+        void estimate_direct_lighting(int task_id, int n_item,
                         ShadowRayQueue *shadow_ray_queue,
                         MaterialEvalQueue *material_eval_queue) {
 

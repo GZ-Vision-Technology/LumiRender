@@ -48,8 +48,8 @@ namespace luminous {
 
         }
 
-        void EmbreeAggregate::intersect_any(int max_rays, ShadowRayQueue *shadow_ray_queue,
-                                            SOA<PixelSampleState> *pixel_sample_state) const {
+        void EmbreeAggregate::intersect_any_and_record_direct_lighting(int max_rays, ShadowRayQueue *shadow_ray_queue,
+                                                                       SOA<PixelSampleState> *pixel_sample_state) const {
             parallel_for(shadow_ray_queue->size(), [&](uint task_id, uint tid) {
                 ShadowRayWorkItem item = (*shadow_ray_queue)[task_id];
                 bool hit = _intersect_any(item.ray);

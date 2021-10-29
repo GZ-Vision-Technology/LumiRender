@@ -40,7 +40,7 @@ namespace luminous {
             DEFINE_KERNEL(generate_ray_samples);
             DEFINE_KERNEL(process_escape_ray);
             DEFINE_KERNEL(process_emission);
-            DEFINE_KERNEL(eval_BSDFs);
+            DEFINE_KERNEL(estimate_direct_lighting);
 #undef DEFINE_KERNEL
 
             // accelerate structure
@@ -103,7 +103,7 @@ namespace luminous {
 
             void intersect_closest(int depth);
 
-            void trace_shadow_ray(int wavefront_depth);
+            void intersect_any_and_record_direct_lighting(int wavefront_depth);
 
             void update() override {
                 _rt_param->frame_index += 1;

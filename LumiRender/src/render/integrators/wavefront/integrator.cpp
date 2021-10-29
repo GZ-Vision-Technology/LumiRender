@@ -87,16 +87,14 @@ namespace luminous {
                                              _pixel_sample_state.device_data());
                     _dispatcher.wait();
 
-                    if (depth == _max_depth) {
-                        break;
-                    }
+                    BREAK_IF(depth == _max_depth)
 
-                    _eval_BSDFs.launch(_dispatcher, _max_queue_size,
-                                       _shadow_ray_queue.device_data(),
-                                       _material_eval_queue.device_data());
+                    _estimate_direct_lighting.launch(_dispatcher, _max_queue_size,
+                                                     _shadow_ray_queue.device_data(),
+                                                     _material_eval_queue.device_data());
                     _dispatcher.wait();
 
-                    trace_shadow_ray(depth);
+                    intersect_any_and_record_direct_lighting(depth);
 
 
                 }
@@ -133,7 +131,7 @@ namespace luminous {
             SET_CU_FUNC(generate_ray_samples);
             SET_CU_FUNC(process_escape_ray);
             SET_CU_FUNC(process_emission);
-            SET_CU_FUNC(eval_BSDFs);
+            SET_CU_FUNC(estimate_direct_lighting);
 #undef SET_CU_FUNC
 
         }
@@ -168,9 +166,10 @@ namespace luminous {
                                           _next_ray_queue(depth));
         }
 
-        void WavefrontPT::trace_shadow_ray(int depth) {
-            _aggregate->intersect_any(_max_queue_size, _shadow_ray_queue.device_data(),
-                                      _pixel_sample_state.device_data());
+        void WavefrontPT::intersect_any_and_record_direct_lighting(int depth) {
+            _aggregate->intersect_any_and_record_direct_lighting(_max_queue_size,
+                                                                 _shadow_ray_queue.device_data(),
+                                                                 _pixel_sample_state.device_data());
         }
 
     }
