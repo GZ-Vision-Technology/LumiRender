@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include <utility>
-
 #include "base_libs/geometry/common.h"
 #include "base_libs/optics/common.h"
 #include "render/include/interaction.h"
@@ -26,20 +24,31 @@ namespace luminous {
             WithoutMIS
         };
 
-        struct LightSampleContext {
+        struct SurfacePoint {
             float3 pos;
             float3 ng;
+
+            LM_XPU SurfacePoint() = default;
+
+            LM_XPU SurfacePoint(float3 p, float3 n)
+                    : pos(p), ng(n) {}
+
+            LM_XPU explicit SurfacePoint(const Interaction &it)
+                    : pos(it.pos), ng(it.g_uvn.normal) {}
+
+            LM_XPU explicit SurfacePoint(const SurfaceInteraction &it)
+                    : pos(it.pos), ng(it.g_uvn.normal) {}
+        };
+
+        struct LightSampleContext : public SurfacePoint {
             float3 ns;
             LM_XPU LightSampleContext() = default;
 
-            LM_XPU explicit LightSampleContext(const SurfaceInteraction &si)
-                    : pos(si.pos), ng(si.g_uvn.normal), ns(si.s_uvn.normal) {}
-
             LM_XPU explicit LightSampleContext(const Interaction &it)
-                    : pos(it.pos), ng(it.g_uvn.normal), ns(it.g_uvn.normal) {}
+                    : SurfacePoint(it), ns(it.g_uvn.normal) {}
 
             LM_XPU LightSampleContext(float3 p, float3 ng, float3 ns)
-                    : pos(p), ng(ng), ns(ns) {}
+                    : SurfacePoint{p, ng}, ns(ns) {}
 
             ND_XPU_INLINE Ray spawn_ray(float3 dir) const {
                 return Ray::spawn_ray(pos, ng, dir);
@@ -49,9 +58,20 @@ namespace luminous {
                 return Ray::spawn_ray_to(pos, ng, p);
             }
 
-            ND_XPU_INLINE Ray spawn_ray_to(const LightSampleContext &it) const {
-                return Ray::spawn_ray_to(pos, ng, it.pos, it.ng);
+            ND_XPU_INLINE Ray spawn_ray_to(const LightSampleContext &lsc) const {
+                return Ray::spawn_ray_to(pos, ng, lsc.pos, lsc.ng);
             }
+        };
+
+        /**
+         * used to eval light PDF or lighting to LightSampleContext
+         */
+        struct AreaLightEvalContext : public SurfacePoint {
+        public:
+            float2 uv;
+        public:
+            LM_XPU explicit AreaLightEvalContext(const SurfaceInteraction &si)
+                    : SurfacePoint(si), uv(si.uv) {}
         };
 
         struct LightLiSample {

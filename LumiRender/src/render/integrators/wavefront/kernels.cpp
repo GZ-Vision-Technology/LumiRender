@@ -83,19 +83,18 @@ namespace luminous {
             auto light_sampler = rt_param->scene_data.light_sampler;
             HitAreaLightWorkItem item = (*hit_area_light_queue)[task_id];
             const SceneData *scene_data = &(rt_param->scene_data);
-            item.light->as<AreaLight>();
 
-//            Spectrum Le = item.light->as<AreaLight>();
-//            Spectrum Li{0.f};
-//            Spectrum L = pixel_sample_state->Li[item.pixel_index];
-//            if (item.depth == 0) {
-//                Li = Le * item.throughput;
-//            } else {
-//                Li = Le * item.throughput;
-//            }
-//
-//
-//            pixel_sample_state->Li[item.pixel_index] = L;
+            Spectrum Le = item.light->as<AreaLight>()->radiance(item.uv, item.ng, item.wo, &rt_param->scene_data);
+            Spectrum Li{0.f};
+            Spectrum temp_Li = pixel_sample_state->Li[item.pixel_index];
+            Li = Le * item.throughput;
+            if (item.depth != 0) {
+                float light_select_PMF = light_sampler->PMF(*item.light);
+//                float light_PDF = item.light->PDF_Li(item.p)
+            }
+
+
+            pixel_sample_state->Li[item.pixel_index] = temp_Li;
         }
 
         void estimate_direct_lighting(int task_id, int n_item,
