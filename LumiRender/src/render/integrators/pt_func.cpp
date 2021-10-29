@@ -34,6 +34,9 @@ namespace luminous {
                         si = prd.compute_surface_interaction(ray);
                         L += throughput * si.Le(-ray.direction(), scene_data);
                         pixel_info.normal = si.s_uvn.normal;
+                        if (si.op_bsdf) {
+                            pixel_info.albedo = make_float3(si.op_bsdf->base_color());
+                        }
                     } else {
                         L += prd.scene_data()->light_sampler->on_miss(ray.direction(), prd.scene_data(), throughput);
                     }

@@ -35,6 +35,8 @@ namespace luminous {
             SensorSample ss = sampler.sensor_sample(pixel);
             auto[weight, ray] = camera->generate_ray(ss);
             pixel_sample_state->L[task_id] = {0.f};
+            pixel_sample_state->normal[task_id] = make_float3(0.f);
+            pixel_sample_state->albedo[task_id] = make_float3(0.f);
             pixel_sample_state->filter_weight[task_id] = 1.f;
             ray_queue->push_primary_ray(ray, task_id);
         }
@@ -61,6 +63,9 @@ namespace luminous {
         void process_escape_ray(int task_id, int n_item,
                                 EscapedRayQueue *escaped_ray_queue,
                                 SOA<PixelSampleState> *pixel_sample_state) {
+            if (task_id >= escaped_ray_queue->size()) {
+                return;
+            }
             const SceneData *scene_data = &(rt_param->scene_data);
             const LightSampler *light_sampler = scene_data->light_sampler;
             EscapedRayWorkItem item = (*escaped_ray_queue)[task_id];
@@ -72,6 +77,9 @@ namespace luminous {
         void process_emission(int task_id, int n_item,
                               HitAreaLightQueue *hit_area_light_queue,
                               SOA<PixelSampleState> *pixel_sample_state) {
+            if (task_id >= hit_area_light_queue->size()) {
+                return;
+            }
             auto light_sampler = rt_param->scene_data.light_sampler;
             HitAreaLightWorkItem item = (*hit_area_light_queue)[task_id];
             const SceneData *scene_data = &(rt_param->scene_data);

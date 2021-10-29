@@ -102,6 +102,7 @@ namespace luminous {
                 if (sample_idx + 1 == spp) {
                     _add_samples.launch(_dispatcher, _max_queue_size,
                                         _pixel_sample_state.device_data());
+                    _dispatcher.wait();
                 }
             }
         }
@@ -139,6 +140,7 @@ namespace luminous {
             SET_CU_FUNC(process_escape_ray);
             SET_CU_FUNC(process_emission);
             SET_CU_FUNC(estimate_direct_lighting);
+            SET_CU_FUNC(add_samples);
 #undef SET_CU_FUNC
 
         }
