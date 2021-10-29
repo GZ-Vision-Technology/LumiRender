@@ -243,11 +243,13 @@ namespace luminous {
         struct PixelSampleState {
             uint2 pixel;
             Spectrum L;
+            float3 normal;
+            float3 albedo;
             float filter_weight{};
             Spectrum sensor_ray_weight;
             RaySamples ray_samples;
         };
 
-        LUMINOUS_SOA(PixelSampleState, pixel, L, filter_weight, sensor_ray_weight, ray_samples)
+        LUMINOUS_SOA(PixelSampleState, pixel, L, normal, albedo, filter_weight, sensor_ray_weight, ray_samples)
     }
 }

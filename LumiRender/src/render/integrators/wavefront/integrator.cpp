@@ -58,9 +58,8 @@ namespace luminous {
 
         }
 
-        void WavefrontPT::render_per_sample(int sample_idx) {
+        void WavefrontPT::render_per_sample(int sample_idx, int spp) {
             auto res = _camera->resolution();
-            auto device = create_cpu_device();
             for (int y0 = 0; y0 < res.y; y0 += _scanline_per_pass) {
                 _generate_primary_ray.launch(_dispatcher, _max_queue_size, y0, sample_idx,
                                              _ray_queues.device_data(),
@@ -98,8 +97,11 @@ namespace luminous {
                     _dispatcher.wait();
 
                     intersect_any_and_record_direct_lighting(depth);
+                }
 
-
+                if (sample_idx + 1 == spp) {
+                    _add_samples.launch(_dispatcher, _max_queue_size,
+                                        _pixel_sample_state.device_data());
                 }
             }
         }
@@ -107,8 +109,10 @@ namespace luminous {
         void WavefrontPT::render() {
             auto spp = _sampler->spp();
             for (int sample_idx = 0; sample_idx < spp; ++sample_idx) {
-                render_per_sample(sample_idx);
+                render_per_sample(sample_idx, spp);
             }
+            _rt_param->frame_index += 1;
+            _rt_param.synchronize_to_device();
         }
 
         void WavefrontPT::reset_queues(int depth) {
@@ -174,6 +178,7 @@ namespace luminous {
                                                                  _shadow_ray_queue.device_data(),
                                                                  _pixel_sample_state.device_data());
         }
+
 
     }
 }

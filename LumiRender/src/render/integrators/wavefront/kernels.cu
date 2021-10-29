@@ -54,7 +54,6 @@ GLOBAL kernel_process_emission(int task_id, int n_item,
     }
 }
 
-
 GLOBAL kernel_estimate_direct_lighting(int task_id, int n_item,
                                        luminous::ShadowRayQueue *shadow_ray_queue,
                                        luminous::RayQueue *next_ray_queue,
@@ -62,5 +61,13 @@ GLOBAL kernel_estimate_direct_lighting(int task_id, int n_item,
     task_id = task_id_g3_b3();
     if (task_id < n_item) {
         luminous::estimate_direct_lighting(task_id, n_item, shadow_ray_queue, next_ray_queue, material_eval_queue);
+    }
+}
+
+GLOBAL kernel_add_samples(int task_id, int n_item,
+                          luminous::SOA<PixelSampleState> *pixel_sample_state) {
+    task_id = task_id_g3_b3();
+    if (task_id < n_item) {
+        luminous::add_samples(task_id, n_item, pixel_sample_state);
     }
 }

@@ -41,6 +41,7 @@ namespace luminous {
             DEFINE_KERNEL(process_escape_ray);
             DEFINE_KERNEL(process_emission);
             DEFINE_KERNEL(estimate_direct_lighting);
+            DEFINE_KERNEL(add_samples);
 #undef DEFINE_KERNEL
 
             // accelerate structure
@@ -106,14 +107,14 @@ namespace luminous {
             void intersect_any_and_record_direct_lighting(int wavefront_depth);
 
             void update() override {
-                _rt_param->frame_index += 1;
+                _rt_param->frame_index = 0;
                 _rt_param.synchronize_to_device();
                 _camera.synchronize_all_to_device();
             }
 
             void render() override;
 
-            void render_per_sample(int sample_idx);
+            void render_per_sample(int sample_idx, int spp);
 
         };
     }

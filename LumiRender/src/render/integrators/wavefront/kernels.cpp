@@ -16,7 +16,6 @@
 namespace luminous {
     inline namespace render {
 
-
         GLOBAL_PREFIX RTParam *rt_param;
 
         CPU_ONLY(void set_rt_param(RTParam *param) {
@@ -83,11 +82,21 @@ namespace luminous {
         }
 
         void estimate_direct_lighting(int task_id, int n_item,
-                        ShadowRayQueue *shadow_ray_queue,
-                        RayQueue *next_ray_queue,
-                        MaterialEvalQueue *material_eval_queue) {
+                                      ShadowRayQueue *shadow_ray_queue,
+                                      RayQueue *next_ray_queue,
+                                      MaterialEvalQueue *material_eval_queue) {
 
         }
 
+        void add_samples(int task_id, int n_item,
+                         SOA<PixelSampleState> *pixel_sample_state) {
+            Sensor *camera = rt_param->camera;
+            uint2 pixel = pixel_sample_state->pixel[task_id];
+            Film *film = camera->film();
+            Spectrum L = pixel_sample_state->L[task_id];
+            float3 normal = pixel_sample_state->normal[task_id];
+            float3 albedo = pixel_sample_state->albedo[task_id];
+            film->add_samples(pixel, L, albedo, normal, 1, rt_param->frame_index);
+        }
     }
 }
