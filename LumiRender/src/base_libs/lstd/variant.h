@@ -202,14 +202,14 @@ namespace luminous {
             LM_ND_XPU const U *as() const {
                 static_assert(is_pointer_type, "as<U>() use for pointer type!");
                 static_assert(Index::template GetIndex<U *>::value != -1, "U* is not in T...");
-                return Index::template GetIndex<U *>::value != index ? nullptr : reinterpret_cast<const U *>(data);
+                return *get<U *>();
             }
 
             template<typename U>
             LM_ND_XPU U *as() {
                 static_assert(is_pointer_type, "as<U>() use for pointer type!");
                 static_assert(Index::template GetIndex<U *>::value != -1, "U* is not in T...");
-                return Index::template GetIndex<U *>::value != index ? nullptr : reinterpret_cast<U *>(data);
+                return *get<U *>();
             }
 
 #define _GEN_CASE_N(N)                                                                                                     \

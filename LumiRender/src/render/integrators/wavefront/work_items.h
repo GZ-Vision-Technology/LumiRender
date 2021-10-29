@@ -194,10 +194,10 @@ namespace luminous {
             }
         };
 
-        class AreaLight;
+        class Light;
 
         struct HitAreaLightWorkItem {
-            const AreaLight *light{};
+            const Light *light{};
             float3 pos;
             float3 ng;
             float2 uv;
@@ -242,7 +242,7 @@ namespace luminous {
 
         struct PixelSampleState {
             uint2 pixel;
-            Spectrum L;
+            Spectrum Li;
             float3 normal;
             float3 albedo;
             float filter_weight{};
@@ -250,6 +250,6 @@ namespace luminous {
             RaySamples ray_samples;
         };
 
-        LUMINOUS_SOA(PixelSampleState, pixel, L, normal, albedo, filter_weight, sensor_ray_weight, ray_samples)
+        LUMINOUS_SOA(PixelSampleState, pixel, Li, normal, albedo, filter_weight, sensor_ray_weight, ray_samples)
     }
 }

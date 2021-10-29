@@ -34,7 +34,7 @@ namespace luminous {
             sampler.start_pixel_sample(pixel, sample_index, 0);
             SensorSample ss = sampler.sensor_sample(pixel);
             auto[weight, ray] = camera->generate_ray(ss);
-            pixel_sample_state->L[task_id] = {0.f};
+            pixel_sample_state->Li[task_id] = {0.f};
             pixel_sample_state->normal[task_id] = make_float3(0.f);
             pixel_sample_state->albedo[task_id] = make_float3(0.f);
             pixel_sample_state->filter_weight[task_id] = 1.f;
@@ -69,9 +69,9 @@ namespace luminous {
             const SceneData *scene_data = &(rt_param->scene_data);
             const LightSampler *light_sampler = scene_data->light_sampler;
             EscapedRayWorkItem item = (*escaped_ray_queue)[task_id];
-            Spectrum L = pixel_sample_state->L[item.pixel_index];
+            Spectrum L = pixel_sample_state->Li[item.pixel_index];
             L += light_sampler->on_miss(item.ray_d, scene_data, item.throughput);
-            pixel_sample_state->L[item.pixel_index] = L;
+            pixel_sample_state->Li[item.pixel_index] = L;
         }
 
         void process_emission(int task_id, int n_item,
@@ -83,10 +83,19 @@ namespace luminous {
             auto light_sampler = rt_param->scene_data.light_sampler;
             HitAreaLightWorkItem item = (*hit_area_light_queue)[task_id];
             const SceneData *scene_data = &(rt_param->scene_data);
-            Spectrum Le = item.light->radiance(item.uv, item.ng, item.wo, scene_data);
-            Spectrum L = pixel_sample_state->L[item.pixel_index];
-            L += Le * item.throughput;
-            pixel_sample_state->L[item.pixel_index] = L;
+            item.light->as<AreaLight>();
+
+//            Spectrum Le = item.light->as<AreaLight>();
+//            Spectrum Li{0.f};
+//            Spectrum L = pixel_sample_state->Li[item.pixel_index];
+//            if (item.depth == 0) {
+//                Li = Le * item.throughput;
+//            } else {
+//                Li = Le * item.throughput;
+//            }
+//
+//
+//            pixel_sample_state->Li[item.pixel_index] = L;
         }
 
         void estimate_direct_lighting(int task_id, int n_item,
@@ -103,7 +112,7 @@ namespace luminous {
             Sensor *camera = rt_param->camera;
             uint2 pixel = pixel_sample_state->pixel[task_id];
             Film *film = camera->film();
-            Spectrum L = pixel_sample_state->L[task_id];
+            Spectrum L = pixel_sample_state->Li[task_id];
             float3 normal = pixel_sample_state->normal[task_id];
             float3 albedo = pixel_sample_state->albedo[task_id];
             film->add_samples(pixel, L, albedo, normal, 1, rt_param->frame_index);
