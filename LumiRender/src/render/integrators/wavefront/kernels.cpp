@@ -93,7 +93,9 @@ namespace luminous {
                                       ShadowRayQueue *shadow_ray_queue,
                                       RayQueue *next_ray_queue,
                                       MaterialEvalQueue *material_eval_queue) {
-
+            if (task_id >= material_eval_queue->size()) {
+                return;
+            }
         }
 
         void add_samples(int task_id, int n_item,

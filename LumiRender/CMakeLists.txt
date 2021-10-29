@@ -43,7 +43,7 @@ endfunction()
 #target_link_libraries(assimp_config INTERFACE assimp::assimp)
 #set_target_properties(assimp PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/")
 
-set(LUMINOUS_VCPKG_PATH "E:/work/tools/vcpkg/installed/x64-windows/include")
+#set(LUMINOUS_VCPKG_PATH "E:/work/tools/vcpkg/installed/x64-windows/include")
 
 find_package(assimp CONFIG REQUIRED)
 add_library(assimp_config INTERFACE)

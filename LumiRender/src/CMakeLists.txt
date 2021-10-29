@@ -7,8 +7,6 @@ include_directories("${PROJECT_SOURCE_DIR}/src/ext/gui/imgui/glad")
 include_directories("${PROJECT_SOURCE_DIR}/thirdparty/spdlog/include")
 include_directories("${PROJECT_SOURCE_DIR}/thirdparty/cxxopts/include")
 
-include_directories("${LUMINOUS_VCPKG_PATH}/include")
-
 
 if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
     add_library(luminous-all INTERFACE)

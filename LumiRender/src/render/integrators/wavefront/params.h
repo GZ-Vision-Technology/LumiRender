@@ -19,6 +19,7 @@ namespace luminous {
             HitAreaLightQueue *hit_area_light_queue;
             EscapedRayQueue *escaped_ray_queue;
             MaterialEvalQueue *material_eval_queue;
+            ShadowRayQueue *shadow_ray_queue;
             SOA <PixelSampleState> *pixel_sample_state;
         public:
             WavefrontParams() = default;

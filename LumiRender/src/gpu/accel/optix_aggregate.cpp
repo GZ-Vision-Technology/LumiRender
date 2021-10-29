@@ -61,7 +61,19 @@ namespace luminous {
 
         void OptixAggregate::intersect_any_and_record_direct_lighting(int max_rays, ShadowRayQueue *shadow_ray_queue,
                                                                       SOA<PixelSampleState> *pixel_sample_state) const {
+            _params->shadow_ray_queue = shadow_ray_queue;
+            _params->traversable_handle = OptixAccel::handle();
+            _params.synchronize_to_device();
 
+            auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;
+            OPTIX_CHECK(optixLaunch(_optix_pipeline,
+                                    stream,
+                                    _params.device_ptr<CUdeviceptr>(),
+                                    sizeof(WavefrontParams),
+                                    _intersect_any.sbt_ptr(),
+                                    max_rays, 1, 1));
+
+            _dispatcher.wait();
         }
 
         void OptixAggregate::intersect_any_tr(int max_rays, ShadowRayQueue *shadow_ray_queue,

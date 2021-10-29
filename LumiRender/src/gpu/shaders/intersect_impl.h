@@ -39,9 +39,15 @@ GLOBAL __raygen__find_closest() {
 }
 
 GLOBAL __raygen__occlusion() {
-    if (getLaunchIndex() >= params.ray_queue->size()) {
+    using namespace luminous;
+    int task_id = getLaunchIndex();
+    if (task_id >= params.shadow_ray_queue->size()) {
         return;
     }
+    ShadowRayWorkItem item = (*params.shadow_ray_queue)[task_id];
+    Ray ray = item.ray;
+    bool hit = traceAnyHit(params.traversable_handle, ray);
+    record_shadow_ray_result(item, params.pixel_sample_state, hit);
 }
 
 GLOBAL __miss__closest() {
