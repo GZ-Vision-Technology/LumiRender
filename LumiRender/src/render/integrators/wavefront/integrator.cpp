@@ -89,8 +89,11 @@ namespace luminous {
 
                     BREAK_IF(depth == _max_depth)
 
+                    RayQueue *next_ray_queue = _next_ray_queue(depth);
+
                     _estimate_direct_lighting.launch(_dispatcher, _max_queue_size,
                                                      _shadow_ray_queue.device_data(),
+                                                     next_ray_queue,
                                                      _material_eval_queue.device_data());
                     _dispatcher.wait();
 

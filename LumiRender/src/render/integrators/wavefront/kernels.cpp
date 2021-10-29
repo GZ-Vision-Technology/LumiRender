@@ -84,6 +84,7 @@ namespace luminous {
 
         void estimate_direct_lighting(int task_id, int n_item,
                         ShadowRayQueue *shadow_ray_queue,
+                        RayQueue *next_ray_queue,
                         MaterialEvalQueue *material_eval_queue) {
 
         }
