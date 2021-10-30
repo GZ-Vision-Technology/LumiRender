@@ -110,7 +110,7 @@ namespace luminous {
             float PMF = compute_prim_PMF(inst_id, tri_id);
             float PDF_pos = PMF / prim_area;
 
-            return LightEvalContext{pos, ng, uv, PDF_pos};
+            return LightEvalContext{pos, normalize(ng), uv, PDF_pos};
         }
 
         void SceneData::fill_attribute(index_t inst_id, index_t tri_id, float2 bary,

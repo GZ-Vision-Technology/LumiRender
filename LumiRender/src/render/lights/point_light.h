@@ -25,7 +25,7 @@ namespace luminous {
                       _pos(pos),
                       _intensity(intensity) {}
 
-            LM_ND_XPU SurfaceInteraction sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const;
+            LM_ND_XPU LightEvalContext sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const;
 
             LM_ND_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 

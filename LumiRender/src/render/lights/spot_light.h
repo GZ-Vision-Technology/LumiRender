@@ -37,7 +37,7 @@ namespace luminous {
                       _cos_theta_i(cos(radians(theta_i))),
                       _cos_theta_o(cos(radians(theta_o))) {}
 
-            LM_ND_XPU SurfaceInteraction sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const;
+            LM_ND_XPU LightEvalContext sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const;
 
             LM_ND_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 

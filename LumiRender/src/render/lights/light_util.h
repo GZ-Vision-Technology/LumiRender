@@ -87,13 +87,13 @@ namespace luminous {
             Spectrum L{};
             float3 wi{};
             float PDF_dir{-1.f};
-            SurfaceInteraction p_light{};
-            LightSampleContext ctx{};
+            LightEvalContext p_light{};
+            LightSampleContext lsc{};
             LM_XPU LightLiSample() = default;
 
             LM_XPU LightLiSample(const float3 &L, float3 wi,
-                                 float PDF, SurfaceInteraction si)
-                    : L(L), wi(wi), PDF_dir(PDF), p_light(si) {}
+                                 float PDF, LightEvalContext lec)
+                    : L(L), wi(wi), PDF_dir(PDF), p_light(lec) {}
 
             LM_ND_XPU bool has_contribution() const {
                 return nonzero(L) && PDF_dir != 0;

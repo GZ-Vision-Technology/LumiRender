@@ -16,23 +16,22 @@ namespace luminous {
                   _inv_area(1 / area),
                   _two_sided(two_sided) {}
 
-        SurfaceInteraction AreaLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
-            SurfaceInteraction ret;
+        LightEvalContext AreaLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             auto mesh = scene_data->get_mesh(_inst_idx);
             const Distribution1D &distrib = scene_data->distributions[mesh.distribute_idx];
             float PMF = 0;
             size_t triangle_id = distrib.sample_discrete(u.x, &PMF, &u.x);
-            float2 uv = square_to_triangle(u);
-            ret = scene_data->compute_surface_interaction(_inst_idx, triangle_id, uv);
-            ret.update_PDF_pos(PMF);
-            return ret;
+            float2 bary = square_to_triangle(u);
+            LightEvalContext lec;
+            lec = scene_data->compute_light_eval_context(_inst_idx, triangle_id, bary);
+            return lec;
         }
 
         LightLiSample AreaLight::Li(LightLiSample lls, const SceneData *data) const {
-            float3 wi = lls.p_light.pos - lls.ctx.pos;
+            float3 wi = lls.p_light.pos - lls.lsc.pos;
             lls.wi = normalize(wi);
             lls.L = radiance(LightEvalContext{lls.p_light}, -lls.wi, data);
-            lls.PDF_dir = PDF_Li(lls.ctx, LightEvalContext{lls.p_light}, wi, data);
+            lls.PDF_dir = PDF_Li(lls.lsc, LightEvalContext{lls.p_light}, wi, data);
             return lls;
         }
 

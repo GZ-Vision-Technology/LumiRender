@@ -16,7 +16,7 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(type);
         }
 
-        SurfaceInteraction Light::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
+        LightEvalContext Light::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             LUMINOUS_VAR_PTR_DISPATCH(sample, lls, u, scene_data);
         }
 
@@ -27,15 +27,13 @@ namespace luminous {
         lstd::optional<LightLiSample> Light::sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
                                                        const SceneData *scene_data) const {
             lls.p_light = sample(&lls, u, scene_data);
-            float factor = lls.PDF_dir == 0 ? 0 : 1;
-            Ray ray = lls.ctx.spawn_ray_to(LightSampleContext(lls.p_light));
+            Ray ray = lls.lsc.spawn_ray_to(lls.p_light);
             bool occluded = intersect_any(traversable_handle, ray);
             if (occluded) {
                 return {};
             }
-            lls.p_light.wo = normalize(-ray.direction());
-            lls.p_light.light = this;
             lls = Li(lls, scene_data);
+            float factor = lls.PDF_dir == 0 ? 0 : 1;
             lls.L *= factor;
             return lls;
         }
@@ -49,7 +47,7 @@ namespace luminous {
             LightLiSample lls;
             auto si = (const SurfaceInteraction &)it;
             auto bsdf = si.op_bsdf.value();
-            lls.ctx = LightSampleContext(it);
+            lls.lsc = LightSampleContext(it);
             auto op_lls = sample_Li(sampler.next_2d(), lls, traversable_handle, scene_data);
             if (op_lls && op_lls->has_contribution()) {
                 bsdf_val = bsdf.eval(si.wo, op_lls->wi);
