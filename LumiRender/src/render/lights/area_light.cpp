@@ -31,7 +31,7 @@ namespace luminous {
         LightLiSample AreaLight::Li(LightLiSample lls, const SceneData *data) const {
             float3 wi = lls.p_light.pos - lls.ctx.pos;
             lls.wi = normalize(wi);
-            lls.L = radiance(lls.p_light, -lls.wi, data);
+            lls.L = radiance(AreaLightEvalContext{lls.p_light}, -lls.wi, data);
             lls.PDF_dir = PDF_Li(lls.ctx, lls.p_light, wi, data);
             return lls;
         }
@@ -54,9 +54,9 @@ namespace luminous {
             return (_two_sided ? _2Pi : Pi) * L * (1.f / _inv_area);
         }
 
-        Spectrum AreaLight::radiance(const SurfaceInteraction &p_light, float3 w,
+        Spectrum AreaLight::radiance(const AreaLightEvalContext &lec, float3 w,
                                      const SceneData *scene_data) const {
-            return radiance(p_light.uv, p_light.g_uvn.normal, w, scene_data);
+            return radiance(lec.uv, lec.ng, w, scene_data);
         }
 
         Spectrum AreaLight::radiance(float2 uv, float3 ng, float3 w, const SceneData *scene_data) const {

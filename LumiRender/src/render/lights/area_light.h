@@ -26,7 +26,7 @@ namespace luminous {
 
             AreaLight(uint inst_idx, float3 L, float area, bool two_sided);
 
-            LM_ND_XPU Spectrum radiance(const SurfaceInteraction &p_light, float3 w,
+            LM_ND_XPU Spectrum radiance(const AreaLightEvalContext &lec, float3 w,
                                         const SceneData *scene_data) const;
 
             LM_ND_XPU Spectrum radiance(float2 uv, float3 ng, float3 w, const SceneData *scene_data) const;
