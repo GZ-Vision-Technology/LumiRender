@@ -126,6 +126,7 @@ namespace luminous {
             float2 uv;
             UVN s_uvn;
             float PDF_pos = 0;
+            float prim_area = 0;
             const Light *light = nullptr;
             lstd::optional<BSDF> op_bsdf{};
             const Material *material = nullptr;
