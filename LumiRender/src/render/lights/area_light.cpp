@@ -32,14 +32,14 @@ namespace luminous {
             float3 wi = lls.p_light.pos - lls.ctx.pos;
             lls.wi = normalize(wi);
             lls.L = radiance(AreaLightEvalContext{lls.p_light}, -lls.wi, data);
-            lls.PDF_dir = PDF_Li(lls.ctx, lls.p_light, wi, data);
+            lls.PDF_dir = PDF_Li(lls.ctx, AreaLightEvalContext{lls.p_light}, wi, data);
             return lls;
         }
 
-        float AreaLight::PDF_Li(const LightSampleContext &p_ref, const SurfaceInteraction &p_light,
+        float AreaLight::PDF_Li(const LightSampleContext &p_ref, const AreaLightEvalContext &p_light,
                                 float3 wi, const SceneData *data) const {
             float3 wo = p_ref.pos - p_light.pos;
-            float PDF = luminous::PDF_dir(p_light.PDF_pos, p_light.g_uvn.normal, wo);
+            float PDF = luminous::PDF_dir(p_light.PDF_pos, p_light.ng, wo);
             if (is_inf(PDF)) {
                 return 0;
             }

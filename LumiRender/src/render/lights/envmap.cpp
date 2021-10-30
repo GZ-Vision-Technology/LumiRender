@@ -46,7 +46,7 @@ namespace luminous {
             return L(d, data);
         }
 
-        float Envmap::PDF_Li(const LightSampleContext &p_ref, const SurfaceInteraction &p_light,
+        float Envmap::PDF_Li(const LightSampleContext &p_ref, const AreaLightEvalContext &p_light,
                              float3 wi, const SceneData *data) const {
             float3 w = _w2o.apply_vector(wi);
             float theta = spherical_theta(w);

@@ -29,7 +29,7 @@ namespace luminous {
 
             LM_ND_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 
-            LM_ND_XPU float PDF_Li(const LightSampleContext &ctx, const SurfaceInteraction &p_light,
+            LM_ND_XPU float PDF_Li(const LightSampleContext &ctx, const AreaLightEvalContext &p_light,
                                    float3 wi, const SceneData *data) const;
 
             LM_ND_XPU Spectrum power() const;
