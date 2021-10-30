@@ -26,8 +26,8 @@ namespace luminous {
 
         lstd::optional<LightLiSample> Light::sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
                                                        const SceneData *scene_data) const {
-            lls.p_light = sample(&lls, u, scene_data);
-            Ray ray = lls.lsc.spawn_ray_to(lls.p_light);
+            lls.lec = sample(&lls, u, scene_data);
+            Ray ray = lls.lsc.spawn_ray_to(lls.lec);
             bool occluded = intersect_any(traversable_handle, ray);
             if (occluded) {
                 return {};

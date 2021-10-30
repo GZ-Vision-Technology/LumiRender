@@ -26,7 +26,7 @@ namespace luminous {
         }
 
         LightLiSample PointLight::Li(LightLiSample lls, const SceneData *data) const {
-            float3 wi = lls.p_light.pos - lls.lsc.pos;
+            float3 wi = lls.lec.pos - lls.lsc.pos;
             lls.L = _intensity / length_squared(wi);
             lls.PDF_dir = 0;
             lls.wi = normalize(wi);

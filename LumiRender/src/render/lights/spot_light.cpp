@@ -29,7 +29,7 @@ namespace luminous {
         }
 
         LightLiSample SpotLight::Li(LightLiSample lls, const SceneData *data) const {
-            float3 wi = lls.lsc.pos - lls.p_light.pos;
+            float3 wi = lls.lsc.pos - lls.lec.pos;
             float3 L = _intensity / length_squared(wi);
             wi = normalize(wi);
             float f = fall_off(wi);

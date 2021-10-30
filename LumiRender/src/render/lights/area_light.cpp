@@ -28,10 +28,10 @@ namespace luminous {
         }
 
         LightLiSample AreaLight::Li(LightLiSample lls, const SceneData *data) const {
-            float3 wi = lls.p_light.pos - lls.lsc.pos;
+            float3 wi = lls.lec.pos - lls.lsc.pos;
             lls.wi = normalize(wi);
-            lls.L = radiance(LightEvalContext{lls.p_light}, -lls.wi, data);
-            lls.PDF_dir = PDF_Li(lls.lsc, LightEvalContext{lls.p_light}, wi, data);
+            lls.L = radiance(LightEvalContext{lls.lec}, -lls.wi, data);
+            lls.PDF_dir = PDF_Li(lls.lsc, LightEvalContext{lls.lec}, wi, data);
             return lls;
         }
 
