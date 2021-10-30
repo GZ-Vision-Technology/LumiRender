@@ -71,6 +71,8 @@ namespace luminous {
             float2 uv{};
             float PDF_pos{};
         public:
+            LM_XPU AreaLightEvalContext() = default;
+
             LM_XPU explicit AreaLightEvalContext(const SurfaceInteraction &si)
                     : SurfacePoint(si), uv(si.uv), PDF_pos(si.PDF_pos) {}
         };

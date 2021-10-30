@@ -82,9 +82,10 @@ namespace luminous {
             }
             auto light_sampler = rt_param->scene_data.light_sampler;
             HitAreaLightWorkItem item = (*hit_area_light_queue)[task_id];
+            AreaLightEvalContext lec = item.lec;
             const SceneData *scene_data = &(rt_param->scene_data);
 
-            Spectrum Le = item.light->as<AreaLight>()->radiance(item.uv, item.ng, item.wo, &rt_param->scene_data);
+            Spectrum Le = item.light->as<AreaLight>()->radiance(lec.uv, lec.ng, item.wo, &rt_param->scene_data);
             Spectrum Li{0.f};
             Spectrum temp_Li = pixel_sample_state->Li[item.pixel_index];
             Li = Le * item.throughput;

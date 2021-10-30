@@ -29,8 +29,7 @@ GLOBAL __raygen__find_closest() {
     PerRayData prd;
     bool hit = traceClosestHit(params.traversable_handle, ray, &prd);
     if (hit) {
-        SurfaceInteraction si = prd.compute_surface_interaction(ray);
-        enqueue_item_after_intersect(r, si, params.next_ray_queue,
+        enqueue_item_after_intersect(r, prd, params.next_ray_queue,
                                      params.hit_area_light_queue,
                                      params.material_eval_queue);
     } else {

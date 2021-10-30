@@ -19,14 +19,10 @@ namespace luminous {
             return luminous::intersect_any((uint64_t) rtc_scene(), ray);
         }
 
-        lstd::optional<SurfaceInteraction> EmbreeAggregate::_intersect_closest(Ray ray) const {
+        PerRayData EmbreeAggregate::_intersect_closest(Ray ray) const {
             PerRayData prd{_scene_data};
-            bool hit = luminous::intersect_closest((uint64_t) rtc_scene(), ray, &prd);
-            if (hit) {
-                return {prd.compute_surface_interaction(ray)};
-            } else {
-                return {};
-            }
+            luminous::intersect_closest((uint64_t) rtc_scene(), ray, &prd);
+            return prd;
         }
 
         void EmbreeAggregate::intersect_closest(int max_rays, const RayQueue *ray_queue,
@@ -36,9 +32,9 @@ namespace luminous {
                                                 RayQueue *next_ray_queue) const {
             async(ray_queue->size(), [=](uint task_id, uint tid) {
                 RayWorkItem ray_work_item = (*ray_queue)[task_id];
-                auto op_si = _intersect_closest(ray_work_item.ray);
-                if (op_si) {
-                    enqueue_item_after_intersect(ray_work_item, op_si.value(),
+                auto prd = _intersect_closest(ray_work_item.ray);
+                if (prd.is_hit()) {
+                    enqueue_item_after_intersect(ray_work_item, prd,
                                                  next_ray_queue, hit_area_light_queue,
                                                  material_eval_queue);
                 } else {

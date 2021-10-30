@@ -3,7 +3,7 @@
 //
 
 #include "process_queue.h"
-#include "render/include/shader_include.h"
+#include "render/scene/shader_include.h"
 #include "render/lights/shader_include.h"
 #include "render/materials/shader_include.h"
 
@@ -25,11 +25,13 @@ namespace luminous {
             pixel_sample_state->Li[w.pixel_index] = L_pixel + L;
         }
 
-        void enqueue_item_after_intersect(RayWorkItem r, const SurfaceInteraction& si,
+        void enqueue_item_after_intersect(RayWorkItem r, PerRayData prd,
                                           RayQueue *next_ray_queue,
                                           HitAreaLightQueue *hit_area_light_queue,
                                           MaterialEvalQueue *material_eval_queue) {
             // todo process medium
+
+            auto si = prd.compute_surface_interaction(r.ray);
 
             if (!si.has_material()) {
                 Ray new_ray = si.spawn_ray(r.ray.direction());
@@ -42,8 +44,10 @@ namespace luminous {
             }
 
             if (si.has_emission()) {
-                HitAreaLightWorkItem item{si.light, si.pos, si.g_uvn.normal,
-                                          si.uv, si.wo, r.depth, r.throughput, r.prev_lsc,
+                auto scene_data = prd.scene_data();
+                float PMF = scene_data->compute_prim_PMF(prd.hit_point);
+                si.update_PDF_pos(PMF);
+                HitAreaLightWorkItem item{si.light, AreaLightEvalContext{si}, si.wo, r.depth, r.throughput, r.prev_lsc,
                                           r.specular_bounce, r.pixel_index};
                 hit_area_light_queue->push(item);
 

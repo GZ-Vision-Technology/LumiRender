@@ -196,11 +196,11 @@ namespace luminous {
 
         class Light;
 
+        LUMINOUS_SOA(AreaLightEvalContext, pos, ng, uv, PDF_pos)
+
         struct HitAreaLightWorkItem {
             const Light *light{};
-            float3 pos;
-            float3 ng;
-            float2 uv;
+            AreaLightEvalContext lec;
             float3 wo;
             int depth{};
             Spectrum throughput;
@@ -209,7 +209,7 @@ namespace luminous {
             int pixel_index{};
         };
 
-        LUMINOUS_SOA(HitAreaLightWorkItem, light, pos, ng, uv, wo, depth,
+        LUMINOUS_SOA(HitAreaLightWorkItem, light, lec, wo, depth,
                      throughput, prev_lsc, specular_bounce, pixel_index)
 
         using HitAreaLightQueue = WorkQueue<HitAreaLightWorkItem>;
