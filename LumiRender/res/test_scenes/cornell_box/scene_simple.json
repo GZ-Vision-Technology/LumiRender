@@ -1,0 +1,268 @@
+{
+	"textures" : [
+		{
+			"type" :"ConstantTexture",
+			"name" : "constant",
+			"param": {
+				"val": [1,0,1,0],
+				"color_space": "SRGB"
+			}
+		}
+//	,
+//		{
+//			"name": "picture",
+//			"type" :"ImageTexture",
+//			"param": {
+//				"fn": "HelloWorld.png",
+//				"color_space": "LINEAR"
+//			}
+//		}
+//	,
+//		{
+//			"name": "envmap",
+//			"type": "ImageTexture",
+//			"param": {
+//				"fn": "spruit_sunrise_2k.hdr",
+//				"color_space": "LINEAR"
+//			}
+//		}
+	],
+	"materials": [
+		{
+			"type": "MatteMaterial",
+			"name": "quad",
+			"param": {
+				"diffuse": "constant"
+			}
+		},
+		{
+			"type": "MatteMaterial",
+			"name": "quad2",
+			"param": {
+				"diffuse": "constant"
+			}
+		}
+	],
+	"shapes" : [
+//		{
+//			"name" : "c_box",
+//			"type": "model",
+//			"param" : {
+//				"fn": "cornell_box.obj",
+//				"subdiv_level": 0,
+//				"transform" : {
+//					"type" : "matrix4x4",
+//					"param" : {
+//						"matrix4x4" : [
+//							[1,0,0,1],
+//							[0,1,0,2],
+//							[0,0,1,3],
+//							[0,0,0,1]
+//						]
+//					}
+//				}
+//			}
+//		},
+//		{
+//			"name" : "c_box",
+//			"type": "quad",
+//			"param" : {
+//				"width": 1,
+//				"height": 1,
+//				"transform" : {
+//					"type" : "yaw_pitch",
+//					"param" : {
+//						"yaw" : 0,
+//						"pitch": 0,
+//						"position": [0,0,0]
+//					}
+//				},
+//				"material": "quad"
+//			}
+//		},
+//		{
+//			"name" : "quad1",
+//			"type": "quad",
+//			"param" : {
+//				"width": 1,
+//				"height": 1,
+//				"emission": [5,5,5],
+//				"transform" : {
+//					"type" : "yaw_pitch",
+//					"param" : {
+//						"yaw" : 0,
+//						"pitch": 0,
+//						"position": [5,5,5]
+//					}
+//				},
+//				"material" : "quad"
+//			}
+//		},
+		{
+			"name" : "quad2",
+			"type": "quad",
+			"param" : {
+				"width": 0.5,
+				"height": 0.5,
+				"emission": [17,12,4],
+				"scale": 2.0,
+				"transform" : {
+					"type" : "yaw_pitch",
+					"param" : {
+						"yaw" : 0,
+						"pitch": -90,
+						"position": [-0.83,1.62,0.8]
+					}
+				},
+				"material": "quad2"
+			}
+		},
+//		{
+//			"name" : "c_box",
+//			"type": "model",
+//			"param" : {
+//				"fn": "cbox_smallbox.obj",
+//				"subdiv_level": 0,
+//				"transform" : {
+//					"type" : "yaw_pitch",
+//					"param" : {
+//						"yaw" : 10,
+//						"pitch": 20,
+//						"position": [1,1,1]
+//					}
+//				}
+//			}
+//		},
+		{
+			"name" : "c_box",
+			"type": "model",
+			"param" : {
+//				"material": "quad",
+				"fn": "cornell_box.obj",
+				"smooth": false,
+				"swap_handed": true,
+				"subdiv_level": 0,
+				"transform" : {
+					"type" : "trs",
+					"param" : {
+						"t": [0,0,0],
+						"r": [0,1,0,180],
+						"s": [0.003,0.003,0.003]
+					}
+				}
+			}
+		}
+//	,
+//		{
+//			"name" : "c_box",
+//			"type": "model",
+//			"param" : {
+////				"material": "quad",
+//				"fn": "nanosuit/nanosuit.obj",
+//				"subdiv_level": 0,
+//				"transform" : {
+//					"type" : "trs",
+//					"param" : {
+//						"t" : [0, 0, 1],
+//						"r" : [0, 1, 0, 180],
+//						"s" : [0.1,0.1,0.1]
+//					}
+//				}
+//			}
+//		},
+//		{
+//			"name" : "nanosuit",
+//			"type": "model",
+//			"param" : {
+//				//				"material": "quad",
+//				"fn": "nanosuit/nanosuit.obj",
+//				"subdiv_level": 0,
+//				"transform" : {
+//					"type" : "trs",
+//					"param" : {
+//						"t" : [-1, 0, 1],
+//						"r" : [0, 1, 0, 180],
+//						"s" : [0.1,0.1,0.1]
+//					}
+//				}
+//			}
+//		}
+	],
+	"lights" : [
+//		{
+//			"type": "Envmap",
+//			"param": {
+//				"transform" : {
+//					"type" : "yaw_pitch",
+//					"param" : {
+//						"yaw" : 0,
+//						"pitch": 0,
+//						"position": [0,0,0]
+//					}
+//				},
+//				"scale": [1,1,1],
+//				"key" : "envmap"
+//			}
+//		}
+//		{
+//			"type": "PointLight",
+//			"param": {
+//				"pos": [10,10,10],
+//				"intensity": [10,1,6]
+//			}
+//		}
+	],
+	"integrator" : {
+//		"type" : "WavefrontPT",
+		"type" : "PT",
+		"param" : {
+			"max_depth" : 3,
+			"rr_threshold" : 1
+		}
+	},
+	"light_sampler": {
+		"type": "UniformLightSampler"
+	},
+	"camera" : {
+		"type" : "PinholeCamera",
+		"param" : {
+			"fov_y" : 35,
+			"velocity" : 20,
+			"transform" : {
+				"type" : "yaw_pitch",
+//				"param" : {
+//					"yaw" : 180,
+//					"pitch": 0,
+//					"position": [-0.83,0.819,2.5]
+//				}
+				"param" : {
+					"yaw" : 0,
+					"pitch": 0,
+					"position": [-0.83,0.819,-2.5]
+				}
+			},
+			"film" : {
+				"param" : {
+					"resolution" : [768, 768],
+					"fb_state": 0
+				}
+			}
+		}
+	},
+	"sampler" : {
+		"type" : "PCGSampler",
+		"param" : {
+			"spp" : 1
+		}
+	},
+	"output" : {
+		"fn":"cornell-box.png",
+		"frame_num" : 0
+	},
+	"filter" : {
+		"type" : "triangle",
+		"param" : {
+			"radius" : [1,1]
+		}
+	}
+}
