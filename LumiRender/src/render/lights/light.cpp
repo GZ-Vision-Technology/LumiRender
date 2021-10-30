@@ -6,6 +6,7 @@
 #include "light.h"
 #include "render/include/trace.h"
 #include "core/refl/factory.h"
+#include "render/scene/scene_data.h"
 
 namespace luminous {
     inline namespace render {
@@ -90,7 +91,7 @@ namespace luminous {
                     PerRayData prd{data};
                     NEE_data->found_intersection = intersect_closest(traversable_handle, ray, &prd);
                     if (prd.is_hit() && (NEE_data->next_si = prd.compute_surface_interaction(ray)).light == this) {
-                        NEE_data->next_si.PDF_pos = as<AreaLight>()->inv_area();
+                        NEE_data->next_si.update_PDF_pos(data->compute_prim_PMF(prd.hit_point));
                         Li = NEE_data->next_si.Le(-NEE_data->wi, data);
                         light_PDF = PDF_Li(LightSampleContext(si), NEE_data->next_si, NEE_data->wi, data);
                     } else if (!NEE_data->found_intersection && is_infinite()) {

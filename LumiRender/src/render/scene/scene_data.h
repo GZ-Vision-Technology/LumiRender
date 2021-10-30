@@ -93,7 +93,9 @@ namespace luminous {
                 return get_triangle(mesh, closest_hit.triangle_id);
             }
 
-            LM_XPU SurfaceInteraction compute_surface_interaction(index_t inst_id,
+            LM_ND_XPU float compute_prim_PMF(HitPoint hit_point) const;
+
+            LM_ND_XPU SurfaceInteraction compute_surface_interaction(index_t inst_id,
                                                                   index_t tri_id,
                                                                   luminous::float2 bary) const;
 

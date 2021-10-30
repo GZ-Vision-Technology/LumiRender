@@ -125,12 +125,12 @@ namespace luminous {
         struct SurfaceInteraction : public Interaction {
             float2 uv;
             UVN s_uvn;
-            float PDF_pos = 0;
-            float prim_area = 0;
-            const Light *light = nullptr;
+            float PDF_pos{-1.f};
+            float prim_area{0.f};
+            const Light *light{nullptr};
             lstd::optional<BSDF> op_bsdf{};
-            const Material *material = nullptr;
-            float du_dx = 0, dv_dx = 0, du_dy = 0, dv_dy = 0;
+            const Material *material{nullptr};
+            float du_dx{0}, dv_dx{0}, du_dy{0}, dv_dy{0};
 
             LM_XPU SurfaceInteraction() = default;
 
@@ -142,6 +142,10 @@ namespace luminous {
 
             ND_XPU_INLINE bool has_material() const {
                 return material != nullptr;
+            }
+
+            LM_XPU void update_PDF_pos(float PMF) {
+                PDF_pos = PMF / prim_area;
             }
 
             LM_ND_XPU Spectrum Le(float3 w, const SceneData *scene_data) const;

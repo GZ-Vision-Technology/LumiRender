@@ -133,5 +133,11 @@ namespace luminous {
             auto mesh = get_mesh(inst_id);
             return materials[mesh.material_idx];
         }
+
+        float SceneData::compute_prim_PMF(HitPoint hit_point) const {
+            auto mesh = get_mesh(hit_point.instance_id);
+            const Distribution1D &distrib = get_distrib(mesh.distribute_idx);
+            return distrib.PMF(hit_point.triangle_id);
+        }
     } // luminous::render
 } // luminous
