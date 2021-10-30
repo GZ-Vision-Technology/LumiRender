@@ -14,7 +14,7 @@ namespace luminous {
         public:
             REFL_CLASS(AreaLight)
 
-        public:
+        private:
             uint _inst_idx{};
             float3 L{};
             bool _two_sided{};

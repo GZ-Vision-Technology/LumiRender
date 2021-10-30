@@ -24,7 +24,7 @@ namespace luminous {
             size_t triangle_id = distrib.sample_discrete(u.x, &PMF, &u.x);
             float2 uv = square_to_triangle(u);
             ret = scene_data->compute_surface_interaction(_inst_idx, triangle_id, uv);
-            ret.PDF_pos = PMF / ret.prim_area;
+            ret.PDF_pos = PMF * ret.PDF_pos;
             return ret;
         }
 

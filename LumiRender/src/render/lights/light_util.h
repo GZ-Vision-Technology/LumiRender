@@ -68,10 +68,11 @@ namespace luminous {
          */
         struct AreaLightEvalContext : public SurfacePoint {
         public:
-            float2 uv;
+            float2 uv{};
+            float PDF_pos{};
         public:
             LM_XPU explicit AreaLightEvalContext(const SurfaceInteraction &si)
-                    : SurfacePoint(si), uv(si.uv) {}
+                    : SurfacePoint(si), uv(si.uv), PDF_pos(si.PDF_pos) {}
         };
 
         struct LightLiSample {
