@@ -56,7 +56,7 @@ namespace luminous {
                 return distribute_idx != invalid_uint32;
             }
 
-            ND_XPU_INLINE bool has_light() const {
+            ND_XPU_INLINE bool has_emission() const {
                 return light_idx != invalid_uint32;
             }
 

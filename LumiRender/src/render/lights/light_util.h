@@ -38,6 +38,18 @@ namespace luminous {
 
             LM_XPU explicit SurfacePoint(const SurfaceInteraction &it)
                     : pos(it.pos), ng(it.g_uvn.normal) {}
+
+            ND_XPU_INLINE Ray spawn_ray(float3 dir) const {
+                return Ray::spawn_ray(pos, ng, dir);
+            }
+
+            ND_XPU_INLINE Ray spawn_ray_to(float3 p) const {
+                return Ray::spawn_ray_to(pos, ng, p);
+            }
+
+            ND_XPU_INLINE Ray spawn_ray_to(const SurfacePoint &lsc) const {
+                return Ray::spawn_ray_to(pos, ng, lsc.pos, lsc.ng);
+            }
         };
 
         struct LightSampleContext : public SurfacePoint {
@@ -50,17 +62,7 @@ namespace luminous {
             LM_XPU LightSampleContext(float3 p, float3 ng, float3 ns)
                     : SurfacePoint{p, ng}, ns(ns) {}
 
-            ND_XPU_INLINE Ray spawn_ray(float3 dir) const {
-                return Ray::spawn_ray(pos, ng, dir);
-            }
 
-            ND_XPU_INLINE Ray spawn_ray_to(float3 p) const {
-                return Ray::spawn_ray_to(pos, ng, p);
-            }
-
-            ND_XPU_INLINE Ray spawn_ray_to(const LightSampleContext &lsc) const {
-                return Ray::spawn_ray_to(pos, ng, lsc.pos, lsc.ng);
-            }
         };
 
         /**
@@ -72,6 +74,9 @@ namespace luminous {
             float PDF_pos{};
         public:
             LM_XPU AreaLightEvalContext() = default;
+
+            LM_XPU AreaLightEvalContext(float3 p, float3 ng, float2 uv, float PDF_pos)
+                    : SurfacePoint{p, ng}, uv(uv), PDF_pos(PDF_pos) {}
 
             LM_XPU explicit AreaLightEvalContext(const SurfaceInteraction &si)
                     : SurfacePoint(si), uv(si.uv), PDF_pos(si.PDF_pos) {}
@@ -87,7 +92,7 @@ namespace luminous {
 
             LM_XPU LightLiSample(const float3 &L, float3 wi,
                                  float PDF, SurfaceInteraction si)
-                    : L(L), wi(wi), PDF_dir(PDF), p_light(std::move(si)) {}
+                    : L(L), wi(wi), PDF_dir(PDF), p_light(si) {}
 
             LM_ND_XPU bool has_contribution() const {
                 return nonzero(L) && PDF_dir != 0;

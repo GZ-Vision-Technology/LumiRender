@@ -67,11 +67,50 @@ namespace luminous {
                 luminous::float3 st = normalize(cross(ns, ss));
                 si.s_uvn.set(ss, st, ns);
             }
-            if (mesh.has_light()) {
+            if (mesh.has_emission()) {
                 si.light = &light_sampler->light_at(mesh.light_idx);
             }
             si.material = &materials[mesh.material_idx];
             return si;
+        }
+
+        AreaLightEvalContext SceneData::compute_light_eval_context(index_t inst_id,
+                                                                   index_t tri_id,
+                                                                   luminous::float2 bary) const {
+            auto mesh = get_mesh(inst_id);
+            TriangleHandle tri = get_triangle(mesh, tri_id);
+            const auto &mesh_tex_coords = get_tex_coords(mesh);
+            const auto &mesh_positions = get_positions(mesh);
+            const auto &mesh_normals = get_normals(mesh);
+            const auto &o2w = get_transform(inst_id);
+
+            // compute uv
+            luminous::float2 tex_coord0 = mesh_tex_coords[tri.i];
+            luminous::float2 tex_coord1 = mesh_tex_coords[tri.j];
+            luminous::float2 tex_coord2 = mesh_tex_coords[tri.k];
+            if (is_zero(tex_coord0) && is_zero(tex_coord1) && is_zero(tex_coord2)) {
+                tex_coord0 = luminous::make_float2(0, 0);
+                tex_coord1 = luminous::make_float2(1, 0);
+                tex_coord2 = luminous::make_float2(1, 1);
+            }
+            float2 uv = triangle_lerp(bary, tex_coord0, tex_coord1, tex_coord2);
+
+            // compute pos
+            luminous::float3 p0 = o2w.apply_point(mesh_positions[tri.i]);
+            luminous::float3 p1 = o2w.apply_point(mesh_positions[tri.j]);
+            luminous::float3 p2 = o2w.apply_point(mesh_positions[tri.k]);
+            luminous::float3 pos = triangle_lerp(bary, p0, p1, p2);
+
+            // compute geometry normal
+            luminous::float3 dp02 = p0 - p2;
+            luminous::float3 dp12 = p1 - p2;
+            luminous::float3 ng = cross(dp02, dp12);
+            float prim_area = 0.5f * length(ng);
+
+            float PMF = compute_prim_PMF(inst_id, tri_id);
+            float PDF_pos = PMF / prim_area;
+
+            return AreaLightEvalContext{pos, ng, uv, PDF_pos};
         }
 
         void SceneData::fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
@@ -134,10 +173,10 @@ namespace luminous {
             return materials[mesh.material_idx];
         }
 
-        float SceneData::compute_prim_PMF(HitPoint hit_point) const {
-            auto mesh = get_mesh(hit_point.instance_id);
+        float SceneData::compute_prim_PMF(index_t inst_id, index_t tri_id) const {
+            auto mesh = get_mesh(inst_id);
             const Distribution1D &distrib = get_distrib(mesh.distribute_idx);
-            return distrib.PMF(hit_point.triangle_id);
+            return distrib.PMF(tri_id);
         }
     } // luminous::render
 } // luminous

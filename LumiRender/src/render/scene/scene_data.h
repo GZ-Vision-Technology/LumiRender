@@ -8,7 +8,8 @@
 #include "base_libs/math/common.h"
 #include "core/backend/buffer_view.h"
 #include "base_libs/geometry/common.h"
-#include "render/include/interaction.h"
+#include "render/lights/light_util.h"
+
 
 namespace luminous {
 
@@ -93,14 +94,35 @@ namespace luminous {
                 return get_triangle(mesh, closest_hit.triangle_id);
             }
 
-            LM_ND_XPU float compute_prim_PMF(HitPoint hit_point) const;
+            LM_ND_XPU float compute_prim_PMF(HitPoint hit_point) const {
+                return compute_prim_PMF(hit_point.instance_id, hit_point.triangle_id);
+            }
+
+            LM_ND_XPU float compute_prim_PMF(index_t inst_id, index_t tri_id) const;
 
             LM_ND_XPU SurfaceInteraction compute_surface_interaction(index_t inst_id,
                                                                   index_t tri_id,
                                                                   luminous::float2 bary) const;
 
-            LM_NODISCARD LM_XPU_INLINE SurfaceInteraction compute_surface_interaction(const HitPoint &closest_hit) const {
-                return compute_surface_interaction(closest_hit.instance_id, closest_hit.triangle_id, closest_hit.bary);
+            LM_ND_XPU SurfaceInteraction compute_surface_interaction(const HitPoint &hit_point) const {
+                return compute_surface_interaction(hit_point.instance_id, hit_point.triangle_id, hit_point.bary);
+            }
+
+            LM_ND_XPU bool has_emission(index_t inst_id) const {
+                auto mesh = get_mesh(inst_id);
+                return mesh.has_emission();
+            }
+
+            LM_ND_XPU bool has_emission(const HitPoint &hit_point) const {
+                return has_emission(hit_point.instance_id);
+            }
+
+            LM_ND_XPU AreaLightEvalContext compute_light_eval_context(index_t inst_id,
+                                                                      index_t tri_id,
+                                                                      luminous::float2 bary) const;
+
+            LM_ND_XPU AreaLightEvalContext compute_light_eval_context(const HitPoint &hit_point) const {
+                return compute_light_eval_context(hit_point.instance_id, hit_point.triangle_id, hit_point.bary);
             }
 
             LM_XPU void fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
