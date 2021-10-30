@@ -117,11 +117,11 @@ namespace luminous {
                 return has_emission(hit_point.instance_id);
             }
 
-            LM_ND_XPU AreaLightEvalContext compute_light_eval_context(index_t inst_id,
-                                                                      index_t tri_id,
-                                                                      luminous::float2 bary) const;
+            LM_ND_XPU LightEvalContext compute_light_eval_context(index_t inst_id,
+                                                                  index_t tri_id,
+                                                                  luminous::float2 bary) const;
 
-            LM_ND_XPU AreaLightEvalContext compute_light_eval_context(const HitPoint &hit_point) const {
+            LM_ND_XPU LightEvalContext compute_light_eval_context(const HitPoint &hit_point) const {
                 return compute_light_eval_context(hit_point.instance_id, hit_point.triangle_id, hit_point.bary);
             }
 

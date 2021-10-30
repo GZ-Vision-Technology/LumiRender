@@ -41,7 +41,7 @@ namespace luminous {
             return lls;
         }
 
-        float SpotLight::PDF_Li(const LightSampleContext &ctx, const AreaLightEvalContext &p_light,
+        float SpotLight::PDF_Li(const LightSampleContext &ctx, const LightEvalContext &p_light,
                                 float3 wi, const SceneData *data) const {
             return 0;
         }

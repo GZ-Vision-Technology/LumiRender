@@ -61,7 +61,7 @@ namespace luminous {
                                                         Sampler &sampler, uint64_t traversable_handle,
                                                         const SceneData *scene_data, NEEData *NEE_data) const;
 
-            LM_ND_XPU float PDF_Li(const LightSampleContext &ctx, const AreaLightEvalContext &p_light,
+            LM_ND_XPU float PDF_Li(const LightSampleContext &ctx, const LightEvalContext &p_light,
                                    float3 wi, const SceneData *data) const;
 
             LM_ND_XPU Spectrum power() const;

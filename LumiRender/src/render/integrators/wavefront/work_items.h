@@ -196,11 +196,11 @@ namespace luminous {
 
         class Light;
 
-        LUMINOUS_SOA(AreaLightEvalContext, pos, ng, uv, PDF_pos)
+        LUMINOUS_SOA(LightEvalContext, pos, ng, uv, PDF_pos)
 
         struct HitAreaLightWorkItem {
             const Light *light{};
-            AreaLightEvalContext lec;
+            LightEvalContext lec;
             float3 wo;
             int depth{};
             Spectrum throughput;

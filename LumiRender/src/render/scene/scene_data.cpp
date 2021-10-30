@@ -74,9 +74,9 @@ namespace luminous {
             return si;
         }
 
-        AreaLightEvalContext SceneData::compute_light_eval_context(index_t inst_id,
-                                                                   index_t tri_id,
-                                                                   luminous::float2 bary) const {
+        LightEvalContext SceneData::compute_light_eval_context(index_t inst_id,
+                                                               index_t tri_id,
+                                                               luminous::float2 bary) const {
             auto mesh = get_mesh(inst_id);
             TriangleHandle tri = get_triangle(mesh, tri_id);
             const auto &mesh_tex_coords = get_tex_coords(mesh);
@@ -110,7 +110,7 @@ namespace luminous {
             float PMF = compute_prim_PMF(inst_id, tri_id);
             float PDF_pos = PMF / prim_area;
 
-            return AreaLightEvalContext{pos, ng, uv, PDF_pos};
+            return LightEvalContext{pos, ng, uv, PDF_pos};
         }
 
         void SceneData::fill_attribute(index_t inst_id, index_t tri_id, float2 bary,

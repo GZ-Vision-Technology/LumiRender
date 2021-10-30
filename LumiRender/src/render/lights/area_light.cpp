@@ -31,12 +31,12 @@ namespace luminous {
         LightLiSample AreaLight::Li(LightLiSample lls, const SceneData *data) const {
             float3 wi = lls.p_light.pos - lls.ctx.pos;
             lls.wi = normalize(wi);
-            lls.L = radiance(AreaLightEvalContext{lls.p_light}, -lls.wi, data);
-            lls.PDF_dir = PDF_Li(lls.ctx, AreaLightEvalContext{lls.p_light}, wi, data);
+            lls.L = radiance(LightEvalContext{lls.p_light}, -lls.wi, data);
+            lls.PDF_dir = PDF_Li(lls.ctx, LightEvalContext{lls.p_light}, wi, data);
             return lls;
         }
 
-        float AreaLight::PDF_Li(const LightSampleContext &p_ref, const AreaLightEvalContext &p_light,
+        float AreaLight::PDF_Li(const LightSampleContext &p_ref, const LightEvalContext &p_light,
                                 float3 wi, const SceneData *data) const {
             float3 wo = p_ref.pos - p_light.pos;
             float PDF = luminous::PDF_dir(p_light.PDF_pos, p_light.ng, wo);
@@ -54,7 +54,7 @@ namespace luminous {
             return (_two_sided ? _2Pi : Pi) * L * (1.f / _inv_area);
         }
 
-        Spectrum AreaLight::radiance(const AreaLightEvalContext &lec, float3 w,
+        Spectrum AreaLight::radiance(const LightEvalContext &lec, float3 w,
                                      const SceneData *scene_data) const {
             return radiance(lec.uv, lec.ng, w, scene_data);
         }

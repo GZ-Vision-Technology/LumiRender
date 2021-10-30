@@ -66,19 +66,20 @@ namespace luminous {
         };
 
         /**
+         * A point on light
          * used to eval light PDF or lighting to LightSampleContext
          */
-        struct AreaLightEvalContext : public SurfacePoint {
+        struct LightEvalContext : public SurfacePoint {
         public:
             float2 uv{};
             float PDF_pos{};
         public:
-            LM_XPU AreaLightEvalContext() = default;
+            LM_XPU LightEvalContext() = default;
 
-            LM_XPU AreaLightEvalContext(float3 p, float3 ng, float2 uv, float PDF_pos)
+            LM_XPU LightEvalContext(float3 p, float3 ng, float2 uv, float PDF_pos)
                     : SurfacePoint{p, ng}, uv(uv), PDF_pos(PDF_pos) {}
 
-            LM_XPU explicit AreaLightEvalContext(const SurfaceInteraction &si)
+            LM_XPU explicit LightEvalContext(const SurfaceInteraction &si)
                     : SurfacePoint(si), uv(si.uv), PDF_pos(si.PDF_pos) {}
         };
 

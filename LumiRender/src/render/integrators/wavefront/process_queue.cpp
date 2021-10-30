@@ -47,7 +47,7 @@ namespace luminous {
                 auto scene_data = prd.scene_data();
                 float PMF = scene_data->compute_prim_PMF(prd.hit_point);
                 si.update_PDF_pos(PMF);
-                HitAreaLightWorkItem item{si.light, AreaLightEvalContext{si}, si.wo, r.depth, r.throughput, r.prev_lsc,
+                HitAreaLightWorkItem item{si.light, LightEvalContext{si}, si.wo, r.depth, r.throughput, r.prev_lsc,
                                           r.specular_bounce, r.pixel_index};
                 hit_area_light_queue->push(item);
 
