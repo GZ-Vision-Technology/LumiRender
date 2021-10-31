@@ -35,8 +35,6 @@ namespace luminous {
                 Ray new_ray = hit_ctx.surface_point().spawn_ray(r.ray.direction());
                 next_ray_queue->push_secondary_ray(new_ray, r.depth, r.prev_lsc,
                                                    r.throughput, r.eta_scale,
-                                                   r.specular_bounce,
-                                                   r.any_non_specular_bounces,
                                                    r.pixel_index);
                 return;
             }
@@ -48,21 +46,12 @@ namespace luminous {
             GeometrySurfacePoint gsp = hit_ctx.geometry_surface_point();
 
             if (hit_ctx.has_emission()) {
-                LightEvalContext lec{gsp, hit_ctx.compute_prim_PMF()};
-                HitAreaLightWorkItem item{hit_ctx.light(), lec, wo,
-                                          r.depth, r.throughput, r.prev_lsc,
-                                          r.specular_bounce, r.pixel_index};
-                hit_area_light_queue->push(item);
+
             }
 
 
             auto si = hit_ctx.compute_surface_interaction(r.ray);
 
-
-            MaterialEvalWorkItem item{si.material, si.pos, si.g_uvn.normal, si.s_uvn.normal,
-                                      si.uv, si.wo, r.any_non_specular_bounces,
-                                      r.pixel_index, r.throughput};
-            material_eval_queue->push(item);
         }
     }
 }

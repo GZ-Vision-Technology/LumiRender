@@ -96,20 +96,32 @@ namespace luminous {
 
         LUMINOUS_SOA(Ray, org_x, org_y, org_z, dir_x, dir_y, dir_z, t_max)
 
+        LUMINOUS_SOA(HitInfo, instance_id, prim_id, bary)
+
+        LUMINOUS_SOA(LightSampleContext, pos, ng, ns)
+
         enum RaySampleFlag {
             hasMedia = 1 << 0,
             hasSubsurface = 1 << 1
         };
 
+        struct DirectSamples{
+            float2 u{};
+            float uc{};
+        };
+
+        LUMINOUS_SOA(DirectSamples, u, uc)
+
+        struct IndirectSamples{
+            float2 u{};
+            float uc{}, rr{};
+        };
+
+        LUMINOUS_SOA(IndirectSamples, u, uc, rr)
+
         struct RaySamples {
-            struct {
-                float2 u{};
-                float uc{};
-            } direct;
-            struct {
-                float2 u{};
-                float uc{}, rr{};
-            } indirect;
+            DirectSamples direct;
+            IndirectSamples indirect;
             RaySampleFlag flag{};
         };
 
@@ -122,13 +134,10 @@ namespace luminous {
             Spectrum throughput;
             LightSampleContext prev_lsc;
             float eta_scale{};
-            bool specular_bounce{};
-            bool any_non_specular_bounces{};
         };
 
         LUMINOUS_SOA(RayWorkItem, ray, depth, pixel_index, throughput,
-                     prev_lsc, eta_scale, specular_bounce,
-                     any_non_specular_bounces)
+                     prev_lsc, eta_scale)
 
         class RayQueue : public WorkQueue<RayWorkItem> {
         public:
@@ -149,22 +158,17 @@ namespace luminous {
                 this->pixel_index[index] = pixel_index;
                 this->throughput[index] = Spectrum(1.f);
                 this->eta_scale[index] = 1.f;
-                this->any_non_specular_bounces[index] = false;
-                this->specular_bounce[index] = false;
                 return index;
             }
 
             LM_XPU_INLINE int push_secondary_ray(const Ray &ray, int depth, const LightSampleContext &prev_lsc,
-                                                 const Spectrum &throughput, float eta_scale, bool specular_bounce,
-                                                 bool any_non_specular_bounces, int pixel_index) {
+                                                 const Spectrum &throughput, float eta_scale, int pixel_index) {
                 int index = allocate_entry();
                 this->ray[index] = ray;
                 this->depth[index] = depth;
                 this->pixel_index[index] = pixel_index;
                 this->prev_lsc[index] = prev_lsc;
                 this->throughput[index] = throughput;
-                this->any_non_specular_bounces[index] = any_non_specular_bounces;
-                this->specular_bounce[index] = specular_bounce;
                 this->eta_scale[index] = eta_scale;
                 return index;
             }
@@ -176,12 +180,11 @@ namespace luminous {
             int depth{};
             int pixel_index{};
             Spectrum throughput;
-            int specular_bounce{};
             LightSampleContext prev_lsc;
         };
 
         LUMINOUS_SOA(EscapedRayWorkItem, ray_o, ray_d, depth, pixel_index,
-                     throughput, specular_bounce, prev_lsc)
+                     throughput, prev_lsc)
 
         class EscapedRayQueue : public WorkQueue<EscapedRayWorkItem> {
         public:
@@ -189,28 +192,22 @@ namespace luminous {
 
             LM_XPU_INLINE int push(RayWorkItem r) {
                 EscapedRayWorkItem item{r.ray.origin(), r.ray.direction(), r.depth,
-                                        r.pixel_index, r.throughput, r.specular_bounce, r.prev_lsc};
+                                        r.pixel_index, r.throughput, r.prev_lsc};
                 return WorkQueue::push(item);
             }
         };
 
-        class Light;
-
-        LUMINOUS_SOA(LightEvalContext, pos, ng, uv, PDF_pos)
-
         struct HitAreaLightWorkItem {
-            const Light *light{};
-            LightEvalContext lec;
+            HitInfo hit_info;
             float3 wo;
             int depth{};
             Spectrum throughput;
             LightSampleContext prev_lsc;
-            int specular_bounce{};
             int pixel_index{};
         };
 
-        LUMINOUS_SOA(HitAreaLightWorkItem, light, lec, wo, depth,
-                     throughput, prev_lsc, specular_bounce, pixel_index)
+        LUMINOUS_SOA(HitAreaLightWorkItem, hit_info, wo, depth,
+                     throughput, prev_lsc, pixel_index)
 
         using HitAreaLightQueue = WorkQueue<HitAreaLightWorkItem>;
 
@@ -227,19 +224,13 @@ namespace luminous {
         class Material;
 
         struct MaterialEvalWorkItem {
-            const Material *material;
-            float3 pos;
-            float3 ng;
-            float3 ns;
-            float2 uv;
+            HitInfo hit_info;
             float3 wo;
-            bool any_non_specular_bounces{};
             int pixel_index{};
             Spectrum throughput;
         };
 
-        LUMINOUS_SOA(MaterialEvalWorkItem, pos, ng, ns, uv, wo,
-                     any_non_specular_bounces, pixel_index, throughput)
+        LUMINOUS_SOA(MaterialEvalWorkItem, hit_info, wo, pixel_index, throughput)
 
         using MaterialEvalQueue = WorkQueue<MaterialEvalWorkItem>;
 
