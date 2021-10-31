@@ -184,22 +184,37 @@ namespace luminous {
             }
         };
 
+        struct GeometrySurfacePoint : public SurfacePoint {
+        public:
+            float2 uv{};
+
+            LM_XPU GeometrySurfacePoint() = default;
+
+            LM_XPU explicit GeometrySurfacePoint(const Interaction &it, float2 uv)
+                    : SurfacePoint(it), uv(uv) {}
+
+            LM_XPU GeometrySurfacePoint(float3 p, float3 ng, float2 uv)
+                    : SurfacePoint{p, ng}, uv(uv) {}
+        };
+
         /**
          * A point on light
          * used to eval light PDF or lighting to LightSampleContext
          */
-        struct LightEvalContext : public SurfacePoint {
+        struct LightEvalContext : public GeometrySurfacePoint {
         public:
-            float2 uv{};
             float PDF_pos{};
         public:
             LM_XPU LightEvalContext() = default;
 
+            LM_XPU LightEvalContext(GeometrySurfacePoint gsp, float PDF_pos)
+                    : GeometrySurfacePoint(gsp), PDF_pos(PDF_pos) {}
+
             LM_XPU LightEvalContext(float3 p, float3 ng, float2 uv, float PDF_pos)
-                    : SurfacePoint{p, ng}, uv(uv), PDF_pos(PDF_pos) {}
+                    : GeometrySurfacePoint{p, ng, uv}, PDF_pos(PDF_pos) {}
 
             LM_XPU explicit LightEvalContext(const SurfaceInteraction &si)
-                    : SurfacePoint(si), uv(si.uv), PDF_pos(si.PDF_pos) {}
+                    : GeometrySurfacePoint{si, si.uv}, PDF_pos(si.PDF_pos) {}
         };
 
         struct HitContext {
@@ -223,7 +238,11 @@ namespace luminous {
              * compute geometry data world position and
              * @return position in world space, geometry normal in world space
              */
+            LM_ND_XPU GeometrySurfacePoint geometry_surface_point() const;
+
             LM_ND_XPU SurfacePoint surface_point() const;
+
+            LM_ND_XPU float compute_prim_PMF() const;
 
             LM_ND_XPU const Light *light() const;
 

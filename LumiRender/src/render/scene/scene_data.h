@@ -94,8 +94,8 @@ namespace luminous {
                 return get_triangle(mesh, closest_hit.prim_id);
             }
 
-            LM_ND_XPU float compute_prim_PMF(HitInfo hit_point) const {
-                return compute_prim_PMF(hit_point.instance_id, hit_point.prim_id);
+            LM_ND_XPU float compute_prim_PMF(HitInfo hit_info) const {
+                return compute_prim_PMF(hit_info.instance_id, hit_info.prim_id);
             }
 
             LM_ND_XPU float compute_prim_PMF(index_t inst_id, index_t tri_id) const;
@@ -104,8 +104,8 @@ namespace luminous {
                                                                      index_t tri_id,
                                                                      luminous::float2 bary) const;
 
-            LM_ND_XPU SurfaceInteraction compute_surface_interaction(const HitInfo &hit_point) const {
-                return compute_surface_interaction(hit_point.instance_id, hit_point.prim_id, hit_point.bary);
+            LM_ND_XPU SurfaceInteraction compute_surface_interaction(const HitInfo &hit_info) const {
+                return compute_surface_interaction(hit_info.instance_id, hit_info.prim_id, hit_info.bary);
             }
 
             LM_ND_XPU bool has_emission(index_t inst_id) const {

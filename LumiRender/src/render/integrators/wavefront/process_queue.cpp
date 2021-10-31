@@ -41,10 +41,14 @@ namespace luminous {
                 return;
             }
 
-            float3 wo = normalize(-r.ray.direction());
-            LightEvalContext lec = hit_ctx.compute_light_eval_context();
-            if (hit_ctx.has_emission()) {
 
+
+            float3 wo = normalize(-r.ray.direction());
+
+            GeometrySurfacePoint gsp = hit_ctx.geometry_surface_point();
+
+            if (hit_ctx.has_emission()) {
+                LightEvalContext lec{gsp, hit_ctx.compute_prim_PMF()};
                 HitAreaLightWorkItem item{hit_ctx.light(), lec, wo,
                                           r.depth, r.throughput, r.prev_lsc,
                                           r.specular_bounce, r.pixel_index};

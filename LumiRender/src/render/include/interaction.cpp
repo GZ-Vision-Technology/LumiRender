@@ -35,6 +35,13 @@ namespace luminous {
             return {pos, ng};
         }
 
+        GeometrySurfacePoint HitContext::geometry_surface_point() const {
+            float3 pos, ng;
+            float2 uv;
+            data->fill_attribute(hit_info, &pos, &ng, &uv);
+            return {pos, ng, uv};
+        }
+
         LightEvalContext HitContext::compute_light_eval_context() const {
             return data->compute_light_eval_context(hit_info);
         }
@@ -45,6 +52,10 @@ namespace luminous {
 
         const Material *HitContext::material() const {
             return data->get_material(hit_info.instance_id);
+        }
+
+        float HitContext::compute_prim_PMF() const {
+            return data->compute_prim_PMF(hit_info);
         }
 
         lstd::optional<BSDF> SurfaceInteraction::get_BSDF(const SceneData *scene_data) const {
