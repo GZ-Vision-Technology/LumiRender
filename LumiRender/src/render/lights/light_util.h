@@ -24,34 +24,6 @@ namespace luminous {
             WithoutMIS
         };
 
-        struct SurfacePoint {
-            float3 pos;
-            float3 ng;
-
-            LM_XPU SurfacePoint() = default;
-
-            LM_XPU SurfacePoint(float3 p, float3 n)
-                    : pos(p), ng(n) {}
-
-            LM_XPU explicit SurfacePoint(const Interaction &it)
-                    : pos(it.pos), ng(it.g_uvn.normal) {}
-
-            LM_XPU explicit SurfacePoint(const SurfaceInteraction &it)
-                    : pos(it.pos), ng(it.g_uvn.normal) {}
-
-            ND_XPU_INLINE Ray spawn_ray(float3 dir) const {
-                return Ray::spawn_ray(pos, ng, dir);
-            }
-
-            ND_XPU_INLINE Ray spawn_ray_to(float3 p) const {
-                return Ray::spawn_ray_to(pos, ng, p);
-            }
-
-            ND_XPU_INLINE Ray spawn_ray_to(const SurfacePoint &lsc) const {
-                return Ray::spawn_ray_to(pos, ng, lsc.pos, lsc.ng);
-            }
-        };
-
         struct LightSampleContext : public SurfacePoint {
             float3 ns;
             LM_XPU LightSampleContext() = default;
@@ -63,24 +35,6 @@ namespace luminous {
                     : SurfacePoint{p, ng}, ns(ns) {}
 
 
-        };
-
-        /**
-         * A point on light
-         * used to eval light PDF or lighting to LightSampleContext
-         */
-        struct LightEvalContext : public SurfacePoint {
-        public:
-            float2 uv{};
-            float PDF_pos{};
-        public:
-            LM_XPU LightEvalContext() = default;
-
-            LM_XPU LightEvalContext(float3 p, float3 ng, float2 uv, float PDF_pos)
-                    : SurfacePoint{p, ng}, uv(uv), PDF_pos(PDF_pos) {}
-
-            LM_XPU explicit LightEvalContext(const SurfaceInteraction &si)
-                    : SurfacePoint(si), uv(si.uv), PDF_pos(si.PDF_pos) {}
         };
 
         struct LightLiSample {

@@ -32,8 +32,7 @@ namespace luminous {
             // todo process medium
 
             if (!hit_ctx.has_material()) {
-                auto[pos, ng] = hit_ctx.compute_geometry();
-                Ray new_ray = SurfacePoint(pos, ng).spawn_ray(r.ray.direction());
+                Ray new_ray = hit_ctx.surface_point().spawn_ray(r.ray.direction());
                 next_ray_queue->push_secondary_ray(new_ray, r.depth, r.prev_lsc,
                                                    r.throughput, r.eta_scale,
                                                    r.specular_bounce,
@@ -42,24 +41,17 @@ namespace luminous {
                 return;
             }
 
-
             if (hit_ctx.has_emission()) {
-
+                float3 wo = normalize(-r.ray.direction());
+                HitAreaLightWorkItem item{hit_ctx.light(), hit_ctx.compute_light_eval_context(), wo,
+                                          r.depth, r.throughput, r.prev_lsc,
+                                          r.specular_bounce, r.pixel_index};
+                hit_area_light_queue->push(item);
             }
 
 
             auto si = hit_ctx.compute_surface_interaction(r.ray);
-
-
-            if (si.has_emission()) {
-                auto scene_data = hit_ctx.scene_data();
-                float PMF = scene_data->compute_prim_PMF(hit_ctx.hit_info);
-                si.update_PDF_pos(PMF);
-                HitAreaLightWorkItem item{si.light, LightEvalContext{si}, si.wo, r.depth, r.throughput, r.prev_lsc,
-                                          r.specular_bounce, r.pixel_index};
-                hit_area_light_queue->push(item);
-
-            }
+            
 
             MaterialEvalWorkItem item{si.material, si.pos, si.g_uvn.normal, si.s_uvn.normal,
                                       si.uv, si.wo, r.any_non_specular_bounces,

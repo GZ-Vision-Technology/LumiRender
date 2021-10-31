@@ -29,10 +29,18 @@ namespace luminous {
             return data->has_material(hit_info.instance_id);
         }
 
-        std::pair<float3, float3> HitContext::compute_geometry() const {
+        SurfacePoint HitContext::surface_point() const {
             float3 pos, ng;
             data->fill_attribute(hit_info, &pos, &ng);
             return {pos, ng};
+        }
+
+        LightEvalContext HitContext::compute_light_eval_context() const {
+            return data->compute_light_eval_context(hit_info);
+        }
+
+        const Light *HitContext::light() const {
+            return data->get_light(hit_info.instance_id);
         }
 
         lstd::optional<BSDF> SurfaceInteraction::get_BSDF(const SceneData *scene_data) const {

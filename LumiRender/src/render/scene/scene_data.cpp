@@ -79,45 +79,18 @@ namespace luminous {
         LightEvalContext SceneData::compute_light_eval_context(index_t inst_id,
                                                                index_t tri_id,
                                                                luminous::float2 bary) const {
-            auto mesh = get_mesh(inst_id);
-            TriangleHandle tri = get_triangle(mesh, tri_id);
-            const auto &mesh_tex_coords = get_tex_coords(mesh);
-            const auto &mesh_positions = get_positions(mesh);
-            const auto &mesh_normals = get_normals(mesh);
-            const auto &o2w = get_transform(inst_id);
-
-            // compute uv
-            luminous::float2 tex_coord0 = mesh_tex_coords[tri.i];
-            luminous::float2 tex_coord1 = mesh_tex_coords[tri.j];
-            luminous::float2 tex_coord2 = mesh_tex_coords[tri.k];
-            if (is_zero(tex_coord0) && is_zero(tex_coord1) && is_zero(tex_coord2)) {
-                tex_coord0 = luminous::make_float2(0, 0);
-                tex_coord1 = luminous::make_float2(1, 0);
-                tex_coord2 = luminous::make_float2(1, 1);
-            }
-            float2 uv = triangle_lerp(bary, tex_coord0, tex_coord1, tex_coord2);
-
-            // compute pos
-            luminous::float3 p0 = o2w.apply_point(mesh_positions[tri.i]);
-            luminous::float3 p1 = o2w.apply_point(mesh_positions[tri.j]);
-            luminous::float3 p2 = o2w.apply_point(mesh_positions[tri.k]);
-            luminous::float3 pos = triangle_lerp(bary, p0, p1, p2);
-
-            // compute geometry normal
-            luminous::float3 dp02 = p0 - p2;
-            luminous::float3 dp12 = p1 - p2;
-            luminous::float3 ng = cross(dp02, dp12);
+            float3 pos, ng;
+            float2 uv;
+            fill_attribute(inst_id, tri_id, bary, &pos, &ng, &uv);
             float prim_area = 0.5f * length(ng);
-
             float PMF = compute_prim_PMF(inst_id, tri_id);
             float PDF_pos = PMF / prim_area;
-
             return LightEvalContext{pos, normalize(ng), uv, PDF_pos};
         }
 
         void SceneData::fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
-                                       float3 *world_p, float3 *world_ng,
-                                       float3 *world_ns, float2 *tex_coord) const {
+                                       float3 *world_p, float3 *world_ng,float2 *tex_coord,
+                                       float3 *world_ns ) const {
             auto mesh = get_mesh(inst_id);
             TriangleHandle tri = get_triangle(mesh, tri_id);
 
@@ -179,6 +152,11 @@ namespace luminous {
             auto mesh = get_mesh(inst_id);
             const Distribution1D &distrib = get_distrib(mesh.distribute_idx);
             return distrib.PMF(tri_id);
+        }
+
+        const Light *SceneData::get_light(index_t inst_id) const {
+            auto mesh = get_mesh(inst_id);
+            return &light_sampler->light_at(mesh.light_idx);
         }
     } // luminous::render
 } // luminous

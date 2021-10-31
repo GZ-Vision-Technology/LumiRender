@@ -13,6 +13,8 @@
 namespace luminous {
     inline namespace render {
 
+        class Sampler;
+
         struct RTParam {
             Sampler *sampler;
             Sensor *camera;

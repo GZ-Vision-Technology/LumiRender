@@ -101,8 +101,8 @@ namespace luminous {
             LM_ND_XPU float compute_prim_PMF(index_t inst_id, index_t tri_id) const;
 
             LM_ND_XPU SurfaceInteraction compute_surface_interaction(index_t inst_id,
-                                                                  index_t tri_id,
-                                                                  luminous::float2 bary) const;
+                                                                     index_t tri_id,
+                                                                     luminous::float2 bary) const;
 
             LM_ND_XPU SurfaceInteraction compute_surface_interaction(const HitInfo &hit_point) const {
                 return compute_surface_interaction(hit_point.instance_id, hit_point.prim_id, hit_point.bary);
@@ -136,16 +136,20 @@ namespace luminous {
 
             LM_XPU void fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
                                        float3 *world_p, float3 *world_ng = nullptr,
-                                       float3 *world_ns = nullptr, float2 *tex_coord = nullptr) const;
+                                       float2 *tex_coord = nullptr,
+                                       float3 *world_ns = nullptr) const;
 
             LM_XPU_INLINE void fill_attribute(const HitInfo &closest_hit,
                                               float3 *world_p, float3 *world_ng = nullptr,
-                                              float3 *world_ns = nullptr, float2 *tex_coord = nullptr) const {
+                                              float2 *tex_coord = nullptr,
+                                              float3 *world_ns = nullptr) const {
                 fill_attribute(closest_hit.instance_id, closest_hit.prim_id, closest_hit.bary,
-                               world_p, world_ng, world_ns, tex_coord);
+                               world_p, world_ng, tex_coord, world_ns);
             }
 
             LM_ND_XPU const Material &get_material(index_t inst_id) const;
+
+            LM_ND_XPU const Light *get_light(index_t inst_id) const;
 
             LM_ND_XPU const Texture &get_texture(index_t idx) const;
 
