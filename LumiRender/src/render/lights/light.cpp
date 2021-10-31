@@ -44,10 +44,9 @@ namespace luminous {
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
             Spectrum Ld(0.f);
-            LightLiSample lls;
             auto si = (const SurfaceInteraction &)it;
             auto bsdf = si.op_bsdf.value();
-            lls.lsc = LightSampleContext(it);
+            LightLiSample lls{LightSampleContext(it)};
             auto op_lls = sample_Li(sampler.next_2d(), lls, traversable_handle, scene_data);
             if (op_lls && op_lls->has_contribution()) {
                 bsdf_val = bsdf.eval(si.wo, op_lls->wi);

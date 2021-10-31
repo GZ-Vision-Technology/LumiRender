@@ -96,8 +96,13 @@ namespace luminous {
             if (item.depth == 0) {
                 temp_Li += Le * item.throughput;
             } else {
+                LightLiSample lls{item.prev_lsc};
                 float light_select_PMF = scene_data->light_sampler->PMF(*light);
-//                float light_PDF = light->PDF_Li(item.prev_lsc, lec, make_float3(0.f), scene_data);
+                lls = light->Li(lls, scene_data);
+                float light_PDF = lls.PDF_dir;
+                float bsdf_PDF = item.prev_bsdf_PDF;
+                float weight = bsdf_PDF / (bsdf_PDF + light_PDF);// MIS_weight(bsdf_PDF, light_PDF)
+//                Ld = Le / (bsdf_PDF / bsdf_val + light_PDF / bsdf_val);
             }
             pixel_sample_state->Li[item.pixel_index] = temp_Li;
         }

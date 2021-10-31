@@ -13,6 +13,7 @@ namespace luminous {
     inline namespace render {
         class Scene;
 
+        // todo make CPU support
         class Envmap : BASE_CLASS(LightBase) {
         public:
             REFL_CLASS(Envmap)

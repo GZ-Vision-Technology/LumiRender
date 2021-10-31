@@ -203,11 +203,12 @@ namespace luminous {
             int depth{};
             Spectrum throughput;
             LightSampleContext prev_lsc;
+            float prev_bsdf_PDF;
             int pixel_index{};
         };
 
         LUMINOUS_SOA(HitAreaLightWorkItem, light_hit_info, wo, depth,
-                     throughput, prev_lsc, pixel_index)
+                     throughput, prev_lsc, prev_bsdf_PDF, pixel_index)
 
         using HitAreaLightQueue = WorkQueue<HitAreaLightWorkItem>;
 
