@@ -224,7 +224,10 @@ namespace luminous {
 
         using ShadowRayQueue = WorkQueue<ShadowRayWorkItem>;
 
+        class Material;
+
         struct MaterialEvalWorkItem {
+            const Material *material;
             float3 pos;
             float3 ng;
             float3 ns;

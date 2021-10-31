@@ -70,7 +70,9 @@ namespace luminous {
             if (mesh.has_emission()) {
                 si.light = &light_sampler->light_at(mesh.light_idx);
             }
-            si.material = &materials[mesh.material_idx];
+            if (mesh.has_material()) {
+                si.material = &materials[mesh.material_idx];
+            }
             return si;
         }
 

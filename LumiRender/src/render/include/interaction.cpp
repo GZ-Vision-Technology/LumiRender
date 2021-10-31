@@ -21,6 +21,20 @@ namespace luminous {
             return si;
         }
 
+        bool PerRayData::has_emission() const {
+            return data->has_emission(hit_point.instance_id);
+        }
+
+        bool PerRayData::has_material() const {
+            return data->has_material(hit_point.instance_id);
+        }
+
+        std::pair<float3, float3> PerRayData::compute_geometry() const {
+            float3 pos, ng;
+            data->fill_attribute(hit_point, &pos, &ng);
+            return {pos, ng};
+        }
+
         lstd::optional<BSDF> SurfaceInteraction::get_BSDF(const SceneData *scene_data) const {
             if (!has_material()) {
                 return {};

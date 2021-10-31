@@ -172,6 +172,16 @@ namespace luminous {
                 return hit_point.is_hit();
             }
 
+            LM_ND_XPU bool has_emission() const;
+
+            LM_ND_XPU bool has_material() const;
+
+            /**
+             * compute geometry data world position and
+             * @return position in world space, geometry normal in world space
+             */
+            LM_ND_XPU std::pair<float3, float3> compute_geometry() const;
+
             LM_ND_XPU SurfaceInteraction compute_surface_interaction(Ray ray) const;
 
             ND_XPU_INLINE const SceneData *scene_data() const { return data; }

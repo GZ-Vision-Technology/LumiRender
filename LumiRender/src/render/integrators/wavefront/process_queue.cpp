@@ -31,10 +31,9 @@ namespace luminous {
                                           MaterialEvalQueue *material_eval_queue) {
             // todo process medium
 
-            auto si = prd.compute_surface_interaction(r.ray);
-
-            if (!si.has_material()) {
-                Ray new_ray = si.spawn_ray(r.ray.direction());
+            if (!prd.has_material()) {
+                auto[pos, ng] = prd.compute_geometry();
+                Ray new_ray = SurfacePoint(pos, ng).spawn_ray(r.ray.direction());
                 next_ray_queue->push_secondary_ray(new_ray, r.depth, r.prev_lsc,
                                                    r.throughput, r.eta_scale,
                                                    r.specular_bounce,
@@ -42,6 +41,15 @@ namespace luminous {
                                                    r.pixel_index);
                 return;
             }
+
+
+            if (prd.has_emission()) {
+
+            }
+
+
+            auto si = prd.compute_surface_interaction(r.ray);
+
 
             if (si.has_emission()) {
                 auto scene_data = prd.scene_data();
@@ -53,7 +61,7 @@ namespace luminous {
 
             }
 
-            MaterialEvalWorkItem item{si.pos, si.g_uvn.normal, si.s_uvn.normal,
+            MaterialEvalWorkItem item{si.material, si.pos, si.g_uvn.normal, si.s_uvn.normal,
                                       si.uv, si.wo, r.any_non_specular_bounces,
                                       r.pixel_index, r.throughput};
             material_eval_queue->push(item);

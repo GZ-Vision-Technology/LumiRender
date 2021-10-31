@@ -117,6 +117,15 @@ namespace luminous {
                 return has_emission(hit_point.instance_id);
             }
 
+            LM_ND_XPU bool has_material(index_t inst_id) const {
+                auto mesh = get_mesh(inst_id);
+                return mesh.has_material();
+            }
+
+            LM_ND_XPU bool has_material(const HitPoint &hit_point) const {
+                return has_material(hit_point.instance_id);
+            }
+
             LM_ND_XPU LightEvalContext compute_light_eval_context(index_t inst_id,
                                                                   index_t tri_id,
                                                                   luminous::float2 bary) const;
