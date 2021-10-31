@@ -39,19 +39,16 @@ namespace luminous {
                 return;
             }
 
-
-
             float3 wo = normalize(-r.ray.direction());
 
-            GeometrySurfacePoint gsp = hit_ctx.geometry_surface_point();
-
             if (hit_ctx.has_emission()) {
-
+                HitAreaLightWorkItem item{hit_ctx.hit_info, wo, r.depth,
+                                          r.throughput, r.prev_lsc, r.pixel_index};
+                hit_area_light_queue->push(item);
             }
 
-
-            auto si = hit_ctx.compute_surface_interaction(r.ray);
-
+            MaterialEvalWorkItem item{hit_ctx.hit_info, wo, r.pixel_index, r.throughput};
+            material_eval_queue->push(item);
         }
     }
 }

@@ -223,6 +223,9 @@ namespace luminous {
 
             HitContext() = default;
 
+            LM_XPU HitContext(HitInfo hit_info, const SceneData *data)
+                    : hit_info(hit_info), data(data) {}
+
             LM_XPU explicit HitContext(const SceneData *data)
                     : data(data) {}
 

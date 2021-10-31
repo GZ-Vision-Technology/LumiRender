@@ -198,7 +198,7 @@ namespace luminous {
         };
 
         struct HitAreaLightWorkItem {
-            HitInfo hit_info;
+            HitInfo light_hit_info;
             float3 wo;
             int depth{};
             Spectrum throughput;
@@ -206,7 +206,7 @@ namespace luminous {
             int pixel_index{};
         };
 
-        LUMINOUS_SOA(HitAreaLightWorkItem, hit_info, wo, depth,
+        LUMINOUS_SOA(HitAreaLightWorkItem, light_hit_info, wo, depth,
                      throughput, prev_lsc, pixel_index)
 
         using HitAreaLightQueue = WorkQueue<HitAreaLightWorkItem>;
