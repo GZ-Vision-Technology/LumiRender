@@ -147,7 +147,7 @@ namespace luminous {
                                world_p, world_ng, tex_coord, world_ns);
             }
 
-            LM_ND_XPU const Material &get_material(index_t inst_id) const;
+            LM_ND_XPU const Material *get_material(index_t inst_id) const;
 
             LM_ND_XPU const Light *get_light(index_t inst_id) const;
 

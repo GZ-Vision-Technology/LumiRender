@@ -143,9 +143,9 @@ namespace luminous {
             return textures[idx];
         }
 
-        const Material &SceneData::get_material(index_t inst_id) const {
+        const Material *SceneData::get_material(index_t inst_id) const {
             auto mesh = get_mesh(inst_id);
-            return materials[mesh.material_idx];
+            return &materials[mesh.material_idx];
         }
 
         float SceneData::compute_prim_PMF(index_t inst_id, index_t tri_id) const {

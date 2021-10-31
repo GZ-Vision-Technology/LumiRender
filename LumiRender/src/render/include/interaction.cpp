@@ -43,6 +43,10 @@ namespace luminous {
             return data->get_light(hit_info.instance_id);
         }
 
+        const Material *HitContext::material() const {
+            return data->get_material(hit_info.instance_id);
+        }
+
         lstd::optional<BSDF> SurfaceInteraction::get_BSDF(const SceneData *scene_data) const {
             if (!has_material()) {
                 return {};

@@ -41,9 +41,11 @@ namespace luminous {
                 return;
             }
 
+            float3 wo = normalize(-r.ray.direction());
+            LightEvalContext lec = hit_ctx.compute_light_eval_context();
             if (hit_ctx.has_emission()) {
-                float3 wo = normalize(-r.ray.direction());
-                HitAreaLightWorkItem item{hit_ctx.light(), hit_ctx.compute_light_eval_context(), wo,
+
+                HitAreaLightWorkItem item{hit_ctx.light(), lec, wo,
                                           r.depth, r.throughput, r.prev_lsc,
                                           r.specular_bounce, r.pixel_index};
                 hit_area_light_queue->push(item);
@@ -51,7 +53,7 @@ namespace luminous {
 
 
             auto si = hit_ctx.compute_surface_interaction(r.ray);
-            
+
 
             MaterialEvalWorkItem item{si.material, si.pos, si.g_uvn.normal, si.s_uvn.normal,
                                       si.uv, si.wo, r.any_non_specular_bounces,

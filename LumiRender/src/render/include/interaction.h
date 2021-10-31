@@ -229,6 +229,8 @@ namespace luminous {
 
             LM_ND_XPU LightEvalContext compute_light_eval_context() const;
 
+            LM_ND_XPU const Material *material() const;
+
             LM_ND_XPU SurfaceInteraction compute_surface_interaction(Ray ray) const;
 
             ND_XPU_INLINE const SceneData *scene_data() const { return data; }
