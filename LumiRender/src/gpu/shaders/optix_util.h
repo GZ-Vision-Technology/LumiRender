@@ -44,7 +44,7 @@ static LM_GPU_INLINE const T &getSbtData() {
     return *reinterpret_cast<T *>(optixGetSbtDataPointer());
 }
 
-template<typename T = luminous::PerRayData>
+template<typename T = luminous::HitContext>
 static LM_GPU_INLINE T *getPRD() {
     const unsigned int u0 = optixGetPayload_0();
     const unsigned int u1 = optixGetPayload_1();
@@ -78,15 +78,15 @@ static LM_GPU_INLINE void trace(OptixTraversableHandle handle,
 }
 
 static LM_GPU_INLINE bool traceClosestHit(OptixTraversableHandle handle,
-                                          luminous::Ray ray, luminous::PerRayData *prd) {
+                                          luminous::Ray ray, luminous::HitContext *hit_ctx) {
     unsigned int u0, u1;
-    packPointer(prd, u0, u1);
+    packPointer(hit_ctx, u0, u1);
     trace(handle, ray, OPTIX_RAY_FLAG_DISABLE_ANYHIT,
           luminous::RayType::ClosestHit,        // SBT offset
           luminous::RayType::Count,           // SBT stride
           luminous::RayType::ClosestHit,        // missSBTIndex
           u0, u1);
-    return prd->is_hit();
+    return hit_ctx->is_hit();
 }
 
 static LM_GPU_INLINE bool traceAnyHit(OptixTraversableHandle handle, luminous::Ray ray) {
@@ -124,10 +124,10 @@ static LM_GPU_INLINE uint32_t getPrimIdx() {
     return optixGetPrimitiveIndex();
 }
 
-static LM_GPU_INLINE luminous::HitPoint getClosestHit() {
-    luminous::HitPoint ret;
+static LM_GPU_INLINE luminous::HitInfo getClosestHit() {
+    luminous::HitInfo ret;
     ret.instance_id = getInstanceId();
-    ret.triangle_id = getPrimIdx();
+    ret.prim_id = getPrimIdx();
     ret.bary = getTriangleBarycentric();
     return ret;
 }

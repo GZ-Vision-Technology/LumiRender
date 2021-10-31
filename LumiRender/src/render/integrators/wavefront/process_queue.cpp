@@ -25,14 +25,14 @@ namespace luminous {
             pixel_sample_state->Li[w.pixel_index] = L_pixel + L;
         }
 
-        void enqueue_item_after_intersect(RayWorkItem r, PerRayData prd,
+        void enqueue_item_after_intersect(RayWorkItem r, HitContext hit_ctx,
                                           RayQueue *next_ray_queue,
                                           HitAreaLightQueue *hit_area_light_queue,
                                           MaterialEvalQueue *material_eval_queue) {
             // todo process medium
 
-            if (!prd.has_material()) {
-                auto[pos, ng] = prd.compute_geometry();
+            if (!hit_ctx.has_material()) {
+                auto[pos, ng] = hit_ctx.compute_geometry();
                 Ray new_ray = SurfacePoint(pos, ng).spawn_ray(r.ray.direction());
                 next_ray_queue->push_secondary_ray(new_ray, r.depth, r.prev_lsc,
                                                    r.throughput, r.eta_scale,
@@ -43,17 +43,17 @@ namespace luminous {
             }
 
 
-            if (prd.has_emission()) {
+            if (hit_ctx.has_emission()) {
 
             }
 
 
-            auto si = prd.compute_surface_interaction(r.ray);
+            auto si = hit_ctx.compute_surface_interaction(r.ray);
 
 
             if (si.has_emission()) {
-                auto scene_data = prd.scene_data();
-                float PMF = scene_data->compute_prim_PMF(prd.hit_point);
+                auto scene_data = hit_ctx.scene_data();
+                float PMF = scene_data->compute_prim_PMF(hit_ctx.hit_info);
                 si.update_PDF_pos(PMF);
                 HitAreaLightWorkItem item{si.light, LightEvalContext{si}, si.wo, r.depth, r.throughput, r.prev_lsc,
                                           r.specular_bounce, r.pixel_index};

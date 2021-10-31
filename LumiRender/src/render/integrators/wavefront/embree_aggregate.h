@@ -15,7 +15,7 @@ namespace luminous {
         private:
             LM_NODISCARD bool _intersect_any(Ray ray) const;
 
-            LM_NODISCARD PerRayData _intersect_closest(Ray ray) const;
+            LM_NODISCARD HitContext _intersect_closest(Ray ray) const;
         public:
             EmbreeAggregate(Device *device, Context *context, const Scene *scene);
 

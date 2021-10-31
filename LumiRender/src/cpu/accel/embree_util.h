@@ -115,23 +115,23 @@ namespace luminous {
         }
 
         template<int ray_num, typename RHType>
-        void to_prd(const RHType rh, PerRayData *prd) {
+        void to_hit_ctx(const RHType rh, HitContext *hit_ctx) {
             static_assert(std::is_same_v<RTCType<ray_num>::RHType, RHType>, "RTCType is not match!");
             for (int i = 0; i < ray_num; ++i) {
-                prd[i].hit_point.instance_id = rh.hit.instID[0][i];
-                prd[i].hit_point.triangle_id = rh.hit.primID[i];
-                prd[i].hit_point.bary.x = 1 - rh.hit.u[i] - rh.hit.v[i];
-                prd[i].hit_point.bary.y = rh.hit.u[i];
+                hit_ctx[i].hit_info.instance_id = rh.hit.instID[0][i];
+                hit_ctx[i].hit_info.prim_id = rh.hit.primID[i];
+                hit_ctx[i].hit_info.bary.x = 1 - rh.hit.u[i] - rh.hit.v[i];
+                hit_ctx[i].hit_info.bary.y = rh.hit.u[i];
             }
         }
 
         template<int ray_num>
-        void rtc_intersectNp(RTCScene scene, const Ray *ray, PerRayData *prd) {
+        void rtc_intersectNp(RTCScene scene, const Ray *ray, HitContext *hit_ctx) {
             RTCIntersectContext context{};
             rtcInitIntersectContext(&context);
             auto rh = to_RTCRayHitN<ray_num>(ray);
             RTCType<ray_num>::rtcIntersect(scene, &context, &rh);
-            to_prd<ray_num>(rh, prd);
+            to_hit_ctx<ray_num>(rh, hit_ctx);
         }
 
         LM_ND_INLINE RTCBounds to_RTCBounds(Box3f box) {
@@ -139,16 +139,16 @@ namespace luminous {
                              box.upper.x, box.upper.y, box.upper.z, 0};
         }
 
-        LM_ND_INLINE bool rtc_intersect(RTCScene scene, Ray ray, PerRayData *prd) {
+        LM_ND_INLINE bool rtc_intersect(RTCScene scene, Ray ray, HitContext *hit_ctx) {
             RTCIntersectContext context{};
             rtcInitIntersectContext(&context);
             RTCRayHit rh = to_RTCRayHit(ray);
             rtcIntersect1(scene, &context, &rh);
-            prd->hit_point.instance_id = rh.hit.instID[0];
-            prd->hit_point.triangle_id = rh.hit.primID;
+            hit_ctx->hit_info.instance_id = rh.hit.instID[0];
+            hit_ctx->hit_info.prim_id = rh.hit.primID;
             float w = 1 - rh.hit.u - rh.hit.v;
-            prd->hit_point.bary = make_float2(w, rh.hit.u);
-            return prd->is_hit();
+            hit_ctx->hit_info.bary = make_float2(w, rh.hit.u);
+            return hit_ctx->is_hit();
         }
 
         LM_ND_INLINE bool rtc_occlusion(RTCScene scene, Ray ray) {

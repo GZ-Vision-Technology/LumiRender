@@ -89,13 +89,13 @@ namespace luminous {
                 return triangles[mesh.triangle_offset + triangle_id];
             }
 
-            ND_XPU_INLINE const TriangleHandle &get_triangle(const HitPoint &closest_hit) const {
+            ND_XPU_INLINE const TriangleHandle &get_triangle(const HitInfo &closest_hit) const {
                 auto mesh = get_mesh(closest_hit.instance_id);
-                return get_triangle(mesh, closest_hit.triangle_id);
+                return get_triangle(mesh, closest_hit.prim_id);
             }
 
-            LM_ND_XPU float compute_prim_PMF(HitPoint hit_point) const {
-                return compute_prim_PMF(hit_point.instance_id, hit_point.triangle_id);
+            LM_ND_XPU float compute_prim_PMF(HitInfo hit_point) const {
+                return compute_prim_PMF(hit_point.instance_id, hit_point.prim_id);
             }
 
             LM_ND_XPU float compute_prim_PMF(index_t inst_id, index_t tri_id) const;
@@ -104,8 +104,8 @@ namespace luminous {
                                                                   index_t tri_id,
                                                                   luminous::float2 bary) const;
 
-            LM_ND_XPU SurfaceInteraction compute_surface_interaction(const HitPoint &hit_point) const {
-                return compute_surface_interaction(hit_point.instance_id, hit_point.triangle_id, hit_point.bary);
+            LM_ND_XPU SurfaceInteraction compute_surface_interaction(const HitInfo &hit_point) const {
+                return compute_surface_interaction(hit_point.instance_id, hit_point.prim_id, hit_point.bary);
             }
 
             LM_ND_XPU bool has_emission(index_t inst_id) const {
@@ -113,7 +113,7 @@ namespace luminous {
                 return mesh.has_emission();
             }
 
-            LM_ND_XPU bool has_emission(const HitPoint &hit_point) const {
+            LM_ND_XPU bool has_emission(const HitInfo &hit_point) const {
                 return has_emission(hit_point.instance_id);
             }
 
@@ -122,7 +122,7 @@ namespace luminous {
                 return mesh.has_material();
             }
 
-            LM_ND_XPU bool has_material(const HitPoint &hit_point) const {
+            LM_ND_XPU bool has_material(const HitInfo &hit_point) const {
                 return has_material(hit_point.instance_id);
             }
 
@@ -130,18 +130,18 @@ namespace luminous {
                                                                   index_t tri_id,
                                                                   luminous::float2 bary) const;
 
-            LM_ND_XPU LightEvalContext compute_light_eval_context(const HitPoint &hit_point) const {
-                return compute_light_eval_context(hit_point.instance_id, hit_point.triangle_id, hit_point.bary);
+            LM_ND_XPU LightEvalContext compute_light_eval_context(const HitInfo &hit_point) const {
+                return compute_light_eval_context(hit_point.instance_id, hit_point.prim_id, hit_point.bary);
             }
 
             LM_XPU void fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
                                        float3 *world_p, float3 *world_ng = nullptr,
                                        float3 *world_ns = nullptr, float2 *tex_coord = nullptr) const;
 
-            LM_XPU_INLINE void fill_attribute(const HitPoint &closest_hit,
+            LM_XPU_INLINE void fill_attribute(const HitInfo &closest_hit,
                                               float3 *world_p, float3 *world_ng = nullptr,
                                               float3 *world_ns = nullptr, float2 *tex_coord = nullptr) const {
-                fill_attribute(closest_hit.instance_id, closest_hit.triangle_id, closest_hit.bary,
+                fill_attribute(closest_hit.instance_id, closest_hit.prim_id, closest_hit.bary,
                                world_p, world_ng, world_ns, tex_coord);
             }
 

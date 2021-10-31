@@ -16,11 +16,11 @@
 namespace luminous {
     inline namespace render {
 
-        LM_XPU_INLINE bool intersect_closest(uint64_t traversable_handle, Ray ray, PerRayData *prd) {
+        LM_XPU_INLINE bool intersect_closest(uint64_t traversable_handle, Ray ray, HitContext *hit_ctx) {
 #if defined(__CUDACC__)
-            return traceClosestHit((OptixTraversableHandle)traversable_handle, ray, prd);
+            return traceClosestHit((OptixTraversableHandle)traversable_handle, ray, hit_ctx);
 #else
-            return rtc_intersect((RTCScene)traversable_handle, ray, prd);
+            return rtc_intersect((RTCScene)traversable_handle, ray, hit_ctx);
 #endif
         }
 

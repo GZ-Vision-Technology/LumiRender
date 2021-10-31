@@ -159,17 +159,17 @@ namespace luminous {
 
         class Sampler;
 
-        struct PerRayData {
-            HitPoint hit_point{};
+        struct HitContext {
+            HitInfo hit_info{};
             const SceneData *data{nullptr};
 
-            PerRayData() = default;
+            HitContext() = default;
 
-            LM_XPU explicit PerRayData(const SceneData *data)
+            LM_XPU explicit HitContext(const SceneData *data)
                     : data(data) {}
 
             ND_XPU_INLINE bool is_hit() const {
-                return hit_point.is_hit();
+                return hit_info.is_hit();
             }
 
             LM_ND_XPU bool has_emission() const;

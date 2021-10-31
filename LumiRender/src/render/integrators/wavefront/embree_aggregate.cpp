@@ -19,10 +19,10 @@ namespace luminous {
             return luminous::intersect_any((uint64_t) rtc_scene(), ray);
         }
 
-        PerRayData EmbreeAggregate::_intersect_closest(Ray ray) const {
-            PerRayData prd{_scene_data};
-            luminous::intersect_closest((uint64_t) rtc_scene(), ray, &prd);
-            return prd;
+        HitContext EmbreeAggregate::_intersect_closest(Ray ray) const {
+            HitContext hit_ctx{_scene_data};
+            luminous::intersect_closest((uint64_t) rtc_scene(), ray, &hit_ctx);
+            return hit_ctx;
         }
 
         void EmbreeAggregate::intersect_closest(int max_rays, const RayQueue *ray_queue,
@@ -32,9 +32,9 @@ namespace luminous {
                                                 RayQueue *next_ray_queue) const {
             async(ray_queue->size(), [=](uint task_id, uint tid) {
                 RayWorkItem ray_work_item = (*ray_queue)[task_id];
-                auto prd = _intersect_closest(ray_work_item.ray);
-                if (prd.is_hit()) {
-                    enqueue_item_after_intersect(ray_work_item, prd,
+                auto hit_ctx = _intersect_closest(ray_work_item.ray);
+                if (hit_ctx.is_hit()) {
+                    enqueue_item_after_intersect(ray_work_item, hit_ctx,
                                                  next_ray_queue, hit_area_light_queue,
                                                  material_eval_queue);
                 } else {
