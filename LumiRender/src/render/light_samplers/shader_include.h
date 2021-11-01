@@ -11,4 +11,5 @@
     #include "light_sampler_base.cpp"
 #else
     #include "light_sampler.h"
+    #include "light_sampler_base.h"
 #endif
