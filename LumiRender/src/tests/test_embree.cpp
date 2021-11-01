@@ -68,23 +68,23 @@ int main() {
     RTCBounds rb;
     rtcGetSceneBounds(main_scene, &rb);
 
-    PerRayData prd;
+    HitContext hit_ctx;
 
     Ray ray(make_float3(-0.1, 0.5, 1), make_float3(0, 0, -1));
-    intersect_closest((uint64_t) main_scene, ray, &prd);
-    prd.hit_point.print();
+    intersect_closest((uint64_t) main_scene, ray, &hit_ctx);
+    hit_ctx.hit_info.print();
 
     ray = Ray(make_float3(-0.9, 0.5, 1), make_float3(0, 0, -1));
-    intersect_closest((uint64_t) main_scene, ray, &prd);
-    prd.hit_point.print();
+    intersect_closest((uint64_t) main_scene, ray, &hit_ctx);
+    hit_ctx.hit_info.print();
 
     ray = Ray(make_float3(0.1, 0.5, 1), make_float3(0, 0, -1));
-    intersect_closest((uint64_t) main_scene, ray, &prd);
-    prd.hit_point.print();
+    intersect_closest((uint64_t) main_scene, ray, &hit_ctx);
+    hit_ctx.hit_info.print();
 
     ray = Ray(make_float3(0.9, 0.5, 1), make_float3(0, 0, -1));
-    intersect_closest((uint64_t) main_scene, ray, &prd);
-    prd.hit_point.print();
+    intersect_closest((uint64_t) main_scene, ray, &hit_ctx);
+    hit_ctx.hit_info.print();
 
     return 0;
 }

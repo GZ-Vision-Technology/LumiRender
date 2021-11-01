@@ -10,7 +10,7 @@ inCom = False
 
 num_file = 0
 
-for root,dirs,files in os.walk(os.path.join(os.getcwd(), "src")):
+for root,dirs,files in os.walk(os.path.join(os.getcwd(), "LumiRender/src")):
     for file in files:
         fn = os.path.join(root,file)
         if "ext\\" in fn:

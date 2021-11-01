@@ -15,7 +15,7 @@ namespace luminous {
         private:
             LM_NODISCARD bool _intersect_any(Ray ray) const;
 
-            LM_NODISCARD lstd::optional<SurfaceInteraction> _intersect_closest(Ray ray) const;
+            LM_NODISCARD HitContext _intersect_closest(Ray ray) const;
         public:
             EmbreeAggregate(Device *device, Context *context, const Scene *scene);
 
@@ -25,8 +25,8 @@ namespace luminous {
                                    MaterialEvalQueue *material_eval_queue,
                                    RayQueue *next_ray_queue) const override;
 
-            void intersect_any(int max_rays, ShadowRayQueue *shadow_ray_queue,
-                               SOA<PixelSampleState> *pixel_sample_state) const override;
+            void intersect_any_and_compute_lighting(int max_rays, ShadowRayQueue *shadow_ray_queue,
+                                                    SOA<PixelSampleState> *pixel_sample_state) const override;
 
             void intersect_any_tr(int max_rays, ShadowRayQueue *shadow_ray_queue,
                                   SOA<PixelSampleState> *pixel_sample_state) const override;

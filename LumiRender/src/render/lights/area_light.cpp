@@ -16,30 +16,29 @@ namespace luminous {
                   _inv_area(1 / area),
                   _two_sided(two_sided) {}
 
-        SurfaceInteraction AreaLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
-            SurfaceInteraction ret;
+        LightEvalContext AreaLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             auto mesh = scene_data->get_mesh(_inst_idx);
             const Distribution1D &distrib = scene_data->distributions[mesh.distribute_idx];
             float PMF = 0;
             size_t triangle_id = distrib.sample_discrete(u.x, &PMF, &u.x);
-            float2 uv = square_to_triangle(u);
-            ret = scene_data->compute_surface_interaction(_inst_idx, triangle_id, uv);
-            ret.PDF_pos = PMF / ret.prim_area;
-            return ret;
+            float2 bary = square_to_triangle(u);
+            LightEvalContext lec;
+            lec = scene_data->compute_light_eval_context(_inst_idx, triangle_id, bary);
+            return lec;
         }
 
         LightLiSample AreaLight::Li(LightLiSample lls, const SceneData *data) const {
-            float3 wi = lls.p_light.pos - lls.ctx.pos;
+            float3 wi = lls.lec.pos - lls.lsc.pos;
             lls.wi = normalize(wi);
-            lls.L = radiance(lls.p_light, -lls.wi, data);
-            lls.PDF_dir = PDF_Li(lls.ctx, lls.p_light, wi, data);
+            lls.L = radiance(LightEvalContext{lls.lec}, -lls.wi, data);
+            lls.PDF_dir = PDF_Li(lls.lsc, LightEvalContext{lls.lec}, wi, data);
             return lls;
         }
 
-        float AreaLight::PDF_Li(const LightSampleContext &p_ref, const SurfaceInteraction &p_light,
+        float AreaLight::PDF_Li(const LightSampleContext &p_ref, const LightEvalContext &p_light,
                                 float3 wi, const SceneData *data) const {
             float3 wo = p_ref.pos - p_light.pos;
-            float PDF = luminous::PDF_dir(p_light.PDF_pos, p_light.g_uvn.normal, wo);
+            float PDF = luminous::PDF_dir(p_light.PDF_pos, p_light.ng, wo);
             if (is_inf(PDF)) {
                 return 0;
             }
@@ -54,9 +53,9 @@ namespace luminous {
             return (_two_sided ? _2Pi : Pi) * L * (1.f / _inv_area);
         }
 
-        Spectrum AreaLight::radiance(const SurfaceInteraction &p_light, float3 w,
+        Spectrum AreaLight::radiance(const LightEvalContext &lec, float3 w,
                                      const SceneData *scene_data) const {
-            return radiance(p_light.uv, p_light.g_uvn.normal, w, scene_data);
+            return radiance(lec.uv, lec.ng, w, scene_data);
         }
 
         Spectrum AreaLight::radiance(float2 uv, float3 ng, float3 w, const SceneData *scene_data) const {

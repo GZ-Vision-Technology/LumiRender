@@ -10,13 +10,13 @@ namespace luminous {
     inline namespace render {
 
         LightLiSample Envmap::Li(LightLiSample lls, const SceneData *data) const {
-            float3 wi = lls.p_light.pos - lls.ctx.pos;
+            float3 wi = lls.lec.pos - lls.lsc.pos;
             lls.wi = normalize(wi);
             lls.L = L(_w2o.apply_vector(lls.wi), data);
             return lls;
         }
 
-        SurfaceInteraction Envmap::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
+        LightEvalContext Envmap::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             const Distribution2D &distribution2d = scene_data->get_distribution2d(_distribution_idx);
             float map_PDF = 0;
             float2 uv = distribution2d.sample_continuous(u, &map_PDF);
@@ -30,8 +30,9 @@ namespace luminous {
             sincos(theta, &sin_theta, &cos_theta);
             float3 dir_in_world = _w2o.inverse().apply_vector(spherical_direction(sin_theta, cos_theta, phi));
             lls->PDF_dir = map_PDF / (2 * Pi * Pi * sin_theta);
-            lls->p_light.pos = lls->ctx.pos + dir_in_world;
-            return SurfaceInteraction(lls->p_light.pos);
+            float3 pos = lls->lsc.pos + dir_in_world;
+            lls->lec = LightEvalContext{pos, make_float3(0.f), make_float2(0.f), 0.f};
+            return lls->lec;
         }
 
         Spectrum Envmap::L(float3 dir_in_obj, const SceneData *data) const {
@@ -46,7 +47,7 @@ namespace luminous {
             return L(d, data);
         }
 
-        float Envmap::PDF_Li(const LightSampleContext &p_ref, const SurfaceInteraction &p_light,
+        float Envmap::PDF_Li(const LightSampleContext &p_ref, const LightEvalContext &p_light,
                              float3 wi, const SceneData *data) const {
             float3 w = _w2o.apply_vector(wi);
             float theta = spherical_theta(w);

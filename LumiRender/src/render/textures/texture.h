@@ -19,7 +19,7 @@ namespace luminous {
         public:
             GEN_BASE_NAME(Texture)
 
-            Texture() {}
+            Texture() = default;
 
             GEN_TO_STRING_FUNC
 

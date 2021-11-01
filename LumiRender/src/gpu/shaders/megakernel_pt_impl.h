@@ -46,9 +46,9 @@ GLOBAL __raygen__rg() {
 }
 
 GLOBAL __miss__closest() {
-    luminous::PerRayData *prd = getPRD();
+    luminous::HitContext *hit_ctx = getPRD();
     const auto &data = getSbtData<luminous::SceneData>();
-    prd->data = &data;
+    hit_ctx->data = &data;
 }
 
 GLOBAL __miss__any() {
@@ -57,10 +57,10 @@ GLOBAL __miss__any() {
 
 GLOBAL __closesthit__closest() {
     using namespace luminous;
-    PerRayData *prd = getPRD();
+    HitContext *hit_ctx = getPRD();
     const SceneData &data = getSbtData<SceneData>();
-    prd->data = &data;
-    prd->hit_point = getClosestHit();
+    hit_ctx->data = &data;
+    hit_ctx->hit_info = getClosestHit();
 }
 
 GLOBAL __closesthit__any() {

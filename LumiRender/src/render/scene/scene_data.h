@@ -8,7 +8,8 @@
 #include "base_libs/math/common.h"
 #include "core/backend/buffer_view.h"
 #include "base_libs/geometry/common.h"
-#include "render/include/interaction.h"
+#include "render/lights/light_util.h"
+
 
 namespace luminous {
 
@@ -88,31 +89,67 @@ namespace luminous {
                 return triangles[mesh.triangle_offset + triangle_id];
             }
 
-            ND_XPU_INLINE const TriangleHandle &get_triangle(const HitPoint &closest_hit) const {
+            ND_XPU_INLINE const TriangleHandle &get_triangle(const HitInfo &closest_hit) const {
                 auto mesh = get_mesh(closest_hit.instance_id);
-                return get_triangle(mesh, closest_hit.triangle_id);
+                return get_triangle(mesh, closest_hit.prim_id);
             }
 
-            LM_XPU SurfaceInteraction compute_surface_interaction(index_t inst_id,
+            LM_ND_XPU float compute_prim_PMF(HitInfo hit_info) const {
+                return compute_prim_PMF(hit_info.instance_id, hit_info.prim_id);
+            }
+
+            LM_ND_XPU float compute_prim_PMF(index_t inst_id, index_t tri_id) const;
+
+            LM_ND_XPU SurfaceInteraction compute_surface_interaction(index_t inst_id,
+                                                                     index_t tri_id,
+                                                                     luminous::float2 bary) const;
+
+            LM_ND_XPU SurfaceInteraction compute_surface_interaction(const HitInfo &hit_info) const {
+                return compute_surface_interaction(hit_info.instance_id, hit_info.prim_id, hit_info.bary);
+            }
+
+            LM_ND_XPU bool has_emission(index_t inst_id) const {
+                auto mesh = get_mesh(inst_id);
+                return mesh.has_emission();
+            }
+
+            LM_ND_XPU bool has_emission(const HitInfo &hit_point) const {
+                return has_emission(hit_point.instance_id);
+            }
+
+            LM_ND_XPU bool has_material(index_t inst_id) const {
+                auto mesh = get_mesh(inst_id);
+                return mesh.has_material();
+            }
+
+            LM_ND_XPU bool has_material(const HitInfo &hit_point) const {
+                return has_material(hit_point.instance_id);
+            }
+
+            LM_ND_XPU LightEvalContext compute_light_eval_context(index_t inst_id,
                                                                   index_t tri_id,
                                                                   luminous::float2 bary) const;
 
-            LM_NODISCARD LM_XPU_INLINE SurfaceInteraction compute_surface_interaction(const HitPoint &closest_hit) const {
-                return compute_surface_interaction(closest_hit.instance_id, closest_hit.triangle_id, closest_hit.bary);
+            LM_ND_XPU LightEvalContext compute_light_eval_context(const HitInfo &hit_point) const {
+                return compute_light_eval_context(hit_point.instance_id, hit_point.prim_id, hit_point.bary);
             }
 
             LM_XPU void fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
                                        float3 *world_p, float3 *world_ng = nullptr,
-                                       float3 *world_ns = nullptr, float2 *tex_coord = nullptr) const;
+                                       float2 *tex_coord = nullptr,
+                                       float3 *world_ns = nullptr) const;
 
-            LM_XPU_INLINE void fill_attribute(const HitPoint &closest_hit,
+            LM_XPU_INLINE void fill_attribute(const HitInfo &closest_hit,
                                               float3 *world_p, float3 *world_ng = nullptr,
-                                              float3 *world_ns = nullptr, float2 *tex_coord = nullptr) const {
-                fill_attribute(closest_hit.instance_id, closest_hit.triangle_id, closest_hit.bary,
-                               world_p, world_ng, world_ns, tex_coord);
+                                              float2 *tex_coord = nullptr,
+                                              float3 *world_ns = nullptr) const {
+                fill_attribute(closest_hit.instance_id, closest_hit.prim_id, closest_hit.bary,
+                               world_p, world_ng, tex_coord, world_ns);
             }
 
-            LM_ND_XPU const Material &get_material(index_t inst_id) const;
+            LM_ND_XPU const Material *get_material(index_t inst_id) const;
+
+            LM_ND_XPU const Light *get_light(index_t inst_id) const;
 
             LM_ND_XPU const Texture &get_texture(index_t idx) const;
 

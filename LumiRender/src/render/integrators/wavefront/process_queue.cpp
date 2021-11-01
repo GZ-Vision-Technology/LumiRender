@@ -3,7 +3,7 @@
 //
 
 #include "process_queue.h"
-#include "render/include/shader_include.h"
+#include "render/scene/shader_include.h"
 #include "render/lights/shader_include.h"
 #include "render/materials/shader_include.h"
 
@@ -21,37 +21,33 @@ namespace luminous {
                 return;
             }
             Spectrum L = w.Ld;
-            Spectrum L_pixel = pixel_sample_state->L[w.pixel_index];
-            pixel_sample_state->L[w.pixel_index] = L_pixel + L;
+            Spectrum L_pixel = pixel_sample_state->Li[w.pixel_index];
+            pixel_sample_state->Li[w.pixel_index] = L_pixel + L;
         }
 
-        void enqueue_item_after_intersect(RayWorkItem r, const SurfaceInteraction& si,
+        void enqueue_item_after_intersect(RayWorkItem r, HitContext hit_ctx,
                                           RayQueue *next_ray_queue,
                                           HitAreaLightQueue *hit_area_light_queue,
                                           MaterialEvalQueue *material_eval_queue) {
             // todo process medium
 
-            if (!si.has_material()) {
-                Ray new_ray = si.spawn_ray(r.ray.direction());
-                next_ray_queue->push_secondary_ray(new_ray, r.depth, r.prev_lsc,
-                                                   r.throughput, r.eta_scale,
-                                                   r.specular_bounce,
-                                                   r.any_non_specular_bounces,
-                                                   r.pixel_index);
+            if (!hit_ctx.has_material()) {
+                Ray new_ray = hit_ctx.surface_point().spawn_ray(r.ray.direction());
+                next_ray_queue->push_secondary_ray(new_ray, r.depth, r.prev_lsc, r.throughput,
+                                                   r.prev_bsdf_PDF, r.prev_bsdf_val,
+                                                   r.eta_scale,r.pixel_index);
                 return;
             }
 
-            if (si.has_emission()) {
-                HitAreaLightWorkItem item{(*si.light->get<AreaLight*>()), si.pos, si.g_uvn.normal,
-                                          si.uv, si.wo, r.depth, r.throughput, r.prev_lsc,
-                                          r.specular_bounce, r.pixel_index};
-                hit_area_light_queue->push(item);
+            float3 wo = normalize(-r.ray.direction());
 
+            if (hit_ctx.has_emission()) {
+                HitAreaLightWorkItem item{hit_ctx.hit_info, wo, r.depth,
+                                          r.throughput, r.prev_lsc, r.prev_bsdf_PDF, r.prev_bsdf_val, r.pixel_index};
+                hit_area_light_queue->push(item);
             }
 
-            MaterialEvalWorkItem item{si.pos, si.g_uvn.normal, si.s_uvn.normal,
-                                      si.uv, si.wo, r.any_non_specular_bounces,
-                                      r.pixel_index, r.throughput};
+            MaterialEvalWorkItem item{hit_ctx.hit_info, wo, r.depth, r.pixel_index, r.throughput};
             material_eval_queue->push(item);
         }
     }

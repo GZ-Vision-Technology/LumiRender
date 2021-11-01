@@ -14,7 +14,7 @@ namespace luminous {
         public:
             REFL_CLASS(AreaLight)
 
-        public:
+        private:
             uint _inst_idx{};
             float3 L{};
             bool _two_sided{};
@@ -26,7 +26,7 @@ namespace luminous {
 
             AreaLight(uint inst_idx, float3 L, float area, bool two_sided);
 
-            LM_ND_XPU Spectrum radiance(const SurfaceInteraction &p_light, float3 w,
+            LM_ND_XPU Spectrum radiance(const LightEvalContext &lec, float3 w,
                                         const SceneData *scene_data) const;
 
             LM_ND_XPU Spectrum radiance(float2 uv, float3 ng, float3 w, const SceneData *scene_data) const;
@@ -35,9 +35,9 @@ namespace luminous {
 
             LM_ND_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 
-            LM_ND_XPU SurfaceInteraction sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const;
+            LM_ND_XPU LightEvalContext sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const;
 
-            LM_ND_XPU float PDF_Li(const LightSampleContext &p_ref, const SurfaceInteraction &p_light,
+            LM_ND_XPU float PDF_Li(const LightSampleContext &p_ref, const LightEvalContext &p_light,
                                    float3 wi, const SceneData *data) const;
 
             LM_ND_XPU Spectrum power() const;

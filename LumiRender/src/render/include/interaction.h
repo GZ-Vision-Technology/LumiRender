@@ -56,7 +56,7 @@ namespace luminous {
                 return distribute_idx != invalid_uint32;
             }
 
-            ND_XPU_INLINE bool has_light() const {
+            ND_XPU_INLINE bool has_emission() const {
                 return light_idx != invalid_uint32;
             }
 
@@ -115,7 +115,6 @@ namespace luminous {
         };
 
 
-
         class Material;
 
         class Light;
@@ -125,12 +124,12 @@ namespace luminous {
         struct SurfaceInteraction : public Interaction {
             float2 uv;
             UVN s_uvn;
-            float PDF_pos = 0;
-            float prim_area = 0;
-            const Light *light = nullptr;
+            float PDF_pos{-1.f};
+            float prim_area{0.f};
+            const Light *light{nullptr};
             lstd::optional<BSDF> op_bsdf{};
-            const Material *material = nullptr;
-            float du_dx = 0, dv_dx = 0, du_dy = 0, dv_dy = 0;
+            const Material *material{nullptr};
+            float du_dx{0}, dv_dx{0}, du_dy{0}, dv_dy{0};
 
             LM_XPU SurfaceInteraction() = default;
 
@@ -144,6 +143,10 @@ namespace luminous {
                 return material != nullptr;
             }
 
+            LM_XPU void update_PDF_pos(float PMF) {
+                PDF_pos = PMF / prim_area;
+            }
+
             LM_ND_XPU Spectrum Le(float3 w, const SceneData *scene_data) const;
 
             LM_ND_XPU lstd::optional<BSDF> get_BSDF(const SceneData *scene_data) const;
@@ -153,20 +156,102 @@ namespace luminous {
             }
         };
 
-        class Sampler;
+        struct SurfacePoint {
+            float3 pos;
+            float3 ng;
 
-        struct PerRayData {
-            HitPoint hit_point{};
+            LM_XPU SurfacePoint() = default;
+
+            LM_XPU SurfacePoint(float3 p, float3 n)
+                    : pos(p), ng(n) {}
+
+            LM_XPU explicit SurfacePoint(const Interaction &it)
+                    : pos(it.pos), ng(it.g_uvn.normal) {}
+
+            LM_XPU explicit SurfacePoint(const SurfaceInteraction &it)
+                    : pos(it.pos), ng(it.g_uvn.normal) {}
+
+            ND_XPU_INLINE Ray spawn_ray(float3 dir) const {
+                return Ray::spawn_ray(pos, ng, dir);
+            }
+
+            ND_XPU_INLINE Ray spawn_ray_to(float3 p) const {
+                return Ray::spawn_ray_to(pos, ng, p);
+            }
+
+            ND_XPU_INLINE Ray spawn_ray_to(const SurfacePoint &lsc) const {
+                return Ray::spawn_ray_to(pos, ng, lsc.pos, lsc.ng);
+            }
+        };
+
+        struct GeometrySurfacePoint : public SurfacePoint {
+        public:
+            float2 uv{};
+
+            LM_XPU GeometrySurfacePoint() = default;
+
+            LM_XPU explicit GeometrySurfacePoint(const Interaction &it, float2 uv)
+                    : SurfacePoint(it), uv(uv) {}
+
+            LM_XPU GeometrySurfacePoint(float3 p, float3 ng, float2 uv)
+                    : SurfacePoint{p, ng}, uv(uv) {}
+        };
+
+        /**
+         * A point on light
+         * used to eval light PDF or lighting to LightSampleContext
+         */
+        struct LightEvalContext : public GeometrySurfacePoint {
+        public:
+            float PDF_pos{};
+        public:
+            LM_XPU LightEvalContext() = default;
+
+            LM_XPU LightEvalContext(GeometrySurfacePoint gsp, float PDF_pos)
+                    : GeometrySurfacePoint(gsp), PDF_pos(PDF_pos) {}
+
+            LM_XPU LightEvalContext(float3 p, float3 ng, float2 uv, float PDF_pos)
+                    : GeometrySurfacePoint{p, ng, uv}, PDF_pos(PDF_pos) {}
+
+            LM_XPU explicit LightEvalContext(const SurfaceInteraction &si)
+                    : GeometrySurfacePoint{si, si.uv}, PDF_pos(si.PDF_pos) {}
+        };
+
+        struct HitContext {
+            HitInfo hit_info{};
             const SceneData *data{nullptr};
 
-            PerRayData() = default;
+            HitContext() = default;
 
-            LM_XPU explicit PerRayData(const SceneData *data)
+            LM_XPU HitContext(HitInfo hit_info, const SceneData *data)
+                    : hit_info(hit_info), data(data) {}
+
+            LM_XPU explicit HitContext(const SceneData *data)
                     : data(data) {}
 
             ND_XPU_INLINE bool is_hit() const {
-                return hit_point.is_hit();
+                return hit_info.is_hit();
             }
+
+            LM_ND_XPU bool has_emission() const;
+
+            LM_ND_XPU bool has_material() const;
+
+            /**
+             * compute geometry data world position and
+             * @return position in world space, geometry normal in world space
+             */
+            LM_ND_XPU GeometrySurfacePoint geometry_surface_point() const;
+
+            LM_ND_XPU SurfacePoint surface_point() const;
+
+            LM_ND_XPU float compute_prim_PMF() const;
+
+            LM_ND_XPU const Light *light() const;
+
+            LM_ND_XPU LightEvalContext compute_light_eval_context() const;
+
+            LM_ND_XPU const Material *material() const;
 
             LM_ND_XPU SurfaceInteraction compute_surface_interaction(Ray ray) const;
 

@@ -8,13 +8,11 @@
 namespace luminous {
     inline namespace render {
 
-        SurfaceInteraction PointLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
-            SurfaceInteraction ret;
-            ret.pos = _pos;
-            return ret;
+        LightEvalContext PointLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
+            return LightEvalContext{_pos, make_float3(0.f), make_float2(0.f), 0};
         }
 
-        float PointLight::PDF_Li(const LightSampleContext &ctx, const SurfaceInteraction &p_light,
+        float PointLight::PDF_Li(const LightSampleContext &ctx, const LightEvalContext &p_light,
                                  float3 wi, const SceneData *data) const {
             return 0;
         }
@@ -28,7 +26,7 @@ namespace luminous {
         }
 
         LightLiSample PointLight::Li(LightLiSample lls, const SceneData *data) const {
-            float3 wi = lls.p_light.pos - lls.ctx.pos;
+            float3 wi = lls.lec.pos - lls.lsc.pos;
             lls.L = _intensity / length_squared(wi);
             lls.PDF_dir = 0;
             lls.wi = normalize(wi);

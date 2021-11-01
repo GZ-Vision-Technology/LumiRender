@@ -80,18 +80,20 @@ public:
 
 int main() {
     auto device = create_cpu_device();
-    auto cudevice = create_cuda_device();
-    SOA<Test> st(3, cudevice.get());
+//    auto cudevice = create_cuda_device();
+    SOA<Test> st(3, device.get());
 
     Test t;
+
+    auto p = make_float3(9.9);
+
+    t.pos = p;
 
     cout << &t << endl;
 
     st[0] = t;
 
     Test ss = st[0];
-
-    auto a = st.to_host(device.get());
 
     int i =0 ;
 

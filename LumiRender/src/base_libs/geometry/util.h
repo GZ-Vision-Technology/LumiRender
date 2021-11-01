@@ -137,18 +137,18 @@ namespace luminous {
                             })
         };
 
-        struct alignas(8) HitPoint {
+        struct alignas(8) HitInfo {
             index_t instance_id{invalid_uint32};
-            index_t triangle_id{invalid_uint32};
+            index_t prim_id{invalid_uint32};
             float2 bary{};
 
             LM_ND_XPU bool is_hit() const {
-                return triangle_id != invalid_uint32;
+                return prim_id != invalid_uint32;
             }
 
             LM_XPU void print() const {
-                printf("instance_id:%u,triangle id:%u, bary:(%f,%f)\n",
-                       instance_id, triangle_id, bary.x, bary.y);
+                printf("instance_id:%u,primitive id:%u, bary:(%f,%f)\n",
+                       instance_id, prim_id, bary.x, bary.y);
             }
         };
     }

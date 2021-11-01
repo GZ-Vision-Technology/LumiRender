@@ -16,7 +16,6 @@
 namespace luminous {
     inline namespace render {
 
-
         GLOBAL_PREFIX RTParam *rt_param;
 
         CPU_ONLY(void set_rt_param(RTParam *param) {
@@ -35,7 +34,9 @@ namespace luminous {
             sampler.start_pixel_sample(pixel, sample_index, 0);
             SensorSample ss = sampler.sensor_sample(pixel);
             auto[weight, ray] = camera->generate_ray(ss);
-            pixel_sample_state->L[task_id] = {0.f};
+            pixel_sample_state->Li[task_id] = {0.f};
+            pixel_sample_state->normal[task_id] = make_float3(0.f);
+            pixel_sample_state->albedo[task_id] = make_float3(0.f);
             pixel_sample_state->filter_weight[task_id] = 1.f;
             ray_queue->push_primary_ray(ray, task_id);
         }
@@ -62,31 +63,95 @@ namespace luminous {
         void process_escape_ray(int task_id, int n_item,
                                 EscapedRayQueue *escaped_ray_queue,
                                 SOA<PixelSampleState> *pixel_sample_state) {
+            if (task_id >= escaped_ray_queue->size()) {
+                return;
+            }
             const SceneData *scene_data = &(rt_param->scene_data);
             const LightSampler *light_sampler = scene_data->light_sampler;
             EscapedRayWorkItem item = (*escaped_ray_queue)[task_id];
-            Spectrum L = pixel_sample_state->L[item.pixel_index];
-            L += light_sampler->on_miss(item.ray_d, scene_data, item.throughput);
-            pixel_sample_state->L[item.pixel_index] = L;
+            Spectrum L = pixel_sample_state->Li[item.pixel_index];
+
+            if (item.depth == 0) {
+                L += light_sampler->on_miss(item.ray_d, scene_data, item.throughput);
+            } else {
+                for (int i = 0; i < light_sampler->infinite_light_num(); ++i) {
+                    const Light &light = light_sampler->infinite_light_at(i);
+                    LightSampleContext prev_lsc = item.prev_lsc;
+                    float light_select_PMF = light_sampler->PMF(prev_lsc, light);
+                    LightLiSample lls{prev_lsc, normalize(item.ray_d)};
+                    float bsdf_PDF = item.prev_bsdf_PDF;
+                    Spectrum bsdf_val = item.prev_bsdf_val;
+                    lls = light.Li(lls, scene_data);
+                    float weight = MIS_weight(bsdf_PDF, lls.PDF_dir);
+                    Spectrum temp_Li = item.throughput * lls.L * bsdf_val * weight / bsdf_PDF;
+                    L += temp_Li;
+                }
+            }
+
+            pixel_sample_state->Li[item.pixel_index] = L;
         }
 
         void process_emission(int task_id, int n_item,
                               HitAreaLightQueue *hit_area_light_queue,
                               SOA<PixelSampleState> *pixel_sample_state) {
+            if (task_id >= hit_area_light_queue->size()) {
+                return;
+            }
             auto light_sampler = rt_param->scene_data.light_sampler;
             HitAreaLightWorkItem item = (*hit_area_light_queue)[task_id];
             const SceneData *scene_data = &(rt_param->scene_data);
-            Spectrum Le = item.light->radiance(item.uv, item.ng, item.wo, scene_data);
-            Spectrum L = pixel_sample_state->L[item.pixel_index];
-            L += Le * item.throughput;
-            pixel_sample_state->L[item.pixel_index] = L;
+            HitInfo hit_info = item.light_hit_info;
+            HitContext hit_ctx{hit_info, scene_data};
+
+            LightEvalContext lec = hit_ctx.compute_light_eval_context();
+
+            const Light *light = hit_ctx.light();
+
+            float3 wo = item.wo;
+            Spectrum temp_Li = pixel_sample_state->Li[item.pixel_index];
+            if (item.depth == 0) {
+                Spectrum Le = light->as<AreaLight>()->radiance(lec, wo, scene_data);
+                temp_Li += Le * item.throughput;
+            } else {
+                LightLiSample lls{item.prev_lsc, lec};
+                float light_select_PMF = scene_data->light_sampler->PMF(*light);
+                lls = light->Li(lls, scene_data);
+                float light_PDF = lls.PDF_dir;
+                float bsdf_PDF = item.prev_bsdf_PDF;
+                Spectrum bsdf_val = item.prev_bsdf_val;
+                float weight = MIS_weight(bsdf_PDF, light_PDF);
+                Spectrum L = item.throughput * lls.L * bsdf_val * weight / bsdf_PDF;
+                temp_Li += L / light_select_PMF;
+            }
+            pixel_sample_state->Li[item.pixel_index] = temp_Li;
         }
 
-        void eval_BSDFs(int task_id, int n_item,
-                        ShadowRayQueue *shadow_ray_queue,
-                        MaterialEvalQueue *material_eval_queue) {
+        void estimate_direct_lighting(int task_id, int n_item,
+                                      ShadowRayQueue *shadow_ray_queue,
+                                      RayQueue *next_ray_queue,
+                                      MaterialEvalQueue *material_eval_queue,
+                                      SOA<PixelSampleState> *pixel_sample_state) {
+            if (task_id >= material_eval_queue->size()) {
+                return;
+            }
+            MaterialEvalWorkItem mtl_item = (*material_eval_queue)[task_id];
+            const SceneData *scene_data = &(rt_param->scene_data);
 
+            HitContext hit_ctx{mtl_item.hit_info, scene_data};
+            if (mtl_item.depth == 0) {
+
+            }
         }
 
+        void add_samples(int task_id, int n_item,
+                         SOA<PixelSampleState> *pixel_sample_state) {
+            Sensor *camera = rt_param->camera;
+            uint2 pixel = pixel_sample_state->pixel[task_id];
+            Film *film = camera->film();
+            Spectrum L = pixel_sample_state->Li[task_id];
+            float3 normal = pixel_sample_state->normal[task_id];
+            float3 albedo = pixel_sample_state->albedo[task_id];
+            film->add_samples(pixel, L, albedo, normal, 1, rt_param->frame_index);
+        }
     }
 }

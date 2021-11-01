@@ -42,7 +42,7 @@ namespace luminous {
 
             LM_ND_XPU Spectrum on_miss(float3 dir, const SceneData *data) const;
 
-            LM_ND_XPU SurfaceInteraction sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const;
+            LM_ND_XPU LightEvalContext sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const;
 
             LM_ND_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 
@@ -61,7 +61,7 @@ namespace luminous {
                                                         Sampler &sampler, uint64_t traversable_handle,
                                                         const SceneData *scene_data, NEEData *NEE_data) const;
 
-            LM_ND_XPU float PDF_Li(const LightSampleContext &ctx, const SurfaceInteraction &p_light,
+            LM_ND_XPU float PDF_Li(const LightSampleContext &ctx, const LightEvalContext &p_light,
                                    float3 wi, const SceneData *data) const;
 
             LM_ND_XPU Spectrum power() const;

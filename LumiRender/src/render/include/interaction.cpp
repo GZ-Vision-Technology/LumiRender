@@ -11,14 +11,51 @@
 namespace luminous {
     inline namespace render {
         Spectrum SurfaceInteraction::Le(float3 w,const SceneData *scene_data) const {
-            return has_emission() ? (*light->get<AreaLight*>())->radiance(*this, w, scene_data) : 0.f;
+            return has_emission() ? light->as<AreaLight>()->radiance(LightEvalContext{*this}, w, scene_data) : 0.f;
         }
 
-        SurfaceInteraction PerRayData::compute_surface_interaction(Ray ray) const {
-            auto si = scene_data()->compute_surface_interaction(hit_point);
+        SurfaceInteraction HitContext::compute_surface_interaction(Ray ray) const {
+            auto si = scene_data()->compute_surface_interaction(hit_info);
             si.init_BSDF(scene_data());
             si.wo = normalize(-ray.direction());
             return si;
+        }
+
+        bool HitContext::has_emission() const {
+            return data->has_emission(hit_info.instance_id);
+        }
+
+        bool HitContext::has_material() const {
+            return data->has_material(hit_info.instance_id);
+        }
+
+        SurfacePoint HitContext::surface_point() const {
+            float3 pos, ng;
+            data->fill_attribute(hit_info, &pos, &ng);
+            return {pos, ng};
+        }
+
+        GeometrySurfacePoint HitContext::geometry_surface_point() const {
+            float3 pos, ng;
+            float2 uv;
+            data->fill_attribute(hit_info, &pos, &ng, &uv);
+            return {pos, ng, uv};
+        }
+
+        LightEvalContext HitContext::compute_light_eval_context() const {
+            return data->compute_light_eval_context(hit_info);
+        }
+
+        const Light *HitContext::light() const {
+            return data->get_light(hit_info.instance_id);
+        }
+
+        const Material *HitContext::material() const {
+            return data->get_material(hit_info.instance_id);
+        }
+
+        float HitContext::compute_prim_PMF() const {
+            return data->compute_prim_PMF(hit_info);
         }
 
         lstd::optional<BSDF> SurfaceInteraction::get_BSDF(const SceneData *scene_data) const {

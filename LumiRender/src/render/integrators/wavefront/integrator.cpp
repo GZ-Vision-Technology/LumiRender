@@ -58,9 +58,8 @@ namespace luminous {
 
         }
 
-        void WavefrontPT::render_per_sample(int sample_idx) {
+        void WavefrontPT::render_per_sample(int sample_idx, int spp) {
             auto res = _camera->resolution();
-            auto device = create_cpu_device();
             for (int y0 = 0; y0 < res.y; y0 += _scanline_per_pass) {
                 _generate_primary_ray.launch(_dispatcher, _max_queue_size, y0, sample_idx,
                                              _ray_queues.device_data(),
@@ -87,18 +86,24 @@ namespace luminous {
                                              _pixel_sample_state.device_data());
                     _dispatcher.wait();
 
-                    if (depth == _max_depth) {
-                        break;
-                    }
+                    BREAK_IF(depth == _max_depth)
 
-                    _eval_BSDFs.launch(_dispatcher, _max_queue_size,
-                                       _shadow_ray_queue.device_data(),
-                                       _material_eval_queue.device_data());
+                    RayQueue *next_ray_queue = _next_ray_queue(depth);
+
+                    _estimate_direct_lighting.launch(_dispatcher, _max_queue_size,
+                                                     _shadow_ray_queue.device_data(),
+                                                     next_ray_queue,
+                                                     _material_eval_queue.device_data(),
+                                                     _pixel_sample_state.device_data());
                     _dispatcher.wait();
 
-                    trace_shadow_ray(depth);
+                    intersect_any_and_compute_lighting(depth);
+                }
 
-
+                if (sample_idx + 1 == spp) {
+                    _add_samples.launch(_dispatcher, _max_queue_size,
+                                        _pixel_sample_state.device_data());
+                    _dispatcher.wait();
                 }
             }
         }
@@ -106,8 +111,10 @@ namespace luminous {
         void WavefrontPT::render() {
             auto spp = _sampler->spp();
             for (int sample_idx = 0; sample_idx < spp; ++sample_idx) {
-                render_per_sample(sample_idx);
+                render_per_sample(sample_idx, spp);
             }
+            _rt_param->frame_index += 1;
+            _rt_param.synchronize_to_device();
         }
 
         void WavefrontPT::reset_queues(int depth) {
@@ -133,7 +140,8 @@ namespace luminous {
             SET_CU_FUNC(generate_ray_samples);
             SET_CU_FUNC(process_escape_ray);
             SET_CU_FUNC(process_emission);
-            SET_CU_FUNC(eval_BSDFs);
+            SET_CU_FUNC(estimate_direct_lighting);
+            SET_CU_FUNC(add_samples);
 #undef SET_CU_FUNC
 
         }
@@ -168,10 +176,12 @@ namespace luminous {
                                           _next_ray_queue(depth));
         }
 
-        void WavefrontPT::trace_shadow_ray(int depth) {
-            _aggregate->intersect_any(_max_queue_size, _shadow_ray_queue.device_data(),
-                                      _pixel_sample_state.device_data());
+        void WavefrontPT::intersect_any_and_compute_lighting(int depth) {
+            _aggregate->intersect_any_and_compute_lighting(_max_queue_size,
+                                                           _shadow_ray_queue.device_data(),
+                                                           _pixel_sample_state.device_data());
         }
+
 
     }
 }

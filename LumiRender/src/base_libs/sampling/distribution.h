@@ -65,13 +65,14 @@ namespace luminous {
                 return (offset + du) / size();
             }
 
-            LM_ND_XPU int sample_discrete(float u, float *PMF = nullptr, float *u_remapped = nullptr) const {
+            LM_ND_XPU int sample_discrete(float u, float *p = nullptr, float *u_remapped = nullptr) const {
                 auto predicate = [&](int index) {
                     return CDF[index] <= u;
                 };
                 int offset = find_interval(CDF.size(), predicate);
-                if (PMF) {
-                    *PMF = (_func_integral > 0) ? _func[offset] / (_func_integral * size()) : 0;
+                if (p) {
+                    //todo
+                    *p = PMF(offset);
                 }
                 if (u_remapped) {
                     *u_remapped = (u - CDF[offset]) / (CDF[offset + 1] - CDF[offset]);
@@ -88,7 +89,7 @@ namespace luminous {
             template<typename Index>
             LM_ND_XPU float PMF(Index i) const {
                 DCHECK(i >= 0 && i < size());
-                return func_at(i) / (integral() * size());
+                return integral() > 0 ? (func_at(i) / (integral() * size())) : 0;
             }
 
             static Distribution1DBuilder create_builder(std::vector<float> func) {

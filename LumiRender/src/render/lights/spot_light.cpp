@@ -9,10 +9,8 @@
 namespace luminous {
     inline namespace render {
 
-        SurfaceInteraction SpotLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
-            SurfaceInteraction ret;
-            ret.pos = _pos;
-            return ret;
+        LightEvalContext SpotLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
+            return LightEvalContext{_pos, make_float3(0.f), make_float2(0.f), 0};
         }
 
         float SpotLight::fall_off(float3 w_world) const {
@@ -31,7 +29,7 @@ namespace luminous {
         }
 
         LightLiSample SpotLight::Li(LightLiSample lls, const SceneData *data) const {
-            float3 wi = lls.ctx.pos - lls.p_light.pos;
+            float3 wi = lls.lsc.pos - lls.lec.pos;
             float3 L = _intensity / length_squared(wi);
             wi = normalize(wi);
             float f = fall_off(wi);
@@ -41,7 +39,7 @@ namespace luminous {
             return lls;
         }
 
-        float SpotLight::PDF_Li(const LightSampleContext &ctx, const SurfaceInteraction &p_light,
+        float SpotLight::PDF_Li(const LightSampleContext &ctx, const LightEvalContext &p_light,
                                 float3 wi, const SceneData *data) const {
             return 0;
         }

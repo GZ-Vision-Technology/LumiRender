@@ -67,16 +67,30 @@ namespace luminous {
                 luminous::float3 st = normalize(cross(ns, ss));
                 si.s_uvn.set(ss, st, ns);
             }
-            if (mesh.has_light()) {
+            if (mesh.has_emission()) {
                 si.light = &light_sampler->light_at(mesh.light_idx);
             }
-            si.material = &materials[mesh.material_idx];
+            if (mesh.has_material()) {
+                si.material = &materials[mesh.material_idx];
+            }
             return si;
         }
 
+        LightEvalContext SceneData::compute_light_eval_context(index_t inst_id,
+                                                               index_t tri_id,
+                                                               luminous::float2 bary) const {
+            float3 pos, ng;
+            float2 uv;
+            fill_attribute(inst_id, tri_id, bary, &pos, &ng, &uv);
+            float prim_area = 0.5f * length(ng);
+            float PMF = compute_prim_PMF(inst_id, tri_id);
+            float PDF_pos = PMF / prim_area;
+            return LightEvalContext{pos, normalize(ng), uv, PDF_pos};
+        }
+
         void SceneData::fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
-                                       float3 *world_p, float3 *world_ng,
-                                       float3 *world_ns, float2 *tex_coord) const {
+                                       float3 *world_p, float3 *world_ng,float2 *tex_coord,
+                                       float3 *world_ns ) const {
             auto mesh = get_mesh(inst_id);
             TriangleHandle tri = get_triangle(mesh, tri_id);
 
@@ -129,9 +143,20 @@ namespace luminous {
             return textures[idx];
         }
 
-        const Material &SceneData::get_material(index_t inst_id) const {
+        const Material *SceneData::get_material(index_t inst_id) const {
             auto mesh = get_mesh(inst_id);
-            return materials[mesh.material_idx];
+            return &materials[mesh.material_idx];
+        }
+
+        float SceneData::compute_prim_PMF(index_t inst_id, index_t tri_id) const {
+            auto mesh = get_mesh(inst_id);
+            const Distribution1D &distrib = get_distrib(mesh.distribute_idx);
+            return distrib.PMF(tri_id);
+        }
+
+        const Light *SceneData::get_light(index_t inst_id) const {
+            auto mesh = get_mesh(inst_id);
+            return &light_sampler->light_at(mesh.light_idx);
         }
     } // luminous::render
 } // luminous

@@ -19,14 +19,10 @@ namespace luminous {
             return luminous::intersect_any((uint64_t) rtc_scene(), ray);
         }
 
-        lstd::optional<SurfaceInteraction> EmbreeAggregate::_intersect_closest(Ray ray) const {
-            PerRayData prd{_scene_data};
-            bool hit = luminous::intersect_closest((uint64_t) rtc_scene(), ray, &prd);
-            if (hit) {
-                return {prd.compute_surface_interaction(ray)};
-            } else {
-                return {};
-            }
+        HitContext EmbreeAggregate::_intersect_closest(Ray ray) const {
+            HitContext hit_ctx{_scene_data};
+            luminous::intersect_closest((uint64_t) rtc_scene(), ray, &hit_ctx);
+            return hit_ctx;
         }
 
         void EmbreeAggregate::intersect_closest(int max_rays, const RayQueue *ray_queue,
@@ -36,9 +32,9 @@ namespace luminous {
                                                 RayQueue *next_ray_queue) const {
             async(ray_queue->size(), [=](uint task_id, uint tid) {
                 RayWorkItem ray_work_item = (*ray_queue)[task_id];
-                auto op_si = _intersect_closest(ray_work_item.ray);
-                if (op_si) {
-                    enqueue_item_after_intersect(ray_work_item, op_si.value(),
+                auto hit_ctx = _intersect_closest(ray_work_item.ray);
+                if (hit_ctx.is_hit()) {
+                    enqueue_item_after_intersect(ray_work_item, hit_ctx,
                                                  next_ray_queue, hit_area_light_queue,
                                                  material_eval_queue);
                 } else {
@@ -48,8 +44,8 @@ namespace luminous {
 
         }
 
-        void EmbreeAggregate::intersect_any(int max_rays, ShadowRayQueue *shadow_ray_queue,
-                                            SOA<PixelSampleState> *pixel_sample_state) const {
+        void EmbreeAggregate::intersect_any_and_compute_lighting(int max_rays, ShadowRayQueue *shadow_ray_queue,
+                                                                 SOA<PixelSampleState> *pixel_sample_state) const {
             parallel_for(shadow_ray_queue->size(), [&](uint task_id, uint tid) {
                 ShadowRayWorkItem item = (*shadow_ray_queue)[task_id];
                 bool hit = _intersect_any(item.ray);

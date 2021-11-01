@@ -27,8 +27,8 @@ namespace luminous {
                                            MaterialEvalQueue *material_eval_queue,
                                            RayQueue *next_ray_queue) const = 0;
 
-            virtual void intersect_any(int max_rays, ShadowRayQueue *shadow_ray_queue,
-                                       SOA<PixelSampleState> *pixel_sample_state) const = 0;
+            virtual void intersect_any_and_compute_lighting(int max_rays, ShadowRayQueue *shadow_ray_queue,
+                                                            SOA<PixelSampleState> *pixel_sample_state) const = 0;
 
             virtual void intersect_any_tr(int max_rays, ShadowRayQueue *shadow_ray_queue,
                                           SOA<PixelSampleState> *pixel_sample_state) const = 0;
