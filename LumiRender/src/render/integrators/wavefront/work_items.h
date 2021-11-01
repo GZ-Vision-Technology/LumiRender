@@ -105,14 +105,14 @@ namespace luminous {
             hasSubsurface = 1 << 1
         };
 
-        struct DirectSamples{
+        struct DirectSamples {
             float2 u{};
             float uc{};
         };
 
         LUMINOUS_SOA(DirectSamples, u, uc)
 
-        struct IndirectSamples{
+        struct IndirectSamples {
             float2 u{};
             float uc{}, rr{};
         };
@@ -204,11 +204,12 @@ namespace luminous {
             Spectrum throughput;
             LightSampleContext prev_lsc;
             float prev_bsdf_PDF;
+            Specturm prev_bsdf_val;
             int pixel_index{};
         };
 
         LUMINOUS_SOA(HitAreaLightWorkItem, light_hit_info, wo, depth,
-                     throughput, prev_lsc, prev_bsdf_PDF, pixel_index)
+                     throughput, prev_lsc, prev_bsdf_PDF, prev_bsdf_val, pixel_index)
 
         using HitAreaLightQueue = WorkQueue<HitAreaLightWorkItem>;
 

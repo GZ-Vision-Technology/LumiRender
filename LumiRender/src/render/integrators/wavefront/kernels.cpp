@@ -101,8 +101,10 @@ namespace luminous {
                 lls = light->Li(lls, scene_data);
                 float light_PDF = lls.PDF_dir;
                 float bsdf_PDF = item.prev_bsdf_PDF;
-                float weight = bsdf_PDF / (bsdf_PDF + light_PDF);// MIS_weight(bsdf_PDF, light_PDF)
-//                Ld = Le / (bsdf_PDF / bsdf_val + light_PDF / bsdf_val);
+                Spectrum bsdf_val = item.prev_bsdf_val;
+                float weight = MIS_weight(bsdf_PDF, light_PDF);
+                Spectrum L = item.throughput * Le * bsdf_val * weight / bsdf_PDF;
+                temp_Li += L;
             }
             pixel_sample_state->Li[item.pixel_index] = temp_Li;
         }
