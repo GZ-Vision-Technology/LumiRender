@@ -17,9 +17,14 @@ namespace luminous {
         using std::max;
         using std::min;
 
-        inline LM_XPU float rcp(float f) noexcept { return 1.f / f; }
+        template<typename A, typename B>
+        ND_XPU_INLINE bool is_close(A a, B b) {
+            return abs(a - b) < 0.00001;
+        }
 
-        inline LM_XPU double rcp(double d) noexcept { return 1. / d; }
+        ND_XPU_INLINE float rcp(float f) noexcept { return 1.f / f; }
+
+        ND_XPU_INLINE double rcp(double d) noexcept { return 1. / d; }
 
         LM_XPU_INLINE float saturate(const float &f) { return std::min(1.f, std::max(0.f, f)); }
 

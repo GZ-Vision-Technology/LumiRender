@@ -62,6 +62,7 @@ namespace luminous {
          * @return
          */
         ND_XPU_INLINE float PDF_dir(float PDF_pos, float3 normal, float3 wo) {
+            DCHECK(is_close(length(normal), 1.f))
             float cos_theta = abs_dot(normal, normalize(wo));
             return PDF_pos * length_squared(wo) / cos_theta;
         }
