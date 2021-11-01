@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.17)
 project(LumiRender)
 
-if (WIN32)
-    if(NOT DEFINED ENV{VLD_SDK_PATH})
-        message(STATUS "Can not find VLD SDK $ENV{VLD_SDK_PATH} in build environment!")
-    else()
-        message(STATUS "VLD SDK found in '$ENV{VLD_SDK_PATH}'")
-        include_directories($ENV{VLD_SDK_PATH}/include)
-        link_directories($ENV{VLD_SDK_PATH}/lib/Win64)
-        add_definitions (-D FOUND_VLD)
-    endif()
-endif(WIN32)
+#if (WIN32)
+#    if(NOT DEFINED ENV{VLD_SDK_PATH})
+#        message(STATUS "Can not find VLD SDK $ENV{VLD_SDK_PATH} in build environment!")
+#    else()
+#        message(STATUS "VLD SDK found in '$ENV{VLD_SDK_PATH}'")
+#        include_directories($ENV{VLD_SDK_PATH}/include)
+#        link_directories($ENV{VLD_SDK_PATH}/lib/Win64)
+#        add_definitions (-D FOUND_VLD)
+#    endif()
+#endif(WIN32)
 
 
 # 项目信息
