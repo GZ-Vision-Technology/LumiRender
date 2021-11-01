@@ -61,6 +61,10 @@ namespace luminous {
 
             }
 
+            LM_NODISCARD bool operator == (const Allocator<Ty> &other) {
+                return &arena == &other.arena;
+            }
+
             LM_NODISCARD __declspec(allocator) Ty *allocate(_CRT_GUARDOVERFLOW const size_t count) {
                 return arena.template allocate<Ty>(count);
             }
