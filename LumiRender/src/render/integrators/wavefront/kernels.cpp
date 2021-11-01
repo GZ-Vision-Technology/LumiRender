@@ -129,9 +129,17 @@ namespace luminous {
         void estimate_direct_lighting(int task_id, int n_item,
                                       ShadowRayQueue *shadow_ray_queue,
                                       RayQueue *next_ray_queue,
-                                      MaterialEvalQueue *material_eval_queue) {
+                                      MaterialEvalQueue *material_eval_queue,
+                                      SOA<PixelSampleState> *pixel_sample_state) {
             if (task_id >= material_eval_queue->size()) {
                 return;
+            }
+            MaterialEvalWorkItem mtl_item = (*material_eval_queue)[task_id];
+            const SceneData *scene_data = &(rt_param->scene_data);
+
+            HitContext hit_ctx{mtl_item.hit_info, scene_data};
+            if (mtl_item.depth == 0) {
+
             }
         }
 

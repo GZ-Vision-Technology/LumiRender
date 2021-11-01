@@ -59,8 +59,8 @@ namespace luminous {
             _dispatcher.wait();
         }
 
-        void OptixAggregate::intersect_any_and_record_direct_lighting(int max_rays, ShadowRayQueue *shadow_ray_queue,
-                                                                      SOA<PixelSampleState> *pixel_sample_state) const {
+        void OptixAggregate::intersect_any_and_compute_lighting(int max_rays, ShadowRayQueue *shadow_ray_queue,
+                                                                SOA<PixelSampleState> *pixel_sample_state) const {
             _params->shadow_ray_queue = shadow_ray_queue;
             _params->traversable_handle = OptixAccel::handle();
             _params.synchronize_to_device();

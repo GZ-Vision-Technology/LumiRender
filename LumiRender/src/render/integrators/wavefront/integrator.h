@@ -104,7 +104,7 @@ namespace luminous {
 
             void intersect_closest(int depth);
 
-            void intersect_any_and_record_direct_lighting(int wavefront_depth);
+            void intersect_any_and_compute_lighting(int wavefront_depth);
 
             void update() override {
                 _rt_param->frame_index = 0;

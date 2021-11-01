@@ -93,10 +93,11 @@ namespace luminous {
                     _estimate_direct_lighting.launch(_dispatcher, _max_queue_size,
                                                      _shadow_ray_queue.device_data(),
                                                      next_ray_queue,
-                                                     _material_eval_queue.device_data());
+                                                     _material_eval_queue.device_data(),
+                                                     _pixel_sample_state.device_data());
                     _dispatcher.wait();
 
-                    intersect_any_and_record_direct_lighting(depth);
+                    intersect_any_and_compute_lighting(depth);
                 }
 
                 if (sample_idx + 1 == spp) {
@@ -175,10 +176,10 @@ namespace luminous {
                                           _next_ray_queue(depth));
         }
 
-        void WavefrontPT::intersect_any_and_record_direct_lighting(int depth) {
-            _aggregate->intersect_any_and_record_direct_lighting(_max_queue_size,
-                                                                 _shadow_ray_queue.device_data(),
-                                                                 _pixel_sample_state.device_data());
+        void WavefrontPT::intersect_any_and_compute_lighting(int depth) {
+            _aggregate->intersect_any_and_compute_lighting(_max_queue_size,
+                                                           _shadow_ray_queue.device_data(),
+                                                           _pixel_sample_state.device_data());
         }
 
 

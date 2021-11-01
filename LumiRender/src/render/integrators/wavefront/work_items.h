@@ -133,11 +133,13 @@ namespace luminous {
             int pixel_index{};
             Spectrum throughput;
             LightSampleContext prev_lsc;
+            float prev_bsdf_PDF;
+            Spectrum prev_bsdf_val;
             float eta_scale{};
         };
 
         LUMINOUS_SOA(RayWorkItem, ray, depth, pixel_index, throughput,
-                     prev_lsc, eta_scale)
+                     prev_lsc, prev_bsdf_PDF, prev_bsdf_val, eta_scale)
 
         class RayQueue : public WorkQueue<RayWorkItem> {
         public:
@@ -162,12 +164,15 @@ namespace luminous {
             }
 
             LM_XPU_INLINE int push_secondary_ray(const Ray &ray, int depth, const LightSampleContext &prev_lsc,
-                                                 const Spectrum &throughput, float eta_scale, int pixel_index) {
+                                                 const Spectrum &throughput, float bsdf_PDF, Spectrum bsdf_val,
+                                                 float eta_scale, int pixel_index) {
                 int index = allocate_entry();
                 this->ray[index] = ray;
                 this->depth[index] = depth;
                 this->pixel_index[index] = pixel_index;
                 this->prev_lsc[index] = prev_lsc;
+                this->prev_bsdf_PDF[index] = bsdf_PDF;
+                this->prev_bsdf_val[index] = bsdf_val;
                 this->throughput[index] = throughput;
                 this->eta_scale[index] = eta_scale;
                 return index;
@@ -230,11 +235,12 @@ namespace luminous {
         struct MaterialEvalWorkItem {
             HitInfo hit_info;
             float3 wo;
+            int depth;
             int pixel_index{};
             Spectrum throughput;
         };
 
-        LUMINOUS_SOA(MaterialEvalWorkItem, hit_info, wo, pixel_index, throughput)
+        LUMINOUS_SOA(MaterialEvalWorkItem, hit_info, wo, depth, pixel_index, throughput)
 
         using MaterialEvalQueue = WorkQueue<MaterialEvalWorkItem>;
 
