@@ -70,7 +70,7 @@ else()
 #            WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
-find_package(OpenImageIO CONFIG REQUIRED)
+find_package(OpenImageIO REQUIRED)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions (-D DEBUG_BUILD)
