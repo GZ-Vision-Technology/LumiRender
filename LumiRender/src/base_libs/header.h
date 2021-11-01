@@ -9,8 +9,10 @@
 #include <typeinfo>
 #include <assert.h>
 #include <stdint.h>
-#include <vld.h>
 
+#ifdef FOUND_VLD
+#include <vld.h>
+#endif
 #include "crtdbg.h"
 
 #if defined(_MSC_VER)
