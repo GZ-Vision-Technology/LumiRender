@@ -56,6 +56,16 @@ namespace luminous {
                                  float PDF, LightEvalContext lec)
                     : L(L), wi(wi), PDF_dir(PDF), lec(lec) {}
 
+            LM_XPU void set_sample_result(float PDF, LightEvalContext ctx, float3 w) {
+                PDF_dir = PDF;
+                lec = ctx;
+                wi = w;
+            }
+
+            LM_XPU void update_Li(Spectrum Li) {
+                L = Li;
+            }
+
             LM_ND_XPU bool has_contribution() const {
                 return nonzero(L) && PDF_dir != 0;
             }

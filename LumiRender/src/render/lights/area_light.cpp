@@ -24,14 +24,14 @@ namespace luminous {
             float2 bary = square_to_triangle(u);
             LightEvalContext lec;
             lec = scene_data->compute_light_eval_context(_inst_idx, triangle_id, bary);
+            float3 wi = lec.pos - lls->lsc.pos;
+            float PDF_dir = PDF_Li(lls->lsc, LightEvalContext{lec}, wi, scene_data);
+            lls->set_sample_result(PDF_dir, lec, wi);
             return lec;
         }
 
         LightLiSample AreaLight::Li(LightLiSample lls, const SceneData *data) const {
-            float3 wi = lls.lec.pos - lls.lsc.pos;
-            lls.wi = normalize(wi);
-            lls.L = radiance(LightEvalContext{lls.lec}, -lls.wi, data);
-            lls.PDF_dir = PDF_Li(lls.lsc, LightEvalContext{lls.lec}, wi, data);
+            lls.update_Li(radiance(LightEvalContext{lls.lec}, -lls.wi, data));
             return lls;
         }
 

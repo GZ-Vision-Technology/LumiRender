@@ -10,7 +10,9 @@ namespace luminous {
     inline namespace render {
 
         LightEvalContext SpotLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
-            return LightEvalContext{_pos, make_float3(0.f), make_float2(0.f), 0};
+            auto lec = LightEvalContext{_pos, make_float3(0.f), make_float2(0.f), 0};
+            lls->set_sample_result(0, lec, normalize(_pos - lls->lsc.pos));
+            return lec;
         }
 
         float SpotLight::fall_off(float3 w_world) const {
@@ -31,11 +33,8 @@ namespace luminous {
         LightLiSample SpotLight::Li(LightLiSample lls, const SceneData *data) const {
             float3 wi = lls.lsc.pos - lls.lec.pos;
             float3 L = _intensity / length_squared(wi);
-            wi = normalize(wi);
-            float f = fall_off(wi);
-            lls.L = L * f;
-            lls.PDF_dir = 0;
-            lls.wi = wi;
+            float f = fall_off(normalize(wi));
+            lls.update_Li(L * f);
             return lls;
         }
 

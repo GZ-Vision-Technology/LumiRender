@@ -10,9 +10,7 @@ namespace luminous {
     inline namespace render {
 
         LightLiSample Envmap::Li(LightLiSample lls, const SceneData *data) const {
-            float3 wi = lls.lec.pos - lls.lsc.pos;
-            lls.wi = normalize(wi);
-            lls.L = L(_w2o.apply_vector(lls.wi), data);
+            lls.update_Li(L(_w2o.apply_vector(lls.wi), data));
             return lls;
         }
 
@@ -29,10 +27,12 @@ namespace luminous {
             float sin_theta = 0, cos_theta = 0;
             sincos(theta, &sin_theta, &cos_theta);
             float3 dir_in_world = _w2o.inverse().apply_vector(spherical_direction(sin_theta, cos_theta, phi));
-            lls->PDF_dir = map_PDF / (2 * Pi * Pi * sin_theta);
+            float PDF_dir = map_PDF / (2 * Pi * Pi * sin_theta);
             float3 pos = lls->lsc.pos + dir_in_world;
-            lls->lec = LightEvalContext{pos, make_float3(0.f), make_float2(0.f), 0.f};
-            return lls->lec;
+            LightEvalContext lec{pos, make_float3(0.f), make_float2(0.f), 0.f};
+            float3 wi = normalize(dir_in_world);
+            lls->set_sample_result(PDF_dir, lec, wi);
+            return lec;
         }
 
         Spectrum Envmap::L(float3 dir_in_obj, const SceneData *data) const {
