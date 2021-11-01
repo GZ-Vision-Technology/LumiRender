@@ -95,7 +95,7 @@ namespace luminous {
             typename std::aligned_storage<std::max({sizeof(Ts)...}), alignment_value>::type data{};
 
             static constexpr int data_refl_index = sizeof((_member_counter(0, (refl::Int<128> *)
-                                                                                   nullptr)));
+                    nullptr)));
             static_assert(data_refl_index <= 128, "index must not greater than REFL_MAX_MEMBER_COUNT");
 
             static refl::detail::Sizer<data_refl_index + 1> (_member_counter(int, refl::Int<data_refl_index + 1> *));
@@ -259,11 +259,13 @@ namespace luminous {
         } else if constexpr (nTypes <= 16) {                                                                               \
             switch (index) { _GEN_CASES_16(); }                                                                            \
         } else  {                                                                                                          \
+            printf("invalid index %d [%s:%d]\n", (int)index, __FILE__, __LINE__);                                          \
             assert(0);                                                                                                     \
         }                                                                                                                  \
         if constexpr (std::is_same_v<void, Ret>) {                                                                         \
             return;                                                                                                        \
         } else {                                                                                                           \
+            printf("invalid index %d [%s:%d]\n", (int)index, __FILE__, __LINE__);                                          \
             assert(0);                                                                                                     \
         }
 
