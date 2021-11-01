@@ -70,7 +70,24 @@ namespace luminous {
             const LightSampler *light_sampler = scene_data->light_sampler;
             EscapedRayWorkItem item = (*escaped_ray_queue)[task_id];
             Spectrum L = pixel_sample_state->Li[item.pixel_index];
-            L += light_sampler->on_miss(item.ray_d, scene_data, item.throughput);
+
+            if (item.depth == 0) {
+                L += light_sampler->on_miss(item.ray_d, scene_data, item.throughput);
+            } else {
+                for (int i = 0; i < light_sampler->infinite_light_num(); ++i) {
+                    const Light &light = light_sampler->infinite_light_at(i);
+                    LightSampleContext prev_lsc = item.prev_lsc;
+                    float light_select_PMF = light_sampler->PMF(prev_lsc, light);
+                    LightLiSample lls{prev_lsc, normalize(item.ray_d)};
+                    float bsdf_PDF = item.prev_bsdf_PDF;
+                    Spectrum bsdf_val = item.prev_bsdf_val;
+                    lls = light.Li(lls, scene_data);
+                    float weight = MIS_weight(bsdf_PDF, lls.PDF_dir);
+                    Spectrum temp_Li = item.throughput * lls.L * bsdf_val * weight / bsdf_PDF;
+                    L += temp_Li;
+                }
+            }
+
             pixel_sample_state->Li[item.pixel_index] = L;
         }
 
@@ -91,20 +108,20 @@ namespace luminous {
             const Light *light = hit_ctx.light();
 
             float3 wo = item.wo;
-            Spectrum Le = light->as<AreaLight>()->radiance(lec, wo, scene_data);
             Spectrum temp_Li = pixel_sample_state->Li[item.pixel_index];
             if (item.depth == 0) {
+                Spectrum Le = light->as<AreaLight>()->radiance(lec, wo, scene_data);
                 temp_Li += Le * item.throughput;
             } else {
-                LightLiSample lls{item.prev_lsc};
+                LightLiSample lls{item.prev_lsc, lec};
                 float light_select_PMF = scene_data->light_sampler->PMF(*light);
                 lls = light->Li(lls, scene_data);
                 float light_PDF = lls.PDF_dir;
                 float bsdf_PDF = item.prev_bsdf_PDF;
                 Spectrum bsdf_val = item.prev_bsdf_val;
                 float weight = MIS_weight(bsdf_PDF, light_PDF);
-                Spectrum L = item.throughput * Le * bsdf_val * weight / bsdf_PDF;
-                temp_Li += L;
+                Spectrum L = item.throughput * lls.L * bsdf_val * weight / bsdf_PDF;
+                temp_Li += L / light_select_PMF;
             }
             pixel_sample_state->Li[item.pixel_index] = temp_Li;
         }

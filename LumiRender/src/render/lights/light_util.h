@@ -45,8 +45,12 @@ namespace luminous {
             LightSampleContext lsc{};
             LM_XPU LightLiSample() = default;
 
-            LM_XPU explicit LightLiSample(LightSampleContext lsc)
-                    : lsc(lsc) {}
+            LM_XPU LightLiSample(LightSampleContext lsc,
+                                 LightEvalContext lec)
+                    : lsc(lsc), lec(lec) {}
+
+            LM_XPU explicit LightLiSample(LightSampleContext lsc, float3 wi = make_float3(0.f))
+                    : lsc(lsc), wi(wi) {}
 
             LM_XPU LightLiSample(const float3 &L, float3 wi,
                                  float PDF, LightEvalContext lec)

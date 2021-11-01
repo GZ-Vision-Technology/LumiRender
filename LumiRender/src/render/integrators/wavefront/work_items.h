@@ -181,10 +181,12 @@ namespace luminous {
             int pixel_index{};
             Spectrum throughput;
             LightSampleContext prev_lsc;
+            float prev_bsdf_PDF;
+            Spectrum prev_bsdf_val;
         };
 
         LUMINOUS_SOA(EscapedRayWorkItem, ray_o, ray_d, depth, pixel_index,
-                     throughput, prev_lsc)
+                     throughput, prev_lsc, prev_bsdf_PDF, prev_bsdf_val)
 
         class EscapedRayQueue : public WorkQueue<EscapedRayWorkItem> {
         public:
@@ -204,7 +206,7 @@ namespace luminous {
             Spectrum throughput;
             LightSampleContext prev_lsc;
             float prev_bsdf_PDF;
-            Specturm prev_bsdf_val;
+            Spectrum prev_bsdf_val;
             int pixel_index{};
         };
 
