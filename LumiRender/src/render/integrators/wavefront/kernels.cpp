@@ -138,7 +138,22 @@ namespace luminous {
             const SceneData *scene_data = &(rt_param->scene_data);
 
             HitContext hit_ctx{mtl_item.hit_info, scene_data};
+            SurfaceInteraction si = hit_ctx.compute_surface_interaction(mtl_item.wo);
+            BSDF bsdf = si.op_bsdf.value();
             if (mtl_item.depth == 0) {
+                pixel_sample_state->normal[mtl_item.pixel_index] = si.g_uvn.normal;
+                pixel_sample_state->albedo[mtl_item.pixel_index] = make_float3(bsdf.base_color());
+            }
+
+            RayWorkItem ray_item;
+
+            RaySamples rs = pixel_sample_state->ray_samples[mtl_item.pixel_index];
+
+            auto bsdf_sample = bsdf.sample_f(mtl_item.wo, rs.indirect.uc, rs.indirect.u);
+            if (bsdf_sample) {
+                Spectrum throughput = mtl_item.throughput * bsdf_sample->f_val / bsdf_sample->PDF;
+                ray_item.prev_bsdf_val = bsdf_sample->f_val;
+                ray_item.prev_bsdf_PDF = bsdf_sample->PDF;
 
             }
         }

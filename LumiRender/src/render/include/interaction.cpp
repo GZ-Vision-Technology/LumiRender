@@ -15,9 +15,13 @@ namespace luminous {
         }
 
         SurfaceInteraction HitContext::compute_surface_interaction(Ray ray) const {
+            return compute_surface_interaction(normalize(-ray.direction()));
+        }
+
+        SurfaceInteraction HitContext::compute_surface_interaction(float3 wo) const {
             auto si = scene_data()->compute_surface_interaction(hit_info);
             si.init_BSDF(scene_data());
-            si.wo = normalize(-ray.direction());
+            si.wo = wo;
             return si;
         }
 
