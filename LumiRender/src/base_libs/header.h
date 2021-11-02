@@ -103,6 +103,20 @@ constexpr const char *type_name(T *ptr = nullptr) {
 
 #define USE_LSTD 1
 
+
+
+#ifndef NDEBUG
+
+#define LM_ASSERT(condition, ...) if (!condition) { printf(__VA_ARGS__);} assert(condition);
+
+#else
+
+#define LM_ASSERT(condition, ...)
+
+#endif
+
+
+
 #define DCHECK(a) assert(a);
 #define DCHECK_EQ(a, b) DCHECK(a == b)
 #define DCHECK_GT(a, b) DCHECK(a > b);

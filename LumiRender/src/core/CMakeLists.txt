@@ -1,4 +1,4 @@
-
+# todo change to config by programmer
 file(GLOB_RECURSE HEADER_FILES *.h*)
 file(GLOB_RECURSE SOURCE_FILES *.c*)
 

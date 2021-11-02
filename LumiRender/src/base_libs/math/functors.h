@@ -19,10 +19,11 @@ namespace luminous {
 
         template<typename A, typename B>
         ND_XPU_INLINE bool is_close(A a, B b) {
-            return abs(a - b) < 0.00001;
+            return abs(a - b) < 0.003;
         }
 
-#define CHECK_UNIT_VEC(vec) DCHECK(is_close(length(vec), 1.f));
+#define CHECK_UNIT_VEC(vec) LM_ASSERT(is_close(length(vec), 1.f), "vec is (%f, %f, %f), length is %f\n ", \
+                                        (vec).x, (vec).y, (vec).z, length(vec));
 
         ND_XPU_INLINE float rcp(float f) noexcept { return 1.f / f; }
 
@@ -57,18 +58,19 @@ namespace luminous {
 #undef MAKE_VECTOR_UNARY_FUNC
 
         template<typename T, uint32_t N>
-        ND_XPU_INLINE bool is_zero(Vector<T, N> v) noexcept {
+        ND_XPU_INLINE bool is_zero(Vector <T, N> v) noexcept {
             return all(v == T(0));
         }
 
         template<typename T, uint32_t N>
-        ND_XPU_INLINE bool nonzero(Vector<T, N> v) noexcept {
+        ND_XPU_INLINE bool nonzero(Vector <T, N> v) noexcept {
             return any(v != T(0));
         }
 
 #undef MAKE_VECTOR_UNARY_FUNC_BOOL
 
         template<typename T, uint N, std::enable_if_t<scalar::is_scalar < T>, int> = 0>
+
         LM_ND_XPU constexpr auto select(Vector<bool, N> pred, Vector <T, N> t, Vector <T, N> f) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
@@ -188,8 +190,8 @@ namespace luminous {
         }
 
         template<typename T, uint N>
-        ND_XPU_INLINE T triangle_area(Vector<T, N> p0, Vector<T, N> p1, Vector<T, N> p2) {
-            static_assert(N == 3 || N == 2 , "N must be greater than 1!");
+        ND_XPU_INLINE T triangle_area(Vector <T, N> p0, Vector <T, N> p1, Vector <T, N> p2) {
+            static_assert(N == 3 || N == 2, "N must be greater than 1!");
             if constexpr (N == 2) {
                 Vector<T, 3> pp0 = Vector<T, 3>{p0.x, p0.y, 0};
                 Vector<T, 3> pp1 = Vector<T, 3>{p1.x, p1.y, 0};
@@ -212,10 +214,11 @@ namespace luminous {
         LM_XPU void coordinate_system(Vector<T, 3> v1,
                                       Vector<T, 3> *v2,
                                       Vector<T, 3> *v3) {
+            CHECK_UNIT_VEC(v1)
             if (abs(v1.x) > abs(v1.y)) {
-                *v2 = Vector < T, 3 > (-v1.z, 0, v1.x) / sqrt(v1.x * v1.x + v1.z * v1.z);
+                *v2 = Vector<T, 3>(-v1.z, 0, v1.x) / sqrt(v1.x * v1.x + v1.z * v1.z);
             } else {
-                *v2 = Vector < T, 3 > (0, v1.z, -v1.y) / sqrt(v1.y * v1.y + v1.z * v1.z);
+                *v2 = Vector<T, 3>(0, v1.z, -v1.y) / sqrt(v1.y * v1.y + v1.z * v1.z);
             }
             *v3 = cross(v1, *v2);
         }

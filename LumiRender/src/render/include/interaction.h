@@ -77,6 +77,9 @@ namespace luminous {
             float3 normal;
 
             LM_XPU void set(float3 u, float3 v, float3 n) {
+                CHECK_UNIT_VEC(u)
+                CHECK_UNIT_VEC(v)
+                CHECK_UNIT_VEC(n)
                 dp_du = u;
                 dp_dv = v;
                 normal = n;

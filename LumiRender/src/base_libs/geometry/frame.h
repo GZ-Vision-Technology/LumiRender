@@ -24,14 +24,18 @@ namespace luminous {
 
             LM_XPU explicit TFrame(vector_t normal)
                     : z(normal) {
-                coordinateSystem(z, &x, &y);
+                coordinate_system(z, &x, &y);
             }
 
             LM_ND_XPU static TFrame from_xy(vector_t x, vector_t y) {
+                CHECK_UNIT_VEC(x)
+                CHECK_UNIT_VEC(y)
                 return TFrame(x, y, cross(x, y));
             }
 
             LM_ND_XPU static TFrame from_xz(vector_t x, vector_t z) {
+                CHECK_UNIT_VEC(x)
+                CHECK_UNIT_VEC(z)
                 return TFrame(x, cross(x, z), z);
             }
 
@@ -41,7 +45,7 @@ namespace luminous {
 
             LM_XPU void init(vector_t normal) {
                 z = normal;
-                coordinateSystem(z, &x, &y);
+                coordinate_system(z, &x, &y);
             }
 
             LM_ND_XPU vector_t to_local(vector_t world_v) const {
@@ -53,18 +57,22 @@ namespace luminous {
             }
 
             LM_ND_XPU static scalar_t cos_theta_2(vector_t v) {
+                CHECK_UNIT_VEC(v)
                 return sqr(v.z);
             }
 
             LM_ND_XPU static scalar_t cos_theta(const vector_t v) {
+                CHECK_UNIT_VEC(v)
                 return v.z;
             }
 
             LM_ND_XPU static scalar_t abs_cos_theta(vector_t v) {
+                CHECK_UNIT_VEC(v)
                 return std::abs(v.z);
             }
 
             LM_ND_XPU static scalar_t sin_theta_2(const vector_t v) {
+                CHECK_UNIT_VEC(v)
                 return 1.0f - cos_theta_2(v);
             }
 

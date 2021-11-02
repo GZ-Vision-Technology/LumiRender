@@ -102,7 +102,9 @@ namespace luminous {
             LM_ND_XPU BSDFSample() = default;
 
             LM_ND_XPU BSDFSample(const Spectrum &val, float3 wi_, float PDF_, BxDFFlags flags_, float eta_ = 1)
-                    : f_val(val), wi(wi_), PDF(PDF_), flags(flags_), eta(eta_) {}
+                    : f_val(val), wi(wi_), PDF(PDF_), flags(flags_), eta(eta_) {
+                CHECK_UNIT_VEC(wi_)
+            }
 
             LM_ND_XPU bool is_non_specular() const {
                 return luminous::is_non_specular(flags);
