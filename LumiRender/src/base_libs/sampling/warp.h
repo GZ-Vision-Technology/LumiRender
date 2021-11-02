@@ -61,10 +61,10 @@ namespace luminous {
          * p(dir) = p(pos) * r^2 / cosθ
          * @return
          */
-        ND_XPU_INLINE float PDF_dir(float PDF_pos, float3 normal, float3 wo) {
-            DCHECK(is_close(length(normal), 1.f))
-            float cos_theta = abs_dot(normal, normalize(wo));
-            return PDF_pos * length_squared(wo) / cos_theta;
+        ND_XPU_INLINE float PDF_dir(float PDF_pos, float3 normal, float3 wo_un) {
+            CHECK_UNIT_VEC(normal)
+            float cos_theta = abs_dot(normal, normalize(wo_un));
+            return PDF_pos * length_squared(wo_un) / cos_theta;
         }
 
         ND_XPU_INLINE float3 square_to_hemisphere(const float2 sample) {

@@ -24,9 +24,9 @@ namespace luminous {
             float2 bary = square_to_triangle(u);
             LightEvalContext lec;
             lec = scene_data->compute_light_eval_context(_inst_idx, triangle_id, bary);
-            float3 wi = lec.pos - lls->lsc.pos;
-            float PDF_dir = PDF_Li(lls->lsc, LightEvalContext{lec}, wi, scene_data);
-            lls->set_sample_result(PDF_dir, lec, wi);
+            float3 wi_un = lec.pos - lls->lsc.pos;
+            float PDF_dir = PDF_Li(lls->lsc, LightEvalContext{lec}, wi_un, scene_data);
+            lls->set_sample_result(PDF_dir, lec, normalize(wi_un));
             return lec;
         }
 
@@ -36,9 +36,8 @@ namespace luminous {
         }
 
         float AreaLight::PDF_Li(const LightSampleContext &p_ref, const LightEvalContext &p_light,
-                                float3 wi, const SceneData *data) const {
-            float3 wo = p_ref.pos - p_light.pos;
-            float PDF = luminous::PDF_dir(p_light.PDF_pos, p_light.ng, wo);
+                                float3 wi_un, const SceneData *data) const {
+            float PDF = luminous::PDF_dir(p_light.PDF_pos, p_light.ng, -wi_un);
             if (is_inf(PDF)) {
                 return 0;
             }

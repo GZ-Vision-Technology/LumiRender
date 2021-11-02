@@ -59,6 +59,7 @@ namespace luminous {
             LM_XPU void set_sample_result(float PDF, LightEvalContext ctx, float3 w) {
                 PDF_dir = PDF;
                 lec = ctx;
+                CHECK_UNIT_VEC(w)
                 wi = w;
             }
 

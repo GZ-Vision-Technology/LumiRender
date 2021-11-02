@@ -22,6 +22,8 @@ namespace luminous {
             return abs(a - b) < 0.00001;
         }
 
+#define CHECK_UNIT_VEC(vec) DCHECK(is_close(length(vec), 1.f));
+
         ND_XPU_INLINE float rcp(float f) noexcept { return 1.f / f; }
 
         ND_XPU_INLINE double rcp(double d) noexcept { return 1. / d; }
