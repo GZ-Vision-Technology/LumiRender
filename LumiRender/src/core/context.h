@@ -54,9 +54,11 @@ namespace luminous {
             return _parse_result().count("scene") > 0;
         }
 
-        bool create_working_folder(const luminous_fs::path &name) noexcept;
+        LM_NODISCARD std::string load_cu_file(luminous_fs::path fn);
 
-        bool create_cache_folder(const luminous_fs::path &name) noexcept;
+        LM_NODISCARD bool create_working_folder(const luminous_fs::path &name) noexcept;
+
+        LM_NODISCARD bool create_cache_folder(const luminous_fs::path &name) noexcept;
 
         LM_NODISCARD luminous_fs::path include_path(const luminous_fs::path &name = {}) noexcept;
 

@@ -7,6 +7,18 @@
 
 namespace luminous {
 
+    std::string Context::load_cu_file(luminous_fs::path fn) {
+        if (fn.is_relative()) {
+            fn = working_path(fn);
+        }
+        std::ifstream fst;
+        fst.open(fn.c_str());
+        std::stringstream buffer;
+        buffer << fst.rdbuf();
+        std::string str = buffer.str();
+        return str;
+    }
+
     bool Context::_create_folder_if_necessary(const luminous_fs::path &path) noexcept {
         if (luminous_fs::exists(path)) {
             return true;

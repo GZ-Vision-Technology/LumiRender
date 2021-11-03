@@ -1,35 +1,24 @@
 #include "util/parallel.h"
-
+#include "gpu/framework/jitify/jitify.hpp"
 #include "iostream"
+#include "core/context.h"
 
 using namespace luminous;
 
 using namespace std;
 
-struct A {
 
-};
 
-void func(const A *p1, A *p2) {
-    printf("p1 = %p, p2 = %p\n", p1, p2);
-}
+int main(int argc, char *argv[]) {
 
-template<typename ...Args>
-void func2(Args&&...args) {
-    auto l = [&](uint ,uint) {
-        func(std::forward<Args>(args)...);
-    };
+    Context context{argc, argv};
 
-    l(0,0);
-    luminous::parallel_for(1000, [&](uint ,uint) {
-        func(std::forward<Args>(args)...);
-    });
-}
+    string fn = "E:\\work\\graphic\\renderer\\LumiRender\\LumiRender\\src\\gpu\\shaders\\megakernel_pt.cu";
 
-int main() {
+    auto content = context.load_cu_file(fn);
 
-    auto pa = new A;
 
-    func2(pa, pa);
+
+    cout << content << endl;
 
 }
