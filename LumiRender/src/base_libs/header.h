@@ -83,6 +83,16 @@
 
 #define LUMINOUS_TO_STRING(...) return string_printf(__VA_ARGS__);
 
+#ifndef NDEBUG
+
+#define DEBUG_ONLY(...) __VA_ARGS__
+
+#else
+
+#define DEBUG_ONLY(...)
+
+#endif
+
 template<typename T>
 constexpr const char *type_name(T *ptr = nullptr) {
     if (ptr == nullptr)

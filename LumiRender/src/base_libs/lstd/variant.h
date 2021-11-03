@@ -212,7 +212,7 @@ namespace luminous {
                 return *get<U *>();
             }
 
-#define _GEN_CASE_N(N)                                                                                                     \
+#define GEN_CASE_N(N)                                                                                                     \
         case N:                                                                                                            \
             if constexpr (N < nTypes) {                                                                                    \
                 using ty = typename Index::template GetType<N>::type;                                                      \
@@ -224,40 +224,40 @@ namespace luminous {
                 }                                                                                                          \
             };                                                                                                             \
             break;
-#define _GEN_CASES_2()                                                                                                     \
-        _GEN_CASE_N(0)                                                                                                     \
-        _GEN_CASE_N(1)
-#define _GEN_CASES_4()                                                                                                     \
-        _GEN_CASES_2()                                                                                                     \
-        _GEN_CASE_N(2)                                                                                                     \
-        _GEN_CASE_N(3)
-#define _GEN_CASES_8()                                                                                                     \
-        _GEN_CASES_4()                                                                                                     \
-        _GEN_CASE_N(4)                                                                                                     \
-        _GEN_CASE_N(5)                                                                                                     \
-        _GEN_CASE_N(6)                                                                                                     \
-        _GEN_CASE_N(7)
-#define _GEN_CASES_16()                                                                                                    \
-        _GEN_CASES_8()                                                                                                     \
-        _GEN_CASE_N(8)                                                                                                     \
-        _GEN_CASE_N(9)                                                                                                     \
-        _GEN_CASE_N(10)                                                                                                    \
-        _GEN_CASE_N(11)                                                                                                    \
-        _GEN_CASE_N(12)                                                                                                    \
-        _GEN_CASE_N(13)                                                                                                    \
-        _GEN_CASE_N(14)                                                                                                    \
-        _GEN_CASE_N(15)
-#define _GEN_DISPATCH_BODY()                                                                                               \
+#define GEN_CASES_2()                                                                                                     \
+        GEN_CASE_N(0)                                                                                                     \
+        GEN_CASE_N(1)
+#define GEN_CASES_4()                                                                                                     \
+        GEN_CASES_2()                                                                                                     \
+        GEN_CASE_N(2)                                                                                                     \
+        GEN_CASE_N(3)
+#define GEN_CASES_8()                                                                                                     \
+        GEN_CASES_4()                                                                                                     \
+        GEN_CASE_N(4)                                                                                                     \
+        GEN_CASE_N(5)                                                                                                     \
+        GEN_CASE_N(6)                                                                                                     \
+        GEN_CASE_N(7)
+#define GEN_CASES_16()                                                                                                    \
+        GEN_CASES_8()                                                                                                     \
+        GEN_CASE_N(8)                                                                                                     \
+        GEN_CASE_N(9)                                                                                                     \
+        GEN_CASE_N(10)                                                                                                    \
+        GEN_CASE_N(11)                                                                                                    \
+        GEN_CASE_N(12)                                                                                                    \
+        GEN_CASE_N(13)                                                                                                    \
+        GEN_CASE_N(14)                                                                                                    \
+        GEN_CASE_N(15)
+#define GEN_DISPATCH_BODY()                                                                                               \
         using Ret = std::invoke_result_t<Visitor, typename FirstOf<Ts...>::type &>;                                        \
         static_assert(nTypes <= 16, "too many types");                                                                     \
         if constexpr (nTypes <= 2) {                                                                                       \
-            switch (index) { _GEN_CASES_2(); }                                                                             \
+            switch (index) { GEN_CASES_2(); }                                                                             \
         } else if constexpr (nTypes <= 4) {                                                                                \
-            switch (index) { _GEN_CASES_4(); }                                                                             \
+            switch (index) { GEN_CASES_4(); }                                                                             \
         } else if constexpr (nTypes <= 8) {                                                                                \
-            switch (index) { _GEN_CASES_8(); }                                                                             \
+            switch (index) { GEN_CASES_8(); }                                                                             \
         } else if constexpr (nTypes <= 16) {                                                                               \
-            switch (index) { _GEN_CASES_16(); }                                                                            \
+            switch (index) { GEN_CASES_16(); }                                                                            \
         } else  {                                                                                                          \
             assert(0);                                                                                                     \
         }                                                                                                                  \
@@ -269,12 +269,12 @@ namespace luminous {
 
             template<class Visitor>
             LM_XPU decltype(auto) dispatch(Visitor &&visitor) {
-                _GEN_DISPATCH_BODY()
+                GEN_DISPATCH_BODY()
             }
 
             template<class Visitor>
             LM_XPU decltype(auto) dispatch(Visitor &&visitor) const {
-                _GEN_DISPATCH_BODY()
+                GEN_DISPATCH_BODY()
             }
 
             LM_XPU ~Variant() {
