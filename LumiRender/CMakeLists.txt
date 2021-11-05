@@ -71,6 +71,12 @@ endif ()
 
 set(CMAKE_CXX_STANDARD 17)
 add_definitions(-D _ENABLE_EXTENDED_ALIGNED_STORAGE)
+
+if (MSVC)
+    string(REGEX REPLACE "/EH[a-z]+" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
+endif ()
+
 add_subdirectory(src)
 
 set (CHECK_CUDA_OUTPUT_EXE ${CMAKE_BINARY_DIR}/check_cuda)
