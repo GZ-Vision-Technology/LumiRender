@@ -60,8 +60,3 @@ add_subdirectory(base_libs)
 add_subdirectory(tests)
 add_subdirectory(apps)
 add_subdirectory(render)
-
-#if(LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
-
-
-#endif()

@@ -30,10 +30,8 @@ namespace luminous {
         luminous_fs::path _in_dir;
         luminous_fs::path _scene_file;
         std::string _device;
-        int _thread_num{0};
         mutable cxxopts::Options _cli_options;
         mutable std::optional<cxxopts::ParseResult> _parsed_cli_options;
-        mutable std::optional<std::string> _positional_option;
 
         LM_NODISCARD const cxxopts::ParseResult &_parse_result() const noexcept;
 

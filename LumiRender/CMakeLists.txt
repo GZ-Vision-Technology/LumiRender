@@ -50,18 +50,8 @@ set(CMAKE_DEBUG_POSTFIX "")
 set(LUMINOUS_CPU_BACKEND ON)
 set(LUMINOUS_LOCAL_EMBREE ON)
 
-if (LUMINOUS_LOCAL_EMBREE)
-    find_package(embree 3 CONFIG REQUIRED)
-else()
-#    add_subdirectory(thirdparty/embree)
-#    add_library(embree_config INTERFACE)
-#    target_link_libraries(embree_config INTERFACE embree3)
-#    set_target_properties(embree PROPERTIES
-#            PUBLIC_HEADER "${HEADER_FILES}"
-#            LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
-#            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin/"
-#            WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
+find_package(embree 3 CONFIG REQUIRED)
+
 
 find_package(OpenImageIO CONFIG REQUIRED)
 
