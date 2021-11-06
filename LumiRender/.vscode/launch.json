@@ -12,11 +12,11 @@
           "program": "${command:cmake.launchTargetPath}",
           "args": [
             "-s", 
-            "E:/work/graphic/renderer/LumiRender/LumiRender/res/test_scenes/cornell_box/scene.json",
+            "E:/work/graphic/renderer/LumiRender/LumiRender/res/test_scenes/cornell_box/scene_simple.json",
             "-m",
-            "cli",
+            "gui",
             "-d",
-            "cpu"
+            "cuda"
           ],
           "stopAtEntry": false,
           "cwd": "${command:cmake.getLaunchTargetDirectory}",
