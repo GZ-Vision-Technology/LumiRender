@@ -109,6 +109,14 @@ namespace luminous {
         return _run_dir;
     }
 
+    const luminous_fs::path &Context::_resource_dir() noexcept {
+        auto res_dir = _runtime_dir() / "res";
+        if (!luminous_fs::exists(res_dir)) {
+            luminous_fs::create_directory(res_dir);
+        }
+        return res_dir;
+    }
+
     const luminous_fs::path &Context::_working_dir() noexcept {
         if (_work_dir.empty()) {
             _work_dir = luminous_fs::canonical(_parse_result()["working-dir"].as<luminous_fs::path>());
@@ -159,4 +167,5 @@ namespace luminous {
     bool Context::show_window() noexcept {
         return _parse_result()["mode"].as<std::string>() == "gui";
     }
+
 }// namespace luminous

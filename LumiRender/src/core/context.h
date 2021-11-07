@@ -39,6 +39,8 @@ namespace luminous {
 
         LM_NODISCARD const luminous_fs::path &_working_dir() noexcept;
 
+        LM_NODISCARD const luminous_fs::path &_resource_dir() noexcept;
+
         LM_NODISCARD const luminous_fs::path &_input_dir() noexcept;
 
         static bool _create_folder_if_necessary(const luminous_fs::path &path) noexcept;

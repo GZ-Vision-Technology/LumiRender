@@ -4,5 +4,8 @@
 
 
 
-#include "math.h"
 #include "cuda_util.cuh"
+
+__device__ void func() {
+    printf("Adsfasfdas");
+}
