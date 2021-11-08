@@ -70,7 +70,6 @@
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl",
         "CMAKE_CXX_COMPILER": "cl",
-        "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_DEBUG_POSTFIX": "",
         "VCPKG_TARGET_TRIPLET": "x64-windows",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
@@ -100,6 +99,7 @@
       "cacheVariables": {
         "CMAKE_C_COMPILER": "clang",
         "CMAKE_CXX_COMPILER": "clang",
+        "CUDA_HOST_COMPILER": "D:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/Llvm/x64/bin/clang-cl.exe",
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_DEBUG_POSTFIX": "",
         "VCPKG_TARGET_TRIPLET": "x64-windows",
@@ -128,9 +128,17 @@
       "configurePreset": "x64-linux-clang-vcpkg"
     },
     {
-      "name": "x64-windows",
-      "description": "MSVC x64-windows build settings",
-      "displayName": "x64-windows",
+      "name": "x64-windows-debug",
+      "description": "x64-windows-debug",
+      "displayName": "x64-windows-debug",
+      "configuration": "Debug",
+      "configurePreset": "x64-windows"
+    },
+    {
+      "name": "x64-windows-release",
+      "description": "x64-windows-release",
+      "displayName": "x64-windows-release",
+      "configuration": "Release",
       "configurePreset": "x64-windows"
     },
     {
