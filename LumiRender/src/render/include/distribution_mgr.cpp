@@ -64,7 +64,7 @@ namespace luminous {
                 distributions.emplace_back(func, CDF, handle.integral);
             }
             int count = distributions.size() - 1 - _count_distribution;
-            auto distribution = Distribution2D(distributions.const_device_buffer_view(_count_distribution, count),
+            auto distribution = Distribution2D(distributions.const_host_buffer_view(_count_distribution, count),
                                                distributions.back());
             distribution2ds.push_back(distribution);
         }
