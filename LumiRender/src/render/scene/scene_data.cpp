@@ -65,6 +65,7 @@ namespace luminous {
                 luminous::float3 ns = normalize(o2w.apply_normal(normal));
                 luminous::float3 ss = si.g_uvn.dp_du;
                 luminous::float3 st = normalize(cross(ns, ss));
+                ss = cross(st, ns);
                 si.s_uvn.set(ss, st, ns);
             }
             if (mesh.has_emission()) {

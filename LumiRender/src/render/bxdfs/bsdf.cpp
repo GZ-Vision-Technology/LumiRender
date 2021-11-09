@@ -7,8 +7,9 @@
 namespace luminous {
     inline namespace render {
         Spectrum BSDF::eval(float3 wo_world, float3 wi_world, TransportMode mode) const {
-            float3 wo = normalize(to_local(wo_world));
-            float3 wi = normalize(to_local(wi_world));
+            float3 wo = to_local(wo_world);
+            float3 wi = to_local(wi_world);
+
             if (wo.z == 0) {
                 return make_float4(0);
             }
@@ -16,14 +17,14 @@ namespace luminous {
         }
 
         float BSDF::PDF(float3 wo_world, float3 wi_world, TransportMode mode, BxDFReflTransFlags sample_flags) const {
-            float3 wo = normalize(to_local(wo_world));
-            float3 wi = normalize(to_local(wi_world));
+            float3 wo = to_local(wo_world);
+            float3 wi = to_local(wi_world);
             return _bxdf.PDF(wo, wi, mode, sample_flags);
         }
 
         lstd::optional<BSDFSample> BSDF::sample_f(float3 world_wo, float uc, float2 u,
                                                   TransportMode mode, BxDFReflTransFlags sample_flags) const {
-            float3 local_wo = normalize(to_local(world_wo));
+            float3 local_wo = to_local(world_wo);
             auto ret = _bxdf.sample_f(local_wo, uc, u, mode, sample_flags);
             if (ret) {
                 ret->wi = to_world(ret->wi);
@@ -37,7 +38,7 @@ namespace luminous {
         }
 
         Spectrum BSDF::rho_hd(float3 wo_world, BufferView<const float> uc, BufferView<const float2> u2) const {
-            float3 wo = normalize(to_local(wo_world));
+            float3 wo = to_local(wo_world);
             return _bxdf.rho_hd(wo, uc, u2);
         }
 
