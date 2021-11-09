@@ -94,6 +94,9 @@ namespace luminous {
 
             typename std::aligned_storage<std::max({sizeof(Ts)...}), alignment_value>::type data{};
 
+            int index = -1;
+
+#ifndef __CUDACC__
             static constexpr int data_refl_index = sizeof((_member_counter(0, (refl::Int<128> *)
                                                                                    nullptr)));
             static_assert(data_refl_index <= 128, "index must not greater than REFL_MAX_MEMBER_COUNT");
@@ -105,8 +108,8 @@ namespace luminous {
                 template<typename F>
                 static void process(const F &f) { f(&ReflSelf::data, "data"); }
             };
+#endif
 
-            int index = -1;
 
         public:
             using TypeTuple = std::tuple<Ts...>;
