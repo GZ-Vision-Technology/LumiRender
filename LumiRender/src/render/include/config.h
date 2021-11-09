@@ -120,6 +120,10 @@ namespace luminous {
             std::string fn;
             PixelFormat pixel_format = PixelFormat::UNKNOWN;
             uint64_t handle{0};
+
+            LM_NODISCARD bool has_image() const {
+                return image_idx != invalid_uint32;
+            }
         };
 
         LM_ND_INLINE bool operator==(const TextureConfig &t1, const TextureConfig &t2) {

@@ -37,6 +37,19 @@ namespace luminous {
             _pixel = move(other._pixel);
         }
 
+
+        Image Image::pure_color(float4 color, ColorSpace color_space) {
+            constexpr auto pixel_size = PixelFormatImpl<float4>::pixel_size;
+            auto pixel = new std::byte[pixel_size];
+            auto dest = (float4*)pixel;
+            if (color_space == ColorSpace::LINEAR) {
+                *dest = color;
+            } else {
+                *dest = Spectrum::srgb_to_linear(color);
+            }
+            return {PixelFormat::RGBA32F, pixel, make_uint2(1u)};
+        }
+
         Image Image::load(const luminous_fs::path &path, ColorSpace color_space) {
             auto extension = to_lower(path.extension().string());
             LUMINOUS_INFO("load picture ", path.string());

@@ -40,10 +40,17 @@ namespace luminous {
             for (auto &config : light_configs) {
                 config.fill_tex_config(_tex_configs);
                 if (config.type() == full_type("Envmap")) {
-                    const Image &image = _images[config.texture_config.image_idx];
-                    std::vector<float> vec = Envmap::create_distribution(image);
-                    config.distribution_idx = _distribution_mgr.distribution2ds.size();
-                    _distribution_mgr.add_distribution2d(vec, image.width(), image.height());
+                    if (config.texture_config.has_image()) {
+                        const Image &image = _images[config.texture_config.image_idx];
+                        std::vector<float> vec = Envmap::create_distribution(image);
+                        config.distribution_idx = _distribution_mgr.distribution2ds.size();
+                        _distribution_mgr.add_distribution2d(vec, image.width(), image.height());
+                    } else {
+                        auto image = Image::pure_color(config.texture_config.val, ColorSpace::LINEAR);
+                        std::vector<float> vec = Envmap::create_distribution(image);
+                        config.distribution_idx = _distribution_mgr.distribution2ds.size();
+                        _distribution_mgr.add_distribution2d(vec, image.width(), image.height());
+                    }
                 }
             }
         }

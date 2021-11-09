@@ -38,6 +38,8 @@ namespace luminous {
 
             LM_NODISCARD bool is_32bit() const;
 
+            static Image pure_color(float4 color, ColorSpace color_space);
+
             static Image load(const luminous_fs::path &fn, ColorSpace color_space);
 
             static Image load_hdr(const luminous_fs::path &fn, ColorSpace color_space);
