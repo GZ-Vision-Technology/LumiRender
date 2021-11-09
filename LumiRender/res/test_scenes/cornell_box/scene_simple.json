@@ -224,10 +224,12 @@
 		"type": "UniformLightSampler"
 	},
 	"camera" : {
-		"type" : "PinholeCamera",
+		"type" : "ThinLensCamera",
 		"param" : {
 			"fov_y" : 35,
 			"velocity" : 20,
+			"focal_distance" : 2.5,
+			"lens_radius" : 0.02,
 			"transform" : {
 				"type" : "yaw_pitch",
 //				"param" : {

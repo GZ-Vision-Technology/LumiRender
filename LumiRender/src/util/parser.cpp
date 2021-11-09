@@ -145,11 +145,16 @@ namespace luminous {
         //	},
         SensorConfig parse_sensor(const ParameterSet &ps) {
             SensorConfig ret;
-            ret.set_full_type(ps["type"].as_string());
+            auto type = ps["type"].as_string();
+            ret.set_full_type(type);
             ParameterSet param(ps["param"]);
             ret.fov_y = param["fov_y"].as_float();
             ret.velocity = param["velocity"].as_float();
             ret.transform_config = parse_transform(param["transform"]);
+            if (type == "ThinLensCamera") {
+                ret.focal_distance = param["focal_distance"].as_float(0);
+                ret.lens_radius = param["lens_radius"].as_float(0);
+            }
             ret.film_config = parse_film(param["film"]);
             return ret;
         }

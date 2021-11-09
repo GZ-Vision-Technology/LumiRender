@@ -75,6 +75,10 @@ namespace luminous {
                 update_direction(direction);
             }
 
+            LM_ND_XPU float3 at(float t) const {
+                return origin() + direction() * t;
+            }
+
             LM_XPU void update_origin(const float3 origin) noexcept {
                 org_x = origin.x;
                 org_y = origin.y;

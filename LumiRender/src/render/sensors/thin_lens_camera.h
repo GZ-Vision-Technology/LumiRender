@@ -24,9 +24,12 @@ namespace luminous {
             CPU_ONLY(explicit ThinLensCamera(const SensorConfig &config)
                     : ThinLensCamera(config.transform_config.create().mat4x4(),
                                      config.fov_y,
-                                     config.velocity) {})
+                                     config.velocity,
+                                     config.lens_radius,
+                                     config.focal_distance) {})
 
-            ThinLensCamera(const float4x4 &m, float fov_y, float velocity);
+            ThinLensCamera(const float4x4 &m, float fov_y, float velocity,
+                           float lens_radius, float focal_distance);
 
             LM_XPU float generate_ray(const SensorSample &ss, Ray *ray);
 
