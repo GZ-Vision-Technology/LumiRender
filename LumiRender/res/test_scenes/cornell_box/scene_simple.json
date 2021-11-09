@@ -174,7 +174,7 @@
 			"name" : "nanosuit",
 			"type": "model",
 			"param" : {
-//								"material": "quad",
+//				"material": "quad",
 				"fn": "nanosuit/nanosuit.obj",
 				"subdiv_level": 0,
 				"transform" : {

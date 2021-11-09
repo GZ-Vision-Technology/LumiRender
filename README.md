@@ -60,3 +60,6 @@ A GPU/CPU physically based renderer
 ## Gallery
 megakernel pt + independent sampling + pinhole camera on GPU
 ![](gallery/cornell_box.png)
+
+megakernel pt + independent sampling + thin lens camera on GPU
+![](gallery/cornell-box-dof.png)
