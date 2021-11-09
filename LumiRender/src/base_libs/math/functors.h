@@ -18,8 +18,8 @@ namespace luminous {
         using std::min;
 
         template<typename A, typename B>
-        ND_XPU_INLINE bool is_close(A a, B b) {
-            return abs(a - b) < 0.003;
+        ND_XPU_INLINE bool is_close(A a, B b, float epsilon = 0.00001) {
+            return abs(a - b) < epsilon;
         }
 
 #define CHECK_UNIT_VEC(vec) LM_ASSERT(is_close(length(vec), 1.f), "vec is (%f, %f, %f), length is %f\n ", \

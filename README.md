@@ -31,7 +31,7 @@ A GPU/CPU physically based renderer
 | Feature                                   | Progress    |
 |-------------------------------------------|-------------|
 | Pinhole Cameras                           | Done        |
-| Thin-Lens Cameras                         | Planned     |
+| Thin-Lens Cameras                         | Done        |
 | Realistic Cameras                         | Planned     |
 | Fish-Eye Cameras                          | Planned     |
 | Geometry surface(for light map baker)     | Planned     |
