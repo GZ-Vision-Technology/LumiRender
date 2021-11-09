@@ -40,16 +40,16 @@ namespace luminous {
 
             static Image pure_color(float4 color, ColorSpace color_space);
 
-            static Image load(const luminous_fs::path &fn, ColorSpace color_space);
+            static Image load(const luminous_fs::path &fn, ColorSpace color_space, float3 scale = make_float3(1.f));
 
-            static Image load_hdr(const luminous_fs::path &fn, ColorSpace color_space);
+            static Image load_hdr(const luminous_fs::path &fn, ColorSpace color_space, float3 scale = make_float3(1.f));
 
-            static Image load_exr(const luminous_fs::path &fn, ColorSpace color_space);
+            static Image load_exr(const luminous_fs::path &fn, ColorSpace color_space, float3 scale = make_float3(1.f));
 
             /**
              * ".bmp" or ".png" or ".tga" or ".jpg" or ".jpeg"
              */
-            static Image load_other(const luminous_fs::path &fn, ColorSpace color_space);
+            static Image load_other(const luminous_fs::path &fn, ColorSpace color_space, float3 scale = make_float3(1.f));
 
             void convert_to_32bit();
 

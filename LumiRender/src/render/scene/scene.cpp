@@ -211,7 +211,7 @@ namespace luminous {
                         auto path = _context->scene_path() / tc.fn;
                         tc.fn = path.string();
                     }
-                    Image image = Image::load(tc.fn, tc.color_space);
+                    Image image = Image::load(tc.fn, tc.color_space, tc.scale);
                     DTexture &texture = _device->allocate_texture(image.pixel_format(), image.resolution());
                     texture.copy_from(image);
                     tc.handle = texture.tex_handle();

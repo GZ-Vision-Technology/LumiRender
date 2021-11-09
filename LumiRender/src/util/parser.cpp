@@ -218,6 +218,7 @@ namespace luminous {
                 tc.fn = param["fn"].as_string();
             }
             tc.name = ps["name"].as_string();
+            tc.scale = param["scale"].as_float3(make_float3(1.f));
             string color_space = param["color_space"].as_string("SRGB");
             if (color_space == "SRGB") {
                 tc.color_space = SRGB;

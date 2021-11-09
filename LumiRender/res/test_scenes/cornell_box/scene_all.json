@@ -23,6 +23,7 @@
 			"type": "ImageTexture",
 			"param": {
 				"fn": "spruit_sunrise_2k.hdr",
+				"scale": [1,1,1],
 				"color_space": "LINEAR"
 			}
 		}
@@ -200,7 +201,6 @@
 						"position": [0,0,0]
 					}
 				},
-				"scale": [1,1,1],
 				"key" : "envmap"
 			}
 		}

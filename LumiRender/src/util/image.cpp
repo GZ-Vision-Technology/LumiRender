@@ -41,7 +41,7 @@ namespace luminous {
         Image Image::pure_color(float4 color, ColorSpace color_space) {
             constexpr auto pixel_size = PixelFormatImpl<float4>::pixel_size;
             auto pixel = new std::byte[pixel_size];
-            auto dest = (float4*)pixel;
+            auto dest = (float4 *) pixel;
             if (color_space == ColorSpace::LINEAR) {
                 *dest = color;
             } else {
@@ -50,19 +50,19 @@ namespace luminous {
             return {PixelFormat::RGBA32F, pixel, make_uint2(1u)};
         }
 
-        Image Image::load(const luminous_fs::path &path, ColorSpace color_space) {
+        Image Image::load(const luminous_fs::path &path, ColorSpace color_space, float3 scale) {
             auto extension = to_lower(path.extension().string());
             LUMINOUS_INFO("load picture ", path.string());
             if (extension == ".exr") {
-                return load_exr(path, color_space);
+                return load_exr(path, color_space, scale);
             } else if (extension == ".hdr") {
-                return load_hdr(path, color_space);
+                return load_hdr(path, color_space, scale);
             } else {
-                return load_other(path, color_space);
+                return load_other(path, color_space, scale);
             }
         }
 
-        Image Image::load_hdr(const luminous_fs::path &path, ColorSpace color_space) {
+        Image Image::load_hdr(const luminous_fs::path &path, ColorSpace color_space, float3 scale) {
             int w, h;
             int comp;
             auto path_str = luminous_fs::absolute(path).string();
@@ -76,16 +76,16 @@ namespace luminous {
             auto dest = (float *) pixel;
             if (color_space == SRGB) {
                 for (int i = 0; i < pixel_num; ++i, src += 3, dest += 4) {
-                    dest[0] = Spectrum::srgb_to_linear(src[0]);
-                    dest[1] = Spectrum::srgb_to_linear(src[1]);
-                    dest[2] = Spectrum::srgb_to_linear(src[2]);
+                    dest[0] = Spectrum::srgb_to_linear(src[0]) * scale.x;
+                    dest[1] = Spectrum::srgb_to_linear(src[1]) * scale.y;
+                    dest[2] = Spectrum::srgb_to_linear(src[2]) * scale.z;
                     dest[3] = 1.f;
                 }
             } else {
                 for (int i = 0; i < pixel_num; ++i, src += 3, dest += 4) {
-                    dest[0] = src[0];
-                    dest[1] = src[1];
-                    dest[2] = src[2];
+                    dest[0] = src[0] * scale.x;
+                    dest[1] = src[1] * scale.y;
+                    dest[2] = src[2] * scale.z;
                     dest[3] = 1.f;
                 }
             }
@@ -93,7 +93,7 @@ namespace luminous {
             return Image(pixel_format, pixel, make_uint2(w, h), path);
         }
 
-        Image Image::load_exr(const luminous_fs::path &fn, ColorSpace color_space) {
+        Image Image::load_exr(const luminous_fs::path &fn, ColorSpace color_space, float3 scale) {
             // Parse OpenEXR
             EXRVersion exr_version;
             auto path_str = luminous_fs::absolute(fn).string();
@@ -144,10 +144,13 @@ namespace luminous {
                     if (color_space == SRGB) {
                         for (int i = 0; i < pixel_num; ++i) {
                             PixelType val = reinterpret_cast<PixelType *>(exr_image.images[0])[i];
-                            pixel[i] = Spectrum::srgb_to_linear(val);
+                            pixel[i] = Spectrum::srgb_to_linear(val) * scale.x;
                         }
                     } else {
-                        std::memcpy(pixel, exr_image.images[0], size_in_bytes);
+                        for (int i = 0; i < pixel_num; ++i) {
+                            PixelType val = reinterpret_cast<PixelType *>(exr_image.images[0])[i];
+                            pixel[i] = val * scale.x;
+                        }
                     }
                     return Image(pixel_format, (std::byte *) pixel, resolution, fn);
                 }
@@ -159,14 +162,14 @@ namespace luminous {
                     if (color_space == SRGB) {
                         for (int i = 0; i < pixel_num; ++i) {
                             pixel[i] = make_float2(
-                                    Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[1])[i]),
-                                    Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[0])[i]));
+                                    Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[1])[i]) * scale.x,
+                                    Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[0])[i]) * scale.y);
                         }
                     } else {
                         for (int i = 0; i < pixel_num; ++i) {
                             pixel[i] = make_float2(
-                                    reinterpret_cast<float *>(exr_image.images[1])[i],
-                                    reinterpret_cast<float *>(exr_image.images[0])[i]);
+                                    reinterpret_cast<float *>(exr_image.images[1])[i] * scale.x,
+                                    reinterpret_cast<float *>(exr_image.images[0])[i] * scale.y);
                         }
                     }
                     return Image(pixel_format, (std::byte *) pixel, resolution, fn);
@@ -181,7 +184,7 @@ namespace luminous {
                                     Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[3])[i]),
                                     Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[2])[i]),
                                     Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[1])[i]),
-                                    1.f);
+                                    1.f) * make_float4(scale, 1.f);
                         }
                     } else {
                         for (int i = 0; i < pixel_num; ++i) {
@@ -189,7 +192,7 @@ namespace luminous {
                                     (reinterpret_cast<float *>(exr_image.images[3])[i]),
                                     (reinterpret_cast<float *>(exr_image.images[2])[i]),
                                     (reinterpret_cast<float *>(exr_image.images[1])[i]),
-                                    1.f);
+                                    1.f) * make_float4(scale, 1.f);
                         }
                     }
                     return Image(pixel_format, (std::byte *) pixel, resolution, fn);
@@ -199,7 +202,7 @@ namespace luminous {
             }
         }
 
-        Image Image::load_other(const luminous_fs::path &path, ColorSpace color_space) {
+        Image Image::load_other(const luminous_fs::path &path, ColorSpace color_space, float3 scale) {
             uint8_t *rgba;
             int w, h;
             int channel;
@@ -222,12 +225,19 @@ namespace luminous {
                     float g = (float) src[1] / 255;
                     float b = (float) src[2] / 255;
                     float a = (float) src[3] / 255;
-                    float4 color = make_float4(r, g, b, a);
+                    float4 color = make_float4(r, g, b, a) * make_float4(scale, 1.f);
                     color = Spectrum::srgb_to_linear(color);
                     *dest = make_rgba(color);
                 }
             } else {
-                std::memcpy(pixel, rgba, size_in_bytes);
+                for (int i = 0; i < pixel_num; ++i, src += 4, dest += 1) {
+                    float r = (float) src[0] / 255;
+                    float g = (float) src[1] / 255;
+                    float b = (float) src[2] / 255;
+                    float a = (float) src[3] / 255;
+                    float4 color = make_float4(r, g, b, a) * make_float4(scale, 1.f);
+                    *dest = make_rgba(color);
+                }
             }
             free(rgba);
             return Image(pixel_format, pixel, resolution, path);
@@ -242,7 +252,7 @@ namespace luminous {
             } else {
                 save_other(path);
             }
-            LUMINOUS_INFO("save picture ",path);
+            LUMINOUS_INFO("save picture ", path);
         }
 
         void Image::save_hdr(const luminous_fs::path &path) {

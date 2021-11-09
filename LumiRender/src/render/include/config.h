@@ -112,6 +112,8 @@ namespace luminous {
             ColorSpace color_space = LINEAR;
             index_t tex_idx{invalid_uint32};
 
+            float3 scale{make_float3(1.f)};
+
             // for constant texture
             float4 val = make_float4(0.f);
 
