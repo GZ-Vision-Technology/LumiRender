@@ -35,7 +35,7 @@ namespace luminous {
             : _device(move(device)),
             _context(context) {}
 
-            virtual void init(const Parser &parser);
+            void init(const Parser &parser);
 
             LM_NODISCARD std::shared_ptr<SceneGraph> build_scene_graph(const Parser &parser) {
                 auto scene_graph = parser.parse();
@@ -44,7 +44,7 @@ namespace luminous {
                 return scene_graph;
             }
 
-            virtual void update() {
+            void update() {
                 _integrator->update();
             }
 
@@ -66,7 +66,7 @@ namespace luminous {
                 return _integrator->frame_index() >= _output_config.frame_num;
             }
 
-            virtual void render_gui(double dt) {
+            void render_gui(double dt) {
                 _dt = dt;
                 _integrator->render();
 
@@ -76,7 +76,7 @@ namespace luminous {
                 }
             }
 
-            virtual void update_device_buffer();
+            void update_device_buffer();
 
             LM_NODISCARD virtual Sensor *camera() {
                 return _integrator->camera();
@@ -88,13 +88,13 @@ namespace luminous {
 
             LM_NODISCARD uint2 resolution();
 
-            virtual void on_key(int key, int scancode, int action, int mods);
+            void on_key(int key, int scancode, int action, int mods);
 
             void update_camera_fov_y(float val);
 
-            virtual void update_camera_view(float d_yaw, float d_pitch);
+            void update_camera_view(float d_yaw, float d_pitch);
 
-            virtual void update_film_resolution(uint2 res);
+            void update_film_resolution(uint2 res);
         };
     }
 }
