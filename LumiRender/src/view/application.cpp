@@ -90,6 +90,9 @@ namespace luminous {
         if (button == 0) {
             _left_key_press = bool(action);
         }
+        if (button == 1) {
+            _right_key_press = bool(action);
+        }
     }
 
     void App::on_resize(const uint2 &new_size) {

@@ -224,7 +224,7 @@
 		"type": "UniformLightSampler"
 	},
 	"camera" : {
-		"type" : "PinholeCamera",
+		"type" : "ThinLensCamera",
 		"param" : {
 			"fov_y" : 35,
 			"velocity" : 20,

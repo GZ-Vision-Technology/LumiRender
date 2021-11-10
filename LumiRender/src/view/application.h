@@ -42,6 +42,8 @@ namespace luminous {
 
         bool _left_key_press{false};
 
+        bool _right_key_press{false};
+
         bool _need_update{true};
 
         uint test_count = 0;

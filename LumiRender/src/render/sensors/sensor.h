@@ -22,7 +22,7 @@ namespace luminous {
 
         class Film;
 
-        class Sensor : BASE_CLASS(Variant<PinholeCamera *, ThinLensCamera *>) {
+        class Sensor : BASE_CLASS(Variant<ThinLensCamera *>) {
         public:
             REFL_CLASS(Sensor)
 

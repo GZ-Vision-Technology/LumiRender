@@ -5,6 +5,5 @@
 
 #pragma once
 
-#include "pinhole_camera.h"
 #include "thin_lens_camera.h"
 #include "film.h"
