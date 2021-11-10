@@ -76,8 +76,21 @@ namespace luminous {
     }
 
     void App::on_scroll_event(double scroll_x, double scroll_y) {
-        _task->update_camera_fov_y(scroll_y);
         _need_update = true;
+        if (_left_key_press) {
+            auto camera = _task->camera();
+            float factor = 0.01;
+            camera->update_lens_radius(factor * scroll_y);
+            LUMINOUS_INFO("current lens radius is ", camera->lens_radius());
+            return;
+        } else if (_right_key_press) {
+            auto camera = _task->camera();
+            float factor = 0.1;
+            camera->update_focal_distance(factor * scroll_y);
+            LUMINOUS_INFO("current focal distance is ", camera->focal_distance());
+            return;
+        }
+        _task->update_camera_fov_y(scroll_y);
     }
 
     void App::on_key_event(int key, int scancode, int action, int mods) {
@@ -181,7 +194,7 @@ namespace luminous {
         double d = clock.elapse_ms();
         acc_t += d;
         ++test_count;
-        cout << d << "  " << acc_t / test_count <<"   " << test_count << endl;
+//        cout << d << "  " << acc_t / test_count <<"   " << test_count << endl;
     }
 
     int App::run_with_gui() {

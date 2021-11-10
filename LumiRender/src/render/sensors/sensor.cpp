@@ -11,6 +11,30 @@ namespace luminous {
     inline namespace render {
 
 
+        float Sensor::lens_radius() const {
+            LUMINOUS_VAR_PTR_DISPATCH(lens_radius);
+        }
+
+        void Sensor::set_lens_radius(float r) {
+            LUMINOUS_VAR_PTR_DISPATCH(set_lens_radius, r);
+        }
+
+        void Sensor::update_lens_radius(float d) {
+            set_lens_radius(lens_radius() + d);
+        }
+
+        float Sensor::focal_distance() const {
+            LUMINOUS_VAR_PTR_DISPATCH(focal_distance);
+        }
+
+        void Sensor::set_focal_distance(float fd) {
+            LUMINOUS_VAR_PTR_DISPATCH(set_focal_distance, fd);
+        }
+
+        void Sensor::update_focal_distance(float d) {
+            set_focal_distance(focal_distance() + d);
+        }
+
         float3 Sensor::position() const {
             LUMINOUS_VAR_PTR_DISPATCH(position);
         }

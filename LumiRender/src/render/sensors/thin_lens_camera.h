@@ -33,6 +33,14 @@ namespace luminous {
 
             LM_XPU float generate_ray(const SensorSample &ss, Ray *ray);
 
+            LM_ND_XPU float lens_radius() const { return _lens_radius; }
+
+            LM_XPU void set_lens_radius(float r) { r = r >= 0 ? r : 0; _lens_radius = r; };
+
+            LM_ND_XPU float focal_distance() const { return _focal_distance; }
+
+            LM_XPU void set_focal_distance(float fd) { fd = fd >= 0 ? fd : 0; _focal_distance = fd; }
+
             GEN_STRING_FUNC({
                                 LUMINOUS_TO_STRING("%s:%s", type_name(this), CameraBase::to_string().c_str());
                             })
