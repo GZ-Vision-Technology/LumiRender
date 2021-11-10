@@ -254,7 +254,7 @@
 	},
 	"output" : {
 		"fn":"cornell-box.png",
-		"frame_num" : 500
+		"frame_num" : 0
 	},
 	"filter" : {
 		"type" : "triangle",

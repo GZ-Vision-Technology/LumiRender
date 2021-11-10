@@ -12,8 +12,8 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 bl_info = {
-    "name" : "joyy scene exporter",
-    "author" : "JOYY",
+    "name" : "Luminous scene exporter",
+    "author" : "Zero",
     "description" : "",
     "blender" : (2, 80, 0),
     "location" : "",

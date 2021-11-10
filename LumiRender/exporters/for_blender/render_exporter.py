@@ -12,8 +12,8 @@ import json
 
 #render engine custom begin
 class PBRTRenderEngine(bpy.types.RenderEngine):
-    bl_idname = 'JOYY_Renderer'
-    bl_label = 'JOYY_Renderer'
+    bl_idname = 'Luminous_Renderer'
+    bl_label = 'Luminous_Renderer'
     bl_use_preview = False
     bl_use_material = True
     bl_use_shading_nodes = False
@@ -29,14 +29,14 @@ from bl_ui import properties_material
 for member in dir(properties_render):
     subclass = getattr(properties_render, member)
     try:
-        subclass.COMPAT_ENGINES.add('JOYY_Renderer')
+        subclass.COMPAT_ENGINES.add('Luminous_Renderer')
     except:
         pass
 
 for member in dir(properties_material):
     subclass = getattr(properties_material, member)
     try:
-        subclass.COMPAT_ENGINES.add('JOYY_Renderer')
+        subclass.COMPAT_ENGINES.add('Luminous_Renderer')
     except:
         pass
 
