@@ -179,6 +179,11 @@ namespace luminous {
                 ret.texture_config.name = param["key"].as_string("");
                 ret.scale = param["scale"].as_float3(make_float3(1.f));
                 ret.o2w_config = parse_transform(param["transform"]);
+            } else if (type == "SpotLight") {
+                ret.position = param["pos"].as_float3(make_float3(0.f));
+                ret.intensity = param["intensity"].as_float3(make_float3(0.f));
+                ret.theta_o = param["theta_o"].as_float(60);
+                ret.theta_i = param["theta_i"].as_float(45);
             }
             return ret;
         }

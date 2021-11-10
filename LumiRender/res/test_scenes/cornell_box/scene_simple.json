@@ -228,15 +228,10 @@
 		"param" : {
 			"fov_y" : 35,
 			"velocity" : 20,
-			"focal_distance" : 2.5,
-			"lens_radius" : 0.02,
+			"focal_distance" : 3.5,
+			"lens_radius" : 0.12,
 			"transform" : {
 				"type" : "yaw_pitch",
-//				"param" : {
-//					"yaw" : 180,
-//					"pitch": 0,
-//					"position": [-0.83,0.819,2.5]
-//				}
 				"param" : {
 					"yaw" : 0,
 					"pitch": 0,
@@ -259,7 +254,7 @@
 	},
 	"output" : {
 		"fn":"cornell-box.png",
-		"frame_num" : 0
+		"frame_num" : 500
 	},
 	"filter" : {
 		"type" : "triangle",
