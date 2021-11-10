@@ -11,7 +11,7 @@ import json
 
 
 #render engine custom begin
-class PBRTRenderEngine(bpy.types.RenderEngine):
+class LuminousRenderEngine(bpy.types.RenderEngine):
     bl_idname = 'Luminous_Renderer'
     bl_label = 'Luminous_Renderer'
     bl_use_preview = False
@@ -40,7 +40,7 @@ for member in dir(properties_material):
     except:
         pass
 
-bpy.utils.register_class(PBRTRenderEngine)
+bpy.utils.register_class(LuminousRenderEngine)
 
 
 def create_directory_if_needed(directory_filepath, force=False):

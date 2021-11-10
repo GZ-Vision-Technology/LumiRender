@@ -3,7 +3,7 @@ from . import render_exporter
 
 class ExportPbrtScene(bpy.types.Operator):
     bl_idname = 'scene.export'
-    bl_label = 'Export Scene To JOYY Renderer'
+    bl_label = 'Export Scene To Luminous Renderer'
     bl_options = {"REGISTER", "UNDO"}
     COMPAT_ENGINES = {'Luminous_Renderer'}
     
@@ -22,7 +22,7 @@ class ExportPbrtScene(bpy.types.Operator):
 
 class PbrtRenderSettingsPanel(bpy.types.Panel):
     """Creates a Pbrt settings panel in the render context of the properties editor"""
-    bl_label = "JOYY Render settings"
+    bl_label = "Luminous Render settings"
     bl_idname = "SCENE_PT_layout"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
@@ -124,28 +124,6 @@ class PbrtRenderSettingsPanel(bpy.types.Panel):
             row.prop(scene,"bdpt_visualizestrategies")
             row.prop(scene,"bdpt_visualizeweights")
         
-        if scene.integrators == 'mlt':
-            row = layout.row()
-            row.prop(scene,"mlt_bootstrapsamples")
-            row = layout.row()
-            row.prop(scene,"mlt_chains")
-            row = layout.row()
-            row.prop(scene,"mlt_mutationsperpixel")
-            row = layout.row()
-            row.prop(scene,"mlt_largestepprobability")
-            row = layout.row()
-            row.prop(scene,"mlt_sigma")
-
-        if scene.integrators == 'sppm':
-            row = layout.row()
-            row.prop(scene,"sppm_numiterations")
-            row = layout.row()
-            row.prop(scene,"sppm_photonsperiteration")
-            row = layout.row()
-            row.prop(scene,"sppm_imagewritefrequency")
-            row = layout.row()
-            row.prop(scene,"sppm_radius")
-
         if scene.integrators == 'PT':
             row = layout.row()
             row.prop(scene,"rr_threshold")
@@ -158,22 +136,6 @@ class PbrtRenderSettingsPanel(bpy.types.Panel):
         if scene.sampler == 'halton':
             row.prop(scene,"spp")
             row.prop(scene,"samplepixelcenter")
-        if scene.sampler == 'maxmindist':
-            row.prop(scene,"spp")
-            row.prop(scene,"dimension")
-        if scene.sampler == 'random':
-            row.prop(scene,"spp")
-        if scene.sampler == 'sobol':
-            row.prop(scene,"spp")
-        if scene.sampler == 'lowdiscrepancy':
-            row.prop(scene,"spp")
-            row.prop(scene,"dimension")
-        if scene.sampler == 'stratified':
-            row.prop(scene,"spp")
-            row.prop(scene,"dimension")
-            row = layout.row()
-            row.prop(scene,"xsamples")
-            row.prop(scene,"ysamples")
         if scene.sampler == 'PCGSampler':
             row.prop(scene,"spp")
             
