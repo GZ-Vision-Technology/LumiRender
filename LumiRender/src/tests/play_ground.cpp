@@ -1,29 +1,43 @@
-#include "util/parallel.h"
-#include "iostream"
-#include "core/context.h"
-#include "gpu/framework/nvrtc_wrapper.h"
+#include <iostream>
 
-using namespace luminous;
+#define DEFINE_FUNC_AND_PTR(ClassName, RetType, FuncName, ...) \
+RetType (ClassName::*_fp_##FuncName) __VA_ARGS__ {nullptr};    \
+RetType FuncName##_impl __VA_ARGS__ { return ; }
 
-using namespace std;
+class Base {
+public:
+    int (Base::*_fp_op)(int a, int b) const{(int(Base::*)(int a, int b)const)&Base::op_impl};
+    int op_impl(int a, int b) const {
+        return 0;
+    }
+    template<typename ...Args>
+    int op(Args ...args) {
+        return (this->*(_fp_op))(std::forward<Args>(args)...);
+    }
 
-
-
-int main(int argc, char *argv[]) {
-
-    Context context{argc, argv};
-
-    string fn = "E:\\work\\graphic\\renderer\\LumiRender\\LumiRender\\src\\gpu\\shaders\\test_kernels.cu";
-
-    string path = "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.1\\include\\cuda\\std\\detail\\libcxx\\include";
-
-//    path = "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0\\ucrt";
-
-    NvrtcWrapper nvrtc_wrapper{&context};
-
-    nvrtc_wrapper.add_included_path(path);
-
-    nvrtc_wrapper.compile_cu_file_to_ptx(fn);
+    DEFINE_FUNC_AND_PTR(Base, void , func, (int a) const)
+};
 
 
+class AddOp: public Base {
+public:
+    AddOp(int c) {
+        this->c = c;
+        _fp_op = (int(Base::*)(int, int)const)(&AddOp::op_impl);
+    }
+
+protected:
+    int op_impl(int a, int b) const {
+        return a + b + c;
+    }
+
+private:
+    int c;
+};
+
+int main() {
+
+    Base *p = new AddOp(100);
+
+    std::cout << "AddOp::op result: " << p->op(1,9) << std::endl;
 }
