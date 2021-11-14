@@ -114,7 +114,7 @@ namespace luminous {
         _need_update = true;
     }
 
-    App::App(const std::string &title, const int2 &size, Context *context, const Parser &parser)
+    App::App(const std::string &title, const int2 &size, Context *context, const JsonParser &parser)
             : _size(size) {
         TASK_TAG("launch app")
         if (context->use_gpu()) {

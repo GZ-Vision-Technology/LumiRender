@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "core/context.h"
-#include "util/parser.h"
+#include "util/json_parser.h"
 #include <memory>
 #include "view/application.h"
 
@@ -20,7 +20,7 @@ int execute(int argc, char *argv[]) {
         context.print_help();
         return 0;
     }
-    Parser sp(&context);
+    JsonParser sp(&context);
     try {
         if (context.has_scene()) {
             sp.load(context.scene_file());

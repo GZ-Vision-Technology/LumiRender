@@ -2,7 +2,7 @@
 // Created by Zero on 2021/2/16.
 //
 
-#include "parser.h"
+#include "json_parser.h"
 #include "parameter_set.h"
 #include "render/textures/texture.h"
 #include <iomanip>
@@ -17,7 +17,7 @@ namespace luminous {
             std::string str = buffer.str();
             str = jsonc_to_json(str);
             LUMINOUS_DEBUG(str);
-            if (fn.extension() == "bson") {
+            if (fn.extension() == ".bson") {
                 return DataWrap::from_bson(str);
             } else {
                 return DataWrap::parse(str);
@@ -207,8 +207,11 @@ namespace luminous {
             return ret;
         }
 
-        void Parser::load(const luminous_fs::path &fn) {
-            _data = create_json_from_file(fn);
+        void JsonParser::load(const luminous_fs::path &fn) {
+            auto a = fn.extension();
+            if (fn.extension() == ".json" || fn.extension() == ".bson") {
+                _data = create_json_from_file(fn);
+            }
         }
 
         TextureConfig parse_texture(const ParameterSet &ps) {
@@ -279,7 +282,7 @@ namespace luminous {
             return ret;
         }
 
-        SP<SceneGraph> Parser::parse() const {
+        SP<SceneGraph> JsonParser::parse() const {
             auto shapes = _data["shapes"];
             auto scene_graph = std::make_shared<SceneGraph>(_context);
             scene_graph->shape_configs = parse_shapes(shapes);

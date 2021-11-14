@@ -8,7 +8,7 @@
 #include <render/samplers/sampler.h>
 #include "core/concepts.h"
 #include "core/backend/device.h"
-#include "util/parser.h"
+#include "util/json_parser.h"
 #include "render/integrators/integrator.h"
 #include "core/backend/managed.h"
 #include "render/sensors/common.h"
@@ -35,9 +35,9 @@ namespace luminous {
             : _device(move(device)),
             _context(context) {}
 
-            void init(const Parser &parser);
+            void init(const JsonParser &parser);
 
-            LM_NODISCARD std::shared_ptr<SceneGraph> build_scene_graph(const Parser &parser) {
+            LM_NODISCARD std::shared_ptr<SceneGraph> build_scene_graph(const JsonParser &parser) {
                 auto scene_graph = parser.parse();
                 scene_graph->create_shapes();
                 _output_config = scene_graph->output_config;
