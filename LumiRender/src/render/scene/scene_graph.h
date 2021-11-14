@@ -45,10 +45,10 @@ namespace luminous {
             void update_counter(const Model &model) {
                 mesh_num += model.meshes.size();
                 for (auto &mesh : model.meshes) {
-                    position_num += mesh->positions.size();
-                    normal_num += mesh->normals.size();
-                    tex_coords_num += mesh->tex_coords.size();
-                    tri_num += mesh->triangles.size();
+                    position_num += mesh.positions.size();
+                    normal_num += mesh.normals.size();
+                    tex_coords_num += mesh.tex_coords.size();
+                    tri_num += mesh.triangles.size();
                 }
             }
 

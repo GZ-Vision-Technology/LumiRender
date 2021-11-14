@@ -23,6 +23,9 @@ namespace luminous {
         };
 
         struct Mesh : public Shape {
+
+            Mesh() = default;
+
             Mesh(vector <float3> P,
                  vector <float3> N,
                  vector <float2> uv,
@@ -42,7 +45,7 @@ namespace luminous {
             vector <TriangleHandle> triangles;
             index_t mat_idx{invalid_uint32};
             Box3f aabb;
-            mutable uint idx_in_meshes;
+            mutable uint idx_in_meshes{};
 
             LM_NODISCARD bool has_material() const {
                 return mat_idx != invalid_uint32;
@@ -62,7 +65,7 @@ namespace luminous {
 
             string custom_material_name;
             luminous_fs::path directory;
-            vector <std::shared_ptr<const Mesh>> meshes;
+            vector <Mesh> meshes;
             vector <MaterialConfig> materials;
             vector <TextureConfig> textures;
             string key;

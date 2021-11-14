@@ -72,7 +72,7 @@ namespace luminous {
             if (model->has_custom_material()) {
                 return;
             }
-            vector < aiMaterial * > ai_materials(ai_scene->mNumMaterials);
+            vector<aiMaterial *> ai_materials(ai_scene->mNumMaterials);
             model->materials.reserve(ai_materials.size());
             std::copy(ai_scene->mMaterials, ai_scene->mMaterials + ai_scene->mNumMaterials, ai_materials.begin());
             for (const auto &ai_material : ai_materials) {
@@ -117,7 +117,7 @@ namespace luminous {
                     ai_scene->mRootNode == nullptr,
                     "Failed to load triangle mesh: ", ai_importer.GetErrorString());
 
-            vector < aiMesh * > ai_meshes(ai_scene->mNumMeshes);
+            vector<aiMesh *> ai_meshes(ai_scene->mNumMeshes);
             if (sc.subdiv_level != 0u) {
                 auto subdiv = Assimp::Subdivider::Create(Assimp::Subdivider::CATMULL_CLARKE);
                 subdiv->Subdivide(ai_scene->mMeshes, ai_scene->mNumMeshes, ai_meshes.data(), sc.subdiv_level);
@@ -130,13 +130,13 @@ namespace luminous {
             meshes.reserve(ai_meshes.size());
             for (auto ai_mesh : ai_meshes) {
                 Box3f aabb;
-                vector <float3> positions;
-                vector <float3> normals;
-                vector <float2> tex_coords;
+                vector<float3> positions;
+                vector<float3> normals;
+                vector<float2> tex_coords;
                 positions.reserve(ai_mesh->mNumVertices);
                 normals.reserve(ai_mesh->mNumVertices);
                 tex_coords.reserve(ai_mesh->mNumVertices);
-                vector <TriangleHandle> indices;
+                vector<TriangleHandle> indices;
                 indices.reserve(ai_mesh->mNumFaces);
 
                 for (auto i = 0u; i < ai_mesh->mNumVertices; i++) {
@@ -176,12 +176,12 @@ namespace luminous {
                         LUMINOUS_EXCEPTION("Only triangles and quads supported: ", ai_mesh->mName.data);
                     }
                 }
-                auto mesh = std::make_shared<const Mesh>(move(positions),
-                                                         move(normals),
-                                                         move(tex_coords),
-                                                         move(indices),
-                                                         aabb,
-                                                         ai_mesh->mMaterialIndex);
+                auto mesh = Mesh(move(positions),
+                                 move(normals),
+                                 move(tex_coords),
+                                 move(indices),
+                                 aabb,
+                                 ai_mesh->mMaterialIndex);
                 meshes.push_back(mesh);
             }
         }

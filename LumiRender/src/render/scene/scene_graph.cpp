@@ -50,7 +50,7 @@ namespace luminous {
                 vector<TriangleHandle> triangles{TriangleHandle{0,1,2},
                                                  TriangleHandle{2,1,3}};
 
-                auto mesh = std::make_shared<Mesh>(move(P),move(N), move(UV), move(triangles), aabb);
+                auto mesh = Mesh(move(P),move(N), move(UV), move(triangles), aabb);
                 model->meshes.push_back(mesh);
                 model->custom_material_name = config.material_name;
                 update_counter(*model.get());
