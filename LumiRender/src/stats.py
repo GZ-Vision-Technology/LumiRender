@@ -36,3 +36,11 @@ for root,dirs,files in os.walk(os.path.join(os.getcwd(), "LumiRender/src")):
 
 print(count, num_file)
         
+class C:
+    pass
+class A:
+    pass
+class B(A, C):
+    pass
+    
+print(issubclass(B,C))  

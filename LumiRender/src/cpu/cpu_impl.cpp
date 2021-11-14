@@ -72,19 +72,6 @@ namespace luminous {
             return Dispatcher(std::make_unique<CPUDispatcher>());
         }
 
-        CPUKernel::CPUKernel(func_type func)
-                : _func(std::move(func)) {}
-
-        void CPUKernel::launch(Dispatcher &dispatcher, void **args) {
-            int n_item = *(reinterpret_cast<int *>(args[0]));
-            async(n_item, [&](uint idx, uint tid) {
-                if (idx >= n_item) {
-                    return;
-                }
-                _func(idx, args);
-            });
-        }
-
         CPUTexture::CPUTexture(PixelFormat pixel_format, uint2 resolution)
                 : Impl(pixel_format, resolution) {
             init();

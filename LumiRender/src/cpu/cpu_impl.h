@@ -6,7 +6,6 @@
 #pragma once
 
 #include "core/backend/device.h"
-#include "core/backend/kernel.h"
 
 
 namespace luminous {
@@ -62,23 +61,6 @@ namespace luminous {
 
             ~CPUTexture() override;
         };
-
-        class CPUKernel : public KernelOld::Impl {
-        public:
-            using func_type = std::function<void(uint, void *[])>;
-        private:
-            func_type _func;
-        public:
-            explicit CPUKernel(func_type func);
-
-            void configure(uint3 grid_size, uint3 local_size, size_t sm) override {}
-
-            void launch(Dispatcher &dispatcher, void *args[]) override;
-        };
-
-        inline std::shared_ptr<KernelOld> create_cpu_kernel(const CPUKernel::func_type &func) {
-            return std::make_shared<KernelOld>(std::make_unique<CPUKernel>(func));
-        }
 
         class CPUDispatcher : public Dispatcher::Impl {
         private:

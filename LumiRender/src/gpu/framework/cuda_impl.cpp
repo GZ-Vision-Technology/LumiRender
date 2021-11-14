@@ -198,28 +198,6 @@ namespace luminous {
             CU_CHECK(cuMemcpyHtoD(_ptr + offset, host_ptr, size));
         }
 
-        CUDAKernel::CUDAKernel(CUfunction func)
-                : _func(func) {
-            compute_fit_size();
-        }
-
-        void CUDAKernel::compute_fit_size() {
-            cuOccupancyMaxPotentialBlockSize(&_min_grid_size, &_auto_block_size, _func, 0, _shared_mem, 0);
-        }
-
-        void CUDAKernel::configure(uint3 grid_size, uint3 local_size, size_t sm) {
-            _shared_mem = sm == 0 ? _shared_mem : sm;
-            _grid_size = grid_size;
-            _block_size = local_size;
-        }
-
-        void CUDAKernel::launch(Dispatcher &dispatcher, void * args[]) {
-            auto stream = dynamic_cast<CUDADispatcher *>(dispatcher.impl_mut())->stream;
-            CU_CHECK(cuLaunchKernel(_func, _grid_size.x, _grid_size.y, _grid_size.z,
-                                    _block_size.x, _block_size.y, _block_size.z,
-                                    _shared_mem, stream, args, nullptr));
-        }
-
         CUDADevice::CUDADevice() {
             CU_CHECK(cuInit(0));
             CU_CHECK(cuDeviceGet(&_cu_device, 0));
@@ -245,12 +223,6 @@ namespace luminous {
 
         CUDAModule::CUDAModule(const std::string &ptx_code) {
             CU_CHECK(cuModuleLoadData(&_module, ptx_code.c_str()));
-        }
-
-        SP<KernelOld> CUDAModule::get_kernel(const std::string &name) {
-            CUfunction func;
-            CU_CHECK(cuModuleGetFunction(&func, _module, name.c_str()));
-            return create_cuda_kernel(func);
         }
 
         uint64_t CUDAModule::get_kernel_handle(const std::string &name) {

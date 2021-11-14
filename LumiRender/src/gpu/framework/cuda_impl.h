@@ -9,7 +9,6 @@
 #include "core/backend/buffer.h"
 #include "core/backend/texture.h"
 #include "core/backend/dispatcher.h"
-#include "core/backend/kernel.h"
 #include "core/backend/device.h"
 #include "core/backend/module.h"
 #include <cuda.h>
@@ -82,28 +81,6 @@ namespace luminous {
             void upload(const void *host_ptr, size_t size, size_t offset) override;
         };
 
-        class CUDAKernel : public KernelOld::Impl {
-        private:
-            CUfunction _func{};
-            uint3 _grid_size = make_uint3(1);
-            uint3 _block_size = make_uint3(5);
-            int _auto_block_size = 0;
-            int _min_grid_size = 0;
-            size_t _shared_mem = 1024;
-        public:
-            explicit CUDAKernel(CUfunction func);
-
-            void compute_fit_size();
-
-            void configure(uint3 grid_size, uint3 local_size, size_t sm) override;
-
-            void launch(Dispatcher &dispatcher, void *args[]) override;
-        };
-
-        inline std::shared_ptr<KernelOld> create_cuda_kernel(CUfunction func) {
-            return std::make_shared<KernelOld>(std::make_unique<CUDAKernel>(func));
-        }
-
         class CUDADevice : public Device::Impl {
         private:
             CUdevice _cu_device{};
@@ -136,8 +113,6 @@ namespace luminous {
             LM_NODISCARD uint64_t get_kernel_handle(const std::string &name) override;
 
             LM_NODISCARD std::pair<ptr_t, size_t> get_global_var(const std::string &name) override;
-
-            LM_NODISCARD SP<KernelOld> get_kernel(const std::string &name) override;
 
             virtual void upload_data_to_global_var(const std::string &name, const void *data, size_t size) override;
         };
