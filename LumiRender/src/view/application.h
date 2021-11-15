@@ -51,7 +51,11 @@ namespace luminous {
         double acc_t = 0;
 
     public:
+        App() = default;
+
         App(const std::string &title, const int2 &size, Context *context, const Parser &parser);
+
+        void init(const std::string &title, const int2 &size, Context *context, const Parser &parser);
 
         void init_with_gui(const std::string &title) {
             init_window(title, _task->resolution());

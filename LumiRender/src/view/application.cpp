@@ -114,9 +114,10 @@ namespace luminous {
         _need_update = true;
     }
 
-    App::App(const std::string &title, const int2 &size, Context *context, const Parser &parser)
-            : _size(size) {
+
+    void App::init(const string &title,const int2 &size, Context *context, const Parser &parser) {
         TASK_TAG("launch app")
+        _size = size;
         if (context->use_gpu()) {
             _task = std::make_unique<Task>(create_cuda_device(), context);
         } else {
@@ -130,6 +131,11 @@ namespace luminous {
             init_with_gui(title);
         }
         _clock.start();
+    }
+
+    App::App(const std::string &title, const int2 &size, Context *context, const Parser &parser)
+            : _size(size) {
+        init(title, size, context, parser);
     }
 
     void App::init_gl_context() {

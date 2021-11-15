@@ -22,6 +22,7 @@ int execute(int argc, char *argv[]) {
         return 0;
     }
     std::unique_ptr<Parser> parser{nullptr};
+    App app;
     try {
         if (context.has_scene()) {
             auto scene_file = context.scene_file();
@@ -32,11 +33,10 @@ int execute(int argc, char *argv[]) {
             }
             parser->load(scene_file);
         }
+        app.init("luminous", luminous::make_int2(1280,720), &context, *parser);
     } catch (std::exception &e1) {
         cout << e1.what();
     }
-
-    App app("luminous", luminous::make_int2(1280,720), &context, *parser);
     return app.run();
 }
 
