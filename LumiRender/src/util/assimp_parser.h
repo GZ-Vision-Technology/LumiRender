@@ -25,6 +25,9 @@ namespace luminous {
                                                           bool swap_handed = false,
                                                           bool smooth = true);
 
+            LM_NODISCARD static std::vector<Mesh> parse_meshes(const aiScene *ai_scene,
+                                                               uint32_t subdiv_level = 0u);
+
             void load(const luminous_fs::path &fn) override;
 
             LM_NODISCARD SP<SceneGraph> parse() const override;
