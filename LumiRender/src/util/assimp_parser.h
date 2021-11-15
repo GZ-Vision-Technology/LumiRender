@@ -15,8 +15,16 @@ namespace luminous {
     inline namespace utility {
         class AssimpParser : public Parser {
         private:
-            const aiScene* _ai_scene{nullptr};
+            Assimp::Importer _ai_importer;
+            const aiScene *_ai_scene{nullptr};
+            luminous_fs::path directory;
         public:
+
+            LM_NODISCARD static const aiScene *load_scene(const luminous_fs::path &fn,
+                                                          Assimp::Importer &ai_importer,
+                                                          bool swap_handed = false,
+                                                          bool smooth = true);
+
             void load(const luminous_fs::path &fn) override;
 
             LM_NODISCARD SP<SceneGraph> parse() const override;

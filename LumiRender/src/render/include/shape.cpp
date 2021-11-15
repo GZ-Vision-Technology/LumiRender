@@ -3,10 +3,7 @@
 //
 
 #include "shape.h"
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
-#include <assimp/Subdivision.h>
-#include <assimp/scene.h>
+#include "util/assimp_parser.h"
 #include "render/textures/texture.h"
 
 namespace luminous {
@@ -86,31 +83,8 @@ namespace luminous {
             Assimp::Importer ai_importer;
             luminous_fs::path path = sc.fn;
             directory = path.parent_path();
-            ai_importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
-                                           aiComponent_COLORS |
-                                           aiComponent_BONEWEIGHTS |
-                                           aiComponent_ANIMATIONS |
-                                           aiComponent_LIGHTS |
-                                           aiComponent_CAMERAS |
-                                           aiComponent_TEXTURES |
-                                           aiComponent_MATERIALS);
-            LUMINOUS_INFO("Loading triangle mesh: ", path);
-            aiPostProcessSteps normal_flag = sc.smooth ? aiProcess_GenSmoothNormals : aiProcess_GenNormals;
-            auto post_process_steps = aiProcess_JoinIdenticalVertices |
-                                      normal_flag |
-                                      aiProcess_PreTransformVertices |
-                                      aiProcess_ImproveCacheLocality |
-                                      aiProcess_FixInfacingNormals |
-                                      aiProcess_FindInvalidData |
-                                      aiProcess_GenUVCoords |
-                                      aiProcess_TransformUVCoords |
-                                      aiProcess_OptimizeMeshes |
-                                      aiProcess_FlipUVs;
-            post_process_steps = sc.swap_handed ?
-                                 post_process_steps | aiProcess_ConvertToLeftHanded :
-                                 post_process_steps;
-            auto ai_scene = ai_importer.ReadFile(path.string().c_str(),
-                                                 post_process_steps);
+
+            auto ai_scene = AssimpParser::load_scene(sc.fn, ai_importer, sc.swap_handed, sc.smooth);
 
             LUMINOUS_EXCEPTION_IF(
                     ai_scene == nullptr || (ai_scene->mFlags & static_cast<uint>(AI_SCENE_FLAGS_INCOMPLETE)) ||
