@@ -11,11 +11,11 @@ add_library(luminous-render SHARED ${HEADER_FILES} ${SOURCE_FILES} ${wavefront_k
 
 target_link_libraries(luminous-render
         PUBLIC
-        assimp_config
         embree
 #        OpenImageIO
         luminous-base_libs
         luminous-util
+        luminous-parser
         luminous-cpu
         luminous-gpu
         luminous-core)

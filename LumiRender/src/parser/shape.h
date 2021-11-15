@@ -8,8 +8,8 @@
 #include "base_libs/geometry/common.h"
 #include <vector>
 #include "core/concepts.h"
-#include "interaction.h"
-#include "config.h"
+#include "render/include/interaction.h"
+#include "render/include/config.h"
 
 
 namespace luminous {

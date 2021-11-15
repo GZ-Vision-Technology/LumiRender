@@ -6,7 +6,7 @@
 #pragma once
 
 #include "core/concepts.h"
-#include "render/scene/scene_graph.h"
+#include "scene_graph.h"
 
 namespace luminous {
 

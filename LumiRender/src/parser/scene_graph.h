@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "render/include/shape.h"
+#include "shape.h"
 #include "core/concepts.h"
 #include <memory>
 #include "core/context.h"

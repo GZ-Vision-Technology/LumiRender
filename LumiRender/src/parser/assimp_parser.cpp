@@ -4,7 +4,7 @@
 
 
 #include "assimp_parser.h"
-#include "render/include/shape.h"
+#include "shape.h"
 #include "render/textures/texture.h"
 
 namespace luminous {

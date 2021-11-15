@@ -3,7 +3,7 @@
 //
 
 #include "shape.h"
-#include "util/assimp_parser.h"
+#include "parser/assimp_parser.h"
 #include "render/textures/texture.h"
 
 namespace luminous {

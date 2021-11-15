@@ -47,6 +47,7 @@ endif ()
 
 add_subdirectory(core)
 add_subdirectory(util)
+add_subdirectory(parser)
 add_subdirectory(ext)
 if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
     add_definitions (-D CUDA_SUPPORT)

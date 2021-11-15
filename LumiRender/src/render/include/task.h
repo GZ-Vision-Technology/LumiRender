@@ -8,7 +8,7 @@
 #include <render/samplers/sampler.h>
 #include "core/concepts.h"
 #include "core/backend/device.h"
-#include "util/json_parser.h"
+#include "parser/json_parser.h"
 #include "render/integrators/integrator.h"
 #include "core/backend/managed.h"
 #include "render/sensors/common.h"

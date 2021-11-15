@@ -7,7 +7,7 @@
 
 #include "base_libs/math/common.h"
 #include "core/concepts.h"
-#include "render/include/shape.h"
+#include "parser/shape.h"
 #include "render/include/accelerator.h"
 #include "core/backend/managed.h"
 #include <embree3/rtcore.h>
