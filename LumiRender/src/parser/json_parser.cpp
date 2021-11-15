@@ -294,6 +294,7 @@ namespace luminous {
             scene_graph->material_configs = parse_materials(_data["materials"]);
             scene_graph->integrator_config = parse_integrator(ParameterSet(_data["integrator"]));
             scene_graph->output_config = parse_output(ParameterSet(_data["output"]));
+            scene_graph->create_shapes();
             return scene_graph;
         }
     }
