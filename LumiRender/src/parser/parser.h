@@ -19,7 +19,7 @@ namespace luminous {
 
             virtual void load(const luminous_fs::path &fn) = 0;
 
-            LM_NODISCARD virtual  SP<SceneGraph> parse() const = 0;
+            LM_NODISCARD virtual SP<SceneGraph> parse() const = 0;
         };
     }
 }

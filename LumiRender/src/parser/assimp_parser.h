@@ -21,6 +21,8 @@ namespace luminous {
             luminous_fs::path directory;
         public:
 
+            explicit AssimpParser(Context *context) : Parser(context) {}
+
             LM_NODISCARD static const aiScene *load_scene(const luminous_fs::path &fn,
                                                           Assimp::Importer &ai_importer,
                                                           bool swap_handed = false,

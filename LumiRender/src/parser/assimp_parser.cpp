@@ -10,6 +10,19 @@
 namespace luminous {
     inline namespace utility {
 
+        void AssimpParser::load(const luminous_fs::path &fn) {
+            directory = fn.parent_path();
+            _ai_scene = load_scene(fn, _ai_importer);
+            LUMINOUS_EXCEPTION_IF(
+                    _ai_scene == nullptr || (_ai_scene->mFlags & static_cast<uint>(AI_SCENE_FLAGS_INCOMPLETE)) ||
+                    _ai_scene->mRootNode == nullptr,
+                    "Failed to load scene: ", _ai_importer.GetErrorString());
+        }
+
+        SP<SceneGraph> AssimpParser::parse() const {
+            return {};
+        }
+
         const aiScene *AssimpParser::load_scene(const luminous_fs::path &fn, Assimp::Importer &ai_importer,
                                                 bool swap_handed, bool smooth) {
             ai_importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
@@ -108,19 +121,6 @@ namespace luminous {
                 meshes.push_back(mesh);
             }
             return meshes;
-        }
-
-        void AssimpParser::load(const luminous_fs::path &fn) {
-            directory = fn.parent_path();
-            _ai_scene = load_scene(fn, _ai_importer);
-            LUMINOUS_EXCEPTION_IF(
-                    _ai_scene == nullptr || (_ai_scene->mFlags & static_cast<uint>(AI_SCENE_FLAGS_INCOMPLETE)) ||
-                    _ai_scene->mRootNode == nullptr,
-                    "Failed to load scene: ", _ai_importer.GetErrorString());
-        }
-
-        SP<SceneGraph> AssimpParser::parse() const {
-            return {};
         }
 
         std::vector<MaterialConfig> AssimpParser::parse_materials(const aiScene *ai_scene,

@@ -5,6 +5,7 @@
 #include <iostream>
 #include "core/context.h"
 #include "parser/json_parser.h"
+#include "parser/assimp_parser.h"
 #include <memory>
 #include "view/application.h"
 
@@ -27,7 +28,7 @@ int execute(int argc, char *argv[]) {
             if (scene_file.extension() == ".json" || scene_file.extension() == ".bson") {
                 parser = std::make_unique<JsonParser>(&context);
             } else {
-
+                parser = std::make_unique<AssimpParser>(&context);
             }
             parser->load(scene_file);
         }
@@ -35,7 +36,7 @@ int execute(int argc, char *argv[]) {
         cout << e1.what();
     }
 
-    App app("luminous", luminous::make_int2(1280,720), &context, *parser.get());
+    App app("luminous", luminous::make_int2(1280,720), &context, *parser);
     return app.run();
 }
 
