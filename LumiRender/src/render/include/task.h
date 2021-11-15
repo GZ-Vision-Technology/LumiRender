@@ -32,12 +32,12 @@ namespace luminous {
             Managed<FrameBufferType, FrameBufferType> _frame_buffer{_device.get()};
         public:
             Task(std::unique_ptr<Device> device, Context *context)
-            : _device(move(device)),
-            _context(context) {}
+                    : _device(move(device)),
+                      _context(context) {}
 
-            void init(const JsonParser &parser);
+            void init(const Parser &parser);
 
-            LM_NODISCARD std::shared_ptr<SceneGraph> build_scene_graph(const JsonParser &parser) {
+            LM_NODISCARD std::shared_ptr<SceneGraph> build_scene_graph(const Parser &parser) {
                 auto scene_graph = parser.parse();
                 scene_graph->create_shapes();
                 _output_config = scene_graph->output_config;
@@ -71,7 +71,7 @@ namespace luminous {
                 _integrator->render();
 
                 if (_integrator->frame_index() == _output_config.frame_num
-                && _output_config.frame_num != 0) {
+                    && _output_config.frame_num != 0) {
                     save_to_file();
                 }
             }

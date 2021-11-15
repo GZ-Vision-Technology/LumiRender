@@ -88,7 +88,7 @@ namespace luminous {
             return _render_buffer.synchronize_and_get_host_data();
         }
 
-        void Task::init(const JsonParser &parser) {
+        void Task::init(const Parser &parser) {
             auto scene_graph = build_scene_graph(parser);
             const std::string type = scene_graph->integrator_config.type();
             if (type == "PT") {
