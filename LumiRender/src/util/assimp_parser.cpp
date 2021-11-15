@@ -5,6 +5,7 @@
 
 #include "assimp_parser.h"
 #include "render/include/shape.h"
+#include "render/textures/texture.h"
 
 namespace luminous {
     inline namespace utility {
@@ -123,17 +124,78 @@ namespace luminous {
         }
 
         std::vector<MaterialConfig> AssimpParser::parse_materials(const aiScene *ai_scene,
-                                                                  luminous_fs::path directory) {
+                                                                  const luminous_fs::path &directory) {
             std::vector<MaterialConfig> ret;
+            vector<aiMaterial *> ai_materials(ai_scene->mNumMaterials);
+            ret.reserve(ai_materials.size());
+            std::copy(ai_scene->mMaterials, ai_scene->mMaterials + ai_scene->mNumMaterials, ai_materials.begin());
+            for (const auto &ai_material : ai_materials) {
+                MaterialConfig mc = parse_material(ai_material, directory);
+                mc.set_full_type("AssimpMaterial");
+                ret.push_back(mc);
+            }
             return ret;
         }
 
         MaterialConfig AssimpParser::parse_material(const aiMaterial *ai_material,
-                                                    luminous_fs::path directory) {
-            MaterialConfig ret;
-            return ret;
+                                                    const luminous_fs::path &directory) {
+            auto full_path = [&](const luminous_fs::path &fn) -> std::string {
+                return fn.empty() ? fn.string() : (directory / fn).string();
+            };
+            MaterialConfig mc;
+            {
+                // process diffuse
+                auto[diffuse_fn, diffuse] = load_texture(ai_material, aiTextureType_DIFFUSE);
+                mc.diffuse_tex.fn = full_path(diffuse_fn);
+                auto tex_type = mc.diffuse_tex.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
+                mc.diffuse_tex.val = diffuse;
+                mc.diffuse_tex.name = "diffuse";
+                mc.diffuse_tex.set_type(tex_type);
+                mc.diffuse_tex.color_space = LINEAR;
+            }
+            {
+                // process specular
+                auto[specular_fn, specular] = load_texture(ai_material, aiTextureType_SPECULAR);
+                mc.specular_tex.fn = full_path(specular_fn);
+                mc.specular_tex.val = specular;
+                mc.specular_tex.name = "specular";
+                auto tex_type = mc.specular_tex.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
+                mc.specular_tex.set_type(tex_type);
+                mc.specular_tex.color_space = LINEAR;
+            }
+            {
+                // process normal map
+                auto[normal_fn, _] = load_texture(ai_material, aiTextureType_HEIGHT);
+                mc.normal_tex.set_type(type_name<ImageTexture>());
+                mc.normal_tex.name = "normal";
+                mc.normal_tex.fn = full_path(normal_fn);
+                mc.normal_tex.color_space = LINEAR;
+            }
+            return mc;
+
         }
 
-
+        std::pair<string, float4> AssimpParser::load_texture(const aiMaterial *mat, aiTextureType type) {
+            string fn;
+            for (size_t i = 0; i < mat->GetTextureCount(type); ++i) {
+                aiString str;
+                mat->GetTexture(type, i, &str);
+                fn = str.C_Str();
+                break;
+            }
+            aiColor3D ai_color;
+            switch (type) {
+                case aiTextureType_DIFFUSE:
+                    mat->Get(AI_MATKEY_COLOR_DIFFUSE, ai_color);
+                    break;
+                case aiTextureType_SPECULAR:
+                    mat->Get(AI_MATKEY_COLOR_SPECULAR, ai_color);
+                    break;
+                default:
+                    break;
+            }
+            float4 color = make_float4(ai_color.r, ai_color.g, ai_color.b, 0);
+            return std::make_pair(fn, color);
+        }
     }
 }
