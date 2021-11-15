@@ -67,7 +67,6 @@ namespace luminous {
             luminous_fs::path directory;
             vector <Mesh> meshes;
             vector <MaterialConfig> materials;
-            vector <TextureConfig> textures;
             string key;
         };
 

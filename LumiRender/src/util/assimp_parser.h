@@ -9,6 +9,7 @@
 #include <assimp/postprocess.h>
 #include <assimp/Subdivision.h>
 #include <assimp/scene.h>
+#include "render/include/config.h"
 #include "parser.h"
 
 namespace luminous {
@@ -27,6 +28,12 @@ namespace luminous {
 
             LM_NODISCARD static std::vector<Mesh> parse_meshes(const aiScene *ai_scene,
                                                                uint32_t subdiv_level = 0u);
+
+            LM_NODISCARD static std::vector<MaterialConfig> parse_materials(const aiScene *ai_scene,
+                                                                            luminous_fs::path directory);
+
+            LM_NODISCARD static MaterialConfig parse_material(const aiMaterial *ai_material,
+                                                              luminous_fs::path directory);
 
             void load(const luminous_fs::path &fn) override;
 

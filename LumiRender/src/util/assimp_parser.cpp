@@ -82,18 +82,18 @@ namespace luminous {
                     auto ai_face = ai_mesh->mFaces[f];
                     if (ai_face.mNumIndices == 3) {
                         indices.push_back(TriangleHandle{
-                            ai_face.mIndices[0],
-                            ai_face.mIndices[1],
-                            ai_face.mIndices[2]});
+                                ai_face.mIndices[0],
+                                ai_face.mIndices[1],
+                                ai_face.mIndices[2]});
                     } else if (ai_face.mNumIndices == 4) {
                         indices.push_back(TriangleHandle{
-                            ai_face.mIndices[0],
-                            ai_face.mIndices[1],
-                            ai_face.mIndices[2]});
+                                ai_face.mIndices[0],
+                                ai_face.mIndices[1],
+                                ai_face.mIndices[2]});
                         indices.push_back(TriangleHandle{
-                            ai_face.mIndices[0],
-                            ai_face.mIndices[2],
-                            ai_face.mIndices[3]});
+                                ai_face.mIndices[0],
+                                ai_face.mIndices[2],
+                                ai_face.mIndices[3]});
                     } else {
                         LUMINOUS_EXCEPTION("Only triangles and quads supported: ", ai_mesh->mName.data);
                     }
@@ -120,6 +120,18 @@ namespace luminous {
 
         SP<SceneGraph> AssimpParser::parse() const {
             return {};
+        }
+
+        std::vector<MaterialConfig> AssimpParser::parse_materials(const aiScene *ai_scene,
+                                                                  luminous_fs::path directory) {
+            std::vector<MaterialConfig> ret;
+            return ret;
+        }
+
+        MaterialConfig AssimpParser::parse_material(const aiMaterial *ai_material,
+                                                    luminous_fs::path directory) {
+            MaterialConfig ret;
+            return ret;
         }
 
 

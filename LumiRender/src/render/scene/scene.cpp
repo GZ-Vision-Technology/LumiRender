@@ -144,7 +144,6 @@ namespace luminous {
                 }
                 material_count += model->materials.size();
                 lstd::append(scene_graph->material_configs, model->materials);
-                lstd::append(tex_configs, model->textures);
             }
 
             lstd::append(_tex_configs, scene_graph->tex_configs);
