@@ -18,9 +18,9 @@ namespace luminous {
         public:
             explicit JsonParser(Context *context) : Parser(context) {}
 
-            void load(const luminous_fs::path &fn);
+            void load(const luminous_fs::path &fn) override;
 
-            LM_NODISCARD SP<SceneGraph> parse() const;
+            LM_NODISCARD SP<SceneGraph> parse() const override;
         };
     }
 }

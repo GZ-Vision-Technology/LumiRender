@@ -20,16 +20,22 @@ int execute(int argc, char *argv[]) {
         context.print_help();
         return 0;
     }
-    JsonParser sp(&context);
+    std::unique_ptr<Parser> parser{nullptr};
     try {
         if (context.has_scene()) {
-            sp.load(context.scene_file());
+            auto scene_file = context.scene_file();
+            if (scene_file.extension() == ".json" || scene_file.extension() == ".bson") {
+                parser = std::make_unique<JsonParser>(&context);
+            } else {
+
+            }
+            parser->load(scene_file);
         }
     } catch (std::exception &e1) {
         cout << e1.what();
     }
 
-    App app("luminous", luminous::make_int2(1280,720), &context, sp);
+    App app("luminous", luminous::make_int2(1280,720), &context, *parser.get());
     return app.run();
 }
 
