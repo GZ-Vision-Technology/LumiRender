@@ -10,19 +10,6 @@
 namespace luminous {
     inline namespace utility {
 
-        void AssimpParser::load(const luminous_fs::path &fn) {
-            directory = fn.parent_path();
-            _ai_scene = load_scene(fn, _ai_importer);
-            LUMINOUS_EXCEPTION_IF(
-                    _ai_scene == nullptr || (_ai_scene->mFlags & static_cast<uint>(AI_SCENE_FLAGS_INCOMPLETE)) ||
-                    _ai_scene->mRootNode == nullptr,
-                    "Failed to load scene: ", _ai_importer.GetErrorString());
-        }
-
-        SP<SceneGraph> AssimpParser::parse() const {
-            return {};
-        }
-
         const aiScene *AssimpParser::load_scene(const luminous_fs::path &fn, Assimp::Importer &ai_importer,
                                                 bool swap_handed, bool smooth) {
             ai_importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
@@ -196,6 +183,47 @@ namespace luminous {
             }
             float4 color = make_float4(ai_color.r, ai_color.g, ai_color.b, 0);
             return std::make_pair(fn, color);
+        }
+
+        void AssimpParser::load(const luminous_fs::path &fn) {
+            directory = fn.parent_path();
+            _ai_scene = load_scene(fn, _ai_importer);
+            LUMINOUS_EXCEPTION_IF(
+                    _ai_scene == nullptr || (_ai_scene->mFlags & static_cast<uint>(AI_SCENE_FLAGS_INCOMPLETE)) ||
+                    _ai_scene->mRootNode == nullptr,
+                    "Failed to load scene: ", _ai_importer.GetErrorString());
+        }
+
+        SP<SceneGraph> AssimpParser::parse() const {
+            auto scene_graph = std::make_shared<SceneGraph>(_context);
+
+            scene_graph->light_configs = parse_lights();
+            scene_graph->sensor_config = parse_camera();
+
+            return scene_graph;
+        }
+
+        std::vector<LightConfig> AssimpParser::parse_lights() const {
+            std::vector<LightConfig> ret;
+            ret.reserve(_ai_scene->mNumLights);
+
+            for (int i = 0; i < _ai_scene->mNumLights; ++i) {
+                auto lc = parse_light(_ai_scene->mLights[i]);
+                ret.push_back(lc);
+            }
+
+            return ret;
+        }
+
+        LightConfig AssimpParser::parse_light(const aiLight* ai_light) const {
+            LightConfig ret;
+
+            return ret;
+        }
+
+        SensorConfig AssimpParser::parse_camera() const {
+            SensorConfig ret;
+            return ret;
         }
     }
 }

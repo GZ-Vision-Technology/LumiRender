@@ -20,9 +20,6 @@ namespace luminous {
             const aiScene *_ai_scene{nullptr};
             luminous_fs::path directory;
         public:
-
-            explicit AssimpParser(Context *context) : Parser(context) {}
-
             LM_NODISCARD static const aiScene *load_scene(const luminous_fs::path &fn,
                                                           Assimp::Importer &ai_importer,
                                                           bool swap_handed = false,
@@ -38,6 +35,15 @@ namespace luminous {
 
             LM_NODISCARD static MaterialConfig parse_material(const aiMaterial *ai_material,
                                                               const luminous_fs::path& directory);
+        public:
+
+            explicit AssimpParser(Context *context) : Parser(context) {}
+
+            LM_NODISCARD std::vector<LightConfig> parse_lights() const;
+
+            LM_NODISCARD LightConfig parse_light(const aiLight* ai_light) const;
+
+            LM_NODISCARD SensorConfig parse_camera() const;
 
             void load(const luminous_fs::path &fn) override;
 
