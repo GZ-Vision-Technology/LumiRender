@@ -1,0 +1,263 @@
+{
+    "textures": [
+        {
+            "type": "ImageTexture",
+            "name": "textures/HelloWorld.png",
+            "param": {
+                "fn": "textures/HelloWorld.png",
+                "color_space": "SRGB"
+            }
+        },
+        {
+            "type": "ConstantTexture",
+            "name": "matte2_constant",
+            "param": {
+                "val": [
+                    0.08534839749336243,
+                    0.8000000715255737,
+                    0.03122410550713539,
+                    1.0
+                ],
+                "color_space": "SRGB"
+            }
+        },
+        {
+            "type": "ConstantTexture",
+            "name": "matte.001_constant",
+            "param": {
+                "val": [
+                    0.06310652941465378,
+                    0.07048752903938293,
+                    0.8000000715255737,
+                    1.0
+                ],
+                "color_space": "SRGB"
+            }
+        }
+    ],
+    "materials": [
+        {
+            "type": "MatteMaterial",
+            "name": "matte",
+            "param": {
+                "diffuse": "textures/HelloWorld.png"
+            }
+        },
+        {
+            "type": "MatteMaterial",
+            "name": "matte2",
+            "param": {
+                "diffuse": "matte2_constant"
+            }
+        },
+        {
+            "type": "MatteMaterial",
+            "name": "matte.001",
+            "param": {
+                "diffuse": "matte.001_constant"
+            }
+        }
+    ],
+    "shapes": [
+        {
+            "name": "Cube",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Cube.ply",
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Cube001",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Cube001.ply",
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0,
+                            0.0,
+                            3.9695780277252197,
+                            0.0,
+                            0.0,
+                            1.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Cube002",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Cube002.ply",
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0,
+                            0.0,
+                            -3.7999961376190186,
+                            0.0,
+                            0.0,
+                            1.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "light_Area",
+            "type": "quad",
+            "param": {
+                "width": 1.0,
+                "height": 1.0,
+                "emission": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "scale": 1,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0,
+                            4.645256042480469,
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    }
+                },
+                "material": ""
+            }
+        }
+    ],
+    "lights": [],
+    "camera": {
+        "type": "ThinLensCamera",
+        "param": {
+            "fov_y": 26.99146642997552,
+            "velocity": 20,
+            "transform": {
+                "type": "matrix4x4",
+                "param": {
+                    "matrix4x4": [
+                        0.6859206557273865,
+                        -0.32401347160339355,
+                        0.6515582203865051,
+                        7.358891487121582,
+                        0.7276763319969177,
+                        0.305420845746994,
+                        -0.6141703724861145,
+                        -6.925790786743164,
+                        0.0,
+                        0.8953956365585327,
+                        0.44527140259742737,
+                        4.958309173583984,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                }
+            },
+            "film": {
+                "param": {
+                    "resolution": [
+                        768,
+                        768
+                    ],
+                    "fb_state": 0
+                }
+            }
+        }
+    },
+    "integrator": {
+        "type": "PT",
+        "param": {
+            "max_depth": 10,
+            "rr_threshold": 1.0
+        }
+    },
+    "light_sampler": {
+        "type": "UniformLightSampler"
+    },
+    "sampler": {
+        "type": "PCGSampler",
+        "param": {
+            "spp": 1
+        }
+    },
+    "filter": {
+        "type": "triangle",
+        "param": {
+            "radius": [
+                0.5,
+                0.5
+            ]
+        }
+    },
+    "output": {
+        "fn": "output.png",
+        "frame_num": 100
+    }
+}
