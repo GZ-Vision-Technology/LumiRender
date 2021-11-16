@@ -7,6 +7,7 @@
 
 #include "base_libs/header.h"
 #include "base_libs/math/common.h"
+#include <vector>
 
 namespace luminous {
     inline namespace utility {
@@ -155,6 +156,17 @@ namespace luminous {
                 return ParameterSet(_data[i]);
             }
 
+            template<typename T>
+            LM_NODISCARD std::vector<T> as_vector() const {
+                LUMINOUS_EXCEPTION_IF(!_data.is_array(), "data is not array!");
+                std::vector<T> ret;
+                for (const auto &elm : _data) {
+                    ParameterSet ps{elm};
+                    ret.push_back(ps.template as<T>());
+                }
+                return ret;
+            }
+
 #define LUMINOUS_MAKE_AS_TYPE_SCALAR(type) LM_NODISCARD type as_##type(type val = type()) const {                   \
             try {                                                                                               \
                 return _as_##type();                                                                            \
@@ -255,7 +267,5 @@ namespace luminous {
 #undef LUMINOUS_MAKE_AS_TYPE_MAT3X3
 #undef LUMINOUS_MAKE_AS_TYPE_MAT4X4
         };
-
-
     } //luminous::render
 } // luminous

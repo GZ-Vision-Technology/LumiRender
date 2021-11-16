@@ -25,8 +25,8 @@ namespace luminous {
             mutable std::vector <LightConfig> light_configs;
             IntegratorConfig integrator_config;
             LightSamplerConfig light_sampler_config;
-            vector <SP<const Model>> model_list;
-            vector <SP<const ModelInstance>> instance_list;
+            vector <Model> model_list;
+            vector <ModelInstance> instance_list;
             vector <TextureConfig> tex_configs;
             vector <MaterialConfig> material_configs;
             OutputConfig output_config;
@@ -55,7 +55,7 @@ namespace luminous {
         public:
             explicit SceneGraph(Context *context) : _context(context) {}
 
-            SP<Model> create_shape(const ShapeConfig &config);
+            Model create_shape(const ShapeConfig &config);
 
             void create_shape_instance(const ShapeConfig &config);
 

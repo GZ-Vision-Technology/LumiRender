@@ -118,13 +118,13 @@ namespace luminous {
             vector<TextureConfig> tex_configs;
             index_t material_count = scene_graph->material_configs.size();
             reserve_geometry(scene_graph);
-            for (const SP<const Model> &model : scene_graph->model_list) {
+            for (const auto &model : scene_graph->model_list) {
                 int64_t model_mat_idx = lstd::find_index_if(scene_graph->material_configs,
                                                             [&](const MaterialConfig &val) {
-                                                                return model->has_custom_material() &&
-                                                                       val.name == model->custom_material_name;
+                                                                return model.has_custom_material() &&
+                                                                       val.name == model.custom_material_name;
                                                             });
-                for (const auto &mesh : model->meshes) {
+                for (const auto &mesh : model.meshes) {
                     _positions.append(mesh.positions);
                     _normals.append(mesh.normals);
                     _tex_coords.append(mesh.tex_coords);
@@ -142,8 +142,8 @@ namespace luminous {
                     vert_offset += vert_count;
                     tri_offset += tri_count;
                 }
-                material_count += model->materials.size();
-                lstd::append(scene_graph->material_configs, model->materials);
+                material_count += model.materials.size();
+                lstd::append(scene_graph->material_configs, model.materials);
             }
 
             lstd::append(_tex_configs, scene_graph->tex_configs);
@@ -168,19 +168,19 @@ namespace luminous {
             };
 
             index_t distribute_idx = 0;
-            for (const SP<const ModelInstance> &instance : scene_graph->instance_list) {
-                const SP<const Model> &model = scene_graph->model_list[instance->model_idx];
-                for (const auto &mesh : model->meshes) {
+            for (const auto &instance : scene_graph->instance_list) {
+                const auto &model = scene_graph->model_list[instance.model_idx];
+                for (const auto &mesh : model.meshes) {
                     _inst_to_transform_idx.push_back(_transforms.size());
-                    _scene_box.extend(instance->o2w.apply_box(mesh.aabb));
-                    if (nonzero(instance->emission)) {
+                    _scene_box.extend(instance.o2w.apply_box(mesh.aabb));
+                    if (nonzero(instance.emission)) {
                         LightConfig lc;
-                        lc.emission = instance->emission;
+                        lc.emission = instance.emission;
                         lc.set_full_type("AreaLight");
                         lc.instance_idx = _inst_to_mesh_idx.size();
                         MeshHandle &mesh_handle = _meshes[mesh.idx_in_meshes];
                         mesh_handle.light_idx = scene_graph->light_configs.size();
-                        lc.surface_area = compute_surface_area(mesh_handle, instance->o2w);
+                        lc.surface_area = compute_surface_area(mesh_handle, instance.o2w);
                         scene_graph->light_configs.push_back(lc);
                         mesh_handle.material_idx = _materials.size() - 1;
                         if (!mesh_handle.has_distribute()) {
@@ -191,7 +191,7 @@ namespace luminous {
                     _inst_triangle_num += mesh.triangles.size();
                     _inst_vertices_num += mesh.positions.size();
                 }
-                _transforms.push_back(instance->o2w);
+                _transforms.push_back(instance.o2w);
             }
         }
 

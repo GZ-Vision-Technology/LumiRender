@@ -20,14 +20,14 @@ namespace luminous {
             }
         }
 
-        SP<Model> SceneGraph::create_shape(const ShapeConfig &config) {
+        Model SceneGraph::create_shape(const ShapeConfig &config) {
             if (config.type() == "model") {
                 config.fn = (_context->scene_path() / config.fn).string();
-                auto model = std::make_shared<Model>(config);
-                update_counter(*model.get());
+                auto model = Model(config);
+                update_counter(model);
                 return model;
             } else if (config.type() == "quad") {
-                auto model = std::make_shared<Model>();
+                auto model = Model();
                 auto x = config.width / 2;
                 auto y = config.height / 2;
                 Box3f aabb;
@@ -51,10 +51,12 @@ namespace luminous {
                                                  TriangleHandle{2,1,3}};
 
                 auto mesh = Mesh(move(P),move(N), move(UV), move(triangles), aabb);
-                model->meshes.push_back(mesh);
-                model->custom_material_name = config.material_name;
-                update_counter(*model.get());
+                model.meshes.push_back(mesh);
+                model.custom_material_name = config.material_name;
+                update_counter(model);
                 return model;
+            } else if (config.type() == "mesh") {
+
             } else {
                 LUMINOUS_ERROR("unknown shape type !")
             }
@@ -64,14 +66,14 @@ namespace luminous {
             auto key = gen_key(config);
             if (!is_contain(key)) {
                 auto mp = create_shape(config);
-                mp->key = key;
+                mp.key = key;
                 _key_to_idx[key] = model_list.size();
                 model_list.push_back(mp);
             }
             uint idx = _key_to_idx[key];
             Transform o2w = config.o2w.create();
-            auto instance = std::make_shared<ModelInstance>(idx, o2w, config.name.c_str(), config.emission);
-            instance_num += model_list[instance->model_idx]->meshes.size();
+            auto instance = ModelInstance(idx, o2w, config.name.c_str(), config.emission);
+            instance_num += model_list[instance.model_idx].meshes.size();
             instance_list.push_back(instance);
         }
 
