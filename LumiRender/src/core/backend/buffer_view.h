@@ -50,9 +50,8 @@ namespace luminous {
 
         LM_ND_XPU const_iterator cend() const { return _ptr + _num; }
 
-        template<typename Index>
-        LM_ND_XPU T &operator[](Index i) {
-            EXE_DEBUG(i >= size(), printf("ptr = %p, size:%d,index:%d\n", _ptr, int(size()), int(i)));
+        LM_ND_XPU T &operator[](uint32_t i) {
+            EXE_DEBUG(i >= size(), printf("ptr = %p, size:%d,index:%u\n", _ptr, int(size()), i));
 #ifndef NDEBUG
             if (i >= size()) {
                 volatile int a = 0;
@@ -62,9 +61,8 @@ namespace luminous {
             return _ptr[i];
         }
 
-        template<typename Index>
-        LM_ND_XPU const T &operator[](Index i) const {
-            EXE_DEBUG(i >= size(), printf("ptr = %p, size:%d,index:%d\n", _ptr, int(size()), int(i)));
+        LM_ND_XPU const T &operator[](uint32_t i) const {
+            EXE_DEBUG(i >= size(), printf("ptr = %p, size:%d,index:%u\n", _ptr, int(size()), i));
 #ifndef NDEBUG
             if (i >= size()) {
                 volatile int a = 0;

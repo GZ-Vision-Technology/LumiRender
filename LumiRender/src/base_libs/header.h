@@ -46,12 +46,6 @@
 
 #define HAVE_POSIX_MEMALIGN
 
-#ifdef NDEBUG
-#define EXE_DEBUG(pred, arg)
-#else
-#define EXE_DEBUG(pred, arg) if (pred) { arg; }
-#endif
-
 #ifdef IS_GPU_CODE
 
 #define LUMINOUS_DBG(...) printf(__FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
@@ -114,15 +108,12 @@ constexpr const char *type_name(T *ptr = nullptr) {
 #define USE_LSTD 1
 
 
-
-#ifndef NDEBUG
-
-#define LM_ASSERT(condition, ...) if (!condition) { printf(__VA_ARGS__);} assert(condition);
-
-#else
-
+#ifdef NDEBUG
+#define EXE_DEBUG(pred, arg)
 #define LM_ASSERT(condition, ...)
-
+#else
+#define EXE_DEBUG(pred, arg) if (pred) { arg; }
+#define LM_ASSERT(condition, ...) if (!condition) { printf(__VA_ARGS__);} assert(condition);
 #endif
 
 

@@ -39,7 +39,7 @@ namespace luminous {
         public:
             REFL_CLASS(LightSamplerBase)
 
-        protected:
+        private:
             BufferView<const Light> _lights;
 
             BufferView<const Light> _infinite_lights;

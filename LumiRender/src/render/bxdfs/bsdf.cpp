@@ -11,7 +11,7 @@ namespace luminous {
             float3 wi = to_local(wi_world);
 
             if (wo.z == 0) {
-                return make_float4(0);
+                return Spectrum{0};
             }
             return _bxdf.eval(wo, wi, mode) * abs_dot(_shading_frame.z, wi_world);
         }
