@@ -153,7 +153,7 @@ namespace luminous {
 
             LM_ND_XPU const Texture &get_texture(index_t idx) const;
 
-            LM_ND_XPU const Distribution1D &get_distrib(index_t inst_id) const;
+            LM_ND_XPU const Distribution1D &get_distribution(index_t inst_id) const;
 
             LM_ND_XPU const Distribution2D &get_distribution2d(index_t idx) const;
         };

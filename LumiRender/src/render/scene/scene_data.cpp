@@ -131,8 +131,9 @@ namespace luminous {
             }
         }
 
-        const Distribution1D &SceneData::get_distrib(index_t inst_id) const {
+        const Distribution1D &SceneData::get_distribution(index_t inst_id) const {
             auto mesh = get_mesh(inst_id);
+            LM_ASSERT(mesh.has_distribute(), "mesh not has distribution instance id is %u\n", inst_id);
             return distributions[mesh.distribute_idx];
         }
 
@@ -150,8 +151,7 @@ namespace luminous {
         }
 
         float SceneData::compute_prim_PMF(index_t inst_id, index_t tri_id) const {
-            auto mesh = get_mesh(inst_id);
-            const Distribution1D &distrib = get_distrib(mesh.distribute_idx);
+            const Distribution1D &distrib = get_distribution(inst_id);
             return distrib.PMF(tri_id);
         }
 

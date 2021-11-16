@@ -50,6 +50,29 @@ namespace luminous {
 
         LM_ND_XPU const_iterator cend() const { return _ptr + _num; }
 
+        LM_ND_XPU T &at(uint32_t i) {
+            EXE_DEBUG(i >= size(), printf("ptr = %p, size:%d,index:%u\n", _ptr, int(size()), i));
+#ifndef NDEBUG
+            if (i >= size()) {
+                volatile int a = 0;
+            }
+#endif
+            DCHECK_LT(i, size());
+            return _ptr[i];
+        }
+
+        LM_ND_XPU const T &at(uint32_t i) const {
+            EXE_DEBUG(i >= size(), printf("ptr = %p, size:%d,index:%u\n", _ptr, int(size()), i));
+#ifndef NDEBUG
+            if (i >= size()) {
+                volatile int a = 0;
+            }
+#endif
+            DCHECK_LT(i, size());
+            return _ptr[i];
+        }
+
+
         LM_ND_XPU T &operator[](uint32_t i) {
             EXE_DEBUG(i >= size(), printf("ptr = %p, size:%d,index:%u\n", _ptr, int(size()), i));
 #ifndef NDEBUG
