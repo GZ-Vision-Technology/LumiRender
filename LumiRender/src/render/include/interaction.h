@@ -15,15 +15,6 @@
 namespace luminous {
     inline namespace render {
 
-        struct TriangleHandle {
-            index_t i;
-            index_t j;
-            index_t k;
-            LM_XPU void print() const {
-                printf("i:%u, j:%u, k:%u \n", i, j, k);
-            }
-        };
-
         struct MeshHandle {
             MeshHandle() = default;
 

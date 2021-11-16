@@ -56,7 +56,16 @@ namespace luminous {
                 update_counter(model);
                 return model;
             } else if (config.type() == "mesh") {
-
+                auto model = Model();
+                Box3f aabb;
+                for (auto pos : config.positions) {
+                    aabb.extend(pos);
+                }
+                Mesh mesh(move(config.positions), move(config.normals),
+                          move(config.tex_coords), move(config.triangles), aabb);
+                model.meshes.push_back(mesh);
+                model.custom_material_name = config.material_name;
+                update_counter(model);
             } else {
                 LUMINOUS_ERROR("unknown shape type !")
             }

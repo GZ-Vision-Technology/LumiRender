@@ -4,7 +4,6 @@
 
 #include "json_parser.h"
 #include "parameter_set.h"
-#include "render/textures/texture.h"
 #include <iomanip>
 
 namespace luminous {
@@ -67,6 +66,11 @@ namespace luminous {
             } else if (shape_config.type() == "quad") {
                 shape_config.width = param["width"].as_float(1);
                 shape_config.height = param["height"].as_float(1);
+            } else if (shape_config.type() == "mesh") {
+                shape_config.positions = param["positions"].as_vector<float3>();
+                shape_config.normals = param["normals"].as_vector<float3>();
+                shape_config.tex_coords = param["tex_coords"].as_vector<float2>();
+                shape_config.triangles = param["triangles"].as_vector<TriangleHandle>();
             }
 
             shape_config.name = string(shape["name"]);

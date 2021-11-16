@@ -167,6 +167,12 @@ namespace luminous {
                 return ret;
             }
 
+            template<typename T, std::enable_if_t<std::is_same_v<T, TriangleHandle>, int> = 0>
+            LM_NODISCARD T as() const {
+                LUMINOUS_EXCEPTION_IF(!_data.is_array(), "A is not an array and cannot be converted")
+                return T{at(0).as_uint(), at(1).as_uint(), at(2).as_uint()};
+            }
+
 #define LUMINOUS_MAKE_AS_TYPE_SCALAR(type) LM_NODISCARD type as_##type(type val = type()) const {                   \
             try {                                                                                               \
                 return _as_##type();                                                                            \

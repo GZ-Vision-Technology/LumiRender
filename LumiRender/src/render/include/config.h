@@ -97,10 +97,10 @@ namespace luminous {
             float width{};
             float height{};
             // mesh param
-            std::vector<float2> tex_coords;
-            std::vector<float3> positions;
-            std::vector<float3> normals;
-            std::vector<uint3> triangles;
+            mutable std::vector<float2> tex_coords;
+            mutable std::vector<float3> positions;
+            mutable std::vector<float3> normals;
+            mutable std::vector<TriangleHandle> triangles;
         };
 
         struct TextureMappingConfig : Config {

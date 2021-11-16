@@ -10,6 +10,15 @@
 namespace luminous {
     inline namespace geometry {
 
+        struct TriangleHandle {
+            index_t i{};
+            index_t j{};
+            index_t k{};
+            LM_XPU void print() const {
+                printf("i:%u, j:%u, k:%u \n", i, j, k);
+            }
+        };
+
         ND_XPU_INLINE bool same_hemisphere(float3 w1, float3 w2) {
             return w1.z * w2.z > 0;
         }
