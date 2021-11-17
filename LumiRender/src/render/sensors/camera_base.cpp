@@ -85,6 +85,7 @@ namespace luminous {
             } else if (_yaw < 0) {
                 _yaw = 360 + fmodf(_yaw, 360);
             }
+            printf("yaw :%f \n", _yaw);
         }
 
         void CameraBase::set_pitch(float pitch) {
