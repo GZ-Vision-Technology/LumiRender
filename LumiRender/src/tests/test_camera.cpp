@@ -4,52 +4,57 @@
 
 #include "iostream"
 #include "render/sensors/sensor.h"
+#include "render/sensors/shader_include.h"
 
 using namespace luminous;
 using namespace std;
 
+LM_NODISCARD Transform create(TransformConfig tc) {
+        auto yaw_t = Transform::rotation_y(tc.yaw);
+        auto pitch_t = Transform::rotation_x(tc.pitch);
+        auto tt = Transform::translation(tc.position);
+        return tt * pitch_t * yaw_t;
+}
+
+class Camera {
+public:
+    float yaw{}, pitch{};
+    explicit Camera(float4x4 m) {
+        update(m);
+    }
+
+    void update(const float4x4 &m) {
+        float sy = sqrt(sqr(m[2][1]) + sqr(m[2][2]));
+        pitch = degrees(std::atan2(-m[2][1], m[2][2]));
+        yaw = degrees(-std::atan2(-m[2][0], sy));
+    }
+
+    Transform camera_to_world_rotation() const {
+        auto horizontal = Transform::rotation_y(yaw);
+        auto vertical = Transform::rotation_x(pitch);
+        return horizontal *vertical;
+    }
+};
+
 void test_sensor() {
-    SensorConfig config;
-    config.set_full_type("PinholeCamera");
-    config.fov_y = 90;
-    config.velocity = 20;
 
     TransformConfig tc;
     tc.set_type("yaw_pitch");
-
-    tc.yaw = 0;
-    tc.pitch = 0;
+    tc.yaw = 95;
+    tc.pitch = 20;
     tc.position = make_float3(0,0,0);
-    config.film_config.set_full_type("RGBFilm");
-    config.film_config.resolution = make_uint2(500,500);
-    tc.mat4x4 = make_float4x4(1);
-    config.transform_config = tc;
 
-    auto camera = Sensor::create(config);
+    auto t1 = create(tc);
 
-    SensorSample ss;
-    ss.p_film = make_float2(250,250);
+    Camera camera(t1.mat4x4());
 
-    auto mat = camera.camera_to_world_rotation().mat4x4();
+    cout << t1.mat4x4().to_string() << endl;
 
-    tc.set_full_type("matrix4x4");
-    tc.mat4x4 = mat;
+    auto m2 = camera.camera_to_world_rotation();
 
+    cout << m2.mat4x4().to_string() << endl;
 
-//    camera.move(camera.forward());
-
-    Ray ray;
-    camera.generate_ray(ss, &ray);
-    cout << camera.to_string() << endl;
-
-    cout << ray.to_string() << endl;
-
-//    camera.update_fov_y(5);
-    camera.set_yaw(90);
-    camera.set_pitch(45);
-    camera.generate_ray(ss, &ray);
-
-    cout << ray.to_string() << endl;
+    return;
 
 }
 
