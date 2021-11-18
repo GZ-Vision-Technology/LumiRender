@@ -38,7 +38,9 @@ namespace luminous {
                             pixel_info.albedo = make_float3(si.op_bsdf->base_color());
                         }
                     } else {
-                        L += hit_ctx.scene_data()->light_sampler->on_miss(ray.direction(), hit_ctx.scene_data(), throughput);
+                        Spectrum env_color = hit_ctx.scene_data()->light_sampler->on_miss(ray.direction(), hit_ctx.scene_data(), throughput);
+                        L += env_color;
+                        pixel_info.albedo = env_color.vec();
                     }
                 }
                 BREAK_IF(!found_intersection)
