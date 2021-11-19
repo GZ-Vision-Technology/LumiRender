@@ -52,26 +52,24 @@ class Camera:
         # print("-----------------------", (m[2][0], m[0][0]))
         
     def camera_to_world_rotation(self):
-        horizontal = rotation_y(self.yaw);
-        vertical = rotation_x(-self.pitch);
-        return np.matmul(horizontal, vertical)
+        return view_mat(self.pitch, self.yaw)
     
     def __repr__(self) -> str:
         return "yaw:%s, pitch: %s" % (self.yaw, self.pitch)
 
 
 yaw = -150
-pitch = 20
+pitch = 180
 
 mat = view_mat(pitch, yaw)
 
 # print(rotation_x(-pitch))
 # print(rotation_y(yaw))
-print(mat)
+# print(mat)
 
 cam = Camera(mat)
 
 print(cam)
 
-print(cam.camera_to_world_rotation())
+# print(cam.camera_to_world_rotation())
 

@@ -24,8 +24,8 @@ namespace luminous {
 
         void CameraBase::_update(const float4x4 &m) {
             float sy = sqrt(sqr(m[2][1]) + sqr(m[2][2]));
-            _pitch = degrees(-std::atan2(m[2][1], m[2][2]));
-            _yaw = degrees(-std::atan2(-m[2][0], sy));
+            _pitch = -degrees(std::atan2(m[1][2], m[1][1]));
+            _yaw = degrees(-std::atan2(m[2][0], m[0][0]));
             _position = make_float3(m[3]);
         }
 
@@ -149,7 +149,7 @@ namespace luminous {
         Transform CameraBase::camera_to_world_rotation() const {
             auto horizontal = Transform::rotation_y(_yaw);
             auto vertical = Transform::rotation_x(-_pitch);
-            return horizontal *vertical;
+            return horizontal * vertical;
         }
 
         float3 CameraBase::forward() const {

@@ -73,7 +73,7 @@ namespace luminous {
                     return tt * rr * ss;
                 } else if (type() == "yaw_pitch") {
                     auto yaw_t = Transform::rotation_y(yaw);
-                    auto pitch_t = Transform::rotation_x(pitch);
+                    auto pitch_t = Transform::rotation_x(-pitch);
                     auto tt = Transform::translation(position);
                     return tt * pitch_t * yaw_t;
                 }
