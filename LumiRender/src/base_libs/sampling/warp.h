@@ -43,7 +43,7 @@ namespace luminous {
 
         ND_XPU_INLINE float2 square_to_triangle(const float2 u) {
             auto su0 = sqrt(u.x);
-            return make_float2(1 - su0, u.x * su0);
+            return make_float2(1 - su0, u.y * su0);
         }
 
         ND_XPU_INLINE float3 square_to_sphere(float2 u) {
