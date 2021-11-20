@@ -110,7 +110,7 @@
 					"type" : "yaw_pitch",
 					"param" : {
 						"yaw" : 0,
-						"pitch": 90,
+						"pitch":-90,
 						"position": [-0.83,1.62,0.8]
 					}
 				}
@@ -215,7 +215,7 @@
 //		"type" : "WavefrontPT",
 		"type" : "PT",
 		"param" : {
-			"max_depth" : 3,
+			"max_depth" : 1,
 			"rr_threshold" : 1
 		}
 	},
@@ -228,12 +228,12 @@
 			"fov_y" : 35,
 			"velocity" : 20,
 			"focal_distance" : 3.5,
-			"lens_radius" : 0.12,
+			"lens_radius" : 0,
 			"transform" : {
 				"type" : "yaw_pitch",
 				"param" : {
 					"yaw" : 0,
-					"pitch": 20,
+					"pitch": 0,
 					"position": [-0.83,0.819,-2.5]
 				}
 			},

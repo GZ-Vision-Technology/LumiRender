@@ -1,20 +1,93 @@
 {
     "textures": [
         {
-            "type": "ImageTexture",
-            "name": "textures/HelloWorld.png",
+            "type": "ConstantTexture",
+            "name": "matte2_constant",
             "param": {
-                "fn": "textures/HelloWorld.png",
+                "val": [
+                    1.0,
+                    0.9371121525764465,
+                    0.9371121525764465,
+                    1.0
+                ],
                 "color_space": "SRGB"
+            }
+        },
+        {
+            "type": "ConstantTexture",
+            "name": "matte2.001_constant",
+            "param": {
+                "val": [
+                    0.8000000715255737,
+                    0.0,
+                    0.005676119588315487,
+                    1.0
+                ],
+                "color_space": "SRGB"
+            }
+        },
+        {
+            "type": "ConstantTexture",
+            "name": "matte2.005_constant",
+            "param": {
+                "val": [
+                    0.08534839749336243,
+                    0.8000000715255737,
+                    0.03122410550713539,
+                    1.0
+                ],
+                "color_space": "SRGB"
+            }
+        },
+        {
+            "type": "ConstantTexture",
+            "name": "matte2.006_constant",
+            "param": {
+                "val": [
+                    0.0008473525522276759,
+                    0.0,
+                    0.8000000715255737,
+                    1.0
+                ],
+                "color_space": "SRGB"
+            }
+        },
+        {
+            "name": "envmap",
+            "type": "ImageTexture",
+            "param": {
+                "fn": "textures/spruit_sunrise_2k.hdr",
+                "color_space": "LINEAR"
             }
         }
     ],
     "materials": [
         {
             "type": "MatteMaterial",
-            "name": "matte",
+            "name": "matte2",
             "param": {
-                "diffuse": "textures/HelloWorld.png"
+                "diffuse": "matte2_constant"
+            }
+        },
+        {
+            "type": "MatteMaterial",
+            "name": "matte2.001",
+            "param": {
+                "diffuse": "matte2.001_constant"
+            }
+        },
+        {
+            "type": "MatteMaterial",
+            "name": "matte2.005",
+            "param": {
+                "diffuse": "matte2.005_constant"
+            }
+        },
+        {
+            "type": "MatteMaterial",
+            "name": "matte2.006",
+            "param": {
+                "diffuse": "matte2.006_constant"
             }
         }
     ],
@@ -25,6 +98,7 @@
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
+                "material": "matte2",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -64,6 +138,7 @@
             "param": {
                 "fn": "meshes/WusonOBJ.ply",
                 "subdiv_level": 0,
+                "material": "matte2",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -90,6 +165,126 @@
                                 2.0051560401916504,
                                 4.5013813972473145,
                                 2.926147937774658,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Cube.001",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Cube.001.ply",
+                "subdiv_level": 0,
+                "material": "matte2.001",
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                8.050644874572754,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Cube.002",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Cube.002.ply",
+                "subdiv_level": 0,
+                "material": "matte2.005",
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                7.451808452606201,
+                                0.0,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Cube.003",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Cube.003.ply",
+                "subdiv_level": 0,
+                "material": "matte2.006",
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                7.056504249572754,
                                 1.0
                             ]
                         ]
@@ -144,7 +339,31 @@
             }
         }
     ],
-    "lights": [],
+    "lights": [
+        {
+            "type": "Envmap",
+            "param": {
+                "transform": {
+                    "type": "yaw_pitch",
+                    "param": {
+                        "yaw": 0,
+                        "pitch": 0,
+                        "position": [
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                },
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "key": "envmap"
+            }
+        }
+    ],
     "camera": {
         "type": "ThinLensCamera",
         "param": {
@@ -155,9 +374,9 @@
                 "param": {
                     "matrix4x4": [
                         [
-                            1.0,
+                            -0.6441235542297363,
                             0.0,
-                            0.0,
+                            0.7649214267730713,
                             0.0
                         ],
                         [
@@ -167,15 +386,15 @@
                             0.0
                         ],
                         [
+                            -0.7649214267730713,
                             0.0,
-                            0.0,
-                            1.0,
+                            -0.6441235542297363,
                             0.0
                         ],
                         [
                             0.22328254580497742,
-                            -5.902786731719971,
-                            0.3758120536804199,
+                            2.405710220336914,
+                            13.323944091796875,
                             1.0
                         ]
                     ]
@@ -187,7 +406,7 @@
                         768,
                         768
                     ],
-                    "fb_state": 1
+                    "fb_state": 2
                 }
             }
         }
