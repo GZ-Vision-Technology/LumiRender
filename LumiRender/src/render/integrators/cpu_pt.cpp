@@ -17,7 +17,7 @@ namespace luminous {
 
         CPUPathTracer::CPUPathTracer(Device *device, Context *context)
                 : Integrator(device, context) {
-            set_thread_num(_context->thread_num());
+
         }
 
         void CPUPathTracer::init(const SP<SceneGraph> &scene_graph) {

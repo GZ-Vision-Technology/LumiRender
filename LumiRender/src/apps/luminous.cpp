@@ -24,6 +24,7 @@ int execute(int argc, char *argv[]) {
     std::unique_ptr<Parser> parser{nullptr};
     App app;
     try {
+        set_thread_num(context.thread_num());
         if (context.has_scene()) {
             auto scene_file = context.scene_file();
             if (scene_file.extension() == ".json" || scene_file.extension() == ".bson") {
