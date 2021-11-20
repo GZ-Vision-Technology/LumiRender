@@ -110,7 +110,7 @@
 					"type" : "yaw_pitch",
 					"param" : {
 						"yaw" : 0,
-						"pitch":-90,
+						"pitch":90,
 						"position": [-0.83,1.62,0.8]
 					}
 				}
@@ -151,7 +151,7 @@
 				}
 			}
 		}
-//	,
+	,
 //		{
 //			"name" : "c_box",
 //			"type": "model",
@@ -169,23 +169,23 @@
 //				}
 //			}
 //		},
-//		{
-//			"name" : "nanosuit",
-//			"type": "model",
-//			"param" : {
-////				"material": "quad",
-//				"fn": "nanosuit/nanosuit.obj",
-//				"subdiv_level": 0,
-//				"transform" : {
-//					"type" : "trs",
-//					"param" : {
-//						"t" : [-1, 0, 1],
-//						"r" : [0, 1, 0, 180],
-//						"s" : [0.1,0.1,0.1]
-//					}
-//				}
-//			}
-//		}
+		{
+			"name" : "nanosuit",
+			"type": "model",
+			"param" : {
+//				"material": "quad",
+				"fn": "nanosuit/nanosuit.obj",
+				"subdiv_level": 0,
+				"transform" : {
+					"type" : "trs",
+					"param" : {
+						"t" : [-1, 0, 1],
+						"r" : [0, 1, 0, 180],
+						"s" : [0.1,0.1,0.1]
+					}
+				}
+			}
+		}
 	],
 	"lights" : [
 //		{
@@ -215,7 +215,7 @@
 //		"type" : "WavefrontPT",
 		"type" : "PT",
 		"param" : {
-			"max_depth" : 1,
+			"max_depth" : 3,
 			"rr_threshold" : 1
 		}
 	},
@@ -228,7 +228,7 @@
 			"fov_y" : 35,
 			"velocity" : 20,
 			"focal_distance" : 3.5,
-			"lens_radius" : 0,
+			"lens_radius" :0.09,
 			"transform" : {
 				"type" : "yaw_pitch",
 				"param" : {
