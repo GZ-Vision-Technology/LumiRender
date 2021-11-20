@@ -111,7 +111,7 @@
 					"type" : "yaw_pitch",
 					"param" : {
 						"yaw" : 0,
-						"pitch": 90,
+						"pitch": 0,
 						"position": [-0.83,1.62,0.8]
 					}
 				},
@@ -236,8 +236,8 @@
 //					"position": [-0.83,0.819,2.5]
 //				}
 				"param" : {
-					"yaw" : 120,
-					"pitch": 20,
+					"yaw" : 0,
+					"pitch": 0,
 					"position": [-0.83,0.819,-2.5]
 				}
 			},

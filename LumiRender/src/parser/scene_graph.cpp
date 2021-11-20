@@ -29,28 +29,28 @@ namespace luminous {
             } else if (config.type() == "quad") {
                 auto model = Model();
                 auto x = config.width / 2;
-                auto y = config.height / 2;
+                auto z = config.height / 2;
                 Box3f aabb;
-                vector<float3> P{make_float3(x, y, 0),
-                                 make_float3(x, -y, 0),
-                                 make_float3(-x, y, 0),
-                                 make_float3(-x, -y, 0)};
+                vector<float3> P{make_float3(x, 0, z),
+                                 make_float3(x, -0, -z),
+                                 make_float3(-x, 0, z),
+                                 make_float3(-x, -0, -z)};
 
                 for (auto p : P) {
                     aabb.extend(p);
                 }
-                
-                vector<float3> N(4, make_float3(0, 0, -1));
+
+                vector<float3> N(4, make_float3(0, -1, 0));
 
                 vector<float2> UV{make_float2(1, 1),
                                   make_float2(1, 0),
                                   make_float2(0, 1),
                                   make_float2(0, 0)};
 
-                vector<TriangleHandle> triangles{TriangleHandle{0,1,2},
-                                                 TriangleHandle{2,1,3}};
+                vector<TriangleHandle> triangles{TriangleHandle{1, 0, 2},
+                                                 TriangleHandle{1, 2, 3}};
 
-                auto mesh = Mesh(move(P),move(N), move(UV), move(triangles), aabb);
+                auto mesh = Mesh(move(P), move(N), move(UV), move(triangles), aabb);
                 model.meshes.push_back(mesh);
                 model.custom_material_name = config.material_name;
                 update_counter(model);

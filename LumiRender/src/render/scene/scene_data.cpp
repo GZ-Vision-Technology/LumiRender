@@ -80,18 +80,18 @@ namespace luminous {
         LightEvalContext SceneData::compute_light_eval_context(index_t inst_id,
                                                                index_t tri_id,
                                                                luminous::float2 bary) const {
-            float3 pos, ng;
+            float3 pos, ng_un;
             float2 uv;
-            fill_attribute(inst_id, tri_id, bary, &pos, &ng, &uv);
-            float prim_area = 0.5f * length(ng);
+            fill_attribute(inst_id, tri_id, bary, &pos, &ng_un, &uv);
+            float prim_area = 0.5f * length(ng_un);
             float PMF = compute_prim_PMF(inst_id, tri_id);
             float PDF_pos = PMF / prim_area;
-            return LightEvalContext{pos, normalize(ng), uv, PDF_pos};
+            return LightEvalContext{pos, normalize(ng_un), uv, PDF_pos};
         }
 
         void SceneData::fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
-                                       float3 *world_p, float3 *world_ng,float2 *tex_coord,
-                                       float3 *world_ns ) const {
+                                       float3 *world_p, float3 *world_ng_un, float2 *tex_coord,
+                                       float3 *world_ns_un) const {
             auto mesh = get_mesh(inst_id);
             TriangleHandle tri = get_triangle(mesh, tri_id);
 
@@ -103,18 +103,18 @@ namespace luminous {
             luminous::float3 p2 = mesh_positions[tri.k];
             *world_p = o2w.apply_point(triangle_lerp(bary, p0, p1, p2));
 
-            if (world_ng) {
+            if (world_ng_un) {
                 luminous::float3 dp02 = p0 - p2;
                 luminous::float3 dp12 = p1 - p2;
-                *world_ng = o2w.apply_normal(cross(dp02, dp12));
+                *world_ng_un = o2w.apply_normal(cross(dp02, dp12));
             }
 
-            if (world_ns) {
+            if (world_ns_un) {
                 const auto &mesh_normals = get_normals(mesh);
                 auto n0 = mesh_normals[tri.i];
                 auto n1 = mesh_normals[tri.j];
                 auto n2 = mesh_normals[tri.k];
-                *world_ns = o2w.apply_normal(triangle_lerp(bary, n0, n1, n2));
+                *world_ns_un = o2w.apply_normal(triangle_lerp(bary, n0, n1, n2));
             }
 
             if (tex_coord) {
