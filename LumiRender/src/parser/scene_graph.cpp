@@ -28,19 +28,19 @@ namespace luminous {
                 return model;
             } else if (config.type() == "quad") {
                 auto model = Model();
-                auto x = config.width / 2;
-                auto z = config.height / 2;
+                auto width = config.width / 2;
+                auto height = config.height / 2;
                 Box3f aabb;
-                vector<float3> P{make_float3(x, 0, z),
-                                 make_float3(x, -0, -z),
-                                 make_float3(-x, 0, z),
-                                 make_float3(-x, -0, -z)};
+                vector<float3> P{make_float3(width, height, 0),
+                                 make_float3(width, -height, 0),
+                                 make_float3(-width, height, 0),
+                                 make_float3(-width, -height, 0)};
 
                 for (auto p : P) {
                     aabb.extend(p);
                 }
 
-                vector<float3> N(4, make_float3(0, -1, 0));
+                vector<float3> N(4, make_float3(0, 0, 1));
 
                 vector<float2> UV{make_float2(1, 1),
                                   make_float2(1, 0),
