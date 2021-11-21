@@ -190,7 +190,7 @@ namespace luminous {
         }
 
         template<typename T, uint N>
-        ND_XPU_INLINE T triangle_area(Vector <T, N> p0, Vector <T, N> p1, Vector <T, N> p2) {
+        ND_XPU_INLINE T triangle_area(Vector <T, N> p0, Vector <T, N> p1, Vector <T, N> p2) noexcept {
             static_assert(N == 3 || N == 2, "N must be greater than 1!");
             if constexpr (N == 2) {
                 Vector<T, 3> pp0 = Vector<T, 3>{p0.x, p0.y, 0};
@@ -203,7 +203,7 @@ namespace luminous {
         }
 
         template<typename T, typename F2>
-        LM_ND_XPU T triangle_lerp(F2 barycentric, T v0, T v1, T v2) {
+        LM_ND_XPU T triangle_lerp(F2 barycentric, T v0, T v1, T v2) noexcept {
             auto u = barycentric.x;
             auto v = barycentric.y;
             auto w = 1 - barycentric.x - barycentric.y;
@@ -211,9 +211,14 @@ namespace luminous {
         }
 
         template<typename T>
+        LM_XPU Vector<T, 3> face_forward(Vector<T, 3> v1, Vector<T, 3> v2) noexcept {
+            return dot(v1, v2) > 0 ? v1 : -v1;
+        }
+
+        template<typename T>
         LM_XPU void coordinate_system(Vector<T, 3> v1,
                                       Vector<T, 3> *v2,
-                                      Vector<T, 3> *v3) {
+                                      Vector<T, 3> *v3) noexcept {
             CHECK_UNIT_VEC(v1)
             if (abs(v1.x) > abs(v1.y)) {
                 *v2 = Vector<T, 3>(-v1.z, 0, v1.x) / sqrt(v1.x * v1.x + v1.z * v1.z);
@@ -232,7 +237,7 @@ namespace luminous {
             return q / std::sqrt(dot(q, q));
         }
 
-        LM_NODISCARD LM_XPU_INLINE Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) {
+        LM_NODISCARD LM_XPU_INLINE Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) noexcept {
             float cosTheta = dot(q1, q2);
             if (cosTheta > .9995f)
                 //If the rotation Angle is too small, treat it as a straight line
