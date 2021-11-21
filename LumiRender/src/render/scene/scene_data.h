@@ -137,7 +137,8 @@ namespace luminous {
             LM_XPU void fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
                                        float3 *world_p, float3 *world_ng_un = nullptr,
                                        float2 *tex_coord = nullptr,
-                                       float3 *world_ns_un = nullptr) const;
+                                       float3 *world_ns_un = nullptr,
+                                       SurfaceInteraction *si = nullptr) const;
 
             LM_XPU_INLINE void fill_attribute(const HitInfo &closest_hit,
                                               float3 *world_p, float3 *world_ng = nullptr,

@@ -40,7 +40,7 @@ namespace luminous {
                     aabb.extend(p);
                 }
 
-                vector<float3> N(4, make_float3(0, 0, 1));
+                vector<float3> N(4, make_float3(0, 0, 0));
 
                 vector<float2> UV{make_float2(1, 1),
                                   make_float2(1, 0),

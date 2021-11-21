@@ -95,43 +95,73 @@ namespace luminous {
 
         void SceneData::fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
                                        float3 *world_p, float3 *world_ng_un, float2 *tex_coord,
-                                       float3 *world_ns_un) const {
+                                       float3 *world_ns_un, SurfaceInteraction *si) const {
             auto mesh = get_mesh(inst_id);
             TriangleHandle tri = get_triangle(mesh, tri_id);
 
             const auto &o2w = get_transform(inst_id);
             // compute pos
             const auto &mesh_positions = get_positions(mesh);
-            luminous::float3 p0 = mesh_positions[tri.i];
-            luminous::float3 p1 = mesh_positions[tri.j];
-            luminous::float3 p2 = mesh_positions[tri.k];
-            *world_p = o2w.apply_point(triangle_lerp(bary, p0, p1, p2));
+            luminous::float3 p0 = o2w.apply_point(mesh_positions[tri.i]);
+            luminous::float3 p1 = o2w.apply_point(mesh_positions[tri.j]);
+            luminous::float3 p2 = o2w.apply_point(mesh_positions[tri.k]);
+            *world_p = triangle_lerp(bary, p0, p1, p2);
 
-            if (world_ng_un) {
-                luminous::float3 dp02 = p0 - p2;
-                luminous::float3 dp12 = p1 - p2;
-                *world_ng_un = o2w.apply_normal(cross(dp02, dp12));
-            }
+            luminous::float2 tex_coord0, tex_coord1, tex_coord2;
 
-            if (world_ns_un) {
-                const auto &mesh_normals = get_normals(mesh);
-                auto n0 = mesh_normals[tri.i];
-                auto n1 = mesh_normals[tri.j];
-                auto n2 = mesh_normals[tri.k];
-                *world_ns_un = o2w.apply_normal(triangle_lerp(bary, n0, n1, n2));
-            }
-
-            if (tex_coord) {
+            if (tex_coord || si) {
+                // compute tex_coord
                 const auto &mesh_tex_coords = get_tex_coords(mesh);
-                luminous::float2 tex_coord0 = mesh_tex_coords[tri.i];
-                luminous::float2 tex_coord1 = mesh_tex_coords[tri.j];
-                luminous::float2 tex_coord2 = mesh_tex_coords[tri.k];
+                tex_coord0 = mesh_tex_coords[tri.i];
+                tex_coord1 = mesh_tex_coords[tri.j];
+                tex_coord2 = mesh_tex_coords[tri.k];
                 if (is_zero(tex_coord0) && is_zero(tex_coord1) && is_zero(tex_coord2)) {
                     tex_coord0 = luminous::make_float2(0, 0);
                     tex_coord1 = luminous::make_float2(1, 0);
                     tex_coord2 = luminous::make_float2(1, 1);
                 }
                 *tex_coord = triangle_lerp(bary, tex_coord0, tex_coord1, tex_coord2);
+                if (si) {
+                    si->uv = *tex_coord;
+                }
+            }
+
+            if (world_ng_un || si) {
+                luminous::float3 dp02 = p0 - p2;
+                luminous::float3 dp12 = p1 - p2;
+                *world_ng_un = cross(dp02, dp12);
+                if (si) {
+                    // compute geometry uvn
+                    si->prim_area = 0.5f * length(*world_ng_un);
+                    luminous::float2 duv02 = tex_coord0 - tex_coord2;
+                    luminous::float2 duv12 = tex_coord1 - tex_coord2;
+                    float det = duv02[0] * duv12[1] - duv02[1] * duv12[0];
+                    float inv_det = 1 / det;
+
+                    luminous::float3 dp_du = (duv12[1] * dp02 - duv02[1] * dp12) * inv_det;
+                    luminous::float3 dp_dv = (-duv12[0] * dp02 + duv02[0] * dp12) * inv_det;
+                    si->g_uvn.set(normalize(dp_du), normalize(dp_dv), normalize(*world_ng_un));
+                }
+            }
+
+            if (world_ns_un || si) {
+                // compute shading uvn
+                const auto &mesh_normals = get_normals(mesh);
+                auto n0 = mesh_normals[tri.i];
+                auto n1 = mesh_normals[tri.j];
+                auto n2 = mesh_normals[tri.k];
+                *world_ns_un = o2w.apply_normal(triangle_lerp(bary, n0, n1, n2));
+                if (si) {
+                    if (is_zero(*world_ns_un)) {
+                        si->s_uvn = si->g_uvn;
+                    } else {
+                        luminous::float3 ns = normalize(*world_ns_un);
+                        luminous::float3 ss = si->g_uvn.dp_du;
+                        luminous::float3 st = normalize(cross(ns, ss));
+                        ss = cross(st, ns);
+                        si->s_uvn.set(ss, st, ns);
+                    }
+                }
             }
         }
 
