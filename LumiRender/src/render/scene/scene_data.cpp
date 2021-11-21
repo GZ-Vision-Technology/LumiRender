@@ -120,7 +120,9 @@ namespace luminous {
                     tex_coord1 = luminous::make_float2(1, 0);
                     tex_coord2 = luminous::make_float2(1, 1);
                 }
-                *tex_coord = triangle_lerp(bary, tex_coord0, tex_coord1, tex_coord2);
+                if (tex_coord) {
+                    *tex_coord = triangle_lerp(bary, tex_coord0, tex_coord1, tex_coord2);
+                }
                 if (si) {
                     si->uv = *tex_coord;
                 }
@@ -129,10 +131,10 @@ namespace luminous {
             if (world_ng_un || si) {
                 luminous::float3 dp02 = p0 - p2;
                 luminous::float3 dp12 = p1 - p2;
-                *world_ng_un = cross(dp02, dp12);
+                luminous::float3 ng_un = cross(dp02, dp12);
                 if (si) {
                     // compute geometry uvn
-                    si->prim_area = 0.5f * length(*world_ng_un);
+                    si->prim_area = 0.5f * length(ng_un);
                     luminous::float2 duv02 = tex_coord0 - tex_coord2;
                     luminous::float2 duv12 = tex_coord1 - tex_coord2;
                     float det = duv02[0] * duv12[1] - duv02[1] * duv12[0];
@@ -142,6 +144,9 @@ namespace luminous {
                     luminous::float3 dp_dv = (-duv12[0] * dp02 + duv02[0] * dp12) * inv_det;
                     si->g_uvn.set(normalize(dp_du), normalize(dp_dv), normalize(*world_ng_un));
                 }
+                if (world_ng_un) {
+                    *world_ng_un = ng_un;
+                }
             }
 
             if (world_ns_un || si) {
@@ -150,17 +155,20 @@ namespace luminous {
                 auto n0 = mesh_normals[tri.i];
                 auto n1 = mesh_normals[tri.j];
                 auto n2 = mesh_normals[tri.k];
-                *world_ns_un = o2w.apply_normal(triangle_lerp(bary, n0, n1, n2));
+                auto ns_un = o2w.apply_normal(triangle_lerp(bary, n0, n1, n2));
                 if (si) {
-                    if (is_zero(*world_ns_un)) {
+                    if (is_zero(ns_un)) {
                         si->s_uvn = si->g_uvn;
                     } else {
-                        luminous::float3 ns = normalize(*world_ns_un);
+                        luminous::float3 ns = normalize(ns_un);
                         luminous::float3 ss = si->g_uvn.dp_du;
                         luminous::float3 st = normalize(cross(ns, ss));
                         ss = cross(st, ns);
                         si->s_uvn.set(ss, st, ns);
                     }
+                }
+                if (world_ns_un) {
+                    *world_ns_un = ns_un;
                 }
             }
         }
