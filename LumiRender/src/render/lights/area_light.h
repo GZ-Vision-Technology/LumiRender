@@ -18,20 +18,17 @@ namespace luminous {
             uint _inst_idx{};
             float3 L{};
             bool _two_sided{};
-            float _inv_area{};
         public:
             CPU_ONLY(explicit AreaLight(const LightConfig &config)
-                    : AreaLight(config.instance_idx, config.emission, config.surface_area,
+                    : AreaLight(config.instance_idx, config.emission,
                                 config.two_sided) {})
 
-            AreaLight(uint inst_idx, float3 L, float area, bool two_sided);
+            AreaLight(uint inst_idx, float3 L, bool two_sided);
 
             LM_ND_XPU Spectrum radiance(const LightEvalContext &lec, float3 w,
                                         const SceneData *scene_data) const;
 
             LM_ND_XPU Spectrum radiance(float2 uv, float3 ng, float3 w, const SceneData *scene_data) const;
-
-            LM_ND_XPU float inv_area() const;
 
             LM_ND_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 

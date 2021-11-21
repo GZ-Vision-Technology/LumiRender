@@ -43,8 +43,8 @@ namespace luminous {
                 // compute geometry uvn
                 luminous::float3 dp02 = p0 - p2;
                 luminous::float3 dp12 = p1 - p2;
-                luminous::float3 ng = cross(dp02, dp12);
-                si.prim_area = 0.5f * length(ng);
+                luminous::float3 ng_un = cross(dp02, dp12);
+                si.prim_area = 0.5f * length(ng_un);
 
                 luminous::float2 duv02 = tex_coord0 - tex_coord2;
                 luminous::float2 duv12 = tex_coord1 - tex_coord2;
@@ -53,7 +53,7 @@ namespace luminous {
 
                 luminous::float3 dp_du = (duv12[1] * dp02 - duv02[1] * dp12) * inv_det;
                 luminous::float3 dp_dv = (-duv12[0] * dp02 + duv02[0] * dp12) * inv_det;
-                si.g_uvn.set(normalize(dp_du), normalize(dp_dv), normalize(ng));
+                si.g_uvn.set(normalize(dp_du), normalize(dp_dv), normalize(ng_un));
             }
 
             {

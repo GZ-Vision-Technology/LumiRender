@@ -9,11 +9,10 @@
 namespace luminous {
     inline namespace render {
 
-        AreaLight::AreaLight(uint inst_idx, float3 L, float area, bool two_sided)
+        AreaLight::AreaLight(uint inst_idx, float3 L, bool two_sided)
                 : BaseBinder<LightBase>(LightType::Area),
                   _inst_idx(inst_idx),
                   L(L),
-                  _inv_area(1 / area),
                   _two_sided(two_sided) {}
 
         LightEvalContext AreaLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
@@ -44,12 +43,9 @@ namespace luminous {
             return PDF;
         }
 
-        float AreaLight::inv_area() const {
-            return _inv_area;
-        }
-
         Spectrum AreaLight::power() const {
-            return (_two_sided ? _2Pi : Pi) * L * (1.f / _inv_area);
+            // todo
+            return (_two_sided ? _2Pi : Pi) * L/* *area */;
         }
 
         Spectrum AreaLight::radiance(const LightEvalContext &lec, float3 w,
