@@ -62,11 +62,15 @@ namespace luminous {
                 auto n1 = mesh_normals[tri.j];
                 auto n2 = mesh_normals[tri.k];
                 auto normal = triangle_lerp(bary, n0, n1, n2);
-                luminous::float3 ns = normalize(o2w.apply_normal(normal));
-                luminous::float3 ss = si.g_uvn.dp_du;
-                luminous::float3 st = normalize(cross(ns, ss));
-                ss = cross(st, ns);
-                si.s_uvn.set(ss, st, ns);
+                if (is_zero(normal)) {
+                    si.s_uvn = si.g_uvn;
+                } else {
+                    luminous::float3 ns = normalize(o2w.apply_normal(normal));
+                    luminous::float3 ss = si.g_uvn.dp_du;
+                    luminous::float3 st = normalize(cross(ns, ss));
+                    ss = cross(st, ns);
+                    si.s_uvn.set(ss, st, ns);
+                }
             }
             if (mesh.has_emission()) {
                 si.light = &light_sampler->light_at(mesh.light_idx);

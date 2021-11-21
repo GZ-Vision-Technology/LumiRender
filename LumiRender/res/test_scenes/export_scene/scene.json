@@ -2,12 +2,12 @@
     "textures": [
         {
             "type": "ConstantTexture",
-            "name": "matte2_constant",
+            "name": "matte_whitte_constant",
             "param": {
                 "val": [
-                    1.0,
-                    0.9371121525764465,
-                    0.9371121525764465,
+                    0.7250000238418579,
+                    0.7099999785423279,
+                    0.6800000071525574,
                     1.0
                 ],
                 "color_space": "SRGB"
@@ -15,12 +15,12 @@
         },
         {
             "type": "ConstantTexture",
-            "name": "matte2.001_constant",
+            "name": "matte_red_constant",
             "param": {
                 "val": [
-                    0.8000000715255737,
-                    0.0,
-                    0.005676119588315487,
+                    0.6299999952316284,
+                    0.06499999761581421,
+                    0.05000000074505806,
                     1.0
                 ],
                 "color_space": "SRGB"
@@ -28,77 +28,129 @@
         },
         {
             "type": "ConstantTexture",
-            "name": "matte2.005_constant",
+            "name": "matte_green_constant",
             "param": {
                 "val": [
-                    0.08534839749336243,
-                    0.8000000715255737,
-                    0.03122410550713539,
+                    0.14000000059604645,
+                    0.44999998807907104,
+                    0.09099999815225601,
                     1.0
                 ],
                 "color_space": "SRGB"
-            }
-        },
-        {
-            "type": "ConstantTexture",
-            "name": "matte2.006_constant",
-            "param": {
-                "val": [
-                    0.0008473525522276759,
-                    0.0,
-                    0.8000000715255737,
-                    1.0
-                ],
-                "color_space": "SRGB"
-            }
-        },
-        {
-            "name": "envmap",
-            "type": "ImageTexture",
-            "param": {
-                "fn": "textures/spruit_sunrise_2k.hdr",
-                "color_space": "LINEAR"
             }
         }
     ],
     "materials": [
         {
             "type": "MatteMaterial",
-            "name": "matte2",
+            "name": "matte_whitte",
             "param": {
-                "diffuse": "matte2_constant"
+                "diffuse": "matte_whitte_constant"
             }
         },
         {
             "type": "MatteMaterial",
-            "name": "matte2.001",
+            "name": "matte_red",
             "param": {
-                "diffuse": "matte2.001_constant"
+                "diffuse": "matte_red_constant"
             }
         },
         {
             "type": "MatteMaterial",
-            "name": "matte2.005",
+            "name": "matte_green",
             "param": {
-                "diffuse": "matte2.005_constant"
-            }
-        },
-        {
-            "type": "MatteMaterial",
-            "name": "matte2.006",
-            "param": {
-                "diffuse": "matte2.006_constant"
+                "diffuse": "matte_green_constant"
             }
         }
     ],
     "shapes": [
         {
-            "name": "Cube",
+            "name": "Plane",
             "type": "model",
             "param": {
-                "fn": "meshes/Cube.ply",
+                "fn": "meshes/Plane.ply",
                 "subdiv_level": 0,
-                "material": "matte2",
+                "material": "matte_whitte",
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                -4.371138834797027e-08,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                -4.371138834797027e-08,
+                                -1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.9999999999999999,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Plane.001",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Plane.001.ply",
+                "subdiv_level": 0,
+                "material": "matte_whitte",
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                6.123233995736766e-17,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                -6.123233995736766e-17,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                2.0,
+                                -1.2246467991473532e-16,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Plane.002",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Plane.002.ply",
+                "subdiv_level": 0,
+                "material": "matte_whitte",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -133,60 +185,20 @@
             }
         },
         {
-            "name": "WusonOBJ",
+            "name": "Plane.003",
             "type": "model",
             "param": {
-                "fn": "meshes/WusonOBJ.ply",
+                "fn": "meshes/Plane.003.ply",
                 "subdiv_level": 0,
-                "material": "matte2",
+                "material": "matte_red",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
                         "matrix4x4": [
                             [
-                                0.29500827193260193,
-                                -0.6520983576774597,
-                                0.6983823180198669,
-                                0.0
-                            ],
-                            [
-                                -0.6884758472442627,
-                                0.3617504239082337,
-                                0.6285997629165649,
-                                0.0
-                            ],
-                            [
-                                0.6625489592552185,
-                                0.6662614941596985,
-                                0.3422346115112304,
-                                0.0
-                            ],
-                            [
-                                2.0051560401916504,
-                                2.9261479377746586,
-                                4.5013813972473145,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Cube.001",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Cube.001.ply",
-                "subdiv_level": 0,
-                "material": "matte2.001",
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                1.0,
-                                0.0,
-                                0.0,
+                                -4.371138828673793e-08,
+                                -1.0,
+                                6.123233995736766e-17,
                                 0.0
                             ],
                             [
@@ -196,15 +208,15 @@
                                 0.0
                             ],
                             [
-                                0.0,
                                 1.0,
-                                -6.123233995736766e-17,
+                                -4.371138828673793e-08,
+                                2.6765505875820354e-24,
                                 0.0
                             ],
                             [
-                                8.050644874572754,
-                                0.0,
-                                0.0,
+                                -1.0,
+                                1.0,
+                                -6.123233995736766e-17,
                                 1.0
                             ]
                         ]
@@ -213,20 +225,20 @@
             }
         },
         {
-            "name": "Cube.002",
+            "name": "Plane.004",
             "type": "model",
             "param": {
-                "fn": "meshes/Cube.002.ply",
+                "fn": "meshes/Plane.004.ply",
                 "subdiv_level": 0,
-                "material": "matte2.005",
+                "material": "matte_green",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
                         "matrix4x4": [
                             [
-                                1.0,
-                                0.0,
-                                0.0,
+                                -4.371138828673793e-08,
+                                -1.0,
+                                6.123233995736766e-17,
                                 0.0
                             ],
                             [
@@ -236,55 +248,15 @@
                                 0.0
                             ],
                             [
-                                0.0,
+                                1.0,
+                                -4.371138828673793e-08,
+                                2.6765505875820354e-24,
+                                0.0
+                            ],
+                            [
+                                1.0,
                                 1.0,
                                 -6.123233995736766e-17,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                4.562916684671688e-16,
-                                7.451808452606201,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Cube.003",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Cube.003.ply",
-                "subdiv_level": 0,
-                "material": "matte2.006",
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                1.0,
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                6.123233995736766e-17,
-                                1.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                1.0,
-                                -6.123233995736766e-17,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                7.056504249572754,
-                                -4.320862671204484e-16,
                                 1.0
                             ]
                         ]
@@ -296,8 +268,8 @@
             "name": "light_Area",
             "type": "quad",
             "param": {
-                "width": 0.9647223949432373,
-                "height": 0.9647223949432373,
+                "width": 1.0,
+                "height": 1.0,
                 "emission": [
                     1.0,
                     1.0,
@@ -309,27 +281,27 @@
                     "param": {
                         "matrix4x4": [
                             [
-                                2.8945822715759277,
-                                -1.5847373008728027,
-                                9.70371731501647e-17,
+                                1.0,
+                                0.0,
+                                0.0,
                                 0.0
                             ],
                             [
-                                -0.18763823807239532,
-                                -0.3427282869815826,
-                                0.9205048680305481,
+                                0.0,
+                                6.123233995736766e-17,
+                                1.0,
                                 0.0
                             ],
                             [
-                                0.442048043012619,
-                                0.8074173331260681,
-                                0.39073109626770014,
+                                0.0,
+                                1.0,
+                                -6.123233995736766e-17,
                                 0.0
                             ],
                             [
-                                4.239302635192871,
-                                1.8070187568664553,
-                                3.3952887058258057,
+                                0.0,
+                                1.899999976158142,
+                                -1.163414444591058e-16,
                                 1.0
                             ]
                         ]
@@ -339,31 +311,7 @@
             }
         }
     ],
-    "lights": [
-        {
-            "type": "Envmap",
-            "param": {
-                "transform": {
-                    "type": "yaw_pitch",
-                    "param": {
-                        "yaw": 0,
-                        "pitch": 0,
-                        "position": [
-                            0,
-                            0,
-                            0
-                        ]
-                    }
-                },
-                "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "key": "envmap"
-            }
-        }
-    ],
+    "lights": [],
     "camera": {
         "type": "ThinLensCamera",
         "param": {
@@ -372,12 +320,12 @@
             "transform": {
                 "type": "yaw_pitch",
                 "param": {
-                    "yaw": -8.79999950494515,
-                    "pitch": -6.100005292314364,
+                    "yaw": 0.0,
+                    "pitch": 2.5044781608585254e-06,
                     "position": [
-                        -1.1715672016143799,
-                        0.5559291839599609,
-                        -18.82392120361328
+                        0.0,
+                        1.0,
+                        -5.381541728973389
                     ]
                 }
             },

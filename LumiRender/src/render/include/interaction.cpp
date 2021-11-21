@@ -10,8 +10,10 @@
 
 namespace luminous {
     inline namespace render {
-        Spectrum SurfaceInteraction::Le(float3 w,const SceneData *scene_data) const {
-            return has_emission() ? light->as<AreaLight>()->radiance(LightEvalContext{*this}, w, scene_data) : 0.f;
+        Spectrum SurfaceInteraction::Le(float3 w, const SceneData *scene_data) const {
+            return has_emission() ?
+                   light->as<AreaLight>()->radiance(LightEvalContext{*this}, w, scene_data) :
+                   0.f;
         }
 
         SurfaceInteraction HitContext::compute_surface_interaction(Ray ray) const {
