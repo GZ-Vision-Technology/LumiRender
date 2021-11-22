@@ -1,76 +1,15 @@
 {
-    "textures": [
-        {
-            "type": "ConstantTexture",
-            "name": "matte_whitte_constant",
-            "param": {
-                "val": [
-                    0.7250000238418579,
-                    0.7099999785423279,
-                    0.6800000071525574,
-                    1.0
-                ],
-                "color_space": "SRGB"
-            }
-        },
-        {
-            "type": "ConstantTexture",
-            "name": "matte_red_constant",
-            "param": {
-                "val": [
-                    0.6299999952316284,
-                    0.06499999761581421,
-                    0.05000000074505806,
-                    1.0
-                ],
-                "color_space": "SRGB"
-            }
-        },
-        {
-            "type": "ConstantTexture",
-            "name": "matte_green_constant",
-            "param": {
-                "val": [
-                    0.14000000059604645,
-                    0.44999998807907104,
-                    0.09099999815225601,
-                    1.0
-                ],
-                "color_space": "SRGB"
-            }
-        }
-    ],
-    "materials": [
-        {
-            "type": "MatteMaterial",
-            "name": "matte_whitte",
-            "param": {
-                "diffuse": "matte_whitte_constant"
-            }
-        },
-        {
-            "type": "MatteMaterial",
-            "name": "matte_red",
-            "param": {
-                "diffuse": "matte_red_constant"
-            }
-        },
-        {
-            "type": "MatteMaterial",
-            "name": "matte_green",
-            "param": {
-                "diffuse": "matte_green_constant"
-            }
-        }
-    ],
+    "textures": [],
+    "materials": [],
     "shapes": [
         {
-            "name": "Plane",
+            "name": "mesh",
             "type": "model",
             "param": {
-                "fn": "meshes/Plane.ply",
+                "fn": "meshes/meshes.gltf",
+                "smooth": false,
+                "swap_handed": true,
                 "subdiv_level": 0,
-                "material": "matte_whitte",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -84,259 +23,19 @@
                             [
                                 0.0,
                                 1.0,
-                                -4.371138834797027e-08,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                -4.371138834797027e-08,
-                                -1.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                1.0,
-                                0.9999999999999999,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Plane.001",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Plane.001.ply",
-                "subdiv_level": 0,
-                "material": "matte_whitte",
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                1.0,
-                                0.0,
                                 0.0,
                                 0.0
                             ],
                             [
                                 0.0,
-                                6.123233995736766e-17,
-                                1.0,
-                                0.0
-                            ],
-                            [
                                 0.0,
                                 1.0,
-                                -6.123233995736766e-17,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                2.0,
-                                -1.2246467991473532e-16,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Plane.002",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Plane.002.ply",
-                "subdiv_level": 0,
-                "material": "matte_whitte",
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                1.0,
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                6.123233995736766e-17,
-                                1.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                1.0,
-                                -6.123233995736766e-17,
                                 0.0
                             ],
                             [
                                 0.0,
                                 0.0,
                                 0.0,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Plane.003",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Plane.003.ply",
-                "subdiv_level": 0,
-                "material": "matte_red",
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                -4.371138828673793e-08,
-                                -1.0,
-                                6.123233995736766e-17,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                6.123233995736766e-17,
-                                1.0,
-                                0.0
-                            ],
-                            [
-                                1.0,
-                                -4.371138828673793e-08,
-                                2.6765505875820354e-24,
-                                0.0
-                            ],
-                            [
-                                -1.0,
-                                1.0,
-                                -6.123233995736766e-17,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Plane.004",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Plane.004.ply",
-                "subdiv_level": 0,
-                "material": "matte_green",
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                -4.371138828673793e-08,
-                                -1.0,
-                                6.123233995736766e-17,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                6.123233995736766e-17,
-                                1.0,
-                                0.0
-                            ],
-                            [
-                                1.0,
-                                -4.371138828673793e-08,
-                                2.6765505875820354e-24,
-                                0.0
-                            ],
-                            [
-                                1.0,
-                                1.0,
-                                -6.123233995736766e-17,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Cube",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Cube.ply",
-                "subdiv_level": 0,
-                "material": "matte_whitte",
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                0.2897777557373047,
-                                -4.754429065187201e-18,
-                                -0.07764571905136108,
-                                0.0
-                            ],
-                            [
-                                0.07764571905136108,
-                                1.7743770051389686e-17,
-                                0.2897777557373047,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.30000001192092896,
-                                -1.8369702717156673e-17,
-                                0.0
-                            ],
-                            [
-                                0.4000000059604645,
-                                0.30000001192092896,
-                                -0.3499999940395355,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Cube.001",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Cube.001.ply",
-                "subdiv_level": 0,
-                "material": "matte_whitte",
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                0.2819077968597412,
-                                6.282808120100845e-18,
-                                0.10260604321956635,
-                                0.0
-                            ],
-                            [
-                                -0.10260604321956635,
-                                1.7261874053948218e-17,
-                                0.2819077968597412,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.6000000238418579,
-                                -3.6739405434313346e-17,
-                                0.0
-                            ],
-                            [
-                                -0.4000000059604645,
-                                0.6000000238418579,
-                                0.2000000029802322,
                                 1.0
                             ]
                         ]
@@ -348,14 +47,14 @@
             "name": "light_Area",
             "type": "quad",
             "param": {
-                "width": 0.6000000238418579,
-                "height": 0.6000000238418579,
+                "width": 50.0,
+                "height": 50.0,
                 "emission": [
-                    0.17000000178813934,
-                    0.11999999731779099,
-                    0.03999999910593033
+                    1.0,
+                    1.0,
+                    1.0
                 ],
-                "scale": 100.0,
+                "scale": 7.0,
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -380,8 +79,8 @@
                             ],
                             [
                                 0.0,
-                                1.9800000190734863,
-                                -1.2124003428350216e-16,
+                                106.19914245605469,
+                                -6.5028219940500575e-15,
                                 1.0
                             ]
                         ]
@@ -395,7 +94,7 @@
     "camera": {
         "type": "ThinLensCamera",
         "param": {
-            "fov_y": 26.99146642997552,
+            "fov_y": 39.597755335771296,
             "velocity": 20,
             "transform": {
                 "type": "yaw_pitch",
@@ -403,9 +102,9 @@
                     "yaw": 0.0,
                     "pitch": 2.5044781608585254e-06,
                     "position": [
-                        0.0,
-                        1.0,
-                        -5.381541728973389
+                        -9.957763671875,
+                        42.956077575683594,
+                        -123.66873168945312
                     ]
                 }
             },
