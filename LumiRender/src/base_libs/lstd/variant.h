@@ -250,7 +250,7 @@ namespace luminous {
         GEN_CASE_N(13)                                                                                                    \
         GEN_CASE_N(14)                                                                                                    \
         GEN_CASE_N(15)
-#define GEN_DISPATCH_BODY()                                                                                               \
+#define GEN_DISPATCH_BODY()                                                                                                \
         using Ret = std::invoke_result_t<Visitor, typename FirstOf<Ts...>::type &>;                                        \
         static_assert(nTypes <= 16, "too many types");                                                                     \
         if constexpr (nTypes <= 2) {                                                                                       \
@@ -262,21 +262,21 @@ namespace luminous {
         } else if constexpr (nTypes <= 16) {                                                                               \
             switch (index) { GEN_CASES_16(); }                                                                            \
         } else  {                                                                                                          \
-            assert(0);                                                                                                     \
+            LM_ASSERT(0, "function %s error !", func_name);                                                                \
         }                                                                                                                  \
         if constexpr (std::is_same_v<void, Ret>) {                                                                         \
             return;                                                                                                        \
         } else {                                                                                                           \
-            assert(0);                                                                                                     \
+            LM_ASSERT(0, "function %s error !", func_name);                                                                                                    \
         }
 
             template<class Visitor>
-            LM_XPU decltype(auto) dispatch(Visitor &&visitor) {
+            LM_XPU decltype(auto) dispatch(Visitor &&visitor, const char *func_name = nullptr) {
                 GEN_DISPATCH_BODY()
             }
 
             template<class Visitor>
-            LM_XPU decltype(auto) dispatch(Visitor &&visitor) const {
+            LM_XPU decltype(auto) dispatch(Visitor &&visitor, const char *func_name = nullptr) const {
                 GEN_DISPATCH_BODY()
             }
 
@@ -299,11 +299,11 @@ namespace luminous {
 #define LUMINOUS_VAR_DISPATCH(method, ...)                                                                                 \
         return this->dispatch([&](auto &&self)-> decltype(auto) {                                                          \
             return self.method(__VA_ARGS__);                                                                               \
-        });
+        }, #method);
 #define LUMINOUS_VAR_PTR_DISPATCH(method, ...)                                                                             \
         return this->dispatch([&](auto &&self)-> decltype(auto) {                                                          \
             return self->method(__VA_ARGS__);                                                                              \
-        });
+        }, #method);
 
         };
 

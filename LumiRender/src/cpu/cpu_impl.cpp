@@ -64,7 +64,6 @@ namespace luminous {
         }
 
         DTexture CPUDevice::allocate_texture(PixelFormat pixel_format, uint2 resolution) {
-            DCHECK(0)
             return DTexture(std::make_unique<CPUTexture>(pixel_format, resolution));
         }
 
