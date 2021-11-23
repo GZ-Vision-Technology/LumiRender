@@ -19,7 +19,6 @@ namespace luminous {
             return 2 * lerp(x, a, b) / (a + b);
         }
 
-
         ND_XPU_INLINE float sample_linear(float u, float a, float b) {
             assert(a > 0 && b > 0);
             if (u == 0 && a == 0)
@@ -27,6 +26,7 @@ namespace luminous {
             float x = u * (a + b) / (a + std::sqrt(lerp(u, sqr(a), sqr(b))));
             return std::min(x, one_minus_epsilon);
         }
+
 
         ND_XPU_INLINE float fast_exp(float x) {
 #ifdef IS_GPU_CODE
@@ -68,6 +68,14 @@ namespace luminous {
                 *uRemapped = std::min(float(u / p), one_minus_epsilon);
 
             return offset;
+        }
+
+        ND_XPU_INLINE float sample_tent(float u, float r) {
+            const float a[] = {0.5f, 0.5f};
+            if (sample_discrete(BufferView{a, 2}, u, nullptr, &u) == 0)
+                return -r + r * sample_linear(u, 0, 1);
+            else
+                return r * sample_linear(u, 1, 0);
         }
 
         LM_XPU_INLINE float gaussian(float x, float mu = 0, float sigma = 1) {
