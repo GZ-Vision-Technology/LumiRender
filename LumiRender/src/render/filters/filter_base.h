@@ -74,7 +74,7 @@ namespace luminous {
                 _init_distribution();
             }
 
-            LM_ND_XPU FilterSample sample(float2 u) {
+            LM_ND_XPU FilterSample sample(float2 u) const {
                 float PDF;
                 int2 pi;
                 float2 p = _distribution2d.sample_continuous(u, &PDF, &pi);
@@ -91,6 +91,10 @@ namespace luminous {
             LM_ND_XPU float2 radius() {
                 return _radius;
             }
+
+            GEN_STRING_FUNC({
+                return string_printf("filter radius:%s", _radius.to_string().c_str());
+            })
         };
     }
 }

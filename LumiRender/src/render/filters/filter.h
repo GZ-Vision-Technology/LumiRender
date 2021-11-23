@@ -7,33 +7,32 @@
 #include "base_libs/math/common.h"
 #include "base_libs/lstd/lstd.h"
 #include "render/include/config.h"
-#include "filter_base.h"
+#include "box.h"
+#include "triangle.h"
+#include "render/include/creator.h"
 
 namespace luminous {
     inline namespace render {
 
-        class BoxFilter;
-
-        class GaussianFilter;
-
-        class TriangleFilter;
-
         using lstd::Variant;
 
-        class FilterHandle : public Variant<BoxFilter *, GaussianFilter *, TriangleFilter *> {
-            using Variant::Variant;
+        class Filter : BASE_CLASS(Variant<BoxFilter, TriangleFilter>) {
+        private:
+            using BaseBinder::BaseBinder;
         public:
-            CPU_ONLY(LM_NODISCARD std::string to_string() const;)
+            GEN_BASE_NAME(Sampler)
 
-            LM_ND_XPU float2 radius() const;
+            LM_ND_XPU FilterSample sample(const float2 &u) const {
+                LUMINOUS_VAR_DISPATCH(sample, u);
+            }
 
-            LM_ND_XPU float integral() const;
+            LM_ND_XPU float integral() const {
+                LUMINOUS_VAR_DISPATCH(integral);
+            }
 
-            LM_ND_XPU float evaluate(float2 p) const;
-
-            LM_ND_XPU FilterSample sample(float2 u) const;
-
-            static FilterHandle create(const FilterConfig &config);
+            CPU_ONLY(static Filter create(const FilterConfig &config) {
+                return detail::create<Filter>(config);
+            })
         };
     }
 }

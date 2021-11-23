@@ -17,6 +17,8 @@ for root,dirs,files in os.walk(os.path.join(os.getcwd(), "LumiRender/src")):
             continue
         if "gui" in fn:
             continue
+        if "tests" in fn:
+            continue
         if "stats.py" in fn:
             continue
         if "jitify" in fn:

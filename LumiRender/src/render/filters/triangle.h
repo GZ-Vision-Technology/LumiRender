@@ -12,7 +12,11 @@
 namespace luminous {
     inline namespace render {
         class TriangleFilter : public FilterBase {
+        private:
+            FilterSampler _sampler;
         public:
+            CPU_ONLY(explicit TriangleFilter(const FilterConfig &config) : TriangleFilter(config.radius) {})
+
             explicit TriangleFilter(float2 r) : FilterBase(r) {}
 
             LM_ND_XPU float evaluate(const float2 &p) const {
@@ -20,14 +24,16 @@ namespace luminous {
                        std::max(0.f, _radius.y - std::abs(p.y));
             }
 
-            // FilterSample sample(const float2 &u) const {
-            //     auto p = make_float2(lerp(u[0], -_radius.x, _radius.x), lerp(u[1], -_radius.y, _radius.y));
-            //     return {p, 1.f};
-            // }
+            LM_ND_XPU FilterSample sample(const float2 &u) const {
+                return _sampler.sample(u);
+            }
 
-            // LM_ND_XPU Float integral() const { return 4 * _radius.x * _radius.y; }
+            LM_ND_XPU float integral() const { return sqr(_radius.x * _radius.y); }
 
-            CPU_ONLY(LM_ND_XPU std::string to_string() const;)
+            GEN_STRING_FUNC({
+                                return string_printf("filter type:%s, %s", type_name(this),
+                                                     FilterBase::to_string().c_str());
+                            })
 
         };
     }

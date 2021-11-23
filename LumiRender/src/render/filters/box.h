@@ -13,7 +13,9 @@ namespace luminous {
     inline namespace render {
         class BoxFilter : public FilterBase {
         public:
-            explicit BoxFilter(float2 r):FilterBase(r) {}
+            CPU_ONLY(explicit BoxFilter(const FilterConfig &config) : BoxFilter(config.radius) {})
+
+            explicit BoxFilter(float2 r) : FilterBase(r) {}
 
             LM_ND_XPU float evaluate(const float2 &p) const {
                 return (std::abs(p.x) <= _radius.x && std::abs(p.y) <= _radius.y) ? 1 : 0;
@@ -26,7 +28,9 @@ namespace luminous {
 
             LM_ND_XPU float integral() const { return 4 * _radius.x * _radius.y; }
 
-            CPU_ONLY(LM_ND_XPU std::string to_string() const;)
+            GEN_STRING_FUNC({
+                return string_printf("filter type:%s, %s", type_name(this), FilterBase::to_string().c_str());
+            })
 
         };
     }

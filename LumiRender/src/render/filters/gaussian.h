@@ -4,3 +4,11 @@
 
 
 #pragma once
+
+#include "filter_base.h"
+
+namespace luminous {
+    inline namespace render {
+
+    }
+}
