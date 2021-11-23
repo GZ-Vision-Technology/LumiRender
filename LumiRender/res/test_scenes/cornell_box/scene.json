@@ -242,6 +242,12 @@
 					"resolution" : [768, 768],
 					"fb_state": 0
 				}
+			},
+			"filter": {
+				"type": "BoxFilter",
+				"param": {
+					"radius": [1,1]
+				}
 			}
 		}
 	},

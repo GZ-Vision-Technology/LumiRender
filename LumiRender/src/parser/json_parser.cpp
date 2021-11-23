@@ -125,10 +125,23 @@ namespace luminous {
 
         FilmConfig parse_film(const ParameterSet &ps) {
             FilmConfig fc;
-            fc.set_full_type("RGBFilm");
             ParameterSet param(ps["param"]);
             fc.resolution = param["resolution"].as_uint2(make_uint2(500, 500));
             fc.state = param["fb_state"].as_int(0);
+            return fc;
+        }
+
+        //"filter": {
+        //    "type": "BoxFilter",
+        //    "param": {
+        //        "radius": [1,1]
+        //    }
+        //}
+        FilterConfig parse_filter(const ParameterSet &ps) {
+            FilterConfig fc;
+            std::string type = ps["type"].as_string("BoxFilter");
+            fc.set_full_type(type);
+            fc.radius = ps["radius"].as_float2(make_float2(1.f, 1.f));
             return fc;
         }
 
@@ -160,6 +173,7 @@ namespace luminous {
                 ret.lens_radius = param["lens_radius"].as_float(0);
             }
             ret.film_config = parse_film(param["film"]);
+            ret.filter_config = parse_filter(param["filter"]);
             return ret;
         }
 

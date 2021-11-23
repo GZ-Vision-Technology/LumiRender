@@ -222,6 +222,7 @@ namespace luminous {
             float focal_distance{};
             float lens_radius{};
             FilmConfig film_config;
+            FilterConfig filter_config;
         };
 
         struct LightSamplerConfig : Config {
