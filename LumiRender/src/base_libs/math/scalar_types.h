@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <type_traits>
+#include "constants.h"
 #include "../header.h"
 
 namespace luminous {

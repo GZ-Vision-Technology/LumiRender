@@ -7,6 +7,7 @@
 
 #include <typeinfo>
 #include <variant>
+#include "../math/vector_types.h"
 #include "../header.h"
 
 namespace luminous {
@@ -174,7 +175,7 @@ namespace luminous {
 
             LM_XPU array() = default;
 
-            LM_ND_XPU void fill(const T &v) { DCHECK(!"should never be called"); }
+            LM_XPU void fill(const T &v) { DCHECK(!"should never be called"); }
 
             LM_ND_XPU bool operator==(const array<T, 0> &a) const { return true; }
 
@@ -260,6 +261,66 @@ namespace luminous {
 
         };
 
-    } // lstd
+        template<typename T, int Row, int Col = Row>
+        class Array2D {
+        private:
+            T value[Row][Col]{};
+        public:
+            using value_type = T;
+            using iterator = value_type *;
+            using const_iterator = const value_type *;
+            using size_t = std::size_t;
+            static constexpr int row = Row;
+            static constexpr int col = Col;
+        public:
+            Array2D() = default;
 
+            LM_XPU void fill(const T *array) {
+                std::memcpy(value, array, size() * sizeof(T));
+            }
+
+            LM_XPU void fill(const T array[row][col]) {
+                for (int i = 0; i < row; ++i) {
+                    for (int j = 0; j < col; ++j) {
+                        value[i][j] = array[i][j];
+                    }
+                }
+            }
+
+            LM_ND_XPU static constexpr int size() { return row * col; }
+
+            LM_ND_XPU bool operator==(const Array2D<T, Row, Col> &array) const {
+                for (int i = 0; i < row; ++i) {
+                    for (int j = 0; j < col; ++j) {
+                        if (value[i][j] != array[i][j]) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            LM_ND_XPU bool operator!=(const Array2D<T, Row, Col> &array) const { return !(*this == array); }
+
+            LM_ND_XPU iterator begin() { return value; }
+
+            LM_ND_XPU iterator end() { return value + size(); }
+
+            LM_ND_XPU const_iterator begin() const { return value; }
+
+            LM_ND_XPU const_iterator end() const { return value + size(); }
+
+            LM_ND_XPU const_iterator cbegin() const { return value; }
+
+            LM_ND_XPU const_iterator cend() const { return value + size(); }
+
+            LM_ND_XPU value_type operator()(int x, int y) const { return value[y][x]; }
+
+            LM_ND_XPU value_type operator()(int2 coord) const { return (*this)(coord.x, coord.y); }
+
+            LM_ND_XPU value_type& operator()(int x, int y) { return value[y][x]; }
+
+            LM_ND_XPU value_type& operator()(int2 coord) { return (*this)(coord.x, coord.y); }
+        };
+    } // lstd
 }

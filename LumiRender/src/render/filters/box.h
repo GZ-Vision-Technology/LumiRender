@@ -19,7 +19,7 @@ namespace luminous {
                 return (std::abs(p.x) <= _radius.x && std::abs(p.y) <= _radius.y) ? 1 : 0;
             }
 
-            FilterSample sample(const float2 &u) const {
+            LM_ND_XPU FilterSample sample(const float2 &u) const {
                 auto p = make_float2(lerp(u[0], -_radius.x, _radius.x), lerp(u[1], -_radius.y, _radius.y));
                 return {p, 1.f};
             }
