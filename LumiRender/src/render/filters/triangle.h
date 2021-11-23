@@ -6,14 +6,12 @@
 #pragma once
 
 #include "filter_base.h"
-#include "base_libs/math/rng.h"
+#include "base_libs/sampling/sampling.h"
 #include "render/include/config.h"
 
 namespace luminous {
     inline namespace render {
         class TriangleFilter : public FilterBase {
-        private:
-            FilterSampler _sampler;
         public:
             CPU_ONLY(explicit TriangleFilter(const FilterConfig &config) : TriangleFilter(config.radius) {})
 
@@ -25,7 +23,7 @@ namespace luminous {
             }
 
             LM_ND_XPU FilterSample sample(const float2 &u) const {
-                return _sampler.sample(u);
+                return {make_float2(sample_tent(u.x, _radius.x), sample_tent(u.y, _radius.y)),1.f};
             }
 
             LM_ND_XPU float integral() const { return sqr(_radius.x * _radius.y); }

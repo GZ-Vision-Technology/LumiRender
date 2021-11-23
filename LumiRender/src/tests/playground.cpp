@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "render/filters/filter_base.h"
+#include "base_libs/sampling/sampling.h"
 
 using namespace std;
 
@@ -19,9 +20,15 @@ int main() {
         a[i] = 1.f;
     }
 
-    FilterSampler filter_sampler(a);
+//    FilterSampler filter_sampler(a);
 
+    float u = 1;
 
+    float c = sample_tent(u, 1);
+
+//    c = sample_linear(u, 0,1);
+
+    cout << c << endl;
 
     return 0;
 }
