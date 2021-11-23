@@ -304,15 +304,15 @@ namespace luminous {
 
             LM_ND_XPU iterator begin() { return value; }
 
-            LM_ND_XPU iterator end() { return value + size(); }
+            LM_ND_XPU iterator end() { return begin() + size(); }
 
-            LM_ND_XPU const_iterator begin() const { return value; }
+            LM_ND_XPU const_iterator begin() const { return reinterpret_cast<const_iterator>(value); }
 
-            LM_ND_XPU const_iterator end() const { return value + size(); }
+            LM_ND_XPU const_iterator end() const { return begin() + size(); }
 
-            LM_ND_XPU const_iterator cbegin() const { return value; }
+            LM_ND_XPU const_iterator cbegin() const { return reinterpret_cast<const_iterator>(value); }
 
-            LM_ND_XPU const_iterator cend() const { return value + size(); }
+            LM_ND_XPU const_iterator cend() const { return cbegin() + size(); }
 
             LM_ND_XPU value_type operator()(int x, int y) const { return value[y][x]; }
 
@@ -321,6 +321,10 @@ namespace luminous {
             LM_ND_XPU value_type& operator()(int x, int y) { return value[y][x]; }
 
             LM_ND_XPU value_type& operator()(int2 coord) { return (*this)(coord.x, coord.y); }
+
+            LM_ND_XPU const_iterator operator[](int y) const { return value[y]; }
+
+            LM_ND_XPU iterator operator[](int y) { return value[y]; }
         };
     } // lstd
 }
