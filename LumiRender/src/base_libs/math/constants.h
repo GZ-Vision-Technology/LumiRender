@@ -33,6 +33,7 @@ namespace luminous {
         constexpr uint32_t invalid_uint32 = uint32_t(-1);
         constexpr uint64_t invalid_uint64 = uint64_t(-1);
 #ifdef __CUDACC__
+        // todo fix compile error: identifier "luminous::constant::one_minus_epsilon" is undefined in device code
         #define one_minus_epsilon 0x1.fffffep-1
 #else
         constexpr float one_minus_epsilon = float_one_minus_epsilon;
