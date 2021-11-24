@@ -31,7 +31,7 @@ GLOBAL __raygen__rg() {
     Sampler sampler = *params.sampler;
     auto frame_index = params.frame_index;
     sampler.start_pixel_sample(pixel, frame_index, 0);
-    auto ss = sampler.sensor_sample(pixel);
+    auto ss = sampler.sensor_sample(pixel, camera->filter());
     bool debug = pixel.x == 383 && pixel.y == 383;
 
     auto [weight, ray] = camera->generate_ray(ss);

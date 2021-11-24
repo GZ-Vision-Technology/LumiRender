@@ -17,9 +17,11 @@ namespace luminous {
 
         SensorSample Sampler::sensor_sample(uint2 p_raster, const Filter *filter) {
             SensorSample ss;
-            ss.p_film = make_float2(p_raster) + next_2d();
+            FilterSample fs = filter->sample(next_2d());
+            ss.p_film = make_float2(p_raster) + make_float2(0.5f) + fs.p;
             ss.p_lens = next_2d();
             ss.time = next_1d();
+            ss.weight = fs.weight;
             return ss;
         }
 

@@ -28,16 +28,19 @@ namespace luminous {
         constexpr auto sqrtOf2 = 1.41421356237309504880168872420969808f;
         constexpr auto invSqrtOf2 = 0.707106781186547524400844362104849039f;
         constexpr float float_one_minus_epsilon = 0x1.fffffep-1;
-        constexpr float one_minus_epsilon = float_one_minus_epsilon;
         constexpr float ray_t_max = 1e16f;
         constexpr float shadow_epsilon = 0.0001f;
         constexpr uint32_t invalid_uint32 = uint32_t(-1);
         constexpr uint64_t invalid_uint64 = uint64_t(-1);
-
+#ifdef __CUDACC__
+        #define one_minus_epsilon 0x1.fffffep-1
+#else
+        constexpr float one_minus_epsilon = float_one_minus_epsilon;
+#endif
         using FrameBufferType = uint32_t;
 
         static struct NegInfTy {
-#ifdef __CUDA_ARCH__
+#ifdef __CUDACC__
             __device__ operator          double   ( ) const { return -CUDART_INF; }
             __device__ operator          float    ( ) const { return -CUDART_INF_F; }
 #else

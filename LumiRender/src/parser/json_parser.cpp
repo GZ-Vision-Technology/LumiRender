@@ -141,7 +141,8 @@ namespace luminous {
             FilterConfig fc;
             std::string type = ps["type"].as_string("BoxFilter");
             fc.set_full_type(type);
-            fc.radius = ps["radius"].as_float2(make_float2(1.f, 1.f));
+            ParameterSet param(ps["param"]);
+            fc.radius = param["radius"].as_float2(make_float2(1.f, 1.f));
             return fc;
         }
 

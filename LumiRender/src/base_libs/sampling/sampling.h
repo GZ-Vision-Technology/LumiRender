@@ -5,8 +5,9 @@
 
 #pragma once
 
-#include <assert.h>
+#include <cassert>
 #include "core/backend/buffer_view.h"
+#include "base_libs/math/constants.h"
 
 namespace luminous {
 
@@ -24,7 +25,7 @@ namespace luminous {
             if (u == 0 && a == 0)
                 return 0;
             float x = u * (a + b) / (a + std::sqrt(lerp(u, sqr(a), sqr(b))));
-            return std::min(x, one_minus_epsilon);
+            return std::min(float(x), float(one_minus_epsilon));
         }
 
 
@@ -65,7 +66,7 @@ namespace luminous {
             if (pmf != nullptr)
                 *pmf = p;
             if (uRemapped != nullptr)
-                *uRemapped = std::min(float(u / p), one_minus_epsilon);
+                *uRemapped = std::min(float(u / p), float(one_minus_epsilon));
 
             return offset;
         }

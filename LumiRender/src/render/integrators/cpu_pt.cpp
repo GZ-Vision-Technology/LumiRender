@@ -36,7 +36,7 @@ namespace luminous {
                 Film *film = _camera->film();
                 Sampler sampler = *_sampler.data();
                 sampler.start_pixel_sample(pixel, _frame_index, 0);
-                auto ss = sampler.sensor_sample(pixel);
+                auto ss = sampler.sensor_sample(pixel, _camera->filter());
                 auto [weight, ray] = _camera->generate_ray(ss);
                 uint spp = sampler.spp();
                 PixelInfo pixel_info;

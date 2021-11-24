@@ -228,7 +228,7 @@
 			"fov_y" : 35,
 			"velocity" : 20,
 			"focal_distance" : 3.5,
-			"lens_radius" :0.09,
+			"lens_radius" :0.0,
 			"transform" : {
 				"type" : "yaw_pitch",
 				"param" : {
@@ -244,9 +244,9 @@
 				}
 			},
 			"filter": {
-				"type": "BoxFilter",
+				"type": "TriangleFilter",
 				"param": {
-					"radius": [1,1]
+					"radius": [2,2]
 				}
 			}
 		}
