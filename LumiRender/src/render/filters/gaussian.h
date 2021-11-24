@@ -8,9 +8,13 @@
 #include "filter_base.h"
 #include "base_libs/sampling/sampling.h"
 #include "render/include/config.h"
+#include "filter_sampler.h"
 
 namespace luminous {
     inline namespace render {
+
+        class Filter;
+
         class GaussianFilter : public FilterBase {
         private:
             float _exp_x{};
@@ -19,18 +23,17 @@ namespace luminous {
             FilterSampler _sampler;
         public:
             CPU_ONLY(explicit GaussianFilter(const FilterConfig &config)
-                    : GaussianFilter(config.radius, config.exp_x, config.exp_y, config.sigma) {})
+                    : GaussianFilter(config.radius, config.sigma) {})
 
-            explicit GaussianFilter(float2 r, float exp_x, float exp_y, float sigma)
-                    : FilterBase(r), _exp_x(exp_x), _exp_y(exp_y), _sigma(sigma) {}
+            explicit GaussianFilter(float2 r, float sigma);
 
             LM_ND_XPU float evaluate(const float2 &p) const {
                 return (std::max<float>(0, gaussian(p.x, 0, _sigma) - _exp_x) *
-                        std::max<float>(0, gaussian(p.y, 0, _sigma) - _exp_x));
+                        std::max<float>(0, gaussian(p.y, 0, _sigma) - _exp_y));
             }
 
             LM_ND_XPU FilterSample sample(const float2 &u) const {
-                return {make_float2(sample_tent(u.x, _radius.x), sample_tent(u.y, _radius.y)), 1.f};
+                return _sampler.sample(u);
             }
 
             LM_ND_XPU float integral() const { return sqr(_radius.x * _radius.y); }

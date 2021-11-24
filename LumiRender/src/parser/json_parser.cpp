@@ -143,6 +143,9 @@ namespace luminous {
             fc.set_full_type(type);
             ParameterSet param(ps["param"]);
             fc.radius = param["radius"].as_float2(make_float2(1.f, 1.f));
+            if (type == "GaussianFilter") {
+
+            }
             return fc;
         }
 

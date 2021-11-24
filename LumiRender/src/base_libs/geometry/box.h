@@ -78,6 +78,10 @@ namespace luminous {
                 return length(upper - lower) * 0.5f;
             }
 
+            ND_XPU_INLINE vector_t lerp(vector_t t) const {
+                return lerp(t, lower, upper);
+            }
+
             ND_XPU_INLINE vector_t center() const {
                 return (lower + upper) * 0.5f;
             }
