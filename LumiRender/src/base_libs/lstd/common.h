@@ -163,23 +163,23 @@ namespace luminous {
         };
 
         template<typename T, int N>
-        class array;
+        class Array;
 
         template<typename T>
-        class array<T, 0> {
+        class Array<T, 0> {
         public:
             using value_type = T;
             using iterator = value_type *;
             using const_iterator = const value_type *;
             using size_t = std::size_t;
 
-            LM_XPU array() = default;
+            LM_XPU Array() = default;
 
             LM_XPU void fill(const T &v) { DCHECK(!"should never be called"); }
 
-            LM_ND_XPU bool operator==(const array<T, 0> &a) const { return true; }
+            LM_ND_XPU bool operator==(const Array<T, 0> &a) const { return true; }
 
-            LM_ND_XPU bool operator!=(const array<T, 0> &a) const { return false; }
+            LM_ND_XPU bool operator!=(const Array<T, 0> &a) const { return false; }
 
             LM_ND_XPU iterator begin() { return nullptr; }
 
@@ -209,7 +209,7 @@ namespace luminous {
         };
 
         template<typename T, int N>
-        class array {
+        class Array {
         private:
             T values[N] = {};
         public:
@@ -218,9 +218,9 @@ namespace luminous {
             using const_iterator = const value_type *;
             using size_t = std::size_t;
 
-            array() = default;
+            Array() = default;
 
-            LM_XPU array(std::initializer_list<T> v) {
+            LM_XPU Array(std::initializer_list<T> v) {
                 size_t i = 0;
                 for (const T &val : v)
                     values[i++] = val;
@@ -230,7 +230,7 @@ namespace luminous {
                 for (int i = 0; i < N; ++i) { values[i] = v; }
             }
 
-            LM_ND_XPU bool operator==(const array<T, N> &a) const {
+            LM_ND_XPU bool operator==(const Array<T, N> &a) const {
                 for (int i = 0; i < N; ++i) {
                     if (values[i] != a.values[i]) {
                         return false;
@@ -239,7 +239,7 @@ namespace luminous {
                 return true;
             }
 
-            LM_ND_XPU bool operator!=(const array<T, N> &a) const { return !(*this == a); }
+            LM_ND_XPU bool operator!=(const Array<T, N> &a) const { return !(*this == a); }
 
             LM_ND_XPU iterator begin() { return values; }
 

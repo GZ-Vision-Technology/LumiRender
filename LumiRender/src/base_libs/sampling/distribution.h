@@ -7,7 +7,7 @@
 
 #include "base_libs/math/common.h"
 #include "core/backend/buffer_view.h"
-
+#include "base_libs/lstd/common.h"
 
 namespace luminous {
     inline namespace sampling {
@@ -26,20 +26,49 @@ namespace luminous {
                     : func(move(func)), CDF(move(CDF)), func_integral(integral) {}
         };
 
+        template<int Size>
+        class CDistribution1D {
+        private:
+            Array<float, Size> _func;
+            Array<float, Size + 1> CDF;
+            float _func_integral{};
+        public:
+            CDistribution1D(const float *func, const float *CDF, float integral)
+            : _func_integral(integral) {
+                for (int i = 0; i < Size; ++i) {
+                    _func[i] = func[i];
+                }
+                for (int i = 0; i < Size + 1; ++i) {
+                    this->CDF[i] = CDF[i];
+                }
+            }
+
+            LM_ND_XPU constexpr size_t size() const { return _func.size(); }
+
+            LM_ND_XPU float integral() const { return _func_integral; }
+
+            LM_ND_XPU float func_at(int i) const { return _func[i]; }
+
+            LM_ND_XPU float PMF(int i) const {
+                DCHECK(i >= 0 && i < size());
+                return integral() > 0 ? (func_at(i) / (integral() * size())) : 0;
+            }
+        };
+
         class Distribution1D {
         public:
             using value_type = float;
             using const_value_type = const float;
         private:
             // todo change to indice mode, reduce memory usage
-            BufferView<const_value_type> _func{};
-            BufferView<const_value_type> CDF{};
+            BufferView <const_value_type> _func{};
+            BufferView <const_value_type> CDF{};
             float _func_integral{};
         public:
             LM_XPU Distribution1D() = default;
 
-            LM_XPU Distribution1D(BufferView<const_value_type> func,
-                                  BufferView<const_value_type> CDF, float integral)
+            LM_XPU Distribution1D(BufferView <const_value_type> func,
+                                  BufferView <const_value_type> CDF, float integral)
                     : _func(func), CDF(CDF), _func_integral(integral) {}
 
             LM_ND_XPU size_t size() const { return _func.size(); }
