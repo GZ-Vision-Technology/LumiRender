@@ -142,9 +142,13 @@ namespace luminous {
             std::string type = ps["type"].as_string("BoxFilter");
             fc.set_full_type(type);
             ParameterSet param(ps["param"]);
-            fc.radius = param["radius"].as_float2(make_float2(1.f, 1.f));
-            if (type == "GaussianFilter") {
-
+            if (type == "BoxFilter") {
+                fc.radius = param["radius"].as_float2(make_float2(0.5, 0.5));
+            } else if (type == "TriangleFilter") {
+                fc.radius = param["radius"].as_float2(make_float2(2.f, 2.f));
+            } else if (type == "GaussianFilter") {
+                fc.radius = param["radius"].as_float2(make_float2(1.5f, 1.5f));
+                fc.sigma = 0.5f;
             }
             return fc;
         }

@@ -66,6 +66,7 @@ namespace luminous {
                 model.meshes.push_back(mesh);
                 model.custom_material_name = config.material_name;
                 update_counter(model);
+                return model;
             } else {
                 LUMINOUS_ERROR("unknown shape type !")
             }
