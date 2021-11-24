@@ -15,6 +15,8 @@ namespace luminous {
 
         using lstd::Variant;
 
+        class Filter;
+
         class Sampler : BASE_CLASS(Variant<LCGSampler, PCGSampler>) {
         public:
             REFL_CLASS(Sampler)
@@ -28,7 +30,7 @@ namespace luminous {
 
             LM_XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
-            LM_XPU SensorSample sensor_sample(uint2 p_raster);
+            LM_XPU SensorSample sensor_sample(uint2 p_raster, const Filter *filter = nullptr);
 
             LM_ND_XPU int compute_dimension(int depth) const;
 

@@ -4,6 +4,7 @@
 
 
 #include "sampler.h"
+#include "render/filters/filter.h"
 #include "render/include/creator.h"
 #include "core/refl/factory.h"
 
@@ -14,7 +15,7 @@ namespace luminous {
             LUMINOUS_VAR_DISPATCH(spp)
         }
 
-        SensorSample Sampler::sensor_sample(uint2 p_raster) {
+        SensorSample Sampler::sensor_sample(uint2 p_raster, const Filter *filter) {
             SensorSample ss;
             ss.p_film = make_float2(p_raster) + next_2d();
             ss.p_lens = next_2d();

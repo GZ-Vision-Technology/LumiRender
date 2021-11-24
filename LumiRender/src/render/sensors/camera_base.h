@@ -10,6 +10,7 @@
 #include "render/samplers/sampler_base.h"
 #include "render/include/creator.h"
 #include "core/concepts.h"
+#include "render/filters/filter.h"
 #include "core/refl/reflection.h"
 
 
@@ -43,6 +44,8 @@ namespace luminous {
 
             DEFINE_AND_REGISTER_MEMBER(Film *, _film);
 
+            Filter _filter;
+
             LM_XPU void _update(const float4x4 &m);
 
             LM_XPU void _update_raster();
@@ -56,9 +59,13 @@ namespace luminous {
 
             LM_XPU void update_film_resolution(uint2 res);
 
+            LM_XPU void set_filter(const Filter &filter);
+
             LM_XPU void set_film(Film *film);
 
             LM_ND_XPU Film *film();
+
+            LM_ND_XPU const Filter *filter() const;
 
             LM_ND_XPU uint2 resolution() const;
 

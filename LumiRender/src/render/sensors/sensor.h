@@ -48,6 +48,16 @@ namespace luminous {
 
             LM_ND_XPU std::pair<float, Ray> generate_ray(const SensorSample &ss);
 
+            template<typename ...Args>
+            LM_XPU decltype(auto) set_filter(Args ...args) {
+                LUMINOUS_VAR_PTR_DISPATCH(set_filter, std::forward<Args>(args)...)
+            }
+
+            template<typename ...Args>
+            LM_XPU decltype(auto) filter(Args ...args) const {
+                LUMINOUS_VAR_PTR_DISPATCH(filter, std::forward<Args>(args)...)
+            }
+
             LM_XPU void set_film(Film *film);
 
             LM_XPU void update_film_resolution(uint2 res);

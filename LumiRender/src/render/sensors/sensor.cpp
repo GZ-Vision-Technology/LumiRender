@@ -153,6 +153,8 @@ namespace luminous {
             auto ret = detail::create_ptr<Sensor>(config);
             auto film = Creator<Film>::create_ptr(config.film_config).first;
             ret.first.set_film(film);
+            auto filter = Filter::create(config.filter_config);
+            ret.first.set_filter(filter);
             return ret;
         })
 

@@ -44,6 +44,14 @@ namespace luminous {
             _update_raster();
         }
 
+        void CameraBase::set_filter(const Filter &filter) {
+            _filter = filter;
+        }
+
+        const Filter *CameraBase::filter() const {
+            return &_filter;
+        }
+
         void CameraBase::set_film(Film *film) {
             _film = film;
             _set_resolution(_film->resolution());
