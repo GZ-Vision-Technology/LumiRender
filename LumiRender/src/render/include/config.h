@@ -208,6 +208,11 @@ namespace luminous {
 
         struct FilterConfig : Config {
             float2 radius;
+
+            // for gaussian filter
+            float exp_x{};
+            float exp_y{};
+            float sigma{};
         };
 
         struct FilmConfig : Config {

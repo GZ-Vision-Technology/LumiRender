@@ -81,18 +81,6 @@ namespace luminous {
             }
         }
 
-        LM_XPU_INLINE float gaussian(float x, float mu = 0, float sigma = 1) {
-            return 1 / std::sqrt(2 * Pi * sigma * sigma) *
-                   fast_exp(-sqr(x - mu) / (2 * sigma * sigma));
-        }
-
-        ND_XPU_INLINE float gaussian_integral(float x0, float x1, float mu = 0,
-                                              float sigma = 1) {
-            assert(sigma > 0);
-            float sigmaRoot2 = sigma * float(1.414213562373095);
-            return 0.5f * (std::erf((mu - x0) / sigmaRoot2) - std::erf((mu - x1) / sigmaRoot2));
-        }
-
         ND_XPU_INLINE float2 sample_bilinear(float2 u, BufferView<const float> w) {
             assert(4 == w.size());
             float2 p;
