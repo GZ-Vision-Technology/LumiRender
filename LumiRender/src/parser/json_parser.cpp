@@ -148,7 +148,7 @@ namespace luminous {
                 fc.radius = param["radius"].as_float2(make_float2(2.f, 2.f));
             } else if (type == "GaussianFilter") {
                 fc.radius = param["radius"].as_float2(make_float2(1.5f, 1.5f));
-                fc.sigma = 0.5f;
+                fc.sigma = param["radius"].as_float(0.5f);
             }
             return fc;
         }
