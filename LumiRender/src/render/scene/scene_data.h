@@ -14,7 +14,12 @@
 namespace luminous {
 
     inline namespace sampling {
-        class Distribution1D;
+        class DistribData;
+
+        template<typename T>
+        class Distribution;
+
+        using Distribution1D = Distribution<DistribData>;
 
         class Distribution2D;
     }

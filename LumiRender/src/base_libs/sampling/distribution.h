@@ -26,7 +26,7 @@ namespace luminous {
                     : func(move(func)), CDF(move(CDF)), func_integral(integral) {}
         };
 
-        class DistribData {
+        struct DistribData {
         public:
             using value_type = float;
             using const_value_type = const float;
@@ -36,17 +36,21 @@ namespace luminous {
             BufferView<const_value_type> CDF{};
             float func_integral{};
 
+            DistribData() = default;
+
             DistribData(BufferView<const_value_type> func,
                         BufferView<const_value_type> CDF, float integral)
                     : func(func), CDF(CDF), func_integral(integral) {}
         };
 
         template<int Size>
-        class CDistribData {
+        struct CDistribData {
         public:
             Array<float, Size> func;
             Array<float, Size + 1> CDF;
             float func_integral{};
+
+            CDistribData() = default;
 
             CDistribData(Array<float, Size> func,
                          Array<float, Size + 1> CDF, float integral)
@@ -116,73 +120,6 @@ namespace luminous {
                 DCHECK(i >= 0 && i < size());
                 return integral() > 0 ? (func_at(i) / (integral() * size())) : 0;
             }
-        };
-
-        class Distribution1D {
-        public:
-            using value_type = float;
-            using const_value_type = const float;
-        private:
-            // todo change to indice mode, reduce memory usage
-            BufferView<const_value_type> _func{};
-            BufferView<const_value_type> CDF{};
-            float _func_integral{};
-        public:
-            LM_XPU Distribution1D() = default;
-
-            LM_XPU Distribution1D(BufferView<const_value_type> func,
-                                  BufferView<const_value_type> CDF, float integral)
-                    : _func(func), CDF(CDF), _func_integral(integral) {}
-
-            LM_ND_XPU size_t size() const { return _func.size(); }
-
-            LM_ND_XPU float sample_continuous(float u, float *pdf = nullptr, int *ofs = nullptr) const {
-                auto predicate = [&](int index) {
-                    return CDF[index] <= u;
-                };
-                size_t offset = find_interval((int) CDF.size(), predicate);
-                if (ofs) {
-                    *ofs = offset;
-                }
-                float du = u - CDF[offset];
-                if ((CDF[offset + 1] - CDF[offset]) > 0) {
-                    DCHECK_GT(CDF[offset + 1], CDF[offset]);
-                    du /= (CDF[offset + 1] - CDF[offset]);
-                }
-                DCHECK(!is_nan(du));
-
-                if (pdf) {
-                    *pdf = (_func_integral > 0) ? _func[offset] / _func_integral : 0;
-                }
-                return (offset + du) / size();
-            }
-
-            LM_ND_XPU int sample_discrete(float u, float *p = nullptr, float *u_remapped = nullptr) const {
-                auto predicate = [&](int index) {
-                    return CDF[index] <= u;
-                };
-                int offset = find_interval(CDF.size(), predicate);
-                if (p) {
-                    //todo
-                    *p = PMF(offset);
-                }
-                if (u_remapped) {
-                    *u_remapped = (u - CDF[offset]) / (CDF[offset + 1] - CDF[offset]);
-                    DCHECK(*u_remapped >= 0.f && *u_remapped <= 1.f);
-                }
-                return offset;
-            }
-
-            LM_ND_XPU float integral() const { return _func_integral; }
-
-            template<typename Index>
-            LM_ND_XPU float func_at(Index i) const { return _func[i]; }
-
-            template<typename Index>
-            LM_ND_XPU float PMF(Index i) const {
-                DCHECK(i >= 0 && i < size());
-                return integral() > 0 ? (func_at(i) / (integral() * size())) : 0;
-            }
 
             static Distribution1DBuilder create_builder(std::vector<float> func) {
                 size_t num = func.size();
@@ -205,6 +142,11 @@ namespace luminous {
             }
         };
 
+        using Distribution1D = Distribution<DistribData>;
+
+        template<int Size>
+        using StaticDistribution1D = Distribution<CDistribData<Size>>;
+
         struct Distribution2DBuilder {
             vector<Distribution1DBuilder> conditional_v;
             Distribution1DBuilder marginal;
@@ -213,7 +155,7 @@ namespace luminous {
                     : conditional_v(move(conditional_v)), marginal(move(marginal)) {}
         };
 
-
+        
         class Distribution2D {
         private:
             BufferView<const Distribution1D> _conditional_v{};
