@@ -45,6 +45,8 @@ namespace luminous {
 
         template<int Size>
         struct CDistribData {
+        private:
+            static constexpr int size_in_bytes = Size * sizeof(float);
         public:
             Array<float, Size> func;
             Array<float, Size + 1> CDF;
@@ -55,6 +57,16 @@ namespace luminous {
             CDistribData(Array<float, Size> func,
                          Array<float, Size + 1> CDF, float integral)
                     : func(func), CDF(CDF), func_integral(integral) {}
+
+            CDistribData(const float *f, const float *C, float integral) {
+                init(f, C, integral);
+            }
+
+            void init(const float *f, const float *C, float integral) {
+                std::memcpy(func.begin(), f, size_in_bytes);
+                std::memcpy(CDF.begin(), C, size_in_bytes + sizeof(float));
+                func_integral = integral;
+            }
         };
 
         template<typename T = DistribData>
@@ -234,9 +246,27 @@ namespace luminous {
         };
 
         using Distribution2D = TDistribution2D<Distribution2DData>;
-        
+
         template<int U, int V>
         using StaticDistribution2D = TDistribution2D<CDistribution2DData<U, V>>;
+
+        template<int U, int V>
+        LM_NODISCARD StaticDistribution2D<U, V> create_static_distrib2d(const float *func) {
+            auto builder2d = Distribution2D::create_builder(func, U, V);
+            Array <StaticDistribution1D<U>, V> conditional_v;
+            for (int i = 0; i < builder2d.conditional_v.size(); ++i) {
+                auto builder = builder2d.conditional_v[i];
+                StaticDistribution1D<U> static_distribution(builder.func.data(),
+                                                            builder.CDF.data(),
+                                                            builder.func_integral);
+                conditional_v[i] = static_distribution;
+            }
+            StaticDistribution1D<V> marginal(builder2d.marginal.func.data(),
+                                             builder2d.marginal.CDF.data(),
+                                             builder2d.marginal.func_integral);
+            StaticDistribution2D<U, V> ret(conditional_v, marginal);
+            return ret;
+        }
 
     } // luminous::sampling
 } // luminous
