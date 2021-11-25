@@ -32,14 +32,14 @@ namespace luminous {
             using const_value_type = const float;
         public:
             // todo change to indice mode, reduce memory usage
-            BufferView<const_value_type> func{};
-            BufferView<const_value_type> CDF{};
+            BufferView <const_value_type> func{};
+            BufferView <const_value_type> CDF{};
             float func_integral{};
 
             DistribData() = default;
 
-            DistribData(BufferView<const_value_type> func,
-                        BufferView<const_value_type> CDF, float integral)
+            DistribData(BufferView <const_value_type> func,
+                        BufferView <const_value_type> CDF, float integral)
                     : func(func), CDF(CDF), func_integral(integral) {}
         };
 
@@ -58,18 +58,18 @@ namespace luminous {
         };
 
         template<typename T = DistribData>
-        class Distribution {
+        class TDistribution {
         public:
             using data_type = T;
         private:
             data_type _data;
         public:
-            Distribution() = default;
+            TDistribution() = default;
 
-            explicit Distribution(const data_type &data) : _data(data) {}
+            explicit TDistribution(const data_type &data) : _data(data) {}
 
             template<typename ...Args>
-            explicit Distribution(Args ...args) : Distribution(T(std::forward<Args>(args)...)) {}
+            explicit TDistribution(Args ...args) : TDistribution(T(std::forward<Args>(args)...)) {}
 
             LM_ND_XPU size_t size() const { return _data.func.size(); }
 
@@ -142,10 +142,10 @@ namespace luminous {
             }
         };
 
-        using Distribution1D = Distribution<DistribData>;
+        using Distribution1D = TDistribution<DistribData>;
 
         template<int Size>
-        using StaticDistribution1D = Distribution<CDistribData<Size>>;
+        using StaticDistribution1D = TDistribution<CDistribData<Size>>;
 
         struct Distribution2DBuilder {
             vector<Distribution1DBuilder> conditional_v;
@@ -155,22 +155,52 @@ namespace luminous {
                     : conditional_v(move(conditional_v)), marginal(move(marginal)) {}
         };
 
-        
-        class Distribution2D {
-        private:
-            BufferView<const Distribution1D> _conditional_v{};
-            Distribution1D _marginal{};
+        struct Distribution2DData {
         public:
-            LM_XPU Distribution2D() = default;
+            BufferView<const Distribution1D> conditional_v{};
+            Distribution1D marginal{};
 
-            LM_XPU Distribution2D(BufferView<const Distribution1D> conditional_v, Distribution1D marginal)
-                    : _conditional_v(conditional_v), _marginal(marginal) {}
+            Distribution2DData() = default;
+
+            Distribution2DData(BufferView<const Distribution1D> conditional_v,
+                               Distribution1D marginal)
+                    : conditional_v(conditional_v),
+                      marginal(marginal) {}
+        };
+
+        template<int U, int V>
+        struct CDistribution2DData {
+        public:
+            Array <StaticDistribution1D<U>, V> conditional_v{};
+            StaticDistribution1D<V> marginal;
+
+            CDistribution2DData() = default;
+
+            CDistribution2DData(Array <StaticDistribution1D<U>, V> conditional_v,
+                                StaticDistribution1D<V> marginal)
+                    : conditional_v(conditional_v),
+                      marginal(marginal) {}
+        };
+
+        template<typename T>
+        class TDistribution2D {
+        public:
+            using data_type = T;
+        private:
+            data_type _data;
+        public:
+            TDistribution2D() = default;
+
+            explicit TDistribution2D(const data_type &data) : _data(data) {}
+
+            template<typename ...Args>
+            explicit TDistribution2D(Args ...args) : TDistribution2D(T(std::forward<Args>(args)...)) {}
 
             LM_ND_XPU float2 sample_continuous(float2 u, float *PDF, int2 *offset = nullptr) const {
                 float PDFs[2];
                 int2 uv;
-                float d1 = _marginal.sample_continuous(u[1], &PDFs[1], &uv[1]);
-                float d0 = _conditional_v[uv[1]].sample_continuous(u[0], &PDFs[0], &uv[0]);
+                float d1 = _data.marginal.sample_continuous(u[1], &PDFs[1], &uv[1]);
+                float d0 = _data.conditional_v[uv[1]].sample_continuous(u[0], &PDFs[0], &uv[0]);
                 *PDF = PDFs[0] * PDFs[1];
                 if (offset) {
                     *offset = uv;
@@ -179,9 +209,9 @@ namespace luminous {
             }
 
             LM_ND_XPU float PDF(float2 p) const {
-                size_t iu = clamp(size_t(p[0] * _conditional_v[0].size()), 0, _conditional_v[0].size() - 1);
-                size_t iv = clamp(size_t(p[1] * _marginal.size()), 0, _marginal.size() - 1);
-                return _conditional_v[iv].func_at(iu) / _marginal.integral();
+                size_t iu = clamp(size_t(p[0] * _data.conditional_v[0].size()), 0, _data.conditional_v[0].size() - 1);
+                size_t iv = clamp(size_t(p[1] * _data.marginal.size()), 0, _data.marginal.size() - 1);
+                return _data.conditional_v[iv].func_at(iu) / _data.marginal.integral();
             }
 
             static Distribution2DBuilder create_builder(const float *func, int nu, int nv) {
@@ -189,7 +219,7 @@ namespace luminous {
                 conditional_v.reserve(nv);
                 for (int v = 0; v < nv; ++v) {
                     vector<float> func_v;
-                    func_v.insert(func_v.end(), &func[v * nu], &func[v * nu + nv]);
+                    func_v.insert(func_v.end(), &func[v * nu], &func[v * nu + nu]);
                     Distribution1DBuilder builder = Distribution1D::create_builder(func_v);
                     conditional_v.push_back(builder);
                 }
@@ -202,5 +232,11 @@ namespace luminous {
                 return {move(conditional_v), move(marginal_builder)};
             }
         };
+
+        using Distribution2D = TDistribution2D<Distribution2DData>;
+        
+        template<int U, int V>
+        using StaticDistribution2D = TDistribution2D<CDistribution2DData<U, V>>;
+
     } // luminous::sampling
 } // luminous

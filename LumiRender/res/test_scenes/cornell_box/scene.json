@@ -260,11 +260,5 @@
 	"output" : {
 		"fn":"cornell-box.png",
 		"frame_num" : 0
-	},
-	"filter" : {
-		"type" : "triangle",
-		"param" : {
-			"radius" : [1,1]
-		}
 	}
 }

@@ -14,14 +14,19 @@
 namespace luminous {
 
     inline namespace sampling {
-        class DistribData;
+        struct DistribData;
 
         template<typename T>
-        class Distribution;
+        class TDistribution;
 
-        using Distribution1D = Distribution<DistribData>;
+        using Distribution1D = TDistribution<DistribData>;
 
-        class Distribution2D;
+        struct Distribution2DData;
+
+        template<typename T>
+        class TDistribution2D;
+
+        using Distribution2D = TDistribution2D<Distribution2DData>;
     }
 
     inline namespace render {

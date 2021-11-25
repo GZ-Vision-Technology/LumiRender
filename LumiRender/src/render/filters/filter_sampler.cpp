@@ -46,7 +46,7 @@ namespace luminous {
                 BufferView<const float> CDF_view(CDF[y], CDF_size);
                 _distributions[y] = Distribution1D(func_view, CDF_view, builder1D.func_integral);
             }
-            _distribution2d = Distribution2D({_distributions, tab_size}, _distributions[tab_size]);
+//            _distribution2d = Distribution2D({_distributions, tab_size}, _distributions[tab_size]);
         }
     }
 }

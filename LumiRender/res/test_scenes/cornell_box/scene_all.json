@@ -246,6 +246,12 @@
 					"resolution" : [768, 768],
 					"fb_state": 0
 				}
+			},
+			"filter": {
+				"type": "TriangleFilter",
+				"param": {
+					"radius": [2,2]
+				}
 			}
 		}
 	},
@@ -258,11 +264,5 @@
 	"output" : {
 		"fn":"cornell-box.png",
 		"frame_num" : 0
-	},
-	"filter" : {
-		"type" : "triangle",
-		"param" : {
-			"radius" : [1,1]
-		}
 	}
 }
