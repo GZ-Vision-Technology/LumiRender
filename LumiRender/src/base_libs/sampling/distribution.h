@@ -32,27 +32,40 @@ namespace luminous {
             using const_value_type = const float;
         public:
             // todo change to indice mode, reduce memory usage
-            BufferView <const_value_type> func{};
-            BufferView <const_value_type> CDF{};
+            BufferView<const_value_type> func{};
+            BufferView<const_value_type> CDF{};
             float func_integral{};
+
+            DistribData(BufferView<const_value_type> func,
+                        BufferView<const_value_type> CDF, float integral)
+                    : func(func), CDF(CDF), func_integral(integral) {}
         };
 
         template<int Size>
         class CDistribData {
-        private:
+        public:
             Array<float, Size> func;
             Array<float, Size + 1> CDF;
             float func_integral{};
+
+            CDistribData(Array<float, Size> func,
+                         Array<float, Size + 1> CDF, float integral)
+                    : func(func), CDF(CDF), func_integral(integral) {}
         };
 
-        template<typename T>
+        template<typename T = DistribData>
         class Distribution {
         public:
-            using data_type= T;
+            using data_type = T;
         private:
             data_type _data;
         public:
+            Distribution() = default;
+
             explicit Distribution(const data_type &data) : _data(data) {}
+
+            template<typename ...Args>
+            explicit Distribution(Args ...args) : Distribution(T(std::forward<Args>(args)...)) {}
 
             LM_ND_XPU size_t size() const { return _data.func.size(); }
 
@@ -111,14 +124,14 @@ namespace luminous {
             using const_value_type = const float;
         private:
             // todo change to indice mode, reduce memory usage
-            BufferView <const_value_type> _func{};
-            BufferView <const_value_type> CDF{};
+            BufferView<const_value_type> _func{};
+            BufferView<const_value_type> CDF{};
             float _func_integral{};
         public:
             LM_XPU Distribution1D() = default;
 
-            LM_XPU Distribution1D(BufferView <const_value_type> func,
-                                  BufferView <const_value_type> CDF, float integral)
+            LM_XPU Distribution1D(BufferView<const_value_type> func,
+                                  BufferView<const_value_type> CDF, float integral)
                     : _func(func), CDF(CDF), _func_integral(integral) {}
 
             LM_ND_XPU size_t size() const { return _func.size(); }
