@@ -10,7 +10,7 @@
 #include "render/samplers/sampler_base.h"
 #include "render/include/creator.h"
 #include "core/concepts.h"
-#include "render/filters/filter.h"
+#include "render/filters/shader_include.h"
 #include "core/refl/reflection.h"
 
 

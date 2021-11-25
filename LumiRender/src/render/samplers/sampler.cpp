@@ -4,7 +4,7 @@
 
 
 #include "sampler.h"
-#include "render/filters/filter.h"
+#include "render/filters/shader_include.h"
 #include "render/include/creator.h"
 #include "core/refl/factory.h"
 
