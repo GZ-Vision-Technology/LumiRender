@@ -9,7 +9,7 @@ namespace luminous {
     inline namespace render {
 
         GaussianFilter::GaussianFilter(float2 r, float sigma)
-                : FilterBase(r),
+                : FittedFilter(r),
                   _exp_x(gaussian(r.x, 0, sigma)),
                   _exp_y(gaussian(r.y, 0, sigma)),
                   _sigma(sigma) {

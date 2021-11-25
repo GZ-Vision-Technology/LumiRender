@@ -26,8 +26,6 @@ namespace luminous {
                 return {p, 1.f};
             }
 
-            LM_ND_XPU float integral() const { return 4 * _radius.x * _radius.y; }
-
             GEN_STRING_FUNC({
                 return string_printf("filter type:%s, %s", type_name(this), FilterBase::to_string().c_str());
             })

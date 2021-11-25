@@ -1,5 +1,5 @@
 //
-// Created by Zero on 2021/1/29.
+// Created by Zero on 25/11/2021.
 //
 
 
@@ -12,17 +12,14 @@
 
 namespace luminous {
     inline namespace render {
-
-        class GaussianFilter : public FittedFilter {
+        class LanczosSincFilter : public FittedFilter {
         private:
-            float _exp_x{};
-            float _exp_y{};
-            float _sigma{};
+            float tau{};
         public:
-            CPU_ONLY(explicit GaussianFilter(const FilterConfig &config)
+            CPU_ONLY(explicit LanczosSincFilter(const FilterConfig &config)
                     : GaussianFilter(config.radius, config.sigma) {})
 
-            explicit GaussianFilter(float2 r, float sigma);
+            explicit LanczosSincFilter(float2 r, float sigma);
 
             LM_ND_XPU float evaluate(const float2 &p) const {
                 return (std::max<float>(0, gaussian(p.x, 0, _sigma) - _exp_x) *

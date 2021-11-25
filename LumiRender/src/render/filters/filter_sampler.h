@@ -8,12 +8,16 @@
 #include "base_libs/math/common.h"
 #include "base_libs/lstd/common.h"
 #include "base_libs/sampling/distribution.h"
-#include "filter_base.h"
 
 namespace luminous {
     inline namespace render {
 
         class Filter;
+
+        struct FilterSample {
+            float2 p;
+            float weight{};
+        };
 
         class FilterSampler {
         public:

@@ -6,28 +6,39 @@
 #pragma once
 
 #include "base_libs/math/common.h"
+#include "filter_sampler.h"
 
 namespace luminous {
     inline namespace render {
 
-        struct FilterSample {
-            float2 p;
-            float weight{};
-        };
-
-        struct FilterBase {
+        class FilterBase {
         protected:
             const float2 _radius;
         public:
-            explicit FilterBase(const float2 r) : _radius(r) {}
+            explicit FilterBase(const float2 r)
+                    : _radius(r) {}
 
             LM_ND_XPU float2 radius() const {
                 return _radius;
             }
 
             GEN_STRING_FUNC({
-                return string_printf("filter radius:%s", _radius.to_string().c_str());
-            })
+                                return string_printf("filter radius:%s", _radius.to_string().c_str());
+                            })
+        };
+
+        class FittedFilter : public FilterBase {
+        protected:
+            FilterSampler _sampler;
+        public:
+            explicit FittedFilter(const float2 r)
+                    : FilterBase(r) {}
+
+            LM_ND_XPU FilterSample sample(const float2 &u) const {
+                FilterSample fs = _sampler.sample(u);
+                fs.p = fs.p * radius();
+                return fs;
+            }
         };
     }
 }
