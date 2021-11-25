@@ -26,30 +26,80 @@ namespace luminous {
                     : func(move(func)), CDF(move(CDF)), func_integral(integral) {}
         };
 
-        template<int Size>
-        class CDistribution1D {
-        private:
-            Array<float, Size> _func;
-            Array<float, Size + 1> CDF;
-            float _func_integral{};
+        class DistribData {
         public:
-            CDistribution1D(const float *func, const float *CDF, float integral)
-            : _func_integral(integral) {
-                for (int i = 0; i < Size; ++i) {
-                    _func[i] = func[i];
+            using value_type = float;
+            using const_value_type = const float;
+        public:
+            // todo change to indice mode, reduce memory usage
+            BufferView <const_value_type> func{};
+            BufferView <const_value_type> CDF{};
+            float func_integral{};
+        };
+
+        template<int Size>
+        class CDistribData {
+        private:
+            Array<float, Size> func;
+            Array<float, Size + 1> CDF;
+            float func_integral{};
+        };
+
+        template<typename T>
+        class Distribution {
+        public:
+            using data_type= T;
+        private:
+            data_type _data;
+        public:
+            explicit Distribution(const data_type &data) : _data(data) {}
+
+            LM_ND_XPU size_t size() const { return _data.func.size(); }
+
+            LM_ND_XPU float sample_continuous(float u, float *pdf = nullptr, int *ofs = nullptr) const {
+                auto predicate = [&](int index) {
+                    return _data.CDF[index] <= u;
+                };
+                size_t offset = find_interval((int) _data.CDF.size(), predicate);
+                if (ofs) {
+                    *ofs = offset;
                 }
-                for (int i = 0; i < Size + 1; ++i) {
-                    this->CDF[i] = CDF[i];
+                float du = u - _data.CDF[offset];
+                if ((_data.CDF[offset + 1] - _data.CDF[offset]) > 0) {
+                    DCHECK_GT(_data.CDF[offset + 1], _data.CDF[offset]);
+                    du /= (_data.CDF[offset + 1] - _data.CDF[offset]);
                 }
+                DCHECK(!is_nan(du));
+
+                if (pdf) {
+                    *pdf = (_data.func_integral > 0) ? _data.func[offset] / _data.func_integral : 0;
+                }
+                return (offset + du) / size();
             }
 
-            LM_ND_XPU constexpr size_t size() const { return _func.size(); }
+            LM_ND_XPU int sample_discrete(float u, float *p = nullptr, float *u_remapped = nullptr) const {
+                auto predicate = [&](int index) {
+                    return _data.CDF[index] <= u;
+                };
+                int offset = find_interval(_data.CDF.size(), predicate);
+                if (p) {
+                    //todo
+                    *p = PMF(offset);
+                }
+                if (u_remapped) {
+                    *u_remapped = (u - _data.CDF[offset]) / (_data.CDF[offset + 1] - _data.CDF[offset]);
+                    DCHECK(*u_remapped >= 0.f && *u_remapped <= 1.f);
+                }
+                return offset;
+            }
 
-            LM_ND_XPU float integral() const { return _func_integral; }
+            LM_ND_XPU float integral() const { return _data.func_integral; }
 
-            LM_ND_XPU float func_at(int i) const { return _func[i]; }
+            template<typename Index>
+            LM_ND_XPU float func_at(Index i) const { return _data.func[i]; }
 
-            LM_ND_XPU float PMF(int i) const {
+            template<typename Index>
+            LM_ND_XPU float PMF(Index i) const {
                 DCHECK(i >= 0 && i < size());
                 return integral() > 0 ? (func_at(i) / (integral() * size())) : 0;
             }
