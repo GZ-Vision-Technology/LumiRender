@@ -12,18 +12,18 @@
 
 namespace luminous {
     inline namespace render {
+
         class LanczosSincFilter : public FittedFilter {
         private:
-            float tau{};
+            float _tau{};
         public:
             CPU_ONLY(explicit LanczosSincFilter(const FilterConfig &config)
-                    : GaussianFilter(config.radius, config.sigma) {})
+                    : GaussianFilter(config.radius, config.tau) {})
 
-            explicit LanczosSincFilter(float2 r, float sigma);
+            explicit LanczosSincFilter(float2 r, float tau);
 
             LM_ND_XPU float evaluate(const float2 &p) const {
-                return (std::max<float>(0, gaussian(p.x, 0, _sigma) - _exp_x) *
-                        std::max<float>(0, gaussian(p.y, 0, _sigma) - _exp_y));
+                return windowed_sinc(p.x, _radius.x, _tau) * windowed_sinc(p.y, _radius.y, _tau);
             }
 
             GEN_STRING_FUNC({

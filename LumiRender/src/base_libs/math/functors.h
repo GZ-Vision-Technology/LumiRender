@@ -239,6 +239,24 @@ namespace luminous {
             return q / std::sqrt(dot(q, q));
         }
 
+        ND_XPU_INLINE float sin_x_over_x(float x) noexcept {
+            if (1 + x * x == 1) {
+                return 1;
+            }
+            return std::sin(x) / x;
+        }
+
+        ND_XPU_INLINE float sinc(float x) noexcept {
+            return sin_x_over_x(Pi * x);
+        }
+
+        ND_XPU_INLINE float windowed_sinc(float x, float radius, float tau) {
+            if (std::abs(x) > radius) {
+                return 0;
+            }
+            return sinc(x) * sinc(x / tau);
+        }
+
         LM_NODISCARD LM_XPU_INLINE Quaternion slerp(float t, const Quaternion &q1, const Quaternion &q2) noexcept {
             float cosTheta = dot(q1, q2);
             if (cosTheta > .9995f)

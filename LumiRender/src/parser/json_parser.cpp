@@ -149,6 +149,9 @@ namespace luminous {
             } else if (type == "GaussianFilter") {
                 fc.radius = param["radius"].as_float2(make_float2(1.5f, 1.5f));
                 fc.sigma = param["sigma"].as_float(0.5f);
+            } else if (type == "LanczosSincFilter") {
+                fc.radius = param["radius"].as_float2(make_float2(4.f, 4.f));
+                fc.tau = param["sigma"].as_float(3.f);
             }
             return fc;
         }

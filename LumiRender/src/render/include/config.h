@@ -211,6 +211,9 @@ namespace luminous {
 
             // for gaussian filter
             float sigma{};
+
+            // for sinc filter
+            float tau;
         };
 
         struct FilmConfig : Config {
