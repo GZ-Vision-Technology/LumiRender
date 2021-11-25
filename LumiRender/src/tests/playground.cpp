@@ -52,10 +52,12 @@ int main() {
 
     auto sd = create_static_distrib2d<10, 10>(ret.data());
 
-    auto db = Distribution2D::create_builder(func.data(), 10, 10);
+//    auto db = Distribution2D::create_builder(func.data(), 10, 10);
 
     float PDF;
     float2 p = sd.sample_continuous(make_float2(0.5f), &PDF);
+
+    auto p2 = sd.sample_continuous(make_float2(-0.5f), &PDF);
 
     create(ret.data(), 10, 10);
 

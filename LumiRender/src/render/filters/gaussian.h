@@ -33,7 +33,9 @@ namespace luminous {
             }
 
             LM_ND_XPU FilterSample sample(const float2 &u) const {
-                return _sampler.sample(u);
+                FilterSample fs = _sampler.sample(u);
+                fs.p = fs.p * radius();
+                return fs;
             }
 
             LM_ND_XPU float integral() const { return sqr(_radius.x * _radius.y); }

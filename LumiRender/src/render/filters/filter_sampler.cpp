@@ -29,7 +29,11 @@ namespace luminous {
         }
 
         FilterSample FilterSampler::sample(float2 u) const {
-            return FilterSample();
+            u = u * 2.f - make_float2(1.f);
+            float PDF = 0;
+            float2 p = _distribution2d.sample_continuous(abs(u), &PDF);
+            p = p * sign(u);
+            return FilterSample{p, 1.f};
         }
     }
 }

@@ -47,6 +47,8 @@ namespace luminous {
 
         MAKE_VECTOR_UNARY_FUNC(rcp)
 
+        MAKE_VECTOR_UNARY_FUNC(sign)
+
         MAKE_VECTOR_UNARY_FUNC(saturate)
 
         MAKE_VECTOR_UNARY_FUNC(abs)

@@ -244,9 +244,12 @@
 				}
 			},
 			"filter": {
-				"type": "TriangleFilter",
+				"type": "GaussianFilter",
+////				"type": "TriangleFilter",
+//				"type": "BoxFilter",
 				"param": {
-					"radius": [2,2]
+					"radius": [3,3],
+					"sigma" : 1.5
 				}
 			}
 		}

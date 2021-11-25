@@ -100,6 +100,11 @@ namespace luminous {
             }
         }
 
+        template<typename T>
+        LM_ND_XPU T sign(T val) {
+            return val >= 0 ? T(1) : T(-1);
+        }
+
         template<typename FloatType>
         ND_XPU_INLINE FloatType safe_acos(FloatType x) noexcept {
             if constexpr (std::is_same_v<FloatType, float>) {
