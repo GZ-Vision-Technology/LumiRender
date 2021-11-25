@@ -30,14 +30,22 @@ namespace luminous {
             }
         }
 
-        void Film::add_render_sample(uint pixel_index, Spectrum color, float weight, uint frame_index) {
-            color *= weight;
-            if (frame_index > 0) {
-                const float a = 1.0f / static_cast<float>(frame_index + 1);
-                const float3 accum_color_prev = make_float3(_render_buffer_view[pixel_index]);
-                color = lerp(a, accum_color_prev, color);
+        template<typename value_type>
+        LM_XPU void fill_buffer(uint pixel_index, value_type val, float weight,
+                                uint frame_index, BufferView<float4> buffer_view) {
+            if (frame_index == 0) {
+                buffer_view[pixel_index] = make_float4(val * weight, weight);
+            } else {
+                float pre_weight_sum = buffer_view[pixel_index].w;
+                const float3 accum_color_prev = make_float3(buffer_view[pixel_index]);
+                float t = weight / (pre_weight_sum + weight);
+                val = lerp(t, accum_color_prev, val);
+                buffer_view[pixel_index] = make_float4(val, pre_weight_sum + weight);
             }
-            _render_buffer_view[pixel_index] = make_float4(color, 1.f);
+        }
+
+        void Film::add_render_sample(uint pixel_index, Spectrum color, float weight, uint frame_index) {
+            fill_buffer(pixel_index, color, weight, frame_index, _render_buffer_view);
         }
 
         void Film::add_normal_sample(uint pixel_index, float3 normal, float weight, uint frame_index) {

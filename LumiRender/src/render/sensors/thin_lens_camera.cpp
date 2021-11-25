@@ -34,7 +34,7 @@ namespace luminous {
                 ray->update_direction(normalize(p_focus - ray->origin()));
             }
             *ray = c2w.apply_ray(*ray);
-            return 1;
+            return 1 * ss.filter_weight;
         }
     }
 }

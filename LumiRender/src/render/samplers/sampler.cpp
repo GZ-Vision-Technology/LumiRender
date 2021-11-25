@@ -21,7 +21,7 @@ namespace luminous {
             ss.p_film = make_float2(p_raster) + make_float2(0.5f) + fs.p;
             ss.p_lens = next_2d();
             ss.time = next_1d();
-            ss.weight = fs.weight;
+            ss.filter_weight = fs.weight;
             return ss;
         }
 
