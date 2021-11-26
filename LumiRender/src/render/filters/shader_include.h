@@ -8,6 +8,8 @@
 #if defined(__CUDACC__)
     #include "filter_sampler.cpp"
     #include "gaussian.cpp"
+    #include "sinc.cpp"
+    #include "mitchell.cpp"
     #include "filter.h"
 #else
     #include "filter.h"

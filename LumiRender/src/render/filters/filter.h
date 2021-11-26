@@ -9,6 +9,7 @@
 #include "render/include/config.h"
 #include "box.h"
 #include "triangle.h"
+#include "sinc.h"
 #include "gaussian.h"
 #include "render/include/creator.h"
 
@@ -17,7 +18,7 @@ namespace luminous {
 
         using lstd::Variant;
 
-        class Filter : BASE_CLASS(Variant<BoxFilter, TriangleFilter, GaussianFilter>) {
+        class Filter : BASE_CLASS(Variant<BoxFilter, TriangleFilter, GaussianFilter, LanczosSincFilter>) {
         private:
             using BaseBinder::BaseBinder;
         public:

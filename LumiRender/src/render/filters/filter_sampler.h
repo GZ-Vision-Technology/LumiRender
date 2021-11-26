@@ -21,7 +21,7 @@ namespace luminous {
 
         class FilterSampler {
         public:
-            static constexpr int tab_size = 10;
+            static constexpr int tab_size = 20;
             static constexpr int CDF_size = tab_size + 1;
             using Distrib = StaticDistribution2D<tab_size, tab_size>;
             using array_type = Array2D<float, tab_size, tab_size>;

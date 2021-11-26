@@ -18,7 +18,7 @@ namespace luminous {
             float _tau{};
         public:
             CPU_ONLY(explicit LanczosSincFilter(const FilterConfig &config)
-                    : GaussianFilter(config.radius, config.tau) {})
+                    : LanczosSincFilter(config.radius, config.tau) {})
 
             explicit LanczosSincFilter(float2 r, float tau);
 
