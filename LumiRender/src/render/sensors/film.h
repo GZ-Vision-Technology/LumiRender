@@ -70,21 +70,30 @@ namespace luminous {
                 add_render_sample(_pixel_index(pixel), std::forward<Args>(args)...);
             }
 
-            LM_XPU void add_render_sample(uint pixel_index, Spectrum color, float weight, uint frame_index = 0u);
+            LM_XPU void fill_buffer(uint pixel_index, float3 val, float weight,
+                                    uint frame_index, BufferView<float4> buffer_view);
+
+            LM_XPU void add_render_sample(uint pixel_index, Spectrum color, float weight, uint frame_index = 0u) {
+                fill_buffer(pixel_index, color.vec(), weight, frame_index, _render_buffer_view);
+            }
 
             template<typename ...Args>
             LM_XPU void add_normal_sample(uint2 pixel, Args &&...args) {
                 add_normal_sample(_pixel_index(pixel), std::forward<Args>(args)...);
             }
 
-            LM_XPU void add_normal_sample(uint pixel_index, float3 normal, float weight, uint frame_index = 0u);
+            LM_XPU void add_normal_sample(uint pixel_index, float3 normal, float weight, uint frame_index = 0u) {
+                fill_buffer(pixel_index, normal, weight, frame_index, _normal_buffer_view);
+            }
 
             template<typename ...Args>
             LM_XPU void add_albedo_sample(uint2 pixel, Args &&...args) {
                 add_albedo_sample(_pixel_index(pixel), std::forward<Args>(args)...);
             }
 
-            LM_XPU void add_albedo_sample(uint pixel_index, float3 albedo, float weight, uint frame_index = 0u);
+            LM_XPU void add_albedo_sample(uint pixel_index, float3 albedo, float weight, uint frame_index = 0u) {
+                fill_buffer(pixel_index, albedo, weight, frame_index, _albedo_buffer_view);
+            }
 
             LM_XPU void fill_frame_buffer(uint2 pixel) {
                 fill_frame_buffer(_pixel_index(pixel));

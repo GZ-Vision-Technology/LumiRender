@@ -30,42 +30,17 @@ namespace luminous {
             }
         }
 
-        template<typename value_type>
-        LM_XPU void fill_buffer(uint pixel_index, value_type val, float weight,
-                                uint frame_index, BufferView<float4> buffer_view) {
+        void Film::fill_buffer(uint pixel_index, float3 val, float weight,
+                               uint frame_index, BufferView<float4> buffer_view) {
             if (frame_index == 0) {
-                buffer_view[pixel_index] = make_float4(val * weight, weight);
+                buffer_view[pixel_index] = make_float4(val, weight);
             } else {
                 float pre_weight_sum = buffer_view[pixel_index].w;
-                const float3 accum_color_prev = make_float3(buffer_view[pixel_index]);
+                const float3 accum_val_prev = make_float3(buffer_view[pixel_index]);
                 float t = weight / (pre_weight_sum + weight);
-                val = lerp(t, accum_color_prev, val);
+                val = lerp(t, accum_val_prev, val);
                 buffer_view[pixel_index] = make_float4(val, pre_weight_sum + weight);
             }
-        }
-
-        void Film::add_render_sample(uint pixel_index, Spectrum color, float weight, uint frame_index) {
-            fill_buffer(pixel_index, color, weight, frame_index, _render_buffer_view);
-        }
-
-        void Film::add_normal_sample(uint pixel_index, float3 normal, float weight, uint frame_index) {
-            normal *= weight;
-            if (frame_index > 0) {
-                const float a = 1.0f / static_cast<float>(frame_index + 1);
-                const float3 accum_color_prev = make_float3(_normal_buffer_view[pixel_index]);
-                normal = lerp(a, accum_color_prev, normal);
-            }
-            _normal_buffer_view[pixel_index] = make_float4(normal, 1.f);
-        }
-
-        void Film::add_albedo_sample(uint pixel_index, float3 albedo, float weight, uint frame_index) {
-            albedo *= weight;
-            if (frame_index > 0) {
-                const float a = 1.0f / static_cast<float>(frame_index + 1);
-                const float3 accum_color_prev = make_float3(_albedo_buffer_view[pixel_index]);
-                albedo = lerp(a, accum_color_prev, albedo);
-            }
-            _albedo_buffer_view[pixel_index] = make_float4(albedo, 1.f);
         }
 
         void Film::_update() {
@@ -78,6 +53,7 @@ namespace luminous {
                 _screen_window.upper = make_float2(1.f, 1.f / aspect);
             }
         }
+
 
     }
 }
