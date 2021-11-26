@@ -24,9 +24,10 @@ namespace luminous {
             static constexpr int tab_size = 10;
             static constexpr int CDF_size = tab_size + 1;
             using Distrib = StaticDistribution2D<tab_size, tab_size>;
+            using array_type = Array2D<float, tab_size, tab_size>;
         private:
             Distrib _distribution2d;
-
+            array_type _signs{};
         public:
             FilterSampler() = default;
 

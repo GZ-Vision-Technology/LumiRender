@@ -70,7 +70,7 @@ namespace luminous {
                 add_render_sample(_pixel_index(pixel), std::forward<Args>(args)...);
             }
 
-            LM_XPU void fill_buffer(uint pixel_index, float3 val, float weight,
+            LM_XPU static void fill_buffer(uint pixel_index, float3 val, float weight,
                                     uint frame_index, BufferView<float4> buffer_view);
 
             LM_XPU void add_render_sample(uint pixel_index, Spectrum color, float weight, uint frame_index = 0u) {

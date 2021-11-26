@@ -53,7 +53,5 @@ namespace luminous {
                 _screen_window.upper = make_float2(1.f, 1.f / aspect);
             }
         }
-
-
     }
 }

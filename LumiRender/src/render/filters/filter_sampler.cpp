@@ -19,7 +19,8 @@ namespace luminous {
                 float2 p = make_float2((x + 0.5f) / tab_size * r.x,
                                        (y + 0.5f) / tab_size * r.y);
                 float val = filter->evaluate(p);
-                func[i] = val;
+                _signs(x, y) = sign(val);
+                func[i] = abs(val);
             }
             init(func.data());
         }
@@ -31,9 +32,10 @@ namespace luminous {
         FilterSample FilterSampler::sample(float2 u) const {
             u = u * 2.f - make_float2(1.f);
             float PDF = 0;
-            float2 p = _distribution2d.sample_continuous(abs(u), &PDF);
+            int2 offset{};
+            float2 p = _distribution2d.sample_continuous(abs(u), &PDF, &offset);
             p = p * sign(u);
-            return FilterSample{p, 1.f};
+            return FilterSample{p, 1.f * _signs(offset)};
         }
     }
 }
