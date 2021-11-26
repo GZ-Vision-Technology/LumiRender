@@ -15,6 +15,7 @@ namespace luminous {
             buffer << fst.rdbuf();
             std::string str = buffer.str();
             str = jsonc_to_json(str);
+            fst.close();
             LUMINOUS_DEBUG(str);
             if (fn.extension() == ".bson") {
                 return DataWrap::from_bson(str);

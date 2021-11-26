@@ -221,6 +221,11 @@ namespace luminous {
                 return make_float2(d0, d1);
             }
 
+            LM_ND_XPU float func_at(int2 coord) const {
+                auto row = _data.conditional_v[coord.y];
+                return row.func_at(coord.x);
+            }
+
             LM_ND_XPU float PDF(float2 p) const {
                 size_t iu = clamp(size_t(p[0] * _data.conditional_v[0].size()), 0, _data.conditional_v[0].size() - 1);
                 size_t iv = clamp(size_t(p[1] * _data.marginal.size()), 0, _data.marginal.size() - 1);

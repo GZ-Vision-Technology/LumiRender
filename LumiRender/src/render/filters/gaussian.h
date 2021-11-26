@@ -24,10 +24,7 @@ namespace luminous {
 
             explicit GaussianFilter(float2 r, float sigma);
 
-            LM_ND_XPU float evaluate(const float2 &p) const {
-                return (std::max<float>(0, gaussian(p.x, 0, _sigma) - _exp_x) *
-                        std::max<float>(0, gaussian(p.y, 0, _sigma) - _exp_y));
-            }
+            LM_ND_XPU float evaluate(const float2 &p) const;
 
             GEN_STRING_FUNC({
                                 return string_printf("filter type:%s, %s", type_name(this),

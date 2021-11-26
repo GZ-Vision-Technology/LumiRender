@@ -22,9 +22,7 @@ namespace luminous {
 
             explicit LanczosSincFilter(float2 r, float tau);
 
-            LM_ND_XPU float evaluate(const float2 &p) const {
-                return windowed_sinc(p.x, _radius.x, _tau) * windowed_sinc(p.y, _radius.y, _tau);
-            }
+            LM_ND_XPU float evaluate(const float2 &p) const;
 
             GEN_STRING_FUNC({
                                 return string_printf("filter type:%s, %s", type_name(this),

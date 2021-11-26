@@ -37,8 +37,7 @@ namespace luminous {
             } else {
                 float pre_weight_sum = buffer_view[pixel_index].w;
                 const float3 accum_val_prev = make_float3(buffer_view[pixel_index]);
-                float t = weight / (pre_weight_sum + weight);
-                val = lerp(t, accum_val_prev, val);
+                val = (pre_weight_sum * accum_val_prev + val * weight) / (frame_index + 1.f);
                 buffer_view[pixel_index] = make_float4(val, pre_weight_sum + weight);
             }
         }

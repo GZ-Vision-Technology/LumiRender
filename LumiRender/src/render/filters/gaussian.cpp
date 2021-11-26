@@ -15,5 +15,10 @@ namespace luminous {
                   _sigma(sigma) {
             _sampler.init(std::make_shared<Filter>(*this).get());
         }
+
+        float GaussianFilter::evaluate(const float2 &p) const {
+            return (std::max<float>(0, gaussian(p.x, 0, _sigma) - _exp_x) *
+                    std::max<float>(0, gaussian(p.y, 0, _sigma) - _exp_y));
+        }
     }
 }
