@@ -10,12 +10,20 @@ namespace luminous {
         void Film::fill_frame_buffer(uint pixel_index) {
             switch (_fb_state) {
                 case Render: {
-                    float4 color = _render_buffer_view[pixel_index];
+                    float4 val = _render_buffer_view[pixel_index];
+                    if (val.w == 0) {
+                        return;
+                    }
+                    float3 color = make_float3(val) / val.w;
                     _frame_buffer_view[pixel_index] = make_rgba(Spectrum::linear_to_srgb(color));
                     break;
                 }
                 case Albedo: {
-                    float4 color = _albedo_buffer_view[pixel_index];
+                    float4 val = _albedo_buffer_view[pixel_index];
+                    if (val.w == 0) {
+                        return;
+                    }
+                    float3 color = make_float3(val) / val.w;
                     _frame_buffer_view[pixel_index] = make_rgba(Spectrum::linear_to_srgb(color));
                     break;
                 }
@@ -32,13 +40,13 @@ namespace luminous {
 
         void Film::fill_buffer(uint pixel_index, float3 val, float weight,
                                uint frame_index, BufferView<float4> buffer_view) {
+            val = val * weight;
             if (frame_index == 0) {
                 buffer_view[pixel_index] = make_float4(val, weight);
             } else {
                 float pre_weight_sum = buffer_view[pixel_index].w;
                 const float3 accum_val_prev = make_float3(buffer_view[pixel_index]);
-                val = (pre_weight_sum * accum_val_prev + val * weight) / (frame_index + 1.f);
-                buffer_view[pixel_index] = make_float4(val, pre_weight_sum + weight);
+                buffer_view[pixel_index] = make_float4(val + accum_val_prev, pre_weight_sum + weight);
             }
         }
 
