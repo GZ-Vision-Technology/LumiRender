@@ -28,7 +28,11 @@ namespace luminous {
                     break;
                 }
                 case Normal: {
-                    float3 normal = make_float3(_normal_buffer_view[pixel_index]);
+                    float4 val = _render_buffer_view[pixel_index];
+                    if (val.w == 0) {
+                        return;
+                    }
+                    float3 normal = make_float3(val) / val.w;
                     _frame_buffer_view[pixel_index] = make_rgba((normal + 1.f) / 2.f);
                     break;
                 }
