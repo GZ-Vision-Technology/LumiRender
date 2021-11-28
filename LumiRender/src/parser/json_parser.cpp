@@ -144,15 +144,19 @@ namespace luminous {
             fc.set_full_type(type);
             ParameterSet param(ps["param"]);
             if (type == "BoxFilter") {
-                fc.radius = param["radius"].as_float2(make_float2(0.5, 0.5));
+                fc.radius = param["radius"].as_float2(make_float2(0.5f));
             } else if (type == "TriangleFilter") {
-                fc.radius = param["radius"].as_float2(make_float2(2.f, 2.f));
+                fc.radius = param["radius"].as_float2(make_float2(2.f));
             } else if (type == "GaussianFilter") {
-                fc.radius = param["radius"].as_float2(make_float2(1.5f, 1.5f));
+                fc.radius = param["radius"].as_float2(make_float2(1.5f));
                 fc.sigma = param["sigma"].as_float(0.5f);
             } else if (type == "LanczosSincFilter") {
-                fc.radius = param["radius"].as_float2(make_float2(4.f, 4.f));
+                fc.radius = param["radius"].as_float2(make_float2(4.f));
                 fc.tau = param["sigma"].as_float(3.f);
+            } else if (type == "Mitchell") {
+                fc.b = param["b"].as_float(1 / 3.f);
+                fc.c = param["c"].as_float(1 / 3.f);
+                fc.radius = param["radius"].as_float2(make_float2(2.f));
             }
             return fc;
         }
