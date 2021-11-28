@@ -17,7 +17,7 @@ namespace luminous {
             float b;
             float c;
 
-            LM_ND_XPU float mitchell1D(float x) const {
+            LM_ND_XPU float mitchell_1d(float x) const {
                 x = std::abs(x);
                 if (x <= 1)
                     return ((12 - 9 * b - 6 * c) * x * x * x + (-18 + 12 * b + 6 * c) * x * x +

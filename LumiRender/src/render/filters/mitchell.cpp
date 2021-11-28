@@ -14,8 +14,8 @@ namespace luminous {
         }
 
         float MitchellFilter::evaluate(const float2 &p) const {
-            return mitchell1D(2 * p.x / _radius.x) *
-                   mitchell1D(2 * p.y / _radius.y);
+            return mitchell_1d(2 * p.x / _radius.x) *
+                   mitchell_1d(2 * p.y / _radius.y);
         }
     }
 }
