@@ -244,8 +244,10 @@
 				}
 			},
 			"filter": {
+//				"type": "LanczosSincFilter",
 				"type": "GaussianFilter",
-////				"type": "TriangleFilter",
+//				"type": "MitchellFilter",
+//				"type": "TriangleFilter",
 //				"type": "BoxFilter",
 				"param": {
 					"radius": [3,3],
