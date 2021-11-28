@@ -6,6 +6,7 @@
 #pragma once
 
 #include "base_libs/optics/rgb.h"
+#include "base.h"
 
 namespace luminous {
     inline namespace render {
@@ -31,6 +32,27 @@ namespace luminous {
                       _albedo(albedo),
                       _max_depth(maxDepth),
                       _sample_num(nSamples) {}
+
+            LM_ND_XPU BxDFFlags flags() const {
+                BxDFFlags top_flags = _top.flags();
+                BxDFFlags bottom_flags = _bottom.flags();
+                DCHECK(is_transmissive(top_flags) || is_transmissive(bottom_flags));
+
+                BxDFFlags flags = BxDFFlags::Reflection;
+                if (is_specular(top_flags))
+                    flags = flags | BxDFFlags::Specular;
+
+                if (is_diffuse(top_flags) || is_diffuse(bottom_flags) || _albedo.is_black()) {
+                    flags = flags | BxDFFlags::Diffuse;
+                }
+                else if (is_glossy(top_flags) || is_glossy(bottom_flags)) {
+                    flags = flags | BxDFFlags::Glossy;
+                }
+                if (is_transmissive(top_flags) && is_transmissive(bottom_flags)) {
+                    flags = flags | BxDFFlags::Transmission;
+                }
+                return flags;
+            }
 
             LM_XPU void regularize() {
                 _top.regularize();
