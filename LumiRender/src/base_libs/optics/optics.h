@@ -26,12 +26,19 @@ namespace luminous {
             *wt = -wi / eta + (cosTheta_i / eta - cosTheta_t) * Vector<T, 3>(n);
             return true;
         }
-        
-        LM_XPU inline float fresnel_schlick(const float cos_theta, const float exponent = 5.0f,
-                                            const float minimum = 0.0f, const float maximum = 1.0f) {
 
-            return clamp(minimum + (maximum - minimum) * powf(fmaxf(0.0f,1.0f - cos_theta), exponent),
-                        minimum, maximum);
+        ND_XPU_INLINE float schlick_weight(float cos_theta) {
+            float m = clamp(1.f - cos_theta, 0.f, 1.f);
+            return Pow<5>(m);
+        }
+
+        template<typename T>
+        LM_ND_XPU auto fresnel_schlick(T R0, float cos_theta) {
+            return lerp(schlick_weight(cos_theta), R0, T{1.f});
+        }
+
+        ND_XPU_INLINE float schlick_R0_from_eta(float eta) {
+            return sqr(eta - 1) / sqr(eta + 1);
         }
     }
 }
