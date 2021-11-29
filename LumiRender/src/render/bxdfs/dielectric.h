@@ -37,6 +37,14 @@ namespace luminous {
                                                           BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
 
             LM_ND_XPU BxDFFlags flags() const;
+
+            LM_XPU void print() const {
+                printf("DielectricBxDF Kr(%f,%f,%f,%f)", Kr.x, Kr.y, Kr.z, Kr.w);
+            }
+
+            GEN_STRING_FUNC({
+                LUMINOUS_TO_STRING("DielectricBxDF Kr : %s", Kr.to_string().c_str());
+            })
         };
     }
 }

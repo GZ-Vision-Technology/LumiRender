@@ -159,6 +159,12 @@ namespace luminous {
             TextureConfig specular_tex;
             TextureConfig normal_tex;
 
+            // glass material
+            TextureConfig Kr_tex;
+            TextureConfig Kt_tex;
+            TextureConfig eta_tex;
+            TextureConfig roughness_tex;
+
             void fill_tex_configs(std::vector<TextureConfig> &tex_configs) {
                 if (type() == full_type("AssimpMaterial")) {
                     int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config){

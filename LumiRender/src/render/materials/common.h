@@ -6,4 +6,5 @@
 #pragma once
 
 #include "matte.h"
+#include "glass.h"
 #include "ai_material.h"

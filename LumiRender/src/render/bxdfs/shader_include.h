@@ -9,6 +9,8 @@
 #if defined(__CUDACC__)
     #include "bxdf.cpp"
     #include "bsdf.cpp"
+    #include "dielectric.cpp"
+    #include "microfacet.cpp"
 #else
     #error "this file just for cuda shader include"
 #endif

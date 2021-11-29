@@ -17,7 +17,7 @@ namespace luminous {
     inline namespace render {
 
         using lstd::Variant;
-        class BxDF : public Variant<IdealDiffuse> {
+        class BxDF : public Variant<IdealDiffuse, DielectricBxDF> {
             using Variant::Variant;
         public:
             GEN_BASE_NAME(BxDF)
