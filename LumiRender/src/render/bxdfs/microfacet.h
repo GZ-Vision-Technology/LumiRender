@@ -9,7 +9,7 @@
 
 namespace luminous {
     inline namespace render {
-        enum MDType {
+        enum MicrofacetType {
             GGX,
             Beckmann,
         };
@@ -18,19 +18,46 @@ namespace luminous {
         private:
             float _alpha_x{};
             float _alpha_y{};
-            MDType _md_type{};
+            MicrofacetType _type{};
         public:
-            LM_XPU MicrofacetDistribution(float alpha_x, float alpha_y, MDType md_type = GGX)
+            LM_XPU MicrofacetDistribution(float alpha_x, float alpha_y, MicrofacetType md_type = GGX)
                     : _alpha_x(alpha_x),
                       _alpha_y(alpha_y),
-                      _md_type(md_type) {
+                      _type(md_type) {
 
             }
 
+            static float roughness_to_alpha(float roughness) {
+                roughness = std::max(roughness, (float) 1e-3);
+                float x = std::log(roughness);
+                return 1.62142f +
+                       0.819955f * x +
+                       0.1734f * Pow<2>(x) +
+                       0.0171201f * Pow<3>(x) +
+                       0.000640711f * Pow<4>(x);
+            }
+
+            /**
+             *  beckmann
+             *
+             *             e^[-(tan_theta_h)^2 ((cos_theta_h)^2/ax^2 + (sin_theta_h)^2/ay^2)]
+             * D(wh) = -------------------------------------------------------------------------
+             *                                PI ax ay (cos_theta_h)^4
+             *
+             *  GGX
+             *                                                    1
+             * D(wh) = ---------------------------------------------------------------------------------------------------
+             *             PI ax ay (cos_theta_h)^4 [1 + (tan_theta_h)^2 ((cos_theta_h)^2/ax^2 + (sin_theta_h)^2/ay^2)]^2
+             *
+             * from http://www.pbr-book.org/3ed-2018/Reflection_Models/Microfacet_Models.html
+             *
+             * @param wh
+             * @return
+             */
             LM_ND_XPU float D(const float3 &wh) const;
 
             /**
-             * ¦«(¦Ø) = A-(¦Ø) / (A+(¦Ø) - A-(¦Ø))
+             * lambda(w) = A-(w) / (A+(w) - A-(w))
              * @param  w [description]
              * @return   [description]
              */
@@ -38,7 +65,7 @@ namespace luminous {
 
             /**
              * smith occlusion function
-             * G1(¦Ø) = 1 / (¦«(¦Ø) + 1)
+             * G1(w) = 1 / (lambda(w) + 1)
              * @param  w [description]
              * @return   [description]
              */
@@ -47,8 +74,7 @@ namespace luminous {
             }
 
             /**
-             * G(¦Øo, ¦Øi) = 1 / (¦«(¦Øo) + ¦«(¦Øi) + 1)
-             * @param  w [description]
+             * G(wo, wi) = 1 / (lambda(wo) + lambda(wi) + 1)
              * @return   [description]
              */
             LM_ND_XPU float G(const float3 &wo, const float3 &wi) const {
