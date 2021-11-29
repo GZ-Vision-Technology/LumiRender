@@ -9,6 +9,7 @@
 #include "base_libs/lstd/variant.h"
 #include "base_libs/optics/rgb.h"
 #include "layered_bxdf.h"
+#include "dielectric.h"
 #include "microfacet.h"
 #include "core/backend/buffer_view.h"
 

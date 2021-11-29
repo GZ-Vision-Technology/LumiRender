@@ -20,6 +20,8 @@ namespace luminous {
             float _alpha_y{};
             MicrofacetType _type{};
         public:
+            LM_XPU MicrofacetDistribution() = default;
+
             LM_XPU MicrofacetDistribution(float alpha_x, float alpha_y, MicrofacetType md_type = GGX)
                     : _alpha_x(alpha_x),
                       _alpha_y(alpha_y),
@@ -27,7 +29,7 @@ namespace luminous {
 
             }
 
-            static float roughness_to_alpha(float roughness) {
+            LM_ND_XPU static float roughness_to_alpha(float roughness) {
                 roughness = std::max(roughness, (float) 1e-3);
                 float x = std::log(roughness);
                 return 1.62142f +
@@ -35,6 +37,10 @@ namespace luminous {
                        0.1734f * Pow<2>(x) +
                        0.0171201f * Pow<3>(x) +
                        0.000640711f * Pow<4>(x);
+            }
+
+            LM_ND_XPU bool effectively_smooth() const {
+                return std::max(_alpha_x, _alpha_y) < 1e-3f;
             }
 
             /**

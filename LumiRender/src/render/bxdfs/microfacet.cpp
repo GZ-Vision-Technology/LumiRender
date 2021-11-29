@@ -10,7 +10,7 @@ namespace luminous {
     inline namespace render {
 
         float MicrofacetDistribution::D(const float3 &wh) const {
-            // When ¦È is close to 90, tan¦È is infinity
+            // When theta is close to 90, tan theta is infinity
             float tan_theta_2 = Frame::tan_theta_2(wh);
             if (is_inf(tan_theta_2)) {
                 return 0.f;
