@@ -2,12 +2,12 @@
 // Created by Zero on 2021/6/9.
 //
 
-#include "glass.h"
+#include "dieletric.h"
 
 namespace luminous {
     inline namespace render {
 
-        BSDF GlassMaterial::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
+        BSDF DielectricMaterial::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
             return BSDF();
         }
     }

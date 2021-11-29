@@ -17,11 +17,11 @@ namespace luminous {
 
         class AssimpMaterial;
 
-        class GlassMaterial;
+        class DielectricMaterial;
 
         using lstd::Variant;
 
-        class Material : BASE_CLASS(Variant<MatteMaterial *, AssimpMaterial *, GlassMaterial *>) {
+        class Material : BASE_CLASS(Variant<MatteMaterial *, AssimpMaterial *, DielectricMaterial *>) {
         public:
             REFL_CLASS(Material)
 

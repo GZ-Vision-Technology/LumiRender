@@ -6,5 +6,6 @@
 #pragma once
 
 #include "matte.h"
-#include "glass.h"
+#include "dieletric.h"
+#include "conductor.h"
 #include "ai_material.h"
