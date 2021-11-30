@@ -8,10 +8,17 @@ namespace luminous {
     inline namespace render {
 
         Spectrum DielectricBxDF::eval(float3 wo, float3 wi, TransportMode mode) const {
-            return luminous::Spectrum();
+            if (_distribution.effectively_smooth()) {
+                return 0.f;
+            }
+
+            return {};
         }
 
         float DielectricBxDF::PDF(float3 wo, float3 wi, TransportMode mode, BxDFReflTransFlags sample_flags) const {
+            if (_distribution.effectively_smooth()) {
+                return 0.f;
+            }
             return 0;
         }
 

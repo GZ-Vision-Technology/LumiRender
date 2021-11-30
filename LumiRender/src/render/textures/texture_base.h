@@ -69,6 +69,24 @@ namespace luminous {
             ND_XPU_INLINE PixelFormat pixel_format() const {
                 return _pixel_format;
             }
+            
+            ND_XPU_INLINE int channel_num() const {
+                switch (_pixel_format) {
+                    case PixelFormat::R8U:
+                    case PixelFormat::R32F:
+                        return 1;
+                    case PixelFormat::RG8U:
+                    case PixelFormat::RG32F:
+                        return 2;
+                    case PixelFormat::RGBA8U:
+                    case PixelFormat::RGBA32F:
+                        return 4;
+                    case PixelFormat::UNKNOWN:
+                        break;
+                }
+                LM_ASSERT(0, "unknown pixel format %d", int(_pixel_format));
+                return -1;
+            }
 
             LM_XPU_INLINE void set_mapping(const TextureMapping2D &mapping) {
                 _mapping = mapping;

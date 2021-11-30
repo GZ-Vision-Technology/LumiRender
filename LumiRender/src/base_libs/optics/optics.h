@@ -46,21 +46,21 @@ namespace luminous {
             return inv4Pi * (1 - sqr(g)) / (denom * safe_sqrt(denom));
         }
 
-        ND_XPU_INLINE float fresnel_dielectric(float cosTheta_i, float eta) {
-            cosTheta_i = clamp(cosTheta_i, -1, 1);
-            if (cosTheta_i < 0) {
+        ND_XPU_INLINE float fresnel_dielectric(float cos_theta_i, float eta) {
+            cos_theta_i = clamp(cos_theta_i, -1, 1);
+            if (cos_theta_i < 0) {
                 eta = 1 / eta;
-                cosTheta_i = -cosTheta_i;
+                cos_theta_i = -cos_theta_i;
             }
 
-            float sin2Theta_i = 1 - sqr(cosTheta_i);
+            float sin2Theta_i = 1 - sqr(cos_theta_i);
             float sin2Theta_t = sin2Theta_i / sqr(eta);
             if (sin2Theta_t >= 1)
                 return 1.f;
-            float cosTheta_t = safe_sqrt(1 - sin2Theta_t);
+            float cos_theta_t = safe_sqrt(1 - sin2Theta_t);
 
-            float r_parl = (eta * cosTheta_i - cosTheta_t) / (eta * cosTheta_i + cosTheta_t);
-            float r_perp = (cosTheta_i - eta * cosTheta_t) / (cosTheta_i + eta * cosTheta_t);
+            float r_parl = (eta * cos_theta_i - cos_theta_t) / (eta * cos_theta_i + cos_theta_t);
+            float r_perp = (cos_theta_i - eta * cos_theta_t) / (cos_theta_i + eta * cos_theta_t);
             return (r_parl * r_parl + r_perp * r_perp) / 2;
         }
 

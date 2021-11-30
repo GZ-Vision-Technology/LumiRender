@@ -39,6 +39,10 @@ namespace luminous {
                 LUMINOUS_VAR_DISPATCH(pixel_format)
             }
 
+            LM_ND_XPU int channel_num() const {
+                LUMINOUS_VAR_DISPATCH(channel_num);
+            }
+
             LM_XPU void set_mapping(const TextureMapping2D &mapping) {
                 LUMINOUS_VAR_DISPATCH(set_mapping, mapping)
             }
