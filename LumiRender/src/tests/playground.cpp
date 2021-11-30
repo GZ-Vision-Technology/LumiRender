@@ -6,6 +6,7 @@
 #include "render/filters/filter_base.h"
 #include "base_libs/sampling/sampling.h"
 #include "base_libs/sampling/distribution.h"
+#include "base_libs/optics/optics.h"
 
 using namespace std;
 
@@ -32,36 +33,15 @@ Distribution2D create(const float *func, int U, int V) {
 }
 
 int main() {
+    auto cos_theta_i = 0.5f;
+    auto r = fresnel_dielectric(cos_theta_i, 1, 1.5);
 
-    BufferView<const float> bfv;
+    auto r2 = fresnel_dielectric(cos_theta_i, 1.5);
 
-    DistribData d(bfv, bfv, 1);
-
-    TDistribution distribution(d);
-
-    Array<float, 1> func;
-    Array<float, 2> CDF;
-    CDistribData<1> cdd(func, CDF, 1);
-    TDistribution d2(cdd);
-
-    TDistribution d3(bfv, bfv, 1);
-    vector<float> ret;
-    for (int i = 0; i < 100; ++i) {
-        ret.push_back(i);
-    }
-
-    auto sd = create_static_distrib2d<10, 10>(ret.data());
-
-//    auto db = Distribution2D::create_builder(func.data(), 10, 10);
-
-    float PDF;
-    float2 p = sd.sample_continuous(make_float2(0.5f), &PDF);
-
-    auto p2 = sd.sample_continuous(make_float2(-0.5f), &PDF);
-
-    create(ret.data(), 10, 10);
-
-
-
+    float etai = 1;
+    float etat = 1.5;
+    float k = 0.9;
+    auto rc = fresnel_conductor(cos_theta_i, etai, etat, k);
+    auto rc2 = fresnel_complex(cos_theta_i, Complex<float>(etat, k));
     return 0;
 }

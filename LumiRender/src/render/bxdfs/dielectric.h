@@ -6,7 +6,7 @@
 #pragma once
 
 #include "base.h"
-#include "base_libs/optics/rgb.h"
+#include "fresnel.h"
 #include "microfacet.h"
 
 namespace luminous {

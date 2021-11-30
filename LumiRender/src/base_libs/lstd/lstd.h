@@ -7,4 +7,5 @@
 
 #include "common.h"
 #include "variant.h"
+#include "complex.h"
 #include "function_trait.h"

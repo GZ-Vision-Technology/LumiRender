@@ -6,6 +6,8 @@
 #pragma once
 
 #include "../math/common.h"
+#include "base_libs/lstd/complex.h"
+#include "rgb.h"
 
 namespace luminous {
     inline namespace optics {
@@ -49,43 +51,53 @@ namespace luminous {
         ND_XPU_INLINE float fresnel_dielectric(float cos_theta_i, float eta) {
             cos_theta_i = clamp(cos_theta_i, -1, 1);
             if (cos_theta_i < 0) {
-                eta = 1 / eta;
+                eta = 1.f / eta;
                 cos_theta_i = -cos_theta_i;
             }
 
-            float sin2Theta_i = 1 - sqr(cos_theta_i);
-            float sin2Theta_t = sin2Theta_i / sqr(eta);
-            if (sin2Theta_t >= 1)
+            float sin_theta_i_2 = 1 - sqr(cos_theta_i);
+            float sin_theta_t_2 = sin_theta_i_2 / sqr(eta);
+            if (sin_theta_t_2 >= 1) {
                 return 1.f;
-            float cos_theta_t = safe_sqrt(1 - sin2Theta_t);
+            }
+            float cos_theta_t = safe_sqrt(1 - sin_theta_t_2);
 
             float r_parl = (eta * cos_theta_i - cos_theta_t) / (eta * cos_theta_i + cos_theta_t);
             float r_perp = (cos_theta_i - eta * cos_theta_t) / (cos_theta_i + eta * cos_theta_t);
-            return (r_parl * r_parl + r_perp * r_perp) / 2;
+            return (sqr(r_parl) + sqr(r_perp)) / 2;
+        }
+
+        ND_XPU_INLINE float fresnel_dielectric(float cos_theta_i, float eta_i, float eta_t) {
+            return fresnel_dielectric(cos_theta_i, eta_t / eta_i);
+        }
+
+        ND_XPU_INLINE float fresnel_complex(float cos_theta_i, lstd::Complex<float> eta) {
+            using Complex = lstd::Complex<float>;
+            cos_theta_i = clamp(cos_theta_i, 0, 1);
+            float sin_theta_i_2 = 1 - sqr(cos_theta_i);
+            Complex sin_theta_t_2 = sin_theta_i_2 / sqr(eta);
+            Complex cos_theta_t = lstd::sqrt(1.f - sin_theta_t_2);
+
+            Complex r_parl = (eta * cos_theta_i - cos_theta_t) / (eta * cos_theta_i + cos_theta_t);
+            Complex r_perp = (cos_theta_i - eta * cos_theta_t) / (cos_theta_i + eta * cos_theta_t);
+            return (lstd::norm(r_parl) + lstd::norm(r_perp)) * .5f;
+        }
+
+        ND_XPU_INLINE float fresnel_complex(float cos_theta_i, float eta, float k) {
+            return fresnel_complex(cos_theta_i, lstd::Complex<float>(eta, k));
+        }
+
+        ND_XPU_INLINE Spectrum fresnel_complex(float cos_theta_i, Spectrum eta, Spectrum k) {
+            Spectrum ret;
+            for (int i = 0; i < 3; ++i) {
+                ret[i] = fresnel_complex(cos_theta_i, eta[i], k[i]);
+            }
+            return ret;
         }
 
         ND_XPU_INLINE Spectrum fresnel_conductor(float cos_theta_i, const Spectrum &eta_i,
                                                  const Spectrum &eta_t, const Spectrum &kt) {
-            cos_theta_i = clamp(cos_theta_i, -1, 1);
-            Spectrum eta = eta_t / eta_i;
-            Spectrum eta_k = kt / eta_i;
-
-            float cos_theta_i_2 = sqr(cos_theta_i);
-            float sin_theta_i_2 = 1.f - cos_theta_i_2;
-
-            Spectrum t0 = sqr(eta) - sqr(eta_k) - sin_theta_i_2;
-            Spectrum a2plusb2 = sqrt(sqr(t0) + 4.f * sqr(eta) * sqr(eta_k));
-            Spectrum t1 = a2plusb2 + cos_theta_i_2;
-            Spectrum a = sqrt(0.5f * (a2plusb2 + t0));
-            Spectrum t2 = 2.f * cos_theta_i * a;
-            Spectrum Rs = (t1 - t2) / (t1 + t2);
-
-            Spectrum t3 = cos_theta_i_2 * a2plusb2 + sqr(sin_theta_i_2);
-            Spectrum t4 = t2 * sin_theta_i_2;
-            Spectrum Rp = Rs * (t3 - t4) / (t3 + t4);
-
-            return 0.5f * (Rp + Rs);
+            return fresnel_complex(cos_theta_i, eta_t / eta_i, kt);
         }
-
     }
 }
