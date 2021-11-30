@@ -22,12 +22,10 @@ namespace luminous {
                 rx = roughness.x;
                 ry = roughness.y;
             }
-            MicrofacetDistribution distribution(rx, ry, GGX);
             float4 kr = kr_tex.eval(ctx);
             float4 kt = kt_tex.eval(ctx);
             float eta = eta_tex.eval(ctx).x;
-
-            BxDF bxdf = BxDF(DielectricBxDF(kr, kt, eta, distribution));
+            BxDF bxdf = BxDF(DielectricBxDF(kr, kt, eta, rx, ry, GGX));
 
             return {ctx.ng, ctx.ns, ctx.dp_dus, bxdf};
         }

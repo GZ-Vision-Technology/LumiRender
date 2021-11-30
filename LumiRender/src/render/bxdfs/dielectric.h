@@ -27,6 +27,9 @@ namespace luminous {
             LM_XPU DielectricBxDF(float4 kr, float4 kt, float eta, MicrofacetDistribution distribution)
                     : Kr(kr), Kt(kt), _eta(eta), _distribution(distribution) {}
 
+            LM_XPU DielectricBxDF(float4 kr, float4 kt, float eta, float rx, float ry, MicrofacetType type)
+                    : Kr(kr), Kt(kt), _eta(eta), _distribution(MicrofacetDistribution(rx, ry, type)) {}
+
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const;
 
             LM_ND_XPU float PDF(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance,
@@ -43,8 +46,8 @@ namespace luminous {
             }
 
             GEN_STRING_FUNC({
-                LUMINOUS_TO_STRING("DielectricBxDF Kr : %s", Kr.to_string().c_str());
-            })
+                                LUMINOUS_TO_STRING("DielectricBxDF Kr : %s", Kr.to_string().c_str());
+                            })
         };
     }
 }

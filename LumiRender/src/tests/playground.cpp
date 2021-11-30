@@ -34,7 +34,7 @@ Distribution2D create(const float *func, int U, int V) {
 
 int main() {
     auto cos_theta_i = 0.5f;
-    auto r = fresnel_dielectric(cos_theta_i, 1, 1.5);
+    auto r = fresnel_dielectric(cos_theta_i, 1.5, 1);
 
     auto r2 = fresnel_dielectric(cos_theta_i, 1.5);
 
