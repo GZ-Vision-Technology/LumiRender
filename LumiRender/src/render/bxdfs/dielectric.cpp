@@ -25,26 +25,32 @@ namespace luminous {
 
             wh = face_forward(wh, make_float3(0, 0, 1));
 
-            if (dot(wh, wi) * cos_theta_i < 0 || dot(wh, wo) * cos_theta_o < 0) {
+            if (dot(wh, wi) * cos_theta_i < 0
+                || dot(wh, wo) * cos_theta_o < 0) {
                 return 0.f;
             }
 
             if (reflect) {
                 eta_p = cos_theta_o > 0 ? _eta : (1.f / _eta);
                 float F = fresnel_dielectric(dot(wo, wh), eta_p);
+                if (F == 0.f) {
+                    return 0.f;
+                }
                 float ret = _distribution.D(wh) * F * _distribution.G(wo, wi)
                             / std::abs(4 * cos_theta_o * cos_theta_i);
                 return ret * Kr;
             } else {
                 eta_p = cos_theta_i < 0 ? _eta : (1.f / _eta);
                 float F = fresnel_dielectric(dot(wo, wh), eta_p);
+                if (F == 1) {
+                    return 0.f;
+                }
                 float denom = sqr(dot(wi, wh) * eta_p + dot(wo, wh)) * cos_theta_i * cos_theta_o;
 
                 float numerator = _distribution.D(wh) * (1 - F) * _distribution.G(wo, wi) *
                                   std::abs(dot(wi, wh) * dot(wo, wh));
                 float ft = numerator / denom;
-
-
+                return ft * Kt;
             }
 
             return {};

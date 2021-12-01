@@ -125,7 +125,7 @@ namespace luminous {
             return {};
         }
 
-        float MicrofacetDistribution::PDF_dir(const float3 &wo, const float3 &wh) const {
+        float MicrofacetDistribution::PDF(const float3 &wo, const float3 &wh) const {
             return D(wh) * Frame::abs_cos_theta(wh);
         }
     }

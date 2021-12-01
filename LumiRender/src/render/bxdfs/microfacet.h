@@ -94,7 +94,7 @@ namespace luminous {
              * @param  wh :normal of microfacet
              * @return
              */
-            LM_ND_XPU float PDF_dir(const float3 &wo, const float3 &wh) const;
+            LM_ND_XPU float PDF(const float3 &wo, const float3 &wh) const;
 
         };
     }
