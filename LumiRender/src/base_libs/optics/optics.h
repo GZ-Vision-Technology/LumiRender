@@ -17,15 +17,45 @@ namespace luminous {
         }
 
         template<typename T>
-        LM_XPU inline bool refract(Vector<T, 3> wi, Vector<T, 3> n, T eta, Vector<T, 3> *wt) {
-            T cosTheta_i = dot(n, wi);
-            T sin2Theta_i = max<T>(0, 1 - cosTheta_i * cosTheta_i);
-            T sin2Theta_t = sin2Theta_i / sqr(eta);
-            if (sin2Theta_t >= 1) {
+        LM_XPU bool refract(Vector<T, 3> wi, Vector<T, 3> n, T eta, T *eta_p,
+                                   Vector<T, 3> *wt) {
+            T cos_theta_i = dot(n, wi);
+            // Potentially flip interface orientation for Snell's law
+            if (cos_theta_i < 0) {
+                eta = 1 / eta;
+                cos_theta_i = -cos_theta_i;
+                n = -n;
+            }
+
+            // Compute $\cos\,\theta_\roman{t}$ using Snell's law
+            T sin_theta_i_2 = std::max<T>(0, 1 - sqr(cos_theta_i));
+            T sin_theta_t_2 = sin_theta_i_2 / sqr(eta);
+            // Handle total internal reflection case
+            if (sin_theta_t_2 >= 1) {
                 return false;
             }
-            T cosTheta_t = safe_sqrt(1 - sin2Theta_t);
-            *wt = -wi / eta + (cosTheta_i / eta - cosTheta_t) * Vector<T, 3>(n);
+
+            T cos_theta_t = safe_sqrt(1 - sin_theta_t_2);
+
+            *wt = -wi / eta + (cos_theta_i / eta - cos_theta_t) * n;
+            // Provide relative IOR along ray to caller
+            if (eta_p) {
+                *eta_p = eta;
+            }
+
+            return true;
+        }
+
+        template<typename T>
+        LM_XPU inline bool refract(Vector<T, 3> wi, Vector<T, 3> n, T eta, Vector<T, 3> *wt) {
+            T cos_theta_i = dot(n, wi);
+            T sin_theta_i_2 = max<T>(0, 1 - sqr(cos_theta_i));
+            T sin_theta_t_2 = sin_theta_i_2 / sqr(eta);
+            if (sin_theta_t_2 >= 1) {
+                return false;
+            }
+            T cos_theta_t = safe_sqrt(1 - sin_theta_t_2);
+            *wt = -wi / eta + (cos_theta_i / eta - cos_theta_t) * Vector<T, 3>(n);
             return true;
         }
 
