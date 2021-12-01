@@ -72,8 +72,8 @@ namespace luminous {
                 case GGX: {
                     float cos_theta = 0, phi = _2Pi * u[1];
                     if (_alpha_x == _alpha_y) {
-                        float tanTheta2 = _alpha_x * _alpha_x * u[0] / (1.0f - u[0]);
-                        cos_theta = 1 / std::sqrt(1 + tanTheta2);
+                        float tan_theta_2 = _alpha_x * _alpha_x * u[0] / (1.0f - u[0]);
+                        cos_theta = 1 / std::sqrt(1 + tan_theta_2);
                     } else {
                         phi = std::atan(_alpha_y / _alpha_x * std::tan(_2Pi * u[1] + PiOver2));
                         if (u[1] > .5f) {
