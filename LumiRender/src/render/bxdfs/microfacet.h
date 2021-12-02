@@ -97,6 +97,41 @@ namespace luminous {
              */
             LM_ND_XPU float PDF_wh(const float3 &wo, const float3 &wh) const;
 
+            /**
+             * pwi(wi) = dwh / dwi * pwh(wh) = pwh(wh) / 4cos_theta_h
+             * @param PDF_wh
+             * @param wo
+             * @param wh
+             * @return
+             */
+            LM_ND_XPU float PDF_wi_reflection(float PDF_wh, float3 wo, float3 wh) const {
+                return PDF_wh / (4 * abs_dot(wo, wh));
+            }
+
+            LM_ND_XPU float PDF_wi_reflection(float3 wo, float3 wh) const {
+                return PDF_wi_reflection(PDF_wh(wo, wh), wo, wh);
+            }
+
+            /**
+             * dwh  dwi
+             *                   eta_i^2 |wi dot wh|
+             * dwh/dwi = -----------------------------------------
+             *            [eta_o(wh dot wo) + eta_i(wi dot wh)]^2
+             * @tparam T
+             * @param PDF_wh
+             * @param eta eta_i / eta_o
+             * @return
+             */
+            LM_ND_XPU float PDF_wi_transmission(float PDF_wh, float3 wo, float3 wh, float3 wi, float eta) const {
+                float denom = sqr(dot(wi, wh) + dot(wo, wh) / eta);
+                float dwh_dwi = abs_dot(wi, wh) / denom;
+                return PDF_wh * dwh_dwi;
+            }
+
+            LM_ND_XPU float PDF_wi_transmission(float3 wo, float3 wh, float3 wi, float eta) const {
+                return PDF_wi_transmission(PDF_wh(wh, wo), wo, wh, wi, eta);
+            }
+
             template<typename T>
             LM_ND_XPU T BRDF(float3 wo, float3 wh, float3 wi, T Fr,
                              float cos_theta_i, float cos_theta_o,

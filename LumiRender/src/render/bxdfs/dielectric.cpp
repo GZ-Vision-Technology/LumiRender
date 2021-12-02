@@ -36,23 +36,15 @@ namespace luminous {
                 if (F == 0.f) {
                     return 0.f;
                 }
-                float ret = _distribution.D(wh) * F * _distribution.G(wo, wi)
-                            / std::abs(4 * cos_theta_o * cos_theta_i);
-                return ret * Kr;
+                float fr = _distribution.BRDF(wo, wh, wi, F, cos_theta_i, cos_theta_o, mode);
+                return fr * Kr;
             } else {
                 eta_p = cos_theta_o > 0 ? _eta : (1.f / _eta);
                 float F = fresnel_dielectric(dot(wo, wh), eta_p);
                 if (F == 1) {
                     return 0.f;
                 }
-                float denom = sqr(dot(wi, wh) * eta_p + dot(wo, wh)) * cos_theta_i * cos_theta_o;
-
-                float numerator = _distribution.D(wh) * (1 - F) * _distribution.G(wo, wi) *
-                                  std::abs(dot(wi, wh) * dot(wo, wh));
-                float ft = numerator / denom;
-                if (mode == TransportMode::Radiance) {
-                    ft = ft / sqr(eta_p);
-                }
+                float ft = _distribution.BTDF(wo, wh, wi, 1 - F, eta_p, cos_theta_o, cos_theta_i, mode);
                 return ft * Kt;
             }
             return {};
@@ -97,15 +89,12 @@ namespace luminous {
 
             float PDF = 0.f;
             if (reflect) {
-                PDF = _distribution.PDF_wh(wo, wh) / (4 * abs_dot(wo, wh));
+                PDF = _distribution.PDF_wi_reflection(wo, wh);
                 PDF = PDF * pr / (pt + pr);
             } else {
-                float denom = sqr(dot(wi, wh) + dot(wo, wh) / eta_p);
-                float dwh_dwi = abs_dot(wi, wh) / denom;
-                PDF = _distribution.PDF_wh(wo, wh) * dwh_dwi;
+                PDF = _distribution.PDF_wi_transmission(wo, wh, wi, eta_p);
                 PDF = PDF * pt / (pt + pr);
             }
-
             return PDF;
         }
 
@@ -164,15 +153,29 @@ namespace luminous {
                 if (uc < pr / (pr + pt)) {
                     // reflection
                     float3 wi = reflect(wo, wh);
+                    float cos_theta_i = Frame::cos_theta(wi);
+                    float cos_theta_o = Frame::cos_theta(wo);
                     if (!same_hemisphere(wi, wo)) {
                         return {};
                     }
-                    PDF = _distribution.PDF_wh(wo, wh) / (4 * abs_dot(wo, wh)) * pr / (pr + pt);
-
+                    PDF = _distribution.PDF_wi_reflection(wo, wh) * pr / (pr + pt);
+                    float fr = _distribution.BRDF(wo, wh, wi, R, cos_theta_i, cos_theta_o, mode);
+                    Spectrum val = fr * Kr;
+                    return {BSDFSample(val, wi, PDF, Reflection, _eta)};
+                } else {
+                    // transmission
+                    float eta_p{};
+                    float3 wi{};
+                    bool valid = refract(wo, wh, _eta, &eta_p, &wi);
+                    float cos_theta_o = Frame::cos_theta(wo);
+                    float cos_theta_i = Frame ::cos_theta(wi);
+                    PDF = _distribution.PDF_wi_transmission(wo, wh, wi, eta_p) * pt / (pr + pt);
+                    float ft = _distribution.BTDF(wo, wh, wi, 1 - R, cos_theta_o, cos_theta_i, eta_p, mode);
+                    Spectrum val = ft * Kt;
+                    return {BSDFSample(val, wi, PDF, Transmission, _eta)};
                 }
             }
-
-            return lstd::optional<BSDFSample>();
+            return {};
         }
 
         BxDFFlags DielectricBxDF::flags() const {
