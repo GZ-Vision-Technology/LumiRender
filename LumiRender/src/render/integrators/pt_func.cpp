@@ -46,6 +46,8 @@ namespace luminous {
                 BREAK_IF(!found_intersection)
                 if (!si.op_bsdf) {
                     ray = si.spawn_ray(ray.direction());
+                    found_intersection = luminous::intersect_closest(scene_handle, ray, &hit_ctx);
+                    si = hit_ctx.compute_surface_interaction(ray);
                     --bounces;
                     continue;
                 }
