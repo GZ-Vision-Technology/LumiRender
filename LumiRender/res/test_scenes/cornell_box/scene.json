@@ -4,7 +4,7 @@
 			"type" :"ConstantTexture",
 			"name" : "constant",
 			"param": {
-				"val": [1,0,1,0],
+				"val": [1,1,1,0],
 				"color_space": "SRGB"
 			}
 		}
@@ -174,7 +174,7 @@
 			"name" : "nanosuit",
 			"type": "model",
 			"param" : {
-//				"material": "quad",
+				"material": "quad",
 				"fn": "nanosuit/nanosuit.obj",
 				"subdiv_level": 0,
 				"transform" : {

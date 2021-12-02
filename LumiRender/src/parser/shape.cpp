@@ -23,7 +23,9 @@ namespace luminous {
             meshes = AssimpParser::parse_meshes(ai_scene, sc.subdiv_level);
 
             custom_material_name = sc.material_name;
-            materials = AssimpParser::parse_materials(ai_scene, directory);
+            if (custom_material_name.empty()) {
+                materials = AssimpParser::parse_materials(ai_scene, directory);
+            }
         }
     } // luminous::render
 } // luminous
