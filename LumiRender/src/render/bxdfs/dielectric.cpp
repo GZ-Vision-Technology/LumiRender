@@ -97,12 +97,12 @@ namespace luminous {
 
             float PDF = 0.f;
             if (reflect) {
-                PDF = _distribution.PDF(wo, wh) / (4 * abs_dot(wo, wh));
+                PDF = _distribution.PDF_wh(wo, wh) / (4 * abs_dot(wo, wh));
                 PDF = PDF * pr / (pt + pr);
             } else {
                 float denom = sqr(dot(wi, wh) + dot(wo, wh) / eta_p);
                 float dwh_dwi = abs_dot(wi, wh) / denom;
-                PDF = _distribution.PDF(wo, wh) * dwh_dwi;
+                PDF = _distribution.PDF_wh(wo, wh) * dwh_dwi;
                 PDF = PDF * pt / (pt + pr);
             }
 
@@ -160,13 +160,15 @@ namespace luminous {
                 if (pr == 0 && pt == 0) {
                     return {};
                 }
-                float PDF;
+                float PDF{};
                 if (uc < pr / (pr + pt)) {
                     // reflection
                     float3 wi = reflect(wo, wh);
                     if (!same_hemisphere(wi, wo)) {
                         return {};
                     }
+                    PDF = _distribution.PDF_wh(wo, wh) / (4 * abs_dot(wo, wh)) * pr / (pr + pt);
+
                 }
             }
 

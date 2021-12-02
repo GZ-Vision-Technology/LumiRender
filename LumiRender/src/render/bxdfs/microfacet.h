@@ -6,6 +6,7 @@
 #pragma once
 
 #include "base_libs/optics/rgb.h"
+#include "base.h"
 
 namespace luminous {
     inline namespace render {
@@ -94,8 +95,57 @@ namespace luminous {
              * @param  wh :normal of microfacet
              * @return
              */
-            LM_ND_XPU float PDF(const float3 &wo, const float3 &wh) const;
+            LM_ND_XPU float PDF_wh(const float3 &wo, const float3 &wh) const;
 
+            template<typename T>
+            LM_ND_XPU T BRDF(float3 wo, float3 wh, float3 wi, T Fr,
+                             float cos_theta_i, float cos_theta_o,
+                             TransportMode mode = TransportMode::Radiance) const {
+                return D(wh) * Fr * G(wo, wi) / std::abs(4 * cos_theta_o * cos_theta_i);
+            }
+
+            template<typename T>
+            LM_ND_XPU T BRDF(float3 wo, float3 wi, T Fr,
+                             float cos_theta_i, float cos_theta_o,
+                             TransportMode mode = TransportMode::Radiance) const {
+                float3 wh = normalize(wo + wi);
+                return BRDF(wo, wh, wi, Fr, cos_theta_i, cos_theta_o, mode);
+            }
+
+            /**
+             *
+             * @tparam T
+             * @param eta : eta_i / eta_o
+             * @param mode
+             * @return
+             */
+            template<typename T>
+            LM_ND_XPU T BTDF(float3 wo, float3 wh, float3 wi, T Ft,
+                             float cos_theta_i, float cos_theta_o, T eta,
+                             TransportMode mode = TransportMode::Radiance) const {
+                T numerator = D(wh) * Ft * G(wo, wi) * std::abs(dot(wi, wh) * dot(wo, wh));
+                T denom = sqr(dot(wi, wh) * eta + dot(wo, wh)) * cos_theta_i * cos_theta_o;
+                T ft = numerator / denom;
+                if (mode == TransportMode::Radiance) {
+                    ft = ft / sqr(eta);
+                }
+                return ft;
+            }
+
+            /**
+             *
+             * @tparam T
+             * @param eta : eta_i / eta_o
+             * @param mode
+             * @return
+             */
+            template<typename T>
+            LM_ND_XPU T BTDF(float3 wo, float3 wi, T Ft,
+                             float cos_theta_i, float cos_theta_o, T eta,
+                             TransportMode mode = TransportMode::Radiance) const {
+                float3 wh = normalize(wo + wi * eta);
+                return BTDF(wo, wh, wi, Ft, cos_theta_i, cos_theta_o,eta, mode);
+            }
         };
     }
 }
