@@ -15,6 +15,17 @@
 #endif
 #include "crtdbg.h"
 
+
+#if defined(__GNUC__) || defined(__clang__)
+#define LM_FUNCSIG  __PRETTY_FUNCTION__
+#elif defined(_MSC_VER)
+#define LM_FUNCSIG __FUNCSIG__
+#endif
+
+#ifndef LM_FUNCSIG
+#error "LM_FUNCSIG is needed but not provided by C++ compiler."
+#endif
+
 #if defined(_MSC_VER)
 #define HAVE_ALIGNED_MALLOC
 #endif
@@ -113,7 +124,13 @@ constexpr const char *type_name(T *ptr = nullptr) {
 #define LM_ASSERT(condition, ...)
 #else
 #define EXE_DEBUG(pred, arg) if (pred) { arg; }
-#define LM_ASSERT(condition, ...) if (!condition) { printf(__VA_ARGS__);} assert(condition);
+
+#define LM_ASSERT(condition, ...)                      \
+        [&] {                                          \
+             bool b = (condition);                     \
+             if (!b) { printf(__VA_ARGS__);} assert(b);\
+        }()
+
 #endif
 
 

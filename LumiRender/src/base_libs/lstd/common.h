@@ -59,13 +59,13 @@ namespace luminous {
         inline constexpr nullopt_t nullopt{};
 
         template<typename T>
-        class optional {
+        class alignas(T) optional {
         private:
-            LM_XPU T *ptr() { return reinterpret_cast<T *>(&_optional_value); }
+            LM_XPU T *ptr() { return reinterpret_cast<T *>(&_opt_buffer); }
 
-            LM_XPU const T *ptr() const { return reinterpret_cast<const T *>(&_optional_value); }
+            LM_XPU const T *ptr() const { return reinterpret_cast<const T *>(&_opt_buffer); }
 
-            T _optional_value;
+            std::aligned_storage_t<sizeof(T), alignof(T)> _opt_buffer;
             bool set = false;
         public:
             using value_type = T;
@@ -84,7 +84,6 @@ namespace luminous {
             LM_XPU optional(optional &&v) : set(v.has_value()) {
                 if (v.has_value()) {
                     new(ptr()) T(std::move(v.value()));
-                    v.reset();
                 }
             }
 
@@ -123,7 +122,6 @@ namespace luminous {
                 if (v.has_value()) {
                     new(ptr()) T(std::move(v.value()));
                     set = true;
-                    v.reset();
                 }
                 return *this;
             }
@@ -148,7 +146,7 @@ namespace luminous {
             }
 
             LM_XPU const T &value() const {
-                DCHECK(set);
+                DCHECK(set && LM_FUNCSIG);
                 return *ptr();
             }
 

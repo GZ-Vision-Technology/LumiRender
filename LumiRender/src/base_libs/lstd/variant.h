@@ -127,10 +127,12 @@ namespace luminous {
             }
 
             LM_XPU Variant(const Variant &v) : index(v.index) {
+              if(index >= 0) {
                 v.dispatch([&](const auto &item) {
                     using U = std::decay_t<decltype(item)>;
                     new(&data) U(item);
                 });
+            }
             }
 
             LM_ND_XPU int type_index() const { return index; }
@@ -225,7 +227,7 @@ namespace luminous {
                     else                                                                                                   \
                         return visitor(*reinterpret_cast<ty *>(&data));                                                    \
                 }                                                                                                          \
-            };                                                                                                             \
+            }                                                                                                             \
             break;
 #define GEN_CASES_2()                                                                                                     \
         GEN_CASE_N(0)                                                                                                     \
@@ -250,24 +252,29 @@ namespace luminous {
         GEN_CASE_N(13)                                                                                                    \
         GEN_CASE_N(14)                                                                                                    \
         GEN_CASE_N(15)
-#define GEN_DISPATCH_BODY()                                                                                                \
-        using Ret = std::invoke_result_t<Visitor, typename FirstOf<Ts...>::type &>;                                        \
-        static_assert(nTypes <= 16, "too many types");                                                                     \
-        if constexpr (nTypes <= 2) {                                                                                       \
-            switch (index) { GEN_CASES_2(); }                                                                             \
-        } else if constexpr (nTypes <= 4) {                                                                                \
-            switch (index) { GEN_CASES_4(); }                                                                             \
-        } else if constexpr (nTypes <= 8) {                                                                                \
-            switch (index) { GEN_CASES_8(); }                                                                             \
-        } else if constexpr (nTypes <= 16) {                                                                               \
-            switch (index) { GEN_CASES_16(); }                                                                            \
-        } else  {                                                                                                          \
-            LM_ASSERT(0, "function %s error !", func_name);                                                                \
-        }                                                                                                                  \
-        if constexpr (std::is_same_v<void, Ret>) {                                                                         \
-            return;                                                                                                        \
-        } else {                                                                                                           \
-            LM_ASSERT(0, "function %s error !", func_name);                                                                                                    \
+#define GEN_DISPATCH_BODY()                                                                        \
+  using Ret = std::invoke_result_t<Visitor, typename FirstOf<Ts...>::type &>;                      \
+  static_assert(nTypes <= 16, "too many types");                                                   \
+  if (index < 0) {                                                                                 \
+    printf("Error: %s: unknown type tag: %d\n", func_name, index);                                 \
+                                                                                         \
+  }                                                                                                \
+  if constexpr (nTypes <= 2) {                                                                     \
+    switch (index) { GEN_CASES_2() }                                                               \
+  } else if constexpr (nTypes <= 4) {                                                              \
+    switch (index) { GEN_CASES_4() }                                                               \
+  } else if constexpr (nTypes <= 8) {                                                              \
+    switch (index) { GEN_CASES_8() }                                                               \
+  } else if constexpr (nTypes <= 16) {                                                             \
+    switch (index) { GEN_CASES_16() }                                                              \
+  } else {                                                                                         \
+    LM_ASSERT(0, "Error: %s: unknown type tag: %d\n", func_name, index);                           \
+  }                                                                                                \
+  if constexpr (std::is_same_v<void, Ret>) {                                                       \
+    return;                                                                                        \
+  } else {                                                                                         \
+    /* LM_ASSERT(0, "Error： %s: unknown type tag: %d\n", func_name, index); */                   \
+    return Ret{};                                                                                  \
         }
 
             template<class Visitor>
@@ -292,6 +299,7 @@ namespace luminous {
                     using U = std::decay_t<decltype(self)>;
                     that->template get<U>()->~U();
                 });
+                index = -1;
             }
 
 #undef _GEN_CASE_N
@@ -299,11 +307,11 @@ namespace luminous {
 #define LUMINOUS_VAR_DISPATCH(method, ...)                                                                                 \
         return this->dispatch([&](auto &&self)-> decltype(auto) {                                                          \
             return self.method(__VA_ARGS__);                                                                               \
-        }, #method);
+        }, "File:\"" __FILE__ "\",Line:" TO_STRING(__LINE__) ",Calling:" LM_FUNCSIG);
 #define LUMINOUS_VAR_PTR_DISPATCH(method, ...)                                                                             \
         return this->dispatch([&](auto &&self)-> decltype(auto) {                                                          \
             return self->method(__VA_ARGS__);                                                                              \
-        }, #method);
+        }, "File:\"" __FILE__ "\",Line:" TO_STRING(__LINE__) ",Calling:" LM_FUNCSIG);
 
         };
 
