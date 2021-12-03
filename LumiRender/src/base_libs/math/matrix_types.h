@@ -261,6 +261,15 @@ namespace luminous {
             }
         }
 
+        template<typename T>
+        ND_XPU_INLINE bool all_positive(T v) noexcept {
+            if constexpr(std::is_arithmetic_v<T>) {
+                return v >= 0;
+            } else {
+                return all(v >= T(0));
+            }
+        }
+
 #undef MAKE_VECTOR_UNARY_FUNC_BOOL
     }
 }

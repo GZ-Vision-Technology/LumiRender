@@ -93,11 +93,11 @@ namespace luminous {
         }
 
         struct BSDFSample {
-            Spectrum f_val;
-            float3 wi;
-            float PDF;
-            BxDFFlags flags;
-            float eta = 1;
+            Spectrum f_val{};
+            float3 wi{};
+            float PDF{0.f};
+            BxDFFlags flags{};
+            float eta{1.f};
 
             LM_ND_XPU BSDFSample() = default;
 

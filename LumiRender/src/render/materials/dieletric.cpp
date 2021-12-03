@@ -12,7 +12,7 @@ namespace luminous {
             const Texture &kr_tex = scene_data->get_texture(Kr);
             const Texture &kt_tex = scene_data->get_texture(Kt);
             const Texture &roughness_tex = scene_data->get_texture(_roughness);
-            const Texture &eta_tex = scene_data->get_texture(_roughness);
+            const Texture &eta_tex = scene_data->get_texture(_eta);
 
             float4 roughness = roughness_tex.eval(ctx);
             float rx{0}, ry{0};

@@ -167,6 +167,12 @@ namespace luminous {
                     float eta_p{};
                     float3 wi{};
                     bool valid = refract(wo, wh, _eta, &eta_p, &wi);
+                    if (!valid) {
+                        return {};
+                    }
+                    if (same_hemisphere(wo, wi)) {
+                        return {};
+                    }
                     float cos_theta_o = Frame::cos_theta(wo);
                     float cos_theta_i = Frame::cos_theta(wi);
                     PDF = _distribution.PDF_wi_transmission(wo, wh, wi, eta_p) * pt / (pr + pt);

@@ -142,6 +142,7 @@ namespace luminous {
                              TransportMode mode = TransportMode::Radiance) const {
                 auto ret = D(wh) * Fr * G(wo, wi) / std::abs(4 * cos_theta_o * cos_theta_i);
                 DCHECK(!invalid(ret));
+                DCHECK(all_positive(ret));
                 return ret;
             }
 
@@ -165,12 +166,13 @@ namespace luminous {
                              float cos_theta_i, float cos_theta_o, T eta,
                              TransportMode mode = TransportMode::Radiance) const {
                 T numerator = D(wh) * Ft * G(wo, wi) * std::abs(dot(wi, wh) * dot(wo, wh));
-                T denom = sqr(dot(wi, wh) * eta + dot(wo, wh)) * cos_theta_i * cos_theta_o;
+                T denom = sqr(dot(wi, wh) * eta + dot(wo, wh)) * abs(cos_theta_i * cos_theta_o);
                 T ft = numerator / denom;
                 if (mode == TransportMode::Radiance) {
                     ft = ft / sqr(eta);
                 }
                 DCHECK(!invalid(ft));
+                DCHECK(all_positive(ft));
                 return ft;
             }
 
