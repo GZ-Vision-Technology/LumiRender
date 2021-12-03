@@ -7,6 +7,22 @@
 				"val": [1,1,1,0],
 				"color_space": "SRGB"
 			}
+		},
+		{
+			"type" :"ConstantTexture",
+			"name" : "roughness",
+			"param": {
+				"val": [0.01,0.01,1,0],
+				"color_space": "LINEAR"
+			}
+		},
+		{
+			"type" :"ConstantTexture",
+			"name" : "eta",
+			"param": {
+				"val": [1.5,0.01,1,0],
+				"color_space": "LINEAR"
+			}
 		}
 //	,
 //		{
@@ -33,6 +49,16 @@
 			"name": "quad",
 			"param": {
 				"diffuse": "constant"
+			}
+		},
+		{
+			"type": "DielectricMaterial",
+			"name": "glass",
+			"param": {
+				"Kr": "constant",
+				"Kt": "constant",
+				"roughness": "roughness",
+				"eta" : "eta"
 			}
 		},
 		{

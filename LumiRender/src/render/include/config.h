@@ -203,6 +203,30 @@ namespace luminous {
                     });
                     DCHECK(idx != -1);
                     diffuse_tex.tex_idx = idx;
+                } else if (type() == full_type("DielectricMaterial")) {
+                    auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+                        return tex_config.name == Kr_tex.name;
+                    });
+                    DCHECK(idx != -1);
+                    Kr_tex.tex_idx = idx;
+
+                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+                        return tex_config.name == Kt_tex.name;
+                    });
+                    DCHECK(idx != -1);
+                    Kt_tex.tex_idx = idx;
+
+                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+                        return tex_config.name == roughness_tex.name;
+                    });
+                    DCHECK(idx != -1);
+                    roughness_tex.tex_idx = idx;
+
+                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+                        return tex_config.name == eta_tex.name;
+                    });
+                    DCHECK(idx != -1);
+                    eta_tex.tex_idx = idx;
                 }
             }
         };
