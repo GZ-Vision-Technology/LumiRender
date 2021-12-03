@@ -168,7 +168,7 @@ namespace luminous {
                     float3 wi{};
                     bool valid = refract(wo, wh, _eta, &eta_p, &wi);
                     float cos_theta_o = Frame::cos_theta(wo);
-                    float cos_theta_i = Frame ::cos_theta(wi);
+                    float cos_theta_i = Frame::cos_theta(wi);
                     PDF = _distribution.PDF_wi_transmission(wo, wh, wi, eta_p) * pt / (pr + pt);
                     float ft = _distribution.BTDF(wo, wh, wi, 1 - R, cos_theta_o, cos_theta_i, eta_p, mode);
                     Spectrum val = ft * Kt;

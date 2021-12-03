@@ -252,6 +252,15 @@ namespace luminous {
         MAKE_VECTOR_UNARY_FUNC_BOOL(nan)
         MAKE_VECTOR_UNARY_FUNC_BOOL(invalid)
 
+        template<typename T>
+        ND_XPU_INLINE bool invalid(T v) noexcept {
+            if constexpr(std::is_floating_point_v<T>) {
+                return is_invalid(v);
+            } else {
+                return has_invalid(v);
+            }
+        }
+
 #undef MAKE_VECTOR_UNARY_FUNC_BOOL
     }
 }

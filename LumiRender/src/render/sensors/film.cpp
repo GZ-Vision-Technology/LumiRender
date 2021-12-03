@@ -45,6 +45,7 @@ namespace luminous {
         void Film::fill_buffer(uint pixel_index, float3 val, float weight,
                                uint frame_index, BufferView<float4> buffer_view) {
             val = val * weight;
+            DCHECK(!has_invalid(val));
             if (frame_index == 0) {
                 buffer_view[pixel_index] = make_float4(val, weight);
             } else {

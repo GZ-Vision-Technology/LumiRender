@@ -105,7 +105,9 @@ namespace luminous {
              * @return
              */
             LM_ND_XPU float PDF_wi_reflection(float PDF_wh, float3 wo, float3 wh) const {
-                return PDF_wh / (4 * abs_dot(wo, wh));
+                float ret = PDF_wh / (4 * abs_dot(wo, wh));
+                DCHECK(!is_invalid(ret));
+                return ret;
             }
 
             LM_ND_XPU float PDF_wi_reflection(float3 wo, float3 wh) const {
@@ -125,7 +127,9 @@ namespace luminous {
             LM_ND_XPU float PDF_wi_transmission(float PDF_wh, float3 wo, float3 wh, float3 wi, float eta) const {
                 float denom = sqr(dot(wi, wh) + dot(wo, wh) / eta);
                 float dwh_dwi = abs_dot(wi, wh) / denom;
-                return PDF_wh * dwh_dwi;
+                float ret = PDF_wh * dwh_dwi;
+                DCHECK(!is_invalid(ret));
+                return ret;
             }
 
             LM_ND_XPU float PDF_wi_transmission(float3 wo, float3 wh, float3 wi, float eta) const {
@@ -136,7 +140,9 @@ namespace luminous {
             LM_ND_XPU T BRDF(float3 wo, float3 wh, float3 wi, T Fr,
                              float cos_theta_i, float cos_theta_o,
                              TransportMode mode = TransportMode::Radiance) const {
-                return D(wh) * Fr * G(wo, wi) / std::abs(4 * cos_theta_o * cos_theta_i);
+                auto ret = D(wh) * Fr * G(wo, wi) / std::abs(4 * cos_theta_o * cos_theta_i);
+                DCHECK(!invalid(ret));
+                return ret;
             }
 
             template<typename T>
@@ -164,6 +170,7 @@ namespace luminous {
                 if (mode == TransportMode::Radiance) {
                     ft = ft / sqr(eta);
                 }
+                DCHECK(!invalid(ft));
                 return ft;
             }
 
