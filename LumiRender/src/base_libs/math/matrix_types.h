@@ -250,6 +250,7 @@ namespace luminous {
 
         MAKE_VECTOR_UNARY_FUNC_BOOL(inf)
         MAKE_VECTOR_UNARY_FUNC_BOOL(nan)
+        MAKE_VECTOR_UNARY_FUNC_BOOL(invalid)
 
 #undef MAKE_VECTOR_UNARY_FUNC_BOOL
     }

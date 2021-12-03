@@ -11,16 +11,16 @@ namespace luminous {
     inline namespace math {
 
 #if defined(__CUDACC__)
-        #define DoubleOneMinusEpsilon 0x1.fffffffffffffp-1
-        #define FloatOneMinusEpsilon float(0x1.fffffep-1)
-        #define OneMinusEpsilon FloatOneMinusEpsilon
+#define DoubleOneMinusEpsilon 0x1.fffffffffffffp-1
+#define FloatOneMinusEpsilon float(0x1.fffffep-1)
+#define OneMinusEpsilon FloatOneMinusEpsilon
 #else
         static constexpr float FloatOneMinusEpsilon = 0.99999994;
         static constexpr float OneMinusEpsilon = FloatOneMinusEpsilon;
 #endif
 
-        template <typename T, std::enable_if_t<std::is_floating_point<T>::value, bool> = false>
-        inline LM_XPU bool is_nan(T v) {
+        template<typename T, std::enable_if_t<std::is_floating_point<T>::value, bool> = false>
+        ND_XPU_INLINE bool is_nan(T v) {
 #if defined(__CUDACC__)
             return ::isnan(v);
 #else
@@ -28,13 +28,13 @@ namespace luminous {
 #endif
         }
 
-        template <typename T, std::enable_if_t<std::is_integral<T>::value, bool> = false>
-        inline LM_XPU bool is_nan(T v) {
+        template<typename T, std::enable_if_t<std::is_integral<T>::value, bool> = false>
+        ND_XPU_INLINE bool is_nan(T v) {
             return false;
         }
 
-        template <typename T, std::enable_if_t<std::is_floating_point<T>::value, bool> = false>
-        inline LM_XPU bool is_inf(T v) {
+        template<typename T, std::enable_if_t<std::is_floating_point<T>::value, bool> = false>
+        ND_XPU_INLINE bool is_inf(T v) {
 #if defined(__CUDACC__)
             return ::isinf(v);
 #else
@@ -42,9 +42,19 @@ namespace luminous {
 #endif
         }
 
-        template <typename T, std::enable_if_t<std::is_integral<T>::value, bool> = false>
-        inline LM_XPU bool is_inf(T v) {
+        template<typename T, std::enable_if_t<std::is_integral<T>::value, bool> = false>
+        ND_XPU_INLINE bool is_inf(T v) {
             return false;
+        }
+
+        template<typename T, std::enable_if_t<std::is_floating_point<T>::value, bool> = false>
+        ND_XPU_INLINE bool is_nature_number(T v) {
+            return !is_inf(v) && !is_nan(v);
+        }
+
+        template<typename T, std::enable_if_t<std::is_floating_point<T>::value, bool> = false>
+        ND_XPU_INLINE bool is_invalid(T v) {
+            return is_inf(v) || is_nan(v);
         }
 
         LM_XPU_INLINE float FMA(float a, float b, float c) {
