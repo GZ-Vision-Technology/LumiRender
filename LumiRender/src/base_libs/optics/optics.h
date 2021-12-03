@@ -19,6 +19,7 @@ namespace luminous {
         template<typename T>
         LM_XPU bool refract(Vector<T, 3> wi, Vector<T, 3> n, T eta, T *eta_p,
                                    Vector<T, 3> *wt) {
+            CHECK_UNIT_VEC(wi)
             T cos_theta_i = dot(n, wi);
             // Potentially flip interface orientation for Snell's law
             if (cos_theta_i < 0) {
@@ -37,7 +38,7 @@ namespace luminous {
 
             T cos_theta_t = safe_sqrt(1 - sin_theta_t_2);
 
-            *wt = -wi / eta + (cos_theta_i / eta - cos_theta_t) * n;
+            *wt = normalize(-wi / eta + (cos_theta_i / eta - cos_theta_t) * n);
             // Provide relative IOR along ray to caller
             if (eta_p) {
                 *eta_p = eta;

@@ -40,7 +40,7 @@ namespace luminous {
             switch (_type) {
                 case GGX: {
                     float abs_tan_theta = std::abs(Frame::tan_theta(w));
-                    if (std::isinf(abs_tan_theta)) {
+                    if (is_inf(abs_tan_theta)) {
                         return 0.f;
                     }
                     float alpha = std::sqrt(Frame::cos_phi_2(w) * sqr(_alpha_x) +
@@ -49,7 +49,7 @@ namespace luminous {
                 }
                 case Beckmann: {
                     float abs_tan_theta = std::abs(Frame::tan_theta(w));
-                    if (std::isinf(abs_tan_theta)) {
+                    if (is_inf(abs_tan_theta)) {
                         return 0.f;
                     }
                     float alpha = std::sqrt(Frame::cos_phi_2(w) * sqr(_alpha_x) +
@@ -95,12 +95,12 @@ namespace luminous {
                     float tan_theta_2, phi;
                     if (_alpha_x == _alpha_y) {
                         float log_sample = std::log(1 - u[0]);
-                        DCHECK(!std::isinf(log_sample));
+                        DCHECK(!is_inf(log_sample));
                         tan_theta_2 = -_alpha_x * _alpha_x * log_sample;
                         phi = u[1] * _2Pi;
                     } else {
                         float log_sample = std::log(1 - u[0]);
-                        DCHECK(!std::isinf(log_sample));
+                        DCHECK(!is_inf(log_sample));
                         phi = std::atan(_alpha_y / _alpha_x *
                                 std::tan(_2Pi * u[1] + PiOver2));
                         if (u[1] > 0.5f) {
