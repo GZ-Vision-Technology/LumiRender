@@ -12,7 +12,7 @@
 			"type" :"ConstantTexture",
 			"name" : "roughness",
 			"param": {
-				"val": [0,0,1,0],
+				"val": [0.01,0.01,1,0],
 				"color_space": "LINEAR"
 			}
 		},
@@ -200,7 +200,7 @@
 			"name" : "nanosuit",
 			"type": "model",
 			"param" : {
-				"material": "glass",
+				"material": "quad",
 				"fn": "nanosuit/nanosuit.obj",
 				"subdiv_level": 0,
 				"transform" : {
@@ -242,7 +242,7 @@
 //		"type" : "WavefrontPT",
 		"type" : "PT",
 		"param" : {
-			"max_depth" : 3,
+			"max_depth" : 15,
 			"rr_threshold" : 1
 		}
 	},

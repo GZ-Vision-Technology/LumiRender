@@ -178,6 +178,9 @@ namespace luminous {
                     PDF = _distribution.PDF_wi_transmission(wo, wh, wi, eta_p) * pt / (pr + pt);
                     float ft = _distribution.BTDF(wo, wh, wi, 1 - R, cos_theta_o, cos_theta_i, eta_p, mode);
                     Spectrum val = ft * Kt;
+                    if (dot(wo, wh) < 0) {
+                        return {};
+                    }
                     return {BSDFSample(val, wi, PDF, Transmission, _eta)};
                 }
             }

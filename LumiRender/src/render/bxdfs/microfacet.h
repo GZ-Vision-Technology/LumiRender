@@ -85,7 +85,8 @@ namespace luminous {
              * @return   [description]
              */
             LM_ND_XPU float G(const float3 &wo, const float3 &wi) const {
-                return 1 / (1 + lambda(wo) + lambda(wi));
+                auto ret = 1 / (1 + lambda(wo) + lambda(wi));
+                return ret;
             }
 
             LM_ND_XPU float3 sample_wh(const float3 &wo, const float2 &u) const;
@@ -125,7 +126,7 @@ namespace luminous {
              * @return
              */
             LM_ND_XPU float PDF_wi_transmission(float PDF_wh, float3 wo, float3 wh, float3 wi, float eta) const {
-                float denom = sqr(dot(wi, wh) + dot(wo, wh) / eta);
+                float denom = sqr(dot(wi, wh) * eta + dot(wo, wh));
                 float dwh_dwi = abs_dot(wi, wh) / denom;
                 float ret = PDF_wh * dwh_dwi;
                 DCHECK(!is_invalid(ret));

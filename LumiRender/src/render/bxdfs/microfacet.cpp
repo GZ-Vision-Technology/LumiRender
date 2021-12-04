@@ -22,7 +22,8 @@ namespace luminous {
             switch (_type) {
                 case GGX: {
                     float e = tan_theta_2 * (sqr(Frame::cos_phi(wh) / _alpha_x) + sqr(Frame::sin_phi(wh) / _alpha_y));
-                    return 1.f / (Pi * _alpha_x * _alpha_y * cos_theta_4 * sqr(1 + e));
+                    float ret = 1.f / (Pi * _alpha_x * _alpha_y * cos_theta_4 * sqr(1 + e));
+                    return ret;
                 }
                 case Beckmann: {
                     return std::exp(-tan_theta_2 * (Frame::cos_phi_2(wh) / sqr(_alpha_x) +
@@ -45,7 +46,8 @@ namespace luminous {
                     }
                     float alpha = std::sqrt(Frame::cos_phi_2(w) * sqr(_alpha_x) +
                                             Frame::sin_phi_2(w) * sqr(_alpha_y));
-                    return (-1 + std::sqrt(1.f + sqr(alpha * abs_tan_theta))) / 2;
+                    float ret = (-1 + std::sqrt(1.f + sqr(alpha * abs_tan_theta))) / 2;
+                    return ret;
                 }
                 case Beckmann: {
                     float abs_tan_theta = std::abs(Frame::tan_theta(w));
@@ -58,7 +60,8 @@ namespace luminous {
                     if (a >= 1.6f) {
                         return 0.f;
                     }
-                    return (1 - 1.259f * a + 0.396f * sqr(a)) / (3.535f * a + 2.181f * sqr(a));
+                    float ret = (1 - 1.259f * a + 0.396f * sqr(a)) / (3.535f * a + 2.181f * sqr(a));
+                    return ret;
                 }
                 default:
                     break;
