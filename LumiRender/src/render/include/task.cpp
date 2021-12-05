@@ -118,7 +118,8 @@ namespace luminous {
             Image image = Image(PixelFormat::RGBA32F, p, res);
             image.for_each_pixel([&](std::byte *pixel, int i) {
                 auto fp = reinterpret_cast<float4 *>(pixel);
-                *fp = Spectrum::linear_to_srgb(buffer[i]);
+                float4 val = buffer[i];
+                *fp = Spectrum::linear_to_srgb(val / val.w);
             });
             luminous_fs::path path = _context->scene_path() / _output_config.fn;
             image.save_image(path);
