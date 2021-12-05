@@ -12,7 +12,7 @@
 			"type" :"ConstantTexture",
 			"name" : "roughness",
 			"param": {
-				"val": [0.01,0.01,1,0],
+				"val": [0,0,1,0],
 				"color_space": "LINEAR"
 			}
 		},
@@ -195,24 +195,24 @@
 //				}
 //			}
 //		}
-	,
-		{
-			"name" : "nanosuit",
-			"type": "model",
-			"param" : {
-				"material": "quad",
-				"fn": "nanosuit/nanosuit.obj",
-				"subdiv_level": 0,
-				"transform" : {
-					"type" : "trs",
-					"param" : {
-						"t" : [-1, 0, 1],
-						"r" : [0, 1, 0, 180],
-						"s" : [0.1,0.1,0.1]
-					}
-				}
-			}
-		}
+//	,
+//		{
+//			"name" : "nanosuit",
+//			"type": "model",
+//			"param" : {
+//				"material": "quad",
+//				"fn": "nanosuit/nanosuit.obj",
+//				"subdiv_level": 0,
+//				"transform" : {
+//					"type" : "trs",
+//					"param" : {
+//						"t" : [-1, 0, 1],
+//						"r" : [0, 1, 0, 180],
+//						"s" : [0.1,0.1,0.1]
+//					}
+//				}
+//			}
+//		}
 	],
 	"lights" : [
 //		{
@@ -242,7 +242,7 @@
 //		"type" : "WavefrontPT",
 		"type" : "PT",
 		"param" : {
-			"max_depth" : 15,
+			"max_depth" : 3,
 			"rr_threshold" : 1
 		}
 	},
@@ -291,6 +291,6 @@
 	},
 	"output" : {
 		"fn":"cornell-box.png",
-		"frame_num" : 0
+		"frame_num" : 1024
 	}
 }
