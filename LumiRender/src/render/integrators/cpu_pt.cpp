@@ -44,7 +44,7 @@ namespace luminous {
                     for (int i = 0; i < spp; ++i) {
                         pixel_info += luminous::render::path_tracing(ray, scene<CPUScene>()->scene_handle(), sampler,
                                                                      _max_depth, _rr_threshold, false,
-                                                                     scene<CPUScene>()->scene_data());
+                                                                     scene<CPUScene>()->scene_data_host_ptr());
                     }
                     pixel_info /= float(spp);
                     film->add_sample(pixel, pixel_info, weight, _frame_index);

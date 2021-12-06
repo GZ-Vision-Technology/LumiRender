@@ -39,6 +39,7 @@ namespace luminous {
                 // texture data
                 _textures.allocate_device();
             }
+            _scene_data.allocate_device();
         }
 
         void GPUScene::fill_scene_data() {
@@ -58,6 +59,7 @@ namespace luminous {
 
             _scene_data->materials = this->_materials.const_device_buffer_view();
             _scene_data->textures = this->_textures.const_device_buffer_view();
+            _scene_data.synchronize_to_device();
         }
 
         void GPUScene::synchronize_to_gpu() {

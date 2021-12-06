@@ -13,7 +13,7 @@ namespace luminous {
 
         EmbreeAggregate::EmbreeAggregate(Device *device, Context *context, const Scene *scene)
                 : EmbreeAccel(device, context, scene),
-                  WavefrontAggregate(scene->scene_data()) {}
+                  WavefrontAggregate(scene->scene_data_host_ptr()) {}
 
         bool EmbreeAggregate::_intersect_any(Ray ray) const {
             return luminous::intersect_any((uint64_t) rtc_scene(), ray);

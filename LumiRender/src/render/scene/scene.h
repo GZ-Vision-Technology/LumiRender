@@ -39,7 +39,7 @@ namespace luminous {
             size_t _texture_num{0};
             int _infinite_light_num{0};
 
-            UP<SceneData> _scene_data{new SceneData()};
+            Managed<SceneData> _scene_data{_device};
 
             Box3f _scene_box;
 
@@ -75,7 +75,9 @@ namespace luminous {
 
         public:
             Scene(Device *device, Context *context)
-                    : _device(device), _context(context) {}
+                    : _device(device), _context(context) {
+                _scene_data.reset(1);
+            }
 
             void shrink_to_fit();
 
@@ -89,7 +91,9 @@ namespace luminous {
 
             virtual void fill_scene_data() = 0;
 
-            LM_NODISCARD const SceneData *scene_data() const { return _scene_data.get(); }
+            LM_NODISCARD const SceneData *scene_data_host_ptr() const { return _scene_data.data(); }
+
+            LM_NODISCARD const SceneData *scene_data_device_ptr() const { return _scene_data.device_ptr<const SceneData *>(); }
 
             LM_NODISCARD uint64_t as_handle() const { return _accelerator->handle(); }
 

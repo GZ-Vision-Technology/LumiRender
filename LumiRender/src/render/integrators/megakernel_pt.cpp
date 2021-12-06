@@ -19,6 +19,7 @@ namespace luminous {
             lp.frame_index = 0u;
             lp.max_depth = _max_depth;
             lp.rr_threshold = _rr_threshold;
+            lp.scene_data = _scene->scene_data_device_ptr();
             _launch_params.reset(&lp);
         }
 

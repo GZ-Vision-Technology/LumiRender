@@ -120,8 +120,8 @@ namespace luminous {
             _device_ptr_table.miss_record = device->create_buffer<SceneRecord>(RayType::Count);
             SceneRecord ms_sbt[RayType::Count] = {};
 
-            ms_sbt[RayType::ClosestHit].data = *scene->scene_data();
-            ms_sbt[RayType::AnyHit].data = *scene->scene_data();
+            ms_sbt[RayType::ClosestHit].data = *scene->scene_data_host_ptr();
+            ms_sbt[RayType::AnyHit].data = *scene->scene_data_host_ptr();
 
             OPTIX_CHECK(
                     optixSbtRecordPackHeader(_program_group_table.miss_closest_group, &ms_sbt[RayType::ClosestHit]));
@@ -131,8 +131,8 @@ namespace luminous {
 
             _device_ptr_table.hit_record = device->create_buffer<SceneRecord>(RayType::Count);
             SceneRecord hit_sbt[RayType::Count] = {};
-            hit_sbt[RayType::ClosestHit].data = *scene->scene_data();
-            hit_sbt[RayType::AnyHit].data = *scene->scene_data();
+            hit_sbt[RayType::ClosestHit].data = *scene->scene_data_host_ptr();
+            hit_sbt[RayType::AnyHit].data = *scene->scene_data_host_ptr();
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.hit_closest_group,
                                                  &hit_sbt[RayType::ClosestHit]));
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.hit_any_group,

@@ -39,16 +39,16 @@ GLOBAL __raygen__rg() {
     PixelInfo pixel_info;
     for (int i = 0; i < spp; ++i) {
         pixel_info += path_tracing(ray, params.traversable_handle, sampler,
-                params.max_depth, params.rr_threshold, debug);
+                params.max_depth, params.rr_threshold, debug, params.scene_data);
     }
     pixel_info /= float(spp);
     film->add_sample(pixel, pixel_info, weight, frame_index);
 }
 
 GLOBAL __miss__closest() {
-    luminous::HitContext *hit_ctx = getPRD();
-    const auto &data = getSbtData<luminous::SceneData>();
-    hit_ctx->data = &data;
+//    luminous::HitContext *hit_ctx = getPRD();
+//    const auto &data = getSbtData<luminous::SceneData>();
+//    hit_ctx->data = &data;
 }
 
 GLOBAL __miss__any() {
@@ -58,11 +58,9 @@ GLOBAL __miss__any() {
 GLOBAL __closesthit__closest() {
     using namespace luminous;
     HitContext *hit_ctx = getPRD();
-    const SceneData &data = getSbtData<SceneData>();
-    hit_ctx->data = &data;
     hit_ctx->hit_info = getClosestHit();
 }
 
 GLOBAL __closesthit__any() {
-    setPayloadOcclusion(true);
+//    setPayloadOcclusion(true);
 }

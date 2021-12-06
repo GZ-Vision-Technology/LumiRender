@@ -16,7 +16,7 @@ namespace luminous {
 
         Sensor *Integrator::camera() { return _camera.data(); }
 
-        const SceneData* Integrator::scene_data() const { return _scene->scene_data();}
+        const SceneData* Integrator::scene_data() const { return _scene->scene_data_host_ptr();}
 
         void Integrator::init(const std::shared_ptr<SceneGraph> &scene_graph) {
             if (_device->is_cpu()) {

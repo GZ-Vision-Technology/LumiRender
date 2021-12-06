@@ -148,7 +148,7 @@ namespace luminous {
 
         void WavefrontPT::init_rt_param() {
             _rt_param.push_back({_sampler.device_data(), _camera.device_ptr(),
-                                 0, *_scene->scene_data()});
+                                 0, *_scene->scene_data_host_ptr()});
             _rt_param.allocate_device(1);
             _rt_param.synchronize_to_device();
             if (_device->is_cpu()) {

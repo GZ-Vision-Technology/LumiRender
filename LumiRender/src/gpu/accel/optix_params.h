@@ -9,6 +9,7 @@
 #include "base_libs/math/common.h"
 #include "render/samplers/sampler.h"
 #include "optix_defines.h"
+#include "render/scene/scene_data.h"
 
 namespace luminous {
 
@@ -23,6 +24,7 @@ namespace luminous {
             uint max_depth;
             float rr_threshold;
             Sensor *camera;
+            const SceneData *scene_data;
             const Sampler *sampler;
         };
     }

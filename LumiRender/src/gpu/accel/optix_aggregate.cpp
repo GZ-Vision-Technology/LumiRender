@@ -24,7 +24,7 @@ namespace luminous {
                                        "__miss__any"};
 
         OptixAggregate::OptixAggregate(Device *device, Context *context, const Scene *scene)
-                : OptixAccel(device, context, scene), WavefrontAggregate(scene->scene_data()),
+                : OptixAccel(device, context, scene), WavefrontAggregate(scene->scene_data_host_ptr()),
                   _intersect_any(create_shader_wrapper(intersect_shader, intersect_any_func)),
                   _intersect_closet(create_shader_wrapper(intersect_shader, intersect_closest_func)) {
             auto program_groups = _intersect_closet.program_groups();
