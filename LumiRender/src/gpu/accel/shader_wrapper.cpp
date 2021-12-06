@@ -112,16 +112,13 @@ namespace luminous {
 
         void ShaderWrapper::build_sbt(const render::Scene *scene, Device *device) {
 
-            _device_ptr_table.rg_record = device->create_buffer<RayGenRecord>(1);
-            RayGenRecord rg_sbt = {};
+            _device_ptr_table.rg_record = device->create_buffer<SBTRecord>(1);
+            SBTRecord rg_sbt = {};
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.raygen_group, &rg_sbt));
             _device_ptr_table.rg_record.upload(&rg_sbt);
 
-            _device_ptr_table.miss_record = device->create_buffer<SceneRecord>(RayType::Count);
-            SceneRecord ms_sbt[RayType::Count] = {};
-
-            ms_sbt[RayType::ClosestHit].data = *scene->scene_data_host_ptr();
-            ms_sbt[RayType::AnyHit].data = *scene->scene_data_host_ptr();
+            _device_ptr_table.miss_record = device->create_buffer<SBTRecord>(RayType::Count);
+            SBTRecord ms_sbt[RayType::Count] = {};
 
             OPTIX_CHECK(
                     optixSbtRecordPackHeader(_program_group_table.miss_closest_group, &ms_sbt[RayType::ClosestHit]));
@@ -129,10 +126,9 @@ namespace luminous {
                     optixSbtRecordPackHeader(_program_group_table.miss_any_group, &ms_sbt[RayType::AnyHit]));
             _device_ptr_table.miss_record.upload(ms_sbt);
 
-            _device_ptr_table.hit_record = device->create_buffer<SceneRecord>(RayType::Count);
-            SceneRecord hit_sbt[RayType::Count] = {};
-            hit_sbt[RayType::ClosestHit].data = *scene->scene_data_host_ptr();
-            hit_sbt[RayType::AnyHit].data = *scene->scene_data_host_ptr();
+            _device_ptr_table.hit_record = device->create_buffer<SBTRecord>(RayType::Count);
+            SBTRecord hit_sbt[RayType::Count] = {};
+
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.hit_closest_group,
                                                  &hit_sbt[RayType::ClosestHit]));
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.hit_any_group,

@@ -11,10 +11,9 @@
 
 namespace luminous {
     inline namespace gpu {
-        template<typename T>
-        struct Record {
-            alignas(OPTIX_SBT_RECORD_ALIGNMENT) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
-            T data;
+
+        struct alignas(OPTIX_SBT_RECORD_ALIGNMENT) SBTRecord {
+            std::byte data[OPTIX_SBT_RECORD_HEADER_SIZE];
         };
 
         enum RayType {
@@ -22,9 +21,6 @@ namespace luminous {
             AnyHit = 1,
             Count
         };
-
-        using RayGenRecord = Record<RayGenData>;
-        using SceneRecord = Record<SceneData>;
 
         template<typename T>
         void mat4x4_to_array12(Matrix4x4<T> mat, T *output) {

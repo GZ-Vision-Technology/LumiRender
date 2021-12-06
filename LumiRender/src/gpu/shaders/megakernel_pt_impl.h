@@ -46,9 +46,8 @@ GLOBAL __raygen__rg() {
 }
 
 GLOBAL __miss__closest() {
-//    luminous::HitContext *hit_ctx = getPRD();
-//    const auto &data = getSbtData<luminous::SceneData>();
-//    hit_ctx->data = &data;
+//    printf("adfad-------------sfads\n");
+//    setPayloadOcclusion(false);
 }
 
 GLOBAL __miss__any() {
@@ -62,5 +61,6 @@ GLOBAL __closesthit__closest() {
 }
 
 GLOBAL __closesthit__any() {
+    printf("adfadsfads\n");
 //    setPayloadOcclusion(true);
 }

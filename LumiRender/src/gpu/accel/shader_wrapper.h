@@ -49,9 +49,9 @@ namespace luminous {
         };
 
         struct DevicePtrTable {
-            Buffer<RayGenRecord> rg_record{nullptr};
-            Buffer<SceneRecord> miss_record{nullptr};
-            Buffer<SceneRecord> hit_record{nullptr};
+            Buffer<SBTRecord> rg_record{nullptr};
+            Buffer<SBTRecord> miss_record{nullptr};
+            Buffer<SBTRecord> hit_record{nullptr};
 
             void clear() {
                 rg_record.clear();
