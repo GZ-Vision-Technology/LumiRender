@@ -242,7 +242,7 @@
 //		"type" : "WavefrontPT",
 		"type" : "PT",
 		"param" : {
-			"max_depth" : 3,
+			"max_depth" : 10,
 			"rr_threshold" : 1
 		}
 	},
@@ -266,7 +266,7 @@
 			},
 			"film" : {
 				"param" : {
-					"resolution" : [768, 768],
+					"resolution" : [1024, 1024],
 					"fb_state": 0
 				}
 			},
@@ -291,7 +291,7 @@
 	},
 	"output" : {
 		"fn":"cornell-box.png",
-		"dispatch_num" : 0,
-		"frame_per_dispatch": 1
+		"dispatch_num" : 64,
+		"frame_per_dispatch": 4
 	}
 }

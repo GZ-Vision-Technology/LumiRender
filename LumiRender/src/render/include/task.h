@@ -12,6 +12,7 @@
 #include "render/integrators/integrator.h"
 #include "core/backend/managed.h"
 #include "render/sensors/common.h"
+#include "util/clock.h"
 
 namespace luminous {
     inline namespace render {
@@ -27,6 +28,7 @@ namespace luminous {
             double _dt{0};
             OutputConfig _output_config;
             int _dispatch_num{0};
+            Clock _clock;
             Managed<float4, float4> _render_buffer{_device.get()};
             Managed<float4, float4> _normal_buffer{_device.get()};
             Managed<float4, float4> _albedo_buffer{_device.get()};
@@ -45,7 +47,7 @@ namespace luminous {
             void save_to_file();
 
             LM_NODISCARD bool complete() const {
-                return _dispatch_num >= _output_config.dispatch_num;
+                return _dispatch_num > _output_config.dispatch_num;
             }
 
             void render_gui(double dt);

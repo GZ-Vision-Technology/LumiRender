@@ -115,7 +115,7 @@ namespace luminous {
     }
 
 
-    void App::init(const string &title,const int2 &size, Context *context, const Parser &parser) {
+    void App::init(const string &title, const int2 &size, Context *context, const Parser &parser) {
         TASK_TAG("launch app")
         _size = size;
         if (context->use_gpu()) {
@@ -200,7 +200,7 @@ namespace luminous {
         double d = clock.elapse_ms();
         acc_t += d;
         ++test_count;
-         cout << d << "  " << acc_t / test_count <<"   " << test_count << endl;
+        cout << d << "  " << acc_t / test_count << "   " << test_count << endl;
     }
 
     int App::run_with_gui() {
@@ -227,6 +227,7 @@ namespace luminous {
         while (!_task->complete()) {
             render();
         }
+
         return 0;
     }
 
@@ -303,7 +304,6 @@ namespace luminous {
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, res.x, res.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, test_color);
     }
-
 
 
 }
