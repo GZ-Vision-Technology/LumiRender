@@ -28,7 +28,7 @@ namespace luminous {
                     break;
                 }
                 case Normal: {
-                    float4 val = _render_buffer_view[pixel_index];
+                    float4 val = _normal_buffer_view[pixel_index];
                     if (val.w == 0) {
                         return;
                     }

@@ -88,6 +88,28 @@ namespace luminous {
             return _render_buffer.synchronize_and_get_host_data();
         }
 
+        float4 *Task::get_normal_buffer() {
+            return _normal_buffer.synchronize_and_get_host_data();
+        }
+
+        float4 *Task::get_albedo_buffer() {
+            return _albedo_buffer.synchronize_and_get_host_data();
+        }
+
+        float4 *Task::get_buffer() {
+            auto fb_state = camera()->film()->frame_buffer_state();
+            switch (fb_state) {
+                case Render:
+                    return get_render_buffer();
+                case Normal:
+                    return get_normal_buffer();
+                case Albedo:
+                    return get_albedo_buffer();
+            }
+            DCHECK(0);
+            return nullptr;
+        }
+
         void Task::init(const Parser &parser) {
             auto scene_graph = build_scene_graph(parser);
             const std::string type = scene_graph->integrator_config.type();
@@ -112,7 +134,7 @@ namespace luminous {
         }
 
         void Task::save_to_file() {
-            float4 *buffer = get_render_buffer();
+            float4 *buffer = get_buffer();
             auto res = resolution();
             size_t size = res.x * res.y * pixel_size(PixelFormat::RGBA32F);
             auto p = new std::byte[size];

@@ -52,6 +52,10 @@ namespace luminous {
 
             Film() = default;
 
+            ND_XPU_INLINE FBState frame_buffer_state() const {
+                return _fb_state;
+            }
+
             LM_XPU void add_sample(uint2 pixel, PixelInfo pixel_info, float weight, uint frame_index = 0u) {
                 add_samples(pixel, pixel_info.Li, pixel_info.albedo, pixel_info.normal, weight, frame_index);
             }

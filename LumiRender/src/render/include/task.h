@@ -29,6 +29,7 @@ namespace luminous {
             OutputConfig _output_config;
             int _dispatch_num{0};
             Clock _clock;
+            FBState _fb_state;
             Managed<float4, float4> _render_buffer{_device.get()};
             Managed<float4, float4> _normal_buffer{_device.get()};
             Managed<float4, float4> _albedo_buffer{_device.get()};
@@ -54,11 +55,17 @@ namespace luminous {
 
             void update_device_buffer();
 
-            LM_NODISCARD virtual Sensor *camera() { return _integrator->camera(); }
+            LM_NODISCARD Sensor *camera() { return _integrator->camera(); }
 
-            LM_NODISCARD virtual FrameBufferType *get_frame_buffer();
+            LM_NODISCARD FrameBufferType *get_frame_buffer();
 
-            LM_NODISCARD virtual float4 *get_render_buffer();
+            LM_NODISCARD float4 *get_render_buffer();
+
+            LM_NODISCARD float4 *get_normal_buffer();
+
+            LM_NODISCARD float4 *get_albedo_buffer();
+
+            LM_NODISCARD float4 *get_buffer();
 
             LM_NODISCARD uint2 resolution();
 

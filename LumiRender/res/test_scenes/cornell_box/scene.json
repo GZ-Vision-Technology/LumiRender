@@ -267,7 +267,7 @@
 			"film" : {
 				"param" : {
 					"resolution" : [1024, 1024],
-					"fb_state": 0
+					"fb_state": 1
 				}
 			},
 			"filter": {
@@ -291,7 +291,7 @@
 	},
 	"output" : {
 		"fn":"cornell-box.png",
-		"dispatch_num" : 64,
+		"dispatch_num" : 8,
 		"frame_per_dispatch": 4
 	}
 }
