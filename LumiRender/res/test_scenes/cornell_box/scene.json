@@ -291,6 +291,7 @@
 	},
 	"output" : {
 		"fn":"cornell-box.png",
-		"frame_num" : 1024
+		"dispatch_num" : 0,
+		"frame_per_dispatch": 1
 	}
 }

@@ -233,8 +233,8 @@ namespace luminous {
 
         struct OutputConfig : Config {
             std::string fn;
-            int frame_num;
-            int frame_per_update;
+            int dispatch_num{};
+            int frame_per_dispatch{};
         };
 
         struct FilterConfig : Config {
@@ -244,10 +244,10 @@ namespace luminous {
             float sigma{};
 
             // for sinc filter
-            float tau;
+            float tau{};
 
             // for mitchell filter
-            float b, c;
+            float b{}, c{};
         };
 
         struct FilmConfig : Config {

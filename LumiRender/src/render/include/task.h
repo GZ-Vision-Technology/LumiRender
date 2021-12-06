@@ -26,6 +26,7 @@ namespace luminous {
             UP<Integrator> _integrator;
             double _dt{0};
             OutputConfig _output_config;
+            int _dispatch_num{0};
             Managed<float4, float4> _render_buffer{_device.get()};
             Managed<float4, float4> _normal_buffer{_device.get()};
             Managed<float4, float4> _albedo_buffer{_device.get()};
@@ -44,7 +45,7 @@ namespace luminous {
             void save_to_file();
 
             LM_NODISCARD bool complete() const {
-                return _integrator->frame_index() >= _output_config.frame_num;
+                return _dispatch_num >= _output_config.dispatch_num;
             }
 
             void render_gui(double dt);

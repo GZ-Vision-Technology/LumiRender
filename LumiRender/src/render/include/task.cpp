@@ -127,10 +127,9 @@ namespace luminous {
 
         void Task::render_gui(double dt) {
             _dt = dt;
-            _integrator->render(1);
-
-            if (_integrator->frame_index() == _output_config.frame_num
-                && _output_config.frame_num != 0) {
+            _integrator->render(_output_config.frame_per_dispatch);
+            if (_dispatch_num++ == _output_config.dispatch_num
+                && _output_config.dispatch_num != 0) {
                 save_to_file();
             }
         }
