@@ -108,7 +108,7 @@ namespace luminous {
             }
         }
 
-        void WavefrontPT::render() {
+        void WavefrontPT::render(int frame_num) {
             auto spp = _sampler->spp();
             for (int sample_idx = 0; sample_idx < spp; ++sample_idx) {
                 render_per_sample(sample_idx, spp);

@@ -29,7 +29,7 @@ namespace luminous {
             init_launch_params();
         }
 
-        void MegakernelPT::render() {
+        void MegakernelPT::render(int frame_num) {
             auto res = _camera->resolution();
             _scene->accel<MegakernelOptixAccel>()->launch(res, _launch_params);
             _launch_params->frame_index += 1;

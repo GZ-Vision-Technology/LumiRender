@@ -319,6 +319,7 @@ namespace luminous {
             OutputConfig ret;
             ret.fn = ps["fn"].as_string("luminous.png");
             ret.frame_num = ps["frame_num"].as_int(0);
+            ret.frame_per_update = ps["frame_per_update"].as_uint(1);
             return ret;
         }
 

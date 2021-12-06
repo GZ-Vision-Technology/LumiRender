@@ -97,7 +97,7 @@ namespace luminous {
                 } else {
                     _integrator = std::make_unique<MegakernelPT>(_device.get(), _context);
                 }
-            } else if(type == "WavefrontPT") {
+            } else if (type == "WavefrontPT") {
                 _integrator = std::make_unique<WavefrontPT>(_device.get(), _context);
             }
             _integrator->init(scene_graph);
@@ -127,10 +127,10 @@ namespace luminous {
 
         void Task::render_gui(double dt) {
             _dt = dt;
-            _integrator->render();
+            _integrator->render(1);
 
             if (_integrator->frame_index() == _output_config.frame_num
-            && _output_config.frame_num != 0) {
+                && _output_config.frame_num != 0) {
                 save_to_file();
             }
         }

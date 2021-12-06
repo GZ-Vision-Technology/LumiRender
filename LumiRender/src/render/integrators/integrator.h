@@ -54,7 +54,7 @@ namespace luminous {
 
             virtual void update() = 0;
 
-            virtual void render() = 0;
+            virtual void render(int frame_num) = 0;
         };
 
         class GPUIntegrator : public Integrator {

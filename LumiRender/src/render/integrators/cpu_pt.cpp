@@ -29,7 +29,7 @@ namespace luminous {
             _frame_index = 0;
         }
 
-        void CPUPathTracer::render() {
+        void CPUPathTracer::render(int frame_num) {
             const uint tile_size = 16;
             uint2 res = _camera->resolution();
             tiled_for_2d(res, make_uint2(tile_size), [&](uint2 pixel, uint tid) {
