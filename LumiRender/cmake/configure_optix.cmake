@@ -55,6 +55,7 @@ macro(cuda_compile_and_embed output_var cuda_file)
                 --std=c++17
                 -arch=sm_70
                 -D__x86_64
+                -lineinfo
                 )
     else ()
         cuda_compile_ptx(ptx_files
@@ -64,6 +65,7 @@ macro(cuda_compile_and_embed output_var cuda_file)
                 --std=c++17
                 -arch=sm_70
                 -D__x86_64
+                -lineinfo
                 )
     endif ()
     list(GET ptx_files 0 ptx_file)
