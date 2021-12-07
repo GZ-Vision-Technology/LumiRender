@@ -242,7 +242,7 @@
 //		"type" : "WavefrontPT",
 		"type" : "PT",
 		"param" : {
-			"max_depth" : 3,
+			"max_depth" : 5,
 			"rr_threshold" : 1
 		}
 	},
@@ -266,7 +266,7 @@
 			},
 			"film" : {
 				"param" : {
-					"resolution" : [768, 768],
+					"resolution" : [1024, 1024],
 					"fb_state": 0
 				}
 			},

@@ -44,7 +44,7 @@ static LM_GPU_INLINE const T &getSbtData() {
     return *reinterpret_cast<T *>(optixGetSbtDataPointer());
 }
 
-template<typename T = luminous::HitContext>
+template<typename T = luminous::HitInfo>
 static LM_GPU_INLINE T *getPRD() {
     const unsigned int u0 = optixGetPayload_0();
     const unsigned int u1 = optixGetPayload_1();

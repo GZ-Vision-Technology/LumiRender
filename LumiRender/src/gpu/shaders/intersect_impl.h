@@ -50,9 +50,7 @@ GLOBAL __raygen__occlusion() {
 }
 
 GLOBAL __miss__closest() {
-    luminous::HitContext *hit_ctx = getPRD();
-    const auto &data = getSbtData<luminous::SceneData>();
-    hit_ctx->data = &data;
+    
 }
 
 GLOBAL __miss__any() {
@@ -61,10 +59,8 @@ GLOBAL __miss__any() {
 
 GLOBAL __closesthit__closest() {
     using namespace luminous;
-    HitContext *hit_ctx = getPRD();
-    const auto &data = getSbtData<SceneData>();
-    hit_ctx->data = &data;
-    hit_ctx->hit_info = getClosestHit();
+    HitInfo *hit_info = getPRD<HitInfo>();
+    *hit_info = getClosestHit();
 }
 
 GLOBAL __closesthit__any() {

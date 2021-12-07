@@ -20,7 +20,7 @@
 
 extern "C" {
 __constant__ luminous::LaunchParams
-params;
+        params;
 }
 
 GLOBAL __raygen__rg() {
@@ -34,12 +34,12 @@ GLOBAL __raygen__rg() {
     auto ss = sampler.sensor_sample(pixel, camera->filter());
     bool debug = pixel.x == 383 && pixel.y == 383;
 
-    auto [weight, ray] = camera->generate_ray(ss);
+    auto[weight, ray] = camera->generate_ray(ss);
     uint spp = sampler.spp();
     PixelInfo pixel_info;
     for (int i = 0; i < spp; ++i) {
         pixel_info += path_tracing(ray, params.traversable_handle, sampler,
-                params.max_depth, params.rr_threshold, debug, params.scene_data);
+                                   params.max_depth, params.rr_threshold, debug, params.scene_data);
     }
     pixel_info /= float(spp);
     film->add_sample(pixel, pixel_info, weight, frame_index);
@@ -48,8 +48,8 @@ GLOBAL __raygen__rg() {
 
 GLOBAL __closesthit__closest() {
     using namespace luminous;
-    HitContext *hit_ctx = getPRD();
-    hit_ctx->hit_info = getClosestHit();
+    HitInfo *hit_info = getPRD<HitInfo>();
+    *hit_info = getClosestHit();
 }
 
 GLOBAL __closesthit__any() {
