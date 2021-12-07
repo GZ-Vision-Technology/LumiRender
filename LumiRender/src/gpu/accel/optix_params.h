@@ -9,12 +9,12 @@
 #include "base_libs/math/common.h"
 #include "render/samplers/sampler.h"
 #include "optix_defines.h"
-#include "render/scene/scene_data.h"
 
 namespace luminous {
 
     inline namespace render {
         class Sensor;
+        class SceneData;
     }
 
     inline namespace gpu {

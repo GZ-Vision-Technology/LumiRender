@@ -16,12 +16,6 @@ namespace luminous {
             std::byte data[OPTIX_SBT_RECORD_HEADER_SIZE];
         };
 
-        enum RayType {
-            ClosestHit = 0,
-            AnyHit = 1,
-            Count
-        };
-
         template<typename T>
         void mat4x4_to_array12(Matrix4x4<T> mat, T *output) {
 

@@ -13,17 +13,11 @@ namespace luminous {
 
         ProgramName intersect_closest_func{"__raygen__find_closest",
                                            "__closesthit__closest",
-                                           "__closesthit__any",
-//                                           "__miss__closest",
-//                                           "__miss__any"
-        };
+                                           "__closesthit__any"};
 
         ProgramName intersect_any_func{"__raygen__occlusion",
                                        "__closesthit__closest",
-                                       "__closesthit__any",
-//                                       "__miss__closest",
-//                                       "__miss__any"
-        };
+                                       "__closesthit__any"};
 
         OptixAggregate::OptixAggregate(Device *device, Context *context, const Scene *scene)
                 : OptixAccel(device, context, scene), WavefrontAggregate(scene->scene_data_host_ptr()),

@@ -86,8 +86,8 @@ namespace luminous {
             emit_desc.result = compact_size_buffer.ptr<CUdeviceptr>();
 
             OptixTraversableHandle traversable_handle = 0;
-            OPTIX_CHECK(optixAccelBuild(_optix_device_context, 0, &accel_options,
-                                        &build_input, 1,
+            OPTIX_CHECK(optixAccelBuild(_optix_device_context, nullptr,
+                                        &accel_options,&build_input, 1,
                                         temp_buffer.ptr<CUdeviceptr>(), gas_buffer_sizes.tempSizeInBytes,
                                         tri_gas_buffer.ptr<CUdeviceptr>(), gas_buffer_sizes.outputSizeInBytes,
                                         &traversable_handle, &emit_desc, 1));
@@ -165,7 +165,7 @@ namespace luminous {
             _instances.upload(optix_instances.data());
 
             OPTIX_CHECK(optixAccelBuild(_optix_device_context,
-                                        0, &accel_options,
+                                        nullptr, &accel_options,
                                         &instance_input, 1,
                                         temp_buffer.ptr<CUdeviceptr>(),
                                         ias_buffer_sizes.tempSizeInBytes,
@@ -228,7 +228,7 @@ namespace luminous {
 
             _pipeline_compile_options.traversableGraphFlags = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_ANY;
             _pipeline_compile_options.usesMotionBlur = false;
-            _pipeline_compile_options.numPayloadValues = 4;
+            _pipeline_compile_options.numPayloadValues = 2;
 //            _pipeline_compile_options.numAttributeValues = 2;
             // OPTIX_EXCEPTION_FLAG_NONE;
             //#ifndef NDEBUG

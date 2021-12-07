@@ -83,8 +83,8 @@ static LM_GPU_INLINE bool traceClosestHit(OptixTraversableHandle handle,
     packPointer(hit_ctx, u0, u1);
     trace(handle, ray, OPTIX_RAY_FLAG_DISABLE_ANYHIT,
           0,        // SBT offset
-          4,           // SBT stride
-          3,        // missSBTIndex
+          0,           // SBT stride
+          0,        // missSBTIndex
           u0, u1);
     return hit_ctx->is_hit();
 }
@@ -94,8 +94,8 @@ static LM_GPU_INLINE bool traceAnyHit(OptixTraversableHandle handle, luminous::R
     trace(handle, ray, OPTIX_RAY_FLAG_DISABLE_ANYHIT
                        | OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT,
           1,        // SBT offset
-          4,           // SBT stride
-          3,        // missSBTIndex
+          0,           // SBT stride
+          0,        // missSBTIndex
           occluded);
     return bool(occluded);
 }
