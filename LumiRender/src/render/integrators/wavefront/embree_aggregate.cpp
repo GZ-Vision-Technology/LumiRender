@@ -21,7 +21,7 @@ namespace luminous {
 
         HitContext EmbreeAggregate::_intersect_closest(Ray ray) const {
             HitContext hit_ctx{_scene_data};
-            luminous::intersect_closest((uint64_t) rtc_scene(), ray, &hit_ctx);
+            luminous::intersect_closest((uint64_t) rtc_scene(), ray, &hit_ctx.hit_info);
             return hit_ctx;
         }
 

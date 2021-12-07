@@ -27,7 +27,7 @@ GLOBAL __raygen__find_closest() {
     RayWorkItem r = (*params.ray_queue)[task_id];
     Ray ray = r.ray;
     HitContext hit_ctx;
-    bool hit = traceClosestHit(params.traversable_handle, ray, &hit_ctx);
+    bool hit = traceClosestHit(params.traversable_handle, ray, &hit_ctx.hit_info);
     if (hit) {
         enqueue_item_after_intersect(r, hit_ctx, params.next_ray_queue,
                                      params.hit_area_light_queue,

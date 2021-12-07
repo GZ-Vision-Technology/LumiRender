@@ -139,16 +139,16 @@ namespace luminous {
                              box.upper.x, box.upper.y, box.upper.z, 0};
         }
 
-        LM_ND_INLINE bool rtc_intersect(RTCScene scene, Ray ray, HitContext *hit_ctx) {
+        LM_ND_INLINE bool rtc_intersect(RTCScene scene, Ray ray, HitInfo *hit_info) {
             RTCIntersectContext context{};
             rtcInitIntersectContext(&context);
             RTCRayHit rh = to_RTCRayHit(ray);
             rtcIntersect1(scene, &context, &rh);
-            hit_ctx->hit_info.instance_id = rh.hit.instID[0];
-            hit_ctx->hit_info.prim_id = rh.hit.primID;
+            hit_info->instance_id = rh.hit.instID[0];
+            hit_info->prim_id = rh.hit.primID;
             float w = 1 - rh.hit.u - rh.hit.v;
-            hit_ctx->hit_info.bary = make_float2(w, rh.hit.u);
-            return hit_ctx->is_hit();
+            hit_info->bary = make_float2(w, rh.hit.u);
+            return hit_info->is_hit();
         }
 
         LM_ND_INLINE bool rtc_occlusion(RTCScene scene, Ray ray) {

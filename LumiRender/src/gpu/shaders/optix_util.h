@@ -78,7 +78,7 @@ static LM_GPU_INLINE void trace(OptixTraversableHandle handle,
 }
 
 static LM_GPU_INLINE bool traceClosestHit(OptixTraversableHandle handle,
-                                          luminous::Ray ray, luminous::HitContext *hit_ctx) {
+                                          luminous::Ray ray, luminous::HitInfo *hit_ctx) {
     unsigned int u0, u1;
     packPointer(hit_ctx, u0, u1);
     trace(handle, ray, OPTIX_RAY_FLAG_DISABLE_ANYHIT,

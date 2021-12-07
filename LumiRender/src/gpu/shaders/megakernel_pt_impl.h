@@ -45,23 +45,13 @@ GLOBAL __raygen__rg() {
     film->add_sample(pixel, pixel_info, weight, frame_index);
 }
 
-GLOBAL __miss__closest() {
-    printf("dasfasdf\n");
-}
-
-GLOBAL __miss__any() {
-    printf("dasfasdf\n");
-//    setPayloadOcclusion(false);
-}
 
 GLOBAL __closesthit__closest() {
-//    printf("dasfasdf\n");
     using namespace luminous;
     HitContext *hit_ctx = getPRD();
     hit_ctx->hit_info = getClosestHit();
 }
 
 GLOBAL __closesthit__any() {
-//    printf("__closesthit__any\n");
     setPayloadOcclusion(true);
 }

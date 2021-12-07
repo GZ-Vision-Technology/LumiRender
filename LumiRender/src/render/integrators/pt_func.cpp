@@ -18,13 +18,13 @@ namespace luminous {
                               uint max_depth, float rr_threshold, bool debug,
                               const SceneData *scene_data) {
             HitContext hit_ctx{scene_data};
-
+            
             Spectrum L(0.f);
             Spectrum throughput(1.f);
             SurfaceInteraction si;
 
             int bounces;
-            bool found_intersection = luminous::intersect_closest(scene_handle, ray, &hit_ctx);
+            bool found_intersection = luminous::intersect_closest(scene_handle, ray, &hit_ctx.hit_info);
 
             PixelInfo pixel_info;
 
@@ -46,7 +46,7 @@ namespace luminous {
                 BREAK_IF(!found_intersection)
                 if (!si.op_bsdf) {
                     ray = si.spawn_ray(ray.direction());
-                    found_intersection = luminous::intersect_closest(scene_handle, ray, &hit_ctx);
+                    found_intersection = luminous::intersect_closest(scene_handle, ray, &hit_ctx.hit_info);
                     si = hit_ctx.compute_surface_interaction(ray);
                     --bounces;
                     continue;
