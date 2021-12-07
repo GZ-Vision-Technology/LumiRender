@@ -10,8 +10,7 @@
 #include "gpu/framework/cuda_impl.h"
 #include "core/backend/managed.h"
 
-#include "gpu/framework/jitify/jitify.hpp"
-
+#include "render/include/kernel.h"
 #include "render/samplers/sampler.h"
 #include "render/lights/light.h"
 #include "base_libs/sampling/distribution.h"
@@ -21,15 +20,20 @@ using namespace std;
 
 extern "C" char ptxCode[];
 
+void add_func(int n, int a, int *, int*,int*) {
+    printf("adfdfad");
+}
+
 void test_driver_api() {
     using namespace luminous;
     auto device = create_cuda_device();
-    auto dispatcher = device->new_dispatcher();
+    Dispatcher dispatcher = device->new_dispatcher();
 
     auto cudaModule = create_cuda_module(ptxCode);
-    auto kernel = cudaModule->get_kernel("addKernel");
+    auto kernel_handle = cudaModule->get_kernel_handle("addKernel");
 
-//    auto stream = static_cast<CUDADispatcher>(dispatcher.impl_mut())->stream;
+    Kernel<decltype(&add_func)> kernel(add_func);
+    kernel.set_cu_function(kernel_handle);
 
     const int size = 5;
     const int a[size] = {1, 2, 3, 4, 5};
@@ -43,17 +47,19 @@ void test_driver_api() {
     buffer_a.upload(a, size);
     buffer_b.upload(b, size);
 
-    auto pa = buffer_a.ptr();
-    auto pb = buffer_b.ptr();
-    auto pc = buffer_c.ptr();
-    vector<void *> args{&pc, &pa, &pb};
-    int nitem = 5;
-//    kernel->launch(dispatcher, nitem,pc, pa, pb);
-    kernel->launch(dispatcher, pc, pa, pb);
+    int* pa = buffer_a.ptr<int*>();
+    int* pb = buffer_b.ptr<int*>();
+    int* pc = buffer_c.ptr<int*>();
+    int n = 5;
+    kernel.launch(dispatcher, 3, pa, pb, pc);
 
+//    int nitem = 5;
+////    kernel->launch(dispatcher, nitem,pc, pa, pb);
+//    kernel->launch(dispatcher, pc, pa, pb);
+//
     dispatcher.wait();
 
-    buffer_c.download(c, size - 2, 1);
+    buffer_c.download(c, size, 0);
     for (int i = 0; i < size; ++i) {
         cout << c[i] << endl;
     }
@@ -63,94 +69,30 @@ void test_kernel_sampler() {
     using namespace luminous;
 
     auto device = create_cuda_device();
-    auto dispatcher = device->new_dispatcher();
-
-    auto cudaModule = create_cuda_module(ptxCode);
-    auto kernel = cudaModule->get_kernel("test_sampler2");
-
-    auto config = SamplerConfig();
-    config.set_full_type("LCGSampler");
-    config.spp = 9;
-    auto sampler = Sampler::create(config);
-    auto buffer = device->create_buffer<Sampler>(1);
-    buffer.upload(&sampler);
-    auto ps = buffer.ptr();
-
-    kernel->launch(dispatcher, ps);
-}
-
-void test_managed() {
-    using namespace luminous;
-
-    auto device = create_cuda_device();
-    auto dispatcher = device->new_dispatcher();
-
-    auto cudaModule = create_cuda_module(ptxCode);
-    auto kernel = cudaModule->get_kernel("test_sampler2");
-
-    auto b = device->obtain_buffer(6);
-
-    cout << "Adfdasf" << endl;
-
-}
-
-
-void test_memory() {
-    using namespace luminous;
-    auto device = create_cuda_device();
-    auto dispatcher = device->new_dispatcher();
-
-    auto cudaModule = create_cuda_module(ptxCode);
-    auto kernel = cudaModule->get_kernel("test_light");
-    auto kernel2 = cudaModule->get_kernel("test_area_light");
-
-    LightConfig config;
-//    const Light* ptr = ml.device_data();
-//    kernel->launch( dispatcher, ptr);
-//    dispatcher.wait();
-
-//    auto area_light = luminous::render::AreaLight(config);
-//    Managed<AreaLight> mal{device.get()};
-//    mal.push_back(area_light);
-//    mal.allocate_device(1);
-//    mal.synchronize_to_device();
-//    auto ptr2 = mal.device_data();
-//    kernel2->launch(dispatcher, ptr2);
-//    dispatcher.wait();
-}
-
-void test_al() {
-    using namespace luminous;
-    auto device = create_cuda_device();
-    auto dispatcher = device->new_dispatcher();
-
-    auto cudaModule = create_cuda_module(ptxCode);
-    auto kernel = cudaModule->get_kernel("test_AL");
-
-    auto al = AL();
-
-    Managed<AL> mal{device.get()};
-    mal.push_back(al);
-    mal.allocate_device(1);
-    mal.synchronize_to_device();
-    auto ptr = mal.device_data();
-    kernel->launch(dispatcher, ptr);
-    dispatcher.wait();
-    mal.synchronize_to_host();
-    auto light = mal[0];
-    printf("host %f    \n", light.padded);
-    printf("size is %llu, align is %llu\n", sizeof(AL), alignof(AL));
+//    auto dispatcher = device->new_dispatcher();
+//
+//    auto cudaModule = create_cuda_module(ptxCode);
+//    auto kernel = cudaModule->get_kernel("test_sampler2");
+//
+//    auto config = SamplerConfig();
+//    config.set_full_type("LCGSampler");
+//    config.spp = 9;
+//    auto sampler = Sampler::create(config);
+//    auto buffer = device->create_buffer<Sampler>(1);
+//    buffer.upload(&sampler);
+//    auto ps = buffer.ptr();
+//
+//    kernel->launch(dispatcher, ps);
 }
 
 int main() {
 
 //    test_managed();
 
-//    test_driver_api();
+    test_driver_api();
 
 //    test_memory();
 
-    test_al();
 //    test_kernel_sampler();
 //    test3();
 //    test2();

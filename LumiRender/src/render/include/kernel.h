@@ -7,6 +7,7 @@
 
 #include "cpu/cpu_impl.h"
 #include "gpu/framework/cuda_impl.h"
+#include "base_libs/lstd/function_trait.h"
 
 namespace luminous {
     inline namespace render {
