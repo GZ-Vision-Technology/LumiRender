@@ -9,6 +9,11 @@
 #include "render/include/task.h"
 #include "gpu/framework/cuda_impl.h"
 #include "cpu/cpu_impl.h"
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <ShlObj.h>
+#endif
 
 using std::cout;
 using std::endl;
@@ -130,7 +135,6 @@ namespace luminous {
         if (_show_window) {
             init_with_gui(title);
         }
-        _clock.start();
     }
 
     App::App(const std::string &title, const int2 &size, Context *context, const Parser &parser)
@@ -177,11 +181,11 @@ namespace luminous {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGui::Render();
     }
 
     void App::imgui_end() {
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+      ImGui::Render();
+      ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
     void App::check_and_update() {
@@ -191,41 +195,87 @@ namespace luminous {
         }
     }
 
-    void App::render() {
-        auto dt = _clock.elapse_s();
-        _clock.start();
-        check_and_update();
-        Clock clock;
-        _task->render_gui(dt);
-        double d = clock.elapse_ms();
-        acc_t += d;
-        ++test_count;
-        cout << d << "  " << acc_t / test_count << "  " << test_count * 1000/ acc_t << "fps   " << test_count << endl;
+    void App::render(double delta_elapsed) {
+        _task->render_gui(delta_elapsed);
     }
 
     int App::run_with_gui() {
-        Clock clock;
+
+        std::chrono::steady_clock::time_point t0, t1, t2;
+
         while (!glfwWindowShouldClose(_handle)) {
-            //            imgui_begin();
-            glfwPollEvents();
-            glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
-            glClear(GL_COLOR_BUFFER_BIT);
-            render();
-            update_render_texture();
-            draw();
-            //            imgui_end();
-            //            clock.start();
-            glfwSwapBuffers(_handle);
-            //            cout << clock.elapse_ms() << endl;
+          glfwPollEvents();
+
+          t1 = t0 = std::chrono::steady_clock::now();
+          check_and_update();
+          t2 = std::chrono::steady_clock::now();
+          _frame_stats.update_time += t2 - t1;
+
+          t1 = t2;
+          render(_frame_stats.last_frame_elapsed.count());
+          t2 = std::chrono::steady_clock::now();
+          _frame_stats.render_time += t2 - t1;
+
+          t1 = t2;
+          update_render_texture();
+          draw();
+          t2 = std::chrono::steady_clock::now();
+          _frame_stats.display_time += t2 - t1;
+
+          _frame_stats.last_frame_elapsed = t2 - t0;
+          _frame_stats.last_sample_elapsed += _frame_stats.last_frame_elapsed;
+          ++_frame_stats.frame_count;
+
+          imgui_begin();
+          display_stats();
+          imgui_end();
+
+          glfwSwapBuffers(_handle);
         }
         glfwTerminate();
         return 0;
     }
 
+    void App::display_stats() {
+
+        constexpr std::chrono::duration<float> update_min_time_interval{.5f};
+
+        static char display_text[128] = {};
+
+        if (_frame_stats.last_sample_elapsed > update_min_time_interval) {
+            snprintf(display_text, 128,
+                     "FPS          : %8.1f\n"
+                     "state update : %8.1f ms\n"
+                     "render       : %8.1f ms\n"
+                     "display      : %8.1f ms",
+                     _frame_stats.frame_count / _frame_stats.last_sample_elapsed.count(),
+                     _frame_stats.update_time.count() * 1000.f / _frame_stats.frame_count,
+                     _frame_stats.render_time.count() * 1000.f / _frame_stats.frame_count,
+                     _frame_stats.display_time.count() * 1000.f / _frame_stats.frame_count
+                     );
+
+            _frame_stats.frame_count = 0;
+            _frame_stats.last_sample_elapsed = std::chrono::duration<float>::zero();
+            _frame_stats.update_time = std::chrono::duration<float>::zero();
+            _frame_stats.render_time = std::chrono::duration<float>::zero();
+            _frame_stats.display_time = std::chrono::duration<float>::zero();
+        }
+
+        if (display_text[0]) {
+            ImGui::SetNextWindowPos(ImVec2{10.f, 10.f});
+            ImGui::Begin("Frame Statistics", nullptr,
+                         ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar |
+                             ImGuiWindowFlags_NoSavedSettings);
+            ImGui::TextColored(ImColor(0.7f, 0.7f, 0.7f, 1.0f), display_text);
+            ImGui::End();
+        }
+    }
+
 
     int App::run_with_cli() {
         while (!_task->complete()) {
-            render();
+          check_and_update();
+          render(.0);
         }
 
         return 0;
@@ -249,6 +299,9 @@ namespace luminous {
     }
 
     void App::draw() const {
+        glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         glUniform1i(_gl_ctx.program_tex, 0);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
@@ -282,15 +335,37 @@ namespace luminous {
             fprintf(stderr, "Failed to initialize OpenGL loader!\n");
             exit(EXIT_FAILURE);
         }
+
+        init_imgui();
     }
 
     void App::init_imgui() {
-//        const char *glsl_version = "#version 130";
-//        IMGUI_CHECKVERSION();
-//        ImGui::CreateContext();
-//        ImGui::StyleColorsDark();
-//        ImGui_ImplGlfw_InitForOpenGL(_handle, true);
-//        ImGui_ImplOpenGL3_Init(glsl_version);
+        const char *glsl_version = "#version 130";
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO &io = ImGui::GetIO();
+        (void)io;
+        ImGui::StyleColorsDark();
+        ImGui_ImplGlfw_InitForOpenGL(_handle, true);
+        ImGui_ImplOpenGL3_Init(glsl_version);
+#ifdef _WIN32
+        PWSTR pszFontFolder = nullptr;
+        SHGetKnownFolderPath(FOLDERID_Fonts, KF_FLAG_DEFAULT, NULL, &pszFontFolder);
+        if(pszFontFolder) {
+            std::size_t cch = 0;
+            cch = WideCharToMultiByte(CP_ACP, 0, pszFontFolder, -1, NULL, 0, NULL, NULL);
+            if(cch > 0) {
+                std::string strFontFolder(cch, '\0');
+                WideCharToMultiByte(CP_ACP, 0, pszFontFolder, -1, &strFontFolder[0], strFontFolder.size(), NULL, NULL);
+                strFontFolder.insert(cch-1, "\\LUCON.ttf");
+                auto pArialFont = io.Fonts->AddFontFromFileTTF(strFontFolder.data(), 14);
+            }
+            CoTaskMemFree(pszFontFolder);
+        }
+#else
+        auto pFont = io.Fonts->AddFontDefault();
+        pFont->FontSize = 14;
+#endif
     }
 
     void App::set_title(const std::string &s) {

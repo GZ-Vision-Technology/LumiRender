@@ -17,7 +17,7 @@
 #include "render/include/task.h"
 
 namespace luminous {
-    using namespace std::chrono;
+
     class App {
         struct GLContext {
             GLuint program{0};
@@ -38,17 +38,20 @@ namespace luminous {
 
         bool _show_window{false};
 
-        Clock _clock;
-
         bool _left_key_press{false};
 
         bool _right_key_press{false};
 
         bool _need_update{true};
 
-        uint test_count = 0;
-
-        double acc_t = 0;
+        struct FrameStats {
+            std::chrono::duration<float> update_time{.0f};
+            std::chrono::duration<float> render_time{.0f};
+            std::chrono::duration<float> display_time{.0f};
+            std::chrono::duration<float> last_frame_elapsed{.0f};
+            std::chrono::duration<float> last_sample_elapsed{.0f};
+            unsigned long frame_count = 0;
+        } _frame_stats;
 
     public:
         App() = default;
@@ -86,7 +89,7 @@ namespace luminous {
 
         void set_title(const std::string &s);
 
-        void render();
+        void render(double delta_elapsed);
 
         void check_and_update();
 
@@ -95,6 +98,8 @@ namespace luminous {
         void imgui_begin();
 
         void imgui_end();
+
+        void display_stats();
 
         int run();
 
