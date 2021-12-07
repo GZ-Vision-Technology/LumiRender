@@ -112,36 +112,41 @@ namespace luminous {
 
         void ShaderWrapper::build_sbt(const render::Scene *scene, Device *device) {
 
-            _device_ptr_table.rg_record = device->create_buffer<SBTRecord>(1);
-            SBTRecord rg_sbt = {};
-            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.raygen_group, &rg_sbt));
-            _device_ptr_table.rg_record.upload(&rg_sbt);
+            _device_ptr_table.sbt_records = device->create_buffer<SBTRecord>(4);
 
-            _device_ptr_table.miss_record = device->create_buffer<SBTRecord>(1);
-            SBTRecord ms_sbt[1] = {};
+//            _device_ptr_table.rg_record = device->create_buffer<SBTRecord>(1);
+//            SBTRecord rg_sbt = {};
+            SBTRecord sbt[4] = {};
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.raygen_group, &sbt[0]));
+//            _device_ptr_table.rg_record.upload(&rg_sbt);
 
-            OPTIX_CHECK(
-                    optixSbtRecordPackHeader(_program_group_table.miss_closest_group, &ms_sbt[RayType::ClosestHit]));
+//            _device_ptr_table.miss_record = device->create_buffer<SBTRecord>(1);
+//            SBTRecord ms_sbt[1] = {};
+
+//            OPTIX_CHECK(
+//                    optixSbtRecordPackHeader(_program_group_table.miss_closest_group, &sbt[3]));
 //            OPTIX_CHECK(
 //                    optixSbtRecordPackHeader(_program_group_table.miss_any_group, &ms_sbt[RayType::AnyHit]));
 //            _device_ptr_table.miss_record.upload(ms_sbt);
 
-            _device_ptr_table.hit_record = device->create_buffer<SBTRecord>(RayType::Count);
-            SBTRecord hit_sbt[RayType::Count] = {};
+//            _device_ptr_table.hit_record = device->create_buffer<SBTRecord>(RayType::Count);
+//            SBTRecord hit_sbt[RayType::Count] = {};
 
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.hit_closest_group,
-                                                 &hit_sbt[RayType::ClosestHit]));
+                                                 &sbt[1]));
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.hit_any_group,
-                                                 &hit_sbt[RayType::AnyHit]));
-            _device_ptr_table.hit_record.upload(hit_sbt);
+                                                 &sbt[2]));
+            OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.miss_closest_group,
+                                                 &sbt[3]));
+            _device_ptr_table.sbt_records.upload(sbt);
 
-            _sbt.raygenRecord = _device_ptr_table.rg_record.ptr<CUdeviceptr>();
-            _sbt.missRecordBase = _device_ptr_table.miss_record.ptr<CUdeviceptr>();
-            _sbt.missRecordStrideInBytes = _device_ptr_table.miss_record.stride_in_bytes();
-            _sbt.missRecordCount = _device_ptr_table.miss_record.size();
-            _sbt.hitgroupRecordBase = _device_ptr_table.hit_record.ptr<CUdeviceptr>();
-            _sbt.hitgroupRecordStrideInBytes = _device_ptr_table.hit_record.stride_in_bytes();
-            _sbt.hitgroupRecordCount = _device_ptr_table.hit_record.size();
+            _sbt.raygenRecord = _device_ptr_table.sbt_records.ptr<CUdeviceptr>();
+            _sbt.hitgroupRecordBase = _device_ptr_table.sbt_records.address<CUdeviceptr>(1);
+            _sbt.hitgroupRecordStrideInBytes = sizeof(SBTRecord);
+            _sbt.hitgroupRecordCount = 2;
+            _sbt.missRecordBase = _device_ptr_table.sbt_records.address<CUdeviceptr>(3);
+            _sbt.missRecordStrideInBytes = sizeof(SBTRecord);
+            _sbt.missRecordCount = 1;
         }
 
     }

@@ -228,8 +228,8 @@ namespace luminous {
 
             _pipeline_compile_options.traversableGraphFlags = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_ANY;
             _pipeline_compile_options.usesMotionBlur = false;
-            _pipeline_compile_options.numPayloadValues = 2;
-            _pipeline_compile_options.numAttributeValues = 2;
+            _pipeline_compile_options.numPayloadValues = 4;
+//            _pipeline_compile_options.numAttributeValues = 2;
             // OPTIX_EXCEPTION_FLAG_NONE;
             //#ifndef NDEBUG
             //            _pipeline_compile_options.exceptionFlags =

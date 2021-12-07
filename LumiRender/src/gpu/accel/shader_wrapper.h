@@ -49,14 +49,17 @@ namespace luminous {
         };
 
         struct DevicePtrTable {
-            Buffer<SBTRecord> rg_record{nullptr};
-            Buffer<SBTRecord> miss_record{nullptr};
-            Buffer<SBTRecord> hit_record{nullptr};
+//            Buffer<SBTRecord> rg_record{nullptr};
+//            Buffer<SBTRecord> miss_record{nullptr};
+//            Buffer<SBTRecord> hit_record{nullptr};
+
+            Buffer<SBTRecord> sbt_records{nullptr};
 
             void clear() {
-                rg_record.clear();
-                miss_record.clear();
-                hit_record.clear();
+//                rg_record.clear();
+//                miss_record.clear();
+//                hit_record.clear();
+                sbt_records.clear();
             }
         };
 
