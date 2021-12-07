@@ -17,7 +17,7 @@ namespace luminous {
 
         class Filter;
 
-        class Sampler : BASE_CLASS(Variant<LCGSampler, PCGSampler>) {
+        class Sampler : BASE_CLASS(Variant<LCGSampler, LCGSampler,LCGSampler,LCGSampler,LCGSampler,LCGSampler, PCGSampler>) {
         public:
             REFL_CLASS(Sampler)
 

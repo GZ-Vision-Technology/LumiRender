@@ -15,6 +15,7 @@
 #include "render/lights/light.h"
 #include "base_libs/sampling/distribution.h"
 #include "test_light.h"
+#include "util/clock.h"
 
 using namespace std;
 
@@ -51,6 +52,8 @@ void test_driver_api() {
     int* pb = buffer_b.ptr<int*>();
     int* pc = buffer_c.ptr<int*>();
     int n = 5;
+    Clock clock1;
+
     kernel.launch(dispatcher, 3, pa, pb, pc);
 
 //    int nitem = 5;
@@ -58,19 +61,16 @@ void test_driver_api() {
 //    kernel->launch(dispatcher, pc, pa, pb);
 //
     dispatcher.wait();
+    cout << clock1.elapse_ms() << endl;
 
-    buffer_c.download(c, size, 0);
-    for (int i = 0; i < size; ++i) {
-        cout << c[i] << endl;
-    }
 }
 
 void test_kernel_sampler() {
     using namespace luminous;
 
     auto device = create_cuda_device();
-//    auto dispatcher = device->new_dispatcher();
-//
+    auto dispatcher = device->new_dispatcher();
+
 //    auto cudaModule = create_cuda_module(ptxCode);
 //    auto kernel = cudaModule->get_kernel("test_sampler2");
 //
