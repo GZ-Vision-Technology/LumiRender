@@ -44,8 +44,8 @@ namespace luminous {
             {
                 OptixProgramGroupDesc miss_prog_group_desc = {};
                 miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
-                miss_prog_group_desc.miss.module = optix_module;
-                miss_prog_group_desc.miss.entryFunctionName = program_name.miss_closest;
+//                miss_prog_group_desc.miss.module = optix_module;
+//                miss_prog_group_desc.miss.entryFunctionName = nullptr;
                 sizeof_log = sizeof(log);
                 OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
                         optix_device_context,
@@ -57,21 +57,21 @@ namespace luminous {
                         &(program_group_table.miss_closest_group)
                 ), log);
 
-                memset(&miss_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
-                miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
-                miss_prog_group_desc.miss.module = optix_module;
-                miss_prog_group_desc.miss.entryFunctionName = program_name.miss_any;
-                sizeof_log = sizeof(log);
-
-                OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
-                        optix_device_context,
-                        &miss_prog_group_desc,
-                        1,  // num program groups
-                        &program_group_options,
-                        log,
-                        &sizeof_log,
-                        &(program_group_table.miss_any_group)
-                ), log);
+//                memset(&miss_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
+//                miss_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_MISS;
+//                miss_prog_group_desc.miss.module = optix_module;
+//                miss_prog_group_desc.miss.entryFunctionName = program_name.miss_any;
+//                sizeof_log = sizeof(log);
+//
+//                OPTIX_CHECK_WITH_LOG(optixProgramGroupCreate(
+//                        optix_device_context,
+//                        &miss_prog_group_desc,
+//                        1,  // num program groups
+//                        &program_group_options,
+//                        log,
+//                        &sizeof_log,
+//                        &(program_group_table.miss_any_group)
+//                ), log);
             }
 
             {
@@ -117,14 +117,14 @@ namespace luminous {
             OPTIX_CHECK(optixSbtRecordPackHeader(_program_group_table.raygen_group, &rg_sbt));
             _device_ptr_table.rg_record.upload(&rg_sbt);
 
-            _device_ptr_table.miss_record = device->create_buffer<SBTRecord>(RayType::Count);
-            SBTRecord ms_sbt[RayType::Count] = {};
+            _device_ptr_table.miss_record = device->create_buffer<SBTRecord>(1);
+            SBTRecord ms_sbt[1] = {};
 
             OPTIX_CHECK(
                     optixSbtRecordPackHeader(_program_group_table.miss_closest_group, &ms_sbt[RayType::ClosestHit]));
-            OPTIX_CHECK(
-                    optixSbtRecordPackHeader(_program_group_table.miss_any_group, &ms_sbt[RayType::AnyHit]));
-            _device_ptr_table.miss_record.upload(ms_sbt);
+//            OPTIX_CHECK(
+//                    optixSbtRecordPackHeader(_program_group_table.miss_any_group, &ms_sbt[RayType::AnyHit]));
+//            _device_ptr_table.miss_record.upload(ms_sbt);
 
             _device_ptr_table.hit_record = device->create_buffer<SBTRecord>(RayType::Count);
             SBTRecord hit_sbt[RayType::Count] = {};

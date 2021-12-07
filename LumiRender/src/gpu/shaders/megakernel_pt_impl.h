@@ -46,12 +46,11 @@ GLOBAL __raygen__rg() {
 }
 
 GLOBAL __miss__closest() {
-//    printf("adfad-------------sfads\n");
-//    setPayloadOcclusion(false);
+
 }
 
 GLOBAL __miss__any() {
-    setPayloadOcclusion(false);
+//    setPayloadOcclusion(false);
 }
 
 GLOBAL __closesthit__closest() {
@@ -61,6 +60,5 @@ GLOBAL __closesthit__closest() {
 }
 
 GLOBAL __closesthit__any() {
-    printf("adfadsfads\n");
-//    setPayloadOcclusion(true);
+    setPayloadOcclusion(true);
 }

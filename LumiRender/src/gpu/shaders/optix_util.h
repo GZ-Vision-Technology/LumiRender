@@ -15,7 +15,7 @@ static LM_GPU_INLINE void *unpackPointer(unsigned int i0, unsigned int i1) {
 }
 
 static LM_GPU_INLINE void packPointer(void *ptr, unsigned int &i0, unsigned int &i1) {
-    const unsigned long long uptr = reinterpret_cast<unsigned long long>( ptr );
+    const auto uptr = reinterpret_cast<unsigned long long>( ptr );
     i0 = uptr >> 32;
     i1 = uptr & 0x00000000ffffffff;
 }
@@ -90,10 +90,9 @@ static LM_GPU_INLINE bool traceClosestHit(OptixTraversableHandle handle,
 }
 
 static LM_GPU_INLINE bool traceAnyHit(OptixTraversableHandle handle, luminous::Ray ray) {
-    unsigned int occluded = 1u;
+    unsigned int occluded = 0u;
     trace(handle, ray, OPTIX_RAY_FLAG_DISABLE_ANYHIT
-                       | OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT
-                       | OPTIX_RAY_FLAG_DISABLE_CLOSESTHIT,
+                       | OPTIX_RAY_FLAG_TERMINATE_ON_FIRST_HIT,
           luminous::RayType::AnyHit,        // SBT offset
           luminous::RayType::Count,           // SBT stride
           luminous::RayType::AnyHit,        // missSBTIndex
@@ -113,7 +112,7 @@ static LM_GPU_INLINE luminous::Ray getRayInWorld() {
     auto org = luminous::make_float3(o.x, o.y, o.z);
     float t_min = optixGetRayTmin();
     float t_max = optixGetRayTmax();
-    return luminous::Ray(org, dir, t_max);
+    return {org, dir, t_max};
 }
 
 static LM_GPU_INLINE uint32_t getInstanceId() {

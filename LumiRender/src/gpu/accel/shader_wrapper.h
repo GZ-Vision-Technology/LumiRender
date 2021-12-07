@@ -22,14 +22,14 @@ namespace luminous {
             const char *raygen{};
             const char *closesthit_closest{};
             const char *closesthit_any{};
-            const char *miss_closest{};
-            const char *miss_any{};
+//            const char *miss_closest{};
+//            const char *miss_any{};
         };
 
         struct ProgramGroupTable {
             OptixProgramGroup raygen_group{nullptr};
             OptixProgramGroup miss_closest_group{nullptr};
-            OptixProgramGroup miss_any_group{nullptr};
+//            OptixProgramGroup miss_any_group{nullptr};
             OptixProgramGroup hit_closest_group{nullptr};
             OptixProgramGroup hit_any_group{nullptr};
 
@@ -41,8 +41,8 @@ namespace luminous {
 
             void clear() const {
                 OPTIX_CHECK(optixProgramGroupDestroy(raygen_group));
-                OPTIX_CHECK(optixProgramGroupDestroy(miss_closest_group));
-                OPTIX_CHECK(optixProgramGroupDestroy(miss_any_group));
+//                OPTIX_CHECK(optixProgramGroupDestroy(miss_closest_group));
+//                OPTIX_CHECK(optixProgramGroupDestroy(miss_any_group));
                 OPTIX_CHECK(optixProgramGroupDestroy(hit_closest_group));
                 OPTIX_CHECK(optixProgramGroupDestroy(hit_any_group));
             }
@@ -81,8 +81,8 @@ namespace luminous {
 
             LM_NODISCARD std::vector<OptixProgramGroup> program_groups() const {
                 return {_program_group_table.raygen_group,
-                        _program_group_table.miss_closest_group,
-                        _program_group_table.miss_any_group,
+//                        _program_group_table.miss_closest_group,
+//                        _program_group_table.miss_any_group,
                         _program_group_table.hit_closest_group,
                         _program_group_table.hit_any_group};
             };

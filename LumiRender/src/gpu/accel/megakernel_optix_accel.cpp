@@ -12,8 +12,9 @@ namespace luminous {
         ProgramName megakernel_shader{"__raygen__rg",
                                  "__closesthit__closest",
                                  "__closesthit__any",
-                                 "__miss__closest",
-                                 "__miss__any"};
+//                                 "__miss__closest",
+//                                 "__miss__any"
+        };
 
         MegakernelOptixAccel::MegakernelOptixAccel(Device *device, Context *context, const Scene *scene)
                 : OptixAccel(device, context, scene),
