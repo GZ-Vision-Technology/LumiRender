@@ -226,10 +226,11 @@ namespace luminous {
             module_compile_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_NONE;
 #endif
 
-            _pipeline_compile_options.traversableGraphFlags = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_ANY;
+            _pipeline_compile_options.traversableGraphFlags = OPTIX_TRAVERSABLE_GRAPH_FLAG_ALLOW_SINGLE_LEVEL_INSTANCING;
             _pipeline_compile_options.usesMotionBlur = false;
-            _pipeline_compile_options.numPayloadValues = 2;
-//            _pipeline_compile_options.numAttributeValues = 2;
+            _pipeline_compile_options.numPayloadValues = 2u;
+            _pipeline_compile_options.usesPrimitiveTypeFlags = OPTIX_PRIMITIVE_TYPE_FLAGS_TRIANGLE;
+            _pipeline_compile_options.numAttributeValues = 2;
             // OPTIX_EXCEPTION_FLAG_NONE;
             //#ifndef NDEBUG
             //            _pipeline_compile_options.exceptionFlags =
