@@ -16,7 +16,7 @@ namespace luminous {
 
         Sensor *Integrator::camera() { return _camera.data(); }
 
-        const SceneData* Integrator::scene_data() const { return _scene->scene_data_host_ptr();}
+        const SceneData *Integrator::scene_data() const { return _scene->scene_data_host_ptr(); }
 
         void Integrator::init(const std::shared_ptr<SceneGraph> &scene_graph) {
             if (_device->is_cpu()) {
@@ -29,7 +29,9 @@ namespace luminous {
             _scene->init(scene_graph);
             _sampler.push_back(Sampler::create(scene_graph->sampler_config));
 
-            _camera.init(1, lstd::Sizer<Sensor>::compound_size() + lstd::Sizer<Film>::size);
+            _camera.init(1, lstd::Sizer<Sensor>::compound_size() +
+                            lstd::Sizer<Film>::size +
+                            lstd::Sizer<Filter>::size);
             _camera.add_element(scene_graph->sensor_config);
 
             init_on_device();
