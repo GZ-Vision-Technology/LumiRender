@@ -44,7 +44,6 @@ namespace luminous {
             OptixPipelineCompileOptions _pipeline_compile_options = {};
             Device *_device{};
             mutable Dispatcher _dispatcher;
-            uint32_t geom_flags = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
             OptixTraversableHandle _root_as_handle{};
             std::list<Buffer<std::byte>> _as_buffer_list;
             Buffer<OptixInstance> _instances{nullptr};

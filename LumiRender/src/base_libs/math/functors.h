@@ -171,7 +171,11 @@ namespace luminous {
 
         template<typename T, uint N>
         LM_ND_XPU constexpr auto normalize(Vector <T, N> u) noexcept {
+#ifndef __CUDACC__
             return u * (1.0f / length(u));
+#else
+            return u * ::rsqrt(dot(u,u));
+#endif
         }
 
         template<typename T, uint N>
