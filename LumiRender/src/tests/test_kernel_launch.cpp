@@ -32,7 +32,7 @@ void test_driver_api() {
 
     auto cudaModule = create_cuda_module(ptxCode);
     auto kernel_handle = cudaModule->get_kernel_handle("addKernel");
-
+    cout << ptxCode << endl;
     Kernel<decltype(&add_func)> kernel(add_func);
     kernel.set_cu_function(kernel_handle);
 
