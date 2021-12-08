@@ -67,6 +67,7 @@ void test_normal(int a) {
     for (int i = 0; i < 10000000; ++i) {
         a += ca.func();
     }
+    cout << "test_normal : ";
     cout << a << endl << clk.elapse_ms() << endl;
 }
 
@@ -84,6 +85,7 @@ void test_virtual(int a) {
     for (int i = 0; i < 10000000; ++i) {
         a += p->func();
     }
+    cout << "test_virtual : ";
     cout << a << endl << clk.elapse_ms() << endl;
 }
 
@@ -100,6 +102,7 @@ void test_variant(int a) {
     for (int i = 0; i < 10000000; ++i) {
         a += cd.func();
     }
+    cout << "test_variant : ";
     cout << a << endl << clk.elapse_ms() << endl;
 }
 

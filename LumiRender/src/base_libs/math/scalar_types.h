@@ -21,7 +21,8 @@ namespace luminous {
         using index_t = uint32_t;
 
         template<typename T>
-        struct IsScalar : std::false_type {};
+        struct IsScalar : std::false_type {
+        };
 
 #define MAKE_IS_SCALAR_TRUE(Type) template<> struct IsScalar<Type> : std::true_type {};
 
@@ -56,6 +57,7 @@ namespace luminous {
         LM_NODISCARD LM_XPU constexpr float radians(float deg) noexcept {
             return deg * constant::Pi / 180.0f;
         }
+
         LM_NODISCARD LM_XPU constexpr float degrees(float rad) noexcept {
             return rad * constant::invPi * 180.0f;
         }
@@ -70,7 +72,7 @@ namespace luminous {
             return a + t * (b - a);
         }
 
-        template <typename T, typename U, typename V>
+        template<typename T, typename U, typename V>
         LM_NODISCARD LM_XPU constexpr T clamp(T val, U low, V high) noexcept {
             if (val < low)
                 return low;
@@ -85,10 +87,12 @@ namespace luminous {
             ::sincosf(theta, sin, cos);
         }
 #else
+
         inline LM_XPU void sincos(float theta, float *_sin, float *_cos) {
             *_sin = sinf(theta);
             *_cos = cosf(theta);
         }
+
 #endif
 
         template<typename FloatType>
@@ -108,7 +112,7 @@ namespace luminous {
         template<typename T>
         LM_ND_XPU T abs(T val) {
             if constexpr(std::is_same_v<T, float>) {
-                return ::fabs(val);
+                return ::fabsf(val);
             }
             return ::fabs(val);
         }
@@ -131,12 +135,12 @@ namespace luminous {
             }
         }
 
-        template <typename T>
+        template<typename T>
         inline LM_XPU constexpr auto sqr(T v) {
             return v * v;
         }
 
-        template <int n>
+        template<int n>
         LM_XPU constexpr float Pow(float v) {
             if constexpr (n < 0) {
                 return 1 / Pow<-n>(v);
@@ -149,9 +153,24 @@ namespace luminous {
             return n2 * n2 * Pow<n & 1>(v);
         }
 
-        template <typename IntegerType>
+        template<uint32_t N>
+        ND_XPU_INLINE unsigned int tea(uint32_t val0, uint32_t val1) {
+            uint32_t v0 = val0;
+            uint32_t v1 = val1;
+            uint32_t s0 = 0;
+
+            for (uint32_t n = 0; n < N; n++) {
+                s0 += 0x9e3779b9;
+                v0 += ((v1 << 4) + 0xa341316c) ^ (v1 + s0) ^ ((v1 >> 5) + 0xc8013ea4);
+                v1 += ((v0 << 4) + 0xad90777d) ^ (v0 + s0) ^ ((v0 >> 5) + 0x7e95761e);
+            }
+
+            return v0;
+        }
+
+        template<typename IntegerType>
         LM_XPU_INLINE IntegerType round_up(IntegerType x, IntegerType y) {
-            return ( ( x + y - 1 ) / y ) * y;
+            return ((x + y - 1) / y) * y;
         }
 
         LM_XPU_INLINE bool is_power_of_two(uint32_t i) noexcept { return (i & (i - 1)) == 0; }

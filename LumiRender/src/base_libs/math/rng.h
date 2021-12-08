@@ -13,14 +13,21 @@
 namespace luminous {
     inline namespace math {
 
+        ND_XPU_INLINE float lcg_func(uint32_t &state) {
+            constexpr auto lcg_a = 1664525u;
+            constexpr auto lcg_c = 1013904223u;
+            state = lcg_a * state + lcg_c;
+            return static_cast<float>(state & 0x00ffffffu) * (1.0f / static_cast<float>(0x01000000u));
+        };
+
         template<unsigned int N = 4>
         class LCG {
         private:
-            uint32_t state{};
+            uint32_t _state{};
         public:
             LM_XPU LCG() { init(0, 0); }
 
-            LM_NODISCARD LM_XPU LCG(uint2 v) {
+            LM_NODISCARD LM_XPU explicit LCG(uint2 v) {
                 init(v);
             }
 
@@ -33,24 +40,12 @@ namespace luminous {
             }
 
             inline LM_XPU void init(unsigned int val0, unsigned int val1) {
-                unsigned int v0 = val0;
-                unsigned int v1 = val1;
-                unsigned int s0 = 0;
-
-                for (unsigned int n = 0; n < N; n++) {
-                    s0 += 0x9e3779b9;
-                    v0 += ((v1 << 4) + 0xa341316c) ^ (v1 + s0) ^ ((v1 >> 5) + 0xc8013ea4);
-                    v1 += ((v0 << 4) + 0xad90777d) ^ (v0 + s0) ^ ((v0 >> 5) + 0x7e95761e);
-                }
-                state = v0;
+                _state = tea<N>(val0, val1);
             }
 
             // Generate random unsigned int in [0, 2^24)
             LM_NODISCARD inline LM_XPU float next() {
-                const uint32_t LCG_A = 1664525u;
-                const uint32_t LCG_C = 1013904223u;
-                state = (LCG_A * state + LCG_C);
-                return ldexpf(float(state), -32);
+                return lcg_func(_state);
             }
         };
 
