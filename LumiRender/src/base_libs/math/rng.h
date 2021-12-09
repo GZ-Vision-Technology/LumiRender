@@ -7,7 +7,7 @@
 
 #include "../header.h"
 #include "vector_types.h"
-#include "inttypes.h"
+#include <cinttypes>
 #include "float.h"
 
 namespace luminous {
