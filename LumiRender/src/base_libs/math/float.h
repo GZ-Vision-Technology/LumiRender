@@ -58,7 +58,7 @@ namespace luminous {
         }
 
         LM_XPU_INLINE float FMA(float a, float b, float c) {
-            return std::fma(a, b, c);
+            return std::fmaf(a, b, c);
         }
 
         LM_XPU_INLINE double FMA(double a, double b, double c) {
