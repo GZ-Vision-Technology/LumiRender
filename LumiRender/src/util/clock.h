@@ -10,34 +10,98 @@
 namespace luminous {
 
     inline namespace utility {
-        class Clock {
 
-            using SystemClock = std::chrono::high_resolution_clock;
-            using Tick = std::chrono::high_resolution_clock::time_point;
+    class HpClock {
+    public:
+        HpClock() {
+            reset();
+        }
 
-        private:
-            Tick _last;
+        // resets the timer
+        void reset() {
+            _paused = false;
+            _last_stamp = _start_stamp = hp_timer::now();
+            _stop_stamp = time_point{hp_timer::duration::zero()};
+        }
+        // starts the timer
+        void resume() {
+            if (_paused) {
+                hp_timer::duration elapsed = hp_timer::now() - _stop_stamp;
+                if (elapsed < hp_timer::duration::zero())
+                    elapsed = hp_timer::duration::zero();
 
-        public:
-            Clock() noexcept: _last{SystemClock::now()} {}
-
-            void tic() noexcept { _last = SystemClock::now(); }
-
-            void start() noexcept { tic(); }
-
-            LM_NODISCARD auto toc() const noexcept {
-                auto curr = SystemClock::now();
-                using namespace std::chrono_literals;
-                return (curr - _last) / 1ns * 1e-6;
+                _start_stamp += elapsed;
+                _last_stamp = _start_stamp;
+                _stop_stamp = time_point{hp_timer::duration::zero()};
+                _paused = false;
             }
-
-            LM_NODISCARD auto elapse_ms() const noexcept {
-                return toc();
+        }
+        // stop (or pause) the timer
+        void stop() {
+            if (!_paused) {
+                _stop_stamp = hp_timer::now();
+                _paused = true;
             }
+        }
+        // returns true if timer stopped
+        bool is_paused() const {
+            return _paused;
+        }
+        // get the current time in seconds after the lastest Reset() or Resume() call.
+        double get_time() const {
+            duration secs;
+            if (_paused)
+                secs = duration_cast(_stop_stamp - _start_stamp);
+            else
+                secs = duration_cast(hp_timer::now() - _start_stamp);
 
-            LM_NODISCARD auto elapse_s() const noexcept {
-                return elapse_ms() / 1000;
+            // This can happen because high resolution timer is used here.
+            if (secs < duration::zero())
+                secs = duration::zero();
+
+            return secs.count();
+        }
+        void tick() {
+            if (!_paused) {
+                _last_stamp = hp_timer::now();
             }
-        };
+        }
+        // get the time in seconds that elapsed after the lastest Tick() call.
+        double get_elapsed_time() const {
+            duration secs;
+
+            if (_paused) {
+                secs = duration_cast(_stop_stamp - _last_stamp);
+            } else
+                secs = duration_cast(hp_timer::now() - _last_stamp);
+
+            // This can happen because high resolution timer is used here.
+            if (secs < duration::zero())
+                secs = duration::zero();
+
+            return secs.count();
+        }
+
+    private:
+        using duration = std::chrono::duration<double>; // second.
+        using hp_timer = std::chrono::steady_clock;
+        using time_point = std::chrono::steady_clock::time_point;
+
+        // disable copy/move/assignment
+        HpClock(const HpClock &) = delete;
+        HpClock &operator=(const HpClock &) = delete;
+
+        // Convert resolution from nanosecond to second.
+        static duration duration_cast(const hp_timer::duration &interval) {
+            return std::chrono::duration_cast<duration>(interval);
+        }
+
+        time_point _start_stamp;
+        time_point _stop_stamp;
+        time_point _last_stamp;
+        bool _paused;
+    };
+
+    using Clock = HpClock;
     } // luminous::utility
 }// luminous

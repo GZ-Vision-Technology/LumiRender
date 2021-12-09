@@ -152,7 +152,8 @@ namespace luminous {
             }
 
             LM_ND_XPU float3 apply_normal(float3 normal) const {
-                return transpose(inv_mat3x3()) * normal;
+                // return transpose(inv_mat3x3()) * normal;
+                return make_float3(transpose(_inv_mat) * make_float4(normal, .0f));
             }
 
             LM_ND_XPU Box3f apply_box(const Box3f &b) const {

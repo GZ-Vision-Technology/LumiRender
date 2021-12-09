@@ -124,7 +124,7 @@ namespace luminous {
             }
             _integrator->init(scene_graph);
             update_device_buffer();
-            _clock.start();
+            _clock.reset();
         }
 
         std::shared_ptr<SceneGraph> Task::build_scene_graph(const Parser &parser) {
@@ -153,7 +153,7 @@ namespace luminous {
             _integrator->render(_output_config.frame_per_dispatch);
             if (_dispatch_num++ == _output_config.dispatch_num
                 && _output_config.dispatch_num != 0) {
-                auto t = _clock.elapse_s();
+                auto t = _clock.get_time();
                 cout << "render is complete elapse " << t << " s" << endl;
                 cout << (_output_config.dispatch_num * _output_config.frame_per_dispatch) / t << " fps" << endl;
                 save_to_file();

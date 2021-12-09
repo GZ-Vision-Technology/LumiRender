@@ -44,12 +44,14 @@ namespace luminous {
 
         bool _need_update{true};
 
+        HpClock _clock;
+
         struct FrameStats {
-            std::chrono::duration<float> update_time{.0f};
-            std::chrono::duration<float> render_time{.0f};
-            std::chrono::duration<float> display_time{.0f};
-            std::chrono::duration<float> last_frame_elapsed{.0f};
-            std::chrono::duration<float> last_sample_elapsed{.0f};
+            float update_time{.0f};
+            float render_time{.0f};
+            float display_time{.0f};
+            float last_frame_elapsed{.0f};
+            float last_sample_elapsed{.0f};
             unsigned long frame_count = 0;
         } _frame_stats;
 

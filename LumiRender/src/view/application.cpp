@@ -201,25 +201,31 @@ namespace luminous {
 
     int App::run_with_gui() {
 
-        std::chrono::steady_clock::time_point t0, t1, t2;
+        float t0, t1, t2;
+        float elapsed_time;
+
+        _clock.reset();
 
         while (!glfwWindowShouldClose(_handle)) {
           glfwPollEvents();
 
-          t1 = t0 = std::chrono::steady_clock::now();
+          elapsed_time = _clock.get_elapsed_time();
+          _clock.tick();
+
+          t1 = t0 = _clock.get_time();
           check_and_update();
-          t2 = std::chrono::steady_clock::now();
+          t2 = _clock.get_time();
           _frame_stats.update_time += t2 - t1;
 
           t1 = t2;
-          render(_frame_stats.last_frame_elapsed.count());
-          t2 = std::chrono::steady_clock::now();
+          render(elapsed_time);
+          t2 = _clock.get_time();
           _frame_stats.render_time += t2 - t1;
 
           t1 = t2;
           update_render_texture();
           draw();
-          t2 = std::chrono::steady_clock::now();
+          t2 = _clock.get_time();
           _frame_stats.display_time += t2 - t1;
 
           _frame_stats.last_frame_elapsed = t2 - t0;
@@ -238,7 +244,7 @@ namespace luminous {
 
     void App::display_stats() {
 
-        constexpr std::chrono::duration<float> update_min_time_interval{.5f};
+        constexpr float update_min_time_interval{.5f};
 
         static char display_text[128] = {};
 
@@ -248,17 +254,17 @@ namespace luminous {
                      "state update : %8.1f ms\n"
                      "render       : %8.1f ms\n"
                      "display      : %8.1f ms",
-                     _frame_stats.frame_count / _frame_stats.last_sample_elapsed.count(),
-                     _frame_stats.update_time.count() * 1000.f / _frame_stats.frame_count,
-                     _frame_stats.render_time.count() * 1000.f / _frame_stats.frame_count,
-                     _frame_stats.display_time.count() * 1000.f / _frame_stats.frame_count
+                     _frame_stats.frame_count / _frame_stats.last_sample_elapsed,
+                     _frame_stats.update_time * 1000.f / _frame_stats.frame_count,
+                     _frame_stats.render_time * 1000.f / _frame_stats.frame_count,
+                     _frame_stats.display_time * 1000.f / _frame_stats.frame_count
                      );
 
             _frame_stats.frame_count = 0;
-            _frame_stats.last_sample_elapsed = std::chrono::duration<float>::zero();
-            _frame_stats.update_time = std::chrono::duration<float>::zero();
-            _frame_stats.render_time = std::chrono::duration<float>::zero();
-            _frame_stats.display_time = std::chrono::duration<float>::zero();
+            _frame_stats.last_sample_elapsed = 0.0f;
+            _frame_stats.update_time         = 0.0f;
+            _frame_stats.render_time         = 0.0f;
+            _frame_stats.display_time        = 0.0f;
         }
 
         if (display_text[0]) {

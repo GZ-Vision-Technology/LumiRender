@@ -22,12 +22,12 @@ namespace luminous {
 
         TaskTag(const char *tn)
                 : task_name(tn) {
-            clock.tic();
+            clock.tick();
             LUMINOUS_INFO(task_name, " start!")
         }
 
         ~TaskTag() {
-            LUMINOUS_INFO(string_printf("%s complete, elapsed time is %g s", task_name, clock.elapse_s()));
+            LUMINOUS_INFO(string_printf("%s complete, elapsed time is %g s", task_name, clock.get_elapsed_time()));
         }
     };
 
