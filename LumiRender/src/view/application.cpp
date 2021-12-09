@@ -9,10 +9,13 @@
 #include "render/include/task.h"
 #include "gpu/framework/cuda_impl.h"
 #include "cpu/cpu_impl.h"
+
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
+
 #include <windows.h>
 #include <ShlObj.h>
+
 #endif
 
 using std::cout;
@@ -184,8 +187,8 @@ namespace luminous {
     }
 
     void App::imgui_end() {
-      ImGui::Render();
-      ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
     void App::check_and_update() {
@@ -207,36 +210,36 @@ namespace luminous {
         _clock.reset();
 
         while (!glfwWindowShouldClose(_handle)) {
-          glfwPollEvents();
+            glfwPollEvents();
 
-          elapsed_time = _clock.get_elapsed_time();
-          _clock.tick();
+            elapsed_time = _clock.get_elapsed_time();
+            _clock.tick();
 
-          t1 = t0 = _clock.get_time();
-          check_and_update();
-          t2 = _clock.get_time();
-          _frame_stats.update_time += t2 - t1;
+            t1 = t0 = _clock.get_time();
+            check_and_update();
+            t2 = _clock.get_time();
+            _frame_stats.update_time += t2 - t1;
 
-          t1 = t2;
-          render(elapsed_time);
-          t2 = _clock.get_time();
-          _frame_stats.render_time += t2 - t1;
+            t1 = t2;
+            render(elapsed_time);
+            t2 = _clock.get_time();
+            _frame_stats.render_time += t2 - t1;
 
-          t1 = t2;
-          update_render_texture();
-          draw();
-          t2 = _clock.get_time();
-          _frame_stats.display_time += t2 - t1;
+            t1 = t2;
+            update_render_texture();
+            draw();
+            t2 = _clock.get_time();
+            _frame_stats.display_time += t2 - t1;
 
-          _frame_stats.last_frame_elapsed = t2 - t0;
-          _frame_stats.last_sample_elapsed += _frame_stats.last_frame_elapsed;
-          ++_frame_stats.frame_count;
+            _frame_stats.last_frame_elapsed = t2 - t0;
+            _frame_stats.last_sample_elapsed += _frame_stats.last_frame_elapsed;
+            ++_frame_stats.frame_count;
 
-          imgui_begin();
-          display_stats();
-          imgui_end();
+            imgui_begin();
+            display_stats();
+            imgui_end();
 
-          glfwSwapBuffers(_handle);
+            glfwSwapBuffers(_handle);
         }
         glfwTerminate();
         return 0;
@@ -258,20 +261,20 @@ namespace luminous {
                      _frame_stats.update_time * 1000.f / _frame_stats.frame_count,
                      _frame_stats.render_time * 1000.f / _frame_stats.frame_count,
                      _frame_stats.display_time * 1000.f / _frame_stats.frame_count
-                     );
+            );
 
             _frame_stats.frame_count = 0;
             _frame_stats.last_sample_elapsed = 0.0f;
-            _frame_stats.update_time         = 0.0f;
-            _frame_stats.render_time         = 0.0f;
-            _frame_stats.display_time        = 0.0f;
+            _frame_stats.update_time = 0.0f;
+            _frame_stats.render_time = 0.0f;
+            _frame_stats.display_time = 0.0f;
         }
 
         if (display_text[0]) {
             ImGui::SetNextWindowPos(ImVec2{10.f, 10.f});
             ImGui::Begin("Frame Statistics", nullptr,
                          ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar |
-                             ImGuiWindowFlags_NoSavedSettings);
+                         ImGuiWindowFlags_NoSavedSettings);
             ImGui::TextColored(ImColor(0.7f, 0.7f, 0.7f, 1.0f), display_text);
             ImGui::End();
         }
@@ -280,8 +283,8 @@ namespace luminous {
 
     int App::run_with_cli() {
         while (!_task->complete()) {
-          check_and_update();
-          render(.0);
+            check_and_update();
+            render(.0);
         }
 
         return 0;
@@ -350,20 +353,20 @@ namespace luminous {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
-        (void)io;
+        (void) io;
         ImGui::StyleColorsDark();
         ImGui_ImplGlfw_InitForOpenGL(_handle, true);
         ImGui_ImplOpenGL3_Init(glsl_version);
 #ifdef _WIN32
         PWSTR pszFontFolder = nullptr;
         SHGetKnownFolderPath(FOLDERID_Fonts, KF_FLAG_DEFAULT, NULL, &pszFontFolder);
-        if(pszFontFolder) {
+        if (pszFontFolder) {
             std::size_t cch = 0;
             cch = WideCharToMultiByte(CP_ACP, 0, pszFontFolder, -1, NULL, 0, NULL, NULL);
-            if(cch > 0) {
+            if (cch > 0) {
                 std::string strFontFolder(cch, '\0');
                 WideCharToMultiByte(CP_ACP, 0, pszFontFolder, -1, &strFontFolder[0], strFontFolder.size(), NULL, NULL);
-                strFontFolder.insert(cch-1, "\\LUCON.ttf");
+                strFontFolder.insert(cch - 1, "\\LUCON.ttf");
                 auto pArialFont = io.Fonts->AddFontFromFileTTF(strFontFolder.data(), 14);
             }
             CoTaskMemFree(pszFontFolder);
