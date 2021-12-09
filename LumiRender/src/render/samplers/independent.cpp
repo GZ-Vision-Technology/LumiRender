@@ -22,7 +22,9 @@ namespace luminous {
         }
 
         float2 LCGSampler::next_2d() {
-            return make_float2(next_1d(), next_1d());
+            float x = next_1d();
+            float y = next_1d();
+            return make_float2(x, y);
         }
 
         void PCGSampler::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
@@ -39,8 +41,9 @@ namespace luminous {
         }
 
         float2 PCGSampler::next_2d() {
-            return make_float2(next_1d(), next_1d());
+            float x = next_1d();
+            float y = next_1d();
+            return make_float2(x, y);
         }
-
     }
 }

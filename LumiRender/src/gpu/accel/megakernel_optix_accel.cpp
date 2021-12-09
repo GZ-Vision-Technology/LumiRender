@@ -16,6 +16,7 @@ namespace luminous {
 
         MegakernelOptixAccel::MegakernelOptixAccel(Device *device, Context *context, const Scene *scene)
                 : OptixAccel(device, context, scene),
+                // todo change to string_view
                 _shader_wrapper(create_shader_wrapper(megakernel_pt, megakernel_shader)) {
             build_pipeline(_shader_wrapper.program_groups());
         }
