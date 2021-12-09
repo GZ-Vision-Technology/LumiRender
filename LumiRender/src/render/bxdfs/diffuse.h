@@ -50,10 +50,11 @@ namespace luminous {
                     return {};
                 }
                 float3 wi = square_to_cosine_hemisphere(u);
-                if (wo.z < 0) {
-                    wi.z *= -1;
-                }
+                wi.z = wo.z < 0 ? -wi.z : wi.z;
                 float PDF_val = PDF(wo, wi, mode, sample_flags);
+                if (PDF_val == 0) {
+                    return {};
+                }
                 Spectrum f = _eval(wo, wi, mode);
                 return BSDFSample(f, wi, PDF_val, BxDFFlags::Reflection);
             }
