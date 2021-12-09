@@ -22,7 +22,7 @@ namespace luminous {
             Spectrum L(0.f);
             Spectrum throughput(1.f);
             SurfaceInteraction si;
-
+            const LightSampler *light_sampler = hit_ctx.scene_data()->light_sampler;
             int bounces;
             bool found_intersection = luminous::intersect_closest(scene_handle, ray, &hit_ctx.hit_info);
 
@@ -36,12 +36,13 @@ namespace luminous {
                     pixel_info.albedo = make_float3(si.op_bsdf->base_color());
                 }
             } else {
-                Spectrum env_color = hit_ctx.scene_data()->light_sampler->on_miss(ray.direction(), hit_ctx.scene_data(),
+                Spectrum env_color = light_sampler->on_miss(ray.direction(), hit_ctx.scene_data(),
                                                                                   throughput);
                 L += env_color;
                 pixel_info.albedo = env_color.vec();
+                pixel_info.Li = L;
+                return pixel_info;
             }
-
             for (bounces = 0; bounces < max_depth; ++bounces) {
                 BREAK_IF(!found_intersection)
                 if (!si.op_bsdf) {
@@ -51,7 +52,6 @@ namespace luminous {
                     --bounces;
                     continue;
                 }
-                const LightSampler *light_sampler = hit_ctx.scene_data()->light_sampler;
                 NEEData NEE_data;
                 NEE_data.debug = debug;
                 Spectrum Ld = light_sampler->estimate_direct_lighting(si, sampler,

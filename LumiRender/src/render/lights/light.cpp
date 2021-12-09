@@ -91,7 +91,7 @@ namespace luminous {
                 if (hit_ctx.is_hit() && (NEE_data->next_si = hit_ctx.compute_surface_interaction(ray)).light == this) {
                     NEE_data->next_si.update_PDF_pos(data->compute_prim_PMF(hit_ctx.hit_info));
                     Li = NEE_data->next_si.Le(-NEE_data->wi, data);
-                    light_PDF = PDF_Li(LightSampleContext(si), LightEvalContext{NEE_data->next_si}, NEE_data->wi, data);
+                    light_PDF = as<AreaLight>()->PDF_Li(LightSampleContext(si), LightEvalContext{NEE_data->next_si}, NEE_data->wi, data);
                 } else if (!NEE_data->found_intersection && is_infinite()) {
                     Li = as<Envmap>()->on_miss(ray.direction(), hit_ctx.scene_data());
                     light_PDF = as<Envmap>()->PDF_Li(LightSampleContext(si), LightEvalContext{NEE_data->next_si}, NEE_data->wi, data);

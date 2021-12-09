@@ -51,16 +51,16 @@
 				"diffuse": "constant"
 			}
 		},
-		{
-			"type": "DielectricMaterial",
-			"name": "glass",
-			"param": {
-				"Kr": "constant",
-				"Kt": "constant",
-				"roughness": "roughness",
-				"eta" : "eta"
-			}
-		},
+//		{
+//			"type": "DielectricMaterial",
+//			"name": "glass",
+//			"param": {
+//				"Kr": "constant",
+//				"Kt": "constant",
+//				"roughness": "roughness",
+//				"eta" : "eta"
+//			}
+//		},
 		{
 			"type": "MatteMaterial",
 			"name": "quad2",

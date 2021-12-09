@@ -24,7 +24,7 @@ namespace luminous {
 
         class SpotLight;
 
-        class Light : BASE_CLASS(Variant<PointLight *, AreaLight *, SpotLight *, Envmap *>) {
+        class Light : BASE_CLASS(Variant<AreaLight *, Envmap *>) {
         private:
             using BaseBinder::BaseBinder;
         public:
