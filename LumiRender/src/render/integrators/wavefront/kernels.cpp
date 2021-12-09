@@ -32,7 +32,7 @@ namespace luminous {
             Sensor *camera = rt_param->camera;
             Sampler sampler = *(rt_param->sampler);
             sampler.start_pixel_sample(pixel, sample_index, 0);
-            SensorSample ss = sampler.sensor_sample(pixel);
+            SensorSample ss = sampler.sensor_sample(pixel, camera->filter());
             auto[weight, ray] = camera->generate_ray(ss);
             pixel_sample_state->Li[task_id] = {0.f};
             pixel_sample_state->normal[task_id] = make_float3(0.f);

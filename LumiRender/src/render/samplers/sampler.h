@@ -30,7 +30,7 @@ namespace luminous {
 
             LM_XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
-            LM_XPU SensorSample sensor_sample(uint2 p_raster, const Filter *filter = nullptr);
+            LM_XPU SensorSample sensor_sample(uint2 p_raster, const Filter *filter);
 
             LM_ND_XPU int compute_dimension(int depth) const;
 
