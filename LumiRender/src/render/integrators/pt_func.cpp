@@ -15,10 +15,10 @@ namespace luminous {
     inline namespace render {
 
         LM_ND_XPU PixelInfo path_tracing(Ray ray, uint64_t scene_handle, Sampler &sampler,
-                              uint max_depth, float rr_threshold, bool debug,
-                              const SceneData *scene_data) {
+                                         uint max_depth, float rr_threshold, bool debug,
+                                         const SceneData *scene_data) {
             HitContext hit_ctx{scene_data};
-            
+
             Spectrum L(0.f);
             Spectrum throughput(1.f);
             SurfaceInteraction si;
@@ -28,21 +28,21 @@ namespace luminous {
 
             PixelInfo pixel_info;
 
-            for (bounces = 0; bounces < max_depth; ++bounces) {
-                if (bounces == 0) {
-                    if (found_intersection) {
-                        si = hit_ctx.compute_surface_interaction(ray);
-                        L += throughput * si.Le(-ray.direction(), scene_data);
-                        pixel_info.normal = si.s_uvn.normal;
-                        if (si.op_bsdf) {
-                            pixel_info.albedo = make_float3(si.op_bsdf->base_color());
-                        }
-                    } else {
-                        Spectrum env_color = hit_ctx.scene_data()->light_sampler->on_miss(ray.direction(), hit_ctx.scene_data(), throughput);
-                        L += env_color;
-                        pixel_info.albedo = env_color.vec();
-                    }
+            if (found_intersection) {
+                si = hit_ctx.compute_surface_interaction(ray);
+                L += throughput * si.Le(-ray.direction(), scene_data);
+                pixel_info.normal = si.s_uvn.normal;
+                if (si.op_bsdf) {
+                    pixel_info.albedo = make_float3(si.op_bsdf->base_color());
                 }
+            } else {
+                Spectrum env_color = hit_ctx.scene_data()->light_sampler->on_miss(ray.direction(), hit_ctx.scene_data(),
+                                                                                  throughput);
+                L += env_color;
+                pixel_info.albedo = env_color.vec();
+            }
+
+            for (bounces = 0; bounces < max_depth; ++bounces) {
                 BREAK_IF(!found_intersection)
                 if (!si.op_bsdf) {
                     ray = si.spawn_ray(ray.direction());
@@ -51,7 +51,6 @@ namespace luminous {
                     --bounces;
                     continue;
                 }
-
                 const LightSampler *light_sampler = hit_ctx.scene_data()->light_sampler;
                 NEEData NEE_data;
                 NEE_data.debug = debug;
