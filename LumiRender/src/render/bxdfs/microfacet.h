@@ -19,14 +19,13 @@ namespace luminous {
         private:
             float _alpha_x{};
             float _alpha_y{};
-            MicrofacetType _type{};
+            constexpr static MicrofacetType _type{GGX};
         public:
             LM_XPU MicrofacetDistribution() = default;
 
-            LM_XPU MicrofacetDistribution(float alpha_x, float alpha_y, MicrofacetType md_type = GGX)
+            LM_XPU MicrofacetDistribution(float alpha_x, float alpha_y)
                     : _alpha_x(alpha_x),
-                      _alpha_y(alpha_y),
-                      _type(md_type) {
+                      _alpha_y(alpha_y) {
 
             }
 

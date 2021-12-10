@@ -28,7 +28,7 @@ namespace luminous {
             float4 kr = kr_tex.eval(ctx);
             float4 kt = kt_tex.eval(ctx);
             float eta = eta_tex.eval(ctx).x;
-            BxDF bxdf = BxDF(DielectricBxDF(kr, kt, eta, rx, ry, GGX));
+            BxDF bxdf = BxDF(DielectricBxDF(kr, kt, eta, rx, ry));
 
             return {ctx.ng, ctx.ns, ctx.dp_dus, bxdf};
         }

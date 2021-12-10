@@ -24,11 +24,14 @@ namespace luminous {
                 return Kr;
             }
 
+            LM_XPU DielectricBxDF(float4 kr, float4 kt, float eta)
+                    : Kr(kr), Kt(kt), _eta(eta) {}
+
             LM_XPU DielectricBxDF(float4 kr, float4 kt, float eta, MicrofacetDistribution distribution)
                     : Kr(kr), Kt(kt), _eta(eta), _distribution(distribution) {}
 
-            LM_XPU DielectricBxDF(float4 kr, float4 kt, float eta, float rx, float ry, MicrofacetType type)
-                    : Kr(kr), Kt(kt), _eta(eta), _distribution(MicrofacetDistribution(rx, ry, type)) {}
+            LM_XPU DielectricBxDF(float4 kr, float4 kt, float eta, float rx, float ry)
+                    : Kr(kr), Kt(kt), _eta(eta), _distribution(MicrofacetDistribution(rx, ry)) {}
 
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const;
 
