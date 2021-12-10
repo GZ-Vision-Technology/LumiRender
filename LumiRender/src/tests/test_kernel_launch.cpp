@@ -61,7 +61,7 @@ void test_driver_api() {
 //    kernel->launch(dispatcher, pc, pa, pb);
 //
     dispatcher.wait();
-    cout << clock1.elapse_ms() << endl;
+//    cout << clock1.elapse_ms() << endl;
 
 }
 
@@ -103,7 +103,7 @@ void test_kernel_sampler() {
 //        cout << f << endl;
     }
 
-    cout << clock.elapse_ms() << endl;
+//    cout << clock.elapse_ms() << endl;
     
 //    buffer.upload(&sampler);
 //    auto ps = buffer.ptr();

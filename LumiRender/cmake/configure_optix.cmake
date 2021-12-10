@@ -54,6 +54,7 @@ macro(cuda_compile_and_embed output_var cuda_file)
                 --expt-relaxed-constexpr
                 --std=c++17
                 -arch=sm_70
+                -rdc true
                 -D__x86_64
                 -lineinfo
                 )
@@ -64,6 +65,7 @@ macro(cuda_compile_and_embed output_var cuda_file)
                 --expt-relaxed-constexpr
                 --std=c++17
                 -arch=sm_70
+                -rdc true
                 -D__x86_64
                 -lineinfo
                 )
