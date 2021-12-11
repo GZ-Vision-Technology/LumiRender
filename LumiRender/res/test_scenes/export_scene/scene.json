@@ -395,7 +395,7 @@
     "camera": {
         "type": "ThinLensCamera",
         "param": {
-            "fov_y": 26.99146642997552,
+            "fov_y": 26,
             "velocity": 20,
             "transform": {
                 "type": "yaw_pitch",
@@ -445,15 +445,6 @@
         "type": "PCGSampler",
         "param": {
             "spp": 1
-        }
-    },
-    "filter": {
-        "type": "triangle",
-        "param": {
-            "radius": [
-                0.5,
-                0.5
-            ]
         }
     },
     "output": {
