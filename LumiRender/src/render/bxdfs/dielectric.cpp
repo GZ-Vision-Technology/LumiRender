@@ -8,7 +8,7 @@ namespace luminous {
     inline namespace render {
 
         Spectrum DielectricBxDF::eval(float3 wo, float3 wi, TransportMode mode) const {
-            if (_distribution.effectively_smooth()) {
+            if (_microfacet.effectively_smooth()) {
                 return 0.f;
             }
             float cos_theta_o = Frame::cos_theta(wo);
@@ -36,7 +36,7 @@ namespace luminous {
                 if (F == 0.f) {
                     return 0.f;
                 }
-                float fr = _distribution.BRDF(wo, wh, wi, F, cos_theta_i, cos_theta_o, mode);
+                float fr = _microfacet.BRDF(wo, wh, wi, F, cos_theta_i, cos_theta_o, mode);
                 return fr * Kr;
             } else {
                 eta_p = cos_theta_o > 0 ? _eta : (1.f / _eta);
@@ -44,14 +44,14 @@ namespace luminous {
                 if (F == 1) {
                     return 0.f;
                 }
-                float ft = _distribution.BTDF(wo, wh, wi, 1 - F, eta_p, cos_theta_o, cos_theta_i, mode);
+                float ft = _microfacet.BTDF(wo, wh, wi, 1 - F, eta_p, cos_theta_o, cos_theta_i, mode);
                 return ft * Kt;
             }
             return {};
         }
 
         float DielectricBxDF::PDF(float3 wo, float3 wi, TransportMode mode, BxDFReflTransFlags sample_flags) const {
-            if (_distribution.effectively_smooth()) {
+            if (_microfacet.effectively_smooth()) {
                 return 0.f;
             }
             float cos_theta_o = Frame::cos_theta(wo);
@@ -89,10 +89,10 @@ namespace luminous {
 
             float PDF = 0.f;
             if (reflect) {
-                PDF = _distribution.PDF_wi_reflection(wo, wh);
+                PDF = _microfacet.PDF_wi_reflection(wo, wh);
                 PDF = PDF * pr / (pt + pr);
             } else {
-                PDF = _distribution.PDF_wi_transmission(wo, wh, wi, eta_p);
+                PDF = _microfacet.PDF_wi_transmission(wo, wh, wi, eta_p);
                 PDF = PDF * pt / (pt + pr);
             }
             return PDF;
@@ -100,7 +100,7 @@ namespace luminous {
 
         lstd::optional<BSDFSample> DielectricBxDF::sample_f(float3 wo, float uc, float2 u, TransportMode mode,
                                                             BxDFReflTransFlags sample_flags) const {
-            if (_distribution.effectively_smooth()) {
+            if (_microfacet.effectively_smooth()) {
                 float R = fresnel_dielectric(Frame::cos_theta(wo), _eta);
                 float T = 1 - R;
                 float pr = R, pt = T;
@@ -136,7 +136,7 @@ namespace luminous {
                     return {BSDFSample(val, wi, pt / (pr + pt), Transmission, eta_p)};
                 }
             } else {
-                float3 wh = _distribution.sample_wh(wo, u);
+                float3 wh = _microfacet.sample_wh(wo, u);
                 float R = fresnel_dielectric(dot(wo, wh), _eta);
                 float T = 1 - R;
                 float pr = R, pt = T;
@@ -158,8 +158,8 @@ namespace luminous {
                     if (!same_hemisphere(wi, wo)) {
                         return {};
                     }
-                    PDF = _distribution.PDF_wi_reflection(wo, wh) * pr / (pr + pt);
-                    float fr = _distribution.BRDF(wo, wh, wi, R, cos_theta_i, cos_theta_o, mode);
+                    PDF = _microfacet.PDF_wi_reflection(wo, wh) * pr / (pr + pt);
+                    float fr = _microfacet.BRDF(wo, wh, wi, R, cos_theta_i, cos_theta_o, mode);
                     Spectrum val = fr * Kr;
                     return {BSDFSample(val, wi, PDF, Reflection, _eta)};
                 } else {
@@ -175,8 +175,8 @@ namespace luminous {
                     }
                     float cos_theta_o = Frame::cos_theta(wo);
                     float cos_theta_i = Frame::cos_theta(wi);
-                    PDF = _distribution.PDF_wi_transmission(wo, wh, wi, eta_p) * pt / (pr + pt);
-                    float ft = _distribution.BTDF(wo, wh, wi, 1 - R, cos_theta_o, cos_theta_i, eta_p, mode);
+                    PDF = _microfacet.PDF_wi_transmission(wo, wh, wi, eta_p) * pt / (pr + pt);
+                    float ft = _microfacet.BTDF(wo, wh, wi, 1 - R, cos_theta_o, cos_theta_i, eta_p, mode);
                     Spectrum val = ft * Kt;
                     if (dot(wo, wh) < 0) {
                         return {};
@@ -192,7 +192,7 @@ namespace luminous {
                 return BxDFFlags::Transmission;
             else
                 return BxDFFlags::Reflection | BxDFFlags::Transmission |
-                       (_distribution.effectively_smooth() ? BxDFFlags::Specular : BxDFFlags::Glossy);
+                       (_microfacet.effectively_smooth() ? BxDFFlags::Specular : BxDFFlags::Glossy);
         }
     }
 }

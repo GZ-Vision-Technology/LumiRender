@@ -9,7 +9,7 @@
 namespace luminous {
     inline namespace render {
 
-        float MicrofacetDistribution::D(const float3 &wh) const {
+        float Microfacet::D(const float3 &wh) const {
             // When theta is close to 90, tan theta is infinity
             float tan_theta_2 = Frame::tan_theta_2(wh);
             if (is_inf(tan_theta_2)) {
@@ -37,7 +37,7 @@ namespace luminous {
             return 0;
         }
 
-        float MicrofacetDistribution::lambda(const float3 &w) const {
+        float Microfacet::lambda(const float3 &w) const {
             switch (_type) {
                 case GGX: {
                     float abs_tan_theta = std::abs(Frame::tan_theta(w));
@@ -70,7 +70,7 @@ namespace luminous {
             return 0;
         }
 
-        float3 MicrofacetDistribution::sample_wh(const float3 &wo, const float2 &u) const {
+        float3 Microfacet::sample_wh(const float3 &wo, const float2 &u) const {
             switch (_type) {
                 case GGX: {
                     float cos_theta = 0, phi = _2Pi * u[1];
@@ -128,7 +128,7 @@ namespace luminous {
             return {};
         }
 
-        float MicrofacetDistribution::PDF_wh(const float3 &wo, const float3 &wh) const {
+        float Microfacet::PDF_wh(const float3 &wo, const float3 &wh) const {
             return D(wh) * Frame::abs_cos_theta(wh);
         }
     }

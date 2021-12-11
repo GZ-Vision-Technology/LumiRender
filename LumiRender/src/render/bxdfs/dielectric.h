@@ -16,7 +16,7 @@ namespace luminous {
             float4 Kr;
             float4 Kt;
             float _eta{0.f};
-            MicrofacetDistribution _distribution{};
+            Microfacet _microfacet{};
         public:
             LM_XPU DielectricBxDF() = default;
 
@@ -27,11 +27,11 @@ namespace luminous {
             LM_XPU DielectricBxDF(float4 kr, float4 kt, float eta)
                     : Kr(kr), Kt(kt), _eta(eta) {}
 
-            LM_XPU DielectricBxDF(float4 kr, float4 kt, float eta, MicrofacetDistribution distribution)
-                    : Kr(kr), Kt(kt), _eta(eta), _distribution(distribution) {}
+            LM_XPU DielectricBxDF(float4 kr, float4 kt, float eta, Microfacet distribution)
+                    : Kr(kr), Kt(kt), _eta(eta), _microfacet(distribution) {}
 
             LM_XPU DielectricBxDF(float4 kr, float4 kt, float eta, float rx, float ry)
-                    : Kr(kr), Kt(kt), _eta(eta), _distribution(MicrofacetDistribution(rx, ry)) {}
+                    : Kr(kr), Kt(kt), _eta(eta), _microfacet(Microfacet(rx, ry)) {}
 
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const;
 

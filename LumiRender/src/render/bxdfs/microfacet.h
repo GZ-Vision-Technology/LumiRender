@@ -15,15 +15,15 @@ namespace luminous {
             Beckmann,
         };
 
-        class MicrofacetDistribution {
+        class Microfacet {
         private:
             float _alpha_x{};
             float _alpha_y{};
             constexpr static MicrofacetType _type{GGX};
         public:
-            LM_XPU MicrofacetDistribution() = default;
+            LM_XPU Microfacet() = default;
 
-            LM_XPU MicrofacetDistribution(float alpha_x, float alpha_y)
+            LM_XPU Microfacet(float alpha_x, float alpha_y)
                     : _alpha_x(alpha_x),
                       _alpha_y(alpha_y) {
 
