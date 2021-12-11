@@ -24,6 +24,7 @@ luminous_render_add_application(test-arena SOURCES test_arena.cpp)
 luminous_render_add_application(test-reflection SOURCES test_reflection.cpp)
 luminous_render_add_application(test-upload SOURCES test_upload.cpp)
 luminous_render_add_application(test_tagged_ptr SOURCES test_tagged_ptr.cpp)
+luminous_render_add_application(test_pt SOURCES test_pt.cpp)
 
 add_executable(playground playground.cpp)
 
