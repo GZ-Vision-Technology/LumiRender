@@ -59,6 +59,9 @@
 
 #ifdef IS_GPU_CODE
 
+#define lm_likely(x) __builtin_expect(!!(x), 1)
+#define lm_unlikely(x) __builtin_expect(!!(x), 0)
+
 #define LUMINOUS_DBG(...) printf(__FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
 #define LM_XPU __host__ __device__
 #define LM_GPU __device__
@@ -72,6 +75,9 @@
 #define GEN_STRING_FUNC(args)
 
 #else
+
+#define lm_likely(x) (x)
+#define lm_unlikely(x) (x)
 
 #define LM_XPU
 #define LM_GPU

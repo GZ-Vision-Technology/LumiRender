@@ -32,7 +32,7 @@ namespace luminous {
                 si = hit_ctx.compute_surface_interaction(ray);
                 L += throughput * si.Le(-ray.direction(), scene_data);
                 pixel_info.normal = si.s_uvn.normal;
-                if (si.op_bsdf) {
+                if (lm_likely(si.op_bsdf)) {
                     pixel_info.albedo = make_float3(si.op_bsdf->base_color());
                 }
             } else {
@@ -45,7 +45,7 @@ namespace luminous {
             }
             for (bounces = 0; bounces < max_depth; ++bounces) {
                 BREAK_IF(!found_intersection)
-                if (!si.op_bsdf) {
+                if (lm_unlikely(!si.op_bsdf)) {
                     ray = si.spawn_ray(ray.direction());
                     found_intersection = luminous::intersect_closest(scene_handle, ray, &hit_ctx.hit_info);
                     si = hit_ctx.compute_surface_interaction(ray);

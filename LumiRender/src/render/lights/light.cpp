@@ -44,7 +44,7 @@ namespace luminous {
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
             Spectrum Ld(0.f);
-            auto si = (const SurfaceInteraction &)it;
+            auto si = (const SurfaceInteraction &) it;
             auto bsdf = si.op_bsdf.value();
             LightLiSample lls{LightSampleContext(it)};
             auto op_lls = sample_Li(sampler.next_2d(), lls, traversable_handle, scene_data);
@@ -55,12 +55,8 @@ namespace luminous {
                 light_PDF = op_lls->PDF_dir;
                 if (bsdf_val.not_black() && bsdf_PDF != 0) {
                     if (Li.not_black()) {
-                        if (is_delta()) {
-                            Ld = bsdf_val * Li / light_PDF;
-                        } else {
-                            float weight = MIS_weight(light_PDF, bsdf_PDF);
-                            Ld = bsdf_val * Li * weight / light_PDF;
-                        }
+                        float weight = MIS_weight(light_PDF, bsdf_PDF);
+                        Ld = bsdf_val * Li * weight / light_PDF;
                     }
                 }
             }
@@ -73,7 +69,7 @@ namespace luminous {
             Spectrum Ld(0.f);
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
-            auto si = (const SurfaceInteraction &)it;
+            auto si = (const SurfaceInteraction &) it;
             auto bsdf = si.op_bsdf.value();
             float uc = sampler.next_1d();
             float2 u = sampler.next_2d();
@@ -91,10 +87,12 @@ namespace luminous {
                 if (hit_ctx.is_hit() && (NEE_data->next_si = hit_ctx.compute_surface_interaction(ray)).light == this) {
                     NEE_data->next_si.update_PDF_pos(data->compute_prim_PMF(hit_ctx.hit_info));
                     Li = NEE_data->next_si.Le(-NEE_data->wi, data);
-                    light_PDF = as<AreaLight>()->PDF_Li(LightSampleContext(si), LightEvalContext{NEE_data->next_si}, NEE_data->wi, data);
+                    light_PDF = as<AreaLight>()->PDF_Li(LightSampleContext(si), LightEvalContext{NEE_data->next_si},
+                                                        NEE_data->wi, data);
                 } else if (!NEE_data->found_intersection && is_infinite()) {
                     Li = as<Envmap>()->on_miss(ray.direction(), hit_ctx.scene_data());
-                    light_PDF = as<Envmap>()->PDF_Li(LightSampleContext(si), LightEvalContext{NEE_data->next_si}, NEE_data->wi, data);
+                    light_PDF = as<Envmap>()->PDF_Li(LightSampleContext(si), LightEvalContext{NEE_data->next_si},
+                                                     NEE_data->wi, data);
                 }
                 weight = MIS_weight(bsdf_PDF, light_PDF);
                 Ld = bsdf_val * Li * weight / bsdf_PDF;

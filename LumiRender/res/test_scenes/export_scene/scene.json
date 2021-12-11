@@ -411,12 +411,12 @@
             },
             "filter": {
                 //				"type": "LanczosSincFilter",
-                "type": "GaussianFilter",
+//                "type": "GaussianFilter",
                 //				"type": "MitchellFilter",
                 //				"type": "TriangleFilter",
-                //				"type": "BoxFilter",
+                				"type": "BoxFilter",
                 "param": {
-                    "radius": [3,3]
+                    "radius": [0.5,0.5]
                     //					"sigma" : 1.5
                 }
             },
