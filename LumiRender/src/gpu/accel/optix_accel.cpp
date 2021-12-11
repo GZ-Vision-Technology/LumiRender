@@ -88,7 +88,7 @@ namespace luminous {
 
             OptixTraversableHandle traversable_handle = 0;
             OPTIX_CHECK(optixAccelBuild(_optix_device_context, nullptr,
-                                        &accel_options,&build_input, 1,
+                                        &accel_options, &build_input, 1,
                                         temp_buffer.ptr<CUdeviceptr>(), gas_buffer_sizes.tempSizeInBytes,
                                         tri_gas_buffer.ptr<CUdeviceptr>(), gas_buffer_sizes.outputSizeInBytes,
                                         &traversable_handle, &emit_desc, 1));
@@ -233,20 +233,17 @@ namespace luminous {
             _pipeline_compile_options.usesPrimitiveTypeFlags = OPTIX_PRIMITIVE_TYPE_FLAGS_TRIANGLE;
             _pipeline_compile_options.numAttributeValues = 2;
             // OPTIX_EXCEPTION_FLAG_NONE;
-            //#ifndef NDEBUG
-            //            _pipeline_compile_options.exceptionFlags =
-            //                    (OPTIX_EXCEPTION_FLAG_STACK_OVERFLOW | OPTIX_EXCEPTION_FLAG_TRACE_DEPTH |
-            //                     OPTIX_EXCEPTION_FLAG_DEBUG);
-            //#else
+#ifndef NDEBUG
+            _pipeline_compile_options.exceptionFlags =
+                    (OPTIX_EXCEPTION_FLAG_STACK_OVERFLOW | OPTIX_EXCEPTION_FLAG_TRACE_DEPTH |
+                     OPTIX_EXCEPTION_FLAG_DEBUG);
+#else
             _pipeline_compile_options.exceptionFlags = OPTIX_EXCEPTION_FLAG_NONE;
-            //#endif
+#endif
             _pipeline_compile_options.pipelineLaunchParamsVariableName = "params";
 
             char log[2048];
             size_t log_size = sizeof(log);
-            std::ofstream ofs(_context->working_path("luminous_ptx.txt"));
-            ofs << ptx_code;
-            ofs.close();
             OPTIX_CHECK_WITH_LOG(optixModuleCreateFromPTX(
                     _optix_device_context,
                     &module_compile_options,
