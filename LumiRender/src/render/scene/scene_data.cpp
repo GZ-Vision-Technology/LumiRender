@@ -14,64 +14,9 @@ namespace luminous {
         SurfaceInteraction SceneData::compute_surface_interaction(index_t inst_id,
                                                                   index_t tri_id,
                                                                   luminous::float2 bary) const {
-            auto mesh = get_mesh(inst_id);
-            TriangleHandle tri = get_triangle(mesh, tri_id);
-            const auto &mesh_tex_coords = get_tex_coords(mesh);
-            const auto &mesh_positions = get_positions(mesh);
-            const auto &mesh_normals = get_normals(mesh);
-            const auto &o2w = get_transform(inst_id);
-
             SurfaceInteraction si;
-            luminous::float2 tex_coord0 = mesh_tex_coords[tri.i];
-            luminous::float2 tex_coord1 = mesh_tex_coords[tri.j];
-            luminous::float2 tex_coord2 = mesh_tex_coords[tri.k];
-            if (is_zero(tex_coord0) && is_zero(tex_coord1) && is_zero(tex_coord2)) {
-                tex_coord0 = luminous::make_float2(0, 0);
-                tex_coord1 = luminous::make_float2(1, 0);
-                tex_coord2 = luminous::make_float2(1, 1);
-            }
-            si.uv = triangle_lerp(bary, tex_coord0, tex_coord1, tex_coord2);
+            auto mesh = fill_attribute(inst_id, tri_id, bary, nullptr, nullptr, nullptr, nullptr, &si);
 
-            {
-                // compute pos
-                luminous::float3 p0 = o2w.apply_point(mesh_positions[tri.i]);
-                luminous::float3 p1 = o2w.apply_point(mesh_positions[tri.j]);
-                luminous::float3 p2 = o2w.apply_point(mesh_positions[tri.k]);
-                luminous::float3 pos = triangle_lerp(bary, p0, p1, p2);
-                si.pos = pos;
-
-                // compute geometry uvn
-                luminous::float3 dp02 = p0 - p2;
-                luminous::float3 dp12 = p1 - p2;
-                luminous::float3 ng_un = cross(dp02, dp12);
-                si.prim_area = 0.5f * length(ng_un);
-
-                luminous::float2 duv02 = tex_coord0 - tex_coord2;
-                luminous::float2 duv12 = tex_coord1 - tex_coord2;
-                float det = duv02[0] * duv12[1] - duv02[1] * duv12[0];
-                float inv_det = 1 / det;
-
-                luminous::float3 dp_du = (duv12[1] * dp02 - duv02[1] * dp12) * inv_det;
-                luminous::float3 dp_dv = (-duv12[0] * dp02 + duv02[0] * dp12) * inv_det;
-                si.g_uvn.set(normalize(dp_du), normalize(dp_dv), normalize(ng_un));
-            }
-
-            {
-                // compute shading uvn
-                auto n0 = mesh_normals[tri.i];
-                auto n1 = mesh_normals[tri.j];
-                auto n2 = mesh_normals[tri.k];
-                auto normal = triangle_lerp(bary, n0, n1, n2);
-                if (is_zero(normal)) {
-                    si.s_uvn = si.g_uvn;
-                } else {
-                    luminous::float3 ns = normalize(o2w.apply_normal(normal));
-                    luminous::float3 ss = si.g_uvn.dp_du;
-                    luminous::float3 st = normalize(cross(ns, ss));
-                    ss = cross(st, ns);
-                    si.s_uvn.set(ss, st, ns);
-                }
-            }
             if (mesh.has_emission()) {
                 si.light = &light_sampler->light_at(mesh.light_idx);
             }
@@ -93,9 +38,9 @@ namespace luminous {
             return LightEvalContext{pos, normalize(ng_un), uv, PDF_pos};
         }
 
-        void SceneData::fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
-                                             float3 *world_p, float3 *world_ng_un,
-                                             float2 *tex_coord, float3 *world_ns_un) const {
+        MeshHandle SceneData::fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
+                                             float3 *world_p, float3 *world_ng_un, float2 *tex_coord,
+                                             float3 *world_ns_un, SurfaceInteraction *si) const {
             auto mesh = get_mesh(inst_id);
             TriangleHandle tri = get_triangle(mesh, tri_id);
 
@@ -106,10 +51,15 @@ namespace luminous {
             luminous::float3 p1 = o2w.apply_point(mesh_positions[tri.j]);
             luminous::float3 p2 = o2w.apply_point(mesh_positions[tri.k]);
             luminous::float3 pos = triangle_lerp(bary, p0, p1, p2);
-            *world_p = pos;
+            if (world_p) {
+                *world_p = pos;
+            }
+            if (si) {
+                si->pos = pos;
+            }
             luminous::float2 tex_coord0, tex_coord1, tex_coord2;
 
-            if (tex_coord) {
+            if (tex_coord || si) {
                 // compute tex_coord
                 const auto &mesh_tex_coords = get_tex_coords(mesh);
                 tex_coord0 = mesh_tex_coords[tri.i];
@@ -124,24 +74,55 @@ namespace luminous {
                 if (tex_coord) {
                     *tex_coord = uv;
                 }
+                if (si) {
+                    si->uv = uv;
+                }
             }
 
-            if (world_ng_un) {
+            if (world_ng_un || si) {
                 luminous::float3 dp02 = p0 - p2;
                 luminous::float3 dp12 = p1 - p2;
                 luminous::float3 ng_un = cross(dp02, dp12);
-                *world_ng_un = ng_un;
+                if (si) {
+                    // compute geometry uvn
+                    si->prim_area = 0.5f * length(ng_un);
+                    luminous::float2 duv02 = tex_coord0 - tex_coord2;
+                    luminous::float2 duv12 = tex_coord1 - tex_coord2;
+                    float det = duv02[0] * duv12[1] - duv02[1] * duv12[0];
+                    float inv_det = 1 / det;
+
+                    luminous::float3 dp_du = (duv12[1] * dp02 - duv02[1] * dp12) * inv_det;
+                    luminous::float3 dp_dv = (-duv12[0] * dp02 + duv02[0] * dp12) * inv_det;
+                    si->g_uvn.set(normalize(dp_du), normalize(dp_dv), normalize(ng_un));
+                }
+                if (world_ng_un) {
+                    *world_ng_un = ng_un;
+                }
             }
 
-            if (world_ns_un) {
+            if (world_ns_un || si) {
                 // compute shading uvn
                 const auto &mesh_normals = get_normals(mesh);
                 auto n0 = mesh_normals[tri.i];
                 auto n1 = mesh_normals[tri.j];
                 auto n2 = mesh_normals[tri.k];
                 auto ns_un = o2w.apply_normal(triangle_lerp(bary, n0, n1, n2));
-                *world_ns_un = ns_un;
+                if (si) {
+                    if (is_zero(ns_un)) {
+                        si->s_uvn = si->g_uvn;
+                    } else {
+                        luminous::float3 ns = normalize(ns_un);
+                        luminous::float3 ss = si->g_uvn.dp_du;
+                        luminous::float3 st = normalize(cross(ns, ss));
+                        ss = cross(st, ns);
+                        si->s_uvn.set(ss, st, ns);
+                    }
+                }
+                if (world_ns_un) {
+                    *world_ns_un = ns_un;
+                }
             }
+            return mesh;
         }
 
         const Distribution1D &SceneData::get_distribution(index_t inst_id) const {

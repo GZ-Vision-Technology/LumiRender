@@ -144,17 +144,19 @@ namespace luminous {
                 return compute_light_eval_context(hit_point.instance_id, hit_point.prim_id, hit_point.bary);
             }
 
-            LM_XPU void fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
+            LM_XPU MeshHandle fill_attribute(index_t inst_id, index_t tri_id, float2 bary,
                                              float3 *world_p, float3 *world_ng_un = nullptr,
                                              float2 *tex_coord = nullptr,
-                                             float3 *world_ns_un = nullptr) const;
+                                             float3 *world_ns_un = nullptr,
+                                             SurfaceInteraction *si = nullptr) const;
 
-            LM_XPU_INLINE void fill_attribute(const HitInfo &closest_hit,
+            LM_XPU_INLINE MeshHandle fill_attribute(const HitInfo &closest_hit,
                                                     float3 *world_p, float3 *world_ng = nullptr,
                                                     float2 *tex_coord = nullptr,
-                                                    float3 *world_ns = nullptr) const {
-                fill_attribute(closest_hit.instance_id, closest_hit.prim_id, closest_hit.bary,
-                                      world_p, world_ng, tex_coord, world_ns);
+                                                    float3 *world_ns = nullptr,
+                                                    SurfaceInteraction *si = nullptr) const {
+                return fill_attribute(closest_hit.instance_id, closest_hit.prim_id, closest_hit.bary,
+                                      world_p, world_ng, tex_coord, world_ns, si);
             }
 
             LM_ND_XPU const Material *get_material(index_t inst_id) const;
