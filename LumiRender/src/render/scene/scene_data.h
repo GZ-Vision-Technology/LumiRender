@@ -36,10 +36,6 @@ namespace luminous {
 
         class Material;
 
-        struct RayGenData {
-
-        };
-
         struct SceneData {
             // instance data
             BufferView<const index_t> inst_to_mesh_idx;
