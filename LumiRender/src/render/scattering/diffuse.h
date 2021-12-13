@@ -21,10 +21,6 @@ namespace luminous {
                 return Spectrum{R * constant::invPi};
             }
 
-            LM_ND_XPU bool valid() const {
-                return any(R != make_float4(-1.f));
-            }
-
         public:
             LM_XPU IdealDiffuse() = default;
 
@@ -60,7 +56,11 @@ namespace luminous {
             }
 
             LM_ND_XPU BxDFFlags flags() const {
-                return valid() ? BxDFFlags::DiffuseReflection : BxDFFlags::Unset;
+                return BxDFFlags::DiffuseReflection;
+            }
+
+            LM_ND_XPU bool match_flags(BxDFFlags bxdf_flags) const {
+                return (flags() & bxdf_flags) == flags();
             }
 
             LM_XPU void print() const {

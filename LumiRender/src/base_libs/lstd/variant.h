@@ -219,7 +219,7 @@ namespace luminous {
 
 #define GEN_CASE_N(N)                                                                                                     \
         case N:                                                                                                            \
-            if constexpr (N < nTypes) {                                                                                    \
+            if constexpr ((N) < nTypes) {                                                                                    \
                 using ty = typename Index::template GetType<N>::type;                                                      \
                 if constexpr (!std::is_same_v<ty, std::monostate>) {                                                       \
                     if constexpr (std::is_const_v<std::remove_pointer_t<decltype(this)>>)                                  \
