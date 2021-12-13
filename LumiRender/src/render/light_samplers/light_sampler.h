@@ -6,7 +6,7 @@
 #pragma once
 
 #include "base_libs/lstd/lstd.h"
-#include "render/bxdfs/bsdf_wrapper.h"
+#include "render/scattering/bsdf_wrapper.h"
 #include "render/samplers/sampler.h"
 
 

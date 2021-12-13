@@ -2,7 +2,7 @@
 // Created by Zero on 2021/2/14.
 //
 
-#include "render/bxdfs/microfacet.cpp"
+#include "render/scattering/microfacet.cpp"
 
 extern "C" __global__ void addKernel(unsigned long long _, int d,int *a, int *b, long long c)
 {

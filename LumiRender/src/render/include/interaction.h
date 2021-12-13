@@ -10,7 +10,7 @@
 #include "base_libs/geometry/util.h"
 #include "base_libs/optics/rgb.h"
 #include "base_libs/lstd/lstd.h"
-#include "render/bxdfs/bsdf_wrapper.h"
+#include "render/scattering/bsdf_wrapper.h"
 
 namespace luminous {
     inline namespace render {

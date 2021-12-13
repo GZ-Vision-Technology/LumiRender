@@ -11,7 +11,7 @@
 #include "base_libs/geometry/common.h"
 #include "base_libs/math/common.h"
 #include "base_libs/optics/rgb.h"
-#include "render/bxdfs/bsdf_wrapper.h"
+#include "render/scattering/bsdf_wrapper.h"
 #include "render/lights/light_util.h"
 #include "work_queue.h"
 #include <cuda.h>
