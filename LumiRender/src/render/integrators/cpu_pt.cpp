@@ -38,13 +38,13 @@ namespace luminous {
                     Sampler sampler = *_sampler.data();
                     sampler.start_pixel_sample(pixel, _frame_index, 0);
                     auto ss = sampler.sensor_sample(pixel, _camera->filter());
-                    auto [weight, ray] = _camera->generate_ray(ss);
+                    auto[weight, ray] = _camera->generate_ray(ss);
                     uint spp = sampler.spp();
                     PixelInfo pixel_info;
                     for (int i = 0; i < spp; ++i) {
                         pixel_info += luminous::render::path_tracing(ray, scene<CPUScene>()->scene_handle(), sampler,
-                                                                     _max_depth, _rr_threshold, false,
-                                                                     scene<CPUScene>()->scene_data_host_ptr());
+                                                                     _max_depth, _rr_threshold,
+                                                                     scene<CPUScene>()->scene_data_host_ptr(), false);
                     }
                     pixel_info /= float(spp);
                     film->add_sample(pixel, pixel_info, weight, _frame_index);

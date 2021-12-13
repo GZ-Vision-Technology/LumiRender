@@ -24,6 +24,7 @@ __constant__ luminous::LaunchParams
 }
 
 GLOBAL __raygen__rg() {
+    // todo implement the simple path tracing to profile the performance
     using namespace luminous;
     luminous::uint2 pixel = getPixelCoords();
     Sensor *camera = params.camera;
@@ -39,7 +40,7 @@ GLOBAL __raygen__rg() {
     PixelInfo pixel_info;
     for (int i = 0; i < spp; ++i) {
         pixel_info += path_tracing(ray, params.traversable_handle, sampler,
-                                   params.max_depth, params.rr_threshold, debug, params.scene_data);
+                                   params.max_depth, params.rr_threshold, params.scene_data, debug);
     }
     pixel_info /= float(spp);
     film->add_sample(pixel, pixel_info, weight, frame_index);

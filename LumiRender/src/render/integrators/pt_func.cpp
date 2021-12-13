@@ -15,8 +15,7 @@ namespace luminous {
     inline namespace render {
 
         LM_ND_XPU PixelInfo path_tracing(Ray ray, uint64_t scene_handle, Sampler &sampler,
-                                         uint max_depth, float rr_threshold, bool debug,
-                                         const SceneData *scene_data) {
+                                         uint max_depth, float rr_threshold, const SceneData *scene_data, bool debug) {
             HitContext hit_ctx{scene_data};
 
             Spectrum L(0.f);

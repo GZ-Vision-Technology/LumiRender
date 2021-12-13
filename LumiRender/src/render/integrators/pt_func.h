@@ -19,8 +19,8 @@ namespace luminous {
         struct PixelInfo;
 
         LM_ND_XPU PixelInfo path_tracing(Ray ray, uint64_t scene_handle, Sampler &sampler,
-                              uint max_depth, float rr_threshold, bool debug = false,
-                              const SceneData *scene_data = nullptr);
+                                         uint max_depth, float rr_threshold, const SceneData *scene_data,
+                                         bool debug = false);
 
     }
 }
