@@ -29,7 +29,7 @@ namespace luminous {
         public:
             GEN_BASE_NAME(Material)
 
-            LM_ND_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
+            LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
 #ifndef __CUDACC__
             LM_NODISCARD static std::pair<Material, std::vector<size_t>> create(const MaterialConfig &mc);

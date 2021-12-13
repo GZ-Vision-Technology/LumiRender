@@ -8,7 +8,7 @@
 // this file just for cuda shader include
 #if defined(__CUDACC__)
     #include "bxdf.cpp"
-    #include "bsdf.cpp"
+    #include "bsdf_wrapper.cpp"
     #include "dielectric.cpp"
     #include "microfacet.cpp"
 #else

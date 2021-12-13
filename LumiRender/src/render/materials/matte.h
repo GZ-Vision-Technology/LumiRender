@@ -6,7 +6,7 @@
 #pragma once
 
 #include "render/textures/texture.h"
-#include "render/bxdfs/bsdf.h"
+#include "render/bxdfs/bsdf_wrapper.h"
 #include "render/include/config.h"
 #include "core/concepts.h"
 
@@ -21,7 +21,7 @@ namespace luminous {
         public:
             explicit MatteMaterial(index_t r) : R(r) {}
 
-            LM_ND_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
+            LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(explicit MatteMaterial(const MaterialConfig &mc)
                              :MatteMaterial(mc.diffuse_tex.tex_idx) {})

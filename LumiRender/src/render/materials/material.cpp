@@ -8,7 +8,7 @@
 namespace luminous {
     inline namespace render {
 
-        BSDF Material::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
+        BSDFWrapper Material::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
 
           LUMINOUS_VAR_PTR_DISPATCH(get_BSDF, ctx, scene_data)
         }

@@ -7,7 +7,7 @@
 
 #include "render/textures/texture.h"
 #include "render/include/config.h"
-#include "render/bxdfs/bsdf.h"
+#include "render/bxdfs/bsdf_wrapper.h"
 #include "core/refl/reflection.h"
 
 namespace luminous {
@@ -36,7 +36,7 @@ namespace luminous {
                       Kd(diffuse),
                       Ks(specular) {}
 
-            LM_ND_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
+            LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
         };
     }
 }

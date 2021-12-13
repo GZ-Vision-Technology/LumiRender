@@ -6,7 +6,7 @@
 #pragma once
 
 #include "render/textures/texture.h"
-#include "render/bxdfs/bsdf.h"
+#include "render/bxdfs/bsdf_wrapper.h"
 #include "render/include/config.h"
 
 namespace luminous {

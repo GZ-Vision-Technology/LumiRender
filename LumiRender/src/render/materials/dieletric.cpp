@@ -8,7 +8,7 @@
 namespace luminous {
     inline namespace render {
 
-        BSDF DielectricMaterial::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
+        BSDFWrapper DielectricMaterial::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
             const Texture &kr_tex = scene_data->get_texture(Kr);
             const Texture &kt_tex = scene_data->get_texture(Kt);
             const Texture &roughness_tex = scene_data->get_texture(_roughness);

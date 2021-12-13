@@ -10,7 +10,7 @@
 #include "base_libs/geometry/util.h"
 #include "base_libs/optics/rgb.h"
 #include "base_libs/lstd/lstd.h"
-#include "render/bxdfs/bsdf.h"
+#include "render/bxdfs/bsdf_wrapper.h"
 
 namespace luminous {
     inline namespace render {
@@ -121,7 +121,7 @@ namespace luminous {
             float PDF_pos{-1.f};
             float prim_area{0.f};
             const Light *light{nullptr};
-            lstd::optional<BSDF> op_bsdf{};
+            lstd::optional<BSDFWrapper> op_bsdf{};
             const Material *material{nullptr};
             float du_dx{0}, dv_dx{0}, du_dy{0}, dv_dy{0};
 
@@ -143,7 +143,7 @@ namespace luminous {
 
             LM_ND_XPU Spectrum Le(float3 w, const SceneData *scene_data) const;
 
-            LM_ND_XPU lstd::optional<BSDF> get_BSDF(const SceneData *scene_data) const;
+            LM_ND_XPU lstd::optional<BSDFWrapper> get_BSDF(const SceneData *scene_data) const;
 
             LM_XPU_INLINE void init_BSDF(const SceneData *scene_data) {
                 op_bsdf = get_BSDF(scene_data);

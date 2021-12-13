@@ -12,16 +12,15 @@
 namespace luminous {
     inline namespace render {
 
-        class BSDF {
+        class BSDFWrapper {
         private:
             BxDF _bxdf;
             float3 _ng;
             Frame _shading_frame;
-            MAKE_SOA_FRIEND(BSDF);
         public:
-            LM_XPU BSDF() = default;
+            LM_XPU BSDFWrapper() = default;
 
-            LM_XPU BSDF(float3 ng, float3 ns, float3 dp_dus, BxDF bxdf)
+            LM_XPU BSDFWrapper(float3 ng, float3 ns, float3 dp_dus, BxDF bxdf)
                     : _ng(ng), _shading_frame(Frame::from_xz(dp_dus, ns)), _bxdf(std::move(bxdf)) {}
 
             LM_ND_XPU Spectrum eval(float3 wo_world, float3 wi_world,

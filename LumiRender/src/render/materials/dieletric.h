@@ -6,7 +6,7 @@
 #pragma once
 
 #include "render/textures/texture.h"
-#include "render/bxdfs/bsdf.h"
+#include "render/bxdfs/bsdf_wrapper.h"
 #include "render/include/config.h"
 #include "core/concepts.h"
 
@@ -25,7 +25,7 @@ namespace luminous {
             explicit DielectricMaterial(index_t kr, index_t kt, index_t roughness, index_t eta)
                     : Kr(kr), Kt(kt), _roughness(roughness), _eta(eta) {}
 
-            LM_ND_XPU BSDF get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
+            LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(explicit DielectricMaterial(const MaterialConfig &mc)
                     : DielectricMaterial(mc.Kr_tex.tex_idx,

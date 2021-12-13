@@ -64,7 +64,7 @@ namespace luminous {
             return data->compute_prim_PMF(hit_info);
         }
 
-        lstd::optional<BSDF> SurfaceInteraction::get_BSDF(const SceneData *scene_data) const {
+        lstd::optional<BSDFWrapper> SurfaceInteraction::get_BSDF(const SceneData *scene_data) const {
             if (!has_material()) {
                 return {};
             }

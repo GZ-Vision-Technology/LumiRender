@@ -9,7 +9,7 @@
 #include "base_libs/lstd/lstd.h"
 #include "light_util.h"
 #include "render/include/config.h"
-#include "render/bxdfs/bsdf.h"
+#include "render/bxdfs/bsdf_wrapper.h"
 
 namespace luminous {
     inline namespace render {
