@@ -61,14 +61,14 @@ namespace luminous {
             BufferView<const Distribution2D> distribution2ds;
 
 #define GEN_GET_FUNCTION(attribute)                                                     \
-            ND_XPU_INLINE auto get_##attribute(const MeshHandle &mesh) const {        \
+            ND_XPU_INLINE auto get_##attribute(const MeshHandle &mesh) const {          \
                 return (attribute).sub_view(mesh.vertex_offset, mesh.vertex_count);     \
             }                                                                           \
-            ND_XPU_INLINE auto get_##attribute##_by_mesh_idx(index_t mesh_idx) const {\
+            ND_XPU_INLINE auto get_##attribute##_by_mesh_idx(index_t mesh_idx) const {  \
                 MeshHandle mesh = meshes[mesh_idx];                                     \
                 return get_##attribute(mesh);                                           \
             }                                                                           \
-            ND_XPU_INLINE auto get_##attribute(index_t inst_idx) const {              \
+            ND_XPU_INLINE auto get_##attribute(index_t inst_idx) const {                \
                 auto mesh_idx = inst_to_mesh_idx[inst_idx];                             \
                 return get_##attribute##_by_mesh_idx(mesh_idx);                         \
             }
