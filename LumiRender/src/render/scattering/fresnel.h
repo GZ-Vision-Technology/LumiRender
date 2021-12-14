@@ -12,29 +12,38 @@ namespace luminous {
 
         struct FresnelDielectric {
         private:
-            float _eta_i, _eta_t;
+            float _eta{};
         public:
             LM_XPU FresnelDielectric() = default;
 
-            LM_XPU explicit FresnelDielectric(float eta_t, float eta_i = 1.f)
-                    : _eta_i(eta_i), _eta_t(eta_t) {}
+            LM_XPU explicit FresnelDielectric(float eta_t)
+                    : _eta(eta_t) {}
 
             LM_ND_XPU float eval(float cos_theta_i) const {
-                return fresnel_dielectric(cos_theta_i, _eta_i, _eta_t);
+                return fresnel_dielectric(cos_theta_i, _eta);
             }
         };
 
         struct FresnelConductor {
         private:
-            Spectrum _eta_i, _eta_t, _k;
+            Spectrum _eta, _k;
         public:
             LM_XPU FresnelConductor() = default;
 
-            LM_XPU FresnelConductor(Spectrum eta_t, Spectrum k, Spectrum eta_i = Spectrum{1.f})
-                    : _eta_i(eta_i), _eta_t(eta_t), _k(k) {}
+            LM_XPU FresnelConductor(Spectrum eta, Spectrum k)
+                    : _eta(eta), _k(k) {}
 
             LM_ND_XPU Spectrum eval(float cos_theta_i) const {
-                return fresnel_conductor(cos_theta_i, _eta_i, _eta_t, _k);
+                return fresnel_complex(cos_theta_i, _eta, _k);
+            }
+        };
+
+        struct FresnelNoOp {
+        public:
+            LM_XPU FresnelNoOp() = default;
+
+            LM_ND_XPU float eval(float ) const {
+                return 1.f;
             }
         };
     }

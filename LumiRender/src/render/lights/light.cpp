@@ -39,14 +39,12 @@ namespace luminous {
         }
 
 
-        Spectrum Light::MIS_sample_light(const Interaction &it, Sampler &sampler,
+        Spectrum Light::MIS_sample_light(const SurfaceInteraction &si, const BSDFWrapper &bsdf, Sampler &sampler,
                                          uint64_t traversable_handle, const SceneData *scene_data) const {
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
             Spectrum Ld(0.f);
-            auto si = (const SurfaceInteraction &) it;
-            auto bsdf = si.op_bsdf.value();
-            LightLiSample lls{LightSampleContext(it)};
+            LightLiSample lls{LightSampleContext(si)};
             auto op_lls = sample_Li(sampler.next_2d(), lls, traversable_handle, scene_data);
             if (op_lls && op_lls->has_contribution()) {
                 bsdf_val = bsdf.eval(si.wo, op_lls->wi);
@@ -63,14 +61,12 @@ namespace luminous {
             return Ld;
         }
 
-        Spectrum Light::MIS_sample_BSDF(const Interaction &it, Sampler &sampler,
-                                        uint64_t traversable_handle, NEEData *NEE_data,
+        Spectrum Light::MIS_sample_BSDF(const SurfaceInteraction &si, const BSDFWrapper &bsdf,
+                                        Sampler &sampler, uint64_t traversable_handle, NEEData *NEE_data,
                                         const SceneData *data) const {
             Spectrum Ld(0.f);
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
-            auto si = (const SurfaceInteraction &) it;
-            auto bsdf = si.op_bsdf.value();
             float uc = sampler.next_1d();
             float2 u = sampler.next_2d();
             auto bsdf_sample = bsdf.sample_f(si.wo, uc, u);
@@ -100,12 +96,12 @@ namespace luminous {
             return Ld;
         }
 
-        Spectrum Light::estimate_direct_lighting(const Interaction &it, Sampler &sampler,
+        Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
                                                  uint64_t traversable_handle, const SceneData *scene_data,
                                                  NEEData *NEE_data) const {
-
-            Spectrum Ld = MIS_sample_light(it, sampler, traversable_handle, scene_data);
-            return Ld + MIS_sample_BSDF(it, sampler, traversable_handle, NEE_data, scene_data);
+            auto bsdf = si.get_BSDF(scene_data).value();
+            Spectrum Ld = MIS_sample_light(si, bsdf, sampler, traversable_handle, scene_data);
+            return Ld + MIS_sample_BSDF(si, bsdf, sampler, traversable_handle, NEE_data, scene_data);
         }
 
         bool Light::is_delta() const {

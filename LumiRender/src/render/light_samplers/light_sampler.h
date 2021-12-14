@@ -63,7 +63,7 @@ namespace luminous {
 
             LM_ND_XPU Spectrum on_miss(float3 dir, const SceneData *scene_data, Spectrum throughput) const;
 
-            LM_ND_XPU Spectrum estimate_direct_lighting(const Interaction &si, Sampler &sampler,
+            LM_ND_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
                                                         uint64_t traversable_handle,
                                                         const SceneData *scene_data, NEEData *NEE_data) const;
 
