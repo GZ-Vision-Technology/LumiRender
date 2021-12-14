@@ -26,8 +26,8 @@ namespace luminous {
             DiffuseTransmission = Diffuse | Transmission,
             GlossyReflection = Glossy | Reflection,
             GlossyTransmission = Glossy | Transmission,
-            SpecularReflection = Specular | Reflection,
-            SpecularTransmission = Specular | Transmission,
+            SpecRefl = Specular | Reflection,
+            SpecTrans = Specular | Transmission,
             All = Diffuse | Glossy | Specular | Reflection | Transmission
         };
 

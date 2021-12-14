@@ -96,7 +96,6 @@ namespace luminous {
             }
 
             LM_ND_XPU lstd::optional<BSDFSample> sample_f(float3 wo, float uc, float2 u,
-                                                          BxDFFlags * sampled_flags,
                                                           BxDFFlags flags = BxDFFlags::All,
                                                           TransportMode mode = TransportMode::Radiance) const {
                 int num = match_num(flags);
@@ -111,7 +110,6 @@ namespace luminous {
                     if (bxdf.match_flags(flags)) {
                         if (++count == comp) {
                             ret = bxdf.sample_f(wo, uc, u, mode);
-                            *sampled_flags = bxdf.flags();
                             return false;
                         }
                     }

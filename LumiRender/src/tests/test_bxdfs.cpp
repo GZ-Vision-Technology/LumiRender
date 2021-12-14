@@ -4,6 +4,7 @@
 
 #include "render/scattering/bxdfs.h"
 #include "iostream"
+#include "render/scattering/specular_scatter.h"
 
 using namespace luminous;
 using namespace std;
