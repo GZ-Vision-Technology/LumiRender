@@ -23,6 +23,8 @@ namespace luminous {
             const char *raygen{};
             const char *closesthit_closest{};
             const char *closesthit_any{};
+            // Direct callable C function names must be terminated with a null pointer.
+            const char *const* direct_callables{};
         };
 
         struct ProgramGroupTable {
@@ -30,6 +32,7 @@ namespace luminous {
             OptixProgramGroup miss_closest_group{nullptr};
             OptixProgramGroup hit_closest_group{nullptr};
             OptixProgramGroup hit_any_group{nullptr};
+            std::vector<OptixProgramGroup> callable_prog_groups;
 
             ProgramGroupTable() = default;
 
@@ -41,21 +44,22 @@ namespace luminous {
                 OPTIX_CHECK(optixProgramGroupDestroy(raygen_group));
                 OPTIX_CHECK(optixProgramGroupDestroy(hit_closest_group));
                 OPTIX_CHECK(optixProgramGroupDestroy(hit_any_group));
+                for(auto &prog_group : callable_prog_groups) {
+                    OPTIX_CHECK(optixProgramGroupDestroy(prog_group));
+                }
             }
         };
 
         class ShaderWrapper : public Noncopyable {
         private:
             Buffer<SBTRecord> _sbt_records{nullptr};
+            Buffer<SBTRecord> _callable_records{nullptr};
             OptixShaderBindingTable _sbt{};
             ProgramGroupTable _program_group_table{};
         public:
             ShaderWrapper() = default;
 
-            ShaderWrapper(ShaderWrapper &&other) noexcept
-                    : _sbt_records(std::move(other._sbt_records)),
-                      _sbt(other._sbt),
-                      _program_group_table(other._program_group_table) {}
+            ShaderWrapper(ShaderWrapper &&other) = default;
 
             ShaderWrapper(OptixModule optix_module, OptixDeviceContext optix_device_context,
                           const Scene *scene, Device *device,
@@ -64,14 +68,19 @@ namespace luminous {
             LM_NODISCARD const OptixShaderBindingTable *sbt_ptr() const { return &_sbt; }
 
             LM_NODISCARD std::vector<OptixProgramGroup> program_groups() const {
-                return {_program_group_table.raygen_group,
+                std::vector<OptixProgramGroup> all_prog_groups = {_program_group_table.raygen_group,
                         _program_group_table.hit_closest_group,
-                        _program_group_table.hit_any_group};
+                        _program_group_table.hit_any_group
+                };
+                all_prog_groups.insert(all_prog_groups.end(), _program_group_table.callable_prog_groups.begin(),
+                                       _program_group_table.callable_prog_groups.end());
+                return all_prog_groups;
             };
 
             void clear() {
                 _program_group_table.clear();
                 _sbt_records.clear();
+                _callable_records.clear();
             }
 
             ~ShaderWrapper() = default;

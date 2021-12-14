@@ -18,11 +18,9 @@ namespace luminous {
 
         private:
             Digest _digest{};
-            std::string _buffer;
-            uint64_t _transforms{};
 
         public:
-            explicit SHA1(const std::string &s);
+            explicit SHA1(const std::string_view &s);
 
             LM_NODISCARD auto digest() const noexcept { return _digest; }
 

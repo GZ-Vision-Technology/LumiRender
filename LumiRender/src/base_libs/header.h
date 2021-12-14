@@ -15,6 +15,18 @@
 #endif
 #include "crtdbg.h"
 
+// _countof definination
+#ifndef _countof
+extern "C++"
+{
+    template <typename _CountofType, size_t _SizeOfArray>
+    char (*__countof_helper(_UNALIGNED _CountofType (&_Array)[_SizeOfArray]))[_SizeOfArray];
+
+    #define __crt_countof(_Array) (sizeof(*__countof_helper(_Array)) + 0)
+}
+#define _countof __crt_countof
+#endif
+
 
 #if defined(__GNUC__) || defined(__clang__)
 #define LM_FUNCSIG  __PRETTY_FUNCTION__

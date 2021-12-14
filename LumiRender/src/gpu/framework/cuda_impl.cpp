@@ -222,7 +222,13 @@ namespace luminous {
         }
 
         CUDAModule::CUDAModule(const std::string &ptx_code) {
+#if defined(_DEBUG) && defined(_LUMINOUS_NSIGHT_DEBUG)
+            CUjit_option opts[] = {CU_JIT_GENERATE_DEBUG_INFO};
+            void *opt_vals[] = {(void *)1};
+            CU_CHECK(cuModuleLoadDataEx(&_module, ptx_code.c_str(), _countof(opts), opts, opt_vals));
+#else
             CU_CHECK(cuModuleLoadData(&_module, ptx_code.c_str()));
+#endif
         }
 
         uint64_t CUDAModule::get_kernel_handle(const std::string &name) {

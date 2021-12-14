@@ -5,6 +5,7 @@
 #include "optix_accel.h"
 #include "util/stats.h"
 #include <optix_function_table_definition.h>
+#include <optix_stack_size.h>
 #include <iosfwd>
 
 
@@ -21,12 +22,12 @@ namespace luminous {
                   _context(context),
                   _optix_device_context(create_context()) {}
 
-        ShaderWrapper OptixAccel::create_shader_wrapper(const string &ptx_code, const ProgramName &program_name) {
+        ShaderWrapper OptixAccel::create_shader_wrapper(const std::string_view &ptx_code, const ProgramName &program_name) {
             auto module = obtain_module(ptx_code);
-            return move(ShaderWrapper{
+            return ShaderWrapper{
                     module, _optix_device_context,
                     _scene, _device, program_name
-            });
+            };
         }
 
         OptixBuildInput OptixAccel::get_mesh_build_input(const Buffer<const float3> &positions,
@@ -211,7 +212,7 @@ namespace luminous {
             return _optix_device_context;
         }
 
-        OptixModule OptixAccel::create_module(const string &ptx_code) {
+        OptixModule OptixAccel::create_module(const std::string_view &ptx_code) {
             OptixModule optix_module = nullptr;
 
             // OptiX module
@@ -220,7 +221,11 @@ namespace luminous {
             // TODO: REVIEW THIS
             module_compile_options.maxRegisterCount = OPTIX_COMPILE_DEFAULT_MAX_REGISTER_COUNT;
 #ifndef NDEBUG
+#ifdef LUMINOUS_NSIGHT_DEBUG
+            module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_LEVEL_0;
+#else
             module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
+#endif
             module_compile_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_LINEINFO;
 #else
             module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
@@ -248,7 +253,7 @@ namespace luminous {
                     _optix_device_context,
                     &module_compile_options,
                     &_pipeline_compile_options,
-                    ptx_code.c_str(), ptx_code.size(),
+                    ptx_code.data(), ptx_code.size(),
                     log, &log_size, &optix_module), log);
 
             return optix_module;
@@ -256,8 +261,10 @@ namespace luminous {
 
 
         void OptixAccel::build_pipeline(const std::vector<OptixProgramGroup> &program_groups) {
+            constexpr int max_trace_depth = 2;
+
             OptixPipelineLinkOptions pipeline_link_options = {};
-            pipeline_link_options.maxTraceDepth = 2;
+            pipeline_link_options.maxTraceDepth = max_trace_depth;
 #ifndef NDEBUG
             pipeline_link_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_FULL;
 #else
@@ -275,6 +282,28 @@ namespace luminous {
                     log, &sizeof_log,
                     &_optix_pipeline), log);
 
+            // Set shaders stack sizes.
+            OptixStackSizes stack_sizes = {};
+            for(auto &prog_group : program_groups) {
+                OPTIX_CHECK(optixUtilAccumulateStackSizes(prog_group, &stack_sizes));
+            }
+
+            uint32_t direct_callable_stack_size_from_traversal;
+            uint32_t direct_callable_stack_size_from_state;
+            uint32_t continuation_stack_size;
+            OPTIX_CHECK(optixUtilComputeStackSizes(&stack_sizes,
+                                                   max_trace_depth,
+                                                   0, // maxCCDepth
+                                                   0, // maxDCDEpth
+                                                   &direct_callable_stack_size_from_traversal,
+                                                   &direct_callable_stack_size_from_state,
+                                                   &continuation_stack_size));
+            OPTIX_CHECK(optixPipelineSetStackSize(_optix_pipeline,
+                                                  direct_callable_stack_size_from_traversal,
+                                                  direct_callable_stack_size_from_state,
+                                                  continuation_stack_size,
+                                                  2 // maxTraversableDepth
+                                                  ));
         }
     }
 }

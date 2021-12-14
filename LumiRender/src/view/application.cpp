@@ -74,6 +74,15 @@ namespace luminous {
         get_user_ptr(window)->on_scroll_event(scroll_x, scroll_y);
     }
 
+    App::~App() {
+        if(_show_window) {
+            ImGui_ImplOpenGL3_Shutdown();
+            ImGui_ImplGlfw_Shutdown();
+            ImGui::DestroyContext();
+            glfwTerminate();
+        }
+    }
+
     void App::on_cursor_move(int2 new_pos) {
         int2 delta = new_pos - _last_mouse_pos;
         if (nonzero(_last_mouse_pos) && _left_key_press) {
@@ -241,7 +250,6 @@ namespace luminous {
 
             glfwSwapBuffers(_handle);
         }
-        glfwTerminate();
         return 0;
     }
 

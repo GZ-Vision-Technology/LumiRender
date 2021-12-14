@@ -37,17 +37,13 @@ namespace luminous {
         constexpr size_t block_ints = 16;  /* number of 32bit integers per SHA1 block */
         constexpr size_t block_bytes = block_ints * 4;
 
-        void reset(uint32_t digest[], std::string &buffer, uint64_t &transforms) {
+        void reset(uint32_t digest[]) {
             /* SHA1 initialization constants */
             digest[0] = 0x67452301;
             digest[1] = 0xefcdab89;
             digest[2] = 0x98badcfe;
             digest[3] = 0x10325476;
             digest[4] = 0xc3d2e1f0;
-
-            /* Reset counters */
-            buffer = "";
-            transforms = 0;
         }
 
         uint32_t rol(const uint32_t value, const size_t bits) {
@@ -196,31 +192,30 @@ namespace luminous {
             transforms++;
         }
 
-        void buffer_to_block(const std::string &buffer, uint32_t block[block_ints]) {
+        void buffer_to_block(const char buffer[block_bytes], uint32_t block[block_ints]) {
             /* Convert the std::string (byte buffer) to a uint32_t array (MSB) */
-            for (size_t i = 0; i < block_ints; i++) {
-                block[i] = (buffer[4 * i + 3] & 0xff)
-                           | (buffer[4 * i + 2] & 0xff) << 8
-                           | (buffer[4 * i + 1] & 0xff) << 16
-                           | (buffer[4 * i + 0] & 0xff) << 24;
+            for (size_t i = 0; i < block_ints; ++i, buffer += 4, ++block) {
+                block[0] = (buffer[3] & 0xff)
+                           | (buffer[2] & 0xff) << 8
+                           | (buffer[1] & 0xff) << 16
+                           | (buffer[0] & 0xff) << 24;
             }
         }
 
-        SHA1::SHA1(const std::string &s) {
-            reset(_digest.data(), _buffer, _transforms);
-            std::istringstream is{s, std::istringstream::binary};
-            while (true) {
-                char sbuf[block_bytes];
-                is.read(sbuf, block_bytes - _buffer.size());
-                _buffer.append(sbuf, (std::size_t)is.gcount());
-                if (_buffer.size() != block_bytes) { return; }
-                uint32_t block[block_ints];
-                buffer_to_block(_buffer, block);
-                transform(_digest.data(), block, _transforms);
-                _buffer.clear();
+        SHA1::SHA1(const std::string_view &s) {
+
+            uint32_t block[block_ints];
+            const char *p = s.data();
+            size_t left   = s.size();
+            uint64_t transforms = 0;
+
+            reset(_digest.data());
+            while(left >= block_bytes) {
+                buffer_to_block(p, block);
+                transform(_digest.data(), block, transforms);
+                left -= block_bytes;
             }
         }
-
     }
 }
 

@@ -28,9 +28,9 @@ namespace luminous {
                 }
             }
 
-            OptixModule create_module(const std::string &ptx_code);
+            OptixModule create_module(const std::string_view &ptx_code);
 
-            static SHA1 generate_key(const std::string &ptx_code) {
+            static SHA1 generate_key(const std::string_view &ptx_code) {
                 return SHA1(ptx_code);
             }
 
@@ -49,7 +49,7 @@ namespace luminous {
             Buffer<OptixInstance> _instances{nullptr};
             OptixPipeline _optix_pipeline{};
 
-            OptixModule obtain_module(const std::string &ptx_code) {
+            OptixModule obtain_module(const std::string_view &ptx_code) {
                 SHA1 key = generate_key(ptx_code);
                 if (is_contain(key)) {
                     return _module_map[key];
@@ -78,7 +78,7 @@ namespace luminous {
 
             void build_pipeline(const std::vector<OptixProgramGroup> &program_groups);
 
-            LM_NODISCARD ShaderWrapper create_shader_wrapper(const std::string &ptx_code, const ProgramName &program_name);
+            LM_NODISCARD ShaderWrapper create_shader_wrapper(const std::string_view &ptx_code, const ProgramName &program_name);
 
             void clear() override {
                 optixPipelineDestroy(_optix_pipeline);

@@ -60,12 +60,13 @@ namespace luminous {
 
         App(const std::string &title, const int2 &size, Context *context, const Parser &parser);
 
+        ~App();
+
         void init(const std::string &title, const int2 &size, Context *context, const Parser &parser);
 
         void init_with_gui(const std::string &title) {
             init_window(title, _task->resolution());
             init_event_cb();
-            init_imgui();
             init_gl_context();
         }
 

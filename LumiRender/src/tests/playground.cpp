@@ -3,8 +3,8 @@
 //
 
 #include <iostream>
-#include "render/scattering/microfacet.cpp"
-#include "render/scattering/dielectric.cpp"
+#include "render/bxdfs/microfacet.cpp"
+#include "render/bxdfs/dielectric.cpp"
 
 using namespace std;
 
@@ -17,7 +17,7 @@ void test_dielectric() {
 
     auto eta = 1.5f;
     float r = 0.1;
-    DielectricBxDF bxdf(kr, kt, eta, r, r);
+    DielectricBxDF bxdf(kr, kt, eta, r, r, GGX);
 
     auto wi = spherical_direction(radians(50), 0);
     auto wo = spherical_direction(radians(100), Pi);
