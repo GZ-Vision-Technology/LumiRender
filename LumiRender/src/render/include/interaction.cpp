@@ -63,12 +63,9 @@ namespace luminous {
             return data->compute_prim_PMF(hit_info);
         }
 
-        lstd::optional<BSDFWrapper> SurfaceInteraction::get_BSDF(const SceneData *scene_data) const {
-            if (!has_material()) {
-                return {};
-            }
-            auto bsdf = material->get_BSDF(*this, scene_data);
-            return {bsdf};
+        BSDFWrapper SurfaceInteraction::get_BSDF(const SceneData *scene_data) const {
+            LM_ASSERT(bool(material), "material is nullptr!\n");
+            return material->get_BSDF(*this, scene_data);
         }
     } // luminous::render
 } // luminous

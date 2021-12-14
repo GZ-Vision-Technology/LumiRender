@@ -142,7 +142,7 @@ namespace luminous {
 
             LM_ND_XPU Spectrum Le(float3 w, const SceneData *scene_data) const;
 
-            LM_ND_XPU lstd::optional<BSDFWrapper> get_BSDF(const SceneData *scene_data) const;
+            LM_ND_XPU BSDFWrapper get_BSDF(const SceneData *scene_data) const;
         };
 
         struct SurfacePoint {
