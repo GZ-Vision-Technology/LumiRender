@@ -150,15 +150,15 @@ namespace luminous {
 
             // sample BSDF
             auto bsdf_sample = bsdf.sample_f(mtl_item.wo, rs.indirect.uc, rs.indirect.u);
-            if (bsdf_sample) {
-                Spectrum throughput = mtl_item.throughput * bsdf_sample->f_val / bsdf_sample->PDF;
+            if (bsdf_sample.valid()) {
+                Spectrum throughput = mtl_item.throughput * bsdf_sample.f_val / bsdf_sample.PDF;
                 RayWorkItem ray_item;
-                ray_item.prev_bsdf_val = bsdf_sample->f_val;
-                ray_item.prev_bsdf_PDF = bsdf_sample->PDF;
-                Ray new_ray = si.spawn_ray(bsdf_sample->wi);
+                ray_item.prev_bsdf_val = bsdf_sample.f_val;
+                ray_item.prev_bsdf_PDF = bsdf_sample.PDF;
+                Ray new_ray = si.spawn_ray(bsdf_sample.wi);
                 next_ray_queue->push_secondary_ray(new_ray, mtl_item.depth + 1, LightSampleContext(si),
-                                                   throughput, bsdf_sample->PDF,
-                                                   bsdf_sample->f_val, 1,
+                                                   throughput, bsdf_sample.PDF,
+                                                   bsdf_sample.f_val, 1,
                                                    mtl_item.pixel_index);
             }
 

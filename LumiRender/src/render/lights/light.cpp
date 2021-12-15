@@ -70,13 +70,13 @@ namespace luminous {
             float uc = sampler.next_1d();
             float2 u = sampler.next_2d();
             auto bsdf_sample = bsdf.sample_f(si.wo, uc, u);
-            if (bsdf_sample) {
-                NEE_data->wi = bsdf_sample->wi;
-                NEE_data->bsdf_val = bsdf_sample->f_val;
-                NEE_data->bsdf_PDF = bsdf_sample->PDF;
+            if (bsdf_sample.valid()) {
+                NEE_data->wi = bsdf_sample.wi;
+                NEE_data->bsdf_val = bsdf_sample.f_val;
+                NEE_data->bsdf_PDF = bsdf_sample.PDF;
                 float weight = 1;
-                bsdf_PDF = bsdf_sample->PDF;
-                bsdf_val = bsdf_sample->f_val;
+                bsdf_PDF = bsdf_sample.PDF;
+                bsdf_val = bsdf_sample.f_val;
                 Ray ray = si.spawn_ray(NEE_data->wi);
                 HitContext hit_ctx{data};
                 NEE_data->found_intersection = intersect_closest(traversable_handle, ray, &hit_ctx.hit_info);

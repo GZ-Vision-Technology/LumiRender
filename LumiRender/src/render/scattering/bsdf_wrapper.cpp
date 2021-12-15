@@ -22,13 +22,13 @@ namespace luminous {
             return _bxdf.PDF(wo, wi, mode, sample_flags);
         }
 
-        lstd::optional<BSDFSample> BSDFWrapper::sample_f(float3 world_wo, float uc, float2 u,
+        BSDFSample BSDFWrapper::sample_f(float3 world_wo, float uc, float2 u,
                                                          TransportMode mode, BxDFReflTransFlags sample_flags) const {
             float3 local_wo = to_local(world_wo);
             auto ret = _bxdf.sample_f(local_wo, uc, u, mode, sample_flags);
-            if (ret) {
-                ret->wi = to_world(ret->wi);
-                ret->f_val *= abs_dot(_shading_frame.z, ret->wi);
+            if (ret.valid()) {
+                ret.wi = to_world(ret.wi);
+                ret.f_val *= abs_dot(_shading_frame.z, ret.wi);
             }
             return ret;
         }

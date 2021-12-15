@@ -30,7 +30,7 @@ namespace luminous {
                                 TransportMode mode = TransportMode::Radiance,
                                 BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
 
-            LM_ND_XPU lstd::optional<BSDFSample> sample_f(float3 world_wo, float uc, float2 u,
+            LM_ND_XPU BSDFSample sample_f(float3 world_wo, float uc, float2 u,
                                                           TransportMode mode = TransportMode::Radiance,
                                                           BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
 

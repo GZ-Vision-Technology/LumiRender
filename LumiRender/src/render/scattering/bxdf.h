@@ -16,6 +16,7 @@ namespace luminous {
     inline namespace render {
 
         using lstd::Variant;
+
         class BxDF : public Variant<IdealDiffuse, DielectricBxDF> {
             using Variant::Variant;
         public:
@@ -36,8 +37,8 @@ namespace luminous {
             LM_ND_XPU Spectrum rho_hh(BufferView<const float2> u1, BufferView<const float> uc,
                                       BufferView<const float2> u2) const;
 
-            LM_ND_XPU lstd::optional<BSDFSample> sample_f(float3 wo, float uc, float2 u, TransportMode mode = TransportMode::Radiance,
-                                                          BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, TransportMode mode = TransportMode::Radiance,
+                                          BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
 
             LM_ND_XPU BxDFFlags flags() const;
 

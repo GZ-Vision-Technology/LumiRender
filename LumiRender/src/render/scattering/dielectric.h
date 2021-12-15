@@ -38,9 +38,9 @@ namespace luminous {
             LM_ND_XPU float PDF(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance,
                                 BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
 
-            LM_ND_XPU lstd::optional<BSDFSample> sample_f(float3 wo, float uc, float2 u,
-                                                          TransportMode mode = TransportMode::Radiance,
-                                                          BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u,
+                                          TransportMode mode = TransportMode::Radiance,
+                                          BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
 
             LM_ND_XPU BxDFFlags flags() const;
 

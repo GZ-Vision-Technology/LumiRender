@@ -52,8 +52,7 @@ namespace luminous {
             return r / (constant::Pi * uc.size());
         }
 
-        lstd::optional<BSDFSample>
-        BxDF::sample_f(float3 wo, float uc, float2 u, TransportMode mode, BxDFReflTransFlags sample_flags) const {
+        BSDFSample BxDF::sample_f(float3 wo, float uc, float2 u, TransportMode mode, BxDFReflTransFlags sample_flags) const {
             LUMINOUS_VAR_DISPATCH(sample_f, wo, uc, u, mode, sample_flags);
         }
 

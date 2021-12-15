@@ -98,7 +98,7 @@ namespace luminous {
             return PDF;
         }
 
-        lstd::optional<BSDFSample> DielectricBxDF::sample_f(float3 wo, float uc, float2 u, TransportMode mode,
+        BSDFSample DielectricBxDF::sample_f(float3 wo, float uc, float2 u, TransportMode mode,
                                                             BxDFReflTransFlags sample_flags) const {
             if (_microfacet.effectively_smooth()) {
                 float R = fresnel_dielectric(Frame::cos_theta(wo), _eta);
@@ -118,7 +118,7 @@ namespace luminous {
                     float3 wi = make_float3(-wo.x, -wo.y, wo.z);
                     float fr = R / Frame::abs_cos_theta(wi);
                     Spectrum val = fr * Kr;
-                    return {BSDFSample(val, wi, pr / (pr + pt), Reflection, _eta)};
+                    return {val, wi, pr / (pr + pt), Reflection, _eta};
                 } else {
                     // transmission
                     float3 wi{};
@@ -133,7 +133,7 @@ namespace luminous {
                         ft = ft / sqr(eta_p);
                     }
                     Spectrum val = ft * Kt;
-                    return {BSDFSample(val, wi, pt / (pr + pt), Transmission, eta_p)};
+                    return {val, wi, pt / (pr + pt), Transmission, eta_p};
                 }
             } else {
                 float3 wh = _microfacet.sample_wh(wo, u);
@@ -161,7 +161,7 @@ namespace luminous {
                     PDF = _microfacet.PDF_wi_reflection(wo, wh) * pr / (pr + pt);
                     float fr = _microfacet.BRDF(wo, wh, wi, R, cos_theta_i, cos_theta_o, mode);
                     Spectrum val = fr * Kr;
-                    return {BSDFSample(val, wi, PDF, Reflection, _eta)};
+                    return {val, wi, PDF, Reflection, _eta};
                 } else {
                     // transmission
                     float eta_p{};
@@ -181,7 +181,7 @@ namespace luminous {
                     if (dot(wo, wh) < 0) {
                         return {};
                     }
-                    return {BSDFSample(val, wi, PDF, Transmission, _eta)};
+                    return {val, wi, PDF, Transmission, _eta};
                 }
             }
             return {};

@@ -39,7 +39,7 @@ namespace luminous {
                 return same_hemisphere(wo, wi) ? cosine_hemisphere_PDF(Frame::abs_cos_theta(wi)) : 0;
             }
 
-            LM_ND_XPU lstd::optional<BSDFSample> sample_f(float3 wo, float uc, float2 u,
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u,
                                                           TransportMode mode = TransportMode::Radiance,
                                                           BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const {
                 if (!(sample_flags & BxDFReflTransFlags::Reflection)) {
@@ -52,7 +52,7 @@ namespace luminous {
                     return {};
                 }
                 Spectrum f = _eval(wo, wi, mode);
-                return BSDFSample(f, wi, PDF_val, BxDFFlags::Reflection);
+                return {f, wi, PDF_val, BxDFFlags::Reflection};
             }
 
             LM_ND_XPU BxDFFlags flags() const {
