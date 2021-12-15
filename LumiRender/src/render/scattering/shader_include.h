@@ -10,7 +10,6 @@
     #include "bxdf.cpp"
     #include "bsdf_wrapper.cpp"
     #include "dielectric.cpp"
-    #include "microfacet.cpp"
 #else
     #error "this file just for cuda shader include"
 #endif

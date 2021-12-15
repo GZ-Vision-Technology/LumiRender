@@ -15,12 +15,12 @@ namespace luminous {
             Beckmann,
         };
 
-        template<MicrofacetType T = GGX>
+        template<MicrofacetType microfacet_type = GGX>
         class Microfacet {
         private:
             float _alpha_x{};
             float _alpha_y{};
-            constexpr static MicrofacetType _type{T};
+            constexpr static MicrofacetType _type{microfacet_type};
         public:
             LM_XPU Microfacet() = default;
 
