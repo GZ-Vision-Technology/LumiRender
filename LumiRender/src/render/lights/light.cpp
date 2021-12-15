@@ -24,7 +24,7 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(Li, lls, data);
         }
 
-        lstd::optional<LightLiSample> Light::sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
+        LightLiSample Light::sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
                                                        const SceneData *scene_data) const {
             lls.lec = sample(&lls, u, scene_data);
             Ray ray = lls.lsc.spawn_ray_to(lls.lec);
@@ -45,12 +45,12 @@ namespace luminous {
             Spectrum bsdf_val(0.f), Li(0.f);
             Spectrum Ld(0.f);
             LightLiSample lls{LightSampleContext(si)};
-            auto op_lls = sample_Li(sampler.next_2d(), lls, traversable_handle, scene_data);
-            if (op_lls && op_lls->has_contribution()) {
-                bsdf_val = bsdf.eval(si.wo, op_lls->wi);
-                bsdf_PDF = bsdf.PDF(si.wo, op_lls->wi);
-                Li = op_lls->L;
-                light_PDF = op_lls->PDF_dir;
+            lls = sample_Li(sampler.next_2d(), lls, traversable_handle, scene_data);
+            if (lls.valid() && lls.has_contribution()) {
+                bsdf_val = bsdf.eval(si.wo, lls.wi);
+                bsdf_PDF = bsdf.PDF(si.wo, lls.wi);
+                Li = lls.L;
+                light_PDF = lls.PDF_dir;
                 if (bsdf_val.not_black() && bsdf_PDF != 0) {
                     if (Li.not_black()) {
                         float weight = MIS_weight(light_PDF, bsdf_PDF);

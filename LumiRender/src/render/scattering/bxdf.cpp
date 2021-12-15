@@ -26,9 +26,9 @@ namespace luminous {
             Spectrum r = make_float4(0.);
             DCHECK_EQ(uc.size(), u2.size());
             for (size_t i = 0; i < uc.size(); ++i) {
-                lstd::optional<BSDFSample> bs = sample_f(wo, uc[i], u2[i]);
-                if (bs) {
-                    r += bs->f_val * Frame::abs_cos_theta(bs->wi) / bs->PDF;
+                auto bs = sample_f(wo, uc[i], u2[i]);
+                if (bs.valid()) {
+                    r += bs.f_val * Frame::abs_cos_theta(bs.wi) / bs.PDF;
                 }
             }
             return r / float(uc.size());
@@ -44,9 +44,9 @@ namespace luminous {
                     continue;
                 }
                 float PDF_wo = uniform_hemisphere_PDF();
-                lstd::optional<BSDFSample> bs = sample_f(wo, uc[i], u2[i]);
-                if (bs) {
-                    r += bs->f_val * Frame::abs_cos_theta(bs->wi) * Frame::abs_cos_theta(wo) / (PDF_wo * bs->PDF);
+                auto bs = sample_f(wo, uc[i], u2[i]);
+                if (bs.valid()) {
+                    r += bs.f_val * Frame::abs_cos_theta(bs.wi) * Frame::abs_cos_theta(wo) / (PDF_wo * bs.PDF);
                 }
             }
             return r / (constant::Pi * uc.size());

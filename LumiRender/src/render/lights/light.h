@@ -46,7 +46,7 @@ namespace luminous {
 
             LM_ND_XPU LightLiSample Li(LightLiSample lls, const SceneData *data) const;
 
-            LM_ND_XPU lstd::optional<LightLiSample> sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
+            LM_ND_XPU LightLiSample sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
                                                               const SceneData *scene_data) const;
 
             LM_ND_XPU Spectrum MIS_sample_light(const SurfaceInteraction &si, const BSDFWrapper &bsdf,

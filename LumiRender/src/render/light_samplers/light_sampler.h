@@ -15,8 +15,6 @@ namespace luminous {
 
         using lstd::Variant;
 
-        using lstd::optional;
-
         class UniformLightSampler;
 
         class Light;

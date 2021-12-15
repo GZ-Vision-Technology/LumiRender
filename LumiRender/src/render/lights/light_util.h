@@ -40,7 +40,7 @@ namespace luminous {
         struct LightLiSample {
             Spectrum L{};
             float3 wi{};
-            float PDF_dir{0.f};
+            float PDF_dir{-1.f};
             LightEvalContext lec{};
             LightSampleContext lsc{};
             LM_XPU LightLiSample() = default;
@@ -56,10 +56,13 @@ namespace luminous {
                                  float PDF, LightEvalContext lec)
                     : L(L), wi(wi), PDF_dir(PDF), lec(lec) {}
 
+            ND_XPU_INLINE bool valid() const {
+                return PDF_dir >= 0.f;
+            }
+
             LM_XPU void set_sample_result(float PDF, LightEvalContext ctx, float3 w) {
                 PDF_dir = PDF;
-                lec = ctx;
-                CHECK_UNIT_VEC(w)
+                lec = ctx;CHECK_UNIT_VEC(w)
                 wi = w;
             }
 
