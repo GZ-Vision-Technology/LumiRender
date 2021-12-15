@@ -22,8 +22,8 @@ namespace luminous {
                 rx = roughness.x;
                 ry = roughness.y;
             }
-            rx = Microfacet::roughness_to_alpha(rx);
-            ry = Microfacet::roughness_to_alpha(ry);
+            rx = Microfacet<>::roughness_to_alpha(rx);
+            ry = Microfacet<>::roughness_to_alpha(ry);
 
             float4 kr = kr_tex.eval(ctx);
             float4 kt = kt_tex.eval(ctx);
