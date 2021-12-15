@@ -95,7 +95,7 @@ namespace luminous {
         struct BSDFSample {
             Spectrum f_val{};
             float3 wi{};
-            float PDF{0.f};
+            float PDF{-1.f};
             BxDFFlags flags{};
             float eta{1.f};
 
@@ -104,6 +104,10 @@ namespace luminous {
             LM_ND_XPU BSDFSample(const Spectrum &val, float3 wi_, float PDF_, BxDFFlags flags_, float eta_ = 1)
                     : f_val(val), wi(wi_), PDF(PDF_), flags(flags_), eta(eta_) {
                 CHECK_UNIT_VEC(wi_)
+            }
+
+            LM_ND_XPU bool valid() const {
+                return PDF >= 0.f;
             }
 
             LM_ND_XPU bool is_non_specular() const {

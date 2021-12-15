@@ -5,11 +5,11 @@
 
 #pragma once
 
-// this file just for cuda shader include
 #if defined(__CUDACC__)
     #include "bxdf.cpp"
     #include "bsdf_wrapper.cpp"
     #include "dielectric.cpp"
 #else
-    #error "this file just for cuda shader include"
+    #include "microfacet_scatter.h"
+    #include "specular_scatter.h"
 #endif

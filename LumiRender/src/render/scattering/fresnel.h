@@ -11,38 +11,38 @@ namespace luminous {
     inline namespace render {
 
         struct FresnelDielectric {
-        private:
-            float _eta{};
         public:
+            float eta{};
             LM_XPU FresnelDielectric() = default;
 
             LM_XPU explicit FresnelDielectric(float eta_t)
-                    : _eta(eta_t) {}
+                    : eta(eta_t) {}
 
             LM_ND_XPU float eval(float cos_theta_i) const {
-                return fresnel_dielectric(cos_theta_i, _eta);
+                return fresnel_dielectric(cos_theta_i, eta);
             }
         };
 
         struct FresnelConductor {
-        private:
-            Spectrum _eta, _k;
         public:
+            Spectrum eta, k;
             LM_XPU FresnelConductor() = default;
 
             LM_XPU FresnelConductor(Spectrum eta, Spectrum k)
-                    : _eta(eta), _k(k) {}
+                    : eta(eta), k(k) {}
 
             LM_ND_XPU Spectrum eval(float cos_theta_i) const {
-                return fresnel_complex(cos_theta_i, _eta, _k);
+                return fresnel_complex(cos_theta_i, eta, k);
             }
         };
 
         struct FresnelNoOp {
         public:
+            constexpr static float eta = 1.f;
+
             LM_XPU FresnelNoOp() = default;
 
-            LM_ND_XPU float eval(float ) const {
+            LM_ND_XPU float eval(float) const {
                 return 1.f;
             }
         };

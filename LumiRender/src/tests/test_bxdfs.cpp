@@ -5,18 +5,16 @@
 #include "render/scattering/bxdfs.h"
 #include "iostream"
 #include "render/scattering/specular_scatter.h"
+#include "render/scattering/microfacet_scatter.h"
 
 using namespace luminous;
 using namespace std;
 int main() {
 
-    BxDFs<int, int, std::string> bx_d_fs(1,2, "adfad");
 
-    bx_d_fs.for_each([=](auto obj, int index){
-        cout << obj << endl;
+//    using Specular = BxDFs<SpecularReflection, SpecularTransmission>;
 
-        return false;
-    });
+
 
     return 0;
 }

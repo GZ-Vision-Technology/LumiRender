@@ -128,7 +128,7 @@ namespace luminous {
                         return {};
                     }
 
-                    float ft = R / Frame::abs_cos_theta(wi);
+                    float ft = T / Frame::abs_cos_theta(wi);
                     if (mode == TransportMode::Radiance) {
                         ft = ft / sqr(eta_p);
                     }

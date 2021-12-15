@@ -12,12 +12,14 @@
 namespace luminous {
     inline namespace render {
 
-        template<typename... Ts>
+        template<typename TMicrofacet, typename TFresnel, typename... Ts>
         class BxDFs {
         protected:
             using Tuple = std::tuple<Ts...>;
             static constexpr int size = std::tuple_size_v<Tuple>;
             Tuple _bxdfs;
+            TMicrofacet _microfacet;
+            TFresnel _fresnel;
 
         protected:
             template<int index, typename F>
