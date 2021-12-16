@@ -6,7 +6,6 @@
 #pragma once
 
 #include "base.h"
-#include "fresnel.h"
 
 namespace luminous {
     inline namespace render {

@@ -48,6 +48,14 @@ namespace luminous {
                 Spectrum f = _eval(wo, wi, R, fresnel, microfacet, mode);
                 return {f, wi, PDF_val, BxDFFlags::Reflection};
             }
+
+            LM_ND_XPU BxDFFlags flags() const {
+                return BxDFFlags::DiffRefl;
+            }
+
+            LM_ND_XPU bool match_flags(BxDFFlags bxdf_flags) const {
+                return (flags() & bxdf_flags) == flags();
+            }
         };
 
         class DiffuseTransmission {

@@ -328,5 +328,10 @@ namespace luminous {
                 return BTDF(wo, wh, wi, Ft, cos_theta_i, cos_theta_o, eta, mode);
             }
         };
+
+        class MicrofacetNone {
+        public:
+            LM_XPU MicrofacetNone() = default;
+        };
     }
 }

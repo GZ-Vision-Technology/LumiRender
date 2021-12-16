@@ -12,21 +12,30 @@
 namespace luminous {
     inline namespace render {
 
-        template<typename TMicrofacet, typename TFresnel, typename... Ts>
+        template<typename TData, typename TMicrofacet, typename TFresnel, typename... TBxDF>
         class BSDF {
         protected:
-            using Tuple = std::tuple<Ts...>;
+            using Tuple = std::tuple<TBxDF...>;
             static constexpr int size = std::tuple_size_v<Tuple>;
             Tuple _bxdfs;
-            TMicrofacet _microfacet;
-            TFresnel _fresnel;
-
+            TMicrofacet _microfacet{};
+            TFresnel _fresnel{};
+            TData _data{};
         protected:
+            template<int index, typename F>
+            void iterator(F &&func) const {
+                if constexpr(index < size) {
+                    auto obj = std::get<index>(_bxdfs);
+                    if (func(obj)) {
+                        iterator<index + 1>(func);
+                    }
+                }
+            }
+
             template<int index, typename F>
             void iterator(F &&func) {
                 if constexpr(index < size) {
                     auto obj = std::get<index>(_bxdfs);
-
                     if (func(obj)) {
                         iterator<index + 1>(func);
                     }
@@ -36,8 +45,15 @@ namespace luminous {
         public:
             BSDF() = default;
 
-            explicit BSDF(Ts...args) {
-                _bxdfs = std::make_tuple(std::forward<Ts>(args)...);
+            explicit BSDF(TData data, TMicrofacet microfacet, TFresnel fresnel, TBxDF...args)
+                    : _data(data), _microfacet(microfacet), _fresnel(fresnel),
+                      _bxdfs(std::make_tuple(std::forward<TBxDF>(args)...)) {
+
+            }
+
+            template<typename F>
+            void for_each(F &&func) const {
+                iterator<0>(std::move(func));
             }
 
             template<typename F>
@@ -59,7 +75,7 @@ namespace luminous {
                                                flags & non_reflect);
 
                 Spectrum ret{0.f};
-                for_each([&](auto bxdf) {
+                this->for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
                         ret += bxdf.eval(wo, wi, mode);
                     }
@@ -105,7 +121,7 @@ namespace luminous {
                     return {};
                 }
 
-                int comp = std::min((int)std::floor(uc * num), num - 1);
+                int comp = std::min((int) std::floor(uc * num), num - 1);
                 int count = 0;
                 lstd::optional<BSDFSample> ret;
                 for_each([&](auto bxdf) {

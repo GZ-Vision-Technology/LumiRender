@@ -56,7 +56,7 @@ namespace luminous {
             }
 
             LM_ND_XPU BxDFFlags flags() const {
-                return BxDFFlags::DiffuseReflection;
+                return BxDFFlags::DiffRefl;
             }
 
             LM_ND_XPU bool match_flags(BxDFFlags bxdf_flags) const {
