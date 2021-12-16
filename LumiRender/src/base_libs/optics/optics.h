@@ -12,12 +12,12 @@
 namespace luminous {
     inline namespace optics {
         template<typename T>
-        LM_XPU inline Vector<T, 3> reflect(const Vector<T, 3> wo, const Vector<T, 3> n) {
+        ND_XPU_INLINE Vector<T, 3> reflect(const Vector<T, 3> wo, const Vector<T, 3> n) {
             return -wo + 2 * dot(wo, n) * n;
         }
 
         template<typename T>
-        LM_XPU bool refract(Vector<T, 3> wi, Vector<T, 3> n, T eta, T *eta_p,
+        ND_XPU_INLINE bool refract(Vector<T, 3> wi, Vector<T, 3> n, T eta, T *eta_p,
                                    Vector<T, 3> *wt) {
             CHECK_UNIT_VEC(wi)
             T cos_theta_i = dot(n, wi);
@@ -58,6 +58,11 @@ namespace luminous {
             T cos_theta_t = safe_sqrt(1 - sin_theta_t_2);
             *wt = -wi / eta + (cos_theta_i / eta - cos_theta_t) * Vector<T, 3>(n);
             return true;
+        }
+
+        template<typename T>
+        LM_ND_XPU T correct_eta(float cos_theta_o, T eta) {
+            return cos_theta_o > 0 ? eta : rcp(eta);
         }
 
         ND_XPU_INLINE float schlick_weight(float cos_theta) {

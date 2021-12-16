@@ -189,6 +189,7 @@ namespace luminous {
                         if (!same_hemisphere(wo, wh)) {
                             wh = -wh;
                         }
+                        CHECK_UNIT_VEC(wh);
                         return wh;
                     }
                     case Beckmann: {
@@ -216,6 +217,7 @@ namespace luminous {
                         if (!same_hemisphere(wo, wh)) {
                             wh = -wh;
                         }
+                        CHECK_UNIT_VEC(wh);
                         return wh;
                     }
                     default:
@@ -305,12 +307,10 @@ namespace luminous {
                 T numerator = D(wh) * Ft * G(wo, wi) * std::abs(dot(wi, wh) * dot(wo, wh));
                 T denom = sqr(dot(wi, wh) * eta + dot(wo, wh)) * abs(cos_theta_i * cos_theta_o);
                 T ft = numerator / denom;
-                if (mode == TransportMode::Radiance) {
-                    ft = ft / sqr(eta);
-                }
+                float factor = mode == TransportMode::Radiance ? rcp(sqr(eta)) : 1.f;
                 DCHECK(!invalid(ft));
                 DCHECK(all_positive(ft));
-                return ft;
+                return ft * factor;
             }
 
             /**

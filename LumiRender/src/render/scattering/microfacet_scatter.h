@@ -15,22 +15,31 @@ namespace luminous {
             LM_XPU MicrofacetReflection() = default;
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, TData data,
-                                    TFresnel &fresnel,
-                                    TMicrofacet microfacet = {},
-                                    TransportMode mode = TransportMode::Radiance) const {
+            LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, TData data,
+                                     TFresnel fresnel,
+                                     TMicrofacet microfacet = {},
+                                     TransportMode mode = TransportMode::Radiance) const {
+                // must be reflection and eta must be correct
                 float cos_theta_o = Frame::cos_theta(wo);
                 float cos_theta_i = Frame::cos_theta(wi);
-                bool reflect = cos_theta_i * cos_theta_o > 0;
-                if (!reflect) {
-                    return {0.f};
-                }
-                fresnel.eta = cos_theta_o > 0 ? fresnel.eta : (rcp(fresnel.eta));
                 float3 wh = normalize(wo + wi);
                 wh = face_forward(wh, make_float3(0, 0, 1));
                 auto F = fresnel.eval(dot(wo, wh));
                 auto fr = microfacet.BRDF(wo, wh, wi, F, cos_theta_i, cos_theta_o, mode);
                 return fr * data.color;
+            }
+
+            template<typename TData, typename TFresnel, typename TMicrofacet>
+            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, TData data,
+                                    TFresnel fresnel,
+                                    TMicrofacet microfacet = {},
+                                    TransportMode mode = TransportMode::Radiance) const {
+                float cos_theta_o = Frame::cos_theta(wo);
+                if (!same_hemisphere(wi, wo)) {
+                    return {0.f};
+                }
+                fresnel.eta = correct_eta(cos_theta_o, fresnel.eta);
+                return _eval(wo, wi, fresnel, microfacet, mode);
             }
 
             template<typename TFresnel, typename TMicrofacet>
@@ -52,32 +61,48 @@ namespace luminous {
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wh = microfacet.sample_wh(wo, u);
                 float3 wi = reflect(wo, wh);
-                float cos_theta_i = Frame::cos_theta(wi);
                 float cos_theta_o = Frame::cos_theta(wo);
                 if (!same_hemisphere(wi, wo)) {
                     return {};
                 }
+                fresnel.eta = correct_eta(cos_theta_o, fresnel.eta);
                 float PDF = microfacet.PDF_wi_reflection(wo, wh);
-                Spectrum val = eval(wo, wi, data, fresnel, microfacet);
+                Spectrum val = _eval(wo, wi, data, fresnel, microfacet);
                 return {val, wi, PDF, Reflection, fresnel.eta};
             }
         };
 
         class MicrofacetTransmission {
-        private:
-            float3 _t;
-
         public:
-            MicrofacetTransmission() = default;
+            LM_XPU MicrofacetTransmission() = default;
 
-            template<typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU Spectrum eval(float3 wo, float3 wi,
-                                    TFresnel &fresnel,
+            template<typename TData, typename TFresnel, typename TMicrofacet>
+            LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, TData data,
+                                     TFresnel fresnel,
+                                     TMicrofacet microfacet = {},
+                                     TransportMode mode = TransportMode::Radiance) const {
+                // must be transmission and eta must be correct
+                float cos_theta_o = Frame::cos_theta(wo);
+                float cos_theta_i = Frame::cos_theta(wi);
+                using eta_type = decltype(fresnel.eta);
+                float3 wh = normalize(wo + wi * fresnel.eta);
+                wh = face_forward(wh, make_float3(0, 0, 1));
+                eta_type F = fresnel.eval(dot(wo, wh));
+                eta_type tr = microfacet.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i, cos_theta_o, mode);
+                return tr * data.color;
+            }
+
+            template<typename TData, typename TFresnel, typename TMicrofacet>
+            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, TData data,
+                                    TFresnel fresnel,
                                     TMicrofacet microfacet = {},
                                     TransportMode mode = TransportMode::Radiance) const {
                 float cos_theta_o = Frame::cos_theta(wo);
-                float cos_theta_i = Frame::cos_theta(wi);
-
+                if (same_hemisphere(wi, wo)) {
+                    return {0.f};
+                }
+                fresnel.eta = correct_eta(cos_theta_o, fresnel.eta);
+                return _eval(wo, wi, fresnel, microfacet, mode);
             }
 
             template<typename TFresnel, typename TMicrofacet>
@@ -85,16 +110,33 @@ namespace luminous {
                                 TFresnel fresnel = {},
                                 TMicrofacet microfacet = {},
                                 TransportMode mode = TransportMode::Radiance) const {
-
+                if (same_hemisphere(wo, wi)) {
+                    return 0.f;
+                }
+                float cos_theta_o = Frame::cos_theta(wo);
+                float cos_theta_i = Frame::cos_theta(wi);
+                fresnel.eta = correct_eta(cos_theta_o, fresnel.eta);
+                float3 wh = normalize(wo + wi * fresnel.eta);
+                return microfacet.PDF_wi_transmission(wo, wh, wi, fresnel.eta);
             }
 
-            template<typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float2 u, TFresnel fresnel,
+            template<typename TData, typename TFresnel, typename TMicrofacet>
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float2 u, TData data,
+                                          TFresnel fresnel,
                                           TMicrofacet microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
-
+                float3 wh = microfacet.sample_wh(wo, u);
+                float3 wi{};
+                bool valid = refract(wo, wh, fresnel.eta, &fresnel.eta, &wi);
+                if (!valid || same_hemisphere(wo, wi)) {
+                    return {};
+                }
+                float cos_theta_o = Frame::cos_theta(wo);
+                fresnel.eta = correct_eta(cos_theta_o, fresnel.eta);
+                float PDF = microfacet.PDF_wi_transmission(wo, wh, wi, fresnel.eta);
+                Spectrum val = _eval(wo, wi, data, fresnel, microfacet);
+                return {val, wi, PDF, Transmission, fresnel.eta};
             }
-
         };
     }
 }
