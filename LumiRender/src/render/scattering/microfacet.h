@@ -11,7 +11,9 @@
 namespace luminous {
     inline namespace render {
         enum MicrofacetType {
+            None,
             GGX,
+            Disney,
             Beckmann,
         };
 
@@ -27,7 +29,7 @@ namespace luminous {
             LM_XPU Microfacet(float alpha_x, float alpha_y)
                     : _alpha_x(alpha_x),
                       _alpha_y(alpha_y) {
-
+                LM_ASSERT(_type != None, "unknown type %d", int(_type));
             }
 
             LM_ND_XPU static float roughness_to_alpha(float roughness) {
@@ -72,6 +74,7 @@ namespace luminous {
                     return 0.f;
                 }
                 switch (_type) {
+                    case Disney:
                     case GGX: {
                         float e =
                                 tan_theta_2 * (sqr(Frame::cos_phi(wh) / _alpha_x) + sqr(Frame::sin_phi(wh) / _alpha_y));
@@ -97,6 +100,7 @@ namespace luminous {
              */
             LM_ND_XPU float lambda(const float3 &w) const {
                 switch (_type) {
+                    case Disney:
                     case GGX: {
                         float abs_tan_theta = std::abs(Frame::tan_theta(w));
                         if (is_inf(abs_tan_theta)) {
@@ -124,7 +128,7 @@ namespace luminous {
                     default:
                         break;
                 }
-                LM_ASSERT(0, "unknown type %d", int(_type));
+                LM_ASSERT(_type != None, "unknown type %d", int(_type));
                 return 0;
             }
 
@@ -135,7 +139,8 @@ namespace luminous {
              * @return   [description]
              */
             LM_ND_XPU float G1(const float3 &w) const {
-                return 1 / (1 + lambda(w));
+                float ret = 1 / (1 + lambda(w));
+                return ret;
             }
 
             /**
@@ -143,12 +148,27 @@ namespace luminous {
              * @return   [description]
              */
             LM_ND_XPU float G(const float3 &wo, const float3 &wi) const {
-                auto ret = 1 / (1 + lambda(wo) + lambda(wi));
+                float ret = 0.f;
+                switch (_type) {
+                    case Disney: {
+                        ret = G1(wi) * G1(wo);
+                        return ret;
+                    }
+                    case GGX:
+                    case Beckmann: {
+                        ret = 1 / (1 + lambda(wo) + lambda(wi));
+                        return ret;
+                    }
+                    default:
+                        break;
+                }
+                LM_ASSERT(_type != None, "unknown type %d", int(_type));
                 return ret;
             }
 
             LM_ND_XPU float3 sample_wh(const float3 &wo, const float2 &u) const {
                 switch (_type) {
+                    case Disney:
                     case GGX: {
                         float cos_theta = 0, phi = _2Pi * u[1];
                         if (_alpha_x == _alpha_y) {
@@ -201,7 +221,7 @@ namespace luminous {
                     default:
                         break;
                 }
-                LM_ASSERT(0, "unknown type %d", int(_type));
+                LM_ASSERT(_type != None, "unknown type %d", int(_type));
                 return {};
             }
 
