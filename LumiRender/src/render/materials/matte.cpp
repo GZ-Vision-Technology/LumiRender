@@ -11,9 +11,15 @@ namespace luminous {
 
         BSDFWrapper MatteMaterial::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
             Texture tex = scene_data->textures[R];
-            BxDF bxdf = BxDF(IdealDiffuse(tex.eval(ctx)));
+            float4 color = tex.eval(ctx);
+            BxDF bxdf = BxDF(IdealDiffuse(color));
 
-            return {ctx.ng, ctx.ns, ctx.dp_dus, bxdf};
+            DiffuseBSDF diffuse_bsdf = create_diffuse_bsdf(color);
+            BSDF bsdf{diffuse_bsdf};
+
+
+            //            return {ctx.ng, ctx.ns, ctx.dp_dus, bxdf};
+            return {ctx.ng, ctx.ns, ctx.dp_dus, bsdf};
         }
     }
 }

@@ -15,15 +15,14 @@ namespace luminous {
 
         class BSDFWrapper {
         private:
-            BxDF _bxdf;
             BSDF _bsdf;
             float3 _ng;
             Frame _shading_frame;
         public:
             LM_XPU BSDFWrapper() = default;
 
-            LM_XPU BSDFWrapper(float3 ng, float3 ns, float3 dp_dus, BxDF bxdf)
-                    : _ng(ng), _shading_frame(Frame::from_xz(dp_dus, ns)), _bxdf(std::move(bxdf)) {}
+            LM_XPU BSDFWrapper(float3 ng, float3 ns, float3 dp_dus, BSDF bsdf)
+                    : _ng(ng), _shading_frame(Frame::from_xz(dp_dus, ns)), _bsdf(std::move(bsdf)) {}
 
             LM_ND_XPU Spectrum eval(float3 wo_world, float3 wi_world,
                                     TransportMode mode = TransportMode::Radiance) const;
@@ -33,10 +32,10 @@ namespace luminous {
                                 BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
 
             LM_ND_XPU BSDFSample sample_f(float3 world_wo, float uc, float2 u,
-                                                          TransportMode mode = TransportMode::Radiance,
-                                                          BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
+                                          TransportMode mode = TransportMode::Radiance,
+                                          BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
 
-            LM_ND_XPU float4 base_color() const;
+            LM_ND_XPU Spectrum base_color() const;
 
             LM_ND_XPU float3 to_local(float3 val) const {
                 return _shading_frame.to_local(val);
@@ -47,27 +46,27 @@ namespace luminous {
             }
 
             LM_ND_XPU bool is_non_specular() const {
-                return luminous::is_non_specular(_bxdf.flags());
+                return luminous::is_non_specular(_bsdf.flags());
             }
 
             LM_ND_XPU bool is_reflective() const {
-                return luminous::is_reflective(_bxdf.flags());
+                return luminous::is_reflective(_bsdf.flags());
             }
 
             LM_ND_XPU bool is_transmissive() const {
-                return luminous::is_transmissive(_bxdf.flags());
+                return luminous::is_transmissive(_bsdf.flags());
             }
 
             LM_ND_XPU bool is_diffuse() const {
-                return luminous::is_diffuse(_bxdf.flags());
+                return luminous::is_diffuse(_bsdf.flags());
             }
 
             LM_ND_XPU bool is_glossy() const {
-                return luminous::is_glossy(_bxdf.flags());
+                return luminous::is_glossy(_bsdf.flags());
             }
 
             LM_ND_XPU bool is_specular() const {
-                return luminous::is_specular(_bxdf.flags());
+                return luminous::is_specular(_bsdf.flags());
             }
         };
 

@@ -22,7 +22,7 @@ namespace luminous {
             TData _data{};
         protected:
             template<int index, typename F>
-            void iterator(F &&func) const {
+            LM_XPU void iterator(F &&func) const {
                 if constexpr(index < size) {
                     auto obj = std::get<index>(_bxdfs);
                     if (func(obj)) {
@@ -32,7 +32,7 @@ namespace luminous {
             }
 
             template<int index, typename F>
-            void iterator(F &&func) {
+            LM_XPU void iterator(F &&func) {
                 if constexpr(index < size) {
                     auto obj = std::get<index>(_bxdfs);
                     if (func(obj)) {
@@ -42,9 +42,9 @@ namespace luminous {
             }
 
         public:
-            BSDF_Ty() = default;
+            LM_XPU BSDF_Ty() = default;
 
-            explicit BSDF_Ty(TData data, TFresnel fresnel, TMicrofacet microfacet, TBxDF...args)
+            LM_XPU explicit BSDF_Ty(TData data, TFresnel fresnel, TMicrofacet microfacet, TBxDF...args)
                     : _data(data), _fresnel(fresnel), _microfacet(microfacet),
                       _bxdfs(std::make_tuple(std::forward<TBxDF>(args)...)) {
 
@@ -55,12 +55,12 @@ namespace luminous {
             }
 
             template<typename F>
-            void for_each(F &&func) const {
+            LM_XPU void for_each(F &&func) const {
                 iterator<0>(std::move(func));
             }
 
             template<typename F>
-            void for_each(F &&func) {
+            LM_XPU void for_each(F &&func) {
                 iterator<0>(std::move(func));
             }
 
@@ -129,10 +129,11 @@ namespace luminous {
                 BSDFSample ret;
                 for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
-                        if (++count == comp) {
+                        if (count == comp) {
                             ret = bxdf.sample_f(wo, u, _data, _fresnel, _microfacet, mode);
                             return false;
                         }
+                        count += 1;
                     }
                     return true;
                 });
