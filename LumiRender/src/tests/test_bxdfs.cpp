@@ -14,14 +14,13 @@ using namespace luminous;
 using namespace std;
 
 
-using DiffuseBSDF = BSDF_Ty<Spectrum, MicrofacetNone, FresnelNoOp, DiffuseReflection>;
 int main() {
 
-    DiffuseBSDF bsdf(Spectrum{1.f}, MicrofacetNone{}, FresnelNoOp{}, DiffuseReflection{});
-
-    float3 wi = make_float3(0,1,0);
-    float3 wo = make_float3(0,1,0);
-    Spectrum color{1.f};
+//    DiffuseBSDF bsdf(Spectrum{1.f}, MicrofacetNone{}, FresnelNoOp{}, DiffuseReflection{});
+//
+//    float3 wi = make_float3(0,1,0);
+//    float3 wo = make_float3(0,1,0);
+//    Spectrum color{1.f};
 
 //    bsdf.eval(wo, wi);
 

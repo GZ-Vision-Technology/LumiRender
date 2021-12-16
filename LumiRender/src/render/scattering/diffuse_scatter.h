@@ -46,7 +46,7 @@ namespace luminous {
                 if (PDF_val == 0.f) {
                     return {};
                 }
-                Spectrum f = _eval(wo, wi, data, fresnel, microfacet, mode);
+                Spectrum f = _eval(wo, wi, data, mode);
                 return {f, wi, PDF_val, BxDFFlags::Reflection};
             }
 
@@ -54,7 +54,7 @@ namespace luminous {
                 return BxDFFlags::DiffRefl;
             }
 
-            LM_ND_XPU constexpr static bool match_flags(BxDFFlags bxdf_flags) {
+            LM_ND_XPU static bool match_flags(BxDFFlags bxdf_flags) {
                 return (flags() & bxdf_flags) == flags();
             }
         };

@@ -11,7 +11,7 @@
 namespace luminous {
     inline namespace render {
 
-        template<typename TData, typename TMicrofacet, typename TFresnel, typename... TBxDF>
+        template<typename TData, typename TFresnel, typename TMicrofacet, typename... TBxDF>
         class BSDF_Ty {
         protected:
             using Tuple = std::tuple<TBxDF...>;
@@ -80,7 +80,7 @@ namespace luminous {
                 Spectrum ret{0.f};
                 this->for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
-                        ret += bxdf.eval(wo, wi, mode);
+                        ret += bxdf.eval(wo, wi, _data, _fresnel, _microfacet);
                     }
                     return true;
                 });
@@ -98,7 +98,7 @@ namespace luminous {
                 for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
                         match_count += 1;
-                        ret += bxdf.PDF(wo, wi);
+                        ret += bxdf.PDF(wo, wi, _fresnel, _microfacet);
                     }
                     return true;
                 });
@@ -116,7 +116,7 @@ namespace luminous {
                 return ret;
             }
 
-            LM_ND_XPU lstd::optional<BSDFSample> sample_f(float3 wo, float uc, float2 u,
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u,
                                                           BxDFFlags flags = BxDFFlags::All,
                                                           TransportMode mode = TransportMode::Radiance) const {
                 int num = match_num(flags);
@@ -126,22 +126,22 @@ namespace luminous {
 
                 int comp = std::min((int) std::floor(uc * num), num - 1);
                 int count = 0;
-                lstd::optional<BSDFSample> ret;
+                BSDFSample ret;
                 for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
                         if (++count == comp) {
-                            ret = bxdf.sample_f(wo, uc, u, mode);
+                            ret = bxdf.sample_f(wo, u, _data, _fresnel, _microfacet, mode);
                             return false;
                         }
                     }
                     return true;
                 });
-                ret->PDF /= num;
+                ret.PDF /= num;
                 return ret;
             }
 
             LM_ND_XPU BxDFFlags flags() const {
-                std::byte ret{0};
+                int ret{0};
                 for_each([&](auto bxdf) {
                     ret |= bxdf.flags();
                     return true;
