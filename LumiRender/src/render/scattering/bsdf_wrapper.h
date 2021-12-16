@@ -36,12 +36,6 @@ namespace luminous {
 
             LM_ND_XPU float4 base_color() const;
 
-            LM_ND_XPU Spectrum rho_hd(float3 wo_world, BufferView<const float> uc,
-                                      BufferView<const float2> u2) const;
-
-            LM_ND_XPU Spectrum rho_hh(BufferView<const float2> u1, BufferView<const float> uc,
-                                      BufferView<const float2> u2) const;
-
             LM_ND_XPU float3 to_local(float3 val) const {
                 return _shading_frame.to_local(val);
             }

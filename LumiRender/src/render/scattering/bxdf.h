@@ -31,12 +31,6 @@ namespace luminous {
             LM_ND_XPU float PDF(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance,
                                 BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
 
-            LM_ND_XPU Spectrum rho_hd(float3 wo, BufferView<const float> uc,
-                                      BufferView<const float2> u2) const;
-
-            LM_ND_XPU Spectrum rho_hh(BufferView<const float2> u1, BufferView<const float> uc,
-                                      BufferView<const float2> u2) const;
-
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, TransportMode mode = TransportMode::Radiance,
                                           BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
 

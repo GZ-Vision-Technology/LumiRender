@@ -36,15 +36,5 @@ namespace luminous {
         float4 BSDFWrapper::base_color() const {
             return _bxdf.base_color();
         }
-
-        Spectrum BSDFWrapper::rho_hd(float3 wo_world, BufferView<const float> uc, BufferView<const float2> u2) const {
-            float3 wo = to_local(wo_world);
-            return _bxdf.rho_hd(wo, uc, u2);
-        }
-
-        Spectrum
-        BSDFWrapper::rho_hh(BufferView<const float2> u1, BufferView<const float> uc, BufferView<const float2> u2) const {
-            return _bxdf.rho_hh(u1, uc, u2);
-        }
     } // luminous::render
 } // luminous

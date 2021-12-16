@@ -13,7 +13,7 @@ namespace luminous {
     inline namespace render {
 
         template<typename TMicrofacet, typename TFresnel, typename... Ts>
-        class BxDFs {
+        class BSDF {
         protected:
             using Tuple = std::tuple<Ts...>;
             static constexpr int size = std::tuple_size_v<Tuple>;
@@ -34,9 +34,9 @@ namespace luminous {
             }
 
         public:
-            BxDFs() = default;
+            BSDF() = default;
 
-            explicit BxDFs(Ts...args) {
+            explicit BSDF(Ts...args) {
                 _bxdfs = std::make_tuple(std::forward<Ts>(args)...);
             }
 
