@@ -212,8 +212,10 @@ namespace luminous {
             reset(_digest.data());
             while(left >= block_bytes) {
                 buffer_to_block(p, block);
-                transform(_digest.data(), block, transforms);
+                p += block_bytes;
                 left -= block_bytes;
+
+                transform(_digest.data(), block, transforms);
             }
         }
     }
