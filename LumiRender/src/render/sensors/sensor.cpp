@@ -39,6 +39,14 @@ namespace luminous {
             LUMINOUS_VAR_PTR_DISPATCH(position);
         }
 
+        void Sensor::set_filter(const Filter &filter) {
+            LUMINOUS_VAR_PTR_DISPATCH(set_filter, filter);
+        }
+
+        const Filter *Sensor::filter() const {
+            LUMINOUS_VAR_PTR_DISPATCH(filter);
+        }
+
         void Sensor::set_film(Film *film) {
             LUMINOUS_VAR_PTR_DISPATCH(set_film, film);
         }
