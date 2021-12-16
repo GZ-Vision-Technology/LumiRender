@@ -32,7 +32,7 @@ namespace luminous {
                 L += throughput * si.Le(-ray.direction(), scene_data);
                 pixel_info.normal = si.s_uvn.normal;
                 if (lm_likely(si.has_material())) {
-                    pixel_info.albedo = make_float3(si.get_BSDF(scene_data).base_color());
+                    pixel_info.albedo = make_float3(si.get_BSDF(scene_data).color());
                 }
             } else {
                 Spectrum env_color = light_sampler->on_miss(ray.direction(), hit_ctx.scene_data(),

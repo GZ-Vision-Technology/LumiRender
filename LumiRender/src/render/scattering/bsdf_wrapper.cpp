@@ -6,26 +6,30 @@
 
 namespace luminous {
     inline namespace render {
-        Spectrum BSDFWrapper::eval(float3 wo_world, float3 wi_world, TransportMode mode) const {
+        Spectrum BSDFWrapper::eval(float3 wo_world, float3 wi_world,
+                                   BxDFFlags sample_flags,
+                                   TransportMode mode) const {
             float3 wo = to_local(wo_world);
             float3 wi = to_local(wi_world);
-
             if (wo.z == 0) {
                 return Spectrum{0};
             }
             return _bsdf.eval(wo, wi) * abs_dot(_shading_frame.z, wi_world);
         }
 
-        float BSDFWrapper::PDF(float3 wo_world, float3 wi_world, TransportMode mode, BxDFReflTransFlags sample_flags) const {
+        float BSDFWrapper::PDF(float3 wo_world, float3 wi_world,
+                               BxDFFlags sample_flags,
+                               TransportMode mode) const {
             float3 wo = to_local(wo_world);
             float3 wi = to_local(wi_world);
-            return _bsdf.PDF(wo, wi);
+            return _bsdf.PDF(wo, wi, sample_flags, mode);
         }
 
         BSDFSample BSDFWrapper::sample_f(float3 world_wo, float uc, float2 u,
-                                                         TransportMode mode, BxDFReflTransFlags sample_flags) const {
+                                         BxDFFlags sample_flags,
+                                         TransportMode mode) const {
             float3 local_wo = to_local(world_wo);
-            BSDFSample ret = _bsdf.sample_f(local_wo, uc, u);
+            BSDFSample ret = _bsdf.sample_f(local_wo, uc, u, sample_flags, mode);
             if (ret.valid()) {
                 ret.wi = to_world(ret.wi);
                 ret.f_val *= abs_dot(_shading_frame.z, ret.wi);
@@ -33,7 +37,7 @@ namespace luminous {
             return ret;
         }
 
-        Spectrum BSDFWrapper::base_color() const {
+        Spectrum BSDFWrapper::color() const {
             return _bsdf.color();
         }
     } // luminous::render

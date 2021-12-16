@@ -143,7 +143,7 @@ namespace luminous {
             BSDFWrapper bsdf = si.get_BSDF(scene_data);
             if (mtl_item.depth == 0) {
                 pixel_sample_state->normal[mtl_item.pixel_index] = si.g_uvn.normal;
-                pixel_sample_state->albedo[mtl_item.pixel_index] = make_float3(bsdf.base_color());
+                pixel_sample_state->albedo[mtl_item.pixel_index] = make_float3(bsdf.color());
             }
 
             RaySamples rs = pixel_sample_state->ray_samples[mtl_item.pixel_index];

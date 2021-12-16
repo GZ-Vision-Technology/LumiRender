@@ -25,17 +25,18 @@ namespace luminous {
                     : _ng(ng), _shading_frame(Frame::from_xz(dp_dus, ns)), _bsdf(std::move(bsdf)) {}
 
             LM_ND_XPU Spectrum eval(float3 wo_world, float3 wi_world,
+                                    BxDFFlags sample_flags = BxDFFlags::All,
                                     TransportMode mode = TransportMode::Radiance) const;
 
             LM_ND_XPU float PDF(float3 wo_world, float3 wi_world,
-                                TransportMode mode = TransportMode::Radiance,
-                                BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
+                                BxDFFlags sample_flags = BxDFFlags::All,
+                                TransportMode mode = TransportMode::Radiance) const;
 
             LM_ND_XPU BSDFSample sample_f(float3 world_wo, float uc, float2 u,
-                                          TransportMode mode = TransportMode::Radiance,
-                                          BxDFReflTransFlags sample_flags = BxDFReflTransFlags::All) const;
+                                          BxDFFlags sample_flags = BxDFFlags::All,
+                                          TransportMode mode = TransportMode::Radiance) const;
 
-            LM_ND_XPU Spectrum base_color() const;
+            LM_ND_XPU Spectrum color() const;
 
             LM_ND_XPU float3 to_local(float3 val) const {
                 return _shading_frame.to_local(val);
