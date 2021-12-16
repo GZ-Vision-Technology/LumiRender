@@ -12,10 +12,10 @@ namespace luminous {
 
         class MicrofacetReflection {
         public:
-            MicrofacetReflection() = default;
+            LM_XPU MicrofacetReflection() = default;
 
-            template<typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, Spectrum R,
+            template<typename TData, typename TFresnel, typename TMicrofacet>
+            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, TData data,
                                     TFresnel &fresnel,
                                     TMicrofacet microfacet = {},
                                     TransportMode mode = TransportMode::Radiance) const {
@@ -30,7 +30,7 @@ namespace luminous {
                 wh = face_forward(wh, make_float3(0, 0, 1));
                 auto F = fresnel.eval(dot(wo, wh));
                 auto fr = microfacet.BRDF(wo, wh, wi, F, cos_theta_i, cos_theta_o, mode);
-                return fr * R;
+                return fr * data.color;
             }
 
             template<typename TFresnel, typename TMicrofacet>
@@ -45,8 +45,8 @@ namespace luminous {
                 return microfacet.PDF_wi_reflection(wo, wh);
             }
 
-            template<typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float2 u, Spectrum R,
+            template<typename TData, typename TFresnel, typename TMicrofacet>
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float2 u, TData data,
                                           TFresnel fresnel,
                                           TMicrofacet microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
@@ -58,7 +58,7 @@ namespace luminous {
                     return {};
                 }
                 float PDF = microfacet.PDF_wi_reflection(wo, wh);
-                Spectrum val = eval(wo, wi, R, fresnel, microfacet);
+                Spectrum val = eval(wo, wi, data, fresnel, microfacet);
                 return {val, wi, PDF, Reflection, fresnel.eta};
             }
         };
@@ -69,8 +69,6 @@ namespace luminous {
 
         public:
             MicrofacetTransmission() = default;
-
-            explicit MicrofacetTransmission(float3 t) : _t(t) {}
 
             template<typename TFresnel, typename TMicrofacet>
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi,

@@ -10,6 +10,7 @@
 #include "bsdf_data.h"
 #include "fresnel.h"
 #include "diffuse_scatter.h"
+#include "microfacet_scatter.h"
 
 namespace luminous {
     inline namespace render {
