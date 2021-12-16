@@ -44,14 +44,14 @@ namespace luminous {
         public:
             BSDF_Ty() = default;
 
-            explicit BSDF_Ty(TData data, TMicrofacet microfacet, TFresnel fresnel, TBxDF...args)
-                    : _data(data), _microfacet(microfacet), _fresnel(fresnel),
+            explicit BSDF_Ty(TData data, TFresnel fresnel, TMicrofacet microfacet, TBxDF...args)
+                    : _data(data), _fresnel(fresnel), _microfacet(microfacet),
                       _bxdfs(std::make_tuple(std::forward<TBxDF>(args)...)) {
 
             }
 
             LM_ND_XPU Spectrum color() const {
-                return _data.color;
+                return Spectrum{_data.color};
             }
 
             template<typename F>
@@ -117,8 +117,8 @@ namespace luminous {
             }
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u,
-                                                          BxDFFlags flags = BxDFFlags::All,
-                                                          TransportMode mode = TransportMode::Radiance) const {
+                                          BxDFFlags flags = BxDFFlags::All,
+                                          TransportMode mode = TransportMode::Radiance) const {
                 int num = match_num(flags);
                 if (num == 0) {
                     return {};

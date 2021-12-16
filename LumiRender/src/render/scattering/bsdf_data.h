@@ -10,7 +10,7 @@
 namespace luminous {
     inline namespace render {
         struct DiffuseData {
-            Spectrum color{0.f};
+            float4 color{0.f};
         };
     }
 }

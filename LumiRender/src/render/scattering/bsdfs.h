@@ -16,6 +16,11 @@ namespace luminous {
 
         using DiffuseBSDF = BSDF_Ty<DiffuseData, FresnelNoOp, MicrofacetNone, DiffuseReflection>;
 
+        ND_XPU_INLINE DiffuseBSDF create_diffuse_bsdf(float4 color) {
+            DiffuseData data{color};
+            return DiffuseBSDF(data, FresnelNoOp{}, MicrofacetNone{}, DiffuseReflection{});
+        }
+
         class BSDF : public Variant<DiffuseBSDF> {
         private:
             using Variant::Variant;

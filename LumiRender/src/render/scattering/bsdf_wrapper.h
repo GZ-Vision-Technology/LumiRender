@@ -8,6 +8,7 @@
 #include "render/scattering/bxdf.h"
 #include "base_libs/optics/rgb.h"
 #include "render/integrators/wavefront/soa.h"
+#include "bsdfs.h"
 
 namespace luminous {
     inline namespace render {
@@ -15,6 +16,7 @@ namespace luminous {
         class BSDFWrapper {
         private:
             BxDF _bxdf;
+            BSDF _bsdf;
             float3 _ng;
             Frame _shading_frame;
         public:
