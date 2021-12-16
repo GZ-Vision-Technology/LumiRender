@@ -79,9 +79,8 @@ namespace luminous {
 
                 Spectrum ret{0.f};
                 this->for_each([&](auto bxdf) {
-                    auto fresnel = _fresnel;
                     if (bxdf.match_flags(flags)) {
-                        ret += bxdf.eval(wo, wi, _data, fresnel, _microfacet);
+                        ret += bxdf.eval(wo, wi, _data, _fresnel, _microfacet);
                     }
                     return true;
                 });

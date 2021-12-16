@@ -43,6 +43,11 @@ namespace luminous {
             All = Reflection | Transmission
         };
 
+        template<typename T>
+        LM_ND_XPU T cal_factor(TransportMode mode, T eta) {
+            return mode == TransportMode::Radiance ? rcp(sqr(eta)) : T(1.f);
+        }
+
         ND_XPU_INLINE BxDFFlags operator|(BxDFFlags a, BxDFFlags b) {
             return BxDFFlags((int) a | (int) b);
         }

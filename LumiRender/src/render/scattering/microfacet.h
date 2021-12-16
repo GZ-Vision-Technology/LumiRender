@@ -307,7 +307,7 @@ namespace luminous {
                 T numerator = D(wh) * Ft * G(wo, wi) * std::abs(dot(wi, wh) * dot(wo, wh));
                 T denom = sqr(dot(wi, wh) * eta + dot(wo, wh)) * abs(cos_theta_i * cos_theta_o);
                 T ft = numerator / denom;
-                float factor = mode == TransportMode::Radiance ? rcp(sqr(eta)) : 1.f;
+                T factor = cal_factor(mode, eta);
                 DCHECK(!invalid(ft));
                 DCHECK(all_positive(ft));
                 return ft * factor;
