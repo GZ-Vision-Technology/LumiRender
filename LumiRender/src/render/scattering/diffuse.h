@@ -26,7 +26,7 @@ namespace luminous {
 
             LM_XPU explicit IdealDiffuse(float4 R) : R(R) {}
 
-            LM_ND_XPU float4 base_color() const {
+            LM_ND_XPU float4 color() const {
                 return R;
             }
 

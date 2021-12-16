@@ -24,7 +24,7 @@ namespace luminous {
 
             GEN_TO_STRING_FUNC
 
-            LM_ND_XPU float4 base_color() const;
+            LM_ND_XPU float4 color() const;
 
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, TransportMode mode = TransportMode::Radiance) const;
 

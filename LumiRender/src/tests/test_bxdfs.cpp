@@ -2,28 +2,19 @@
 // Created by Zero on 11/12/2021.
 //
 
-#include "render/scattering/bsdf.h"
+#include "render/scattering/bsdf_ty.h"
 #include "iostream"
 #include "render/scattering/specular_scatter.h"
 #include "render/scattering/microfacet.h"
-#include "render/scattering/fresnel.h"
-#include "render/scattering/microfacet_scatter.h"
+#include "render/scattering/bsdfs.h"
 #include "render/scattering/diffuse_scatter.h"
 
-struct TestA {
-
-};
-
-struct TestB {
-
-};
 
 using namespace luminous;
 using namespace std;
 
-using zt = std::tuple<TestB,TestA>;
 
-using DiffuseBSDF = BSDF<Spectrum, MicrofacetNone, FresnelNoOp, DiffuseReflection>;
+using DiffuseBSDF = BSDF_Ty<Spectrum, MicrofacetNone, FresnelNoOp, DiffuseReflection>;
 int main() {
 
     DiffuseBSDF bsdf(Spectrum{1.f}, MicrofacetNone{}, FresnelNoOp{}, DiffuseReflection{});

@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "base_libs/lstd/variant.h"
 #include "base_libs/optics/rgb.h"
 #include "base.h"
 
@@ -13,7 +12,7 @@ namespace luminous {
     inline namespace render {
 
         template<typename TData, typename TMicrofacet, typename TFresnel, typename... TBxDF>
-        class BSDF {
+        class BSDF_Ty {
         protected:
             using Tuple = std::tuple<TBxDF...>;
             static constexpr int size = std::tuple_size_v<Tuple>;
@@ -43,12 +42,16 @@ namespace luminous {
             }
 
         public:
-            BSDF() = default;
+            BSDF_Ty() = default;
 
-            explicit BSDF(TData data, TMicrofacet microfacet, TFresnel fresnel, TBxDF...args)
+            explicit BSDF_Ty(TData data, TMicrofacet microfacet, TFresnel fresnel, TBxDF...args)
                     : _data(data), _microfacet(microfacet), _fresnel(fresnel),
                       _bxdfs(std::make_tuple(std::forward<TBxDF>(args)...)) {
 
+            }
+
+            LM_ND_XPU Spectrum color() const {
+                return _data.color;
             }
 
             template<typename F>

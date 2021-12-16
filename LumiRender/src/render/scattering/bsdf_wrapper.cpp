@@ -34,7 +34,7 @@ namespace luminous {
         }
 
         float4 BSDFWrapper::base_color() const {
-            return _bxdf.base_color();
+            return _bxdf.color();
         }
     } // luminous::render
 } // luminous

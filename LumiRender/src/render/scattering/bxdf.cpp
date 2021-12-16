@@ -7,8 +7,8 @@
 namespace luminous {
     inline namespace render {
 
-        float4 BxDF::base_color() const {
-            LUMINOUS_VAR_DISPATCH(base_color);
+        float4 BxDF::color() const {
+            LUMINOUS_VAR_DISPATCH(color);
         }
 
         Spectrum BxDF::eval(float3 wo, float3 wi, TransportMode mode) const {
