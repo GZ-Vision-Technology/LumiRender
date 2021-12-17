@@ -8,16 +8,18 @@
 #include "render/scattering/microfacet.h"
 #include "render/scattering/bsdfs.h"
 #include "render/scattering/diffuse_scatter.h"
-#include "render/scattering/bxdf.h"
-
 
 using namespace luminous;
 using namespace std;
 
 
 int main() {
+    std::variant<int ,float> variant{1.f};
 
-    cout << sizeof(IdealDiffuse) << endl;
+    cout << 1 << endl;
+    variant = int(1);
+
+    cout << 1 << endl;
 
 //    DiffuseBSDF bsdf(Spectrum{1.f}, MicrofacetNone{}, FresnelNoOp{}, DiffuseReflection{});
 //
