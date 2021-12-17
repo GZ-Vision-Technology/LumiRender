@@ -287,7 +287,7 @@ namespace luminous {
             auto param = ps["param"];
             ret.color_tex.name = param["color"].as_string();
             if (type == "MatteMaterial") {
-
+                ret.sigma_tex.name = param["sigma"].as_string();
             } else if (type == "DielectricMaterial") {
                 ret.eta_tex.name = param["eta"].as_string();
                 ret.roughness_tex.name = param["roughness"].as_string();

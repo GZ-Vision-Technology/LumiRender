@@ -202,6 +202,12 @@ namespace luminous {
                     });
                     DCHECK(idx != -1);
                     color_tex.tex_idx = idx;
+
+                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+                        return tex_config.name == sigma_tex.name;
+                    });
+                    sigma_tex.tex_idx = idx;
+
                 } else if (type() == full_type("GlassMaterial")) {
                     auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config.name == color_tex.name;

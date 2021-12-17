@@ -291,7 +291,7 @@
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
-                "material": "matte_whitte",
+                "material": "matte_white_sigma",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
