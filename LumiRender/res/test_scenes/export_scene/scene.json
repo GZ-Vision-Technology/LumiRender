@@ -2,7 +2,7 @@
     "textures": [
         {
             "type": "ConstantTexture",
-            "name": "matte_whitte_constant",
+            "name": "matte_white_constant",
             "param": {
                 "val": [
                     0.7250000238418579,
@@ -44,7 +44,7 @@
             "name" : "matte_sigma_constant",
             "param": {
                 "val": [
-                    0.5,
+                    0.9,
                     0.5,
                     0.5,
                     0.5
@@ -56,9 +56,9 @@
     "materials": [
         {
             "type": "MatteMaterial",
-            "name": "matte_whitte",
+            "name": "matte_white",
             "param": {
-                "color": "matte_whitte_constant"
+                "color": "matte_white_constant"
             }
         },
         {
@@ -79,7 +79,7 @@
             "type": "MatteMaterial",
             "name": "matte_white_sigma",
             "param": {
-                "color": "matte_whitte_constant",
+                "color": "matte_white_constant",
                 "sigma": "matte_sigma_constant"
             }
         }
@@ -91,7 +91,7 @@
             "param": {
                 "fn": "meshes/Plane.ply",
                 "subdiv_level": 0,
-                "material": "matte_whitte",
+                "material": "matte_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -131,7 +131,7 @@
             "param": {
                 "fn": "meshes/Plane.001.ply",
                 "subdiv_level": 0,
-                "material": "matte_whitte",
+                "material": "matte_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -171,7 +171,7 @@
             "param": {
                 "fn": "meshes/Plane.002.ply",
                 "subdiv_level": 0,
-                "material": "matte_white_sigma",
+                "material": "matte_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -291,7 +291,7 @@
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
-                "material": "matte_whitte",
+                "material": "matte_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -331,7 +331,7 @@
             "param": {
                 "fn": "meshes/Cube.001.ply",
                 "subdiv_level": 0,
-                "material": "matte_whitte",
+                "material": "matte_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -469,7 +469,7 @@
         }
     },
     "output" : {
-        "fn":"cornell-box-sigma.png",
+        "fn":"cornell-box.png",
         "dispatch_num" : 100,
         "frame_per_dispatch": 1
     }
