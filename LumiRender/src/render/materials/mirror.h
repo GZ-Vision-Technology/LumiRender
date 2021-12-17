@@ -12,6 +12,19 @@
 
 namespace luminous {
     inline namespace render {
+        class MirrorMaterial : BASE_CLASS() {
+        public:
+            REFL_CLASS(MirrorMaterial)
 
+        private:
+            index_t _color_idx{};
+        public:
+            explicit MirrorMaterial(index_t color_idx) : _color_idx(color_idx) {}
+
+            LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
+
+            CPU_ONLY(explicit MirrorMaterial(const MaterialConfig &mc)
+                    : MirrorMaterial(mc.color_tex.tex_idx) {})
+        };
     }
 }

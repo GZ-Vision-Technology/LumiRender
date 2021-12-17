@@ -11,14 +11,15 @@
 #include "fresnel.h"
 #include "diffuse_scatter.h"
 #include "microfacet_scatter.h"
+#include "specular_scatter.h"
 
 namespace luminous {
     inline namespace render {
 
-        using DiffuseBSDF = BSDF_Ty<DiffuseData, FresnelNoOp, MicrofacetNone, DiffuseReflection>;
+        using DiffuseBSDF = BSDF_Ty<BSDFCommonData, FresnelNoOp, MicrofacetNone, DiffuseReflection>;
 
         ND_XPU_INLINE DiffuseBSDF create_diffuse_bsdf(float4 color) {
-            DiffuseData data{color};
+            BSDFCommonData data{color};
             return DiffuseBSDF(data, FresnelNoOp{}, MicrofacetNone{}, DiffuseReflection{});
         }
 
@@ -29,7 +30,14 @@ namespace luminous {
             return OrenNayarBSDF(data, FresnelNoOp{}, MicrofacetNone{}, OrenNayar{});
         }
 
-        class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF> {
+        using MirrorBSDF = BSDF_Ty<BSDFCommonData, FresnelNoOp, MicrofacetNone, SpecularReflection>;
+
+        ND_XPU_INLINE MirrorBSDF create_mirror_bsdf(float4 color) {
+            BSDFCommonData data{color};
+            return MirrorBSDF(data, FresnelNoOp{}, MicrofacetNone{}, SpecularReflection{});
+        }
+
+        class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF> {
         private:
             using Variant::Variant;
         public:

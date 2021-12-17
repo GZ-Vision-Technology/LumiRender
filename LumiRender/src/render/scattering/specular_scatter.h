@@ -42,6 +42,14 @@ namespace luminous {
                 float PDF = 1.f;
                 return {val, wi, PDF, BxDFFlags::SpecRefl};
             }
+
+            LM_ND_XPU constexpr static BxDFFlags flags() {
+                return BxDFFlags::SpecRefl;
+            }
+
+            LM_ND_XPU static bool match_flags(BxDFFlags bxdf_flags) {
+                return (flags() & bxdf_flags) == flags();
+            }
         };
 
         class SpecularTransmission {
@@ -80,6 +88,14 @@ namespace luminous {
                 eta_type factor = cal_factor(mode, fresnel.eta);
                 Spectrum val = ft * data.color * factor;
                 return {val, wi, 1, Transmission};
+            }
+
+            LM_ND_XPU constexpr static BxDFFlags flags() {
+                return BxDFFlags::SpecTrans;
+            }
+
+            LM_ND_XPU static bool match_flags(BxDFFlags bxdf_flags) {
+                return (flags() & bxdf_flags) == flags();
             }
         };
     }
