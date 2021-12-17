@@ -12,10 +12,8 @@ namespace luminous {
         BSDFWrapper MatteMaterial::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
             const Texture& tex = scene_data->get_texture(_color_idx);
             float4 color = tex.eval(ctx);
-            if (is_valid_index(_sigma)) {
-                const Texture& sigma_tex = scene_data->get_texture(_sigma);
-                float sigma = sigma_tex.eval(ctx).x;
-                OrenNayarBSDF oren_nayar_bsdf = create_oren_nayar_bsdf(color, sigma);
+            if (_sigma > 0) {
+                OrenNayarBSDF oren_nayar_bsdf = create_oren_nayar_bsdf(color, _sigma);
                 BSDF bsdf{oren_nayar_bsdf};
                 return {ctx.ng, ctx.ns, ctx.dp_dus, bsdf};
             }

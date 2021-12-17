@@ -38,19 +38,6 @@
                 ],
                 "color_space": "SRGB"
             }
-        },
-        {
-            "type" : "ConstantTexture",
-            "name" : "matte_sigma_constant",
-            "param": {
-                "val": [
-                    9.9,
-                    0.5,
-                    0.5,
-                    0.5
-                ],
-                "color_space" : "LINEAR"
-            }
         }
     ],
     "materials": [
@@ -80,7 +67,7 @@
             "name": "matte_white_sigma",
             "param": {
                 "color": "matte_white_constant",
-                "sigma": "matte_sigma_constant"
+                "sigma": 9.9
             }
         }
     ],
