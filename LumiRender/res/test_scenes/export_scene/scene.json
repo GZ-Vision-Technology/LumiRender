@@ -44,7 +44,7 @@
             "name" : "matte_sigma_constant",
             "param": {
                 "val": [
-                    3.9,
+                    9.9,
                     0.5,
                     0.5,
                     0.5
@@ -331,7 +331,7 @@
             "param": {
                 "fn": "meshes/Cube.001.ply",
                 "subdiv_level": 0,
-                "material": "matte_white",
+                "material": "matte_white_sigma",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
