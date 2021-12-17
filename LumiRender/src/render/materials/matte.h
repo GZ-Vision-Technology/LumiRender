@@ -17,9 +17,9 @@ namespace luminous {
         public:
             REFL_CLASS(MatteMaterial)
         private:
-            index_t R{};
+            index_t _color_idx{};
         public:
-            explicit MatteMaterial(index_t r) : R(r) {}
+            explicit MatteMaterial(index_t r) : _color_idx(r) {}
 
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 

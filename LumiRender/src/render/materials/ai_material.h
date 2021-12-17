@@ -15,26 +15,27 @@ namespace luminous {
         class AssimpMaterial : BASE_CLASS() {
         public:
             REFL_CLASS(AssimpMaterial)
+
         private:
-            index_t Kd_idx{};
-            index_t Ks_idx{};
+            index_t _color_idx{};
+            index_t _specular_idx{};
             index_t _normal_idx{};
 
-            float4 Kd{};
-            float4 Ks{};
+            float4 _color{};
+            float4 _specular{};
         public:
             CPU_ONLY(explicit AssimpMaterial(const MaterialConfig &mc)
-                             :AssimpMaterial(mc.color_tex.tex_idx, mc.specular_tex.tex_idx,
-                                             mc.normal_tex.tex_idx, mc.color_tex.val,
-                                             mc.specular_tex.val) {})
+                    : AssimpMaterial(mc.color_tex.tex_idx, mc.specular_tex.tex_idx,
+                                     mc.normal_tex.tex_idx, mc.color_tex.val,
+                                     mc.specular_tex.val) {})
 
             AssimpMaterial(index_t diffuse_idx, index_t specular_idx,
                            index_t normal_idx, float4 diffuse, float4 specular)
-                    : Kd_idx(diffuse_idx),
-                      Ks_idx(specular_idx),
+                    : _color_idx(diffuse_idx),
+                      _specular_idx(specular_idx),
                       _normal_idx(normal_idx),
-                      Kd(diffuse),
-                      Ks(specular) {}
+                      _color(diffuse),
+                      _specular(specular) {}
 
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
         };
