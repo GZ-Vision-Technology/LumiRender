@@ -176,7 +176,7 @@ namespace luminous {
                     int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config){
                         return tex_config == color_tex;
                     });
-                    if (idx == -1) {
+                    if (index == -1) {
                         color_tex.tex_idx = tex_configs.size();
                         tex_configs.push_back(color_tex);
                     } else {
