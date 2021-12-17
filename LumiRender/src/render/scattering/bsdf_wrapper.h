@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "render/scattering/bxdf.h"
 #include "base_libs/optics/rgb.h"
 #include "render/integrators/wavefront/soa.h"
 #include "bsdfs.h"
