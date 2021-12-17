@@ -12,9 +12,14 @@ namespace luminous {
         struct BSDFCommonData {
             float4 color{0.f};
 
-            LM_XPU explicit BSDFCommonData(float4 color):color(color) {
+            LM_XPU explicit BSDFCommonData(float4 color)
+                    : color(color) {}
+        };
 
-            }
+        struct GlassData : public BSDFCommonData {
+            float eta{};
+            LM_XPU GlassData(float4 color, float eta)
+                    : BSDFCommonData(color), eta(eta) {}
         };
 
         struct OrenNayarData : public BSDFCommonData {

@@ -7,4 +7,5 @@
 
 #include "matte.h"
 #include "mirror.h"
+#include "glass.h"
 #include "ai_material.h"

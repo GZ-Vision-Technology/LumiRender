@@ -19,9 +19,11 @@ namespace luminous {
 
         class MirrorMaterial;
 
+        class GlassMaterial;
+
         using lstd::Variant;
 
-        class Material : BASE_CLASS(Variant<MatteMaterial *, AssimpMaterial *, MirrorMaterial *>) {
+        class Material : BASE_CLASS(Variant<MatteMaterial *, AssimpMaterial *, MirrorMaterial *, GlassMaterial *>) {
         public:
             REFL_CLASS(Material)
 
