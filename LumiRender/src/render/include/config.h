@@ -217,11 +217,11 @@ namespace luminous {
 //                    DCHECK(idx != -1);
 //                    color_tex.tex_idx = idx;
 
-                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config.name == roughness_tex.name;
-                    });
-                    DCHECK(idx != -1);
-                    roughness_tex.tex_idx = idx;
+//                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+//                        return tex_config.name == roughness_tex.name;
+//                    });
+//                    DCHECK(idx != -1);
+//                    roughness_tex.tex_idx = idx;
 
                     idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config.name == eta_tex.name;

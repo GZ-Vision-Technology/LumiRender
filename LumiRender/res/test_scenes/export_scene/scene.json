@@ -51,6 +51,19 @@
                 ],
                 "color_space": "SRGB"
             }
+        },
+        {
+            "type": "ConstantTexture",
+            "name": "glass_eta",
+            "param": {
+                "val": [
+                    1.5,
+                    1.5,
+                    1.5,
+                    1.0
+                ],
+                "color_space": "LINEAR"
+            }
         }
     ],
     "materials": [
@@ -97,6 +110,14 @@
             "param": {
                 "color": "mirror_white",
                 "sigma": 9.9
+            }
+        },
+        {
+            "type": "GlassMaterial",
+            "name": "glass_white",
+            "param": {
+                "color": "mirror_white",
+                "eta": "glass_eta"
             }
         }
     ],
@@ -307,7 +328,7 @@
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
-                "material": "matte_white",
+                "material": "glass_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -348,7 +369,7 @@
             "param": {
                 "fn": "meshes/Cube.001.ply",
                 "subdiv_level": 0,
-                "material": "mirror_white",
+                "material": "glass_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
