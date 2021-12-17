@@ -457,7 +457,7 @@
     },
     "output" : {
         "fn":"cornell-box-sigma.png",
-        "dispatch_num" : 500,
+        "dispatch_num" : 0,
         "frame_per_dispatch": 1
     }
 }
