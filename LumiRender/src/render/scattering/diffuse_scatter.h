@@ -91,8 +91,8 @@ namespace luminous {
                 tan_beta = condition ?
                            sin_theta_i / Frame::abs_cos_theta(wi) :
                            sin_theta_o / Frame::abs_cos_theta(wo);
-
-                return data.color * invPi * (data.A + data.B * max_cos * sin_alpha * tan_beta);
+                float factor = (data.A + data.B * max_cos * sin_alpha * tan_beta);
+                return data.color * invPi * factor;
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>

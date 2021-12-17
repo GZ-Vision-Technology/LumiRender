@@ -44,7 +44,7 @@
             "name" : "matte_sigma_constant",
             "param": {
                 "val": [
-                    0.9,
+                    3.9,
                     0.5,
                     0.5,
                     0.5
@@ -291,7 +291,7 @@
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
-                "material": "matte_white",
+                "material": "matte_white_sigma",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -469,8 +469,8 @@
         }
     },
     "output" : {
-        "fn":"cornell-box.png",
-        "dispatch_num" : 100,
+        "fn":"cornell-box-sigma.png",
+        "dispatch_num" : 500,
         "frame_per_dispatch": 1
     }
 }
