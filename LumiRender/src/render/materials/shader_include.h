@@ -8,9 +8,11 @@
 #if defined(__CUDACC__)
     #include "material.cpp"
     #include "matte.cpp"
+    #include "mirror.cpp"
     #include "ai_material.cpp"
 #else
     #include "material.h"
     #include "matte.h"
+    #include "mirror.h"
     #include "ai_material.h"
 #endif

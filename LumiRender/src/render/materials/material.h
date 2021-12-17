@@ -17,9 +17,11 @@ namespace luminous {
 
         class AssimpMaterial;
 
+        class MirrorMaterial;
+
         using lstd::Variant;
 
-        class Material : BASE_CLASS(Variant<MatteMaterial *, AssimpMaterial *>) {
+        class Material : BASE_CLASS(Variant<MatteMaterial *, AssimpMaterial *, MirrorMaterial *>) {
         public:
             REFL_CLASS(Material)
 
@@ -30,7 +32,9 @@ namespace luminous {
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
 #ifndef __CUDACC__
+
             LM_NODISCARD static std::pair<Material, std::vector<size_t>> create(const MaterialConfig &mc);
+
 #endif
         };
 

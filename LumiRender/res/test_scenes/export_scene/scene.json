@@ -87,6 +87,14 @@
             "type": "MatteMaterial",
             "name": "matte_white_sigma",
             "param": {
+                "color": "matte_white_constant",
+                "sigma": 9.9
+            }
+        },
+        {
+            "type": "MirrorMaterial",
+            "name": "mirror_white",
+            "param": {
                 "color": "mirror_white",
                 "sigma": 9.9
             }
@@ -299,7 +307,7 @@
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
-                "material": "matte_white_sigma",
+                "material": "matte_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -340,7 +348,7 @@
             "param": {
                 "fn": "meshes/Cube.001.ply",
                 "subdiv_level": 0,
-                "material": "matte_white_sigma",
+                "material": "mirror_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
