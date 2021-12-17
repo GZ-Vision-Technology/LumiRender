@@ -150,10 +150,11 @@ namespace luminous {
 
         struct MaterialConfig : Config {
 
-            // Assimp or matte
-
             // common
             TextureConfig color_tex;
+
+            // matte
+            TextureConfig sigma_tex;
 
             // assimp material
             TextureConfig specular_tex;
@@ -265,7 +266,6 @@ namespace luminous {
         struct LightConfig : Config {
             LightConfig() = default;
 
-            float3 miss_color{};
             mutable Box3f scene_box{};
 
             // for area light
