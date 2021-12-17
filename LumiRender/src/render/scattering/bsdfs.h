@@ -22,7 +22,14 @@ namespace luminous {
             return DiffuseBSDF(data, FresnelNoOp{}, MicrofacetNone{}, DiffuseReflection{});
         }
 
-        class BSDF : public Variant<DiffuseBSDF> {
+        using OrenNayarBSDF = BSDF_Ty<OrenNayarData, FresnelNoOp, MicrofacetNone, OrenNayar>;
+
+        ND_XPU_INLINE OrenNayarBSDF create_oren_nayar_bsdf(float4 color, float sigma) {
+            OrenNayarData data{color, sigma};
+            return OrenNayarBSDF(data, FresnelNoOp{}, MicrofacetNone{}, OrenNayar{});
+        }
+
+        class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF> {
         private:
             using Variant::Variant;
         public:

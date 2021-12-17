@@ -171,7 +171,7 @@
             "param": {
                 "fn": "meshes/Plane.002.ply",
                 "subdiv_level": 0,
-                "material": "matte_whitte",
+                "material": "matte_white_sigma",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -291,7 +291,7 @@
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
-                "material": "matte_white_sigma",
+                "material": "matte_whitte",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -468,8 +468,9 @@
             "spp": 1
         }
     },
-    "output": {
-        "fn": "output.png",
-        "frame_num": 100
+    "output" : {
+        "fn":"cornell-box-sigma.png",
+        "dispatch_num" : 100,
+        "frame_per_dispatch": 1
     }
 }

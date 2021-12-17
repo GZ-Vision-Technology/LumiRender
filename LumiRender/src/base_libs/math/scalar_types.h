@@ -21,6 +21,11 @@ namespace luminous {
         using index_t = uint32_t;
 
         template<typename T>
+        LM_ND_XPU bool is_valid_index(T index) {
+            return index != T(-1);
+        }
+
+        template<typename T>
         struct IsScalar : std::false_type {
         };
 
