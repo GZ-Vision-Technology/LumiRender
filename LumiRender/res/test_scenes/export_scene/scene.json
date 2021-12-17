@@ -45,21 +45,21 @@
             "type": "MatteMaterial",
             "name": "matte_whitte",
             "param": {
-                "diffuse": "matte_whitte_constant"
+                "color": "matte_whitte_constant"
             }
         },
         {
             "type": "MatteMaterial",
             "name": "matte_red",
             "param": {
-                "diffuse": "matte_red_constant"
+                "color": "matte_red_constant"
             }
         },
         {
             "type": "MatteMaterial",
             "name": "matte_green",
             "param": {
-                "diffuse": "matte_green_constant"
+                "color": "matte_green_constant"
             }
         }
     ],

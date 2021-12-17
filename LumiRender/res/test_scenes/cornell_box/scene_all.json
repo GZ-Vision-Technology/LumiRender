@@ -33,14 +33,14 @@
 			"type": "MatteMaterial",
 			"name": "quad",
 			"param": {
-				"diffuse": "constant"
+				"color": "constant"
 			}
 		},
 		{
 			"type": "MatteMaterial",
 			"name": "quad2",
 			"param": {
-				"diffuse": "constant"
+				"color": "constant"
 			}
 		}
 	],

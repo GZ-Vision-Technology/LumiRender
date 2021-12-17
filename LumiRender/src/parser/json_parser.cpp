@@ -286,11 +286,10 @@ namespace luminous {
             MaterialConfig ret;
             ret.set_full_type(type);
             auto param = ps["param"];
+            ret.color_tex.name = param["color"].as_string();
             if (type == "MatteMaterial") {
-                ret.diffuse_tex.name = param["diffuse"].as_string();
+
             } else if (type == "DielectricMaterial") {
-                ret.Kr_tex.name = param["Kr"].as_string();
-                ret.Kt_tex.name = param["Kt"].as_string();
                 ret.eta_tex.name = param["eta"].as_string();
                 ret.roughness_tex.name = param["roughness"].as_string();
             }

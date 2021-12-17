@@ -24,9 +24,9 @@ namespace luminous {
             float4 Ks{};
         public:
             CPU_ONLY(explicit AssimpMaterial(const MaterialConfig &mc)
-                             :AssimpMaterial(mc.diffuse_tex.tex_idx, mc.specular_tex.tex_idx,
-                             mc.normal_tex.tex_idx, mc.diffuse_tex.val,
-                             mc.specular_tex.val) {})
+                             :AssimpMaterial(mc.color_tex.tex_idx, mc.specular_tex.tex_idx,
+                                             mc.normal_tex.tex_idx, mc.color_tex.val,
+                                             mc.specular_tex.val) {})
 
             AssimpMaterial(index_t diffuse_idx, index_t specular_idx,
                            index_t normal_idx, float4 diffuse, float4 specular)

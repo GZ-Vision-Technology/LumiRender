@@ -133,12 +133,12 @@ namespace luminous {
             {
                 // process diffuse
                 auto[diffuse_fn, diffuse] = load_texture(ai_material, aiTextureType_DIFFUSE);
-                mc.diffuse_tex.fn = full_path(diffuse_fn);
-                auto tex_type = mc.diffuse_tex.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
-                mc.diffuse_tex.val = diffuse;
-                mc.diffuse_tex.name = "diffuse";
-                mc.diffuse_tex.set_type(tex_type);
-                mc.diffuse_tex.color_space = LINEAR;
+                mc.color_tex.fn = full_path(diffuse_fn);
+                auto tex_type = mc.color_tex.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
+                mc.color_tex.val = diffuse;
+                mc.color_tex.name = "color";
+                mc.color_tex.set_type(tex_type);
+                mc.color_tex.color_space = LINEAR;
             }
             {
                 // process specular

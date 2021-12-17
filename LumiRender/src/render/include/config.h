@@ -153,28 +153,26 @@ namespace luminous {
             // Assimp or matte
 
             // common
-            TextureConfig diffuse_tex;
+            TextureConfig color_tex;
 
             // assimp material
             TextureConfig specular_tex;
             TextureConfig normal_tex;
 
             // glass material
-            TextureConfig Kr_tex;
-            TextureConfig Kt_tex;
             TextureConfig eta_tex;
             TextureConfig roughness_tex;
 
             void fill_tex_configs(std::vector<TextureConfig> &tex_configs) {
                 if (type() == full_type("AssimpMaterial")) {
                     int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config){
-                        return tex_config == diffuse_tex;
+                        return tex_config == color_tex;
                     });
                     if (index == -1) {
-                        diffuse_tex.tex_idx = tex_configs.size();
-                        tex_configs.push_back(diffuse_tex);
+                        color_tex.tex_idx = tex_configs.size();
+                        tex_configs.push_back(color_tex);
                     } else {
-                        diffuse_tex.tex_idx = index;
+                        color_tex.tex_idx = index;
                     }
 
                     index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config){
@@ -199,22 +197,16 @@ namespace luminous {
 
                 } else if (type() == full_type("MatteMaterial")) {
                     auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config.name == diffuse_tex.name;
+                        return tex_config.name == color_tex.name;
                     });
                     DCHECK(idx != -1);
-                    diffuse_tex.tex_idx = idx;
-                } else if (type() == full_type("DielectricMaterial")) {
+                    color_tex.tex_idx = idx;
+                } else if (type() == full_type("GlassMaterial")) {
                     auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config.name == Kr_tex.name;
+                        return tex_config.name == color_tex.name;
                     });
                     DCHECK(idx != -1);
-                    Kr_tex.tex_idx = idx;
-
-                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config.name == Kt_tex.name;
-                    });
-                    DCHECK(idx != -1);
-                    Kt_tex.tex_idx = idx;
+                    color_tex.tex_idx = idx;
 
                     idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config.name == roughness_tex.name;
