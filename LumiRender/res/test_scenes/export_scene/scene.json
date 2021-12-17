@@ -38,6 +38,19 @@
                 ],
                 "color_space": "SRGB"
             }
+        },
+        {
+            "type": "ConstantTexture",
+            "name": "mirror_white",
+            "param": {
+                "val": [
+                    1,
+                    1,
+                    1,
+                    1.0
+                ],
+                "color_space": "SRGB"
+            }
         }
     ],
     "materials": [
@@ -67,6 +80,14 @@
             "name": "matte_white_sigma",
             "param": {
                 "color": "matte_white_constant",
+                "sigma": 9.9
+            }
+        },
+        {
+            "type": "MatteMaterial",
+            "name": "matte_white_sigma",
+            "param": {
+                "color": "mirror_white",
                 "sigma": 9.9
             }
         }

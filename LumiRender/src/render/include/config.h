@@ -165,11 +165,18 @@ namespace luminous {
             TextureConfig roughness_tex;
 
             void fill_tex_configs(std::vector<TextureConfig> &tex_configs) {
+                // common data
+                auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+                    return tex_config.name == color_tex.name;
+                });
+                DCHECK(idx != -1);
+                color_tex.tex_idx = idx;
+
                 if (type() == full_type("AssimpMaterial")) {
                     int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config){
                         return tex_config == color_tex;
                     });
-                    if (index == -1) {
+                    if (idx == -1) {
                         color_tex.tex_idx = tex_configs.size();
                         tex_configs.push_back(color_tex);
                     } else {
@@ -197,18 +204,18 @@ namespace luminous {
                     }
 
                 } else if (type() == full_type("MatteMaterial")) {
-                    auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config.name == color_tex.name;
-                    });
-                    DCHECK(idx != -1);
-                    color_tex.tex_idx = idx;
+//                    auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+//                        return tex_config.name == color_tex.name;
+//                    });
+//                    DCHECK(idx != -1);
+//                    color_tex.tex_idx = idx;
 
                 } else if (type() == full_type("GlassMaterial")) {
-                    auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config.name == color_tex.name;
-                    });
-                    DCHECK(idx != -1);
-                    color_tex.tex_idx = idx;
+//                    auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+//                        return tex_config.name == color_tex.name;
+//                    });
+//                    DCHECK(idx != -1);
+//                    color_tex.tex_idx = idx;
 
                     idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config.name == roughness_tex.name;

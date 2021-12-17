@@ -288,9 +288,11 @@ namespace luminous {
             ret.color_tex.name = param["color"].as_string();
             if (type == "MatteMaterial") {
                 ret.sigma = param["sigma"].as_float(0.f);
-            } else if (type == "DielectricMaterial") {
+            } else if (type == "GlassMaterial") {
                 ret.eta_tex.name = param["eta"].as_string();
                 ret.roughness_tex.name = param["roughness"].as_string();
+            } else if (type == "MirrorMaterial") {
+
             }
             ret.name = ps["name"].as_string();
             return ret;
