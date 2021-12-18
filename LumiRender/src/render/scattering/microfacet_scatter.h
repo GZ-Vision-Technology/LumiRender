@@ -39,7 +39,7 @@ namespace luminous {
                     return {0.f};
                 }
                 fresnel.eta = correct_eta(cos_theta_o, fresnel.eta);
-                return _eval(wo, wi, fresnel, microfacet, mode);
+                return _eval(wo, wi, data, fresnel, microfacet, mode);
             }
 
             template<typename TFresnel, typename TMicrofacet>
@@ -107,7 +107,7 @@ namespace luminous {
                     return {0.f};
                 }
                 fresnel.eta = correct_eta(cos_theta_o, fresnel.eta);
-                return _eval(wo, wi, fresnel, microfacet, mode);
+                return _eval(wo, wi, data, fresnel, microfacet, mode);
             }
 
             template<typename TFresnel, typename TMicrofacet>
