@@ -8,4 +8,6 @@
 #include "matte.h"
 #include "mirror.h"
 #include "glass.h"
+#include "metal.h"
+#include "plastic.h"
 #include "ai_material.h"
