@@ -93,7 +93,7 @@ namespace luminous {
                 float3 wh = normalize(wo + wi * fresnel.eta);
                 wh = face_forward(wh, make_float3(0, 0, 1));
                 eta_type F = fresnel.eval(dot(wo, wh));
-                eta_type tr = microfacet.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i, cos_theta_o, mode);
+                eta_type tr = microfacet.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i, cos_theta_o, fresnel.eta, mode);
                 return tr * data.color;
             }
 
