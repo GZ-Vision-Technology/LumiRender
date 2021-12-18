@@ -10,9 +10,9 @@
 
 namespace luminous {
     inline namespace render {
-        class DiffuseReflection {
+        class DiffuseReflection : public BxDF {
         public:
-            LM_XPU DiffuseReflection() = default;
+            using BxDF::BxDF;
 
             template<typename TData>
             LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, TData data,
@@ -54,14 +54,12 @@ namespace luminous {
                 return BxDFFlags::DiffRefl;
             }
 
-            LM_ND_XPU static bool match_flags(BxDFFlags bxdf_flags) {
-                return (flags() & bxdf_flags) == flags();
-            }
+            GEN_MATCH_FLAGS_FUNC
         };
 
-        class OrenNayar {
+        class OrenNayar : public BxDF {
         public:
-            LM_XPU OrenNayar() = default;
+            using BxDF::BxDF;
 
             /**
              * fr(wi,wo) = R / PI * (A + B * max(0,cos(phi_i - phi_o)) * sin_alpha * tan_beta)
@@ -129,14 +127,12 @@ namespace luminous {
                 return BxDFFlags::DiffRefl;
             }
 
-            LM_ND_XPU static bool match_flags(BxDFFlags bxdf_flags) {
-                return (flags() & bxdf_flags) == flags();
-            }
+            GEN_MATCH_FLAGS_FUNC
         };
 
-        class DiffuseTransmission {
+        class DiffuseTransmission : public BxDF {
         public:
-            LM_XPU DiffuseTransmission() = default;
+            using BxDF::BxDF;
 
             template<typename TData>
             LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, TData data,
@@ -178,9 +174,7 @@ namespace luminous {
                 return BxDFFlags::DiffTrans;
             }
 
-            LM_ND_XPU static bool match_flags(BxDFFlags bxdf_flags) {
-                return (flags() & bxdf_flags) == flags();
-            }
+            GEN_MATCH_FLAGS_FUNC
         };
     }
 }

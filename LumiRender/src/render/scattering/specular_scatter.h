@@ -11,9 +11,9 @@
 namespace luminous {
     inline namespace render {
 
-        class SpecularReflection {
+        class SpecularReflection : public BxDF {
         public:
-            LM_XPU SpecularReflection() = default;
+            using BxDF::BxDF;
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, TData data,
@@ -47,14 +47,12 @@ namespace luminous {
                 return BxDFFlags::SpecRefl;
             }
 
-            LM_ND_XPU static bool match_flags(BxDFFlags bxdf_flags) {
-                return (flags() & bxdf_flags) == flags();
-            }
+            GEN_MATCH_FLAGS_FUNC
         };
 
-        class SpecularTransmission {
+        class SpecularTransmission : public BxDF {
         public:
-            LM_XPU SpecularTransmission() = default;
+            using BxDF::BxDF;
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, TData data,
@@ -94,9 +92,7 @@ namespace luminous {
                 return BxDFFlags::SpecTrans;
             }
 
-            LM_ND_XPU static bool match_flags(BxDFFlags bxdf_flags) {
-                return (flags() & bxdf_flags) == flags();
-            }
+            GEN_MATCH_FLAGS_FUNC
         };
     }
 }

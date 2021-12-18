@@ -10,9 +10,9 @@
 namespace luminous {
     inline namespace render {
 
-        class MicrofacetReflection {
+        class MicrofacetReflection : public BxDF {
         public:
-            LM_XPU MicrofacetReflection() = default;
+            using BxDF::BxDF;
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
             LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, TData data,
@@ -70,11 +70,17 @@ namespace luminous {
                 Spectrum val = _eval(wo, wi, data, fresnel, microfacet);
                 return {val, wi, PDF, Reflection, fresnel.eta};
             }
+
+            LM_ND_XPU constexpr static BxDFFlags flags() {
+                return BxDFFlags::GlossyReflection;
+            }
+
+            GEN_MATCH_FLAGS_FUNC
         };
 
-        class MicrofacetTransmission {
+        class MicrofacetTransmission : public BxDF {
         public:
-            LM_XPU MicrofacetTransmission() = default;
+            using BxDF::BxDF;
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
             LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, TData data,
@@ -137,6 +143,12 @@ namespace luminous {
                 Spectrum val = _eval(wo, wi, data, fresnel, microfacet);
                 return {val, wi, PDF, Transmission, fresnel.eta};
             }
+
+            LM_ND_XPU constexpr static BxDFFlags flags() {
+                return BxDFFlags::GlossyTransmission;
+            }
+
+            GEN_MATCH_FLAGS_FUNC
         };
     }
 }

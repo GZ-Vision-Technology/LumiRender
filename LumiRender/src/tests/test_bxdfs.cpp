@@ -14,12 +14,7 @@ using namespace std;
 
 
 int main() {
-    std::variant<int ,float> variant{1.f};
 
-    cout << 1 << endl;
-    variant = int(1);
-
-    cout << 1 << endl;
 
 //    DiffuseBSDF bsdf(Spectrum{1.f}, MicrofacetNone{}, FresnelNoOp{}, DiffuseReflection{});
 //

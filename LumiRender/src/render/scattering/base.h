@@ -97,6 +97,18 @@ namespace luminous {
             return (f & (BxDFFlags::Diffuse | BxDFFlags::Glossy));
         }
 
+        class BxDF {
+        public:
+            const bool valid{};
+
+            LM_XPU explicit BxDF(bool valid = true) : valid(valid) {}
+        };
+
+#define GEN_MATCH_FLAGS_FUNC                            \
+LM_ND_XPU bool match_flags(BxDFFlags bxdf_flags) {      \
+    return (flags() & bxdf_flags) == flags() && valid;  \
+}
+
         struct BSDFSample {
             Spectrum f_val{};
             float3 wi{};
