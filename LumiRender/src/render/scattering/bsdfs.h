@@ -37,11 +37,11 @@ namespace luminous {
             return MirrorBSDF(data, FresnelNoOp{}, MicrofacetNone{}, SpecularReflection{});
         }
 
-        using GlassBSDF = BSDF_Ty<BSDFCommonData, FresnelDielectric, MicrofacetNone, SpecularReflection, SpecularTransmission>;
+        using GlassBSDF = BSDF_Ty<BSDFCommonData, FresnelDielectric, MicrofacetNone, SpecularFresnel>;
 
         ND_XPU_INLINE GlassBSDF create_glass_bsdf(float4 color, float eta) {
             BSDFCommonData data{color};
-            return GlassBSDF(data, FresnelDielectric{eta}, MicrofacetNone{}, SpecularReflection{}, SpecularTransmission{});
+            return GlassBSDF(data, FresnelDielectric{eta}, MicrofacetNone{}, SpecularFresnel{});
         }
 
         class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF, GlassBSDF> {
