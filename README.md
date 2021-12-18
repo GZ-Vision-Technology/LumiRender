@@ -20,17 +20,29 @@ A GPU/CPU physically based renderer
 ### Reconstruction Filters
 | Feature                      | Progress    |
 |------------------------------|-------------|
-| Filter Importance Sampling   | Planned     |
-| Mitchell-Netravali Filter    | Planned     |
-| Box Filter                   | Planned     |
-| Triangle Filter              | Planned     |
-| Gaussian Filter              | Planned     |
-| Lanczos Windowed Sinc Filter | Planned     |
+| Filter Importance Sampling   | Done        |
+| Mitchell-Netravali Filter    | Done        |
+| Box Filter                   | Done        |
+| Triangle Filter              | Done        |
+| Gaussian Filter              | Done        |
+| Lanczos Windowed Sinc Filter | Done        |
+
+### Materials
+| Feature                      | Progress    |
+|------------------------------|-------------|
+| metal                        | Planned     |
+| matte                        | Done        |
+| glass                        | Done        |
+| mirror                       | Done        |
+| plastic                      | Planned     |
+| disney                       | Planned     |
+| hair                         | Planned     |
+| pbr                          | Planned     |
+| BSSRDF                       | Planned     |
 
 ### Sensor
 | Feature                                   | Progress    |
 |-------------------------------------------|-------------|
-| Pinhole Cameras                           | Done        |
 | Thin-Lens Cameras                         | Done        |
 | Realistic Cameras                         | Planned     |
 | Fish-Eye Cameras                          | Planned     |
