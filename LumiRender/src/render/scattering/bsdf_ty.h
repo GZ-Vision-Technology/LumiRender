@@ -130,7 +130,7 @@ namespace luminous {
                 for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
                         if (count == comp) {
-                            ret = bxdf.sample_f(wo, u, _data, _fresnel, _microfacet, mode);
+                            ret = bxdf.sample_f(wo, uc, u, _data, _fresnel, _microfacet, mode);
                             return false;
                         }
                         count += 1;

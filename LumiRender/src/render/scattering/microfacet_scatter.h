@@ -55,9 +55,8 @@ namespace luminous {
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float2 u, TData data,
-                                          TFresnel fresnel,
-                                          TMicrofacet microfacet = {},
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
+                                          TFresnel fresnel, TMicrofacet microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wh = microfacet.sample_wh(wo, u);
                 float3 wi = reflect(wo, wh);
@@ -127,9 +126,8 @@ namespace luminous {
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float2 u, TData data,
-                                          TFresnel fresnel,
-                                          TMicrofacet microfacet = {},
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
+                                          TFresnel fresnel, TMicrofacet microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wh = microfacet.sample_wh(wo, u);
                 float3 wi{};

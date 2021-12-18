@@ -37,8 +37,8 @@ namespace luminous {
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float2 u, TData data, TFresnel fresnel,
-                                          TMicrofacet microfacet = {},
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
+                                          TFresnel fresnel, TMicrofacet microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
@@ -110,8 +110,8 @@ namespace luminous {
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float2 u, TData data, TFresnel fresnel,
-                                          TMicrofacet microfacet = {},
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
+                                          TFresnel fresnel, TMicrofacet microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
@@ -157,8 +157,8 @@ namespace luminous {
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float2 u, TData data, TFresnel fresnel,
-                                          TMicrofacet microfacet = {},
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
+                                          TFresnel fresnel,TMicrofacet microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z > 0 ? -wi.z : wi.z;

@@ -36,35 +36,16 @@ namespace luminous {
             Importance
         };
 
-        enum class BxDFReflTransFlags {
-            Unset = 0,
-            Reflection = 1 << 0,
-            Transmission = 1 << 1,
-            All = Reflection | Transmission
-        };
-
         template<typename T>
         LM_ND_XPU T cal_factor(TransportMode mode, T eta) {
             return mode == TransportMode::Radiance ? rcp(sqr(eta)) : T(1.f);
         }
 
-        ND_XPU_INLINE BxDFFlags operator|(BxDFFlags a, BxDFFlags b) {
+        ND_XPU_INLINE constexpr BxDFFlags operator|(BxDFFlags a, BxDFFlags b) {
             return BxDFFlags((int) a | (int) b);
         }
 
         ND_XPU_INLINE int operator&(BxDFFlags a, BxDFFlags b) {
-            return ((int) a & (int) b);
-        }
-
-        ND_XPU_INLINE int operator&(BxDFFlags a, BxDFReflTransFlags b) {
-            return ((int) a & (int) b);
-        }
-
-        ND_XPU_INLINE int operator&(BxDFReflTransFlags a, BxDFFlags b) {
-            return ((int) a & (int) b);
-        }
-
-        ND_XPU_INLINE int operator&(BxDFReflTransFlags a, BxDFReflTransFlags b) {
             return ((int) a & (int) b);
         }
 
