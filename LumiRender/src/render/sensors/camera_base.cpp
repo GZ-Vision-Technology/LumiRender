@@ -104,6 +104,7 @@ namespace luminous {
             } else {
                 _pitch = pitch;
             }
+            printf("pitch :%f \n", _pitch);
         }
 
         void CameraBase::update_yaw(float val) {
@@ -122,6 +123,7 @@ namespace luminous {
             } else {
                 _fov_y = new_fov_y;
             }
+            printf("fov_y :%f \n", _fov_y);
             _update_raster();
         }
 
@@ -147,6 +149,9 @@ namespace luminous {
 
         void CameraBase::move(float3 delta) {
             _position += delta;
+#ifndef __CUDACC__
+            printf("camera position:%s \n", _position.to_string().c_str());
+#endif
         }
 
         Transform CameraBase::camera_to_world() const {

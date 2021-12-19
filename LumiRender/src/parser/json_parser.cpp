@@ -47,7 +47,7 @@ namespace luminous {
                 ret.s = param["s"].as_float3(make_float3(1, 1, 1));
             } else {
                 // yaw pitch position
-                ret.yaw = param["yaw"].as_float();
+                ret.yaw = -param["yaw"].as_float();
                 ret.pitch = param["pitch"].as_float();
                 ret.position = param["position"].as_float3();
             }

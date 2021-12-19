@@ -7,6 +7,7 @@
 #include "render/scattering/specular_scatter.h"
 #include "render/scattering/microfacet.h"
 #include "render/scattering/bsdfs.h"
+#include "render/scattering/fresnel.h"
 #include "render/scattering/diffuse_scatter.h"
 
 using namespace luminous;
@@ -14,6 +15,15 @@ using namespace std;
 
 
 int main() {
+
+    auto fresnel = FresnelDielectric(1.5);
+
+    for (int i = 0; i < 90; ++i) {
+        float r = radians(float(i));
+        float cos_theta = std::cos(r);
+        float fr = fresnel.eval(cos_theta);
+        cout << "deg:" << i << " fr :" <<fr << endl;
+    }
 
 
 //    DiffuseBSDF bsdf(Spectrum{1.f}, MicrofacetNone{}, FresnelNoOp{}, DiffuseReflection{});
