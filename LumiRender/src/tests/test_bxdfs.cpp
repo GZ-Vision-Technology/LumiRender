@@ -22,7 +22,7 @@ int main() {
         float r = radians(float(i));
         float cos_theta = std::cos(r);
         float fr = fresnel.eval(cos_theta);
-        cout << "deg:" << i << " fr :" <<fr << endl;
+        cout << "cos :" << cos_theta << " deg:" << i << " fr :" <<fr << endl;
     }
 
 
