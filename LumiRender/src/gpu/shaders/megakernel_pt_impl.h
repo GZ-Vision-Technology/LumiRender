@@ -38,7 +38,7 @@ GLOBAL __raygen__rg() {
     uint spp = sampler.spp();
     PixelInfo pixel_info;
     for (int i = 0; i < spp; ++i) {
-        pixel_info += path_tracing(ray, params.traversable_handle, sampler,
+        pixel_info += path_tracing(ray, params.traversable_handle, sampler, params.min_depth,
                                    params.max_depth, params.rr_threshold, params.scene_data, debug);
     }
     pixel_info /= float(spp);

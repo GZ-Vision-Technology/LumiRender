@@ -42,6 +42,7 @@ namespace luminous {
 
         struct IntegratorConfig : Config {
             uint32_t max_depth = 10;
+            uint32_t min_depth = 5;
             float rr_threshold = 1;
         };
 

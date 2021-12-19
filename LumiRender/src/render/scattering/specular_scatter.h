@@ -40,7 +40,7 @@ namespace luminous {
                 float3 wi = make_float3(-wo.x, -wo.y, wo.z);
                 Spectrum val = fresnel.eval(Frame::cos_theta(wi)) * data.color / Frame::abs_cos_theta(wi);
                 float PDF = 1.f;
-                return {val, wi, PDF, BxDFFlags::SpecRefl};
+                return {val, wi, PDF, BxDFFlags::SpecRefl, fresnel.eta};
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -85,7 +85,7 @@ namespace luminous {
                 auto ft = (eta_type(1) - Fr) / Frame::abs_cos_theta(wi);
                 eta_type factor = cal_factor(mode, fresnel.eta);
                 Spectrum val = ft * data.color * factor;
-                return {val, wi, 1, Transmission};
+                return {val, wi, 1, Transmission, fresnel.eta};
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {

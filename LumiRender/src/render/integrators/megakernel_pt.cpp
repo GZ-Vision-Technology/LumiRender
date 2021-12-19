@@ -18,6 +18,7 @@ namespace luminous {
             lp.camera = _camera.device_ptr();
             lp.frame_index = 0u;
             lp.max_depth = _max_depth;
+            lp.min_depth = _min_depth;
             lp.rr_threshold = _rr_threshold;
             lp.scene_data = _scene->scene_data_device_ptr();
             _launch_params.reset(&lp);

@@ -41,10 +41,11 @@ namespace luminous {
                     auto[weight, ray] = _camera->generate_ray(ss);
                     uint spp = sampler.spp();
                     PixelInfo pixel_info;
+                    bool debug = all(pixel == make_uint2(0, 0));
                     for (int i = 0; i < spp; ++i) {
                         pixel_info += luminous::render::path_tracing(ray, scene<CPUScene>()->scene_handle(), sampler,
-                                                                     _max_depth, _rr_threshold,
-                                                                     scene<CPUScene>()->scene_data_host_ptr(), false);
+                                                                     _min_depth, _max_depth, _rr_threshold,
+                                                                     scene<CPUScene>()->scene_data_host_ptr(), debug);
                     }
                     pixel_info /= float(spp);
                     film->add_sample(pixel, pixel_info, weight, _frame_index);

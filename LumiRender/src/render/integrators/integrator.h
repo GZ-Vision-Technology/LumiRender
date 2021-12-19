@@ -20,6 +20,7 @@ namespace luminous {
         class Integrator : public Noncopyable {
         protected:
             uint _max_depth{};
+            uint _min_depth{};
             float _rr_threshold{};
             Device *_device{};
             SP<Scene> _scene{};

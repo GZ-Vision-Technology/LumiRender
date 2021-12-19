@@ -14,7 +14,7 @@
 namespace luminous {
     inline namespace render {
 
-        LM_ND_XPU PixelInfo path_tracing(Ray ray, uint64_t scene_handle, Sampler &sampler,
+        LM_ND_XPU PixelInfo path_tracing(Ray ray, uint64_t scene_handle, Sampler &sampler, uint min_depth,
                                          uint max_depth, float rr_threshold, const SceneData *scene_data, bool debug) {
             HitContext hit_ctx{scene_data};
 
@@ -62,7 +62,7 @@ namespace luminous {
                 throughput *= bsdf_ei;
                 L += Ld * throughput;
                 float max_comp = throughput.max_comp();
-                if (max_comp < rr_threshold) {
+                if (max_comp < rr_threshold && bounces >= min_depth) {
                     float q = min(0.95f, max_comp);
                     if (q < sampler.next_1d()) {
                         break;
