@@ -101,7 +101,8 @@ namespace luminous {
                                                  TransportMode mode = TransportMode::Radiance) {
                 float3 wi{};
                 fresnel.correct_eta(Frame::cos_theta(wo));
-                bool valid = refract(wo, make_float3(0, 0, 1), fresnel.eta, &wi);
+                float3 n = make_float3(0,0,1);
+                bool valid = refract(wo, face_forward(n, wo), fresnel.eta, &wi);
                 if (!valid) {
                     return {};
                 }
@@ -141,13 +142,21 @@ namespace luminous {
                                                  TFresnel fresnel,
                                                  TMicrofacet microfacet = {},
                                                  TransportMode mode = TransportMode::Radiance) {
-                float Fr = fresnel.eval(Frame::cos_theta(wo));
+                float cos_theta_o = Frame::cos_theta(wo);
+                fresnel.correct_eta(cos_theta_o);
+                float Fr = fresnel.eval(Frame::abs_cos_theta(wo));
                 BSDFSample ret;
                 if (uc < Fr) {
-                    ret = SpecularReflection::sample_f(wo, uc, u, data, fresnel, microfacet, mode);
+                    ret = SpecularReflection::sample_f(wo, data, Fr, fresnel.eta);
                     ret.PDF = Fr;
                 } else {
-                    ret = SpecularTransmission::sample_f(wo, uc, u, data, fresnel, microfacet, mode);
+                    float3 wi{};
+                    float3 n = make_float3(0, 0, 1);
+                    bool valid = refract(wo, face_forward(n, wo), fresnel.eta, &wi);
+                    if (!valid) {
+                        return {};
+                    }
+                    ret = SpecularTransmission::sample_f(wo, wi, data, Fr, fresnel.eta, mode);
                     ret.PDF = 1 - Fr;
                 }
                 return ret;

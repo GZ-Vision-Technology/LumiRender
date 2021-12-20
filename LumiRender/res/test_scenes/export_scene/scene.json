@@ -337,7 +337,7 @@
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
-                "material": "mirror_white",
+                "material": "glass_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -378,7 +378,7 @@
             "param": {
                 "fn": "meshes/Cube.001.ply",
                 "subdiv_level": 0,
-                "material": "matte_white",
+                "material": "glass_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -460,21 +460,21 @@
         }
     ],
     "lights": [
-        		{
-        			"type": "Envmap",
-        			"param": {
-        				"transform" : {
-        					"type" : "yaw_pitch",
-        					"param" : {
-        						"yaw" : 0,
-        						"pitch": 0,
-        						"position": [0,0,0]
-        					}
-        				},
-        				"scale": [1,1,1],
-        				"key" : "mirror_white"
-        			}
-        		}
+//        		{
+//        			"type": "Envmap",
+//        			"param": {
+//        				"transform" : {
+//        					"type" : "yaw_pitch",
+//        					"param" : {
+//        						"yaw" : 0,
+//        						"pitch": 0,
+//        						"position": [0,0,0]
+//        					}
+//        				},
+//        				"scale": [1,1,1],
+//        				"key" : "mirror_white"
+//        			}
+//        		}
     ],
     "camera": {
         "type": "ThinLensCamera",
@@ -483,21 +483,21 @@
             "velocity": 20,
             "transform": {
                 "type": "yaw_pitch",
-//                "param": {
-//                    "yaw": 0.0,
-//                    "pitch": 2.5044781608585254e-06,
-//                    "position": [
-//                        0.0,
-//                        1.0,
-//                        -5.238682270050049
-//                    ]
-//                }
-//                ,
                 "param": {
-                    "yaw": 343,
-                    "pitch": -24,
-                    "position":[1.1198,0.809656,-2.28691]
+                    "yaw": 0.0,
+                    "pitch": 2.5044781608585254e-06,
+                    "position": [
+                        0.0,
+                        1.0,
+                        -5.238682270050049
+                    ]
                 }
+//                ,
+//                "param": {
+//                    "yaw": 343,
+//                    "pitch": -24,
+//                    "position":[1.1198,0.809656,-2.28691]
+//                }
             },
             "filter": {
                 //				"type": "LanczosSincFilter",
@@ -524,8 +524,8 @@
     "integrator": {
         "type": "PT",
         "param": {
-            "max_depth": 64,
-            "min_depth": 15,
+            "max_depth": 10,
+            "min_depth": 0,
             "rr_threshold": 1.0
         }
     },

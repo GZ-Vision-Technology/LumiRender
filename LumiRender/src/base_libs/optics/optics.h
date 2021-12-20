@@ -50,6 +50,7 @@ namespace luminous {
         template<typename T>
         LM_XPU inline bool refract(Vector<T, 3> wi, Vector<T, 3> n, T eta, Vector<T, 3> *wt) {
             T cos_theta_i = dot(n, wi);
+            DCHECK(cos_theta_i > 0);
             T sin_theta_i_2 = max<T>(0, 1 - sqr(cos_theta_i));
             T sin_theta_t_2 = sin_theta_i_2 / sqr(eta);
             if (sin_theta_t_2 >= 1) {
@@ -84,27 +85,19 @@ namespace luminous {
             return inv4Pi * (1 - sqr(g)) / (denom * safe_sqrt(denom));
         }
 
-        ND_XPU_INLINE float fresnel_dielectric(float cos_theta_i, float eta) {
-            cos_theta_i = clamp(cos_theta_i, -1, 1);
-            if (cos_theta_i < 0) {
-                eta = 1.f / eta;
-                cos_theta_i = -cos_theta_i;
-            }
+        ND_XPU_INLINE float fresnel_dielectric(float abs_cos_theta_i, float eta) {
+            abs_cos_theta_i = clamp(abs_cos_theta_i, -1, 1);
 
-            float sin_theta_i_2 = 1 - sqr(cos_theta_i);
+            float sin_theta_i_2 = 1 - sqr(abs_cos_theta_i);
             float sin_theta_t_2 = sin_theta_i_2 / sqr(eta);
             if (sin_theta_t_2 >= 1) {
                 return 1.f;
             }
             float cos_theta_t = safe_sqrt(1 - sin_theta_t_2);
 
-            float r_parl = (eta * cos_theta_i - cos_theta_t) / (eta * cos_theta_i + cos_theta_t);
-            float r_perp = (cos_theta_i - eta * cos_theta_t) / (cos_theta_i + eta * cos_theta_t);
+            float r_parl = (eta * abs_cos_theta_i - cos_theta_t) / (eta * abs_cos_theta_i + cos_theta_t);
+            float r_perp = (abs_cos_theta_i - eta * cos_theta_t) / (abs_cos_theta_i + eta * cos_theta_t);
             return (sqr(r_parl) + sqr(r_perp)) / 2;
-        }
-
-        ND_XPU_INLINE float fresnel_dielectric(float cos_theta_i, float eta_i, float eta_t) {
-            return fresnel_dielectric(cos_theta_i, eta_t / eta_i);
         }
 
         ND_XPU_INLINE float fresnel_complex(float cos_theta_i, lstd::Complex<float> eta) {

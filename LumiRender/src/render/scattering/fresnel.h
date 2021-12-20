@@ -22,8 +22,8 @@ namespace luminous {
                 eta = luminous::correct_eta(cos_theta, eta);
             }
 
-            LM_ND_XPU float eval(float cos_theta_i) const {
-                return fresnel_dielectric(cos_theta_i, eta);
+            LM_ND_XPU float eval(float abs_cos_theta_i) const {
+                return fresnel_dielectric(abs_cos_theta_i, eta);
             }
         };
 
