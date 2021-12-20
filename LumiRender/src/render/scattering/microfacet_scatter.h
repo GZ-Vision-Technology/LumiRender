@@ -38,7 +38,7 @@ namespace luminous {
                 if (!same_hemisphere(wi, wo)) {
                     return {0.f};
                 }
-                fresnel.eta = correct_eta(cos_theta_o, fresnel.eta);
+                fresnel.correct_eta(cos_theta_o);
                 return _eval(wo, wi, data, fresnel, microfacet, mode);
             }
 
@@ -64,7 +64,7 @@ namespace luminous {
                 if (!same_hemisphere(wi, wo)) {
                     return {};
                 }
-                fresnel.eta = correct_eta(cos_theta_o, fresnel.eta);
+                fresnel.correct_eta(cos_theta_o);
                 float PDF = microfacet.PDF_wi_reflection(wo, wh);
                 Spectrum val = _eval(wo, wi, data, fresnel, microfacet);
                 return {val, wi, PDF, Reflection, fresnel.eta};
@@ -106,7 +106,7 @@ namespace luminous {
                 if (same_hemisphere(wi, wo)) {
                     return {0.f};
                 }
-                fresnel.eta = correct_eta(cos_theta_o, fresnel.eta);
+                fresnel.correct_eta(cos_theta_o);
                 return _eval(wo, wi, data, fresnel, microfacet, mode);
             }
 
@@ -120,7 +120,7 @@ namespace luminous {
                 }
                 float cos_theta_o = Frame::cos_theta(wo);
                 float cos_theta_i = Frame::cos_theta(wi);
-                fresnel.eta = correct_eta(cos_theta_o, fresnel.eta);
+                fresnel.correct_eta(cos_theta_o);
                 float3 wh = normalize(wo + wi * fresnel.eta);
                 return microfacet.PDF_wi_transmission(wo, wh, wi, fresnel.eta);
             }
@@ -136,7 +136,7 @@ namespace luminous {
                     return {};
                 }
                 float cos_theta_o = Frame::cos_theta(wo);
-                fresnel.eta = correct_eta(cos_theta_o, fresnel.eta);
+                fresnel.correct_eta(cos_theta_o);
                 float PDF = microfacet.PDF_wi_transmission(wo, wh, wi, fresnel.eta);
                 Spectrum val = _eval(wo, wi, data, fresnel, microfacet);
                 return {val, wi, PDF, Transmission, fresnel.eta};

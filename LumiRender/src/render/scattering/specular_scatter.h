@@ -17,32 +17,45 @@ namespace luminous {
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
             LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, TData data,
-                                    TFresnel fresnel,
-                                    TMicrofacet microfacet = {},
-                                    TransportMode mode = TransportMode::Radiance) {
+                                           TFresnel fresnel,
+                                           TMicrofacet microfacet = {},
+                                           TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
             }
 
             template<typename TFresnel, typename TMicrofacet>
             LM_ND_XPU static float PDF(float3 wo, float3 wi,
-                                TFresnel fresnel = {},
-                                TMicrofacet microfacet = {},
-                                TransportMode mode = TransportMode::Radiance) {
+                                       TFresnel fresnel = {},
+                                       TMicrofacet microfacet = {},
+                                       TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
+            }
+
+            /**
+             * @param wo
+             * @param data
+             * @param Fr fresnel function value
+             * @param eta eta must be corrected
+             * @return
+             */
+            template<typename TData, typename eta_type>
+            LM_ND_XPU static BSDFSample sample_f(float3 wo, TData data, eta_type Fr, eta_type eta) {
+                float3 wi = make_float3(-wo.x, -wo.y, wo.z);
+                Spectrum val = Fr * Spectrum(data.color) / Frame::abs_cos_theta(wi);
+                float PDF = 1.f;
+                return {val, wi, PDF, BxDFFlags::SpecRefl, eta};
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
             LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
-                                          TFresnel fresnel,
-                                          TMicrofacet microfacet = {},
-                                          TransportMode mode = TransportMode::Radiance) {
+                                                 TFresnel fresnel,
+                                                 TMicrofacet microfacet = {},
+                                                 TransportMode mode = TransportMode::Radiance) {
 
                 float3 wi = make_float3(-wo.x, -wo.y, wo.z);
                 fresnel.correct_eta(Frame::cos_theta(wo));
-                float Fr = fresnel.eval(Frame::abs_cos_theta(wo));
-                Spectrum val = Fr * data.color / Frame::abs_cos_theta(wi);
-                float PDF = 1.f;
-                return {val, wi, PDF, BxDFFlags::SpecRefl, fresnel.eta};
+                auto Fr = fresnel.eval(Frame::abs_cos_theta(wo));
+                return sample_f(wo, data, Fr, fresnel.eta);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -58,25 +71,25 @@ namespace luminous {
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
             LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, TData data,
-                                    TFresnel fresnel,
-                                    TMicrofacet microfacet = {},
-                                    TransportMode mode = TransportMode::Radiance) {
+                                           TFresnel fresnel,
+                                           TMicrofacet microfacet = {},
+                                           TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
             }
 
             template<typename TFresnel, typename TMicrofacet>
             LM_ND_XPU static float PDF(float3 wo, float3 wi,
-                                TFresnel fresnel = {},
-                                TMicrofacet microfacet = {},
-                                TransportMode mode = TransportMode::Radiance) {
+                                       TFresnel fresnel = {},
+                                       TMicrofacet microfacet = {},
+                                       TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
             LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
-                                          TFresnel fresnel,
-                                          TMicrofacet microfacet = {},
-                                          TransportMode mode = TransportMode::Radiance) {
+                                                 TFresnel fresnel,
+                                                 TMicrofacet microfacet = {},
+                                                 TransportMode mode = TransportMode::Radiance) {
                 float3 wi{};
                 using eta_type = decltype(TFresnel::eta);
                 bool valid = refract(wo, make_float3(0, 0, 1), fresnel.eta, &fresnel.eta, &wi);
