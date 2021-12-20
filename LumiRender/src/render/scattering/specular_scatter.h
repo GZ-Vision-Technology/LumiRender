@@ -38,7 +38,9 @@ namespace luminous {
                                           TransportMode mode = TransportMode::Radiance) {
 
                 float3 wi = make_float3(-wo.x, -wo.y, wo.z);
-                Spectrum val = fresnel.eval(Frame::cos_theta(wi)) * data.color / Frame::abs_cos_theta(wi);
+                fresnel.correct_eta(Frame::cos_theta(wo));
+                float Fr = fresnel.eval(Frame::abs_cos_theta(wo));
+                Spectrum val = Fr * data.color / Frame::abs_cos_theta(wi);
                 float PDF = 1.f;
                 return {val, wi, PDF, BxDFFlags::SpecRefl, fresnel.eta};
             }
@@ -85,7 +87,7 @@ namespace luminous {
                 auto ft = (eta_type(1) - Fr) / Frame::abs_cos_theta(wi);
                 eta_type factor = cal_factor(mode, fresnel.eta);
                 Spectrum val = ft * data.color * factor;
-                return {val, wi, 1, Transmission, fresnel.eta};
+                return {val, wi, 1, SpecTrans, fresnel.eta};
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {

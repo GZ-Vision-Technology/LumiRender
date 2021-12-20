@@ -337,7 +337,7 @@
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
-                "material": "glass_white",
+                "material": "mirror_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {

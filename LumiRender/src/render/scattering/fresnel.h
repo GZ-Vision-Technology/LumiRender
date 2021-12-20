@@ -18,6 +18,10 @@ namespace luminous {
             LM_XPU explicit FresnelDielectric(float eta_t)
                     : eta(eta_t) {}
 
+            LM_XPU void correct_eta(float cos_theta) {
+                eta = luminous::correct_eta(cos_theta, eta);
+            }
+
             LM_ND_XPU float eval(float cos_theta_i) const {
                 return fresnel_dielectric(cos_theta_i, eta);
             }
@@ -31,6 +35,10 @@ namespace luminous {
             LM_XPU FresnelConductor(Spectrum eta, Spectrum k)
                     : eta(eta), k(k) {}
 
+            LM_XPU void correct_eta(float cos_theta) {
+                eta = luminous::correct_eta(cos_theta, eta);
+            }
+
             LM_ND_XPU Spectrum eval(float cos_theta_i) const {
                 return fresnel_complex(cos_theta_i, eta, k);
             }
@@ -38,9 +46,11 @@ namespace luminous {
 
         struct FresnelNoOp {
         public:
-            constexpr static float eta = 1.f;
+            constexpr static float eta{1.f};
 
             LM_XPU FresnelNoOp() = default;
+
+            LM_XPU void correct_eta(float cos_theta) {}
 
             LM_ND_XPU float eval(float) const {
                 return 1.f;

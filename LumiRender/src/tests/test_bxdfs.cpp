@@ -16,7 +16,7 @@ using namespace std;
 
 int main() {
 
-    auto fresnel = FresnelDielectric(1.5);
+    auto fresnel = FresnelDielectric(0.66);
 
     for (int i = 0; i < 90; ++i) {
         float r = radians(float(i));
