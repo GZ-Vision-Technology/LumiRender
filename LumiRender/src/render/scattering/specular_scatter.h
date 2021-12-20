@@ -106,7 +106,7 @@ namespace luminous {
                 if (!valid) {
                     return {};
                 }
-                auto Fr = fresnel.eval(Frame::cos_theta(wi));
+                auto Fr = fresnel.eval(Frame::abs_cos_theta(wo));
                 return sample_f(wo, wi, data, Fr, fresnel.eta, mode);
             }
 

@@ -62,7 +62,8 @@ namespace luminous {
                                   MicrofacetReflection{}, MicrofacetTransmission{});
         }
 
-        class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF, GlassBSDF, RoughGlassBSDF> {
+        class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF,
+                GlassBSDF, RoughGlassBSDF, GlassBSDFForTest> {
         private:
             using Variant::Variant;
         public:

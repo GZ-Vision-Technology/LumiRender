@@ -539,8 +539,8 @@
         }
     },
     "output" : {
-        "fn":"cornell-box-glass-fresnel.png",
-        "dispatch_num" : 0,
+        "fn":"cornell-box-glass-blend.png",
+        "dispatch_num" : 1024,
         "frame_per_dispatch": 1
     }
 }
