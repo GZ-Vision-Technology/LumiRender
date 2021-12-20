@@ -58,6 +58,7 @@ namespace luminous {
             }
             T cos_theta_t = safe_sqrt(1 - sin_theta_t_2);
             *wt = -wi / eta + (cos_theta_i / eta - cos_theta_t) * n;
+            CHECK_UNIT_VEC(*wt);
             return true;
         }
 

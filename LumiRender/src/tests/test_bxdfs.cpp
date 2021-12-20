@@ -29,7 +29,8 @@ int main() {
     cout << Frame::sin_theta(wt) << endl;
     cout << Frame::sin_theta(wo) << endl;
 
-    cout << Frame::sin_theta(wt) /Frame::sin_theta(wo)<< endl;
+    cout << fresnel_dielectric(0.001, 1.2) << endl;
+//    cout << fresnel_dielectric(-0.5, 1.5) << endl;
 
 
 //    auto fresnel = FresnelDielectric(1.5);
