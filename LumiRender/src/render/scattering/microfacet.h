@@ -26,6 +26,12 @@ namespace luminous {
         public:
             LM_XPU Microfacet() = default;
 
+            LM_XPU explicit Microfacet(float alpha)
+                    : _alpha_x(alpha),
+                      _alpha_y(alpha) {
+                LM_ASSERT(_type != None, "unknown type %d", int(_type));
+            }
+
             LM_XPU Microfacet(float alpha_x, float alpha_y)
                     : _alpha_x(alpha_x),
                       _alpha_y(alpha_y) {
@@ -272,7 +278,7 @@ namespace luminous {
             }
 
             LM_ND_XPU float PDF_wi_transmission(float3 wo, float3 wh, float3 wi, float eta) const {
-                return PDF_wi_transmission(PDF_wh(wh, wo), wo, wh, wi, eta);
+                return PDF_wi_transmission(PDF_wh(wo, wh), wo, wh, wi, eta);
             }
 
             template<typename T>

@@ -50,9 +50,9 @@ namespace luminous {
             */
             template<typename TFresnel, typename TMicrofacet>
             LM_ND_XPU float _PDF(float3 wo, float3 wi,
-                                TFresnel fresnel = {},
-                                TMicrofacet microfacet = {},
-                                TransportMode mode = TransportMode::Radiance) const {
+                                 TFresnel fresnel = {},
+                                 TMicrofacet microfacet = {},
+                                 TransportMode mode = TransportMode::Radiance) const {
                 float3 wh = normalize(wo + wi);
                 return microfacet.PDF_wi_reflection(wo, wh);
             }
@@ -109,7 +109,8 @@ namespace luminous {
                 float3 wh = normalize(wo + wi * fresnel.eta);
                 wh = face_forward(wh, make_float3(0, 0, 1));
                 eta_type F = fresnel.eval(abs_dot(wo, wh));
-                eta_type tr = microfacet.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i, cos_theta_o, fresnel.eta, mode);
+                eta_type tr = microfacet.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i, cos_theta_o, fresnel.eta,
+                                              mode);
                 return tr * data.color;
             }
 
@@ -138,6 +139,7 @@ namespace luminous {
                 float cos_theta_i = Frame::cos_theta(wi);
                 fresnel.correct_eta(cos_theta_o);
                 float3 wh = normalize(wo + wi * fresnel.eta);
+                wh = face_forward(wh, make_float3(0, 0, 1));
                 return microfacet.PDF_wi_transmission(wo, wh, wi, fresnel.eta);
             }
 

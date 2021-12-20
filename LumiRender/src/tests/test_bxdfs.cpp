@@ -9,60 +9,31 @@
 #include "render/scattering/bsdfs.h"
 #include "render/scattering/fresnel.h"
 #include "render/scattering/diffuse_scatter.h"
+#include "render/samplers/independent.cpp"
 
 using namespace luminous;
 using namespace std;
 
+void test_microfacet() {
+    PCGSampler sampler{1};
 
-int main() {
+    Microfacet<GGX> microfacet{0.1};
 
-    float3 wo = make_float3(0.12419761, -0.462170839, -0.878050804);
-    float3 wi = make_float3(-0.186296403, 0.693256259, -0.696196556);
-    float3 wt{};
-    float eta = 0.66666;
-    float3 n = make_float3(0,0,1);
+    float3 wo = make_float3(-0.889549971, -0.295042098, 0.348785102);
+    float3 wi = make_float3(0.558969319, 0.284566134, -0.778829575);
 
-    bool valid = refract(wo, -n, eta, &wt);
-
-    cout << wt.to_string().c_str() << endl;
-
-    cout << Frame::sin_theta(wt) << endl;
-    cout << Frame::sin_theta(wo) << endl;
-
-    cout << fresnel_dielectric(0.001, 1.2) << endl;
-//    cout << fresnel_dielectric(-0.5, 1.5) << endl;
-
-
-//    auto fresnel = FresnelDielectric(1.5);
-//
-//    for (int i = 0; i < 90; ++i) {
-//        float r = radians(float(i));
-//        float cos_theta = std::cos(r);
-//        float fr = fresnel.eval(-cos_theta);
-//        cout << "cos :" << cos_theta << " deg:" << i << " fr :" <<fr << endl;
-//    }
-
-
-//    DiffuseBSDF bsdf(Spectrum{1.f}, MicrofacetNone{}, FresnelNoOp{}, DiffuseReflection{});
-//
-//    float3 wi = make_float3(0,1,0);
-//    float3 wo = make_float3(0,1,0);
-//    Spectrum color{1.f};
-
-//    bsdf.eval(wo, wi);
-
-//    bsdf.for_each([&](auto bxdf) {
-//        cout << bxdf.match_flags(BxDFFlags::Transmission);
-//        auto r = bxdf.eval(wo, wi, color, FresnelNoOp{}, MicrofacetNone{});
-//        cout << r.to_string() << endl;
-//        return true;
-//    });
+    auto bsdf = create_rough_glass_bsdf(make_float4(1.), 1.5, 0.1, 0.1);
 
 //    auto ret = bsdf.eval(wo, wi);
 
-//    using Specular = BxDFs<SpecularReflection, SpecularTransmission>;
+    auto pdf = bsdf.PDF(wo, wi);
 
-//    cout << sizeof(zt) << endl;
+    int i = 0;
+}
+
+int main() {
+
+    test_microfacet();
 
     return 0;
 }
