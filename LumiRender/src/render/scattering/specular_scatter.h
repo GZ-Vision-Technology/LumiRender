@@ -85,22 +85,28 @@ namespace luminous {
                 return 0.f;
             }
 
+            template<typename TData, typename eta_type>
+            LM_ND_XPU static BSDFSample sample_f(float3 wo, float3 wi, TData data, eta_type Fr, eta_type eta,
+                                                 TransportMode mode = TransportMode::Radiance) {
+                auto ft = (eta_type(1) - Fr) / Frame::abs_cos_theta(wi);
+                eta_type factor = cal_factor(mode, eta);
+                Spectrum val = ft * data.color * factor;
+                return {val, wi, 1, SpecTrans, eta};
+            }
+
             template<typename TData, typename TFresnel, typename TMicrofacet>
             LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
                                                  TFresnel fresnel,
                                                  TMicrofacet microfacet = {},
                                                  TransportMode mode = TransportMode::Radiance) {
                 float3 wi{};
-                using eta_type = decltype(TFresnel::eta);
-                bool valid = refract(wo, make_float3(0, 0, 1), fresnel.eta, &fresnel.eta, &wi);
+                fresnel.correct_eta(Frame::cos_theta(wo));
+                bool valid = refract(wo, make_float3(0, 0, 1), fresnel.eta, &wi);
                 if (!valid) {
                     return {};
                 }
                 auto Fr = fresnel.eval(Frame::cos_theta(wi));
-                auto ft = (eta_type(1) - Fr) / Frame::abs_cos_theta(wi);
-                eta_type factor = cal_factor(mode, fresnel.eta);
-                Spectrum val = ft * data.color * factor;
-                return {val, wi, 1, SpecTrans, fresnel.eta};
+                return sample_f(wo, wi, data, Fr, fresnel.eta, mode);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
