@@ -73,6 +73,9 @@ namespace luminous {
                                           TFresnel fresnel, TMicrofacet microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wh = microfacet.sample_wh(wo, u);
+                if (dot(wh, wo) < 0) {
+                    return {};
+                }
                 float3 wi = reflect(wo, wh);
                 float cos_theta_o = Frame::cos_theta(wo);
                 if (!same_hemisphere(wi, wo)) {
@@ -107,6 +110,9 @@ namespace luminous {
                 float cos_theta_i = Frame::cos_theta(wi);
                 using eta_type = decltype(fresnel.eta);
                 float3 wh = normalize(wo + wi * fresnel.eta);
+                if (dot(wo, wh) * dot(wi, wh) > 0) {
+                    return Spectrum(0);
+                }
                 wh = face_forward(wh, make_float3(0, 0, 1));
                 eta_type F = fresnel.eval(abs_dot(wo, wh));
                 eta_type tr = microfacet.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i, cos_theta_o, fresnel.eta,
@@ -139,6 +145,9 @@ namespace luminous {
                 float cos_theta_i = Frame::cos_theta(wi);
                 fresnel.correct_eta(cos_theta_o);
                 float3 wh = normalize(wo + wi * fresnel.eta);
+                if (dot(wo, wh) * dot(wi, wh) > 0) {
+                    return 0.f;
+                }
                 wh = face_forward(wh, make_float3(0, 0, 1));
                 return microfacet.PDF_wi_transmission(wo, wh, wi, fresnel.eta);
             }
@@ -159,6 +168,9 @@ namespace luminous {
                                           TFresnel fresnel, TMicrofacet microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wh = microfacet.sample_wh(wo, u);
+                if (dot(wh, wo) < 0) {
+                    return {};
+                }
                 float3 wi{};
                 float cos_theta_o = Frame::cos_theta(wo);
                 fresnel.correct_eta(cos_theta_o);
