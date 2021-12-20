@@ -24,11 +24,9 @@ void test_microfacet() {
 
     auto bsdf = create_rough_glass_bsdf(make_float4(1.), 1.5, 0.1, 0.1);
 
-//    auto ret = bsdf.eval(wo, wi);
+    auto ret = bsdf.sample_f(wo, 0.1, sampler.next_2d());
 
-    auto pdf = bsdf.PDF(wo, wi);
-
-    int i = 0;
+    int i = 0 ;
 }
 
 int main() {
