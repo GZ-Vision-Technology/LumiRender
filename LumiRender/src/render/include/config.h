@@ -134,6 +134,7 @@ namespace luminous {
 
             LM_NODISCARD SHA1 hash_key() const {
                 std::string str = fn +
+                                  "type:" + type() +
                                   ",val:" + val.to_string() +
                                   ",scale:" + scale.to_string() +
                                   "color space:" + std::to_string(int(color_space));

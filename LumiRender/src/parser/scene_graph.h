@@ -63,6 +63,21 @@ namespace luminous {
                 _tex_configs = tcs;
             }
 
+            LM_NODISCARD const TextureConfig& tex_config(int index) const {
+                return _tex_configs.at(index);
+            }
+
+            LM_NODISCARD size_t cal_tex_index(const TextureConfig &tc) {
+                for (int i = 0; i < _tex_configs.size(); ++i) {
+                    const auto& elm = _tex_configs.at(i);
+                    if (elm.hash_key() == tc.hash_key()) {
+                        return i;
+                    }
+                }
+                _tex_configs.push_back(tc);
+                return _tex_configs.size();
+            }
+
             Model create_shape(const ShapeConfig &config);
 
             void create_shape_instance(const ShapeConfig &config);
