@@ -14,7 +14,7 @@ namespace luminous {
             const Texture& eta_tex = scene_data->get_texture(_eta_idx);
             float4 color = tex.eval(ctx);
             float eta = eta_tex.eval(ctx).x;
-            auto glass_bsdf = create_rough_glass_bsdf(color, eta, 0.1, 0.1);
+            auto glass_bsdf = create_glass_bsdf(color, eta);
             return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{glass_bsdf}};
         }
     }

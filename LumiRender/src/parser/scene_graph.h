@@ -67,7 +67,7 @@ namespace luminous {
                 return _tex_configs.at(index);
             }
 
-            LM_NODISCARD size_t cal_tex_index(const TextureConfig &tc) {
+            LM_NODISCARD size_t try_push(const TextureConfig &tc) {
                 for (int i = 0; i < _tex_configs.size(); ++i) {
                     const auto& elm = _tex_configs.at(i);
                     if (elm.hash_key() == tc.hash_key()) {

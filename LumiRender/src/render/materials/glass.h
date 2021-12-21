@@ -26,7 +26,7 @@ namespace luminous {
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(explicit GlassMaterial(const MaterialConfig &mc)
-                    : GlassMaterial(mc.color_tex.tex_idx, mc.eta_tex.tex_idx) {})
+                    : GlassMaterial(mc.color_tex.tex_idx(), mc.eta_tex.tex_idx()) {})
         };
     }
 }

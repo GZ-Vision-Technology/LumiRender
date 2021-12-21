@@ -273,7 +273,7 @@ namespace luminous {
             std::vector<TextureConfig> ret;
             for (const auto &texture : textures) {
                 TextureConfig config = parse_texture(ParameterSet(texture));
-                config.tex_idx = ret.size();
+                config.fill_tex_idx(ret.size());
                 ret.push_back(config);
             }
             return ret;
@@ -287,7 +287,8 @@ namespace luminous {
                 return ret;
             }
             if constexpr(N == 4) {
-
+                ret.val = ps.as_float4(make_float4(0.f));
+                ret.fill_tex_idx(scene_graph->try_push(ret));
             }
             return ret;
         }

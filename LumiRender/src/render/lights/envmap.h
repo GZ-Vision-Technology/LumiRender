@@ -26,7 +26,7 @@ namespace luminous {
         public:
             CPU_ONLY(explicit Envmap(const LightConfig &config)
                     : BaseBinder<LightBase>(LightType::Infinite),
-                      _tex_idx(config.texture_config.tex_idx),
+                      _tex_idx(config.texture_config.tex_idx()),
                       _scene_center(config.scene_box.center()),
                       _scene_diameter(config.scene_box.radius() * 2.f),
                       _distribution_idx(config.distribution_idx) {

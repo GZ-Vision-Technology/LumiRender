@@ -110,12 +110,29 @@ namespace luminous {
         };
 
         struct TextureConfig : Config {
+        private:
+            index_t _tex_idx{invalid_uint32};
+        public:
             LM_NODISCARD bool is_image() const {
                 return !fn.empty();
             }
 
+            LM_NODISCARD index_t tex_idx() const {
+                return _tex_idx;
+            }
+
+            void fill_tex_idx(index_t index) {
+                if (is_valid_index(_tex_idx)) {
+                    return;
+                }
+                _tex_idx = index;
+            }
+
+            void set_tex_idx(index_t index) {
+                _tex_idx = index;
+            }
+
             ColorSpace color_space = LINEAR;
-            index_t tex_idx{invalid_uint32};
 
             float3 scale{make_float3(1.f)};
 
@@ -137,7 +154,7 @@ namespace luminous {
                                   "type:" + type() +
                                   ",val:" + val.to_string() +
                                   ",scale:" + scale.to_string() +
-                                  "color space:" + std::to_string(int(color_space));
+                                  ",color space:" + std::to_string(int(color_space));
                 return SHA1(str);
             }
         };
@@ -180,37 +197,37 @@ namespace luminous {
                     return tex_config.name == color_tex.name;
                 });
                 DCHECK(idx != -1);
-                color_tex.tex_idx = idx;
+                color_tex.fill_tex_idx(idx);
 
                 if (type() == full_type("AssimpMaterial")) {
                     int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config == color_tex;
                     });
                     if (index == -1) {
-                        color_tex.tex_idx = tex_configs.size();
+                        color_tex.set_tex_idx(tex_configs.size());
                         tex_configs.push_back(color_tex);
                     } else {
-                        color_tex.tex_idx = index;
+                        color_tex.set_tex_idx(index);
                     }
 
                     index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config == specular_tex;
                     });
                     if (index == -1) {
-                        specular_tex.tex_idx = tex_configs.size();
+                        specular_tex.fill_tex_idx(tex_configs.size());
                         tex_configs.push_back(specular_tex);
                     } else {
-                        specular_tex.tex_idx = index;
+                        specular_tex.fill_tex_idx(index);
                     }
 
                     index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config == normal_tex;
                     });
                     if (index == -1) {
-                        normal_tex.tex_idx = tex_configs.size();
+                        normal_tex.fill_tex_idx(tex_configs.size());
                         tex_configs.push_back(normal_tex);
                     } else {
-                        normal_tex.tex_idx = index;
+                        normal_tex.fill_tex_idx(index);
                     }
 
                 } else if (type() == full_type("MatteMaterial")) {
@@ -237,7 +254,7 @@ namespace luminous {
                         return tex_config.name == eta_tex.name;
                     });
                     DCHECK(idx != -1);
-                    eta_tex.tex_idx = idx;
+                    eta_tex.fill_tex_idx(idx);
                 }
             }
         };
@@ -313,7 +330,7 @@ namespace luminous {
                     return tex_config.name == texture_config.name;
                 });
                 texture_config = tex_configs[idx];
-                texture_config.tex_idx = idx;
+                texture_config.fill_tex_idx(idx);
             }
         };
     }
