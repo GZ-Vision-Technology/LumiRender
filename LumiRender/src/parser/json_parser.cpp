@@ -288,9 +288,15 @@ namespace luminous {
             }
             if constexpr(N == 4) {
                 ret.val = ps.as_float4(make_float4(0.f));
-                ret.set_full_type("ConstantTexture");
-                ret.fill_tex_idx(scene_graph->try_push(ret));
+            } else if constexpr(N == 3) {
+                ret.val = make_float4(ps.as_float3(), 0.f);
+            } else if constexpr(N == 2) {
+                ret.val = make_float4(ps.as_float2(), 0.f, 0.f);
+            } else if constexpr(N == 1) {
+                ret.val = make_float4(ps.as_float(), 0, 0, 0);
             }
+            ret.set_full_type("ConstantTexture");
+            ret.fill_tex_idx(scene_graph->try_push(ret));
             return ret;
         }
 
