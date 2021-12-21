@@ -93,6 +93,11 @@ namespace luminous {
             return p;
         }
 
+        ND_XPU_INLINE float remapping(float a, float low, float high) {
+            DCHECK(a >= low && a < high)
+            return (a - low) / (high - low);
+        }
+
         template <typename Float = float>
         class [[maybe_unused]] VarianceEstimator {
         private:

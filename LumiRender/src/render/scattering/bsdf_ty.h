@@ -6,6 +6,7 @@
 #pragma once
 
 #include "base_libs/optics/rgb.h"
+#include "base_libs/sampling/sampling.h"
 #include "base.h"
 
 namespace luminous {
@@ -125,6 +126,7 @@ namespace luminous {
                 }
 
                 int comp = std::min((int) std::floor(uc * num), num - 1);
+                uc = remapping(uc, float(comp) / num, float(comp + 1) / num);
                 int count = 0;
                 BSDFSample ret;
                 for_each([&](auto bxdf) {
