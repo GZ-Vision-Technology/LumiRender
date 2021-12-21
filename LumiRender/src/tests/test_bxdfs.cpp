@@ -22,9 +22,9 @@ void test_microfacet() {
     float3 wo = make_float3(-0.889549971, -0.295042098, 0.348785102);
     float3 wi = make_float3(0.558969319, 0.284566134, -0.778829575);
 
-    auto bsdf = create_rough_glass_bsdf(make_float4(1.), 1.5, 0.1, 0.1);
-
-    auto ret = bsdf.sample_f(wo, 0.1, sampler.next_2d());
+    auto bsdf = create_rough_glass_bsdf(make_float4(1.), 1.5, 0.01, 0.01);
+    sampler.next_2d();
+    auto ret = bsdf.sample_f(wo, 0.9, sampler.next_2d());
 
     int i = 0 ;
 }
