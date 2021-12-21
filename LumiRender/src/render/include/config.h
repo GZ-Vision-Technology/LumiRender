@@ -254,10 +254,10 @@ namespace luminous {
 //                    DCHECK(idx != -1);
 //                    roughness_tex.tex_idx = idx;
 
+                    // todo may be avoid to find
                     idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config.name == eta_tex.name;
                     });
-                    DCHECK(idx != -1);
                     eta_tex.fill_tex_idx(idx);
                 }
             }

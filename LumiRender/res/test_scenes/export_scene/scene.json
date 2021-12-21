@@ -126,7 +126,7 @@
             "name": "glass_white",
             "param": {
                 "color": "mirror_white",
-                "eta": "glass_eta"
+                "eta": 1.9
             }
         }
     ],

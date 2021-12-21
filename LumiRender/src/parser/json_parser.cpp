@@ -260,8 +260,7 @@ namespace luminous {
                     return val.as_float4();
                 }
             }
-            DCHECK(0);
-            return make_float4(1.f);
+            return make_float4(0.f);
         }
 
         TextureConfig parse_texture(const ParameterSet &ps) {
