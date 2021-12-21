@@ -1,64 +1,64 @@
 {
     "textures": [
-        {
-            "type": "ConstantTexture",
-            "name": "matte_white_constant",
-            "param": {
-                "val": [
-                    0.7250000238418579,
-                    0.7099999785423279,
-                    0.6800000071525574,
-                    1.0
-                ],
-                "color_space": "SRGB"
-            }
-        },
-        {
-            "type": "ConstantTexture",
-            "name": "matte_red_constant",
-            "param": {
-                "val": [
-                    0.6299999952316284,
-                    0.06499999761581421,
-                    0.05000000074505806,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "ConstantTexture",
-            "name": "matte_green_constant",
-            "param": {
-                "val": [
-                    0.14000000059604645,
-                    0.44999998807907104,
-                    0.09099999815225601,
-                    1.0
-                ],
-                "color_space": "SRGB"
-            }
-        },
-        {
-            "type": "ConstantTexture",
-            "name": "mirror_white",
-            "param": {
-                "val": [
-                    1,
-                    1,
-                    1,
-                    0
-                ],
-                "color_space": "SRGB"
-            }
-        },
-        {
-            "type": "ConstantTexture",
-            "name": "glass_eta",
-            "param": {
-                "val": 1.5,
-                "color_space": "LINEAR"
-            }
-        }
+//        {
+//            "type": "ConstantTexture",
+//            "name": "matte_white_constant",
+//            "param": {
+//                "val": [
+//                    0.7250000238418579,
+//                    0.7099999785423279,
+//                    0.6800000071525574,
+//                    1.0
+//                ],
+//                "color_space": "SRGB"
+//            }
+//        },
+//        {
+//            "type": "ConstantTexture",
+//            "name": "matte_red_constant",
+//            "param": {
+//                "val": [
+//                    0.6299999952316284,
+//                    0.06499999761581421,
+//                    0.05000000074505806,
+//                    1.0
+//                ]
+//            }
+//        },
+//        {
+//            "type": "ConstantTexture",
+//            "name": "matte_green_constant",
+//            "param": {
+//                "val": [
+//                    0.14000000059604645,
+//                    0.44999998807907104,
+//                    0.09099999815225601,
+//                    1.0
+//                ],
+//                "color_space": "SRGB"
+//            }
+//        },
+//        {
+//            "type": "ConstantTexture",
+//            "name": "mirror_white",
+//            "param": {
+//                "val": [
+//                    1,
+//                    1,
+//                    1,
+//                    0
+//                ],
+//                "color_space": "SRGB"
+//            }
+//        },
+//        {
+//            "type": "ConstantTexture",
+//            "name": "glass_eta",
+//            "param": {
+//                "val": 1.5,
+//                "color_space": "LINEAR"
+//            }
+//        }
 //    ,
 //        {
 //            "name" : "envmap",
@@ -74,7 +74,12 @@
             "type": "MatteMaterial",
             "name": "matte_white",
             "param": {
-                "color": "matte_white_constant"
+                "color": [
+                    0.7250000238418579,
+                    0.7099999785423279,
+                    0.6800000071525574,
+                    1.0
+                ]
             }
         },
         {
@@ -94,14 +99,24 @@
             "type": "MatteMaterial",
             "name": "matte_green",
             "param": {
-                "color": "matte_green_constant"
+                "color": [
+                    0.14000000059604645,
+                    0.44999998807907104,
+                    0.09099999815225601,
+                    1.0
+                ]
             }
         },
         {
             "type": "MatteMaterial",
             "name": "matte_white_sigma",
             "param": {
-                "color": "matte_white_constant",
+                "color": [
+                    0.7250000238418579,
+                    0.7099999785423279,
+                    0.6800000071525574,
+                    1.0
+                ],
                 "sigma": 9.9
             }
         },
@@ -109,7 +124,12 @@
             "type": "MatteMaterial",
             "name": "matte_white_sigma",
             "param": {
-                "color": "matte_white_constant",
+                "color": [
+                    0.7250000238418579,
+                    0.7099999785423279,
+                    0.6800000071525574,
+                    1.0
+                ],
                 "sigma": 9.9
             }
         },
@@ -117,7 +137,12 @@
             "type": "MirrorMaterial",
             "name": "mirror_white",
             "param": {
-                "color": "mirror_white",
+                "color": [
+                    1,
+                    1,
+                    1,
+                    0
+                ],
                 "sigma": 9.9
             }
         },
@@ -125,7 +150,13 @@
             "type": "GlassMaterial",
             "name": "glass_white",
             "param": {
-                "color": "mirror_white",
+                "color": [
+                    1,
+                    1,
+                    1,
+                    0
+                ],
+                "roughness" : [0.002,0.002],
                 "eta": 1.9
             }
         }

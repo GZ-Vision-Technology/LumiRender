@@ -235,30 +235,21 @@ namespace luminous {
                     }
 
                 } else if (type() == full_type("MatteMaterial")) {
-//                    auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-//                        return tex_config.name == color_tex.name;
-//                    });
-//                    DCHECK(idx != -1);
-//                    color_tex.tex_idx = idx;
 
                 } else if (type() == full_type("GlassMaterial")) {
-//                    auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-//                        return tex_config.name == color_tex.name;
-//                    });
-//                    DCHECK(idx != -1);
-//                    color_tex.tex_idx = idx;
 
-//                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-//                        return tex_config.name == roughness_tex.name;
-//                    });
-//                    DCHECK(idx != -1);
-//                    roughness_tex.tex_idx = idx;
+                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+                        return tex_config.name == roughness_tex.name;
+                    });
+                    roughness_tex.fill_tex_idx(idx);
+                    DCHECK(roughness_tex.valid())
 
                     // todo may be avoid to find
                     idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config.name == eta_tex.name;
                     });
                     eta_tex.fill_tex_idx(idx);
+                    DCHECK(eta_tex.valid())
                 }
             }
         };
