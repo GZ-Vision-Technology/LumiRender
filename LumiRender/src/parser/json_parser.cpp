@@ -247,6 +247,23 @@ namespace luminous {
             }
         }
 
+        LM_NODISCARD float4 construct_float4(const ParameterSet &val) {
+            if (val.data().is_number()) {
+                return make_float4(val.as_float(1.f), 0, 0, 0);
+            } else if (val.data().is_array()) {
+                auto size = val.data().size();
+                if (size == 2) {
+                    return make_float4(val.as_float2(make_float2(1.f)), 0, 0);
+                } else if (size == 3) {
+                    return make_float4(val.as_float3(make_float3(1.f)), 0);
+                } else if (size == 4) {
+                    return val.as_float4();
+                }
+            }
+            DCHECK(0);
+            return make_float4(1.f);
+        }
+
         TextureConfig parse_texture(const ParameterSet &ps) {
             std::string type;
             type = ps["type"].as_string("ConstantTexture");
@@ -254,13 +271,13 @@ namespace luminous {
             auto param = ps["param"];
             tc.set_full_type(type);
             if (type == "ConstantTexture") {
-                tc.val = param["val"].as_float4(make_float4(1.f));
+                tc.val = construct_float4(param["val"]);
             } else {
                 tc.fn = param["fn"].as_string();
             }
             tc.name = ps["name"].as_string();
             tc.scale = param["scale"].as_float3(make_float3(1.f));
-            string color_space = param["color_space"].as_string("SRGB");
+            string color_space = param["color_space"].as_string("LINEAR");
             if (color_space == "SRGB") {
                 tc.color_space = SRGB;
             } else {
@@ -279,22 +296,13 @@ namespace luminous {
             return ret;
         }
 
-        template<int N = 1>
         TextureConfig process_attr(const ParameterSet &ps, SceneGraph *scene_graph) {
             TextureConfig ret;
             if (ps.data().is_string()) {
                 ret.name = ps.as_string();
                 return ret;
             }
-            if constexpr(N == 4) {
-                ret.val = ps.as_float4(make_float4(0.f));
-            } else if constexpr(N == 3) {
-                ret.val = make_float4(ps.as_float3(), 0.f);
-            } else if constexpr(N == 2) {
-                ret.val = make_float4(ps.as_float2(), 0.f, 0.f);
-            } else if constexpr(N == 1) {
-                ret.val = make_float4(ps.as_float(), 0, 0, 0);
-            }
+            ret.val = construct_float4(ps);
             ret.set_full_type("ConstantTexture");
             ret.fill_tex_idx(scene_graph->try_push(ret));
             return ret;
@@ -307,12 +315,12 @@ namespace luminous {
             ret.set_full_type(type);
             auto param = ps["param"];
 
-            ret.color_tex = process_attr<4>(param["color"], scene_graph);
+            ret.color_tex = process_attr(param["color"], scene_graph);
             if (type == "MatteMaterial") {
                 ret.sigma = param["sigma"].as_float(0.f);
             } else if (type == "GlassMaterial") {
-                ret.eta_tex = process_attr<1>(param["eta"], scene_graph);
-                ret.roughness_tex = process_attr<2>(param["roughness"], scene_graph);
+                ret.eta_tex = process_attr(param["eta"], scene_graph);
+                ret.roughness_tex = process_attr(param["roughness"], scene_graph);
             } else if (type == "MirrorMaterial") {
 
             }

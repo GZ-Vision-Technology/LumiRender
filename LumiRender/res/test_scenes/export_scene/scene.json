@@ -46,7 +46,7 @@
                     1,
                     1,
                     1,
-                    1.0
+                    0
                 ],
                 "color_space": "SRGB"
             }
@@ -55,12 +55,7 @@
             "type": "ConstantTexture",
             "name": "glass_eta",
             "param": {
-                "val": [
-                    1.5,
-                    1.5,
-                    1.5,
-                    1.0
-                ],
+                "val": 1.5,
                 "color_space": "LINEAR"
             }
         }
