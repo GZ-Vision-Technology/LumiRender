@@ -279,18 +279,32 @@ namespace luminous {
             return ret;
         }
 
-        MaterialConfig parse_material(const ParameterSet &ps) {
+        template<int N = 1>
+        TextureConfig process_attr(const ParameterSet &ps, SceneGraph *scene_graph) {
+            TextureConfig ret;
+            if (ps.data().is_string()) {
+                ret.name = ps.as_string();
+                return ret;
+            }
+            if constexpr(N == 4) {
+
+            }
+            return ret;
+        }
+
+        MaterialConfig parse_material(const ParameterSet &ps, SceneGraph *scene_graph) {
             std::string type;
             type = ps["type"].as_string("MatteMaterial");
             MaterialConfig ret;
             ret.set_full_type(type);
             auto param = ps["param"];
-            ret.color_tex.name = param["color"].as_string();
+
+            ret.color_tex = process_attr<4>(param["color"], scene_graph);
             if (type == "MatteMaterial") {
                 ret.sigma = param["sigma"].as_float(0.f);
             } else if (type == "GlassMaterial") {
-                ret.eta_tex.name = param["eta"].as_string();
-                ret.roughness_tex.name = param["roughness"].as_string();
+                ret.eta_tex = process_attr<1>(param["eta"], scene_graph);
+                ret.roughness_tex = process_attr<2>(param["roughness"], scene_graph);
             } else if (type == "MirrorMaterial") {
 
             }
@@ -298,10 +312,10 @@ namespace luminous {
             return ret;
         }
 
-        std::vector<MaterialConfig> parse_materials(const DataWrap &materials) {
+        std::vector<MaterialConfig> parse_materials(const DataWrap &materials, SceneGraph *scene_graph) {
             std::vector<MaterialConfig> ret;
             for (const auto &material : materials) {
-                ret.push_back(parse_material(ParameterSet(material)));
+                ret.push_back(parse_material(ParameterSet(material), scene_graph));
             }
             return ret;
         }
@@ -332,8 +346,8 @@ namespace luminous {
             scene_graph->sampler_config = parse_sampler(ParameterSet(_data["sampler"]));
             scene_graph->light_configs = parse_lights(_data.value("lights", DataWrap()));
             scene_graph->light_sampler_config = parse_light_sampler(ParameterSet(_data["light_sampler"]));
-            scene_graph->tex_configs = parse_textures(_data["textures"]);
-            scene_graph->material_configs = parse_materials(_data["materials"]);
+            scene_graph->set_tex_configs(move(parse_textures(_data["textures"])));
+            scene_graph->material_configs = parse_materials(_data["materials"], scene_graph.get());
             scene_graph->integrator_config = parse_integrator(ParameterSet(_data["integrator"]));
             scene_graph->output_config = parse_output(ParameterSet(_data["output"]));
             scene_graph->create_shapes();

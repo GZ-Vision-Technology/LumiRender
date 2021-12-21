@@ -18,6 +18,7 @@ namespace luminous {
         private:
             Context *_context;
             std::map <string, uint32_t> _key_to_idx;
+            vector <TextureConfig> _tex_configs;
         public:
             SamplerConfig sampler_config;
             SensorConfig sensor_config;
@@ -27,7 +28,6 @@ namespace luminous {
             LightSamplerConfig light_sampler_config;
             vector <Model> model_list;
             vector <ModelInstance> instance_list;
-            vector <TextureConfig> tex_configs;
             vector <MaterialConfig> material_configs;
             OutputConfig output_config;
 
@@ -54,6 +54,14 @@ namespace luminous {
 
         public:
             explicit SceneGraph(Context *context) : _context(context) {}
+
+            LM_NODISCARD const vector<TextureConfig>& tex_configs() const {
+                return _tex_configs;
+            }
+
+            void set_tex_configs(vector<TextureConfig>&& tcs) {
+                _tex_configs = tcs;
+            }
 
             Model create_shape(const ShapeConfig &config);
 

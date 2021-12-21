@@ -11,6 +11,7 @@
 #include <string>
 #include "core/logging.h"
 #include "util/image.h"
+#include "core/hash.h"
 #include "base_libs/lstd/lstd.h"
 #include "base_libs/sampling/distribution.h"
 
@@ -130,6 +131,14 @@ namespace luminous {
             LM_NODISCARD bool has_image() const {
                 return image_idx != invalid_uint32;
             }
+
+            LM_NODISCARD SHA1 hash_key() const {
+                std::string str = fn +
+                                  ",val:" + val.to_string() +
+                                  ",scale:" + scale.to_string() +
+                                  "color space:" + std::to_string(int(color_space));
+                return SHA1(str);
+            }
         };
 
         LM_ND_INLINE bool operator==(const TextureConfig &t1, const TextureConfig &t2) {
@@ -146,7 +155,6 @@ namespace luminous {
                 return config == texture_config;
             });
         }
-
 
 
         struct MaterialConfig : Config {
@@ -174,7 +182,7 @@ namespace luminous {
                 color_tex.tex_idx = idx;
 
                 if (type() == full_type("AssimpMaterial")) {
-                    int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config){
+                    int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config == color_tex;
                     });
                     if (index == -1) {
@@ -184,7 +192,7 @@ namespace luminous {
                         color_tex.tex_idx = index;
                     }
 
-                    index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config){
+                    index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config == specular_tex;
                     });
                     if (index == -1) {
@@ -194,7 +202,7 @@ namespace luminous {
                         specular_tex.tex_idx = index;
                     }
 
-                    index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config){
+                    index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                         return tex_config == normal_tex;
                     });
                     if (index == -1) {

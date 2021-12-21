@@ -115,7 +115,6 @@ namespace luminous {
             TASK_TAG("convert scene data")
             index_t vert_offset = 0u;
             index_t tri_offset = 0u;
-            vector<TextureConfig> tex_configs;
             index_t material_count = scene_graph->material_configs.size();
             reserve_geometry(scene_graph);
             for (const auto &model : scene_graph->model_list) {
@@ -146,7 +145,7 @@ namespace luminous {
                 lstd::append(scene_graph->material_configs, model.materials);
             }
 
-            lstd::append(_tex_configs, scene_graph->tex_configs);
+            lstd::append(_tex_configs, scene_graph->tex_configs());
             relevance_material_and_texture(scene_graph->material_configs);
             append_light_material(scene_graph->material_configs);
             init_materials(scene_graph);
