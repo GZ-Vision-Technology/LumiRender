@@ -288,6 +288,7 @@ namespace luminous {
             }
             if constexpr(N == 4) {
                 ret.val = ps.as_float4(make_float4(0.f));
+                ret.set_full_type("ConstantTexture");
                 ret.fill_tex_idx(scene_graph->try_push(ret));
             }
             return ret;

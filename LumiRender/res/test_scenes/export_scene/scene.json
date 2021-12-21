@@ -22,8 +22,7 @@
                     0.06499999761581421,
                     0.05000000074505806,
                     1.0
-                ],
-                "color_space": "SRGB"
+                ]
             }
         },
         {
@@ -87,7 +86,13 @@
             "type": "MatteMaterial",
             "name": "matte_red",
             "param": {
-                "color": "matte_red_constant"
+                "color": [
+                    0.6299999952316284,
+                    0.06499999761581421,
+                    0.05000000074505806,
+                    1.0
+                ]
+//                "color": "matte_red_constant"
             }
         },
         {
@@ -540,7 +545,7 @@
     },
     "output" : {
         "fn":"cornell-box-glass-uniform.png",
-        "dispatch_num" : 32,
+        "dispatch_num" : 0,
         "frame_per_dispatch": 1
     }
 }

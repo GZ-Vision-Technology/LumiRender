@@ -68,6 +68,7 @@ namespace luminous {
             }
 
             LM_NODISCARD size_t try_push(const TextureConfig &tc) {
+                auto key = tc.hash_key();
                 for (int i = 0; i < _tex_configs.size(); ++i) {
                     const auto& elm = _tex_configs.at(i);
                     if (elm.hash_key() == tc.hash_key()) {
@@ -75,7 +76,7 @@ namespace luminous {
                     }
                 }
                 _tex_configs.push_back(tc);
-                return _tex_configs.size();
+                return _tex_configs.size() - 1;
             }
 
             Model create_shape(const ShapeConfig &config);

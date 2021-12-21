@@ -128,6 +128,10 @@ namespace luminous {
                 _tex_idx = index;
             }
 
+            LM_NODISCARD bool valid() const {
+                return is_valid_index(_tex_idx);
+            }
+
             void set_tex_idx(index_t index) {
                 _tex_idx = index;
             }
@@ -196,8 +200,8 @@ namespace luminous {
                 auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                     return tex_config.name == color_tex.name;
                 });
-                DCHECK(idx != -1);
                 color_tex.fill_tex_idx(idx);
+                DCHECK(color_tex.valid());
 
                 if (type() == full_type("AssimpMaterial")) {
                     int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
