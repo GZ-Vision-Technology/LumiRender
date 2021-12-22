@@ -210,5 +210,62 @@ namespace luminous {
         };
 
 
+        class MicrofacetFresnel : public BxDF {
+        public:
+            using BxDF::BxDF;
+
+            template<typename TData, typename TFresnel, typename TMicrofacet>
+            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, TData data,
+                                           TFresnel fresnel,
+                                           TMicrofacet microfacet = {},
+                                           TransportMode mode = TransportMode::Radiance) {
+                float cos_theta_o = Frame::cos_theta(wo);
+                fresnel.correct_eta(cos_theta_o);
+                if (same_hemisphere(wi, wo)) {
+                    return MicrofacetReflection::_eval(wo, wi, data, fresnel, microfacet, mode);
+                }
+                return MicrofacetTransmission::_eval(wo, wi, data, fresnel, microfacet, mode);
+            }
+
+            template<typename TFresnel, typename TMicrofacet>
+            LM_ND_XPU static float PDF(float3 wo, float3 wi,
+                                       TFresnel fresnel = {},
+                                       TMicrofacet microfacet = {},
+                                       TransportMode mode = TransportMode::Radiance) {
+                float cos_theta_o = Frame::cos_theta(wo);
+                fresnel.correct_eta(cos_theta_o);
+                if (same_hemisphere(wi, wo)) {
+                    return MicrofacetReflection::_PDF(wo, wi, fresnel, microfacet, mode);
+                }
+                return MicrofacetTransmission::_PDF(wo, wi, fresnel, microfacet, mode);
+            }
+
+            template<typename TData, typename TFresnel, typename TMicrofacet>
+            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
+                                                 TFresnel fresnel,
+                                                 TMicrofacet microfacet = {},
+                                                 TransportMode mode = TransportMode::Radiance) {
+                float cos_theta_o = Frame::cos_theta(wo);
+                fresnel.correct_eta(cos_theta_o);
+                float Fr = fresnel.eval(Frame::abs_cos_theta(wo));
+                BSDFSample ret;
+                if (uc < Fr) {
+                    // sample reflection
+                    ret = MicrofacetReflection::_sample_f(wo, uc, u, data, fresnel, microfacet, mode);
+                    ret.PDF = Fr;
+                } else {
+                    // sample transmission
+                    ret = MicrofacetTransmission::_sample_f(wo, uc, u, data, fresnel, microfacet, mode);
+                    ret.PDF = 1 - Fr;
+                }
+                return ret;
+            }
+
+            LM_ND_XPU constexpr static BxDFFlags flags() {
+                return BxDFFlags::GlossyTrans | BxDFFlags::GlossyRefl;
+            }
+
+            GEN_MATCH_FLAGS_FUNC
+        };
     }
 }
