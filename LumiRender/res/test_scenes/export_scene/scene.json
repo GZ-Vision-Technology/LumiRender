@@ -160,6 +160,25 @@
                 "eta": 1.9
             }
         }
+//        ,
+//        {
+//            "type": "MetalMaterial",
+//            "name" : "metal",
+//            "param": {
+//                "eta" : [3,3,3]
+//            }
+//        }
+//    ,
+//        {
+//            "type" : "PlasticMaterial",
+//            "name": "plastic_white",
+//            "param": {
+//                "color": [1,1,1],
+//                "spec" : [1,1,1],
+//                "roughness": [0,0],
+//                "remapping_roughness": false
+//            }
+//        }
     ],
     "shapes": [
         {
