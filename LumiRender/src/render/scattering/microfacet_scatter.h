@@ -252,11 +252,11 @@ namespace luminous {
                 if (uc < Fr) {
                     // sample reflection
                     ret = MicrofacetReflection::_sample_f(wo, uc, u, data, fresnel, microfacet, mode);
-                    ret.PDF = Fr;
+                    ret.PDF *= Fr;
                 } else {
                     // sample transmission
                     ret = MicrofacetTransmission::_sample_f(wo, uc, u, data, fresnel, microfacet, mode);
-                    ret.PDF = 1 - Fr;
+                    ret.PDF *= 1 - Fr;
                 }
                 return ret;
             }

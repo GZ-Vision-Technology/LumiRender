@@ -20,7 +20,7 @@ namespace luminous {
                 auto glass_bsdf = create_glass_bsdf(color, eta);
                 return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{glass_bsdf}};
             }
-            auto glass_bsdf = create_rough_glass_bsdf(color, eta, roughness.x, roughness.y, true, true);
+            auto glass_bsdf = create_rough_glass_bsdf(color, eta, roughness.x, roughness.y);
             return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{glass_bsdf}};
         }
     }

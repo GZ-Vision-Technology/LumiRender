@@ -86,8 +86,8 @@ void test_microfacet_transmission(float deg) {
     float rs =  sample_bsdf(bsdf_wrapper, wo, eta);
     cout << "rough ";
     BSDFWrapper bsdf_wrapper2{n, n, s,
-                              BSDF{create_rough_glass_bsdf(luminous::make_float4(1.f), eta, 0.002, 0.002, false,
-                                                           true)}};
+                              BSDF{create_rough_glass_bsdf_test(luminous::make_float4(1.f), eta, 0.002, 0.002, false,
+                                                                true)}};
     float rr = sample_bsdf(bsdf_wrapper2, wo ,eta);
     cout << "rr : rs = " << rr / rs;
     cout << endl;

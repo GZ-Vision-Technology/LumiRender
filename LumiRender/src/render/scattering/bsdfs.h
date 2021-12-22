@@ -54,17 +54,25 @@ namespace luminous {
                                     SpecularReflection{valid_refl}, SpecularTransmission{valid_trans});
         }
 
-        using RoughGlassBSDF = BSDF_Ty<BSDFCommonData, FresnelDielectric, Microfacet<GGX>, MicrofacetReflection, MicrofacetTransmission>;
+        using RoughGlassBSDF = BSDF_Ty<BSDFCommonData, FresnelDielectric, Microfacet<GGX>, MicrofacetFresnel>;
 
-        ND_XPU_INLINE RoughGlassBSDF create_rough_glass_bsdf(float4 color, float eta, float alpha_x, float alpha_y,
-                                                             bool valid_refl = true, bool valid_trans = true) {
+        ND_XPU_INLINE RoughGlassBSDF create_rough_glass_bsdf(float4 color, float eta, float alpha_x, float alpha_y) {
             BSDFCommonData data{color};
-            return RoughGlassBSDF(data, FresnelDielectric{eta}, Microfacet<GGX>{alpha_x, alpha_y},
-                                  MicrofacetReflection{valid_refl}, MicrofacetTransmission{valid_trans});
+            return RoughGlassBSDF(data, FresnelDielectric{eta}, Microfacet<GGX>{alpha_x, alpha_y}, MicrofacetFresnel{});
+        }
+
+        using RoughGlassBSDFForTest = BSDF_Ty<BSDFCommonData, FresnelDielectric, Microfacet<GGX>, MicrofacetReflection, MicrofacetTransmission>;
+
+        ND_XPU_INLINE RoughGlassBSDFForTest
+        create_rough_glass_bsdf_test(float4 color, float eta, float alpha_x, float alpha_y,
+                                     bool valid_refl = true, bool valid_trans = true) {
+            BSDFCommonData data{color};
+            return RoughGlassBSDFForTest(data, FresnelDielectric{eta}, Microfacet<GGX>{alpha_x, alpha_y},
+                                         MicrofacetReflection{valid_refl}, MicrofacetTransmission{valid_trans});
         }
 
         class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF,
-                GlassBSDF, RoughGlassBSDF, GlassBSDFForTest> {
+                GlassBSDF, RoughGlassBSDFForTest, GlassBSDFForTest, RoughGlassBSDF> {
         private:
             using Variant::Variant;
         public:
