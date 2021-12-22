@@ -68,23 +68,33 @@ namespace luminous {
                 return _PDF(wo, wi, fresnel, microfacet, mode);
             }
 
+            /**
+             * eta must be corrected
+             */
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
-                                          TFresnel fresnel, TMicrofacet microfacet = {},
-                                          TransportMode mode = TransportMode::Radiance) {
+            LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u, TData data,
+                                                 TFresnel fresnel, TMicrofacet microfacet = {},
+                                                 TransportMode mode = TransportMode::Radiance) {
                 float3 wh = microfacet.sample_wh(wo, u);
                 if (dot(wh, wo) < 0) {
                     return {};
                 }
                 float3 wi = reflect(wo, wh);
-                float cos_theta_o = Frame::cos_theta(wo);
                 if (!same_hemisphere(wi, wo)) {
                     return {};
                 }
-                fresnel.correct_eta(cos_theta_o);
                 float PDF = microfacet.PDF_wi_reflection(wo, wh);
                 Spectrum val = _eval(wo, wi, data, fresnel, microfacet);
                 return {val, wi, PDF, flags(), fresnel.eta};
+            }
+
+            template<typename TData, typename TFresnel, typename TMicrofacet>
+            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
+                                          TFresnel fresnel, TMicrofacet microfacet = {},
+                                          TransportMode mode = TransportMode::Radiance) {
+                float cos_theta_o = Frame::cos_theta(wo);
+                fresnel.correct_eta(cos_theta_o);
+                return _sample_f(wo, uc, u, data, fresnel, microfacet, mode);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -166,16 +176,14 @@ namespace luminous {
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
-                                          TFresnel fresnel, TMicrofacet microfacet = {},
-                                          TransportMode mode = TransportMode::Radiance) {
+            LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u, TData data,
+                                                 TFresnel fresnel, TMicrofacet microfacet = {},
+                                                 TransportMode mode = TransportMode::Radiance) {
                 float3 wh = microfacet.sample_wh(wo, u);
                 if (dot(wh, wo) < 0) {
                     return {};
                 }
                 float3 wi{};
-                float cos_theta_o = Frame::cos_theta(wo);
-                fresnel.correct_eta(cos_theta_o);
                 bool valid = refract(wo, wh, fresnel.eta, &wi);
                 if (!valid || same_hemisphere(wo, wi)) {
                     return {};
@@ -183,6 +191,15 @@ namespace luminous {
                 float PDF = microfacet.PDF_wi_transmission(wo, wh, wi, fresnel.eta);
                 Spectrum val = _eval(wo, wi, data, fresnel, microfacet);
                 return {val, wi, PDF, flags(), fresnel.eta};
+            }
+
+            template<typename TData, typename TFresnel, typename TMicrofacet>
+            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
+                                          TFresnel fresnel, TMicrofacet microfacet = {},
+                                          TransportMode mode = TransportMode::Radiance) {
+                float cos_theta_o = Frame::cos_theta(wo);
+                fresnel.correct_eta(cos_theta_o);
+                return _sample_f(wo, uc, u, data, fresnel, microfacet, mode);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
