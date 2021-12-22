@@ -183,6 +183,7 @@ namespace luminous {
 
             // common
             TextureConfig color_tex;
+            bool remapping_roughness{true};
 
             // matte
             float sigma{};

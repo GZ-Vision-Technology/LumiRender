@@ -320,6 +320,7 @@ namespace luminous {
             } else if (type == "GlassMaterial") {
                 ret.eta_tex = process_attr(param["eta"], scene_graph);
                 ret.roughness_tex = process_attr(param["roughness"], scene_graph);
+                ret.remapping_roughness = param["remapping_roughness"].as_bool(false);
             } else if (type == "MirrorMaterial") {
 
             }
