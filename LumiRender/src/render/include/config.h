@@ -202,7 +202,6 @@ namespace luminous {
                     return tex_config.name == color_tex.name;
                 });
                 color_tex.fill_tex_idx(idx);
-                DCHECK(color_tex.valid());
 
                 if (type() == full_type("AssimpMaterial")) {
                     int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
@@ -252,6 +251,7 @@ namespace luminous {
                     eta_tex.fill_tex_idx(idx);
                     DCHECK(eta_tex.valid())
                 }
+                DCHECK(color_tex.valid());
             }
         };
 
