@@ -156,7 +156,7 @@
                     1,
                     0
                 ],
-                "roughness" : [0.002,0.002],
+                "roughness" : [0.05,0.05],
                 "eta": 1.9
             }
         }
@@ -368,7 +368,8 @@
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
-                "material": "glass_white",
+                //                "material": "glass_white",
+                "material": "mirror_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -409,7 +410,8 @@
             "param": {
                 "fn": "meshes/Cube.001.ply",
                 "subdiv_level": 0,
-                "material": "glass_white",
+//                "material": "glass_white",
+                "material": "mirror_white",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -570,7 +572,7 @@
         }
     },
     "output" : {
-        "fn":"cornell-box-glass-uniform.png",
+        "fn":"cornell-box.png",
         "dispatch_num" : 0,
         "frame_per_dispatch": 1
     }
