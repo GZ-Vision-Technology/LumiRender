@@ -52,10 +52,15 @@ using namespace std;
 //    cout << fr << endl;
 //}
 
-void sample_bsdf(BSDFWrapper bsdf_wrapper, luminous::float3 wo) {
+float sample_bsdf(BSDFWrapper bsdf_wrapper, luminous::float3 wo, float eta) {
     PCGSampler sampler{1};
     int num = 100000;
     Spectrum ret{0.f};
+    auto wi = wo;
+    bool valid = refract(wo, luminous::make_float3(0,0,1), eta, &wi);
+    if (!valid) {
+        return 0;
+    }
     for (int i = 0; i < num; ++i) {
         auto bs = bsdf_wrapper.sample_f(wo, sampler.next_1d(), sampler.next_2d());
         if (bs.PDF == 0) {
@@ -66,23 +71,25 @@ void sample_bsdf(BSDFWrapper bsdf_wrapper, luminous::float3 wo) {
         ret += result / float(num);
     }
     cout << ret.to_string() << endl;
+    return ret.x;
 }
 
 void test_microfacet_transmission(float deg) {
     PCGSampler sampler{1};
-    cout << "deg = " << deg << endl;
-    auto wo = luminous::spherical_direction(radians(deg), 0);
+    cout << "\ndeg = " << deg << endl;
+    auto wo = luminous::spherical_direction(radians(deg), 120);
     auto n = luminous::make_float3(0, 0, 1);
     auto s = luminous::make_float3(1, 0, 0);
     float eta = 1.5;
     cout << "specular ";
-    BSDFWrapper bsdf_wrapper{n, n, s, BSDF{create_glass_bsdf_test(luminous::make_float4(1.f), 1.5, false, true)}};
-    sample_bsdf(bsdf_wrapper, wo);
+    BSDFWrapper bsdf_wrapper{n, n, s, BSDF{create_glass_bsdf_test(luminous::make_float4(1.f), eta, false, true)}};
+    float rs =  sample_bsdf(bsdf_wrapper, wo, eta);
     cout << "rough ";
     BSDFWrapper bsdf_wrapper2{n, n, s,
-                              BSDF{create_rough_glass_bsdf(luminous::make_float4(1.f), 1.5, 0.002, 0.002, false,
+                              BSDF{create_rough_glass_bsdf(luminous::make_float4(1.f), eta, 0.002, 0.002, false,
                                                            true)}};
-    sample_bsdf(bsdf_wrapper2, wo);
+    float rr = sample_bsdf(bsdf_wrapper2, wo ,eta);
+    cout << "rr : rs = " << rr / rs;
     cout << endl;
 }
 
@@ -93,6 +100,7 @@ int main() {
 //    test_microfacet();
     for (int i = 1; i < 90; i += 3) {
         test_microfacet_transmission(i);
+//        break;
     }
     cout << endl;
     return 0;

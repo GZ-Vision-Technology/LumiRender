@@ -102,10 +102,10 @@ namespace luminous {
              * must be transmission and eta must be correct
              */
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, TData data,
+            LM_ND_XPU static Spectrum _eval(float3 wo, float3 wi, TData data,
                                      TFresnel fresnel,
                                      TMicrofacet microfacet = {},
-                                     TransportMode mode = TransportMode::Radiance) const {
+                                     TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 float cos_theta_i = Frame::cos_theta(wi);
                 using eta_type = decltype(fresnel.eta);
@@ -137,10 +137,10 @@ namespace luminous {
              * wo and wi must be not same hemisphere
              */
             template<typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU float _PDF(float3 wo, float3 wi,
+            LM_ND_XPU static float _PDF(float3 wo, float3 wi,
                                  TFresnel fresnel = {},
                                  TMicrofacet microfacet = {},
-                                 TransportMode mode = TransportMode::Radiance) const {
+                                 TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 float cos_theta_i = Frame::cos_theta(wi);
                 fresnel.correct_eta(cos_theta_o);
@@ -153,10 +153,10 @@ namespace luminous {
             }
 
             template<typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU float PDF(float3 wo, float3 wi,
+            LM_ND_XPU static float PDF(float3 wo, float3 wi,
                                 TFresnel fresnel = {},
                                 TMicrofacet microfacet = {},
-                                TransportMode mode = TransportMode::Radiance) const {
+                                TransportMode mode = TransportMode::Radiance) {
                 if (same_hemisphere(wo, wi)) {
                     return 0.f;
                 }
