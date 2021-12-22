@@ -18,10 +18,10 @@ namespace luminous {
              * must be reflection and eta must be corrected
              */
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, TData data,
+            LM_ND_XPU static Spectrum _eval(float3 wo, float3 wi, TData data,
                                      TFresnel fresnel,
                                      TMicrofacet microfacet = {},
-                                     TransportMode mode = TransportMode::Radiance) const {
+                                     TransportMode mode = TransportMode::Radiance) {
 
                 float cos_theta_o = Frame::cos_theta(wo);
                 float cos_theta_i = Frame::cos_theta(wi);
@@ -33,10 +33,10 @@ namespace luminous {
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, TData data,
+            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, TData data,
                                     TFresnel fresnel,
                                     TMicrofacet microfacet = {},
-                                    TransportMode mode = TransportMode::Radiance) const {
+                                    TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 if (!same_hemisphere(wi, wo)) {
                     return {0.f};
@@ -49,19 +49,19 @@ namespace luminous {
             * must be reflection
             */
             template<typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU float _PDF(float3 wo, float3 wi,
+            LM_ND_XPU static float _PDF(float3 wo, float3 wi,
                                  TFresnel fresnel = {},
                                  TMicrofacet microfacet = {},
-                                 TransportMode mode = TransportMode::Radiance) const {
+                                 TransportMode mode = TransportMode::Radiance) {
                 float3 wh = normalize(wo + wi);
                 return microfacet.PDF_wi_reflection(wo, wh);
             }
 
             template<typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU float PDF(float3 wo, float3 wi,
+            LM_ND_XPU static float PDF(float3 wo, float3 wi,
                                 TFresnel fresnel = {},
                                 TMicrofacet microfacet = {},
-                                TransportMode mode = TransportMode::Radiance) const {
+                                TransportMode mode = TransportMode::Radiance) {
                 if (!same_hemisphere(wo, wi)) {
                     return 0.f;
                 }
@@ -69,9 +69,9 @@ namespace luminous {
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
+            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
                                           TFresnel fresnel, TMicrofacet microfacet = {},
-                                          TransportMode mode = TransportMode::Radiance) const {
+                                          TransportMode mode = TransportMode::Radiance) {
                 float3 wh = microfacet.sample_wh(wo, u);
                 if (dot(wh, wo) < 0) {
                     return {};
@@ -88,7 +88,7 @@ namespace luminous {
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
-                return BxDFFlags::GlossyReflection;
+                return BxDFFlags::GlossyRefl;
             }
 
             GEN_MATCH_FLAGS_FUNC
@@ -99,7 +99,7 @@ namespace luminous {
             using BxDF::BxDF;
 
             /**
-             * must be transmission and eta must be correct
+             * must be transmission and eta must be corrected
              */
             template<typename TData, typename TFresnel, typename TMicrofacet>
             LM_ND_XPU static Spectrum _eval(float3 wo, float3 wi, TData data,
@@ -121,10 +121,10 @@ namespace luminous {
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, TData data,
+            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, TData data,
                                     TFresnel fresnel,
                                     TMicrofacet microfacet = {},
-                                    TransportMode mode = TransportMode::Radiance) const {
+                                    TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 if (same_hemisphere(wi, wo)) {
                     return {0.f};
@@ -135,6 +135,7 @@ namespace luminous {
 
             /**
              * wo and wi must be not same hemisphere
+             * and eta must be corrected
              */
             template<typename TFresnel, typename TMicrofacet>
             LM_ND_XPU static float _PDF(float3 wo, float3 wi,
@@ -143,7 +144,6 @@ namespace luminous {
                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 float cos_theta_i = Frame::cos_theta(wi);
-                fresnel.correct_eta(cos_theta_o);
                 float3 wh = normalize(wo + wi * fresnel.eta);
                 if (dot(wo, wh) * dot(wi, wh) > 0) {
                     return 0.f;
@@ -157,16 +157,18 @@ namespace luminous {
                                 TFresnel fresnel = {},
                                 TMicrofacet microfacet = {},
                                 TransportMode mode = TransportMode::Radiance) {
+                float cos_theta_o = Frame::cos_theta(wo);
                 if (same_hemisphere(wo, wi)) {
                     return 0.f;
                 }
+                fresnel.correct_eta(cos_theta_o);
                 return _PDF(wo, wi, fresnel, microfacet, mode);
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
+            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, TData data,
                                           TFresnel fresnel, TMicrofacet microfacet = {},
-                                          TransportMode mode = TransportMode::Radiance) const {
+                                          TransportMode mode = TransportMode::Radiance) {
                 float3 wh = microfacet.sample_wh(wo, u);
                 if (dot(wh, wo) < 0) {
                     return {};
@@ -184,10 +186,12 @@ namespace luminous {
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
-                return BxDFFlags::GlossyTransmission;
+                return BxDFFlags::GlossyTrans;
             }
 
             GEN_MATCH_FLAGS_FUNC
         };
+
+
     }
 }

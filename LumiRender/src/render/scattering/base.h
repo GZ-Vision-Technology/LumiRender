@@ -24,8 +24,8 @@ namespace luminous {
             // Composite _BxDFFlags_ definitions
             DiffRefl = Diffuse | Reflection,
             DiffTrans = Diffuse | Transmission,
-            GlossyReflection = Glossy | Reflection,
-            GlossyTransmission = Glossy | Transmission,
+            GlossyRefl = Glossy | Reflection,
+            GlossyTrans = Glossy | Transmission,
             SpecRefl = Specular | Reflection,
             SpecTrans = Specular | Transmission,
             All = Diffuse | Glossy | Specular | Reflection | Transmission
