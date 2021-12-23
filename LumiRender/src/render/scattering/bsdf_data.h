@@ -50,6 +50,8 @@ namespace luminous {
             }
         };
 
+        using MirrorData = BSDFBaseData;
+
         struct BSDFData {
             LM_XPU BSDFData() {}
 
@@ -58,27 +60,40 @@ namespace luminous {
                 DiffuseData diffuse_data;
                 GlassData glass_data;
                 PlasticData plastic_data;
+                MirrorData mirror_data;
             };
 
-            static BSDFData create_metal_data(float4 eta, float4 k) {
+            LM_ND_XPU static BSDFData create_metal_data(float4 eta, float4 k) {
                 BSDFData ret{};
                 ret.metal_data = {eta, k};
                 return ret;
             }
 
-            static BSDFData create_diffuse_data(float4 color, float sigma) {
+            LM_ND_XPU static BSDFData create_mirror_data(float4 color) {
+                BSDFData ret{};
+                ret.mirror_data.color = color;
+                return ret;
+            }
+
+            LM_ND_XPU static BSDFData create_oren_nayar_data(float4 color, float sigma) {
                 BSDFData ret;
                 ret.diffuse_data = {color, sigma};
                 return ret;
             }
 
-            static BSDFData create_glass_data(float4 color, float eta) {
+            LM_ND_XPU static BSDFData create_diffuse_data(float4 color) {
+                BSDFData ret;
+                ret.diffuse_data.color = color;
+                return ret;
+            }
+
+            LM_ND_XPU static BSDFData create_glass_data(float4 color, float eta) {
                 BSDFData ret;
                 ret.glass_data = {color, eta};
                 return ret;
             }
 
-            static BSDFData create_plastic_data(float4 color, float4 spec) {
+            LM_ND_XPU static BSDFData create_plastic_data(float4 color, float4 spec) {
                 BSDFData ret;
                 ret.plastic_data = {color, spec};
                 return ret;

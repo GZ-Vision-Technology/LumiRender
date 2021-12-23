@@ -109,7 +109,7 @@ int main() {
 
 //    test_bsdf_data();
 
-    BSDFData bsdf_data = BSDFData::create_diffuse_data(make_float4(12), 12);
+    BSDFData bsdf_data = BSDFData::create_diffuse_data(make_float4(12));
 
     cout << bsdf_data.diffuse_data.color.to_string() << endl;
     cout << sizeof(BSDF) << endl;
