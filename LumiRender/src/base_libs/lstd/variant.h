@@ -94,7 +94,7 @@ namespace luminous {
 
             typename std::aligned_storage<std::max({sizeof(Ts)...}), alignment_value>::type data{};
 
-            int index = -1;
+            int8_t index = -1;
 
 #ifndef __CUDACC__
             static constexpr int data_refl_index = sizeof((_member_counter(0, (refl::Int<128> *)
