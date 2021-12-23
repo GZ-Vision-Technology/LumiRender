@@ -8,12 +8,13 @@
 #include "base_libs/optics/rgb.h"
 #include "base_libs/sampling/sampling.h"
 #include "microfacet.h"
+#include "bsdf_data.h"
 #include "base.h"
 
 namespace luminous {
     inline namespace render {
 
-        template<typename TData, typename TFresnel, typename... TBxDF>
+        template<typename TFresnel, typename... TBxDF>
         class BSDF_Ty {
         protected:
             using Tuple = std::tuple<TBxDF...>;
@@ -21,7 +22,7 @@ namespace luminous {
             Tuple _bxdfs;
             Microfacet _microfacet{};
             TFresnel _fresnel{};
-            TData _data{};
+            BSDFData _data{};
         protected:
             template<int index, typename F>
             LM_XPU void iterator(F &&func) const {
@@ -46,7 +47,7 @@ namespace luminous {
         public:
             LM_XPU BSDF_Ty() = default;
 
-            LM_XPU explicit BSDF_Ty(TData data, TFresnel fresnel, Microfacet microfacet, TBxDF...args)
+            LM_XPU explicit BSDF_Ty(BSDFData data, TFresnel fresnel, Microfacet microfacet, TBxDF...args)
                     : _data(data), _fresnel(fresnel), _microfacet(microfacet),
                       _bxdfs(std::make_tuple(std::forward<TBxDF>(args)...)) {
 
