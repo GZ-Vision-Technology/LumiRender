@@ -41,7 +41,7 @@ namespace luminous {
             template<typename TData, typename eta_type>
             LM_ND_XPU static BSDFSample sample_f(float3 wo, TData data, eta_type Fr, eta_type eta) {
                 float3 wi = make_float3(-wo.x, -wo.y, wo.z);
-                Spectrum val = Fr * Spectrum(data.color) / Frame::abs_cos_theta(wi);
+                Spectrum val = Fr * Spectrum(data.color()) / Frame::abs_cos_theta(wi);
                 float PDF = 1.f;
                 return {val, wi, PDF, BxDFFlags::SpecRefl, eta};
             }
@@ -90,7 +90,7 @@ namespace luminous {
                                                  TransportMode mode = TransportMode::Radiance) {
                 auto ft = (eta_type(1) - Fr) / Frame::abs_cos_theta(wi);
                 eta_type factor = cal_factor(mode, eta);
-                Spectrum val = ft * data.color * factor;
+                Spectrum val = ft * data.color() * factor;
                 return {val, wi, 1, SpecTrans, eta};
             }
 

@@ -16,58 +16,57 @@
 namespace luminous {
     inline namespace render {
 
-        using DiffuseBSDF = BSDF_Ty<BSDFCommonData, FresnelNoOp, DiffuseReflection>;
+        using DiffuseBSDF = BSDF_Ty<BSDFData, FresnelNoOp, DiffuseReflection>;
 
         ND_XPU_INLINE DiffuseBSDF create_diffuse_bsdf(float4 color) {
-            BSDFCommonData data{color};
-            return DiffuseBSDF(data, FresnelNoOp{}, Microfacet{}, DiffuseReflection{});
+            return DiffuseBSDF(BSDFData::create_diffuse_data(color),
+                               FresnelNoOp{}, Microfacet{}, DiffuseReflection{});
         }
 
-        using OrenNayarBSDF = BSDF_Ty<OrenNayarData, FresnelNoOp, OrenNayar>;
+        using OrenNayarBSDF = BSDF_Ty<BSDFData, FresnelNoOp, OrenNayar>;
 
         ND_XPU_INLINE OrenNayarBSDF create_oren_nayar_bsdf(float4 color, float sigma) {
-            OrenNayarData data{color, sigma};
-            return OrenNayarBSDF(data, FresnelNoOp{}, Microfacet{}, OrenNayar{});
+            return OrenNayarBSDF(BSDFData::create_oren_nayar_data(color, sigma),
+                                 FresnelNoOp{}, Microfacet{}, OrenNayar{});
         }
 
-        using MirrorBSDF = BSDF_Ty<BSDFCommonData, FresnelNoOp, SpecularReflection>;
+        using MirrorBSDF = BSDF_Ty<BSDFData, FresnelNoOp, SpecularReflection>;
 
         ND_XPU_INLINE MirrorBSDF create_mirror_bsdf(float4 color) {
-            BSDFCommonData data{color};
-            return MirrorBSDF(data, FresnelNoOp{}, Microfacet{}, SpecularReflection{});
+            return MirrorBSDF(BSDFData::create_mirror_data(color),
+                              FresnelNoOp{}, Microfacet{}, SpecularReflection{});
         }
 
-        using GlassBSDF = BSDF_Ty<BSDFCommonData, FresnelDielectric, SpecularFresnel>;
+        using GlassBSDF = BSDF_Ty<BSDFData, FresnelDielectric, SpecularFresnel>;
 
         ND_XPU_INLINE GlassBSDF create_glass_bsdf(float4 color, float eta) {
             BSDFCommonData data{color};
-            return GlassBSDF(data, FresnelDielectric{eta}, Microfacet{}, SpecularFresnel{});
+            return GlassBSDF(BSDFData::create_glass_data(color, eta), FresnelDielectric{eta}, Microfacet{}, SpecularFresnel{});
         }
 
-        using GlassBSDFForTest = BSDF_Ty<BSDFCommonData, FresnelDielectric,
+        using GlassBSDFForTest = BSDF_Ty<BSDFData, FresnelDielectric,
                 SpecularReflection, SpecularTransmission>;
 
         ND_XPU_INLINE GlassBSDFForTest create_glass_bsdf_test(float4 color, float eta,
                                                               bool valid_refl = true, bool valid_trans = true) {
-            BSDFCommonData data{color};
-            return GlassBSDFForTest(data, FresnelDielectric{eta}, Microfacet{},
+            return GlassBSDFForTest(BSDFData::create_glass_data(color, eta), FresnelDielectric{eta}, Microfacet{},
                                     SpecularReflection{valid_refl}, SpecularTransmission{valid_trans});
         }
 
-        using RoughGlassBSDF = BSDF_Ty<BSDFCommonData, FresnelDielectric, MicrofacetFresnel>;
+        using RoughGlassBSDF = BSDF_Ty<BSDFData, FresnelDielectric, MicrofacetFresnel>;
 
         ND_XPU_INLINE RoughGlassBSDF create_rough_glass_bsdf(float4 color, float eta, float alpha_x, float alpha_y) {
-            BSDFCommonData data{color};
-            return RoughGlassBSDF(data, FresnelDielectric{eta}, Microfacet{alpha_x, alpha_y, GGX}, MicrofacetFresnel{});
+            return RoughGlassBSDF(BSDFData::create_glass_data(color, eta), FresnelDielectric{eta},
+                                  Microfacet{alpha_x, alpha_y, GGX}, MicrofacetFresnel{});
         }
 
-        using RoughGlassBSDFForTest = BSDF_Ty<BSDFCommonData, FresnelDielectric, MicrofacetReflection, MicrofacetTransmission>;
+        using RoughGlassBSDFForTest = BSDF_Ty<BSDFData, FresnelDielectric, MicrofacetReflection, MicrofacetTransmission>;
 
         ND_XPU_INLINE RoughGlassBSDFForTest
         create_rough_glass_bsdf_test(float4 color, float eta, float alpha_x, float alpha_y,
                                      bool valid_refl = true, bool valid_trans = true) {
-            BSDFCommonData data{color};
-            return RoughGlassBSDFForTest(data, FresnelDielectric{eta}, Microfacet{alpha_x, alpha_y},
+            return RoughGlassBSDFForTest(BSDFData::create_glass_data(color, eta), FresnelDielectric{eta},
+                                         Microfacet{alpha_x, alpha_y},
                                          MicrofacetReflection{valid_refl}, MicrofacetTransmission{valid_trans});
         }
 

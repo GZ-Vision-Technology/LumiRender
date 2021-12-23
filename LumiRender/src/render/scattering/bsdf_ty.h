@@ -53,7 +53,7 @@ namespace luminous {
             }
 
             LM_ND_XPU Spectrum color() const {
-                return Spectrum{_data.color};
+                return Spectrum{_data.color()};
             }
 
             template<typename F>

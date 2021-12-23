@@ -29,7 +29,7 @@ namespace luminous {
                 wh = face_forward(wh, make_float3(0, 0, 1));
                 auto F = fresnel.eval(abs_dot(wo, wh));
                 auto fr = microfacet.BRDF(wo, wh, wi, F, cos_theta_i, cos_theta_o, mode);
-                return fr * data.color;
+                return fr * data.color();
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
@@ -127,7 +127,7 @@ namespace luminous {
                 eta_type F = fresnel.eval(abs_dot(wo, wh));
                 eta_type tr = microfacet.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i, cos_theta_o, fresnel.eta,
                                               mode);
-                return tr * data.color;
+                return tr * data.color();
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>

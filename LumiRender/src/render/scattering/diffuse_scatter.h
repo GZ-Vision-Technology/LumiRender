@@ -17,7 +17,7 @@ namespace luminous {
             template<typename TData>
             LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, TData data,
                                      TransportMode mode = TransportMode::Radiance) const {
-                return Spectrum{data.color * constant::invPi};
+                return Spectrum{data.color() * constant::invPi};
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
@@ -89,8 +89,9 @@ namespace luminous {
                 tan_beta = condition ?
                            sin_theta_i / Frame::abs_cos_theta(wi) :
                            sin_theta_o / Frame::abs_cos_theta(wo);
-                float factor = (data.A + data.B * max_cos * sin_alpha * tan_beta);
-                return data.color * invPi * factor;
+                float2 AB = data.AB();
+                float factor = (AB.x + AB.y * max_cos * sin_alpha * tan_beta);
+                return data.color() * invPi * factor;
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
@@ -137,7 +138,7 @@ namespace luminous {
             template<typename TData>
             LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, TData data,
                                      TransportMode mode = TransportMode::Radiance) const {
-                return Spectrum{data.color * constant::invPi};
+                return Spectrum{data.color() * constant::invPi};
             }
 
             template<typename TData, typename TFresnel, typename TMicrofacet>
