@@ -11,6 +11,7 @@
 #include "render/scattering/diffuse_scatter.h"
 #include "render/samplers/independent.cpp"
 #include "render/scattering/bsdf_wrapper.cpp"
+#include "render/scattering/bsdf_data.h"
 
 using namespace luminous;
 using namespace std;
@@ -93,15 +94,33 @@ void test_microfacet_transmission(float deg) {
     cout << endl;
 }
 
+enum FresnelType : uint8_t {
+    NoOp,
+    Dielectric,
+    Conductor
+};
+
+void test_bsdf_data() {
+    cout << sizeof (BxDFFlags) << endl;
+    cout << int(BxDFFlags::SpecRefl);
+}
+
 int main() {
 
+//    test_bsdf_data();
+
+    BSDFData bsdf_data = BSDFData::create_diffuse_data(make_float4(12), 12);
+
+    cout << bsdf_data.diffuse_data.color.to_string() << endl;
+    cout << sizeof(RoughGlassBSDFForTest) << endl;
+
 //    test_refract();
-    cout << endl;
+//    cout << endl;
 //    test_microfacet();
-    for (int i = 1; i < 90; i += 3) {
-        test_microfacet_transmission(i);
-//        break;
-    }
+//    for (int i = 1; i < 90; i += 3) {
+//        test_microfacet_transmission(i);
+////        break;
+//    }
     cout << endl;
     return 0;
 }

@@ -21,7 +21,7 @@ namespace luminous {
         private:
             float _alpha_x{};
             float _alpha_y{};
-            MicrofacetType _type{GGX};
+            MicrofacetType _type{None};
         public:
             LM_XPU Microfacet() = default;
 
@@ -334,11 +334,6 @@ namespace luminous {
                 float3 wh = normalize(wo + wi * eta);
                 return BTDF(wo, wh, wi, Ft, cos_theta_i, cos_theta_o, eta, mode);
             }
-        };
-
-        class MicrofacetNone {
-        public:
-            LM_XPU MicrofacetNone() = default;
         };
     }
 }

@@ -45,7 +45,7 @@ namespace luminous {
         }
 
         using GlassBSDFForTest = BSDF_Ty<BSDFCommonData, FresnelDielectric,
-        SpecularReflection, SpecularTransmission>;
+                SpecularReflection, SpecularTransmission>;
 
         ND_XPU_INLINE GlassBSDFForTest create_glass_bsdf_test(float4 color, float eta,
                                                               bool valid_refl = true, bool valid_trans = true) {
@@ -58,7 +58,7 @@ namespace luminous {
 
         ND_XPU_INLINE RoughGlassBSDF create_rough_glass_bsdf(float4 color, float eta, float alpha_x, float alpha_y) {
             BSDFCommonData data{color};
-            return RoughGlassBSDF(data, FresnelDielectric{eta}, Microfacet{alpha_x, alpha_y,GGX}, MicrofacetFresnel{});
+            return RoughGlassBSDF(data, FresnelDielectric{eta}, Microfacet{alpha_x, alpha_y, GGX}, MicrofacetFresnel{});
         }
 
         using RoughGlassBSDFForTest = BSDF_Ty<BSDFCommonData, FresnelDielectric, MicrofacetReflection, MicrofacetTransmission>;
