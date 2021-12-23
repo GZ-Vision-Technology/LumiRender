@@ -10,8 +10,14 @@
 namespace luminous {
     inline namespace render {
 
+        enum FresnelType : uint8_t {
+            NoOp,
+            Metal,
+            Dielectric
+        };
+
         struct BSDFData {
-        public:
+        private:
             float4 _color{};
             float4 _params{};
         public:

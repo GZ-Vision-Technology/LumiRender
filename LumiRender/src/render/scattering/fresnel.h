@@ -6,6 +6,7 @@
 #pragma once
 
 #include "base_libs/optics/optics.h"
+#include "bsdf_data.h"
 
 namespace luminous {
     inline namespace render {
@@ -54,6 +55,31 @@ namespace luminous {
 
             LM_ND_XPU float eval(float) const {
                 return 1.f;
+            }
+        };
+
+
+        struct Fresnel {
+        private:
+            FresnelType _type{NoOp};
+        public:
+
+            LM_XPU explicit Fresnel(FresnelType type = NoOp) : _type(type) {}
+
+            ND_XPU_INLINE FresnelType type() const { return _type; }
+
+            ND_XPU_INLINE Spectrum eval(float cos_theta, BSDFData data) const {
+                switch (_type) {
+                    case NoOp:
+                        return Spectrum{1.f};
+                    case Metal:
+                        return fresnel_complex(cos_theta, Spectrum(data.metal_eta()), Spectrum(data.k()));
+                    case Dielectric:
+                        return fresnel_dielectric(cos_theta, data.eta());
+                    default:
+                        DCHECK(0);
+                }
+                return {0.f};
             }
         };
     }
