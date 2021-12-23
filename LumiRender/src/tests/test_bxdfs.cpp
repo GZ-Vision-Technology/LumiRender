@@ -107,12 +107,14 @@ void test_bsdf_data() {
 
 int main() {
 
+    cout << sizeof (luminous::float3) << endl;
+
 //    test_bsdf_data();
 
-    BSDFData bsdf_data = BSDFData::create_diffuse_data(make_float4(12));
-
-    cout << bsdf_data.diffuse_data.color.to_string() << endl;
-    cout << sizeof(BSDF) << endl;
+//    BSDFData bsdf_data = BSDFData::create_diffuse_data(make_float4(12));
+//
+//    cout << bsdf_data.diffuse_data.color.to_string() << endl;
+//    cout << sizeof(BSDF) << endl;
 
 //    test_refract();
 //    cout << endl;
