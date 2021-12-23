@@ -22,19 +22,21 @@ namespace luminous {
         private:
             float _alpha_x{};
             float _alpha_y{};
-            constexpr static MicrofacetType _type{microfacet_type};
+            MicrofacetType _type{microfacet_type};
         public:
             LM_XPU Microfacet() = default;
 
-            LM_XPU explicit Microfacet(float alpha)
+            LM_XPU explicit Microfacet(float alpha, MicrofacetType type = GGX)
                     : _alpha_x(alpha),
-                      _alpha_y(alpha) {
+                      _alpha_y(alpha),
+                      _type(type) {
                 LM_ASSERT(_type != None, "unknown type %d", int(_type));
             }
 
-            LM_XPU Microfacet(float alpha_x, float alpha_y)
+            LM_XPU Microfacet(float alpha_x, float alpha_y, MicrofacetType type = GGX)
                     : _alpha_x(alpha_x),
-                      _alpha_y(alpha_y) {
+                      _alpha_y(alpha_y),
+                      _type(type) {
                 LM_ASSERT(_type != None, "unknown type %d", int(_type));
             }
 
