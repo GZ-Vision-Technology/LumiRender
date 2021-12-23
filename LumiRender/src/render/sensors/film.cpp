@@ -50,6 +50,7 @@ namespace luminous {
                 buffer_view[pixel_index] = make_float4(val, weight);
             } else {
                 float pre_weight_sum = buffer_view[pixel_index].w;
+                // todo float precision
                 const float3 accum_val_prev = make_float3(buffer_view[pixel_index]);
                 buffer_view[pixel_index] = make_float4(val + accum_val_prev, pre_weight_sum + weight);
             }

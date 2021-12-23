@@ -10,92 +10,99 @@
 namespace luminous {
     inline namespace render {
 
-        struct MetalData {
-            float4 metal_eta{};
-            float4 k{};
-
-            LM_XPU MetalData(float4 eta, float4 k)
-                    : metal_eta(eta), k(k) {}
-        };
-
-        struct BSDFBaseData {
-            float4 color{0.f};
-
-            LM_XPU explicit BSDFBaseData(float4 color)
-                    : color(color) {}
-        };
-
-        struct PlasticData : BSDFBaseData {
-            float4 spec{make_float4(1.f)};
-            LM_XPU PlasticData(float4 color, float4 spec)
-                    : BSDFBaseData(color), spec(spec) {}
-        };
-
-        struct GlassData : public BSDFBaseData {
-            float eta{};
-            LM_XPU GlassData(float4 color, float eta)
-                    : BSDFBaseData(color), eta(eta) {}
-        };
-
-        struct DiffuseData : public BSDFBaseData {
-            float A{};
-            float B{};
-
-            LM_XPU DiffuseData(float4 color, float sigma)
-                    : BSDFBaseData(color) {
-                sigma = radians(sigma);
-                float sigma2 = sqr(sigma);
-                A = 1.f - (sigma2 / (2.f * (sigma2 + 0.33f)));
-                B = 0.45f * sigma2 / (sigma2 + 0.09f);
-            }
-        };
-
-        using MirrorData = BSDFBaseData;
-
         struct BSDFData {
-            LM_XPU BSDFData() {}
+        public:
+            float4 _color{};
+            float4 _params{};
+        public:
 
-            union {
-                MetalData metal_data;
-                DiffuseData diffuse_data;
-                GlassData glass_data;
-                PlasticData plastic_data;
-                MirrorData mirror_data;
-            };
+            LM_XPU BSDFData() = default;
+
+            /**
+             * for metal
+             * @return
+             */
+            ND_XPU_INLINE float4 metal_eta() const {
+                return _color;
+            }
+
+            ND_XPU_INLINE float4 color() const {
+                return _color;
+            }
+
+            /**
+             * for metal
+             * @return
+             */
+            ND_XPU_INLINE float4 k() const {
+                return _params;
+            }
+
+            /**
+             * for dielectric material
+             * @return
+             */
+            ND_XPU_INLINE float eta() const {
+                return _params.x;
+            }
+
+            /**
+             * for plastic material
+             * @return
+             */
+            ND_XPU_INLINE float4 spec() const {
+                return _params;
+            }
+
+            /**
+             * for oren nayar bsdf
+             * @return
+             */
+            ND_XPU_INLINE float2 AB() const {
+                return make_float2(_params);
+            }
 
             LM_ND_XPU static BSDFData create_metal_data(float4 eta, float4 k) {
                 BSDFData ret{};
-                ret.metal_data = {eta, k};
+                ret._color = eta;
+                ret._params = k;
                 return ret;
             }
 
             LM_ND_XPU static BSDFData create_mirror_data(float4 color) {
                 BSDFData ret{};
-                ret.mirror_data.color = color;
+                ret._color = color;
                 return ret;
             }
 
             LM_ND_XPU static BSDFData create_oren_nayar_data(float4 color, float sigma) {
                 BSDFData ret;
-                ret.diffuse_data = {color, sigma};
+                ret._color = color;
+                sigma = radians(sigma);
+                float sigma2 = sqr(sigma);
+                float A = 1.f - (sigma2 / (2.f * (sigma2 + 0.33f)));
+                float B = 0.45f * sigma2 / (sigma2 + 0.09f);
+                ret._params = make_float4(A, B, 0, 0);
                 return ret;
             }
 
             LM_ND_XPU static BSDFData create_diffuse_data(float4 color) {
                 BSDFData ret;
-                ret.diffuse_data.color = color;
+                ret._color = color;
                 return ret;
             }
 
             LM_ND_XPU static BSDFData create_glass_data(float4 color, float eta) {
                 BSDFData ret;
-                ret.glass_data = {color, eta};
+                ret._color = color;
+                ret._params.x = eta;
                 return ret;
             }
 
             LM_ND_XPU static BSDFData create_plastic_data(float4 color, float4 spec) {
                 BSDFData ret;
-                ret.plastic_data = {color, spec};
+                ret._color = color;
+                ret._params = spec;
                 return ret;
             }
         };
