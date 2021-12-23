@@ -15,7 +15,7 @@ namespace luminous {
     inline namespace render {
 
 
-        enum FBState {
+        enum FBState : uint8_t {
             Render,
             Normal,
             Albedo

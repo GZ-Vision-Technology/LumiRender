@@ -10,7 +10,7 @@
 
 namespace luminous {
     inline namespace render {
-        enum MicrofacetType {
+        enum MicrofacetType : uint8_t {
             None,
             GGX,
             Disney,

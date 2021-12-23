@@ -112,7 +112,7 @@ int main() {
     BSDFData bsdf_data = BSDFData::create_diffuse_data(make_float4(12), 12);
 
     cout << bsdf_data.diffuse_data.color.to_string() << endl;
-    cout << sizeof(RoughGlassBSDFForTest) << endl;
+    cout << sizeof(BSDF) << endl;
 
 //    test_refract();
 //    cout << endl;

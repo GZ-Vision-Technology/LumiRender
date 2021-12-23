@@ -12,14 +12,14 @@
 namespace luminous {
     inline namespace render {
         // LightType Definition
-        enum class LightType {
+        enum class LightType : uint8_t {
             DeltaPosition,
             DeltaDirection,
             Area,
             Infinite
         };
 
-        enum class LightSamplingMode {
+        enum class LightSamplingMode : uint8_t  {
             WithMIS,
             WithoutMIS
         };

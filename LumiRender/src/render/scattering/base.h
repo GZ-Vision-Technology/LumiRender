@@ -14,7 +14,7 @@
 namespace luminous {
     inline namespace render {
         // BxDFFlags Definition
-        enum BxDFFlags {
+        enum BxDFFlags : uint8_t  {
             Unset = 0,
             Reflection = 1 << 0,
             Transmission = 1 << 1,
@@ -31,7 +31,7 @@ namespace luminous {
             All = Diffuse | Glossy | Specular | Reflection | Transmission
         };
 
-        enum class TransportMode {
+        enum class TransportMode : uint8_t {
             Radiance,
             Importance
         };

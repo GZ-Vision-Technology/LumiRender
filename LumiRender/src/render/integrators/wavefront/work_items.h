@@ -100,7 +100,7 @@ namespace luminous {
 
         LUMINOUS_SOA(LightSampleContext, pos, ng, ns)
 
-        enum RaySampleFlag {
+        enum RaySampleFlag : uint8_t {
             hasMedia = 1 << 0,
             hasSubsurface = 1 << 1
         };
