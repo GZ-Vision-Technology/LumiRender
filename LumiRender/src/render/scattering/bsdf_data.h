@@ -49,7 +49,7 @@ namespace luminous {
              * @return
              */
             ND_XPU_INLINE float eta() const {
-                return _params.x;
+                return _params.w;
             }
 
             /**
@@ -66,6 +66,17 @@ namespace luminous {
              */
             ND_XPU_INLINE float2 AB() const {
                 return make_float2(_params);
+            }
+
+            LM_XPU_INLINE void correct_eta(float cos_theta, FresnelType fresnel_type) {
+                switch (fresnel_type) {
+                    case FresnelType::Dielectric: {
+                        _params.w = rcp(_params.w);
+                        break;
+                    }
+                    default:
+                        DCHECK(0);
+                }
             }
 
             LM_ND_XPU static BSDFData create_metal_data(float4 eta, float4 k) {
@@ -101,14 +112,15 @@ namespace luminous {
             LM_ND_XPU static BSDFData create_glass_data(float4 color, float eta) {
                 BSDFData ret;
                 ret._color = color;
-                ret._params.x = eta;
+                ret._params.w = eta;
                 return ret;
             }
 
-            LM_ND_XPU static BSDFData create_plastic_data(float4 color, float4 spec) {
+            LM_ND_XPU static BSDFData create_plastic_data(float4 color, float4 spec, float eta) {
                 BSDFData ret;
                 ret._color = color;
                 ret._params = spec;
+                ret._params.w = eta;
                 return ret;
             }
         };
