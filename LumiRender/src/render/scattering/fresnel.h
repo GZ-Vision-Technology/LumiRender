@@ -68,10 +68,10 @@ namespace luminous {
 
             ND_XPU_INLINE FresnelType type() const { return _type; }
 
-            ND_XPU_INLINE float eval(float cos_theta, BSDFData data) const {
+            ND_XPU_INLINE Spectrum eval(float cos_theta, BSDFData data) const {
                 switch (_type) {
                     case NoOp:
-                        return 1.f;
+                        return {1.f};
                     case Metal:
                         return fresnel_complex(cos_theta, Spectrum(data.metal_eta()), Spectrum(data.k()))[0];
                     case Dielectric:
@@ -79,7 +79,7 @@ namespace luminous {
                     default:
                         DCHECK(0);
                 }
-                return 0.f;
+                return {0.f};
             }
         };
     }
