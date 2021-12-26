@@ -68,18 +68,44 @@ namespace luminous {
                 iterator<0>(std::move(func));
             }
 
-            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BxDFFlags flags = BxDFFlags::All,
-                                    TransportMode mode = TransportMode::Radiance) const {
-                if (wo.z == 0) {
-                    return {0.f};
-                }
+            LM_ND_XPU int match_num(BxDFFlags bxdf_flags) const {
+                int ret{0};
+                for_each([&](auto bxdf) {
+                    if (bxdf.match_flags(bxdf_flags)) {
+                        ret += 1;
+                    }
+                    return true;
+                });
+                return ret;
+            }
+
+            LM_ND_XPU BxDFFlags combine_flags(float3 wo, float3 wi, BxDFFlags flags) const {
                 bool reflect = same_hemisphere(wo, wi);
                 auto non_reflect = ~BxDFFlags::Reflection;
                 auto non_trans = ~BxDFFlags::Transmission;
 
                 flags = static_cast<BxDFFlags>(reflect ?
-                                               flags & non_trans :
-                                               flags & non_reflect);
+                        flags & non_trans :
+                        flags & non_reflect);
+                return flags;
+            }
+
+            LM_ND_XPU BxDFFlags flags() const {
+                int ret{0};
+                for_each([&](auto bxdf) {
+                    ret |= bxdf.flags();
+                    return true;
+                });
+                return static_cast<BxDFFlags>(ret);
+            }
+
+            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BxDFFlags flags = BxDFFlags::All,
+                                    TransportMode mode = TransportMode::Radiance) const {
+                if (wo.z == 0) {
+                    return {0.f};
+                }
+
+                flags = combine_flags(wo, wi, flags);
 
                 Spectrum ret{0.f};
                 this->for_each([&](auto bxdf) {
@@ -98,6 +124,9 @@ namespace luminous {
                     return 0;
                 }
                 int match_count = 0;
+
+                flags = combine_flags(wo, wi, flags);
+
                 float ret{0.f};
                 for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
@@ -107,17 +136,6 @@ namespace luminous {
                     return true;
                 });
                 return match_count > 0 ? ret / match_count : 0;
-            }
-
-            LM_ND_XPU int match_num(BxDFFlags bxdf_flags) const {
-                int ret{0};
-                for_each([&](auto bxdf) {
-                    if (bxdf.match_flags(bxdf_flags)) {
-                        ret += 1;
-                    }
-                    return true;
-                });
-                return ret;
             }
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u,
@@ -145,14 +163,27 @@ namespace luminous {
                 ret.PDF /= num;
                 return ret;
             }
+        };
 
-            LM_ND_XPU BxDFFlags flags() const {
-                int ret{0};
-                for_each([&](auto bxdf) {
-                    ret |= bxdf.flags();
-                    return true;
-                });
-                return static_cast<BxDFFlags>(ret);
+        template<typename ...TBxDF>
+        class FresnelBSDF : public BSDF_Ty<TBxDF...> {
+        protected:
+            using BaseClass = BSDF_Ty<TBxDF...>;
+            static_assert(BaseClass::size == 2, "FresnelBSDF must be two BxDF lobe!");
+            using Refl = std::tuple_element_t<0, typename BaseClass::Tuple>;
+            using Trans = std::tuple_element_t<1, typename BaseClass::Tuple>;
+        public:
+            using BaseClass::BaseClass;
+
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u,
+                                          BxDFFlags flags = BxDFFlags::All,
+                                          TransportMode mode = TransportMode::Radiance) const {
+                int num = match_num(flags);
+                if (num == 0) {
+                    return {};
+                }
+
+
             }
         };
     }
