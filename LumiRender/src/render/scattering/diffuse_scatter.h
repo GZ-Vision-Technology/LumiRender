@@ -31,6 +31,7 @@ namespace luminous {
 
             template<typename TFresnel>
             LM_ND_XPU float PDF(float3 wo, float3 wi,
+                                BSDFData data,
                                 TFresnel fresnel = {},
                                 Microfacet microfacet = {},
                                 TransportMode mode = TransportMode::Radiance) const {
@@ -43,7 +44,7 @@ namespace luminous {
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
-                float PDF_val = PDF(wo, wi, fresnel, microfacet, mode);
+                float PDF_val = PDF(wo, wi, data, fresnel, microfacet, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }
@@ -104,6 +105,7 @@ namespace luminous {
 
             template<typename TFresnel>
             LM_ND_XPU float PDF(float3 wo, float3 wi,
+                                BSDFData data,
                                 TFresnel fresnel = {},
                                 Microfacet microfacet = {},
                                 TransportMode mode = TransportMode::Radiance) const {
@@ -116,7 +118,7 @@ namespace luminous {
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
-                float PDF_val = PDF(wo, wi, fresnel, microfacet, mode);
+                float PDF_val = PDF(wo, wi, data, fresnel, microfacet, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }
@@ -150,6 +152,7 @@ namespace luminous {
 
             template<typename TFresnel>
             LM_ND_XPU float PDF(float3 wo, float3 wi,
+                                BSDFData data,
                                 TFresnel fresnel = {},
                                 Microfacet microfacet = {},
                                 TransportMode mode = TransportMode::Radiance) const {
@@ -162,7 +165,7 @@ namespace luminous {
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z > 0 ? -wi.z : wi.z;
-                float PDF_val = PDF(wo, wi, fresnel, microfacet, mode);
+                float PDF_val = PDF(wo, wi, data, fresnel, microfacet, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }

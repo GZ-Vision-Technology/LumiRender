@@ -101,7 +101,7 @@ namespace luminous {
                 for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
                         match_count += 1;
-                        ret += bxdf.PDF(wo, wi, _fresnel, _microfacet);
+                        ret += bxdf.PDF(wo, wi, _data, _fresnel, _microfacet);
                     }
                     return true;
                 });

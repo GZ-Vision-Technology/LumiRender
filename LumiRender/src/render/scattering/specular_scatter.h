@@ -25,6 +25,7 @@ namespace luminous {
 
             template<typename TFresnel>
             LM_ND_XPU static float PDF(float3 wo, float3 wi,
+                                       BSDFData data,
                                        TFresnel fresnel = {},
                                        Microfacet microfacet = {},
                                        TransportMode mode = TransportMode::Radiance) {
@@ -79,6 +80,7 @@ namespace luminous {
 
             template<typename TFresnel>
             LM_ND_XPU static float PDF(float3 wo, float3 wi,
+                                       BSDFData data,
                                        TFresnel fresnel = {},
                                        Microfacet microfacet = {},
                                        TransportMode mode = TransportMode::Radiance) {
@@ -131,6 +133,7 @@ namespace luminous {
 
             template<typename TFresnel>
             LM_ND_XPU static float PDF(float3 wo, float3 wi,
+                                       BSDFData data,
                                        TFresnel fresnel = {},
                                        Microfacet microfacet = {},
                                        TransportMode mode = TransportMode::Radiance) {
