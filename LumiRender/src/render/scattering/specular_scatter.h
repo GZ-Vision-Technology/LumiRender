@@ -55,7 +55,7 @@ namespace luminous {
 
                 float3 wi = make_float3(-wo.x, -wo.y, wo.z);
                 data.correct_eta(Frame::cos_theta(wo), fresnel.type());
-                auto Fr = fresnel.eval(Frame::abs_cos_theta(wo), data)[0];
+                auto Fr = fresnel.eval(Frame::abs_cos_theta(wo), data);
                 return _sample_f(wo, data, Fr, data.eta());
             }
 
@@ -108,7 +108,7 @@ namespace luminous {
                 if (!valid) {
                     return {};
                 }
-                auto Fr = fresnel.eval(Frame::abs_cos_theta(wo), data)[0];
+                auto Fr = fresnel.eval(Frame::abs_cos_theta(wo), data);
                 return _sample_f(wo, wi, data, Fr, data.eta(), mode);
             }
 
@@ -147,7 +147,7 @@ namespace luminous {
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o, fresnel.type());
-                float Fr = fresnel.eval(Frame::abs_cos_theta(wo), data)[0];
+                float Fr = fresnel.eval(Frame::abs_cos_theta(wo), data);
                 BSDFSample ret;
                 if (uc < Fr) {
                     ret = SpecularReflection::_sample_f(wo, data, Fr, data.eta());
