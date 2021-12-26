@@ -70,8 +70,10 @@ namespace luminous {
             /**
              * eta must be corrected
              */
-            LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u, BSDFData data,
-                                                  Fresnel fresnel, Microfacet microfacet = {},
+            LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
+                                                  float _, BSDFData data,
+                                                  Fresnel fresnel,
+                                                  Microfacet microfacet = {},
                                                   TransportMode mode = TransportMode::Radiance) {
                 float3 wh = microfacet.sample_wh(wo, u);
                 if (dot(wh, wo) < 0) {
@@ -91,7 +93,7 @@ namespace luminous {
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o, fresnel.type());
-                return _sample_f(wo, uc, u, data, fresnel, microfacet, mode);
+                return _sample_f(wo, uc, u, 0.f, data, fresnel, microfacet, mode);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -122,7 +124,7 @@ namespace luminous {
                 wh = face_forward(wh, make_float3(0, 0, 1));
                 float F = fresnel.eval(abs_dot(wo, wh), data)[0];
                 float tr = microfacet.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i, cos_theta_o, data.eta(),
-                                              mode);
+                                           mode);
                 return tr * data.color();
             }
 
@@ -170,8 +172,10 @@ namespace luminous {
                 return _PDF(wo, wi, data, fresnel, microfacet, mode);
             }
 
-            LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u, BSDFData data,
-                                                  Fresnel fresnel, Microfacet microfacet = {},
+            LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
+                                                  float _, BSDFData data,
+                                                  Fresnel fresnel,
+                                                  Microfacet microfacet = {},
                                                   TransportMode mode = TransportMode::Radiance) {
                 float3 wh = microfacet.sample_wh(wo, u);
                 if (dot(wh, wo) < 0) {
@@ -192,7 +196,7 @@ namespace luminous {
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o, fresnel.type());
-                return _sample_f(wo, uc, u, data, fresnel, microfacet, mode);
+                return _sample_f(wo, uc, u, 0.f, data, fresnel, microfacet, mode);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -242,11 +246,11 @@ namespace luminous {
                 BSDFSample ret;
                 if (uc < Fr) {
                     // sample reflection
-                    ret = MicrofacetReflection::_sample_f(wo, uc, u, data, fresnel, microfacet, mode);
+                    ret = MicrofacetReflection::_sample_f(wo, uc, u, Fr, data, fresnel, microfacet, mode);
                     ret.PDF *= Fr;
                 } else {
                     // sample transmission
-                    ret = MicrofacetTransmission::_sample_f(wo, uc, u, data, fresnel, microfacet, mode);
+                    ret = MicrofacetTransmission::_sample_f(wo, uc, u, 1 - Fr, data, fresnel, microfacet, mode);
                     ret.PDF *= 1 - Fr;
                 }
                 return ret;
