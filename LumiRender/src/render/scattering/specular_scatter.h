@@ -54,9 +54,9 @@ namespace luminous {
                                                  TransportMode mode = TransportMode::Radiance) {
 
                 float3 wi = make_float3(-wo.x, -wo.y, wo.z);
-                fresnel.correct_eta(Frame::cos_theta(wo));
-                auto Fr = fresnel.eval(Frame::abs_cos_theta(wo));
-                return _sample_f(wo, data, Fr, fresnel.eta);
+                data.correct_eta(Frame::cos_theta(wo), fresnel.type());
+                auto Fr = fresnel.eval(Frame::abs_cos_theta(wo), data)[0];
+                return _sample_f(wo, data, Fr, data.eta());
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -102,14 +102,14 @@ namespace luminous {
                                                  Microfacet microfacet = {},
                                                  TransportMode mode = TransportMode::Radiance) {
                 float3 wi{};
-                fresnel.correct_eta(Frame::cos_theta(wo));
+                data.correct_eta(Frame::cos_theta(wo), fresnel.type());
                 float3 n = make_float3(0,0,1);
-                bool valid = refract(wo, face_forward(n, wo), fresnel.eta, &wi);
+                bool valid = refract(wo, face_forward(n, wo), data.eta(), &wi);
                 if (!valid) {
                     return {};
                 }
-                auto Fr = fresnel.eval(Frame::abs_cos_theta(wo));
-                return _sample_f(wo, wi, data, Fr, fresnel.eta, mode);
+                auto Fr = fresnel.eval(Frame::abs_cos_theta(wo), data)[0];
+                return _sample_f(wo, wi, data, Fr, data.eta(), mode);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -146,20 +146,20 @@ namespace luminous {
                                                  Microfacet microfacet = {},
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
-                fresnel.correct_eta(cos_theta_o);
-                float Fr = fresnel.eval(Frame::abs_cos_theta(wo));
+                data.correct_eta(cos_theta_o, fresnel.type());
+                float Fr = fresnel.eval(Frame::abs_cos_theta(wo), data)[0];
                 BSDFSample ret;
                 if (uc < Fr) {
-                    ret = SpecularReflection::_sample_f(wo, data, Fr, fresnel.eta);
+                    ret = SpecularReflection::_sample_f(wo, data, Fr, data.eta());
                     ret.PDF = Fr;
                 } else {
                     float3 wi{};
                     float3 n = make_float3(0, 0, 1);
-                    bool valid = refract(wo, face_forward(n, wo), fresnel.eta, &wi);
+                    bool valid = refract(wo, face_forward(n, wo), data.eta(), &wi);
                     if (!valid) {
                         return {};
                     }
-                    ret = SpecularTransmission::_sample_f(wo, wi, data, Fr, fresnel.eta, mode);
+                    ret = SpecularTransmission::_sample_f(wo, wi, data, Fr, data.eta(), mode);
                     ret.PDF = 1 - Fr;
                 }
                 return ret;

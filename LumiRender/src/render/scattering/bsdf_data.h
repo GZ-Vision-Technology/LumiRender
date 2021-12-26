@@ -6,6 +6,7 @@
 #pragma once
 
 #include "base_libs/optics/rgb.h"
+#include "base_libs/optics/optics.h"
 
 namespace luminous {
     inline namespace render {
@@ -71,7 +72,7 @@ namespace luminous {
             LM_XPU_INLINE void correct_eta(float cos_theta, FresnelType fresnel_type) {
                 switch (fresnel_type) {
                     case FresnelType::Dielectric: {
-                        _params.w = rcp(_params.w);
+                        _params.w = luminous::correct_eta(cos_theta, _params.w);
                         break;
                     }
                     default:
