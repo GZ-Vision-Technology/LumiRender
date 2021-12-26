@@ -78,14 +78,6 @@ namespace luminous {
                 return 0.f;
             }
 
-            LM_ND_XPU static BSDFSample _sample_f(float3 wo, float3 wi, BSDFData data, float Fr, float eta,
-                                                  TransportMode mode = TransportMode::Radiance) {
-                auto ft = (1.f - Fr) / Frame::abs_cos_theta(wi);
-                float factor = cal_factor(mode, eta);
-                Spectrum val = ft * data.color() * factor;
-                return {val, wi, 1, SpecTrans, eta};
-            }
-
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
                                                   float Fr, BSDFData data,
                                                   Fresnel fresnel,
@@ -115,7 +107,7 @@ namespace luminous {
                     return {};
                 }
                 auto Fr = fresnel.eval(Frame::abs_cos_theta(wo), data)[0];
-                return _sample_f(wo, wi, data, Fr, data.eta(), mode);
+                return _sample_f(wo, uc, u, Fr, data, fresnel, microfacet, mode);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
