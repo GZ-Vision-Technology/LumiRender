@@ -44,7 +44,7 @@ namespace luminous {
                                 SpecularFresnel{});
         }
 
-        using GlassBSDF = FresnelBSDF<SpecularReflection, SpecularTransmission>;
+        using GlassBSDF = FresnelBSDF<SpecularReflection, SpecularTransmission, true>;
 
         ND_XPU_INLINE GlassBSDF create_glass_bsdf(float4 color, float eta,
                                                   bool valid_refl = true, bool valid_trans = true) {

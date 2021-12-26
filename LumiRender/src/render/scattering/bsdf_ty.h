@@ -165,15 +165,46 @@ namespace luminous {
             }
         };
 
-        template<typename ...TBxDF>
-        class FresnelBSDF : public BSDF_Ty<TBxDF...> {
+        template<typename T1, typename T2, bool Delta = false>
+        class FresnelBSDF : public BSDF_Ty<T1, T2> {
         protected:
-            using BaseClass = BSDF_Ty<TBxDF...>;
+            using BaseClass = BSDF_Ty<T1, T2>;
             static_assert(BaseClass::size == 2, "FresnelBSDF must be two BxDF lobe!");
             using Refl = std::tuple_element_t<0, typename BaseClass::Tuple>;
             using Trans = std::tuple_element_t<1, typename BaseClass::Tuple>;
         public:
             using BaseClass::BaseClass;
+
+            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BxDFFlags flags = BxDFFlags::All,
+                                    TransportMode mode = TransportMode::Radiance) const {
+                if constexpr(Delta) {
+                    return {0.f};
+                } else {
+                    BSDFData bsdf_data = BaseClass::_data;
+                    float cos_theta_o = Frame::cos_theta(wo);
+                    bsdf_data.correct_eta(cos_theta_o, BaseClass::_fresnel.type());
+                    if (same_hemisphere(wi, wo)) {
+                        return Refl::_eval(wo, wi, bsdf_data, BaseClass::_fresnel, BaseClass::_microfacet, mode);
+                    }
+                    return Trans::_eval(wo, wi, bsdf_data, BaseClass::_fresnel, BaseClass::_microfacet, mode);
+                }
+            }
+
+            LM_ND_XPU float PDF(float3 wo, float3 wi,
+                                BxDFFlags flags = BxDFFlags::All,
+                                TransportMode mode = TransportMode::Radiance) const {
+                if constexpr(Delta) {
+                    return 0.f;
+                } else {
+                    BSDFData bsdf_data = BaseClass::_data;
+                    float cos_theta_o = Frame::cos_theta(wo);
+                    bsdf_data.correct_eta(cos_theta_o, BaseClass::_fresnel.type());
+                    if (same_hemisphere(wi, wo)) {
+                        return Refl::_PDF(wo, wi, bsdf_data, BaseClass::_fresnel, BaseClass::_microfacet, mode);
+                    }
+                    return Trans::_PDF(wo, wi, bsdf_data, BaseClass::_fresnel, BaseClass::_microfacet, mode);
+                }
+            }
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u,
                                           BxDFFlags flags = BxDFFlags::All,
