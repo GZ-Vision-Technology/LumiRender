@@ -85,8 +85,8 @@ namespace luminous {
                 auto non_trans = ~BxDFFlags::Transmission;
 
                 flags = static_cast<BxDFFlags>(reflect ?
-                        flags & non_trans :
-                        flags & non_reflect);
+                                               flags & non_trans :
+                                               flags & non_reflect);
                 return flags;
             }
 
@@ -178,12 +178,25 @@ namespace luminous {
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u,
                                           BxDFFlags flags = BxDFFlags::All,
                                           TransportMode mode = TransportMode::Radiance) const {
-                int num = match_num(flags);
+                int num = BaseClass::match_num(flags);
                 if (num == 0) {
                     return {};
                 }
 
+                BSDFData bsdf_data = BaseClass::_data;
 
+                float cos_theta_o = Frame::cos_theta(wo);
+                bsdf_data.correct_eta(cos_theta_o, BaseClass::_fresnel.type());
+                float Fr = BaseClass::_fresnel.eval(Frame::abs_cos_theta(wo), bsdf_data)[0];
+                BSDFSample ret;
+                if (uc < Fr) {
+                    ret = Refl::_sample_f(wo, uc, u, Fr, bsdf_data, BaseClass::_fresnel, BaseClass::_microfacet, mode);
+                    ret.PDF *= Fr;
+                } else {
+                    ret = Trans::_sample_f(wo, uc, u, Fr, bsdf_data, BaseClass::_fresnel, BaseClass::_microfacet, mode);
+                    ret.PDF *= 1 - Fr;
+                }
+                return ret;
             }
         };
     }
