@@ -37,11 +37,11 @@ namespace luminous {
                               Fresnel{NoOp}, Microfacet{}, SpecularReflection{});
         }
 
-        using GlassBSDFOld = BSDF_Ty<SpecularFresnel>;
+        using GlassBSDFSingle = BSDF_Ty<SpecularFresnel>;
 
-        ND_XPU_INLINE GlassBSDFOld create_glass_bsdf_old(float4 color, float eta) {
-            return GlassBSDFOld(BSDFData::create_glass_data(color, eta), Fresnel{Dielectric}, Microfacet{},
-                                SpecularFresnel{});
+        ND_XPU_INLINE GlassBSDFSingle create_glass_bsdf_single(float4 color, float eta) {
+            return GlassBSDFSingle(BSDFData::create_glass_data(color, eta), Fresnel{Dielectric}, Microfacet{},
+                                   SpecularFresnel{});
         }
 
         using GlassBSDF = FresnelBSDF<SpecularReflection, SpecularTransmission, true>;
@@ -52,12 +52,12 @@ namespace luminous {
                              SpecularReflection{valid_refl}, SpecularTransmission{valid_trans});
         }
 
-        using RoughGlassBSDFOld = BSDF_Ty<MicrofacetFresnel>;
+        using RoughGlassBSDFSingle = BSDF_Ty<MicrofacetFresnel>;
 
-        ND_XPU_INLINE RoughGlassBSDFOld
-        create_rough_glass_bsdf_old(float4 color, float eta, float alpha_x, float alpha_y) {
-            return RoughGlassBSDFOld(BSDFData::create_glass_data(color, eta), Fresnel{Dielectric},
-                                     Microfacet{alpha_x, alpha_y, GGX}, MicrofacetFresnel{});
+        ND_XPU_INLINE RoughGlassBSDFSingle
+        create_rough_glass_bsdf_single(float4 color, float eta, float alpha_x, float alpha_y) {
+            return RoughGlassBSDFSingle(BSDFData::create_glass_data(color, eta), Fresnel{Dielectric},
+                                        Microfacet{alpha_x, alpha_y, GGX}, MicrofacetFresnel{});
         }
 
         using RoughGlassBSDF = FresnelBSDF<MicrofacetReflection, MicrofacetTransmission>;
@@ -72,7 +72,7 @@ namespace luminous {
         }
 
         class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF,
-                GlassBSDF, RoughGlassBSDFOld, GlassBSDFOld, RoughGlassBSDF> {
+                GlassBSDF, RoughGlassBSDFSingle, GlassBSDFSingle, RoughGlassBSDF> {
         private:
             using Variant::Variant;
         public:
