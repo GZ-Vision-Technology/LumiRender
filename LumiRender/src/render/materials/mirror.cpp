@@ -4,7 +4,6 @@
 
 #include "mirror.h"
 #include "render/scene/scene_data.h"
-#include "core/refl/factory.h"
 
 namespace luminous {
     inline namespace render {

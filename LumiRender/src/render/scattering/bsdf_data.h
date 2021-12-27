@@ -87,6 +87,12 @@ namespace luminous {
                 return ret;
             }
 
+            LM_ND_XPU static BSDFData create_fake_metal_data(float4 color) {
+                BSDFData ret{};
+                ret._color = color;
+                return ret;
+            }
+
             LM_ND_XPU static BSDFData create_mirror_data(float4 color) {
                 BSDFData ret{};
                 ret._color = color;
