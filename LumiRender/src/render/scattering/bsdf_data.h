@@ -75,8 +75,12 @@ namespace luminous {
                         _params.w = luminous::correct_eta(cos_theta, _params.w);
                         break;
                     }
+                    case FresnelType::NoOp:
+                        break;
+                    case FresnelType::Metal:
+                        break;
                     default:
-                        DCHECK(0);
+                        break;
                 }
             }
 
