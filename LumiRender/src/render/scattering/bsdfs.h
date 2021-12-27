@@ -71,16 +71,17 @@ namespace luminous {
                                   MicrofacetTransmission{valid_trans});
         }
 
-        using FakeSpecularMetalBSDF = BSDF_Ty<SpecularReflection>;
+        using FakeMetalBSDF = BSDF_Ty<MicrofacetReflection>;
 
-        ND_XPU_INLINE FakeSpecularMetalBSDF create_fake_specular_metal_bsdf(float4 color) {
-            return FakeSpecularMetalBSDF(BSDFData::create_fake_metal_data(color),
-                                         Fresnel{NoOp}, Microfacet{}, SpecularReflection{});
+        ND_XPU_INLINE FakeMetalBSDF create_fake_metal_bsdf(float4 color, float roughness_x, float roughness_y) {
+            return FakeMetalBSDF(BSDFData::create_fake_metal_data(color),
+                                         Fresnel{NoOp}, Microfacet{roughness_x, roughness_y, GGX},
+                                         MicrofacetReflection{});
         }
 
         class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF,
                 GlassBSDF, RoughGlassBSDFSingle, GlassBSDFSingle, RoughGlassBSDF,
-                FakeSpecularMetalBSDF> {
+                FakeMetalBSDF> {
         private:
             using Variant::Variant;
         public:
