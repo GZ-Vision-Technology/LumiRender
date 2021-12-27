@@ -13,7 +13,7 @@ namespace luminous {
 
         enum FresnelType : uint8_t {
             NoOp,
-            Metal,
+            Conductor,
             Dielectric
         };
 
@@ -77,7 +77,7 @@ namespace luminous {
                     }
                     case FresnelType::NoOp:
                         break;
-                    case FresnelType::Metal:
+                    case FresnelType::Conductor:
                         break;
                     default:
                         break;

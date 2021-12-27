@@ -72,7 +72,7 @@ namespace luminous {
                 switch (_type) {
                     case NoOp:
                         return {1.f};
-                    case Metal:
+                    case Conductor:
                         return fresnel_complex(cos_theta, Spectrum(data.metal_eta()), Spectrum(data.k()))[0];
                     case Dielectric:
                         return fresnel_dielectric(cos_theta, data.eta());

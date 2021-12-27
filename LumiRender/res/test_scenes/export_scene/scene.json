@@ -183,6 +183,16 @@
                 "roughness" : [0.05,0.05]
             }
         }
+        ,
+        {
+            "type": "MetalMaterial",
+            "name" : "metal",
+            "param": {
+                "eta": [0.19999069, 0.922084629, 1.09987593],
+                "k" : [3.90463543, 2.44763327, 2.13765264],
+                "roughness": [0.05,0.05]
+            }
+        }
 //        ,
 //        {
 //            "type": "MetalMaterial",
@@ -410,10 +420,10 @@
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
-                "material": "glass_white",
+//                "material": "glass_white",
 //                "material": "matte_white",
 //                "material": "mirror_white",
-//                "material": "fake_metal",
+                "material": "fake_metal",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {

@@ -237,7 +237,25 @@ namespace luminous {
                         normal_tex.fill_tex_idx(index);
                     }
 
-                } else if (type() == full_type("MatteMaterial")) {
+                } else if (type() == full_type("MetalMaterial")) {
+
+                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+                        return tex_config.name == roughness_tex.name;
+                    });
+                    roughness_tex.fill_tex_idx(idx);
+                    DCHECK(roughness_tex.valid())
+
+                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+                        return tex_config.name == k_tex.name;
+                    });
+                    k_tex.fill_tex_idx(idx);
+                    DCHECK(k_tex.valid())
+
+                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+                        return tex_config.name == eta_tex.name;
+                    });
+                    eta_tex.fill_tex_idx(idx);
+                    DCHECK(eta_tex.valid())
 
                 } else if (type() == full_type("GlassMaterial")) {
 

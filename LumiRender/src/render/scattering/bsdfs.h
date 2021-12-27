@@ -79,6 +79,12 @@ namespace luminous {
                                          MicrofacetReflection{});
         }
 
+        using MetalBSDF = BSDF_Ty<MicrofacetReflection>;
+        ND_XPU_INLINE MetalBSDF create_metal_bsdf(float4 eta, float4 k, float roughness_x, float roughness_y) {
+            BSDFData data = BSDFData::create_metal_data(eta, k);
+            return MetalBSDF(data, Fresnel{Conductor}, Microfacet{roughness_x, roughness_y, GGX}, MicrofacetReflection{});
+        }
+
         class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF,
                 GlassBSDF, RoughGlassBSDFSingle, GlassBSDFSingle, RoughGlassBSDF,
                 FakeMetalBSDF> {

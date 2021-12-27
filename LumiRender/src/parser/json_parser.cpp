@@ -324,6 +324,11 @@ namespace luminous {
             } else if (type == "FakeMetalMaterial") {
                 ret.roughness_tex = process_attr(param["roughness"], scene_graph);
                 ret.remapping_roughness = param["remapping_roughness"].as_bool(false);
+            } else if (type == "MetalMaterial") {
+                ret.roughness_tex = process_attr(param["roughness"], scene_graph);
+                ret.remapping_roughness = param["remapping_roughness"].as_bool(false);
+                ret.eta_tex = process_attr(param["eta"], scene_graph);
+                ret.k_tex = process_attr(param["k"], scene_graph);
             }
             ret.name = ps["name"].as_string();
             return ret;

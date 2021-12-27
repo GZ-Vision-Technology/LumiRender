@@ -39,7 +39,7 @@ namespace luminous {
             index_t _k_idx{};
             index_t _roughness_idx{};
             bool _remapping_roughness{};
-
+        public:
             explicit MetalMaterial(index_t eta_idx, index_t k_idx, index_t roughness_idx, bool remapping)
                     : _eta_idx(eta_idx), _k_idx(k_idx), _roughness_idx(roughness_idx),
                       _remapping_roughness(remapping) {}
