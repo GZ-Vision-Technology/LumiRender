@@ -21,7 +21,6 @@ namespace luminous {
         private:
             float4 _color{};
             float4 _params{};
-            float4 _metal_eta{};
             FresnelType _fresnel_type{NoOp};
         public:
 
@@ -87,21 +86,6 @@ namespace luminous {
                 return make_float2(_params);
             }
 
-            LM_XPU_INLINE void correct_eta(float cos_theta, FresnelType fresnel_type) {
-                switch (fresnel_type) {
-                    case FresnelType::Dielectric: {
-                        _params.w = luminous::correct_eta(cos_theta, _params.w);
-                        break;
-                    }
-                    case FresnelType::NoOp:
-                        break;
-                    case FresnelType::Conductor:
-                        break;
-                    default:
-                        break;
-                }
-            }
-
             LM_XPU_INLINE void correct_eta(float cos_theta) {
                 switch (_fresnel_type) {
                     case FresnelType::Dielectric: {
@@ -109,9 +93,7 @@ namespace luminous {
                         break;
                     }
                     case FresnelType::NoOp:
-                        break;
                     case FresnelType::Conductor:
-                        break;
                     default:
                         break;
                 }
