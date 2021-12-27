@@ -22,7 +22,6 @@ namespace luminous {
             }
 
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFData data,
-                                    Fresnel fresnel,
                                     Microfacet microfacet = {},
                                     TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? _eval(wo, wi, data) : Spectrum{0.f};
@@ -30,18 +29,17 @@ namespace luminous {
 
             LM_ND_XPU float PDF(float3 wo, float3 wi,
                                 BSDFData data,
-                                Fresnel fresnel,
                                 Microfacet microfacet = {},
                                 TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? cosine_hemisphere_PDF(Frame::abs_cos_theta(wi)) : 0.f;
             }
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFData data,
-                                          Fresnel fresnel, Microfacet microfacet = {},
+                                          Microfacet microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
-                float PDF_val = PDF(wo, wi, data, fresnel, microfacet, mode);
+                float PDF_val = PDF(wo, wi, data, microfacet, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }
@@ -93,7 +91,6 @@ namespace luminous {
             }
 
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFData data,
-                                    Fresnel fresnel,
                                     Microfacet microfacet = {},
                                     TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? _eval(wo, wi, data) : Spectrum{0.f};
@@ -101,18 +98,17 @@ namespace luminous {
 
             LM_ND_XPU float PDF(float3 wo, float3 wi,
                                 BSDFData data,
-                                Fresnel fresnel,
                                 Microfacet microfacet = {},
                                 TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? cosine_hemisphere_PDF(Frame::abs_cos_theta(wi)) : 0.f;
             }
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFData data,
-                                          Fresnel fresnel, Microfacet microfacet = {},
+                                          Microfacet microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
-                float PDF_val = PDF(wo, wi, data, fresnel, microfacet, mode);
+                float PDF_val = PDF(wo, wi, data, microfacet, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }
@@ -137,7 +133,6 @@ namespace luminous {
             }
 
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFData data,
-                                    Fresnel fresnel,
                                     Microfacet microfacet = {},
                                     TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? Spectrum{0.f} : _eval(wo, wi, data);
@@ -145,18 +140,17 @@ namespace luminous {
 
             LM_ND_XPU float PDF(float3 wo, float3 wi,
                                 BSDFData data,
-                                Fresnel fresnel,
                                 Microfacet microfacet = {},
                                 TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? 0.f : cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
             }
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFData data,
-                                          Fresnel fresnel, Microfacet microfacet = {},
+                                          Microfacet microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z > 0 ? -wi.z : wi.z;
-                float PDF_val = PDF(wo, wi, data, fresnel, microfacet, mode);
+                float PDF_val = PDF(wo, wi, data, microfacet, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }
