@@ -250,6 +250,12 @@ namespace luminous {
                     });
                     eta_tex.fill_tex_idx(idx);
                     DCHECK(eta_tex.valid())
+                } else if (type() == full_type("FakeMetalMaterial")) {
+                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+                        return tex_config.name == roughness_tex.name;
+                    });
+                    roughness_tex.fill_tex_idx(idx);
+                    DCHECK(roughness_tex.valid())
                 }
                 DCHECK(color_tex.valid());
             }
