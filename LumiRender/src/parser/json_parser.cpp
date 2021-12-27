@@ -247,17 +247,17 @@ namespace luminous {
             }
         }
 
-        LM_NODISCARD float4 construct_float4(const ParameterSet &val) {
+        LM_NODISCARD float4 construct_float4(const ParameterSet &val, float4 default_val = make_float4(1.f)) {
             if (val.data().is_number()) {
                 return make_float4(val.as_float(1.f), 0, 0, 0);
             } else if (val.data().is_array()) {
                 auto size = val.data().size();
                 if (size == 2) {
-                    return make_float4(val.as_float2(make_float2(1.f)), 0, 0);
+                    return make_float4(val.as_float2(make_float2(default_val)), 0, 0);
                 } else if (size == 3) {
-                    return make_float4(val.as_float3(make_float3(1.f)), 0);
+                    return make_float4(val.as_float3(make_float3(default_val)), 0);
                 } else if (size == 4) {
-                    return val.as_float4();
+                    return val.as_float4(default_val);
                 }
             }
             return make_float4(0.f);
@@ -295,13 +295,13 @@ namespace luminous {
             return ret;
         }
 
-        TextureConfig process_attr(const ParameterSet &ps, SceneGraph *scene_graph) {
+        TextureConfig process_attr(const ParameterSet &ps, SceneGraph *scene_graph, float4 default_val = make_float4(1.f)) {
             TextureConfig ret;
             if (ps.data().is_string()) {
                 ret.name = ps.as_string();
                 return ret;
             }
-            ret.val = construct_float4(ps);
+            ret.val = construct_float4(ps, default_val);
             ret.set_full_type("ConstantTexture");
             ret.fill_tex_idx(scene_graph->try_push(ret));
             return ret;
@@ -327,8 +327,8 @@ namespace luminous {
             } else if (type == "MetalMaterial") {
                 ret.roughness_tex = process_attr(param["roughness"], scene_graph);
                 ret.remapping_roughness = param["remapping_roughness"].as_bool(false);
-                ret.eta_tex = process_attr(param["eta"], scene_graph);
-                ret.k_tex = process_attr(param["k"], scene_graph);
+                ret.eta_tex = process_attr(param["eta"], scene_graph, make_float4(0.19999069, 0.922084629, 1.09987593, 0));
+                ret.k_tex = process_attr(param["k"], scene_graph, make_float4(3.90463543, 2.44763327, 2.13765264, 0));
             }
             ret.name = ps["name"].as_string();
             return ret;
