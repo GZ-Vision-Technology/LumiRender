@@ -31,7 +31,7 @@ namespace luminous {
             }
 
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
-                                                  float Fr, BSDFData data,
+                                                  Spectrum Fr, BSDFData data,
                                                   Fresnel fresnel,
                                                   Microfacet microfacet = {},
                                                   TransportMode mode = TransportMode::Radiance) {
@@ -79,7 +79,7 @@ namespace luminous {
             }
 
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
-                                                  float Fr, BSDFData data,
+                                                  Spectrum Fr, BSDFData data,
                                                   Fresnel fresnel,
                                                   Microfacet microfacet = {},
                                                   TransportMode mode = TransportMode::Radiance) {
@@ -89,9 +89,9 @@ namespace luminous {
                 if (!valid) {
                     return {};
                 }
-                auto ft = (1.f - Fr) / Frame::abs_cos_theta(wi);
+                Spectrum ft = (Spectrum(1.f) - Fr) / Frame::abs_cos_theta(wi);
                 float factor = cal_factor(mode, data.eta());
-                Spectrum val = ft * data.color() * factor;
+                Spectrum val = ft * Spectrum(data.color()) * factor;
                 return {val, wi, 1, SpecTrans, data.eta()};
             }
 

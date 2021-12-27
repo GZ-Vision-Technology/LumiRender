@@ -410,10 +410,10 @@
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
-//                "material": "glass_white",
+                "material": "glass_white",
 //                "material": "matte_white",
 //                "material": "mirror_white",
-                "material": "fake_metal",
+//                "material": "fake_metal",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
@@ -454,10 +454,10 @@
             "param": {
                 "fn": "meshes/Cube.001.ply",
                 "subdiv_level": 0,
-//                "material": "glass_white",
+                "material": "glass_white",
 //                "material": "matte_white",
 //                "material": "mirror_white",
-                "material": "fake_metal",
+//                "material": "fake_metal",
                 "transform": {
                     "type": "matrix4x4",
                     "param": {

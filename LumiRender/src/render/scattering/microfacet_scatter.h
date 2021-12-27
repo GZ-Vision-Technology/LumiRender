@@ -71,7 +71,7 @@ namespace luminous {
              * eta must be corrected
              */
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
-                                                  float _, BSDFData data,
+                                                  Spectrum Fr, BSDFData data,
                                                   Fresnel fresnel,
                                                   Microfacet microfacet = {},
                                                   TransportMode mode = TransportMode::Radiance) {
@@ -173,7 +173,7 @@ namespace luminous {
             }
 
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
-                                                  float _, BSDFData data,
+                                                  Spectrum Fr, BSDFData data,
                                                   Fresnel fresnel,
                                                   Microfacet microfacet = {},
                                                   TransportMode mode = TransportMode::Radiance) {
@@ -250,7 +250,7 @@ namespace luminous {
                     ret.PDF *= Fr;
                 } else {
                     // sample transmission
-                    ret = MicrofacetTransmission::_sample_f(wo, uc, u, 1 - Fr, data, fresnel, microfacet, mode);
+                    ret = MicrofacetTransmission::_sample_f(wo, uc, u, Fr, data, fresnel, microfacet, mode);
                     ret.PDF *= 1 - Fr;
                 }
                 return ret;
