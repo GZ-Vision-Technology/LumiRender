@@ -184,6 +184,7 @@ namespace luminous {
             // common
             TextureConfig color_tex;
             bool remapping_roughness{true};
+            TextureConfig roughness_tex;
 
             // matte
             float sigma{};
@@ -194,7 +195,9 @@ namespace luminous {
 
             // glass material
             TextureConfig eta_tex;
-            TextureConfig roughness_tex;
+
+            // metal material
+            TextureConfig k_tex;
 
             void fill_tex_configs(std::vector<TextureConfig> &tex_configs) {
                 // common data

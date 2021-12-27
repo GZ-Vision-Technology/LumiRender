@@ -23,5 +23,7 @@ namespace luminous {
             FakeMetalBSDF fake_metal_material = create_fake_metal_bsdf(color, roughness.x, roughness.y);
             return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{fake_metal_material}};
         }
+
+
     }
 }
