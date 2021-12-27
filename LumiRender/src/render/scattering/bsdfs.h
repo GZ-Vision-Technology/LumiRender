@@ -8,7 +8,6 @@
 #include "bsdf_ty.h"
 #include "microfacet.h"
 #include "bsdf_data.h"
-#include "fresnel.h"
 #include "diffuse_scatter.h"
 #include "microfacet_scatter.h"
 #include "specular_scatter.h"

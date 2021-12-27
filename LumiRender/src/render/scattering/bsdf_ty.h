@@ -9,7 +9,6 @@
 #include "base_libs/sampling/sampling.h"
 #include "microfacet.h"
 #include "bsdf_data.h"
-#include "fresnel.h"
 #include "base.h"
 
 namespace luminous {
