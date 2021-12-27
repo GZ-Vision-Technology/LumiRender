@@ -35,11 +35,24 @@ namespace luminous {
              * @return
              */
             ND_XPU_INLINE float4 metal_eta() const {
-                return _metal_eta;
+                switch (_fresnel_type) {
+                    case Conductor:
+                        return _color;
+                }
+                DCHECK(0);
+                return make_float4(1.f);
             }
 
             ND_XPU_INLINE float4 color() const {
-                return _color;
+                switch (_fresnel_type) {
+                    case NoOp:
+                    case Dielectric:
+                        return _color;
+                    case Conductor:
+                        return make_float4(1.f);
+                }
+                DCHECK(0);
+                return make_float4(1.f);
             }
 
             /**
@@ -122,8 +135,7 @@ namespace luminous {
 
             LM_ND_XPU static BSDFData create_metal_data(float4 eta, float4 k) {
                 BSDFData ret{Conductor};
-                ret._metal_eta = eta;
-                ret._color = make_float4(1.f);
+                ret._color = eta;
                 ret._params = k;
                 return ret;
             }
