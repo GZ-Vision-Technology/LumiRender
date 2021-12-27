@@ -21,6 +21,7 @@ namespace luminous {
         private:
             float4 _color{};
             float4 _params{};
+            float4 _metal_eta{};
         public:
 
             LM_XPU BSDFData() = default;
@@ -30,7 +31,7 @@ namespace luminous {
              * @return
              */
             ND_XPU_INLINE float4 metal_eta() const {
-                return _color;
+                return _metal_eta;
             }
 
             ND_XPU_INLINE float4 color() const {
@@ -86,7 +87,8 @@ namespace luminous {
 
             LM_ND_XPU static BSDFData create_metal_data(float4 eta, float4 k) {
                 BSDFData ret{};
-                ret._color = eta;
+                ret._metal_eta = eta;
+                ret._color = make_float4(1.f);
                 ret._params = k;
                 return ret;
             }

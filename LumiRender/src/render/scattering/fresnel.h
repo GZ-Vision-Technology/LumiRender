@@ -11,54 +11,6 @@
 namespace luminous {
     inline namespace render {
 
-        struct FresnelDielectric {
-        public:
-            float eta{};
-            LM_XPU FresnelDielectric() = default;
-
-            LM_XPU explicit FresnelDielectric(float eta_t)
-                    : eta(eta_t) {}
-
-            LM_XPU void correct_eta(float cos_theta) {
-                eta = luminous::correct_eta(cos_theta, eta);
-            }
-
-            LM_ND_XPU float eval(float abs_cos_theta_i) const {
-                return fresnel_dielectric(abs_cos_theta_i, eta);
-            }
-        };
-
-        struct FresnelConductor {
-        public:
-            Spectrum eta, k;
-            LM_XPU FresnelConductor() = default;
-
-            LM_XPU FresnelConductor(Spectrum eta, Spectrum k)
-                    : eta(eta), k(k) {}
-
-            LM_XPU void correct_eta(float cos_theta) {
-                eta = luminous::correct_eta(cos_theta, eta);
-            }
-
-            LM_ND_XPU Spectrum eval(float cos_theta_i) const {
-                return fresnel_complex(cos_theta_i, eta, k);
-            }
-        };
-
-        struct FresnelNoOp {
-        public:
-            constexpr static float eta{1.f};
-
-            LM_XPU FresnelNoOp() = default;
-
-            LM_XPU void correct_eta(float cos_theta) {}
-
-            LM_ND_XPU float eval(float) const {
-                return 1.f;
-            }
-        };
-
-
         struct Fresnel {
         private:
             FresnelType _type{NoOp};
@@ -73,7 +25,7 @@ namespace luminous {
                     case NoOp:
                         return {1.f};
                     case Conductor:
-                        return fresnel_complex(cos_theta, Spectrum(data.metal_eta()), Spectrum(data.k()))[0];
+                        return fresnel_complex(cos_theta, Spectrum(data.metal_eta()), Spectrum(data.k()));
                     case Dielectric:
                         return fresnel_dielectric(cos_theta, data.eta());
                     default:

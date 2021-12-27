@@ -47,7 +47,7 @@ namespace luminous {
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(explicit MetalMaterial(const MaterialConfig &mc)
-                    : MetalMaterial(mc.color_tex.tex_idx(), mc.k_tex.tex_idx(),
+                    : MetalMaterial(mc.eta_tex.tex_idx(), mc.k_tex.tex_idx(),
                                     mc.roughness_tex.tex_idx(), mc.remapping_roughness) {})
         };
     }
