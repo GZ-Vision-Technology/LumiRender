@@ -106,7 +106,7 @@ namespace luminous {
 
             ND_XPU_INLINE FresnelType type() const { return _fresnel_type; }
 
-            ND_XPU_INLINE Spectrum eval(float cos_theta) const {
+            ND_XPU_INLINE Spectrum eval_fresnel(float cos_theta) const {
                 switch (_fresnel_type) {
                     case NoOp:
                         return {1.f};

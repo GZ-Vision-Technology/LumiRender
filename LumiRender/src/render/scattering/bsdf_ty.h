@@ -216,7 +216,7 @@ namespace luminous {
 
                 float cos_theta_o = Frame::cos_theta(wo);
                 bsdf_data.correct_eta(cos_theta_o);
-                float Fr = bsdf_data.eval(Frame::abs_cos_theta(wo))[0];
+                float Fr = bsdf_data.eval_fresnel(Frame::abs_cos_theta(wo))[0];
                 BSDFSample ret;
                 if (uc < Fr) {
                     ret = Refl::_sample_f(wo, uc, u, Fr, bsdf_data, BaseClass::_microfacet, mode);

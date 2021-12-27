@@ -25,7 +25,7 @@ namespace luminous {
                 float cos_theta_i = Frame::cos_theta(wi);
                 float3 wh = normalize(wo + wi);
                 wh = face_forward(wh, make_float3(0, 0, 1));
-                auto F = data.eval(abs_dot(wo, wh));
+                auto F = data.eval_fresnel(abs_dot(wo, wh));
                 auto fr = microfacet.BRDF(wo, wh, wi, F, cos_theta_i, cos_theta_o, mode);
                 return fr * Spectrum(data.color());
             }
@@ -115,7 +115,7 @@ namespace luminous {
                     return {0.f};
                 }
                 wh = face_forward(wh, make_float3(0, 0, 1));
-                float F = data.eval(abs_dot(wo, wh))[0];
+                float F = data.eval_fresnel(abs_dot(wo, wh))[0];
                 float tr = microfacet.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i, cos_theta_o, data.eta(),
                                            mode);
                 return tr * data.color();
@@ -228,7 +228,7 @@ namespace luminous {
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);
-                float Fr = data.eval(Frame::abs_cos_theta(wo))[0];
+                float Fr = data.eval_fresnel(Frame::abs_cos_theta(wo))[0];
                 BSDFSample ret;
                 if (uc < Fr) {
                     // sample reflection
