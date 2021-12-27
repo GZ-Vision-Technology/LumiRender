@@ -19,6 +19,7 @@ namespace luminous {
 
         struct BSDFData {
         private:
+            // todo Merge field
             float4 _color{};
             float4 _params{};
             FresnelType _fresnel_type{NoOp};
