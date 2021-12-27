@@ -27,6 +27,7 @@ namespace luminous {
 
 
         BSDFWrapper MetalMaterial::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
+            //todo frequently look up the texture lead to time consuming to increase
             const Texture& tex = scene_data->get_texture(_eta_idx);
             float4 eta = tex.eval(ctx);
             const Texture &roughness_tex = scene_data->get_texture(_roughness_idx);
