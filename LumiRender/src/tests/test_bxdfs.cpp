@@ -7,7 +7,6 @@
 #include "render/scattering/specular_scatter.h"
 #include "render/scattering/microfacet.h"
 #include "render/scattering/bsdfs.h"
-#include "render/scattering/fresnel.h"
 #include "render/scattering/diffuse_scatter.h"
 #include "render/samplers/independent.cpp"
 #include "render/scattering/bsdf_wrapper.cpp"
@@ -83,11 +82,11 @@ void test_microfacet_transmission(float deg) {
     auto s = luminous::make_float3(1, 0, 0);
     float eta = 1.5;
     cout << "specular ";
-    BSDFWrapper bsdf_wrapper{n, n, s, BSDF{create_glass_bsdf_test(luminous::make_float4(1.f), eta, false, true)}};
+    BSDFWrapper bsdf_wrapper{n, n, s, BSDF{create_glass_bsdf(luminous::make_float4(1.f), eta, false, true)}};
     float rs =  sample_bsdf(bsdf_wrapper, wo, eta);
     cout << "rough ";
     BSDFWrapper bsdf_wrapper2{n, n, s,
-                              BSDF{create_rough_glass_bsdf_test(luminous::make_float4(1.f), eta, 0.002, 0.002, false,
+                              BSDF{create_rough_glass_bsdf(luminous::make_float4(1.f), eta, 0.002, 0.002, false,
                                                                 true)}};
     float rr = sample_bsdf(bsdf_wrapper2, wo ,eta);
     cout << "rr : rs = " << rr / rs;
@@ -107,7 +106,7 @@ void test_bsdf_data() {
 
 int main() {
 
-    cout << sizeof (luminous::float3) << endl;
+    cout << sizeof (luminous::OrenNayarBSDF )<< endl;
 
 //    test_bsdf_data();
 

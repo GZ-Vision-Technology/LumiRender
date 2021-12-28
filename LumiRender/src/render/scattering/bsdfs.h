@@ -84,7 +84,7 @@ namespace luminous {
 
         class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF,
                 GlassBSDF, RoughGlassBSDFSingle, GlassBSDFSingle, RoughGlassBSDF,
-                FakeMetalBSDF> {
+                FakeMetalBSDF,MetalBSDF> {
         private:
             using Variant::Variant;
         public:
