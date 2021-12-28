@@ -198,8 +198,22 @@ namespace luminous {
             // metal material
             TextureConfig k_tex;
 
-            static void
-            fill_tex_idx_by_name(std::vector<TextureConfig> &tex_configs, TextureConfig &tc, bool force = false) {
+            // disney material
+            TextureConfig metallic_tex;
+            TextureConfig specular_tint_tex;
+            TextureConfig anisotropic_tex;
+            TextureConfig sheen_tex;
+            TextureConfig sheen_tint_tex;
+            TextureConfig clearcoat_tex;
+            TextureConfig clearcoat_gloss_tex;
+            TextureConfig spec_trans_tex;
+            TextureConfig scatter_distance_tex;
+            TextureConfig flatness_tex;
+            TextureConfig diff_trans_tex;
+            bool thin{};
+
+            static void fill_tex_idx_by_name(std::vector<TextureConfig> &tex_configs,
+                                             TextureConfig &tc, bool force = false) {
                 auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                     return tex_config.name == tc.name;
                 });
