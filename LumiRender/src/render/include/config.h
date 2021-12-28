@@ -121,11 +121,10 @@ namespace luminous {
                 return _tex_idx;
             }
 
-            void fill_tex_idx(index_t index) {
-                if (is_valid_index(_tex_idx)) {
-                    return;
+            void fill_tex_idx(index_t index, bool force = false) {
+                if (force || !is_valid_index(_tex_idx)) {
+                    _tex_idx = index;
                 }
-                _tex_idx = index;
             }
 
             LM_NODISCARD bool valid() const {
@@ -199,12 +198,18 @@ namespace luminous {
             // metal material
             TextureConfig k_tex;
 
+            static void
+            fill_tex_idx_by_name(std::vector<TextureConfig> &tex_configs, TextureConfig &tc, bool force = false) {
+                auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
+                    return tex_config.name == tc.name;
+                });
+                tc.fill_tex_idx(idx, force);
+                DCHECK(tc.valid())
+            }
+
             void fill_tex_configs(std::vector<TextureConfig> &tex_configs) {
                 // common data
-                auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                    return tex_config.name == color_tex.name;
-                });
-                color_tex.fill_tex_idx(idx);
+                fill_tex_idx_by_name(tex_configs, color_tex);
 
                 if (type() == full_type("AssimpMaterial")) {
                     int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
@@ -239,44 +244,21 @@ namespace luminous {
 
                 } else if (type() == full_type("MetalMaterial")) {
 
-                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config.name == roughness_tex.name;
-                    });
-                    roughness_tex.fill_tex_idx(idx);
-                    DCHECK(roughness_tex.valid())
+                    fill_tex_idx_by_name(tex_configs, roughness_tex);
 
-                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config.name == k_tex.name;
-                    });
-                    k_tex.fill_tex_idx(idx);
-                    DCHECK(k_tex.valid())
+                    fill_tex_idx_by_name(tex_configs, k_tex);
 
-                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config.name == eta_tex.name;
-                    });
-                    eta_tex.fill_tex_idx(idx);
-                    DCHECK(eta_tex.valid())
+                    fill_tex_idx_by_name(tex_configs, eta_tex);
 
                 } else if (type() == full_type("GlassMaterial")) {
 
-                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config.name == roughness_tex.name;
-                    });
-                    roughness_tex.fill_tex_idx(idx);
-                    DCHECK(roughness_tex.valid())
+                    fill_tex_idx_by_name(tex_configs, roughness_tex);
 
-                    // todo may be avoid to find
-                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config.name == eta_tex.name;
-                    });
-                    eta_tex.fill_tex_idx(idx);
-                    DCHECK(eta_tex.valid())
+                    fill_tex_idx_by_name(tex_configs, eta_tex);
+
                 } else if (type() == full_type("FakeMetalMaterial")) {
-                    idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config.name == roughness_tex.name;
-                    });
-                    roughness_tex.fill_tex_idx(idx);
-                    DCHECK(roughness_tex.valid())
+
+                    fill_tex_idx_by_name(tex_configs, roughness_tex);
                 }
                 DCHECK(color_tex.valid());
             }
