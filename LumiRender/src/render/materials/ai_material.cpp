@@ -9,8 +9,7 @@ namespace luminous {
     inline namespace render {
 
         BSDFWrapper AssimpMaterial::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
-            const Texture &tex = scene_data->get_texture(_color_idx);
-            float4 color = tex.eval(ctx);
+            float4 color = scene_data->get_texture(_color_idx).eval(ctx);
             DiffuseBSDF diffuse_bsdf = create_diffuse_bsdf(color);
             BSDF bsdf{diffuse_bsdf};
             return {ctx.ng, ctx.ns, ctx.dp_dus, bsdf};

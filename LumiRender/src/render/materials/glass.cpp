@@ -10,12 +10,9 @@ namespace luminous {
     inline namespace render {
 
         BSDFWrapper GlassMaterial::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
-            const Texture &tex = scene_data->get_texture(_color_idx);
-            const Texture &eta_tex = scene_data->get_texture(_eta_idx);
-            float4 color = tex.eval(ctx);
-            float eta = eta_tex.eval(ctx).x;
-            const Texture &roughness_tex = scene_data->get_texture(_roughness_idx);
-            float2 roughness = make_float2(roughness_tex.eval(ctx));
+            float4 color = scene_data->get_texture(_color_idx).eval(ctx);
+            float eta = scene_data->get_texture(_eta_idx).eval(ctx).x;
+            float2 roughness = make_float2(scene_data->get_texture(_roughness_idx).eval(ctx));
             if (_remapping_roughness) {
                 roughness.x = Microfacet::roughness_to_alpha(roughness.x);
                 roughness.y = Microfacet::roughness_to_alpha(roughness.y);
