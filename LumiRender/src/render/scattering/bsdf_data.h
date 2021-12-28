@@ -24,6 +24,21 @@ namespace luminous {
             float4 _params{};
             FresnelType _fresnel_type{NoOp};
         public:
+            // disney params
+            float metallic{};
+            float roughness{};
+            float specular_tint{};
+            float anisotropic{};
+            float sheen{};
+            float sheen_tint{};
+            float clearcoat{};
+            float clearcoat_gloss{};
+            float spec_trans{};
+            float4 scatter_distance{};
+            float flatness{};
+            float diff_trans{};
+            bool thin{};
+        public:
 
             LM_XPU BSDFData() = default;
 
