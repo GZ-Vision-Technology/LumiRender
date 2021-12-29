@@ -53,7 +53,7 @@ namespace luminous {
             }
 
             LM_ND_XPU Spectrum color() const {
-                return Spectrum{_data.color()};
+                return Spectrum{_data.get_param().color()};
             }
 
             template<typename F>
@@ -108,7 +108,7 @@ namespace luminous {
                 Spectrum ret{0.f};
                 this->for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
-                        ret += bxdf.safe_eval(wo, wi, _data, _microfacet);
+                        ret += bxdf.safe_eval(wo, wi, _data.get_param(), _microfacet);
                     }
                     return true;
                 });
@@ -129,7 +129,7 @@ namespace luminous {
                 for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
                         match_count += 1;
-                        ret += bxdf.safe_PDF(wo, wi, _data, _microfacet);
+                        ret += bxdf.safe_PDF(wo, wi, _data.get_param(), _microfacet);
                     }
                     return true;
                 });
@@ -151,7 +151,7 @@ namespace luminous {
                 for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
                         if (count == comp) {
-                            ret = bxdf.sample_f(wo, uc, u, _data, _microfacet, mode);
+                            ret = bxdf.sample_f(wo, uc, u, _data.get_param(), _microfacet, mode);
                             return false;
                         }
                         count += 1;
@@ -178,7 +178,7 @@ namespace luminous {
                 if constexpr(Delta) {
                     return {0.f};
                 } else {
-                    BSDFParam bsdf_data = BaseClass::_data;
+                    BSDFParam bsdf_data = BaseClass::_data.get_param();
                     float cos_theta_o = Frame::cos_theta(wo);
                     bsdf_data.correct_eta(cos_theta_o);
                     if (same_hemisphere(wi, wo)) {
@@ -194,7 +194,7 @@ namespace luminous {
                 if constexpr(Delta) {
                     return 0.f;
                 } else {
-                    BSDFParam bsdf_data = BaseClass::_data;
+                    BSDFParam bsdf_data = BaseClass::_data.get_param();
                     float cos_theta_o = Frame::cos_theta(wo);
                     bsdf_data.correct_eta(cos_theta_o);
                     if (same_hemisphere(wi, wo)) {
@@ -212,7 +212,7 @@ namespace luminous {
                     return {};
                 }
 
-                BSDFParam bsdf_data = BaseClass::_data;
+                BSDFParam bsdf_data = BaseClass::_data.get_param();
 
                 float cos_theta_o = Frame::cos_theta(wo);
                 bsdf_data.correct_eta(cos_theta_o);

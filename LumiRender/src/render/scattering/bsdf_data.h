@@ -58,6 +58,10 @@ namespace luminous {
                 return make_float4(1.f);
             }
 
+            ND_XPU_INLINE BSDFParam get_param() const {
+                return *this;
+            }
+
             ND_XPU_INLINE float4 color() const {
                 switch (_fresnel_type) {
                     case NoOp:
