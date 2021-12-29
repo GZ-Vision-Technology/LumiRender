@@ -14,7 +14,7 @@ namespace luminous {
         public:
             using BxDFOld::BxDFOld;
 
-            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFData data,
                                            Microfacet microfacet = {},
                                            TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
@@ -58,7 +58,7 @@ namespace luminous {
         public:
             using BxDFOld::BxDFOld;
 
-            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFData data,
                                            Microfacet microfacet = {},
                                            TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
@@ -112,7 +112,7 @@ namespace luminous {
         public:
             using BxDFOld::BxDFOld;
 
-            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFData data,
                                            Microfacet microfacet = {},
                                            TransportMode mode = TransportMode::Radiance) {
                 return 0.f;

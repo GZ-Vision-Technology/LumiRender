@@ -16,15 +16,15 @@ namespace luminous {
         public:
             using BxDF::BxDF;
 
-            LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFData data,
                                      TransportMode mode = TransportMode::Radiance) const {
                 return Spectrum{data.color() * constant::invPi};
             }
 
-            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFData data,
                                     Microfacet microfacet = {},
                                     TransportMode mode = TransportMode::Radiance) const {
-                return same_hemisphere(wo, wi) ? _eval(wo, wi, data) : Spectrum{0.f};
+                return same_hemisphere(wo, wi) ? eval(wo, wi, data) : Spectrum{0.f};
             }
 
             LM_ND_XPU float PDF(float3 wo, float3 wi,
@@ -43,7 +43,7 @@ namespace luminous {
                 if (PDF_val == 0.f) {
                     return {};
                 }
-                Spectrum f = _eval(wo, wi, data, mode);
+                Spectrum f = eval(wo, wi, data, mode);
                 return {f, wi, PDF_val, BxDFFlags::Reflection};
             }
 
@@ -65,7 +65,7 @@ namespace luminous {
              *   	 alpha = max(theta_i,theta_o)
              *		 beta = min(theta_i,theta_o)
              */
-            LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFData data,
                                      TransportMode mode = TransportMode::Radiance) const {
                 float sin_theta_i = Frame::sin_theta(wi);
                 float sin_theta_o = Frame::sin_theta(wo);
@@ -90,10 +90,10 @@ namespace luminous {
                 return data.color() * invPi * factor;
             }
 
-            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFData data,
                                     Microfacet microfacet = {},
                                     TransportMode mode = TransportMode::Radiance) const {
-                return same_hemisphere(wo, wi) ? _eval(wo, wi, data) : Spectrum{0.f};
+                return same_hemisphere(wo, wi) ? eval(wo, wi, data) : Spectrum{0.f};
             }
 
             LM_ND_XPU float PDF(float3 wo, float3 wi,
@@ -112,7 +112,7 @@ namespace luminous {
                 if (PDF_val == 0.f) {
                     return {};
                 }
-                Spectrum f = _eval(wo, wi, data, mode);
+                Spectrum f = eval(wo, wi, data, mode);
                 return {f, wi, PDF_val, BxDFFlags::Reflection};
             }
 
@@ -127,15 +127,15 @@ namespace luminous {
         public:
             using BxDFOld::BxDFOld;
 
-            LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFData data,
                                      TransportMode mode = TransportMode::Radiance) const {
                 return Spectrum{data.color() * constant::invPi};
             }
 
-            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFData data,
                                     Microfacet microfacet = {},
                                     TransportMode mode = TransportMode::Radiance) const {
-                return same_hemisphere(wo, wi) ? Spectrum{0.f} : _eval(wo, wi, data);
+                return same_hemisphere(wo, wi) ? Spectrum{0.f} : eval(wo, wi, data);
             }
 
             LM_ND_XPU float PDF(float3 wo, float3 wi,
@@ -154,7 +154,7 @@ namespace luminous {
                 if (PDF_val == 0.f) {
                     return {};
                 }
-                Spectrum f = _eval(wo, wi, data, mode);
+                Spectrum f = eval(wo, wi, data, mode);
                 return {f, wi, PDF_val, BxDFFlags::Reflection};
             }
 

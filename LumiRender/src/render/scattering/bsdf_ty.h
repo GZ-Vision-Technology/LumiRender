@@ -108,7 +108,7 @@ namespace luminous {
                 Spectrum ret{0.f};
                 this->for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
-                        ret += bxdf.eval(wo, wi, _data, _microfacet);
+                        ret += bxdf.safe_eval(wo, wi, _data, _microfacet);
                     }
                     return true;
                 });
@@ -182,9 +182,9 @@ namespace luminous {
                     float cos_theta_o = Frame::cos_theta(wo);
                     bsdf_data.correct_eta(cos_theta_o);
                     if (same_hemisphere(wi, wo)) {
-                        return Refl::_eval(wo, wi, bsdf_data, BaseClass::_microfacet, mode);
+                        return Refl::eval(wo, wi, bsdf_data, BaseClass::_microfacet, mode);
                     }
-                    return Trans::_eval(wo, wi, bsdf_data, BaseClass::_microfacet, mode);
+                    return Trans::eval(wo, wi, bsdf_data, BaseClass::_microfacet, mode);
                 }
             }
 

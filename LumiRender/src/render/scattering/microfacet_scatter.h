@@ -17,7 +17,7 @@ namespace luminous {
             /**
              * must be reflection and eta must be corrected
              */
-            LM_ND_XPU static Spectrum _eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFData data,
                                             Microfacet microfacet = {},
                                             TransportMode mode = TransportMode::Radiance) {
 
@@ -30,7 +30,7 @@ namespace luminous {
                 return fr * Spectrum(data.color());
             }
 
-            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFData data,
                                            Microfacet microfacet = {},
                                            TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
@@ -38,7 +38,7 @@ namespace luminous {
                     return {0.f};
                 }
                 data.correct_eta(cos_theta_o);
-                return _eval(wo, wi, data, microfacet, mode);
+                return eval(wo, wi, data, microfacet, mode);
             }
 
             /**
@@ -78,7 +78,7 @@ namespace luminous {
                     return {};
                 }
                 float PDF = microfacet.PDF_wi_reflection(wo, wh);
-                Spectrum val = _eval(wo, wi, data, microfacet);
+                Spectrum val = eval(wo, wi, data, microfacet);
                 return {val, wi, PDF, flags(), data.eta()};
             }
 
@@ -104,7 +104,7 @@ namespace luminous {
             /**
              * must be transmission and eta must be corrected
              */
-            LM_ND_XPU static Spectrum _eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFData data,
                                             Microfacet microfacet = {},
                                             TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
@@ -121,7 +121,7 @@ namespace luminous {
                 return tr * data.color();
             }
 
-            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFData data,
                                            Microfacet microfacet = {},
                                            TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
@@ -129,7 +129,7 @@ namespace luminous {
                     return {0.f};
                 }
                 data.correct_eta(cos_theta_o);
-                return _eval(wo, wi, data, microfacet, mode);
+                return eval(wo, wi, data, microfacet, mode);
             }
 
             /**
@@ -176,7 +176,7 @@ namespace luminous {
                     return {};
                 }
                 float PDF = microfacet.PDF_wi_transmission(wo, wh, wi, data.eta());
-                Spectrum val = _eval(wo, wi, data, microfacet);
+                Spectrum val = eval(wo, wi, data, microfacet);
                 return {val, wi, PDF, flags(), data.eta()};
             }
 
@@ -200,15 +200,15 @@ namespace luminous {
         public:
             using BxDFOld::BxDFOld;
 
-            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFData data,
+            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFData data,
                                            Microfacet microfacet = {},
                                            TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);
                 if (same_hemisphere(wi, wo)) {
-                    return MicrofacetReflection::_eval(wo, wi, data, microfacet, mode);
+                    return MicrofacetReflection::eval(wo, wi, data, microfacet, mode);
                 }
-                return MicrofacetTransmission::_eval(wo, wi, data, microfacet, mode);
+                return MicrofacetTransmission::eval(wo, wi, data, microfacet, mode);
             }
 
             LM_ND_XPU static float PDF(float3 wo, float3 wi,
