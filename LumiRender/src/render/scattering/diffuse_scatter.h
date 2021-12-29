@@ -12,9 +12,9 @@
 
 namespace luminous {
     inline namespace render {
-        class DiffuseReflection : public BxDFOld {
+        class DiffuseReflection : public BxDF<DiffuseReflection> {
         public:
-            using BxDFOld::BxDFOld;
+            using BxDF::BxDF;
 
             LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, BSDFData data,
                                      TransportMode mode = TransportMode::Radiance) const {

@@ -85,7 +85,7 @@ LM_ND_XPU bool match_flags(BxDFFlags bxdf_flags) {      \
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
-                float PDF_val = cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
+                float PDF_val = PDF(wo, wi, data, microfacet, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }
