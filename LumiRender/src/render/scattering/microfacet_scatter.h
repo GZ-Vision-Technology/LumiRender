@@ -44,7 +44,7 @@ namespace luminous {
             /**
             * must be reflection
             */
-            LM_ND_XPU static float _PDF(float3 wo, float3 wi,
+            LM_ND_XPU static float PDF(float3 wo, float3 wi,
                                         BSDFData data,
                                         Microfacet microfacet = {},
                                         TransportMode mode = TransportMode::Radiance) {
@@ -52,14 +52,14 @@ namespace luminous {
                 return microfacet.PDF_wi_reflection(wo, wh);
             }
 
-            LM_ND_XPU static float PDF(float3 wo, float3 wi,
+            LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
                                        BSDFData data,
                                        Microfacet microfacet = {},
                                        TransportMode mode = TransportMode::Radiance) {
                 if (!same_hemisphere(wo, wi)) {
                     return 0.f;
                 }
-                return _PDF(wo, wi, data, microfacet, mode);
+                return PDF(wo, wi, data, microfacet, mode);
             }
 
             /**
@@ -136,7 +136,7 @@ namespace luminous {
              * wo and wi must be not same hemisphere
              * and eta must be corrected
              */
-            LM_ND_XPU static float _PDF(float3 wo, float3 wi,
+            LM_ND_XPU static float PDF(float3 wo, float3 wi,
                                         BSDFData data,
                                         Microfacet microfacet,
                                         TransportMode mode = TransportMode::Radiance) {
@@ -150,7 +150,7 @@ namespace luminous {
                 return microfacet.PDF_wi_transmission(wo, wh, wi, data.eta());
             }
 
-            LM_ND_XPU static float PDF(float3 wo, float3 wi,
+            LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
                                        BSDFData data,
                                        Microfacet microfacet,
                                        TransportMode mode = TransportMode::Radiance) {
@@ -159,7 +159,7 @@ namespace luminous {
                     return 0.f;
                 }
                 data.correct_eta(cos_theta_o);
-                return _PDF(wo, wi, data, microfacet, mode);
+                return PDF(wo, wi, data, microfacet, mode);
             }
 
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
@@ -211,16 +211,16 @@ namespace luminous {
                 return MicrofacetTransmission::eval(wo, wi, data, microfacet, mode);
             }
 
-            LM_ND_XPU static float PDF(float3 wo, float3 wi,
+            LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
                                        BSDFData data,
                                        Microfacet microfacet = {},
                                        TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);
                 if (same_hemisphere(wi, wo)) {
-                    return MicrofacetReflection::_PDF(wo, wi, data, microfacet, mode);
+                    return MicrofacetReflection::PDF(wo, wi, data, microfacet, mode);
                 }
-                return MicrofacetTransmission::_PDF(wo, wi, data, microfacet, mode);
+                return MicrofacetTransmission::PDF(wo, wi, data, microfacet, mode);
             }
 
             LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFData data,

@@ -27,7 +27,7 @@ namespace luminous {
                 return same_hemisphere(wo, wi) ? eval(wo, wi, data) : Spectrum{0.f};
             }
 
-            LM_ND_XPU float PDF(float3 wo, float3 wi,
+            LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
                                 BSDFData data,
                                 Microfacet microfacet = {},
                                 TransportMode mode = TransportMode::Radiance) const {
@@ -39,7 +39,7 @@ namespace luminous {
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
-                float PDF_val = PDF(wo, wi, data, microfacet, mode);
+                float PDF_val = safe_PDF(wo, wi, data, microfacet, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }
@@ -96,7 +96,7 @@ namespace luminous {
                 return same_hemisphere(wo, wi) ? eval(wo, wi, data) : Spectrum{0.f};
             }
 
-            LM_ND_XPU float PDF(float3 wo, float3 wi,
+            LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
                                 BSDFData data,
                                 Microfacet microfacet = {},
                                 TransportMode mode = TransportMode::Radiance) const {
@@ -108,7 +108,7 @@ namespace luminous {
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
-                float PDF_val = PDF(wo, wi, data, microfacet, mode);
+                float PDF_val = safe_PDF(wo, wi, data, microfacet, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }
@@ -138,7 +138,7 @@ namespace luminous {
                 return same_hemisphere(wo, wi) ? Spectrum{0.f} : eval(wo, wi, data);
             }
 
-            LM_ND_XPU float PDF(float3 wo, float3 wi,
+            LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
                                 BSDFData data,
                                 Microfacet microfacet = {},
                                 TransportMode mode = TransportMode::Radiance) const {
@@ -150,7 +150,7 @@ namespace luminous {
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z > 0 ? -wi.z : wi.z;
-                float PDF_val = PDF(wo, wi, data, microfacet, mode);
+                float PDF_val = safe_PDF(wo, wi, data, microfacet, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }

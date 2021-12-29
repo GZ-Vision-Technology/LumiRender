@@ -129,7 +129,7 @@ namespace luminous {
                 for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
                         match_count += 1;
-                        ret += bxdf.PDF(wo, wi, _data, _microfacet);
+                        ret += bxdf.safe_PDF(wo, wi, _data, _microfacet);
                     }
                     return true;
                 });
@@ -198,9 +198,9 @@ namespace luminous {
                     float cos_theta_o = Frame::cos_theta(wo);
                     bsdf_data.correct_eta(cos_theta_o);
                     if (same_hemisphere(wi, wo)) {
-                        return Refl::_PDF(wo, wi, bsdf_data, BaseClass::_microfacet, mode);
+                        return Refl::PDF(wo, wi, bsdf_data, BaseClass::_microfacet, mode);
                     }
-                    return Trans::_PDF(wo, wi, bsdf_data, BaseClass::_microfacet, mode);
+                    return Trans::PDF(wo, wi, bsdf_data, BaseClass::_microfacet, mode);
                 }
             }
 

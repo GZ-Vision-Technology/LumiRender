@@ -20,7 +20,7 @@ namespace luminous {
                 return 0.f;
             }
 
-            LM_ND_XPU static float PDF(float3 wo, float3 wi,
+            LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
                                        BSDFData data,
                                        Microfacet microfacet = {},
                                        TransportMode mode = TransportMode::Radiance) {
@@ -64,7 +64,7 @@ namespace luminous {
                 return 0.f;
             }
 
-            LM_ND_XPU static float PDF(float3 wo, float3 wi,
+            LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
                                        BSDFData data,
                                        Microfacet microfacet = {},
                                        TransportMode mode = TransportMode::Radiance) {
@@ -118,7 +118,7 @@ namespace luminous {
                 return 0.f;
             }
 
-            LM_ND_XPU static float PDF(float3 wo, float3 wi,
+            LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
                                        BSDFData data,
                                        Microfacet microfacet = {},
                                        TransportMode mode = TransportMode::Radiance) {
