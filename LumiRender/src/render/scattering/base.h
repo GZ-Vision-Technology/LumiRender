@@ -6,6 +6,7 @@
 #pragma once
 
 #include "flags.h"
+#include "microfacet.h"
 
 namespace luminous {
     inline namespace render {

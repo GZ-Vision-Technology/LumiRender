@@ -6,7 +6,7 @@
 #pragma once
 
 #include "base_libs/optics/rgb.h"
-#include "base.h"
+#include "flags.h"
 
 namespace luminous {
     inline namespace render {
@@ -195,8 +195,7 @@ namespace luminous {
                         float3 wh = spherical_direction(sin_theta, cos_theta, phi);
                         if (!same_hemisphere(wo, wh)) {
                             wh = -wh;
-                        }
-                        CHECK_UNIT_VEC(wh);
+                        }CHECK_UNIT_VEC(wh);
                         return wh;
                     }
                     case Beckmann: {
@@ -223,8 +222,7 @@ namespace luminous {
                         float3 wh = spherical_direction(sin_theta, cos_theta, phi);
                         if (!same_hemisphere(wo, wh)) {
                             wh = -wh;
-                        }
-                        CHECK_UNIT_VEC(wh);
+                        }CHECK_UNIT_VEC(wh);
                         return wh;
                     }
                     default:
@@ -282,39 +280,35 @@ namespace luminous {
                 return PDF_wi_transmission(PDF_wh(wo, wh), wo, wh, wi, eta);
             }
 
-            template<typename T>
-            LM_ND_XPU T BRDF(float3 wo, float3 wh, float3 wi, T Fr,
-                             float cos_theta_i, float cos_theta_o,
-                             TransportMode mode = TransportMode::Radiance) const {
+            LM_ND_XPU Spectrum BRDF(float3 wo, float3 wh, float3 wi, Spectrum Fr,
+                                    float cos_theta_i, float cos_theta_o,
+                                    TransportMode mode = TransportMode::Radiance) const {
                 auto ret = D(wh) * Fr * G(wo, wi) / std::abs(4 * cos_theta_o * cos_theta_i);
                 DCHECK(!invalid(ret));
                 DCHECK(all_positive(ret));
                 return ret;
             }
 
-            template<typename T>
-            LM_ND_XPU T BRDF(float3 wo, float3 wi, T Fr,
-                             float cos_theta_i, float cos_theta_o,
-                             TransportMode mode = TransportMode::Radiance) const {
+            LM_ND_XPU Spectrum BRDF(float3 wo, float3 wi, Spectrum Fr,
+                                    float cos_theta_i, float cos_theta_o,
+                                    TransportMode mode = TransportMode::Radiance) const {
                 float3 wh = normalize(wo + wi);
                 return BRDF(wo, wh, wi, Fr, cos_theta_i, cos_theta_o, mode);
             }
 
             /**
              *
-             * @tparam T
              * @param eta : eta_i / eta_o
              * @param mode
              * @return
              */
-            template<typename T>
-            LM_ND_XPU T BTDF(float3 wo, float3 wh, float3 wi, T Ft,
-                             float cos_theta_i, float cos_theta_o, T eta,
-                             TransportMode mode = TransportMode::Radiance) const {
-                T numerator = D(wh) * Ft * G(wo, wi) * std::abs(dot(wi, wh) * dot(wo, wh));
-                T denom = sqr(dot(wi, wh) * eta + dot(wo, wh)) * abs(cos_theta_i * cos_theta_o);
-                T ft = numerator / denom;
-                T factor = cal_factor(mode, eta);
+            LM_ND_XPU float BTDF(float3 wo, float3 wh, float3 wi, float Ft,
+                                 float cos_theta_i, float cos_theta_o, float eta,
+                                 TransportMode mode = TransportMode::Radiance) const {
+                float numerator = D(wh) * Ft * G(wo, wi) * std::abs(dot(wi, wh) * dot(wo, wh));
+                float denom = sqr(dot(wi, wh) * eta + dot(wo, wh)) * abs(cos_theta_i * cos_theta_o);
+                float ft = numerator / denom;
+                float factor = cal_factor(mode, eta);
                 DCHECK(!invalid(ft));
                 DCHECK(all_positive(ft));
                 return ft * factor;
@@ -322,14 +316,12 @@ namespace luminous {
 
             /**
              *
-             * @tparam T
              * @param eta : eta_i / eta_o
              * @param mode
              * @return
              */
-            template<typename T>
-            LM_ND_XPU T BTDF(float3 wo, float3 wi, T Ft,
-                             float cos_theta_i, float cos_theta_o, T eta,
+            LM_ND_XPU float BTDF(float3 wo, float3 wi, float Ft,
+                             float cos_theta_i, float cos_theta_o, float eta,
                              TransportMode mode = TransportMode::Radiance) const {
                 float3 wh = normalize(wo + wi * eta);
                 return BTDF(wo, wh, wi, Ft, cos_theta_i, cos_theta_o, eta, mode);
