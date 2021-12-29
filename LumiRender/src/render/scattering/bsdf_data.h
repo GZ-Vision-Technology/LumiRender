@@ -40,6 +40,8 @@ namespace luminous {
 //            bool thin{};
         public:
 
+            MicrofacetDistrib microfacet{};
+
             LM_XPU BSDFParam() = default;
 
             LM_XPU explicit BSDFParam(FresnelType fresnel_type)

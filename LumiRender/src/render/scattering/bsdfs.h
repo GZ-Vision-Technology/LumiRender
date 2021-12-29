@@ -62,7 +62,9 @@ namespace luminous {
         ND_XPU_INLINE RoughGlassBSDF
         create_rough_glass_bsdf(float4 color, float eta, float alpha_x, float alpha_y,
                                 bool valid_refl = true, bool valid_trans = true) {
-            return RoughGlassBSDF(BSDFParam::create_glass_data(color, eta),
+            auto param = BSDFParam::create_glass_data(color, eta);
+            param.microfacet = MicrofacetDistrib{alpha_x, alpha_y};
+            return RoughGlassBSDF(param,
                                   MicrofacetDistrib{alpha_x, alpha_y},
                                   MicrofacetReflection{valid_refl},
                                   MicrofacetTransmission{valid_trans});
@@ -71,7 +73,9 @@ namespace luminous {
         using FakeMetalBSDF = BSDF_Ty<BSDFParam, MicrofacetReflection>;
 
         ND_XPU_INLINE FakeMetalBSDF create_fake_metal_bsdf(float4 color, float roughness_x, float roughness_y) {
-            return FakeMetalBSDF(BSDFParam::create_fake_metal_data(color),
+            auto param = BSDFParam::create_fake_metal_data(color);
+            param.microfacet = MicrofacetDistrib{roughness_x, roughness_y};
+            return FakeMetalBSDF(param,
                                  MicrofacetDistrib{roughness_x, roughness_y, GGX},
                                  MicrofacetReflection{});
         }
@@ -79,6 +83,7 @@ namespace luminous {
         using MetalBSDF = BSDF_Ty<BSDFParam, MicrofacetReflection>;
         ND_XPU_INLINE MetalBSDF create_metal_bsdf(float4 eta, float4 k, float roughness_x, float roughness_y) {
             BSDFParam data = BSDFParam::create_metal_data(eta, k);
+            data.microfacet = MicrofacetDistrib{roughness_x, roughness_y, GGX};
             return MetalBSDF(data, MicrofacetDistrib{roughness_x, roughness_y, GGX}, MicrofacetReflection{});
         }
 
