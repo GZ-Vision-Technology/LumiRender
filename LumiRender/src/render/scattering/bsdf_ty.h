@@ -45,7 +45,7 @@ namespace luminous {
         public:
             LM_XPU BSDF_Ty() = default;
 
-            LM_XPU explicit BSDF_Ty(BSDFParam data, MicrofacetDistrib microfacet, TBxDF...args)
+            LM_XPU explicit BSDF_Ty(BSDFParam data, TBxDF...args)
                     : _data(data),
                       _bxdfs(std::make_tuple(std::forward<TBxDF>(args)...)) {
 
