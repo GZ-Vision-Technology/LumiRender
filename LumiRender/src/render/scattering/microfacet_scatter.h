@@ -18,7 +18,6 @@ namespace luminous {
              * must be reflection and eta must be corrected
              */
             LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFParam data,
-                                           MicrofacetDistrib microfacet = {},
                                            TransportMode mode = TransportMode::Radiance) {
 
                 float cos_theta_o = Frame::cos_theta(wo);
@@ -31,14 +30,13 @@ namespace luminous {
             }
 
             LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFParam data,
-                                                MicrofacetDistrib microfacet = {},
                                                 TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 if (!same_hemisphere(wi, wo)) {
                     return {0.f};
                 }
                 data.correct_eta(cos_theta_o);
-                return eval(wo, wi, data, microfacet, mode);
+                return eval(wo, wi, data, mode);
             }
 
             /**
@@ -46,7 +44,6 @@ namespace luminous {
             */
             LM_ND_XPU static float PDF(float3 wo, float3 wi,
                                        BSDFParam data,
-                                       MicrofacetDistrib microfacet = {},
                                        TransportMode mode = TransportMode::Radiance) {
                 float3 wh = normalize(wo + wi);
                 return data.microfacet.PDF_wi_reflection(wo, wh);
@@ -54,12 +51,11 @@ namespace luminous {
 
             LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
                                             BSDFParam data,
-                                            MicrofacetDistrib microfacet = {},
                                             TransportMode mode = TransportMode::Radiance) {
                 if (!same_hemisphere(wo, wi)) {
                     return 0.f;
                 }
-                return PDF(wo, wi, data, data.microfacet, mode);
+                return PDF(wo, wi, data, mode);
             }
 
             /**
@@ -67,7 +63,6 @@ namespace luminous {
              */
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
                                                   Spectrum Fr, BSDFParam data,
-                                                  MicrofacetDistrib microfacet = {},
                                                   TransportMode mode = TransportMode::Radiance) {
                 float3 wh = data.microfacet.sample_wh(wo, u);
                 if (dot(wh, wo) < 0) {
@@ -78,16 +73,15 @@ namespace luminous {
                     return {};
                 }
                 float PDF = data.microfacet.PDF_wi_reflection(wo, wh);
-                Spectrum val = eval(wo, wi, data, data.microfacet);
+                Spectrum val = eval(wo, wi, data);
                 return {val, wi, PDF, flags(), data.eta()};
             }
 
             LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFParam data,
-                                                 MicrofacetDistrib microfacet = {},
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);
-                return _sample_f(wo, uc, u, 0.f, data, microfacet, mode);
+                return _sample_f(wo, uc, u, 0.f, data, mode);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -104,7 +98,6 @@ namespace luminous {
              * must be transmission and eta must be corrected
              */
             LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFParam data,
-                                           MicrofacetDistrib microfacet = {},
                                            TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 float cos_theta_i = Frame::cos_theta(wi);
@@ -121,14 +114,13 @@ namespace luminous {
             }
 
             LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFParam data,
-                                                MicrofacetDistrib microfacet = {},
                                                 TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 if (same_hemisphere(wi, wo)) {
                     return {0.f};
                 }
                 data.correct_eta(cos_theta_o);
-                return eval(wo, wi, data, data.microfacet, mode);
+                return eval(wo, wi, data, mode);
             }
 
             /**
@@ -137,7 +129,6 @@ namespace luminous {
              */
             LM_ND_XPU static float PDF(float3 wo, float3 wi,
                                        BSDFParam data,
-                                       MicrofacetDistrib microfacet,
                                        TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 float cos_theta_i = Frame::cos_theta(wi);
@@ -151,21 +142,19 @@ namespace luminous {
 
             LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
                                             BSDFParam data,
-                                            MicrofacetDistrib microfacet,
                                             TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 if (same_hemisphere(wo, wi)) {
                     return 0.f;
                 }
                 data.correct_eta(cos_theta_o);
-                return PDF(wo, wi, data, microfacet, mode);
+                return PDF(wo, wi, data, mode);
             }
 
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
                                                   Spectrum Fr, BSDFParam data,
-                                                  MicrofacetDistrib microfacet = {},
                                                   TransportMode mode = TransportMode::Radiance) {
-                float3 wh = microfacet.sample_wh(wo, u);
+                float3 wh = data.microfacet.sample_wh(wo, u);
                 if (dot(wh, wo) < 0) {
                     return {};
                 }
@@ -175,16 +164,15 @@ namespace luminous {
                     return {};
                 }
                 float PDF = data.microfacet.PDF_wi_transmission(wo, wh, wi, data.eta());
-                Spectrum val = eval(wo, wi, data, microfacet);
+                Spectrum val = eval(wo, wi, data);
                 return {val, wi, PDF, flags(), data.eta()};
             }
 
             LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFParam data,
-                                                 MicrofacetDistrib microfacet = {},
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);
-                return _sample_f(wo, uc, u, 0.f, data, microfacet, mode);
+                return _sample_f(wo, uc, u, 0.f, data, mode);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -199,30 +187,27 @@ namespace luminous {
             using BxDF::BxDF;
 
             LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFParam data,
-                                                MicrofacetDistrib microfacet = {},
                                                 TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);
                 if (same_hemisphere(wi, wo)) {
-                    return MicrofacetReflection::eval(wo, wi, data, microfacet, mode);
+                    return MicrofacetReflection::eval(wo, wi, data, mode);
                 }
-                return MicrofacetTransmission::eval(wo, wi, data, microfacet, mode);
+                return MicrofacetTransmission::eval(wo, wi, data, mode);
             }
 
             LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
                                             BSDFParam data,
-                                            MicrofacetDistrib microfacet = {},
                                             TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);
                 if (same_hemisphere(wi, wo)) {
-                    return MicrofacetReflection::PDF(wo, wi, data, microfacet, mode);
+                    return MicrofacetReflection::PDF(wo, wi, data, mode);
                 }
-                return MicrofacetTransmission::PDF(wo, wi, data, microfacet, mode);
+                return MicrofacetTransmission::PDF(wo, wi, data, mode);
             }
 
             LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFParam data,
-                                                 MicrofacetDistrib microfacet = {},
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);
@@ -230,11 +215,11 @@ namespace luminous {
                 BSDFSample ret;
                 if (uc < Fr) {
                     // sample reflection
-                    ret = MicrofacetReflection::_sample_f(wo, uc, u, Fr, data, microfacet, mode);
+                    ret = MicrofacetReflection::_sample_f(wo, uc, u, Fr, data, mode);
                     ret.PDF *= Fr;
                 } else {
                     // sample transmission
-                    ret = MicrofacetTransmission::_sample_f(wo, uc, u, Fr, data, microfacet, mode);
+                    ret = MicrofacetTransmission::_sample_f(wo, uc, u, Fr, data, mode);
                     ret.PDF *= 1 - Fr;
                 }
                 return ret;

@@ -20,7 +20,6 @@ namespace luminous {
             using Tuple = std::tuple<TBxDF...>;
             static constexpr int size = std::tuple_size_v<Tuple>;
             Tuple _bxdfs;
-            MicrofacetDistrib _microfacet{};
             TParam _data{};
         protected:
             template<int index, typename F>
@@ -47,7 +46,7 @@ namespace luminous {
             LM_XPU BSDF_Ty() = default;
 
             LM_XPU explicit BSDF_Ty(BSDFParam data, MicrofacetDistrib microfacet, TBxDF...args)
-                    : _data(data), _microfacet(microfacet),
+                    : _data(data),
                       _bxdfs(std::make_tuple(std::forward<TBxDF>(args)...)) {
 
             }
@@ -108,7 +107,7 @@ namespace luminous {
                 Spectrum ret{0.f};
                 this->for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
-                        ret += bxdf.safe_eval(wo, wi, _data.get_param(), _microfacet);
+                        ret += bxdf.safe_eval(wo, wi, _data.get_param());
                     }
                     return true;
                 });
@@ -129,7 +128,7 @@ namespace luminous {
                 for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
                         match_count += 1;
-                        ret += bxdf.safe_PDF(wo, wi, _data.get_param(), _microfacet);
+                        ret += bxdf.safe_PDF(wo, wi, _data.get_param());
                     }
                     return true;
                 });
@@ -151,7 +150,7 @@ namespace luminous {
                 for_each([&](auto bxdf) {
                     if (bxdf.match_flags(flags)) {
                         if (count == comp) {
-                            ret = bxdf.sample_f(wo, uc, u, _data.get_param(), _microfacet, mode);
+                            ret = bxdf.sample_f(wo, uc, u, _data.get_param(), mode);
                             return false;
                         }
                         count += 1;
@@ -182,9 +181,9 @@ namespace luminous {
                     float cos_theta_o = Frame::cos_theta(wo);
                     bsdf_data.correct_eta(cos_theta_o);
                     if (same_hemisphere(wi, wo)) {
-                        return Refl::eval(wo, wi, bsdf_data, BaseClass::_microfacet, mode);
+                        return Refl::eval(wo, wi, bsdf_data, mode);
                     }
-                    return Trans::eval(wo, wi, bsdf_data, BaseClass::_microfacet, mode);
+                    return Trans::eval(wo, wi, bsdf_data, mode);
                 }
             }
 
@@ -198,9 +197,9 @@ namespace luminous {
                     float cos_theta_o = Frame::cos_theta(wo);
                     bsdf_data.correct_eta(cos_theta_o);
                     if (same_hemisphere(wi, wo)) {
-                        return Refl::PDF(wo, wi, bsdf_data, BaseClass::_microfacet, mode);
+                        return Refl::PDF(wo, wi, bsdf_data, mode);
                     }
-                    return Trans::PDF(wo, wi, bsdf_data, BaseClass::_microfacet, mode);
+                    return Trans::PDF(wo, wi, bsdf_data, mode);
                 }
             }
 
@@ -219,10 +218,10 @@ namespace luminous {
                 float Fr = bsdf_data.eval_fresnel(Frame::abs_cos_theta(wo))[0];
                 BSDFSample ret;
                 if (uc < Fr) {
-                    ret = Refl::_sample_f(wo, uc, u, Fr, bsdf_data, BaseClass::_microfacet, mode);
+                    ret = Refl::_sample_f(wo, uc, u, Fr, bsdf_data, mode);
                     ret.PDF *= Fr;
                 } else {
-                    ret = Trans::_sample_f(wo, uc, u, Fr, bsdf_data, BaseClass::_microfacet, mode);
+                    ret = Trans::_sample_f(wo, uc, u, Fr, bsdf_data, mode);
                     ret.PDF *= 1 - Fr;
                 }
                 return ret;

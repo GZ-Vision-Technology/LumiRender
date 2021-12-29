@@ -15,21 +15,18 @@ namespace luminous {
             using BxDF::BxDF;
 
             LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFParam data,
-                                                MicrofacetDistrib microfacet = {},
                                                 TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
             }
 
             LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
                                             BSDFParam data,
-                                            MicrofacetDistrib microfacet = {},
                                             TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
             }
 
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
                                                   Spectrum Fr, BSDFParam data,
-                                                  MicrofacetDistrib microfacet = {},
                                                   TransportMode mode = TransportMode::Radiance) {
                 float3 wi = make_float3(-wo.x, -wo.y, wo.z);
                 Spectrum val = Fr * Spectrum(data.color()) / Frame::abs_cos_theta(wi);
@@ -38,13 +35,12 @@ namespace luminous {
             }
 
             LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFParam data,
-                                                 MicrofacetDistrib microfacet = {},
                                                  TransportMode mode = TransportMode::Radiance) {
 
                 float3 wi = make_float3(-wo.x, -wo.y, wo.z);
                 data.correct_eta(Frame::cos_theta(wo));
                 auto Fr = data.eval_fresnel(Frame::abs_cos_theta(wo));
-                return _sample_f(wo, uc, u, Fr, data, microfacet, mode);
+                return _sample_f(wo, uc, u, Fr, data, mode);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -58,21 +54,18 @@ namespace luminous {
             using BxDF::BxDF;
 
             LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFParam data,
-                                                MicrofacetDistrib microfacet = {},
                                                 TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
             }
 
             LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
                                             BSDFParam data,
-                                            MicrofacetDistrib microfacet = {},
                                             TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
             }
 
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
                                                   Spectrum Fr, BSDFParam data,
-                                                  MicrofacetDistrib microfacet = {},
                                                   TransportMode mode = TransportMode::Radiance) {
                 float3 wi{};
                 float3 n = make_float3(0, 0, 1);
@@ -87,7 +80,6 @@ namespace luminous {
             }
 
             LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFParam data,
-                                                 MicrofacetDistrib microfacet = {},
                                                  TransportMode mode = TransportMode::Radiance) {
                 float3 wi{};
                 data.correct_eta(Frame::cos_theta(wo));
@@ -97,7 +89,7 @@ namespace luminous {
                     return {};
                 }
                 auto Fr = data.eval_fresnel(Frame::abs_cos_theta(wo))[0];
-                return _sample_f(wo, uc, u, Fr, data, microfacet, mode);
+                return _sample_f(wo, uc, u, Fr, data, mode);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -111,30 +103,27 @@ namespace luminous {
             using BxDF::BxDF;
 
             LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFParam data,
-                                                MicrofacetDistrib microfacet = {},
                                                 TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
             }
 
             LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
                                             BSDFParam data,
-                                            MicrofacetDistrib microfacet = {},
                                             TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
             }
 
             LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFParam data,
-                                                 MicrofacetDistrib microfacet = {},
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);
                 float Fr = data.eval_fresnel(Frame::abs_cos_theta(wo))[0];
                 BSDFSample ret;
                 if (uc < Fr) {
-                    ret = SpecularReflection::_sample_f(wo, uc, u, Fr, data, microfacet, mode);
+                    ret = SpecularReflection::_sample_f(wo, uc, u, Fr, data, mode);
                     ret.PDF *= Fr;
                 } else {
-                    ret = SpecularTransmission::_sample_f(wo, uc, u, Fr, data, microfacet, mode);
+                    ret = SpecularTransmission::_sample_f(wo, uc, u, Fr, data, mode);
                     ret.PDF *= 1 - Fr;
                 }
                 return ret;
