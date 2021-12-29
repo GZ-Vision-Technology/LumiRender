@@ -12,13 +12,6 @@
 namespace luminous {
     inline namespace render {
 
-        class BxDFOld {
-        public:
-            const bool valid{};
-
-            LM_XPU explicit BxDFOld(bool valid = true) : valid(valid) {}
-        };
-
         struct BSDFSample {
             Spectrum f_val{};
             float3 wi{};
