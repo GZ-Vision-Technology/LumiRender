@@ -7,18 +7,10 @@
 
 #include "flags.h"
 #include "microfacet.h"
+#include "bsdf_data.h"
 
 namespace luminous {
     inline namespace render {
-
-        template<typename T>
-        struct BxDF {
-        public:
-            const bool valid{};
-        public:
-            LM_XPU explicit BxDF(bool valid = true) : valid(valid) {}
-
-        };
 
         class BxDFOld {
         public:
@@ -72,6 +64,33 @@ LM_ND_XPU bool match_flags(BxDFFlags bxdf_flags) {      \
 
             LM_ND_XPU bool is_specular() const {
                 return luminous::is_specular(flags);
+            }
+        };
+
+        template<typename T>
+        struct BxDF {
+        public:
+            const bool valid{};
+        public:
+            LM_XPU explicit BxDF(bool valid = true) : valid(valid) {}
+
+            LM_XPU_INLINE float PDF(float3 wo, float3 wi, BSDFData data,
+                                    Microfacet microfacet = {},
+                                    TransportMode mode = TransportMode::Radiance) {
+                return same_hemisphere(wo, wi) ? cosine_hemisphere_PDF(Frame::abs_cos_theta(wi)) : 0.f;
+            }
+
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFData data,
+                                          Microfacet microfacet = {},
+                                          TransportMode mode = TransportMode::Radiance) const {
+                float3 wi = square_to_cosine_hemisphere(u);
+                wi.z = wo.z < 0 ? -wi.z : wi.z;
+                float PDF_val = cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
+                if (PDF_val == 0.f) {
+                    return {};
+                }
+                Spectrum f = static_cast<const T*>(this)->eval(wo, wi, data, mode);
+                return {f, wi, PDF_val, BxDFFlags::Reflection};
             }
         };
     }
