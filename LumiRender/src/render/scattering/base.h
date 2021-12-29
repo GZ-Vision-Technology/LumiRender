@@ -88,8 +88,8 @@ namespace luminous {
                 return {f, wi, PDF_val, BxDFFlags::Reflection};
             }
 
-            LM_ND_XPU bool match_flags(BxDFFlags bxdf_flags) const {
-                auto flags = static_cast<const T *>(this)->flags();
+            ND_XPU_INLINE bool match_flags(BxDFFlags bxdf_flags) {
+                static constexpr auto flags = T::flags();
                 return ((flags & bxdf_flags) == flags) && valid;
             }
         };
