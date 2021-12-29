@@ -22,20 +22,20 @@ namespace luminous {
             }
 
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFParam data,
-                                         Microfacet microfacet = {},
+                                         MicrofacetDistrib microfacet = {},
                                          TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? eval(wo, wi, data) : Spectrum{0.f};
             }
 
             LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
                                      BSDFParam data,
-                                     Microfacet microfacet = {},
+                                     MicrofacetDistrib microfacet = {},
                                      TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? cosine_hemisphere_PDF(Frame::abs_cos_theta(wi)) : 0.f;
             }
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFParam data,
-                                          Microfacet microfacet = {},
+                                          MicrofacetDistrib microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
@@ -90,20 +90,20 @@ namespace luminous {
             }
 
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFParam data,
-                                         Microfacet microfacet = {},
+                                         MicrofacetDistrib microfacet = {},
                                          TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? eval(wo, wi, data) : Spectrum{0.f};
             }
 
             LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
                                      BSDFParam data,
-                                     Microfacet microfacet = {},
+                                     MicrofacetDistrib microfacet = {},
                                      TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? cosine_hemisphere_PDF(Frame::abs_cos_theta(wi)) : 0.f;
             }
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFParam data,
-                                          Microfacet microfacet = {},
+                                          MicrofacetDistrib microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
@@ -131,20 +131,20 @@ namespace luminous {
             }
 
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFParam data,
-                                         Microfacet microfacet = {},
+                                         MicrofacetDistrib microfacet = {},
                                          TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? Spectrum{0.f} : eval(wo, wi, data);
             }
 
             LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
                                      BSDFParam data,
-                                     Microfacet microfacet = {},
+                                     MicrofacetDistrib microfacet = {},
                                      TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? 0.f : cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
             }
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFParam data,
-                                          Microfacet microfacet = {},
+                                          MicrofacetDistrib microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z > 0 ? -wi.z : wi.z;

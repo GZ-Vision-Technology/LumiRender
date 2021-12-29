@@ -17,22 +17,22 @@ namespace luminous {
             Beckmann,
         };
 
-        class Microfacet {
+        class MicrofacetDistrib {
         private:
             float _alpha_x{};
             float _alpha_y{};
             MicrofacetType _type{None};
         public:
-            LM_XPU Microfacet() = default;
+            LM_XPU MicrofacetDistrib() = default;
 
-            LM_XPU explicit Microfacet(float alpha, MicrofacetType type = GGX)
+            LM_XPU explicit MicrofacetDistrib(float alpha, MicrofacetType type = GGX)
                     : _alpha_x(alpha),
                       _alpha_y(alpha),
                       _type(type) {
                 LM_ASSERT(_type != None, "unknown type %d", int(_type));
             }
 
-            LM_XPU Microfacet(float alpha_x, float alpha_y, MicrofacetType type = GGX)
+            LM_XPU MicrofacetDistrib(float alpha_x, float alpha_y, MicrofacetType type = GGX)
                     : _alpha_x(alpha_x),
                       _alpha_y(alpha_y),
                       _type(type) {
