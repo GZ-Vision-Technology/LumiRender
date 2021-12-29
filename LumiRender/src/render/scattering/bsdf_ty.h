@@ -14,14 +14,14 @@
 namespace luminous {
     inline namespace render {
 
-        template<typename... TBxDF>
+        template<typename TParam, typename... TBxDF>
         class BSDF_Ty {
         protected:
             using Tuple = std::tuple<TBxDF...>;
             static constexpr int size = std::tuple_size_v<Tuple>;
             Tuple _bxdfs;
             MicrofacetDistrib _microfacet{};
-            BSDFParam _data{};
+            TParam _data{};
         protected:
             template<int index, typename F>
             LM_XPU void iterator(F &&func) const {
@@ -163,10 +163,10 @@ namespace luminous {
             }
         };
 
-        template<typename T1, typename T2, bool Delta = false>
-        class FresnelBSDF : public BSDF_Ty<T1, T2> {
+        template<typename TParam, typename T1, typename T2, bool Delta = false>
+        class FresnelBSDF : public BSDF_Ty<TParam, T1, T2> {
         protected:
-            using BaseClass = BSDF_Ty<T1, T2>;
+            using BaseClass = BSDF_Ty<TParam, T1, T2>;
             static_assert(BaseClass::size == 2, "FresnelBSDF must be two BxDF lobe!");
             using Refl = std::tuple_element_t<0, typename BaseClass::Tuple>;
             using Trans = std::tuple_element_t<1, typename BaseClass::Tuple>;
