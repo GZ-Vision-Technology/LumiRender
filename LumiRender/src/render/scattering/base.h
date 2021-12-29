@@ -19,11 +19,6 @@ namespace luminous {
             LM_XPU explicit BxDFOld(bool valid = true) : valid(valid) {}
         };
 
-#define GEN_MATCH_FLAGS_FUNC                            \
-LM_ND_XPU bool match_flags(BxDFFlags bxdf_flags) {      \
-    return (flags() & bxdf_flags) == flags() && valid;  \
-}
-
         struct BSDFSample {
             Spectrum f_val{};
             float3 wi{};
@@ -74,9 +69,9 @@ LM_ND_XPU bool match_flags(BxDFFlags bxdf_flags) {      \
         public:
             LM_XPU explicit BxDF(bool valid = true) : valid(valid) {}
 
-            LM_XPU_INLINE float PDF(float3 wo, float3 wi, BSDFData data,
+            LM_XPU_INLINE float safe_PDF(float3 wo, float3 wi, BSDFData data,
                                     Microfacet microfacet = {},
-                                    TransportMode mode = TransportMode::Radiance) {
+                                    TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? cosine_hemisphere_PDF(Frame::abs_cos_theta(wi)) : 0.f;
             }
 
@@ -85,12 +80,17 @@ LM_ND_XPU bool match_flags(BxDFFlags bxdf_flags) {      \
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
-                float PDF_val = PDF(wo, wi, data, microfacet, mode);
+                float PDF_val = safe_PDF(wo, wi, data, microfacet, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }
-                Spectrum f = static_cast<const T*>(this)->eval(wo, wi, data, mode);
+                Spectrum f = static_cast<const T *>(this)->eval(wo, wi, data, mode);
                 return {f, wi, PDF_val, BxDFFlags::Reflection};
+            }
+
+            LM_ND_XPU bool match_flags(BxDFFlags bxdf_flags) const {
+                auto flags = static_cast<const T *>(this)->flags();
+                return ((flags & bxdf_flags) == flags) && valid;
             }
         };
     }

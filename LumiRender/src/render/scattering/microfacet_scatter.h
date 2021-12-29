@@ -10,9 +10,9 @@
 namespace luminous {
     inline namespace render {
 
-        class MicrofacetReflection : public BxDFOld {
+        class MicrofacetReflection : public BxDF<MicrofacetReflection> {
         public:
-            using BxDFOld::BxDFOld;
+            using BxDF::BxDF;
 
             /**
              * must be reflection and eta must be corrected
@@ -94,12 +94,11 @@ namespace luminous {
                 return BxDFFlags::GlossyRefl;
             }
 
-            GEN_MATCH_FLAGS_FUNC
         };
 
-        class MicrofacetTransmission : public BxDFOld {
+        class MicrofacetTransmission : public BxDF<MicrofacetTransmission> {
         public:
-            using BxDFOld::BxDFOld;
+            using BxDF::BxDF;
 
             /**
              * must be transmission and eta must be corrected
@@ -192,13 +191,12 @@ namespace luminous {
                 return BxDFFlags::GlossyTrans;
             }
 
-            GEN_MATCH_FLAGS_FUNC
         };
 
 
-        class MicrofacetFresnel : public BxDFOld {
+        class MicrofacetFresnel : public BxDF<MicrofacetFresnel> {
         public:
-            using BxDFOld::BxDFOld;
+            using BxDF::BxDF;
 
             LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFData data,
                                            Microfacet microfacet = {},
@@ -246,7 +244,6 @@ namespace luminous {
                 return BxDFFlags::GlossyTrans | BxDFFlags::GlossyRefl;
             }
 
-            GEN_MATCH_FLAGS_FUNC
         };
     }
 }

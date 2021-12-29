@@ -51,12 +51,11 @@ namespace luminous {
                 return BxDFFlags::DiffRefl;
             }
 
-            GEN_MATCH_FLAGS_FUNC
         };
 
-        class OrenNayar : public BxDFOld {
+        class OrenNayar : public BxDF<OrenNayar> {
         public:
-            using BxDFOld::BxDFOld;
+            using BxDF::BxDF;
 
             /**
              * fr(wi,wo) = R / PI * (A + B * max(0,cos(phi_i - phi_o)) * sin_alpha * tan_beta)
@@ -120,12 +119,11 @@ namespace luminous {
                 return BxDFFlags::DiffRefl;
             }
 
-            GEN_MATCH_FLAGS_FUNC
         };
 
-        class DiffuseTransmission : public BxDFOld {
+        class DiffuseTransmission : public BxDF<DiffuseTransmission> {
         public:
-            using BxDFOld::BxDFOld;
+            using BxDF::BxDF;
 
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFData data,
                                      TransportMode mode = TransportMode::Radiance) const {
@@ -161,8 +159,6 @@ namespace luminous {
             LM_ND_XPU constexpr static BxDFFlags flags() {
                 return BxDFFlags::DiffTrans;
             }
-
-            GEN_MATCH_FLAGS_FUNC
         };
     }
 }
