@@ -21,7 +21,7 @@ namespace luminous {
             static constexpr int size = std::tuple_size_v<Tuple>;
             Tuple _bxdfs;
             Microfacet _microfacet{};
-            BSDFData _data{};
+            BSDFParam _data{};
         protected:
             template<int index, typename F>
             LM_XPU void iterator(F &&func) const {
@@ -46,7 +46,7 @@ namespace luminous {
         public:
             LM_XPU BSDF_Ty() = default;
 
-            LM_XPU explicit BSDF_Ty(BSDFData data, Microfacet microfacet, TBxDF...args)
+            LM_XPU explicit BSDF_Ty(BSDFParam data, Microfacet microfacet, TBxDF...args)
                     : _data(data), _microfacet(microfacet),
                       _bxdfs(std::make_tuple(std::forward<TBxDF>(args)...)) {
 
@@ -178,7 +178,7 @@ namespace luminous {
                 if constexpr(Delta) {
                     return {0.f};
                 } else {
-                    BSDFData bsdf_data = BaseClass::_data;
+                    BSDFParam bsdf_data = BaseClass::_data;
                     float cos_theta_o = Frame::cos_theta(wo);
                     bsdf_data.correct_eta(cos_theta_o);
                     if (same_hemisphere(wi, wo)) {
@@ -194,7 +194,7 @@ namespace luminous {
                 if constexpr(Delta) {
                     return 0.f;
                 } else {
-                    BSDFData bsdf_data = BaseClass::_data;
+                    BSDFParam bsdf_data = BaseClass::_data;
                     float cos_theta_o = Frame::cos_theta(wo);
                     bsdf_data.correct_eta(cos_theta_o);
                     if (same_hemisphere(wi, wo)) {
@@ -212,7 +212,7 @@ namespace luminous {
                     return {};
                 }
 
-                BSDFData bsdf_data = BaseClass::_data;
+                BSDFParam bsdf_data = BaseClass::_data;
 
                 float cos_theta_o = Frame::cos_theta(wo);
                 bsdf_data.correct_eta(cos_theta_o);

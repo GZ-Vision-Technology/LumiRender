@@ -17,7 +17,7 @@ namespace luminous {
             Dielectric
         };
 
-        struct BSDFData {
+        struct BSDFParam {
         private:
             // todo Merge field
             float4 _color{};
@@ -40,9 +40,9 @@ namespace luminous {
 //            bool thin{};
         public:
 
-            LM_XPU BSDFData() = default;
+            LM_XPU BSDFParam() = default;
 
-            LM_XPU explicit BSDFData(FresnelType fresnel_type)
+            LM_XPU explicit BSDFParam(FresnelType fresnel_type)
                     : _fresnel_type(fresnel_type) {}
 
             /**
@@ -131,27 +131,27 @@ namespace luminous {
                 return {0.f};
             }
 
-            LM_ND_XPU static BSDFData create_metal_data(float4 eta, float4 k) {
-                BSDFData ret{Conductor};
+            LM_ND_XPU static BSDFParam create_metal_data(float4 eta, float4 k) {
+                BSDFParam ret{Conductor};
                 ret._color = eta;
                 ret._params = k;
                 return ret;
             }
 
-            LM_ND_XPU static BSDFData create_fake_metal_data(float4 color) {
-                BSDFData ret{NoOp};
+            LM_ND_XPU static BSDFParam create_fake_metal_data(float4 color) {
+                BSDFParam ret{NoOp};
                 ret._color = color;
                 return ret;
             }
 
-            LM_ND_XPU static BSDFData create_mirror_data(float4 color) {
-                BSDFData ret{NoOp};
+            LM_ND_XPU static BSDFParam create_mirror_data(float4 color) {
+                BSDFParam ret{NoOp};
                 ret._color = color;
                 return ret;
             }
 
-            LM_ND_XPU static BSDFData create_oren_nayar_data(float4 color, float sigma) {
-                BSDFData ret{NoOp};
+            LM_ND_XPU static BSDFParam create_oren_nayar_data(float4 color, float sigma) {
+                BSDFParam ret{NoOp};
                 ret._color = color;
                 sigma = radians(sigma);
                 float sigma2 = sqr(sigma);
@@ -161,21 +161,21 @@ namespace luminous {
                 return ret;
             }
 
-            LM_ND_XPU static BSDFData create_diffuse_data(float4 color) {
-                BSDFData ret{NoOp};
+            LM_ND_XPU static BSDFParam create_diffuse_data(float4 color) {
+                BSDFParam ret{NoOp};
                 ret._color = color;
                 return ret;
             }
 
-            LM_ND_XPU static BSDFData create_glass_data(float4 color, float eta) {
-                BSDFData ret{Dielectric};
+            LM_ND_XPU static BSDFParam create_glass_data(float4 color, float eta) {
+                BSDFParam ret{Dielectric};
                 ret._color = color;
                 ret._params.w = eta;
                 return ret;
             }
 
-            LM_ND_XPU static BSDFData create_plastic_data(float4 color, float4 spec, float eta) {
-                BSDFData ret{Dielectric};
+            LM_ND_XPU static BSDFParam create_plastic_data(float4 color, float4 spec, float eta) {
+                BSDFParam ret{Dielectric};
                 ret._color = color;
                 ret._params = spec;
                 ret._params.w = eta;
