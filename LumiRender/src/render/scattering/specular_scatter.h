@@ -10,9 +10,9 @@
 namespace luminous {
     inline namespace render {
 
-        class SpecularReflection : public BxDF {
+        class SpecularReflection : public BxDFOld {
         public:
-            using BxDF::BxDF;
+            using BxDFOld::BxDFOld;
 
             LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFData data,
                                            Microfacet microfacet = {},
@@ -54,9 +54,9 @@ namespace luminous {
             GEN_MATCH_FLAGS_FUNC
         };
 
-        class SpecularTransmission : public BxDF {
+        class SpecularTransmission : public BxDFOld {
         public:
-            using BxDF::BxDF;
+            using BxDFOld::BxDFOld;
 
             LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFData data,
                                            Microfacet microfacet = {},
@@ -108,9 +108,9 @@ namespace luminous {
             GEN_MATCH_FLAGS_FUNC
         };
 
-        class SpecularFresnel : public BxDF {
+        class SpecularFresnel : public BxDFOld {
         public:
-            using BxDF::BxDF;
+            using BxDFOld::BxDFOld;
 
             LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFData data,
                                            Microfacet microfacet = {},

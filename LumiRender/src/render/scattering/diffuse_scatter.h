@@ -12,9 +12,9 @@
 
 namespace luminous {
     inline namespace render {
-        class DiffuseReflection : public BxDF {
+        class DiffuseReflection : public BxDFOld {
         public:
-            using BxDF::BxDF;
+            using BxDFOld::BxDFOld;
 
             LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, BSDFData data,
                                      TransportMode mode = TransportMode::Radiance) const {
@@ -54,9 +54,9 @@ namespace luminous {
             GEN_MATCH_FLAGS_FUNC
         };
 
-        class OrenNayar : public BxDF {
+        class OrenNayar : public BxDFOld {
         public:
-            using BxDF::BxDF;
+            using BxDFOld::BxDFOld;
 
             /**
              * fr(wi,wo) = R / PI * (A + B * max(0,cos(phi_i - phi_o)) * sin_alpha * tan_beta)
@@ -123,9 +123,9 @@ namespace luminous {
             GEN_MATCH_FLAGS_FUNC
         };
 
-        class DiffuseTransmission : public BxDF {
+        class DiffuseTransmission : public BxDFOld {
         public:
-            using BxDF::BxDF;
+            using BxDFOld::BxDFOld;
 
             LM_ND_XPU Spectrum _eval(float3 wo, float3 wi, BSDFData data,
                                      TransportMode mode = TransportMode::Radiance) const {
