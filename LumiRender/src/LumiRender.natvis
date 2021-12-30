@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <Type Name="luminous::math::Vector&lt;*,2&gt;">
+    <DisplayString>[x={x},y={y}]</DisplayString>
+    <Expand>
+      <Item Name="x">x</Item>
+      <Item Name="y">y</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="luminous::math::Vector&lt;*,3&gt;">
+    <DisplayString>[x={x},y={y},z={z}]</DisplayString>
+    <Expand>
+      <Item Name="x">x</Item>
+      <Item Name="y">y</Item>
+      <Item Name="z">z</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="luminous::math::Vector&lt;*,4&gt;">
+    <DisplayString>[x={x},y={y},z={z},w={w}]</DisplayString>
+    <Expand>
+      <Item Name="x">x</Item>
+      <Item Name="y">y</Item>
+      <Item Name="z">z</Item>
+      <Item Name="w">w</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="luminous::math::Quaternion">
+    <DisplayString>[x={v.x},y={v.y},z={v.z},w={w}]</DisplayString>
+    <Expand>
+      <Item Name="x">v.x</Item>
+      <Item Name="y">v.y</Item>
+      <Item Name="z">v.z</Item>
+      <Item Name="w">w</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="luminous::matrix::Matrix3x3&lt;*&gt;">
+    <DisplayString>[c0={cols[0]},c1={cols[1]},c2={cols[2]}]</DisplayString>
+    <Expand>
+      <Item Name="c0">cols[0]</Item>
+      <Item Name="c1">cols[1]</Item>
+      <Item Name="c2">cols[2]</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="luminous::matrix::Matrix4x4&lt;*&gt;">
+    <DisplayString>[c0={cols[0]},c1={cols[1]},c2={cols[2]},c3={cols[3]}]</DisplayString>
+    <Expand>
+      <Item Name="c0">cols[0]</Item>
+      <Item Name="c1">cols[1]</Item>
+      <Item Name="c2">cols[2]</Item>
+      <Item Name="c3">cols[3]</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="luminous::lstd::Variant&lt;*&gt;">
+    <DisplayString Condition="index &lt; 0"  Optional="true">{{Variant.npos}}</DisplayString>
+    <DisplayString Condition="index == 0"  Optional="true">{{{"$T1"} {*($T1  *)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 1"  Optional="true">{{{"$T2"} {*($T2  *)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 2"  Optional="true">{{{"$T3"} {*($T3  *)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 3"  Optional="true">{{{"$T4"} {*($T4  *)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 4"  Optional="true">{{{"$T5"} {*($T5  *)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 5"  Optional="true">{{{"$T6"} {*($T6  *)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 6"  Optional="true">{{{"$T7"} {*($T7  *)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 7"  Optional="true">{{{"$T8"} {*($T8  *)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 8"  Optional="true">{{{"$T9"} {*($T9  *)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 9"  Optional="true">{{{"$T10"} {*($T10*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 10" Optional="true">{{{"$T11"} {*($T11*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 11" Optional="true">{{{"$T12"} {*($T12*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 12" Optional="true">{{{"$T13"} {*($T13*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 13" Optional="true">{{{"$T14"} {*($T14*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 14" Optional="true">{{{"$T15"} {*($T15*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 15" Optional="true">{{{"$T16"} {*($T16*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 16" Optional="true">{{{"$T17"} {*($T17*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 17" Optional="true">{{{"$T18"} {*($T18*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 18" Optional="true">{{{"$T19"} {*($T19*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 19" Optional="true">{{{"$T20"} {*($T20*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 20" Optional="true">{{{"$T21"} {*($T21*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 21" Optional="true">{{{"$T22"} {*($T22*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 22" Optional="true">{{{"$T23"} {*($T23*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 23" Optional="true">{{{"$T24"} {*($T24*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 24" Optional="true">{{{"$T25"} {*($T25*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 25" Optional="true">{{{"$T26"} {*($T26*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 26" Optional="true">{{{"$T27"} {*($T27*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 27" Optional="true">{{{"$T28"} {*($T28*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 28" Optional="true">{{{"$T29"} {*($T29*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 29" Optional="true">{{{"$T30"} {*($T30*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 30" Optional="true">{{{"$T31"} {*($T31*)&amp;data}}}</DisplayString>
+    <DisplayString Condition="index == 31" Optional="true">{{{"$T32"} {*($T32*)&amp;data}}}</DisplayString>
+    <Expand>
+      <Item Name="Variant.index">index</Item>
+      <ExpandedItem Condition="index == 0"  Optional="true">*($T1 *)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 1"  Optional="true">*($T2 *)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 2"  Optional="true">*($T3 *)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 3"  Optional="true">*($T4 *)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 4"  Optional="true">*($T5 *)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 5"  Optional="true">*($T6 *)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 6"  Optional="true">*($T7 *)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 7"  Optional="true">*($T8 *)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 8"  Optional="true">*($T9 *)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 9"  Optional="true">*($T10*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 10" Optional="true">*($T11*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 11" Optional="true">*($T12*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 12" Optional="true">*($T13*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 13" Optional="true">*($T14*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 14" Optional="true">*($T15*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 15" Optional="true">*($T16*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 16" Optional="true">*($T17*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 17" Optional="true">*($T18*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 18" Optional="true">*($T19*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 19" Optional="true">*($T20*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 20" Optional="true">*($T21*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 21" Optional="true">*($T22*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 22" Optional="true">*($T23*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 23" Optional="true">*($T24*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 24" Optional="true">*($T25*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 25" Optional="true">*($T26*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 26" Optional="true">*($T27*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 27" Optional="true">*($T28*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 28" Optional="true">*($T29*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 29" Optional="true">*($T30*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 30" Optional="true">*($T31*)&amp;data</ExpandedItem>
+      <ExpandedItem Condition="index == 31" Optional="true">*($T32*)&amp;data</ExpandedItem>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>
