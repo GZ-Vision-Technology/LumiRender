@@ -29,21 +29,6 @@ namespace luminous {
             float4 _color{};
             float4 _params{};
             FresnelType _fresnel_type{NoOp};
-//        public:
-//            // disney params
-//            float metallic{};
-//            float roughness{};
-//            float specular_tint{};
-//            float anisotropic{};
-//            float sheen{};
-//            float sheen_tint{};
-//            float clearcoat{};
-//            float clearcoat_gloss{};
-//            float spec_trans{};
-//            float4 scatter_distance{};
-//            float flatness{};
-//            float diff_trans{};
-//            bool thin{};
         public:
 
             MicrofacetDistrib microfacet{};
@@ -145,57 +130,6 @@ namespace luminous {
                 }
                 return {0.f};
             }
-
-            LM_ND_XPU static BSDFParam create_metal_data(float4 eta, float4 k) {
-                BSDFParam ret{Conductor};
-                ret._color = eta;
-                ret._params = k;
-                return ret;
-            }
-
-            LM_ND_XPU static BSDFParam create_fake_metal_data(float4 color) {
-                BSDFParam ret{NoOp};
-                ret._color = color;
-                return ret;
-            }
-
-            LM_ND_XPU static BSDFParam create_mirror_data(float4 color) {
-                BSDFParam ret{NoOp};
-                ret._color = color;
-                return ret;
-            }
-
-            LM_ND_XPU static BSDFParam create_oren_nayar_data(float4 color, float sigma) {
-                BSDFParam ret{NoOp};
-                ret._color = color;
-                sigma = radians(sigma);
-                float sigma2 = sqr(sigma);
-                float A = 1.f - (sigma2 / (2.f * (sigma2 + 0.33f)));
-                float B = 0.45f * sigma2 / (sigma2 + 0.09f);
-                ret._params = make_float4(A, B, 0, 0);
-                return ret;
-            }
-
-            LM_ND_XPU static BSDFParam create_diffuse_data(float4 color) {
-                BSDFParam ret{NoOp};
-                ret._color = color;
-                return ret;
-            }
-
-            LM_ND_XPU static BSDFParam create_glass_data(float4 color, float eta) {
-                BSDFParam ret{Dielectric};
-                ret._color = color;
-                ret._params.w = eta;
-                return ret;
-            }
-
-            LM_ND_XPU static BSDFParam create_plastic_data(float4 color, float4 spec, float eta) {
-                BSDFParam ret{Dielectric};
-                ret._color = color;
-                ret._params = spec;
-                ret._params.w = eta;
-                return ret;
-            }
         };
 
         class PhysicallyMaterialData {
@@ -271,7 +205,20 @@ namespace luminous {
 
         class DisneyMaterialData {
         private:
-
+            // disney params
+            float metallic{};
+            float roughness{};
+            float specular_tint{};
+            float anisotropic{};
+            float sheen{};
+            float sheen_tint{};
+            float clearcoat{};
+            float clearcoat_gloss{};
+            float spec_trans{};
+            float4 scatter_distance{};
+            float flatness{};
+            float diff_trans{};
+            bool thin{};
         };
     }
 }
