@@ -12,11 +12,16 @@ namespace luminous {
     inline namespace render {
 
         enum FresnelType : uint8_t {
-            NoOp,
+            NoOp = 0,
             Dielectric,
             DisneyFr,
             Conductor
         };
+
+        ND_XPU_INLINE MicrofacetType get_microfacet_type(FresnelType fresnel_type) {
+            MicrofacetType array[4] = {None, GGX, Disney, GGX};
+            return array[uint8_t(fresnel_type)];
+        }
 
         struct BSDFParam {
         private:
@@ -47,6 +52,9 @@ namespace luminous {
 
             LM_XPU explicit BSDFParam(FresnelType fresnel_type)
                     : _fresnel_type(fresnel_type) {}
+
+            BSDFParam(const float4 color, const float4 params, const FresnelType type)
+                    : _color(color), _params(params), _fresnel_type(type) {}
 
             /**
              * for metal
@@ -188,6 +196,79 @@ namespace luminous {
                 ret._params.w = eta;
                 return ret;
             }
+        };
+
+        class PhysicallyMaterialData {
+        private:
+            float4 _color{};
+            float4 _params{};
+            FresnelType _fresnel_type{NoOp};
+        public:
+
+            LM_XPU PhysicallyMaterialData() = default;
+
+            LM_XPU explicit PhysicallyMaterialData(FresnelType fresnel_type)
+                    : _fresnel_type(fresnel_type) {}
+
+            ND_XPU_INLINE BSDFParam get_param() const {
+                return BSDFParam{_color, _params, _fresnel_type};
+            }
+
+            LM_ND_XPU static PhysicallyMaterialData create_metal_data(float4 eta, float4 k) {
+                PhysicallyMaterialData ret{Conductor};
+                ret._color = eta;
+                ret._params = k;
+                return ret;
+            }
+
+            LM_ND_XPU static PhysicallyMaterialData create_fake_metal_data(float4 color) {
+                PhysicallyMaterialData ret{NoOp};
+                ret._color = color;
+                return ret;
+            }
+
+            LM_ND_XPU static PhysicallyMaterialData create_mirror_data(float4 color) {
+                PhysicallyMaterialData ret{NoOp};
+                ret._color = color;
+                return ret;
+            }
+
+            LM_ND_XPU static PhysicallyMaterialData create_oren_nayar_data(float4 color, float sigma) {
+                PhysicallyMaterialData ret{NoOp};
+                ret._color = color;
+                sigma = radians(sigma);
+                float sigma2 = sqr(sigma);
+                float A = 1.f - (sigma2 / (2.f * (sigma2 + 0.33f)));
+                float B = 0.45f * sigma2 / (sigma2 + 0.09f);
+                ret._params = make_float4(A, B, 0, 0);
+                return ret;
+            }
+
+            LM_ND_XPU static PhysicallyMaterialData create_diffuse_data(float4 color) {
+                PhysicallyMaterialData ret{NoOp};
+                ret._color = color;
+                return ret;
+            }
+
+            LM_ND_XPU static PhysicallyMaterialData create_glass_data(float4 color, float eta) {
+                PhysicallyMaterialData ret{Dielectric};
+                ret._color = color;
+                ret._params.w = eta;
+                return ret;
+            }
+
+            LM_ND_XPU static PhysicallyMaterialData create_plastic_data(float4 color, float4 spec, float eta = 1.5f) {
+                PhysicallyMaterialData ret{Dielectric};
+                ret._color = color;
+                ret._params = spec;
+                ret._params.w = eta;
+                return ret;
+            }
+        };
+
+        class DisneyMaterialData {
+        private:
+
         };
     }
 }
