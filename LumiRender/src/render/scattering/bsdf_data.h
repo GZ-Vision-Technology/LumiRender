@@ -27,7 +27,7 @@ namespace luminous {
 
         class PhysicallyMaterialData;
 
-        struct BSDFParam {
+        struct BSDFHelper {
         private:
             // todo Merge field
             float4 _color{};
@@ -37,16 +37,16 @@ namespace luminous {
             const float alpha_x{};
             const float alpha_y{};
         public:
-            LM_XPU BSDFParam() = default;
+            LM_XPU BSDFHelper() = default;
 
-            LM_XPU explicit BSDFParam(FresnelType fresnel_type)
+            LM_XPU explicit BSDFHelper(FresnelType fresnel_type)
                     : _fresnel_type(fresnel_type) {}
 
-            LM_XPU BSDFParam(const float4 color, const float4 params, const FresnelType type)
+            LM_XPU BSDFHelper(const float4 color, const float4 params, const FresnelType type)
                     : _color(color), _params(params), _fresnel_type(type) {}
 
-            LM_XPU BSDFParam(const float4 color, const float4 params,
-                             const FresnelType type, float alpha_x, float alpha_y)
+            LM_XPU BSDFHelper(const float4 color, const float4 params,
+                              const FresnelType type, float alpha_x, float alpha_y)
                     : _color(color), _params(params), _fresnel_type(type),
                       alpha_x(alpha_x), alpha_y(alpha_y) {}
 
@@ -100,7 +100,7 @@ namespace luminous {
                 return make_float4(1.f);
             }
 
-            ND_XPU_INLINE BSDFParam get_param() const {
+            ND_XPU_INLINE BSDFHelper get_param() const {
                 return *this;
             }
 
@@ -194,8 +194,8 @@ namespace luminous {
             LM_XPU explicit PhysicallyMaterialData(FresnelType fresnel_type)
                     : _fresnel_type(fresnel_type) {}
 
-            ND_XPU_INLINE BSDFParam get_param() const {
-                auto ret = BSDFParam{_color, _params, _fresnel_type, _alpha_x, _alpha_y};
+            ND_XPU_INLINE BSDFHelper get_helper() const {
+                auto ret = BSDFHelper{_color, _params, _fresnel_type, _alpha_x, _alpha_y};
                 return ret;
             }
 

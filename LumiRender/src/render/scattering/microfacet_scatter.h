@@ -17,7 +17,7 @@ namespace luminous {
             /**
              * must be reflection and eta must be corrected
              */
-            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFParam data,
+            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFHelper data,
                                            TransportMode mode = TransportMode::Radiance) {
 
                 float cos_theta_o = Frame::cos_theta(wo);
@@ -29,7 +29,7 @@ namespace luminous {
                 return fr * Spectrum(data.color());
             }
 
-            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFParam data,
+            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper data,
                                                 TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 if (!same_hemisphere(wi, wo)) {
@@ -43,14 +43,14 @@ namespace luminous {
             * must be reflection
             */
             LM_ND_XPU static float PDF(float3 wo, float3 wi,
-                                       BSDFParam data,
+                                       BSDFHelper data,
                                        TransportMode mode = TransportMode::Radiance) {
                 float3 wh = normalize(wo + wi);
                 return data.PDF_wi_reflection(wo, wh);
             }
 
             LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
-                                            BSDFParam data,
+                                            BSDFHelper data,
                                             TransportMode mode = TransportMode::Radiance) {
                 if (!same_hemisphere(wo, wi)) {
                     return 0.f;
@@ -62,7 +62,7 @@ namespace luminous {
              * eta must be corrected
              */
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
-                                                  Spectrum Fr, BSDFParam data,
+                                                  Spectrum Fr, BSDFHelper data,
                                                   TransportMode mode = TransportMode::Radiance) {
                 float3 wh = data.sample_wh(wo, u);
                 if (dot(wh, wo) < 0) {
@@ -77,7 +77,7 @@ namespace luminous {
                 return {val, wi, PDF, flags(), data.eta()};
             }
 
-            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFParam data,
+            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);
@@ -97,7 +97,7 @@ namespace luminous {
             /**
              * must be transmission and eta must be corrected
              */
-            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFParam data,
+            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFHelper data,
                                            TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 float cos_theta_i = Frame::cos_theta(wi);
@@ -113,7 +113,7 @@ namespace luminous {
                 return tr * data.color();
             }
 
-            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFParam data,
+            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper data,
                                                 TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 if (same_hemisphere(wi, wo)) {
@@ -128,7 +128,7 @@ namespace luminous {
              * and eta must be corrected
              */
             LM_ND_XPU static float PDF(float3 wo, float3 wi,
-                                       BSDFParam data,
+                                       BSDFHelper data,
                                        TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 float cos_theta_i = Frame::cos_theta(wi);
@@ -141,7 +141,7 @@ namespace luminous {
             }
 
             LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
-                                            BSDFParam data,
+                                            BSDFHelper data,
                                             TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 if (same_hemisphere(wo, wi)) {
@@ -152,7 +152,7 @@ namespace luminous {
             }
 
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
-                                                  Spectrum Fr, BSDFParam data,
+                                                  Spectrum Fr, BSDFHelper data,
                                                   TransportMode mode = TransportMode::Radiance) {
                 float3 wh = data.sample_wh(wo, u);
                 if (dot(wh, wo) < 0) {
@@ -168,7 +168,7 @@ namespace luminous {
                 return {val, wi, PDF, flags(), data.eta()};
             }
 
-            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFParam data,
+            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);
@@ -186,7 +186,7 @@ namespace luminous {
         public:
             using BxDF::BxDF;
 
-            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFParam data,
+            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper data,
                                                 TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);
@@ -197,7 +197,7 @@ namespace luminous {
             }
 
             LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
-                                            BSDFParam data,
+                                            BSDFHelper data,
                                             TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);
@@ -207,7 +207,7 @@ namespace luminous {
                 return MicrofacetTransmission::PDF(wo, wi, data, mode);
             }
 
-            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFParam data,
+            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 data.correct_eta(cos_theta_o);

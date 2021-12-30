@@ -20,7 +20,7 @@ namespace luminous {
 
                 LM_XPU explicit Diffuse(float weight) : _weight(weight) {}
 
-                LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFParam data,
+                LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper data,
                                         TransportMode mode = TransportMode::Radiance) const {
                     float Fo = schlick_weight(Frame::abs_cos_theta(wo));
                     float Fi = schlick_weight(Frame::abs_cos_theta(wi));
