@@ -7,7 +7,7 @@
 
 #include "base_libs/math/common.h"
 #include "base_libs/lstd/lstd.h"
-#include "render/include/config.h"
+#include "parser/config.h"
 #include "core/backend/buffer_view.h"
 #include "render/include/pixel_info.h"
 

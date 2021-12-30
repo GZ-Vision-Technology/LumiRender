@@ -6,7 +6,7 @@
 
 #include "base_libs/math/common.h"
 #include "base_libs/lstd/lstd.h"
-#include "render/include/config.h"
+#include "parser/config.h"
 #include "box.h"
 #include "triangle.h"
 #include "sinc.h"

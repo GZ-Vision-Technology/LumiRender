@@ -9,7 +9,7 @@
 #include <assimp/postprocess.h>
 #include <assimp/Subdivision.h>
 #include <assimp/scene.h>
-#include "render/include/config.h"
+#include "config.h"
 #include "parser.h"
 
 namespace luminous {

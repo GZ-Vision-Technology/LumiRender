@@ -8,7 +8,7 @@
 
 #include "base_libs/math/common.h"
 #include "base_libs/lstd/lstd.h"
-#include "../include/config.h"
+#include "parser/config.h"
 
 namespace luminous {
     inline namespace render {

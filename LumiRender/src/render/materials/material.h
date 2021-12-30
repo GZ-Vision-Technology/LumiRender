@@ -9,7 +9,7 @@
 #include "base_libs/lstd/variant.h"
 #include "core/refl/reflection.h"
 #include "render/include/interaction.h"
-#include "render/include/config.h"
+#include "parser/config.h"
 
 namespace luminous {
     inline namespace render {

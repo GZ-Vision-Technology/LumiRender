@@ -7,7 +7,7 @@
 
 #include "filter_base.h"
 #include "base_libs/sampling/sampling.h"
-#include "render/include/config.h"
+#include "parser/config.h"
 
 namespace luminous {
     inline namespace render {

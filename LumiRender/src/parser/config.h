@@ -65,22 +65,7 @@ namespace luminous {
             float pitch{};
             float3 position;
 
-            LM_NODISCARD Transform create() const {
-                if (type() == "matrix4x4") {
-                    return Transform(mat4x4);
-                } else if (type() == "trs") {
-                    auto tt = Transform::translation(t);
-                    auto rr = Transform::rotation(make_float3(r), r.w);
-                    auto ss = Transform::scale(s);
-                    return tt * rr * ss;
-                } else if (type() == "yaw_pitch") {
-                    auto yaw_t = Transform::rotation_y(yaw);
-                    auto pitch_t = Transform::rotation_x(-pitch);
-                    auto tt = Transform::translation(position);
-                    return tt * pitch_t * yaw_t;
-                }
-                LUMINOUS_ERROR("unknown transform type ", type());
-            }
+            LM_NODISCARD Transform create() const;
         };
 
         struct ShapeConfig : Config {
@@ -213,69 +198,9 @@ namespace luminous {
             bool thin{};
 
             static void fill_tex_idx_by_name(std::vector<TextureConfig> &tex_configs,
-                                             TextureConfig &tc, bool force = false) {
-                auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                    return tex_config.name == tc.name;
-                });
-                tc.fill_tex_idx(idx, force);
-                DCHECK(tc.valid())
-            }
+                                             TextureConfig &tc, bool force = false);
 
-            void fill_tex_configs(std::vector<TextureConfig> &tex_configs) {
-                // common data
-                fill_tex_idx_by_name(tex_configs, color_tex);
-
-                if (type() == full_type("AssimpMaterial")) {
-                    int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config == color_tex;
-                    });
-                    if (index == -1) {
-                        color_tex.set_tex_idx(tex_configs.size());
-                        tex_configs.push_back(color_tex);
-                    } else {
-                        color_tex.set_tex_idx(index);
-                    }
-
-                    index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config == specular_tex;
-                    });
-                    if (index == -1) {
-                        specular_tex.fill_tex_idx(tex_configs.size());
-                        tex_configs.push_back(specular_tex);
-                    } else {
-                        specular_tex.fill_tex_idx(index);
-                    }
-
-                    index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                        return tex_config == normal_tex;
-                    });
-                    if (index == -1) {
-                        normal_tex.fill_tex_idx(tex_configs.size());
-                        tex_configs.push_back(normal_tex);
-                    } else {
-                        normal_tex.fill_tex_idx(index);
-                    }
-
-                } else if (type() == full_type("MetalMaterial")) {
-
-                    fill_tex_idx_by_name(tex_configs, roughness_tex);
-
-                    fill_tex_idx_by_name(tex_configs, k_tex);
-
-                    fill_tex_idx_by_name(tex_configs, eta_tex);
-
-                } else if (type() == full_type("GlassMaterial")) {
-
-                    fill_tex_idx_by_name(tex_configs, roughness_tex);
-
-                    fill_tex_idx_by_name(tex_configs, eta_tex);
-
-                } else if (type() == full_type("FakeMetalMaterial")) {
-
-                    fill_tex_idx_by_name(tex_configs, roughness_tex);
-                }
-                DCHECK(color_tex.valid());
-            }
+            void fill_tex_configs(std::vector<TextureConfig> &tex_configs);
         };
 
         struct OutputConfig : Config {
@@ -341,16 +266,7 @@ namespace luminous {
             float3 scale{};
             TransformConfig o2w_config;
 
-            void fill_tex_config(std::vector<TextureConfig> &tex_configs) {
-                if (type() != full_type("Envmap")) {
-                    return;
-                }
-                int idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
-                    return tex_config.name == texture_config.name;
-                });
-                texture_config = tex_configs[idx];
-                texture_config.fill_tex_idx(idx);
-            }
+            void fill_tex_config(std::vector<TextureConfig> &tex_configs);
         };
     }
 }

@@ -7,7 +7,7 @@
 
 #include "base_libs/geometry/common.h"
 #include "base_libs/optics/common.h"
-#include "render/include/config.h"
+#include "parser/config.h"
 #include "core/refl/reflection.h"
 #include "light_util.h"
 

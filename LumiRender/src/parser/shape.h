@@ -9,7 +9,7 @@
 #include <vector>
 #include "core/concepts.h"
 #include "render/include/interaction.h"
-#include "render/include/config.h"
+#include "config.h"
 
 
 namespace luminous {

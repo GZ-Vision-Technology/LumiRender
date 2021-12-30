@@ -10,7 +10,7 @@
 #include "base_libs/lstd/variant.h"
 #include "render/include/creator.h"
 #include "util/image_base.h"
-#include "render/include/config.h"
+#include "parser/config.h"
 
 namespace luminous {
     inline namespace render {

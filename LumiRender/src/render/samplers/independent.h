@@ -6,7 +6,7 @@
 #pragma once
 
 #include "base_libs/math/rng.h"
-#include "../include/config.h"
+#include "parser/config.h"
 #include "sampler_base.h"
 #include "core/concepts.h"
 

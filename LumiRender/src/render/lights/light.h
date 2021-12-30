@@ -8,7 +8,7 @@
 #include "render/samplers/sampler.h"
 #include "base_libs/lstd/lstd.h"
 #include "light_util.h"
-#include "render/include/config.h"
+#include "parser/config.h"
 #include "render/scattering/bsdf_wrapper.h"
 
 namespace luminous {

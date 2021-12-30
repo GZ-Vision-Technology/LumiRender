@@ -15,7 +15,6 @@ target_link_libraries(luminous-render
 #        OpenImageIO
         luminous-base_libs
         luminous-util
-        luminous-parser
         luminous-cpu
         luminous-gpu
         luminous-core)

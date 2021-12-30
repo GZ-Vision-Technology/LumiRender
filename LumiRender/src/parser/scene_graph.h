@@ -9,7 +9,7 @@
 #include "core/concepts.h"
 #include <memory>
 #include "core/context.h"
-#include "render/include/config.h"
+#include "config.h"
 
 namespace luminous {
     inline namespace render {

@@ -6,7 +6,7 @@
 #pragma once
 
 #include "light_sampler_base.h"
-#include "render/include/config.h"
+#include "parser/config.h"
 
 namespace luminous {
     inline namespace render {

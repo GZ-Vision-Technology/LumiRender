@@ -6,7 +6,7 @@
 #pragma once
 
 #include "camera_base.h"
-#include "render/include/config.h"
+#include "parser/config.h"
 
 namespace luminous {
 

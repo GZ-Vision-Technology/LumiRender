@@ -7,7 +7,7 @@
 
 #include "render/textures/texture.h"
 #include "render/scattering/bsdf_wrapper.h"
-#include "render/include/config.h"
+#include "parser/config.h"
 #include "core/concepts.h"
 
 namespace luminous {
