@@ -4,6 +4,7 @@
 
 #include "shape.h"
 #include "parser/assimp_parser.h"
+#include "core/logging.h"
 
 namespace luminous {
     inline namespace render {

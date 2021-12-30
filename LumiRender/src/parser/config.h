@@ -8,9 +8,8 @@
 #include "base_libs/math/common.h"
 #include "base_libs/geometry/common.h"
 #include "base_libs/optics/rgb.h"
+#include "util/image_base.h"
 #include <string>
-#include "core/logging.h"
-#include "util/image.h"
 #include "core/hash.h"
 #include "base_libs/lstd/lstd.h"
 #include "base_libs/sampling/distribution.h"

@@ -3,6 +3,9 @@
 //
 
 #include "config.h"
+#include "core/logging.h"
+#include "util/image.h"
+#include "core/hash.h"
 
 namespace luminous {
     inline namespace render {

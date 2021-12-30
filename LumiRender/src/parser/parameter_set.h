@@ -7,6 +7,7 @@
 
 #include "base_libs/header.h"
 #include "base_libs/math/common.h"
+#include "core/logging.h"
 #include <vector>
 
 namespace luminous {

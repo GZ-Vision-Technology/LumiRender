@@ -8,6 +8,9 @@
 #include "light_base.h"
 #include "base_libs/sampling/distribution.h"
 #include "render/textures/texture.h"
+#ifndef __CUDACC__
+#include "util/image.h"
+#endif
 
 namespace luminous {
     inline namespace render {
