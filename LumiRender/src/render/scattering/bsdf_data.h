@@ -13,8 +13,9 @@ namespace luminous {
 
         enum FresnelType : uint8_t {
             NoOp,
-            Conductor,
-            Dielectric
+            Dielectric,
+            DisneyFr,
+            Conductor
         };
 
         struct BSDFParam {
