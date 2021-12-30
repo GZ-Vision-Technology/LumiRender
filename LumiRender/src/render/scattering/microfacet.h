@@ -309,7 +309,7 @@ namespace luminous {
         }
 
         class MicrofacetDistrib {
-        private:
+        public:
             float _alpha_x{};
             float _alpha_y{};
             MicrofacetType _type{None};

@@ -23,6 +23,10 @@ namespace luminous {
             return array[uint8_t(fresnel_type)];
         }
 
+        class DisneyMaterialData;
+
+        class PhysicallyMaterialData;
+
         struct BSDFParam {
         private:
             // todo Merge field
@@ -40,6 +44,10 @@ namespace luminous {
 
             LM_XPU BSDFParam(const float4 color, const float4 params, const FresnelType type)
                     : _color(color), _params(params), _fresnel_type(type) {}
+
+            ND_XPU_INLINE MicrofacetType microfacet_type() const {
+                return get_microfacet_type(_fresnel_type);
+            }
 
             /**
              * for metal
@@ -137,6 +145,8 @@ namespace luminous {
             float4 _color{};
             float4 _params{};
             FresnelType _fresnel_type{NoOp};
+            float _alpha_x{};
+            float _alpha_y{};
         public:
             MicrofacetDistrib microfacet{};
 
@@ -147,20 +157,24 @@ namespace luminous {
 
             ND_XPU_INLINE BSDFParam get_param() const {
                 auto ret = BSDFParam{_color, _params, _fresnel_type};
-                ret.microfacet = microfacet;
+                ret.microfacet = MicrofacetDistrib{_alpha_x, _alpha_y, get_microfacet_type(_fresnel_type)};
                 return ret;
             }
 
-            LM_ND_XPU static PhysicallyMaterialData create_metal_data(float4 eta, float4 k) {
+            LM_ND_XPU static PhysicallyMaterialData create_metal_data(float4 eta, float4 k,float alpha_x, float alpha_y) {
                 PhysicallyMaterialData ret{Conductor};
                 ret._color = eta;
                 ret._params = k;
+                ret._alpha_x = alpha_x;
+                ret._alpha_y = alpha_y;
                 return ret;
             }
 
-            LM_ND_XPU static PhysicallyMaterialData create_fake_metal_data(float4 color) {
+            LM_ND_XPU static PhysicallyMaterialData create_fake_metal_data(float4 color,float alpha_x, float alpha_y) {
                 PhysicallyMaterialData ret{NoOp};
                 ret._color = color;
+                ret._alpha_x = alpha_x;
+                ret._alpha_y = alpha_y;
                 return ret;
             }
 
@@ -187,10 +201,12 @@ namespace luminous {
                 return ret;
             }
 
-            LM_ND_XPU static PhysicallyMaterialData create_glass_data(float4 color, float eta) {
+            LM_ND_XPU static PhysicallyMaterialData create_glass_data(float4 color, float eta, float alpha_x, float alpha_y) {
                 PhysicallyMaterialData ret{Dielectric};
                 ret._color = color;
                 ret._params.w = eta;
+                ret._alpha_x = alpha_x;
+                ret._alpha_y = alpha_y;
                 return ret;
             }
 
@@ -206,6 +222,8 @@ namespace luminous {
         class DisneyMaterialData {
         private:
             // disney params
+            float4 color{};
+            float eta;
             float metallic{};
             float roughness{};
             float specular_tint{};

@@ -106,7 +106,7 @@ void test_bsdf_data() {
 
 int main() {
 
-    cout << sizeof (luminous::OrenNayarBSDF )<< endl;
+    cout << sizeof (luminous::BSDF)<< endl;
 
 //    test_bsdf_data();
 
