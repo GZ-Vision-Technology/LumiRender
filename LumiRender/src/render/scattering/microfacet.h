@@ -45,7 +45,7 @@ namespace luminous {
              * @param wh
              * @return
              */
-            ND_XPU_INLINE float D(const float3 &wh, float alpha_x, float alpha_y, MicrofacetType type) {
+            ND_XPU_INLINE float D(const float3 &wh, float alpha_x, float alpha_y, MicrofacetType type = GGX) {
                 // When theta is close to 90, tan theta is infinity
                 float tan_theta_2 = Frame::tan_theta_2(wh);
                 if (is_inf(tan_theta_2)) {
@@ -79,7 +79,7 @@ namespace luminous {
              * @param  w [description]
              * @return   [description]
              */
-            ND_XPU_INLINE float lambda(const float3 &w, float alpha_x, float alpha_y, MicrofacetType type) {
+            ND_XPU_INLINE float lambda(const float3 &w, float alpha_x, float alpha_y, MicrofacetType type = GGX) {
                 switch (type) {
                     case Disney:
                     case GGX: {
@@ -119,7 +119,7 @@ namespace luminous {
              * @param  w [description]
              * @return   [description]
              */
-            ND_XPU_INLINE float G1(const float3 &w, float alpha_x, float alpha_y, MicrofacetType type) {
+            ND_XPU_INLINE float G1(const float3 &w, float alpha_x, float alpha_y, MicrofacetType type = GGX) {
                 float ret = 1 / (1 + lambda(w, alpha_x, alpha_y, type));
                 return ret;
             }
@@ -129,7 +129,7 @@ namespace luminous {
              * @return   [description]
              */
             ND_XPU_INLINE float
-            G(const float3 &wo, const float3 &wi, float alpha_x, float alpha_y, MicrofacetType type) {
+            G(const float3 &wo, const float3 &wi, float alpha_x, float alpha_y, MicrofacetType type = GGX) {
                 float ret = 0.f;
                 switch (type) {
                     case Disney: {
@@ -149,7 +149,7 @@ namespace luminous {
             }
 
             ND_XPU_INLINE float3 sample_wh(const float3 &wo, const float2 &u,
-                                           float alpha_x, float alpha_y, MicrofacetType type) {
+                                           float alpha_x, float alpha_y, MicrofacetType type = GGX) {
                 switch (type) {
                     case Disney:
                     case GGX: {
@@ -214,7 +214,7 @@ namespace luminous {
             * @return
             */
             ND_XPU_INLINE float PDF_wh(const float3 &wo, const float3 &wh,
-                                       float alpha_x, float alpha_y, MicrofacetType type) {
+                                       float alpha_x, float alpha_y, MicrofacetType type = GGX) {
                 return D(wh, alpha_x, alpha_y, type) * Frame::abs_cos_theta(wh);
             }
 
@@ -232,7 +232,7 @@ namespace luminous {
             }
 
             ND_XPU_INLINE float PDF_wi_reflection(float3 wo, float3 wh,
-                                                  float alpha_x, float alpha_y, MicrofacetType type) {
+                                                  float alpha_x, float alpha_y, MicrofacetType type = GGX) {
                 return PDF_wi_reflection(PDF_wh(wo, wh, alpha_x, alpha_y, type), wo, wh);
             }
 
@@ -256,7 +256,7 @@ namespace luminous {
 
             ND_XPU_INLINE Spectrum BRDF(float3 wo, float3 wh, float3 wi, Spectrum Fr,
                                         float cos_theta_i, float cos_theta_o,
-                                        float alpha_x, float alpha_y, MicrofacetType type,
+                                        float alpha_x, float alpha_y, MicrofacetType type = GGX,
                                         TransportMode mode = TransportMode::Radiance) {
                 auto ret = D(wh, alpha_x, alpha_y, type) * Fr * G(wo, wi, alpha_x, alpha_y, type)
                            / std::abs(4 * cos_theta_o * cos_theta_i);
@@ -266,8 +266,8 @@ namespace luminous {
             }
 
             ND_XPU_INLINE Spectrum BRDF(float3 wo, float3 wi, Spectrum Fr,
-                                        float cos_theta_i, float cos_theta_o, MicrofacetType type,
-                                        float alpha_x, float alpha_y,
+                                        float cos_theta_i, float cos_theta_o,
+                                        float alpha_x, float alpha_y,MicrofacetType type = GGX,
                                         TransportMode mode = TransportMode::Radiance) {
                 float3 wh = normalize(wo + wi);
                 return microfacet::BRDF(wo, wh, wi, Fr, cos_theta_i, cos_theta_o, alpha_x, alpha_y, type, mode);
@@ -281,7 +281,7 @@ namespace luminous {
              */
             ND_XPU_INLINE float BTDF(float3 wo, float3 wh, float3 wi, float Ft,
                                      float cos_theta_i, float cos_theta_o, float eta,
-                                     float alpha_x, float alpha_y, MicrofacetType type,
+                                     float alpha_x, float alpha_y, MicrofacetType type = GGX,
                                      TransportMode mode = TransportMode::Radiance) {
                 float numerator = D(wh, alpha_x, alpha_y, type) * Ft * G(wo, wi, alpha_x, alpha_y, type) *
                                   std::abs(dot(wi, wh) * dot(wo, wh));
@@ -301,7 +301,7 @@ namespace luminous {
              */
             ND_XPU_INLINE float BTDF(float3 wo, float3 wi, float Ft,
                                      float cos_theta_i, float cos_theta_o, float eta,
-                                     MicrofacetType type, float alpha_x, float alpha_y,
+                                     float alpha_x, float alpha_y, MicrofacetType type = GGX,
                                      TransportMode mode = TransportMode::Radiance) {
                 float3 wh = normalize(wo + wi * eta);
                 return BTDF(wo, wh, wi, Ft, cos_theta_i, cos_theta_o, eta, alpha_x, alpha_y, type, mode);
