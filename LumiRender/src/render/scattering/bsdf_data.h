@@ -53,7 +53,7 @@ namespace luminous {
             LM_XPU explicit BSDFParam(FresnelType fresnel_type)
                     : _fresnel_type(fresnel_type) {}
 
-            BSDFParam(const float4 color, const float4 params, const FresnelType type)
+            LM_XPU BSDFParam(const float4 color, const float4 params, const FresnelType type)
                     : _color(color), _params(params), _fresnel_type(type) {}
 
             /**
@@ -204,6 +204,7 @@ namespace luminous {
             float4 _params{};
             FresnelType _fresnel_type{NoOp};
         public:
+            MicrofacetDistrib microfacet{};
 
             LM_XPU PhysicallyMaterialData() = default;
 
@@ -211,7 +212,9 @@ namespace luminous {
                     : _fresnel_type(fresnel_type) {}
 
             ND_XPU_INLINE BSDFParam get_param() const {
-                return BSDFParam{_color, _params, _fresnel_type};
+                auto ret = BSDFParam{_color, _params, _fresnel_type};
+                ret.microfacet = microfacet;
+                return ret;
             }
 
             LM_ND_XPU static PhysicallyMaterialData create_metal_data(float4 eta, float4 k) {

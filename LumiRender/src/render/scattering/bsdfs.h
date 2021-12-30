@@ -15,70 +15,70 @@
 namespace luminous {
     inline namespace render {
 
-        using DiffuseBSDF = BSDF_Ty<BSDFParam, DiffuseReflection>;
+        using DiffuseBSDF = BSDF_Ty<PhysicallyMaterialData, DiffuseReflection>;
 
         ND_XPU_INLINE DiffuseBSDF create_diffuse_bsdf(float4 color) {
-            return DiffuseBSDF(BSDFParam::create_diffuse_data(color), DiffuseReflection{});
+            return DiffuseBSDF(PhysicallyMaterialData::create_diffuse_data(color), DiffuseReflection{});
         }
 
-        using OrenNayarBSDF = BSDF_Ty<BSDFParam, OrenNayar>;
+        using OrenNayarBSDF = BSDF_Ty<PhysicallyMaterialData, OrenNayar>;
 
         ND_XPU_INLINE OrenNayarBSDF create_oren_nayar_bsdf(float4 color, float sigma) {
-            return OrenNayarBSDF(BSDFParam::create_oren_nayar_data(color, sigma), OrenNayar{});
+            return OrenNayarBSDF(PhysicallyMaterialData::create_oren_nayar_data(color, sigma), OrenNayar{});
         }
 
-        using MirrorBSDF = BSDF_Ty<BSDFParam, SpecularReflection>;
+        using MirrorBSDF = BSDF_Ty<PhysicallyMaterialData, SpecularReflection>;
 
         ND_XPU_INLINE MirrorBSDF create_mirror_bsdf(float4 color) {
-            return MirrorBSDF(BSDFParam::create_mirror_data(color),
+            return MirrorBSDF(PhysicallyMaterialData::create_mirror_data(color),
                               SpecularReflection{});
         }
 
-        using GlassBSDFSingle = BSDF_Ty<BSDFParam, SpecularFresnel>;
+        using GlassBSDFSingle = BSDF_Ty<PhysicallyMaterialData, SpecularFresnel>;
 
         ND_XPU_INLINE GlassBSDFSingle create_glass_bsdf_single(float4 color, float eta) {
-            return GlassBSDFSingle(BSDFParam::create_glass_data(color, eta),
+            return GlassBSDFSingle(PhysicallyMaterialData::create_glass_data(color, eta),
                                    SpecularFresnel{});
         }
 
-        using GlassBSDF = FresnelBSDF<BSDFParam, SpecularReflection, SpecularTransmission, true>;
+        using GlassBSDF = FresnelBSDF<PhysicallyMaterialData, SpecularReflection, SpecularTransmission, true>;
 
         ND_XPU_INLINE GlassBSDF create_glass_bsdf(float4 color, float eta,
                                                   bool valid_refl = true, bool valid_trans = true) {
-            return GlassBSDF(BSDFParam::create_glass_data(color, eta),
+            return GlassBSDF(PhysicallyMaterialData::create_glass_data(color, eta),
                              SpecularReflection{valid_refl}, SpecularTransmission{valid_trans});
         }
 
-        using RoughGlassBSDFSingle = BSDF_Ty<BSDFParam, MicrofacetFresnel>;
+        using RoughGlassBSDFSingle = BSDF_Ty<PhysicallyMaterialData, MicrofacetFresnel>;
 
         ND_XPU_INLINE RoughGlassBSDFSingle
         create_rough_glass_bsdf_single(float4 color, float eta, float alpha_x, float alpha_y) {
-            return RoughGlassBSDFSingle(BSDFParam::create_glass_data(color, eta), MicrofacetFresnel{});
+            return RoughGlassBSDFSingle(PhysicallyMaterialData::create_glass_data(color, eta), MicrofacetFresnel{});
         }
 
-        using RoughGlassBSDF = FresnelBSDF<BSDFParam, MicrofacetReflection, MicrofacetTransmission>;
+        using RoughGlassBSDF = FresnelBSDF<PhysicallyMaterialData, MicrofacetReflection, MicrofacetTransmission>;
 
         ND_XPU_INLINE RoughGlassBSDF
         create_rough_glass_bsdf(float4 color, float eta, float alpha_x, float alpha_y,
                                 bool valid_refl = true, bool valid_trans = true) {
-            auto param = BSDFParam::create_glass_data(color, eta);
+            auto param = PhysicallyMaterialData::create_glass_data(color, eta);
             param.microfacet = MicrofacetDistrib{alpha_x, alpha_y};
             return RoughGlassBSDF(param,
                                   MicrofacetReflection{valid_refl},
                                   MicrofacetTransmission{valid_trans});
         }
 
-        using FakeMetalBSDF = BSDF_Ty<BSDFParam, MicrofacetReflection>;
+        using FakeMetalBSDF = BSDF_Ty<PhysicallyMaterialData, MicrofacetReflection>;
 
         ND_XPU_INLINE FakeMetalBSDF create_fake_metal_bsdf(float4 color, float roughness_x, float roughness_y) {
-            auto param = BSDFParam::create_fake_metal_data(color);
+            auto param = PhysicallyMaterialData::create_fake_metal_data(color);
             param.microfacet = MicrofacetDistrib{roughness_x, roughness_y};
             return FakeMetalBSDF(param, MicrofacetReflection{});
         }
 
-        using MetalBSDF = BSDF_Ty<BSDFParam, MicrofacetReflection>;
+        using MetalBSDF = BSDF_Ty<PhysicallyMaterialData, MicrofacetReflection>;
         ND_XPU_INLINE MetalBSDF create_metal_bsdf(float4 eta, float4 k, float roughness_x, float roughness_y) {
-            BSDFParam data = BSDFParam::create_metal_data(eta, k);
+            PhysicallyMaterialData data = PhysicallyMaterialData::create_metal_data(eta, k);
             data.microfacet = MicrofacetDistrib{roughness_x, roughness_y, GGX};
             return MetalBSDF(data, MicrofacetReflection{});
         }

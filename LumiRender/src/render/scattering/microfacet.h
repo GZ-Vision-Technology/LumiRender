@@ -70,7 +70,7 @@ namespace luminous {
                     default:
                         break;
                 }
-                LM_ASSERT(0, "unknown type %d", int(_type));
+                LM_ASSERT(0, "unknown type %d", int(type));
                 return 0;
             }
 
@@ -109,7 +109,7 @@ namespace luminous {
                     default:
                         break;
                 }
-                LM_ASSERT(_type != None, "unknown type %d", int(_type));
+                LM_ASSERT(type != None, "unknown type %d", int(type));
                 return 0;
             }
 
@@ -144,7 +144,7 @@ namespace luminous {
                     default:
                         break;
                 }
-                LM_ASSERT(_type != None, "unknown type %d", int(_type));
+                LM_ASSERT(type != None, "unknown type %d", int(type));
                 return ret;
             }
 
@@ -204,7 +204,7 @@ namespace luminous {
                     default:
                         break;
                 }
-                LM_ASSERT(_type != None, "unknown type %d", int(_type));
+                LM_ASSERT(type != None, "unknown type %d", int(type));
                 return {};
             }
 
