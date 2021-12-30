@@ -19,7 +19,7 @@ namespace luminous {
         };
 
         ND_XPU_INLINE MicrofacetType get_microfacet_type(FresnelType fresnel_type) {
-            MicrofacetType array[4] = {None, GGX, Disney, GGX};
+            MicrofacetType array[4] = {GGX, GGX, Disney, GGX};
             return array[uint8_t(fresnel_type)];
         }
 
@@ -34,9 +34,9 @@ namespace luminous {
             float4 _params{};
             FresnelType _fresnel_type{NoOp};
         public:
-
-            MicrofacetDistrib microfacet{};
-
+            const float alpha_x{};
+            const float alpha_y{};
+        public:
             LM_XPU BSDFParam() = default;
 
             LM_XPU explicit BSDFParam(FresnelType fresnel_type)
@@ -45,8 +45,40 @@ namespace luminous {
             LM_XPU BSDFParam(const float4 color, const float4 params, const FresnelType type)
                     : _color(color), _params(params), _fresnel_type(type) {}
 
+            LM_XPU BSDFParam(const float4 color, const float4 params,
+                             const FresnelType type, float alpha_x, float alpha_y)
+                    : _color(color), _params(params), _fresnel_type(type),
+                      alpha_x(alpha_x), alpha_y(alpha_y) {}
+
             ND_XPU_INLINE MicrofacetType microfacet_type() const {
                 return get_microfacet_type(_fresnel_type);
+            }
+
+            LM_ND_XPU float3 sample_wh(const float3 &wo, const float2 &u) const {
+                return microfacet::sample_wh(wo, u, alpha_x, alpha_y, microfacet_type());
+            }
+
+            LM_ND_XPU float PDF_wi_reflection(float3 wo, float3 wh) const {
+                return microfacet::PDF_wi_reflection(microfacet::PDF_wh(wo, wh, alpha_x, alpha_y), wo, wh);
+            }
+
+            LM_ND_XPU float PDF_wi_transmission(float3 wo, float3 wh, float3 wi, float eta) const {
+                return microfacet::PDF_wi_transmission(microfacet::PDF_wh(wo, wh, alpha_x, alpha_y, microfacet_type()),
+                                                       wo, wh, wi, eta);
+            }
+
+            LM_ND_XPU Spectrum BRDF(float3 wo, float3 wh, float3 wi, Spectrum Fr,
+                                    float cos_theta_i, float cos_theta_o,
+                                    TransportMode mode = TransportMode::Radiance) const {
+                return microfacet::BRDF(wo, wh, wi, Fr, cos_theta_i, cos_theta_o,
+                                        alpha_x, alpha_y, microfacet_type(), mode);
+            }
+
+            LM_ND_XPU float BTDF(float3 wo, float3 wh, float3 wi, float Ft,
+                                 float cos_theta_i, float cos_theta_o, float eta,
+                                 TransportMode mode = TransportMode::Radiance) const {
+                return microfacet::BTDF(wo, wh, wi, Ft, cos_theta_i, cos_theta_o, eta,
+                                        alpha_x, alpha_y, microfacet_type(), mode);
             }
 
             /**
@@ -55,6 +87,12 @@ namespace luminous {
              */
             ND_XPU_INLINE float4 metal_eta() const {
                 switch (_fresnel_type) {
+                    case NoOp:
+                        break;
+                    case Dielectric:
+                        break;
+                    case DisneyFr:
+                        break;
                     case Conductor:
                         return _color;
                 }
@@ -69,6 +107,7 @@ namespace luminous {
             ND_XPU_INLINE float4 color() const {
                 switch (_fresnel_type) {
                     case NoOp:
+                    case DisneyFr:
                     case Dielectric:
                         return _color;
                     case Conductor:
@@ -112,6 +151,7 @@ namespace luminous {
 
             LM_XPU_INLINE void correct_eta(float cos_theta) {
                 switch (_fresnel_type) {
+                    case DisneyFr:
                     case FresnelType::Dielectric: {
                         _params.w = luminous::correct_eta(cos_theta, _params.w);
                         break;
@@ -148,7 +188,6 @@ namespace luminous {
             float _alpha_x{};
             float _alpha_y{};
         public:
-            MicrofacetDistrib microfacet{};
 
             LM_XPU PhysicallyMaterialData() = default;
 
@@ -156,12 +195,12 @@ namespace luminous {
                     : _fresnel_type(fresnel_type) {}
 
             ND_XPU_INLINE BSDFParam get_param() const {
-                auto ret = BSDFParam{_color, _params, _fresnel_type};
-                ret.microfacet = MicrofacetDistrib{_alpha_x, _alpha_y, get_microfacet_type(_fresnel_type)};
+                auto ret = BSDFParam{_color, _params, _fresnel_type, _alpha_x, _alpha_y};
                 return ret;
             }
 
-            LM_ND_XPU static PhysicallyMaterialData create_metal_data(float4 eta, float4 k,float alpha_x, float alpha_y) {
+            LM_ND_XPU static PhysicallyMaterialData
+            create_metal_data(float4 eta, float4 k, float alpha_x, float alpha_y) {
                 PhysicallyMaterialData ret{Conductor};
                 ret._color = eta;
                 ret._params = k;
@@ -170,7 +209,7 @@ namespace luminous {
                 return ret;
             }
 
-            LM_ND_XPU static PhysicallyMaterialData create_fake_metal_data(float4 color,float alpha_x, float alpha_y) {
+            LM_ND_XPU static PhysicallyMaterialData create_fake_metal_data(float4 color, float alpha_x, float alpha_y) {
                 PhysicallyMaterialData ret{NoOp};
                 ret._color = color;
                 ret._alpha_x = alpha_x;
@@ -201,7 +240,8 @@ namespace luminous {
                 return ret;
             }
 
-            LM_ND_XPU static PhysicallyMaterialData create_glass_data(float4 color, float eta, float alpha_x, float alpha_y) {
+            LM_ND_XPU static PhysicallyMaterialData
+            create_glass_data(float4 color, float eta, float alpha_x, float alpha_y) {
                 PhysicallyMaterialData ret{Dielectric};
                 ret._color = color;
                 ret._params.w = eta;
