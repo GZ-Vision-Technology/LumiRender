@@ -177,13 +177,13 @@ namespace luminous {
                 if constexpr(Delta) {
                     return {0.f};
                 } else {
-                    BSDFHelper bsdf_data = BaseClass::_data.get_helper();
+                    BSDFHelper helper = BaseClass::_data.get_helper();
                     float cos_theta_o = Frame::cos_theta(wo);
-                    bsdf_data.correct_eta(cos_theta_o);
+                    helper.correct_eta(cos_theta_o);
                     if (same_hemisphere(wi, wo)) {
-                        return Refl::eval(wo, wi, bsdf_data, mode);
+                        return Refl::eval(wo, wi, helper, mode);
                     }
-                    return Trans::eval(wo, wi, bsdf_data, mode);
+                    return Trans::eval(wo, wi, helper, mode);
                 }
             }
 
@@ -193,13 +193,13 @@ namespace luminous {
                 if constexpr(Delta) {
                     return 0.f;
                 } else {
-                    BSDFHelper bsdf_data = BaseClass::_data.get_helper();
+                    BSDFHelper helper = BaseClass::_data.get_helper();
                     float cos_theta_o = Frame::cos_theta(wo);
-                    bsdf_data.correct_eta(cos_theta_o);
+                    helper.correct_eta(cos_theta_o);
                     if (same_hemisphere(wi, wo)) {
-                        return Refl::PDF(wo, wi, bsdf_data, mode);
+                        return Refl::PDF(wo, wi, helper, mode);
                     }
-                    return Trans::PDF(wo, wi, bsdf_data, mode);
+                    return Trans::PDF(wo, wi, helper, mode);
                 }
             }
 
@@ -211,17 +211,17 @@ namespace luminous {
                     return {};
                 }
 
-                BSDFHelper bsdf_data = BaseClass::_data.get_helper();
+                BSDFHelper helper = BaseClass::_data.get_helper();
 
                 float cos_theta_o = Frame::cos_theta(wo);
-                bsdf_data.correct_eta(cos_theta_o);
-                float Fr = bsdf_data.eval_fresnel(Frame::abs_cos_theta(wo))[0];
+                helper.correct_eta(cos_theta_o);
+                float Fr = helper.eval_fresnel(Frame::abs_cos_theta(wo))[0];
                 BSDFSample ret;
                 if (uc < Fr) {
-                    ret = Refl::_sample_f(wo, uc, u, Fr, bsdf_data, mode);
+                    ret = Refl::_sample_f(wo, uc, u, Fr, helper, mode);
                     ret.PDF *= Fr;
                 } else {
-                    ret = Trans::_sample_f(wo, uc, u, Fr, bsdf_data, mode);
+                    ret = Trans::_sample_f(wo, uc, u, Fr, helper, mode);
                     ret.PDF *= 1 - Fr;
                 }
                 return ret;
