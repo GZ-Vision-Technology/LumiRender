@@ -54,6 +54,10 @@ namespace luminous {
                 return get_microfacet_type(_fresnel_type);
             }
 
+            ND_XPU_INLINE float roughness() const {
+                return alpha_x;
+            }
+
             LM_ND_XPU float3 sample_wh(const float3 &wo, const float2 &u) const {
                 return microfacet::sample_wh(wo, u, alpha_x, alpha_y, microfacet_type());
             }

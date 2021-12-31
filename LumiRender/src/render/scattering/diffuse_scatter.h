@@ -61,7 +61,7 @@ namespace luminous {
              *   	 alpha = max(theta_i,theta_o)
              *		 beta = min(theta_i,theta_o)
              */
-            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper data,
+            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                     TransportMode mode = TransportMode::Radiance) const {
                 float sin_theta_i = Frame::sin_theta(wi);
                 float sin_theta_o = Frame::sin_theta(wo);
@@ -81,14 +81,14 @@ namespace luminous {
                 tan_beta = condition ?
                            sin_theta_i / Frame::abs_cos_theta(wi) :
                            sin_theta_o / Frame::abs_cos_theta(wo);
-                float2 AB = data.AB();
+                float2 AB = helper.AB();
                 float factor = (AB.x + AB.y * max_cos * sin_alpha * tan_beta);
-                return data.color() * invPi * factor;
+                return helper.color() * invPi * factor;
             }
 
-            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper data,
+            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
                                          TransportMode mode = TransportMode::Radiance) const {
-                return same_hemisphere(wo, wi) ? eval(wo, wi, data) : Spectrum{0.f};
+                return same_hemisphere(wo, wi) ? eval(wo, wi, helper) : Spectrum{0.f};
             }
 
             LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
@@ -97,15 +97,15 @@ namespace luminous {
                 return same_hemisphere(wo, wi) ? cosine_hemisphere_PDF(Frame::abs_cos_theta(wi)) : 0.f;
             }
 
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
-                float PDF_val = safe_PDF(wo, wi, data, mode);
+                float PDF_val = safe_PDF(wo, wi, helper, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }
-                Spectrum f = eval(wo, wi, data, mode);
+                Spectrum f = eval(wo, wi, helper, mode);
                 return {f, wi, PDF_val, BxDFFlags::Reflection};
             }
 
@@ -130,20 +130,20 @@ namespace luminous {
             }
 
             LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
-                                     BSDFHelper data,
+                                     BSDFHelper helper,
                                      TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? 0.f : cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
             }
 
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z > 0 ? -wi.z : wi.z;
-                float PDF_val = safe_PDF(wo, wi, data, mode);
+                float PDF_val = safe_PDF(wo, wi, helper, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }
-                Spectrum f = eval(wo, wi, data, mode);
+                Spectrum f = eval(wo, wi, helper, mode);
                 return {f, wi, PDF_val, BxDFFlags::Reflection};
             }
 

@@ -102,28 +102,28 @@ namespace luminous {
         public:
             using BxDF::BxDF;
 
-            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper data,
+            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
                                                 TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
             }
 
             LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
-                                            BSDFHelper data,
+                                            BSDFHelper helper,
                                             TransportMode mode = TransportMode::Radiance) {
                 return 0.f;
             }
 
-            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
+            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
-                data.correct_eta(cos_theta_o);
-                float Fr = data.eval_fresnel(Frame::abs_cos_theta(wo))[0];
+                helper.correct_eta(cos_theta_o);
+                float Fr = helper.eval_fresnel(Frame::abs_cos_theta(wo))[0];
                 BSDFSample ret;
                 if (uc < Fr) {
-                    ret = SpecularReflection::_sample_f(wo, uc, u, Fr, data, mode);
+                    ret = SpecularReflection::_sample_f(wo, uc, u, Fr, helper, mode);
                     ret.PDF *= Fr;
                 } else {
-                    ret = SpecularTransmission::_sample_f(wo, uc, u, Fr, data, mode);
+                    ret = SpecularTransmission::_sample_f(wo, uc, u, Fr, helper, mode);
                     ret.PDF *= 1 - Fr;
                 }
                 return ret;

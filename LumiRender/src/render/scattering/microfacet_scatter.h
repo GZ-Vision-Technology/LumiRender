@@ -17,54 +17,54 @@ namespace luminous {
             /**
              * must be reflection and eta must be corrected
              */
-            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFHelper data,
+            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                            TransportMode mode = TransportMode::Radiance) {
 
                 float cos_theta_o = Frame::cos_theta(wo);
                 float cos_theta_i = Frame::cos_theta(wi);
                 float3 wh = normalize(wo + wi);
                 wh = face_forward(wh, make_float3(0, 0, 1));
-                auto F = data.eval_fresnel(abs_dot(wo, wh));
-                auto fr = data.BRDF(wo, wh, wi, F, cos_theta_i, cos_theta_o, mode);
-                return fr * Spectrum(data.color());
+                auto F = helper.eval_fresnel(abs_dot(wo, wh));
+                auto fr = helper.BRDF(wo, wh, wi, F, cos_theta_i, cos_theta_o, mode);
+                return fr * Spectrum(helper.color());
             }
 
-            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper data,
+            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
                                                 TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 if (!same_hemisphere(wi, wo)) {
                     return {0.f};
                 }
-                data.correct_eta(cos_theta_o);
-                return eval(wo, wi, data, mode);
+                helper.correct_eta(cos_theta_o);
+                return eval(wo, wi, helper, mode);
             }
 
             /**
             * must be reflection
             */
             LM_ND_XPU static float PDF(float3 wo, float3 wi,
-                                       BSDFHelper data,
+                                       BSDFHelper helper,
                                        TransportMode mode = TransportMode::Radiance) {
                 float3 wh = normalize(wo + wi);
-                return data.PDF_wi_reflection(wo, wh);
+                return helper.PDF_wi_reflection(wo, wh);
             }
 
             LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
-                                            BSDFHelper data,
+                                            BSDFHelper helper,
                                             TransportMode mode = TransportMode::Radiance) {
                 if (!same_hemisphere(wo, wi)) {
                     return 0.f;
                 }
-                return PDF(wo, wi, data, mode);
+                return PDF(wo, wi, helper, mode);
             }
 
             /**
              * eta must be corrected
              */
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
-                                                  Spectrum Fr, BSDFHelper data,
+                                                  Spectrum Fr, BSDFHelper helper,
                                                   TransportMode mode = TransportMode::Radiance) {
-                float3 wh = data.sample_wh(wo, u);
+                float3 wh = helper.sample_wh(wo, u);
                 if (dot(wh, wo) < 0) {
                     return {};
                 }
@@ -72,16 +72,16 @@ namespace luminous {
                 if (!same_hemisphere(wi, wo)) {
                     return {};
                 }
-                float PDF = data.PDF_wi_reflection(wo, wh);
-                Spectrum val = eval(wo, wi, data);
-                return {val, wi, PDF, flags(), data.eta()};
+                float PDF = helper.PDF_wi_reflection(wo, wh);
+                Spectrum val = eval(wo, wi, helper);
+                return {val, wi, PDF, flags(), helper.eta()};
             }
 
-            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
+            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
-                data.correct_eta(cos_theta_o);
-                return _sample_f(wo, uc, u, 0.f, data, mode);
+                helper.correct_eta(cos_theta_o);
+                return _sample_f(wo, uc, u, 0.f, helper, mode);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -97,30 +97,30 @@ namespace luminous {
             /**
              * must be transmission and eta must be corrected
              */
-            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFHelper data,
+            LM_ND_XPU static Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                            TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 float cos_theta_i = Frame::cos_theta(wi);
-                using eta_type = decltype(data.eta());
-                float3 wh = normalize(wo + wi * data.eta());
+                using eta_type = decltype(helper.eta());
+                float3 wh = normalize(wo + wi * helper.eta());
                 if (dot(wo, wh) * dot(wi, wh) > 0) {
                     return {0.f};
                 }
                 wh = face_forward(wh, make_float3(0, 0, 1));
-                float F = data.eval_fresnel(abs_dot(wo, wh))[0];
-                float tr = data.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i, cos_theta_o, data.eta(),
+                float F = helper.eval_fresnel(abs_dot(wo, wh))[0];
+                float tr = helper.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i, cos_theta_o, helper.eta(),
                                            mode);
-                return tr * data.color();
+                return tr * helper.color();
             }
 
-            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper data,
+            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
                                                 TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 if (same_hemisphere(wi, wo)) {
                     return {0.f};
                 }
-                data.correct_eta(cos_theta_o);
-                return eval(wo, wi, data, mode);
+                helper.correct_eta(cos_theta_o);
+                return eval(wo, wi, helper, mode);
             }
 
             /**
@@ -128,44 +128,44 @@ namespace luminous {
              * and eta must be corrected
              */
             LM_ND_XPU static float PDF(float3 wo, float3 wi,
-                                       BSDFHelper data,
+                                       BSDFHelper helper,
                                        TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 float cos_theta_i = Frame::cos_theta(wi);
-                float3 wh = normalize(wo + wi * data.eta());
+                float3 wh = normalize(wo + wi * helper.eta());
                 if (dot(wo, wh) * dot(wi, wh) > 0) {
                     return 0.f;
                 }
                 wh = face_forward(wh, make_float3(0, 0, 1));
-                return data.PDF_wi_transmission(wo, wh, wi, data.eta());
+                return helper.PDF_wi_transmission(wo, wh, wi, helper.eta());
             }
 
             LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
-                                            BSDFHelper data,
+                                            BSDFHelper helper,
                                             TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
                 if (same_hemisphere(wo, wi)) {
                     return 0.f;
                 }
-                data.correct_eta(cos_theta_o);
-                return PDF(wo, wi, data, mode);
+                helper.correct_eta(cos_theta_o);
+                return PDF(wo, wi, helper, mode);
             }
 
             LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
-                                                  Spectrum Fr, BSDFHelper data,
+                                                  Spectrum Fr, BSDFHelper helper,
                                                   TransportMode mode = TransportMode::Radiance) {
-                float3 wh = data.sample_wh(wo, u);
+                float3 wh = helper.sample_wh(wo, u);
                 if (dot(wh, wo) < 0) {
                     return {};
                 }
                 float3 wi{};
-                bool valid = refract(wo, wh, data.eta(), &wi);
+                bool valid = refract(wo, wh, helper.eta(), &wi);
                 if (!valid || same_hemisphere(wo, wi)) {
                     return {};
                 }
-                float PDF = data.PDF_wi_transmission(wo, wh, wi, data.eta());
-                Spectrum val = eval(wo, wi, data);
-                return {val, wi, PDF, flags(), data.eta()};
+                float PDF = helper.PDF_wi_transmission(wo, wh, wi, helper.eta());
+                Spectrum val = eval(wo, wi, helper);
+                return {val, wi, PDF, flags(), helper.eta()};
             }
 
             LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
@@ -186,40 +186,40 @@ namespace luminous {
         public:
             using BxDF::BxDF;
 
-            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper data,
+            LM_ND_XPU static Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
                                                 TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
-                data.correct_eta(cos_theta_o);
+                helper.correct_eta(cos_theta_o);
                 if (same_hemisphere(wi, wo)) {
-                    return MicrofacetReflection::eval(wo, wi, data, mode);
+                    return MicrofacetReflection::eval(wo, wi, helper, mode);
                 }
-                return MicrofacetTransmission::eval(wo, wi, data, mode);
+                return MicrofacetTransmission::eval(wo, wi, helper, mode);
             }
 
             LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
-                                            BSDFHelper data,
+                                            BSDFHelper helper,
                                             TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
-                data.correct_eta(cos_theta_o);
+                helper.correct_eta(cos_theta_o);
                 if (same_hemisphere(wi, wo)) {
-                    return MicrofacetReflection::PDF(wo, wi, data, mode);
+                    return MicrofacetReflection::PDF(wo, wi, helper, mode);
                 }
-                return MicrofacetTransmission::PDF(wo, wi, data, mode);
+                return MicrofacetTransmission::PDF(wo, wi, helper, mode);
             }
 
-            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
+            LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                                  TransportMode mode = TransportMode::Radiance) {
                 float cos_theta_o = Frame::cos_theta(wo);
-                data.correct_eta(cos_theta_o);
-                float Fr = data.eval_fresnel(Frame::abs_cos_theta(wo))[0];
+                helper.correct_eta(cos_theta_o);
+                float Fr = helper.eval_fresnel(Frame::abs_cos_theta(wo))[0];
                 BSDFSample ret;
                 if (uc < Fr) {
                     // sample reflection
-                    ret = MicrofacetReflection::_sample_f(wo, uc, u, Fr, data, mode);
+                    ret = MicrofacetReflection::_sample_f(wo, uc, u, Fr, helper, mode);
                     ret.PDF *= Fr;
                 } else {
                     // sample transmission
-                    ret = MicrofacetTransmission::_sample_f(wo, uc, u, Fr, data, mode);
+                    ret = MicrofacetTransmission::_sample_f(wo, uc, u, Fr, helper, mode);
                     ret.PDF *= 1 - Fr;
                 }
                 return ret;

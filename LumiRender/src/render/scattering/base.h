@@ -62,6 +62,10 @@ namespace luminous {
         public:
             LM_XPU explicit BxDF(bool valid = true) : valid(valid) {}
 
+            ND_XPU_INLINE float weight() const {
+                return 1.f;
+            }
+
             ND_XPU_INLINE float safe_PDF(float3 wo, float3 wi, BSDFHelper data,
                                          MicrofacetDistrib microfacet = {},
                                          TransportMode mode = TransportMode::Radiance) const {
