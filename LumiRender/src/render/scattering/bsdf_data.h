@@ -266,14 +266,14 @@ namespace luminous {
         class DisneyMaterialData {
         private:
             // disney params
-            float4 color{};
+            float4 _color{};
             float eta;
-            float metallic{};
+            float _metallic{};
             float roughness{};
             float specular_tint{};
             float anisotropic{};
-            float sheen{};
-            float sheen_tint{};
+            float _sheen{};
+            float _sheen_tint{};
             float clearcoat{};
             float clearcoat_gloss{};
             float spec_trans{};

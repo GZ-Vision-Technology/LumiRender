@@ -21,7 +21,7 @@ namespace luminous {
                 LM_XPU explicit Diffuse(float factor) : BxDF(factor > 0), _factor(factor) {}
 
                 ND_XPU_INLINE float weight(BSDFHelper helper) const {
-                    return _factor;
+                    return _factor * luminance(helper.color());
                 }
 
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
@@ -45,7 +45,7 @@ namespace luminous {
                 LM_XPU explicit FakeSS(float factor) : BxDF(factor > 0), _factor(factor) {}
 
                 ND_XPU_INLINE float weight(BSDFHelper helper) const {
-                    return _factor;
+                    return _factor * luminance(helper.color());
                 }
 
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
@@ -80,7 +80,7 @@ namespace luminous {
                 LM_XPU explicit Retro(float factor) : BxDF(factor > 0), _factor(factor) {}
 
                 ND_XPU_INLINE float weight(BSDFHelper helper) const {
-                    return _factor;
+                    return _factor * luminance(helper.color());
                 }
 
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
