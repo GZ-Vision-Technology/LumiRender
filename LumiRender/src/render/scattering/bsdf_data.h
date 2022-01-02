@@ -281,6 +281,8 @@ namespace luminous {
             float flatness{};
             float diff_trans{};
             bool thin{};
+        public:
+
         };
     }
 }
