@@ -267,11 +267,13 @@ namespace luminous {
         private:
             // disney params
             float4 _color{};
-            float eta;
+            float4 _color_tint{};
+            float4 _color_sheen_tint{};
+            float _eta;
             float _metallic{};
-            float roughness{};
+            float _roughness{};
             float specular_tint{};
-            float anisotropic{};
+            float _anisotropic{};
             float _sheen{};
             float _sheen_tint{};
             float clearcoat{};

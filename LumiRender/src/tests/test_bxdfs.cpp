@@ -106,6 +106,10 @@ void test_bsdf_data() {
 
 int main() {
 
+    std::tuple<std::string, int> ttt("adsfads", 1);
+    std::get<1>(ttt) = 6;
+    cout << std::get<1>(ttt) << endl;
+
     cout << sizeof (luminous::BSDF)<< endl;
 
 //    test_bsdf_data();

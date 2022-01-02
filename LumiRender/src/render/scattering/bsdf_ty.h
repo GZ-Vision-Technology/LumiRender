@@ -26,7 +26,7 @@ namespace luminous {
             LM_XPU void iterator(F &&func) const {
                 if constexpr(index < size) {
                     auto obj = std::get<index>(_bxdfs);
-                    if (func(obj)) {
+                    if (func(obj, index)) {
                         iterator<index + 1>(func);
                     }
                 }
@@ -36,7 +36,7 @@ namespace luminous {
             LM_XPU void iterator(F &&func) {
                 if constexpr(index < size) {
                     auto obj = std::get<index>(_bxdfs);
-                    if (func(obj)) {
+                    if (func(obj, index)) {
                         iterator<index + 1>(func);
                     }
                 }
@@ -55,6 +55,23 @@ namespace luminous {
                 return Spectrum{_data.get_helper().color()};
             }
 
+            template<typename T>
+            LM_XPU void add_BxDF(T bxdf) {
+                for_each([&](auto &bxdf_ref, int index){
+                    if constexpr(std::is_same_v<decltype(bxdf_ref), T>) {
+                        std::get<index>(_bxdfs) = bxdf;
+                        return false;
+                    } else {
+                        return true;
+                    }
+                });
+            }
+
+            template<typename T>
+            LM_XPU void set_data(T data) {
+                _data = data;
+            }
+
             template<typename F>
             LM_XPU void for_each(F &&func) const {
                 iterator<0>(std::move(func));
@@ -67,7 +84,7 @@ namespace luminous {
 
             LM_ND_XPU int match_num(BxDFFlags bxdf_flags) const {
                 int ret{0};
-                for_each([&](auto bxdf) {
+                for_each([&](auto bxdf, int idx) {
                     if (bxdf.match_flags(bxdf_flags)) {
                         ret += 1;
                     }
@@ -89,7 +106,7 @@ namespace luminous {
 
             LM_ND_XPU BxDFFlags flags() const {
                 int ret{0};
-                for_each([&](auto bxdf) {
+                for_each([&](auto bxdf, int idx) {
                     ret |= bxdf.flags();
                     return true;
                 });
@@ -105,7 +122,7 @@ namespace luminous {
                 flags = combine_flags(wo, wi, flags);
 
                 Spectrum ret{0.f};
-                this->for_each([&](auto bxdf) {
+                this->for_each([&](auto bxdf, int idx) {
                     if (bxdf.match_flags(flags)) {
                         ret += bxdf.safe_eval(wo, wi, _data.get_helper());
                     }
@@ -125,7 +142,7 @@ namespace luminous {
                 flags = combine_flags(wo, wi, flags);
 
                 float ret{0.f};
-                for_each([&](auto bxdf) {
+                for_each([&](auto bxdf, int idx) {
                     if (bxdf.match_flags(flags)) {
                         match_count += 1;
                         ret += bxdf.safe_PDF(wo, wi, _data.get_helper());
@@ -147,7 +164,7 @@ namespace luminous {
                 uc = remapping(uc, float(comp) / num, float(comp + 1) / num);
                 int count = 0;
                 BSDFSample ret;
-                for_each([&](auto bxdf) {
+                for_each([&](auto bxdf, int idx) {
                     if (bxdf.match_flags(flags)) {
                         if (count == comp) {
                             ret = bxdf.sample_f(wo, uc, u, _data.get_helper(), mode);

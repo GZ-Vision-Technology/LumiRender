@@ -4,7 +4,7 @@
 
 #include "disney.h"
 #include "render/scene/scene_data.h"
-
+#include "render/scattering/disney_bsdf.h"
 
 namespace luminous {
     inline namespace render {
@@ -27,9 +27,21 @@ namespace luminous {
                                       lerp(sheen_tint, make_float4(1.f), color_tint) :
                                       make_float4(0.f);
 
+            DisneyBSDF disney_bsdf;
+
             if (_thin) {
+                float flatness = scene_data->get_texture(_flatness).eval(ctx).x;
+                disney::Diffuse diffuse(diffuse_weight * (1 - flatness) * (1 - diff_trans));
+                disney_bsdf.add_BxDF(diffuse);
+                disney::FakeSS fake_ss(diffuse_weight * flatness * (1 - diff_trans));
+                disney_bsdf.add_BxDF(fake_ss);
+            } else {
+                // process BSSRDF
 
             }
+
+            disney_bsdf.add_BxDF(disney::Retro(diffuse_weight));
+            disney::Sheen sheen(diffuse_weight * sheen_weight);
 
             return BSDFWrapper();
         }
