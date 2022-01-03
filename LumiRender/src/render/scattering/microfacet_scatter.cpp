@@ -15,7 +15,7 @@ namespace luminous {
             wh = face_forward(wh, make_float3(0, 0, 1));
             auto F = helper.eval_fresnel(abs_dot(wo, wh));
             auto fr = helper.BRDF(wo, wh, wi, F, cos_theta_i, cos_theta_o, mode);
-            return fr * Spectrum(helper.color());
+            return fr * Spectrum(color(helper));
         }
 
         Spectrum MicrofacetReflection::safe_eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
@@ -73,7 +73,7 @@ namespace luminous {
             float F = helper.eval_fresnel(abs_dot(wo, wh))[0];
             float tr = helper.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i, cos_theta_o, helper.eta(),
                                    mode);
-            return tr * helper.color();
+            return tr * color(helper);
         }
 
         Spectrum MicrofacetTransmission::safe_eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
