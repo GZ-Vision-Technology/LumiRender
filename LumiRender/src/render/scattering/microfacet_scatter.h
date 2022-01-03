@@ -79,7 +79,7 @@ namespace luminous {
                                            Spectrum Fr, BSDFHelper helper,
                                            TransportMode mode = TransportMode::Radiance) const;
 
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                           TransportMode mode = TransportMode::Radiance) const;
 
             LM_ND_XPU constexpr static BxDFFlags flags() {

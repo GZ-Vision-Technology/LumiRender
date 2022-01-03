@@ -14,22 +14,22 @@ namespace luminous {
         public:
             using BxDF::BxDF;
 
-            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper data,
+            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
                                          TransportMode mode = TransportMode::Radiance) const {
                 return 0.f;
             }
 
             LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
-                                     BSDFHelper data,
+                                     BSDFHelper helper,
                                      TransportMode mode = TransportMode::Radiance) const {
                 return 0.f;
             }
 
             LM_ND_XPU BSDFSample _sample_f(float3 wo, float uc, float2 u,
-                                           Spectrum Fr, BSDFHelper data,
+                                           Spectrum Fr, BSDFHelper helper,
                                            TransportMode mode = TransportMode::Radiance) const;
 
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                           TransportMode mode = TransportMode::Radiance) const;
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -42,22 +42,22 @@ namespace luminous {
         public:
             using BxDF::BxDF;
 
-            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper data,
+            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
                                          TransportMode mode = TransportMode::Radiance) const {
                 return 0.f;
             }
 
             LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
-                                     BSDFHelper data,
+                                     BSDFHelper helper,
                                      TransportMode mode = TransportMode::Radiance) const {
                 return 0.f;
             }
 
             LM_ND_XPU BSDFSample _sample_f(float3 wo, float uc, float2 u,
-                                           Spectrum Fr, BSDFHelper data,
+                                           Spectrum Fr, BSDFHelper helper,
                                            TransportMode mode = TransportMode::Radiance) const;
 
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                           TransportMode mode = TransportMode::Radiance) const;
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
