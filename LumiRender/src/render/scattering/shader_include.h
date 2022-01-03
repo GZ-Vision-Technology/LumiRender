@@ -10,6 +10,7 @@
     #include "diffuse_scatter.cpp"
     #include "microfacet_scatter.cpp"
     #include "specular_scatter.cpp"
+    #include "disney_bsdf.cpp"
 #else
     #include "microfacet_scatter.h"
     #include "specular_scatter.h"

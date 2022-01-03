@@ -108,6 +108,11 @@ namespace luminous {
                 return *this;
             }
 
+            ND_XPU_INLINE float4 color_sheen_tint() const {
+                // todo
+                return make_float4(1.f);
+            }
+
             ND_XPU_INLINE float4 color() const {
                 switch (_fresnel_type) {
                     case NoOp:
@@ -203,8 +208,8 @@ namespace luminous {
                 return ret;
             }
 
-            LM_ND_XPU static PhysicallyMaterialData
-            create_metal_data(float4 eta, float4 k, float alpha_x, float alpha_y) {
+            LM_ND_XPU static PhysicallyMaterialData create_metal_data(float4 eta, float4 k,
+                                                                      float alpha_x, float alpha_y) {
                 PhysicallyMaterialData ret{Conductor};
                 ret._color = eta;
                 ret._params = k;

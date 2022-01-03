@@ -69,6 +69,9 @@ namespace luminous {
             public:
                 LM_XPU explicit Sheen(float factor) : BxDF(factor > 0), _factor(factor) {}
 
+                LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
+                                        TransportMode mode = TransportMode::Radiance) const;
+
                 ND_XPU_INLINE float weight(BSDFHelper helper) const {
                     return _factor;
                 }
@@ -84,6 +87,30 @@ namespace luminous {
                 LM_XPU explicit Clearcoat(float factor, float gloss)
                         : BxDF(factor > 0),
                           _factor(factor), _gloss(gloss) {}
+
+                LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
+                                        TransportMode mode = TransportMode::Radiance) const;
+
+                /**
+                 * must be reflection
+                 */
+                LM_ND_XPU static float PDF(float3 wo, float3 wi,
+                                           BSDFHelper helper,
+                                           TransportMode mode = TransportMode::Radiance);
+
+                LM_ND_XPU static float safe_PDF(float3 wo, float3 wi,
+                                                BSDFHelper helper,
+                                                TransportMode mode = TransportMode::Radiance);
+
+                /**
+                 * eta must be corrected
+                 */
+                LM_ND_XPU static BSDFSample _sample_f(float3 wo, float uc, float2 u,
+                                                      Spectrum Fr, BSDFHelper helper,
+                                                      TransportMode mode = TransportMode::Radiance);
+
+                LM_ND_XPU static BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
+                                                     TransportMode mode = TransportMode::Radiance);
 
                 ND_XPU_INLINE float weight(BSDFHelper helper) const {
                     return _factor;
