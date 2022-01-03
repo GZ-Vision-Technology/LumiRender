@@ -85,16 +85,21 @@ namespace luminous {
             }
 
             float Clearcoat::PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
-                return 0;
+                float3 wh = wi + wo;
+                if (length_squared(wh) == 0.f) {
+                    return 0.f;
+                }
+                wh = normalize(wh);
+
+                float Dr = GTR1(Frame::abs_cos_theta(wh), helper.gloss());
+                return Dr * Frame::abs_cos_theta(wh) / (4 * dot(wo, wh));
             }
 
             float Clearcoat::safe_PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
-                return 0;
-            }
-
-            BSDFSample Clearcoat::_sample_f(float3 wo, float uc, float2 u, Spectrum Fr,
-                                            BSDFHelper helper, TransportMode mode) const {
-                return BSDFSample();
+                if (!same_hemisphere(wo, wi)) {
+                    return 0;
+                }
+                return PDF(wo, wi, helper, mode);
             }
 
             BSDFSample Clearcoat::sample_f(float3 wo, float uc, float2 u,
@@ -117,11 +122,8 @@ namespace luminous {
                 }
                 float pdf = PDF(wo, wi, helper, mode);
                 Spectrum f_val = eval(wo, wi, helper, mode);
-
-
                 return {f_val, wi, pdf, BxDFFlags::GlossyRefl};
             }
-
         }
     }
 }
