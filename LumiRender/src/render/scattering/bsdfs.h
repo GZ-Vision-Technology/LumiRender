@@ -35,27 +35,12 @@ namespace luminous {
                               SpecularReflection{});
         }
 
-        using GlassBSDFSingle = BSDF_Ty<PhysicallyMaterialData, SpecularFresnel>;
-
-        ND_XPU_INLINE GlassBSDFSingle create_glass_bsdf_single(float4 color, float eta) {
-            return GlassBSDFSingle(PhysicallyMaterialData::create_glass_data(color, eta, 0, 0),
-                                   SpecularFresnel{});
-        }
-
         using GlassBSDF = FresnelBSDF<PhysicallyMaterialData, SpecularReflection, SpecularTransmission, true>;
 
         ND_XPU_INLINE GlassBSDF create_glass_bsdf(float4 color, float eta,
                                                   bool valid_refl = true, bool valid_trans = true) {
             return GlassBSDF(PhysicallyMaterialData::create_glass_data(color, eta, 0, 0),
                              SpecularReflection{valid_refl}, SpecularTransmission{valid_trans});
-        }
-
-        using RoughGlassBSDFSingle = BSDF_Ty<PhysicallyMaterialData, MicrofacetFresnel>;
-
-        ND_XPU_INLINE RoughGlassBSDFSingle
-        create_rough_glass_bsdf_single(float4 color, float eta, float alpha_x, float alpha_y) {
-            return RoughGlassBSDFSingle(PhysicallyMaterialData::create_glass_data(color, eta, alpha_x, alpha_y),
-                                        MicrofacetFresnel{});
         }
 
         using RoughGlassBSDF = FresnelBSDF<PhysicallyMaterialData, MicrofacetReflection, MicrofacetTransmission>;
@@ -87,10 +72,8 @@ namespace luminous {
                 disney::FakeSS, disney::Retro, disney::Sheen, disney::Clearcoat, MicrofacetReflection, SpecularTransmission>;
 
 
-
-
         class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF,
-                GlassBSDF, RoughGlassBSDFSingle, GlassBSDFSingle, RoughGlassBSDF,
+                GlassBSDF, RoughGlassBSDF,
                 FakeMetalBSDF, MetalBSDF> {
         private:
             using Variant::Variant;
