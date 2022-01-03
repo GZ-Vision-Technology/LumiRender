@@ -66,6 +66,13 @@ namespace luminous {
                 return 1.f;
             }
 
+            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper data,
+                                         TransportMode mode = TransportMode::Radiance) const {
+                return same_hemisphere(wo, wi) ?
+                       static_cast<const T *>(this)->eval(wo, wi, data) :
+                       Spectrum{0.f};
+            }
+
             ND_XPU_INLINE float safe_PDF(float3 wo, float3 wi, BSDFHelper data,
                                          TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? cosine_hemisphere_PDF(Frame::abs_cos_theta(wi)) : 0.f;

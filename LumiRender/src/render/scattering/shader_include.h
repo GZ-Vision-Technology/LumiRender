@@ -7,6 +7,7 @@
 
 #if defined(__CUDACC__)
     #include "bsdf_wrapper.cpp"
+    #include "diffuse_scatter.cpp"
 #else
     #include "microfacet_scatter.h"
     #include "specular_scatter.h"
