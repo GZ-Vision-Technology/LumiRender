@@ -26,24 +26,6 @@ namespace luminous {
                 return same_hemisphere(wo, wi) ? eval(wo, wi, data) : Spectrum{0.f};
             }
 
-            LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
-                                     BSDFHelper data,
-                                     TransportMode mode = TransportMode::Radiance) const {
-                return same_hemisphere(wo, wi) ? cosine_hemisphere_PDF(Frame::abs_cos_theta(wi)) : 0.f;
-            }
-
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
-                                          TransportMode mode = TransportMode::Radiance) const {
-                float3 wi = square_to_cosine_hemisphere(u);
-                wi.z = wo.z < 0 ? -wi.z : wi.z;
-                float PDF_val = safe_PDF(wo, wi, data, mode);
-                if (PDF_val == 0.f) {
-                    return {};
-                }
-                Spectrum f = eval(wo, wi, data, mode);
-                return {f, wi, PDF_val, BxDFFlags::Reflection};
-            }
-
             LM_ND_XPU constexpr static BxDFFlags flags() {
                 return BxDFFlags::DiffRefl;
             }
@@ -89,24 +71,6 @@ namespace luminous {
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
                                          TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? eval(wo, wi, helper) : Spectrum{0.f};
-            }
-
-            LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
-                                     BSDFHelper data,
-                                     TransportMode mode = TransportMode::Radiance) const {
-                return same_hemisphere(wo, wi) ? cosine_hemisphere_PDF(Frame::abs_cos_theta(wi)) : 0.f;
-            }
-
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
-                                          TransportMode mode = TransportMode::Radiance) const {
-                float3 wi = square_to_cosine_hemisphere(u);
-                wi.z = wo.z < 0 ? -wi.z : wi.z;
-                float PDF_val = safe_PDF(wo, wi, helper, mode);
-                if (PDF_val == 0.f) {
-                    return {};
-                }
-                Spectrum f = eval(wo, wi, helper, mode);
-                return {f, wi, PDF_val, BxDFFlags::Reflection};
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {

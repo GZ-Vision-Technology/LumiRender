@@ -284,7 +284,9 @@ namespace luminous {
             float diff_trans{};
             bool thin{};
         public:
-
+            ND_XPU_INLINE BSDFHelper get_helper() const {
+                return BSDFHelper();
+            }
         };
     }
 }

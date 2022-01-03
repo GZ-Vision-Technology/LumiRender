@@ -67,17 +67,15 @@ namespace luminous {
             }
 
             ND_XPU_INLINE float safe_PDF(float3 wo, float3 wi, BSDFHelper data,
-                                         MicrofacetDistrib microfacet = {},
                                          TransportMode mode = TransportMode::Radiance) const {
                 return same_hemisphere(wo, wi) ? cosine_hemisphere_PDF(Frame::abs_cos_theta(wi)) : 0.f;
             }
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper data,
-                                          MicrofacetDistrib microfacet = {},
                                           TransportMode mode = TransportMode::Radiance) const {
                 float3 wi = square_to_cosine_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
-                float PDF_val = safe_PDF(wo, wi, data, microfacet, mode);
+                float PDF_val = safe_PDF(wo, wi, data, mode);
                 if (PDF_val == 0.f) {
                     return {};
                 }
