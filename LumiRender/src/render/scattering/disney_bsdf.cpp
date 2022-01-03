@@ -8,6 +8,18 @@ namespace luminous {
     inline namespace render {
         namespace disney {
 
+            ND_XPU_INLINE float GTR1(float cos_theta, float alpha) {
+                float alpha2 = sqr(alpha);
+                return (alpha2 - 1) /
+                       (Pi * std::log(alpha2) * (1 + (alpha2 - 1) * sqr(cos_theta)));
+            }
+
+            ND_XPU_INLINE float smithG_GGX(float cos_theta, float alpha) {
+                float alpha2 = sqr(alpha);
+                float cos_theta_2 = sqr(cos_theta);
+                return 1 / (cos_theta + sqrt(alpha2 + cos_theta_2 - alpha2 * cos_theta_2));
+            }
+
             Spectrum Diffuse::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
                 float Fo = schlick_weight(Frame::abs_cos_theta(wo));
                 float Fi = schlick_weight(Frame::abs_cos_theta(wi));
@@ -59,26 +71,57 @@ namespace luminous {
 
             // Clearcoat
             Spectrum Clearcoat::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
-                return luminous::Spectrum();
+                float3 wh = wi + wo;
+                if (length_squared(wh) == 0.f) {
+                    return {0.f};
+                }
+                wh = normalize(wh);
+
+                float Dr = GTR1(Frame::abs_cos_theta(wh), helper.gloss());
+                float Fr = fresnel_schlick(0.04f, dot(wo, wh));
+                float Gr = smithG_GGX(Frame::abs_cos_theta(wo), 0.25f)
+                           * smithG_GGX(Frame::abs_cos_theta(wi), 0.25f);
+                return _weight * Gr * Fr * Dr / 4;
             }
 
-            float Clearcoat::PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) {
+            float Clearcoat::PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
                 return 0;
             }
 
-            float Clearcoat::safe_PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) {
+            float Clearcoat::safe_PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
                 return 0;
             }
 
             BSDFSample Clearcoat::_sample_f(float3 wo, float uc, float2 u, Spectrum Fr,
-                                            BSDFHelper helper, TransportMode mode) {
+                                            BSDFHelper helper, TransportMode mode) const {
                 return BSDFSample();
             }
 
             BSDFSample Clearcoat::sample_f(float3 wo, float uc, float2 u,
-                                           BSDFHelper helper, TransportMode mode) {
-                return BSDFSample();
+                                           BSDFHelper helper, TransportMode mode) const {
+                if (wo.z == 0) {
+                    return {};
+                }
+                float gloss = helper.gloss();
+                float alpha2 = sqr(gloss);
+
+                float cos_theta = safe_sqrt((1 - std::pow(alpha2, 1 - u[0])) / (1 - alpha2));
+                float sin_theta = safe_sqrt(1 - sqr(cos_theta));
+                float phi = 2 * Pi * u[1];
+                float3 wh = spherical_direction(sin_theta, cos_theta, phi);
+
+                wh = same_hemisphere(wo, wh) ? wh : -wh;
+                float3 wi = reflect(wo, wh);
+                if (!same_hemisphere(wo, wi)) {
+                    return {};
+                }
+                float pdf = PDF(wo, wi, helper, mode);
+                Spectrum f_val = eval(wo, wi, helper, mode);
+
+
+                return {f_val, wi, pdf, BxDFFlags::GlossyRefl};
             }
+
         }
     }
 }

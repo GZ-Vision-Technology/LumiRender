@@ -104,13 +104,24 @@ namespace luminous {
                 return make_float4(1.f);
             }
 
-            ND_XPU_INLINE BSDFHelper get_param() const {
-                return *this;
-            }
-
             ND_XPU_INLINE float4 color_sheen_tint() const {
                 // todo
                 return make_float4(1.f);
+            }
+
+            ND_XPU_INLINE float4 color_tint() const {
+                // todo
+                return make_float4(1.f);
+            }
+
+            ND_XPU_INLINE float clear_coat() const {
+                // todo
+                return 1;
+            }
+
+            ND_XPU_INLINE float gloss() const {
+                // todo
+                return 1;
             }
 
             ND_XPU_INLINE float4 color() const {
@@ -281,8 +292,8 @@ namespace luminous {
             float _anisotropic{};
             float _sheen{};
             float _sheen_tint{};
-            float clearcoat{};
-            float clearcoat_gloss{};
+            float _clearcoat{};
+            float _clearcoat_gloss{};
             float spec_trans{};
             float4 scatter_distance{};
             float flatness{};
