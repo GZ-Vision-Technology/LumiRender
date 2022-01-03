@@ -16,9 +16,9 @@ namespace luminous {
         public:
             using BxDF::BxDF;
 
-            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper data,
+            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                     TransportMode mode = TransportMode::Radiance) const {
-                return Spectrum{data.color() * constant::invPi};
+                return Spectrum{color(helper) * constant::invPi};
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {
@@ -51,14 +51,14 @@ namespace luminous {
         public:
             using BxDF::BxDF;
 
-            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper data,
+            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                     TransportMode mode = TransportMode::Radiance) const {
-                return Spectrum{data.color() * constant::invPi};
+                return Spectrum{color(helper) * constant::invPi};
             }
 
-            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper data,
+            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
                                          TransportMode mode = TransportMode::Radiance) const {
-                return same_hemisphere(wo, wi) ? Spectrum{0.f} : eval(wo, wi, data);
+                return same_hemisphere(wo, wi) ? Spectrum{0.f} : eval(wo, wi, helper);
             }
 
             LM_ND_XPU float safe_PDF(float3 wo, float3 wi,

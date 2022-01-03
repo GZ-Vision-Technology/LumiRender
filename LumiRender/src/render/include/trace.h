@@ -32,25 +32,5 @@ namespace luminous {
 #endif
         }
 
-        class VisibilityTester {
-        private:
-            Interaction _p0{}, _p1{};
-        public:
-            LM_XPU VisibilityTester() = default;
-
-            LM_XPU VisibilityTester(const Interaction &p0,
-                                    const Interaction &p1)
-                    : _p0(p0), _p1(p1) {}
-
-            LM_ND_XPU const Interaction &P0() const { return _p0; }
-
-            LM_ND_XPU const Interaction &P1() const { return _p1; }
-
-            LM_ND_XPU bool occluded(uint64_t traversable_handle) const {
-                auto ray = _p0.spawn_ray_to(_p1);
-                return intersect_any(traversable_handle, ray);
-            }
-        };
-
     } // luminous::render
 } // luminous

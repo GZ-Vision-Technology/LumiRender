@@ -7,7 +7,7 @@
 namespace luminous {
     inline namespace render {
 
-        Spectrum MicrofacetReflection::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) {
+        Spectrum MicrofacetReflection::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
 
             float cos_theta_o = Frame::cos_theta(wo);
             float cos_theta_i = Frame::cos_theta(wi);
@@ -18,7 +18,7 @@ namespace luminous {
             return fr * Spectrum(helper.color());
         }
 
-        Spectrum MicrofacetReflection::safe_eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) {
+        Spectrum MicrofacetReflection::safe_eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
             float cos_theta_o = Frame::cos_theta(wo);
             if (!same_hemisphere(wi, wo)) {
                 return {0.f};
@@ -27,12 +27,12 @@ namespace luminous {
             return eval(wo, wi, helper, mode);
         }
 
-        float MicrofacetReflection::PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) {
+        float MicrofacetReflection::PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
             float3 wh = normalize(wo + wi);
             return helper.PDF_wi_reflection(wo, wh);
         }
 
-        float MicrofacetReflection::safe_PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) {
+        float MicrofacetReflection::safe_PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
             if (!same_hemisphere(wo, wi)) {
                 return 0.f;
             }
@@ -40,7 +40,7 @@ namespace luminous {
         }
 
         BSDFSample MicrofacetReflection::_sample_f(float3 wo, float uc, float2 u, Spectrum Fr,
-                                                   BSDFHelper helper, TransportMode mode) {
+                                                   BSDFHelper helper, TransportMode mode) const {
             float3 wh = helper.sample_wh(wo, u);
             if (dot(wh, wo) < 0) {
                 return {};
@@ -55,13 +55,13 @@ namespace luminous {
         }
 
         BSDFSample MicrofacetReflection::sample_f(float3 wo, float uc, float2 u,
-                                                  BSDFHelper helper, TransportMode mode) {
+                                                  BSDFHelper helper, TransportMode mode) const {
             float cos_theta_o = Frame::cos_theta(wo);
             helper.correct_eta(cos_theta_o);
             return _sample_f(wo, uc, u, 0.f, helper, mode);
         }
 
-        Spectrum MicrofacetTransmission::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) {
+        Spectrum MicrofacetTransmission::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
             float cos_theta_o = Frame::cos_theta(wo);
             float cos_theta_i = Frame::cos_theta(wi);
             using eta_type = decltype(helper.eta());
@@ -76,7 +76,7 @@ namespace luminous {
             return tr * helper.color();
         }
 
-        Spectrum MicrofacetTransmission::safe_eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) {
+        Spectrum MicrofacetTransmission::safe_eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
             float cos_theta_o = Frame::cos_theta(wo);
             if (same_hemisphere(wi, wo)) {
                 return {0.f};
@@ -85,7 +85,7 @@ namespace luminous {
             return eval(wo, wi, helper, mode);
         }
 
-        float MicrofacetTransmission::PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) {
+        float MicrofacetTransmission::PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
             float cos_theta_o = Frame::cos_theta(wo);
             float cos_theta_i = Frame::cos_theta(wi);
             float3 wh = normalize(wo + wi * helper.eta());
@@ -96,7 +96,7 @@ namespace luminous {
             return helper.PDF_wi_transmission(wo, wh, wi, helper.eta());
         }
 
-        float MicrofacetTransmission::safe_PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) {
+        float MicrofacetTransmission::safe_PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
             float cos_theta_o = Frame::cos_theta(wo);
             if (same_hemisphere(wo, wi)) {
                 return 0.f;
@@ -106,7 +106,8 @@ namespace luminous {
         }
 
         BSDFSample MicrofacetTransmission::_sample_f(float3 wo, float uc, float2 u,
-                                                     Spectrum Fr, BSDFHelper helper, TransportMode mode) {
+                                                     Spectrum Fr, BSDFHelper helper,
+                                                     TransportMode mode) const {
             float3 wh = helper.sample_wh(wo, u);
             if (dot(wh, wo) < 0) {
                 return {};
@@ -122,7 +123,7 @@ namespace luminous {
         }
 
         BSDFSample MicrofacetTransmission::sample_f(float3 wo, float uc, float2 u,
-                                                    BSDFHelper data, TransportMode mode) {
+                                                    BSDFHelper data, TransportMode mode) const {
             float cos_theta_o = Frame::cos_theta(wo);
             data.correct_eta(cos_theta_o);
             return _sample_f(wo, uc, u, 0.f, data, mode);

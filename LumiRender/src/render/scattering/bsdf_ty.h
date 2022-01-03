@@ -198,9 +198,9 @@ namespace luminous {
                     float cos_theta_o = Frame::cos_theta(wo);
                     helper.correct_eta(cos_theta_o);
                     if (same_hemisphere(wi, wo)) {
-                        return Refl::eval(wo, wi, helper, mode);
+                        return std::get<0>(BaseClass::_bxdfs).eval(wo, wi, helper, mode);
                     }
-                    return Trans::eval(wo, wi, helper, mode);
+                    return std::get<1>(BaseClass::_bxdfs).eval(wo, wi, helper, mode);
                 }
             }
 
@@ -214,9 +214,9 @@ namespace luminous {
                     float cos_theta_o = Frame::cos_theta(wo);
                     helper.correct_eta(cos_theta_o);
                     if (same_hemisphere(wi, wo)) {
-                        return Refl::PDF(wo, wi, helper, mode);
+                        return std::get<0>(BaseClass::_bxdfs).PDF(wo, wi, helper, mode);
                     }
-                    return Trans::PDF(wo, wi, helper, mode);
+                    return std::get<1>(BaseClass::_bxdfs).PDF(wo, wi, helper, mode);
                 }
             }
 
@@ -235,10 +235,10 @@ namespace luminous {
                 float Fr = helper.eval_fresnel(Frame::abs_cos_theta(wo))[0];
                 BSDFSample ret;
                 if (uc < Fr) {
-                    ret = Refl::_sample_f(wo, uc, u, Fr, helper, mode);
+                    ret = std::get<0>(BaseClass::_bxdfs)._sample_f(wo, uc, u, Fr, helper, mode);
                     ret.PDF *= Fr;
                 } else {
-                    ret = Trans::_sample_f(wo, uc, u, Fr, helper, mode);
+                    ret = std::get<1>(BaseClass::_bxdfs)._sample_f(wo, uc, u, Fr, helper, mode);
                     ret.PDF *= 1 - Fr;
                 }
                 return ret;

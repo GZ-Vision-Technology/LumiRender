@@ -8,7 +8,7 @@ namespace luminous {
     inline namespace render {
 
         BSDFSample SpecularReflection::_sample_f(float3 wo, float uc, float2 u, Spectrum Fr,
-                                                 BSDFHelper data, TransportMode mode) {
+                                                 BSDFHelper data, TransportMode mode) const {
             float3 wi = make_float3(-wo.x, -wo.y, wo.z);
             Spectrum val = Fr * Spectrum(data.color()) / Frame::abs_cos_theta(wi);
             float PDF = 1.f;
@@ -16,7 +16,7 @@ namespace luminous {
         }
 
         BSDFSample SpecularReflection::sample_f(float3 wo, float uc, float2 u,
-                                                BSDFHelper data, TransportMode mode) {
+                                                BSDFHelper data, TransportMode mode) const {
 
             float3 wi = make_float3(-wo.x, -wo.y, wo.z);
             data.correct_eta(Frame::cos_theta(wo));
@@ -25,7 +25,7 @@ namespace luminous {
         }
 
         BSDFSample SpecularTransmission::_sample_f(float3 wo, float uc, float2 u, Spectrum Fr, BSDFHelper data,
-                                                   TransportMode mode) {
+                                                   TransportMode mode) const {
             float3 wi{};
             float3 n = make_float3(0, 0, 1);
             bool valid = refract(wo, face_forward(n, wo), data.eta(), &wi);
@@ -39,7 +39,7 @@ namespace luminous {
         }
 
         BSDFSample SpecularTransmission::sample_f(float3 wo, float uc, float2 u,
-                                                  BSDFHelper data, TransportMode mode) {
+                                                  BSDFHelper data, TransportMode mode) const {
             float3 wi{};
             data.correct_eta(Frame::cos_theta(wo));
             float3 n = make_float3(0, 0, 1);

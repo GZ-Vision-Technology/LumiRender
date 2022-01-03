@@ -28,7 +28,7 @@ namespace luminous {
                     sin_theta_o / Frame::abs_cos_theta(wo);
             float2 AB = helper.AB();
             float factor = (AB.x + AB.y * max_cos * sin_alpha * tan_beta);
-            return helper.color() * invPi * factor;
+            return color(helper) * invPi * factor;
         }
     }
 }
