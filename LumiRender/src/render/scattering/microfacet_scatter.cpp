@@ -70,7 +70,9 @@ namespace luminous {
             return _sample_f(wo, uc, u, 0.f, helper, mode);
         }
 
-        Spectrum MicrofacetTransmission::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
+        // MicrofacetTransmission
+        Spectrum MicrofacetTransmission::_f(float3 wo, float3 wi, BSDFHelper helper,
+                                            float4 color, TransportMode mode) const {
             float cos_theta_o = Frame::cos_theta(wo);
             float cos_theta_i = Frame::cos_theta(wi);
             using eta_type = decltype(helper.eta());
@@ -80,9 +82,29 @@ namespace luminous {
             }
             wh = face_forward(wh, make_float3(0, 0, 1));
             float F = helper.eval_fresnel(abs_dot(wo, wh))[0];
-            float tr = helper.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i, cos_theta_o, helper.eta(),
-                                   mode);
-            return tr * color(helper);
+            float tr = helper.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i,
+                                   cos_theta_o, helper.eta(), mode);
+            return tr * color;
+        }
+        
+        BSDFSample MicrofacetTransmission::_sample_f_color(float3 wo, float uc, float2 u, Spectrum Fr,
+                                                           BSDFHelper helper, float4 color, TransportMode mode) const {
+            float3 wh = helper.sample_wh(wo, u);
+            if (dot(wh, wo) < 0) {
+                return {};
+            }
+            float3 wi{};
+            bool valid = refract(wo, wh, helper.eta(), &wi);
+            if (!valid || same_hemisphere(wo, wi)) {
+                return {};
+            }
+            float PDF = helper.PDF_wi_transmission(wo, wh, wi, helper.eta());
+            Spectrum val = _f(wo, wi, helper, color, mode);
+            return {val, wi, PDF, flags(), helper.eta()};
+        }
+
+        Spectrum MicrofacetTransmission::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
+            return _f(wo, wi, helper, color(helper), mode);
         }
 
         Spectrum MicrofacetTransmission::safe_eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
@@ -117,18 +139,7 @@ namespace luminous {
         BSDFSample MicrofacetTransmission::_sample_f(float3 wo, float uc, float2 u,
                                                      Spectrum Fr, BSDFHelper helper,
                                                      TransportMode mode) const {
-            float3 wh = helper.sample_wh(wo, u);
-            if (dot(wh, wo) < 0) {
-                return {};
-            }
-            float3 wi{};
-            bool valid = refract(wo, wh, helper.eta(), &wi);
-            if (!valid || same_hemisphere(wo, wi)) {
-                return {};
-            }
-            float PDF = helper.PDF_wi_transmission(wo, wh, wi, helper.eta());
-            Spectrum val = eval(wo, wi, helper);
-            return {val, wi, PDF, flags(), helper.eta()};
+            return _sample_f_color(wo, uc, u, Fr, helper, helper.color(), mode);
         }
 
         BSDFSample MicrofacetTransmission::sample_f(float3 wo, float uc, float2 u,
