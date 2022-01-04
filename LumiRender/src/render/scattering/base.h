@@ -60,7 +60,7 @@ namespace luminous {
         public:
             const bool valid{};
         public:
-            LM_XPU explicit BxDF(bool valid = true) : valid(valid) {}
+            LM_XPU explicit BxDF(bool valid = false) : valid(valid) {}
 
             ND_XPU_INLINE float weight(BSDFHelper helper) const {
                 return 1.f;

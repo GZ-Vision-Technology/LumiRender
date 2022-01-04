@@ -26,6 +26,7 @@ namespace luminous {
             float4 color_sheen_tint = sheen_weight > 0.f ?
                                       lerp(sheen_tint, make_float4(1.f), color_tint) :
                                       make_float4(0.f);
+            float4 scatter_distance = scene_data->get_texture(_scatter_distance).eval(ctx);
 
             DisneyBSDF disney_bsdf;
 

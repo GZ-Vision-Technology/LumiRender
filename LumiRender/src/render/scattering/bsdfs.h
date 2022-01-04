@@ -19,20 +19,20 @@ namespace luminous {
         using DiffuseBSDF = BSDF_Ty<PhysicallyMaterialData, DiffuseReflection>;
 
         ND_XPU_INLINE DiffuseBSDF create_diffuse_bsdf(float4 color) {
-            return DiffuseBSDF(PhysicallyMaterialData::create_diffuse_data(color), DiffuseReflection{});
+            return DiffuseBSDF(PhysicallyMaterialData::create_diffuse_data(color), DiffuseReflection{true});
         }
 
         using OrenNayarBSDF = BSDF_Ty<PhysicallyMaterialData, OrenNayar>;
 
         ND_XPU_INLINE OrenNayarBSDF create_oren_nayar_bsdf(float4 color, float sigma) {
-            return OrenNayarBSDF(PhysicallyMaterialData::create_oren_nayar_data(color, sigma), OrenNayar{});
+            return OrenNayarBSDF(PhysicallyMaterialData::create_oren_nayar_data(color, sigma), OrenNayar{true});
         }
 
         using MirrorBSDF = BSDF_Ty<PhysicallyMaterialData, SpecularReflection>;
 
         ND_XPU_INLINE MirrorBSDF create_mirror_bsdf(float4 color) {
             return MirrorBSDF(PhysicallyMaterialData::create_mirror_data(color),
-                              SpecularReflection{});
+                              SpecularReflection{true});
         }
 
         using GlassBSDF = FresnelBSDF<PhysicallyMaterialData, SpecularReflection, SpecularTransmission, true>;
@@ -58,14 +58,14 @@ namespace luminous {
 
         ND_XPU_INLINE FakeMetalBSDF create_fake_metal_bsdf(float4 color, float alpha_x, float alpha_y) {
             auto param = PhysicallyMaterialData::create_fake_metal_data(color, alpha_x, alpha_y);
-            return FakeMetalBSDF(param, MicrofacetReflection{});
+            return FakeMetalBSDF(param, MicrofacetReflection{true});
         }
 
         using MetalBSDF = BSDF_Ty<PhysicallyMaterialData, MicrofacetReflection>;
 
         ND_XPU_INLINE MetalBSDF create_metal_bsdf(float4 eta, float4 k, float alpha_x, float alpha_y) {
             PhysicallyMaterialData data = PhysicallyMaterialData::create_metal_data(eta, k, alpha_x, alpha_y);
-            return MetalBSDF(data, MicrofacetReflection{});
+            return MetalBSDF(data, MicrofacetReflection{true});
         }
 
         using DisneyBSDF = BSDF_Ty<DisneyMaterialData, disney::Diffuse, disney::FakeSS,
