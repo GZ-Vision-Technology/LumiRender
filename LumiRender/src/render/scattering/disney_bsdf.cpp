@@ -136,7 +136,7 @@ namespace luminous {
                 }
                 Spectrum ft = (Spectrum(1.f) - Fr) / Frame::abs_cos_theta(wi);
                 float factor = cal_factor(mode, helper.eta());
-                Spectrum val = ft * Spectrum(1.f) * factor;
+                Spectrum val = ft * factor; // * Spectrum(1.f)
                 return {val, wi, 1, SpecTrans, helper.eta()};
             }
 
@@ -169,7 +169,7 @@ namespace luminous {
 
             BSDFSample MicrofacetReflection::_sample_f(float3 wo, float uc, float2 u, Spectrum Fr,
                                                        BSDFHelper helper, TransportMode mode) const {
-                return _sample_f_color(wo, uc, u, Fr, helper, helper.color(), mode);
+                return _sample_f_color(wo, uc, u, Fr, helper, make_float4(1.f), mode);
             }
 
             BSDFSample MicrofacetReflection::sample_f(float3 wo, float uc, float2 u,
@@ -196,7 +196,7 @@ namespace luminous {
             BSDFSample MicrofacetTransmission::_sample_f(float3 wo, float uc, float2 u,
                                                          Spectrum Fr, BSDFHelper helper,
                                                          TransportMode mode) const {
-                return _sample_f_color(wo, uc, u, Fr, helper, helper.color(), mode);
+                return _sample_f_color(wo, uc, u, Fr, helper, helper.spec_trans() * sqrt(helper.color()), mode);
             }
 
             BSDFSample MicrofacetTransmission::sample_f(float3 wo, float uc, float2 u,

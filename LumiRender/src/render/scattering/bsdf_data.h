@@ -129,6 +129,11 @@ namespace luminous {
                 return 1;
             }
 
+            ND_XPU_INLINE float spec_trans() const {
+                // todo
+                return 1;
+            }
+
             ND_XPU_INLINE float4 color() const {
                 switch (_fresnel_type) {
                     case NoOp:
@@ -293,17 +298,16 @@ namespace luminous {
             float _eta;
             float _metallic{};
             float _roughness{};
-            float specular_tint{};
+            float _specular_tint{};
             float _anisotropic{};
             float _sheen{};
             float _sheen_tint{};
             float _clearcoat{};
             float _clearcoat_gloss{};
-            float spec_trans{};
-            float4 scatter_distance{};
-            float flatness{};
-            float diff_trans{};
-            bool thin{};
+            float _spec_trans{};
+            float4 _scatter_distance{};
+            float _flatness{};
+            float _diff_trans{};
         public:
             ND_XPU_INLINE BSDFHelper get_helper() const {
                 return BSDFHelper();
