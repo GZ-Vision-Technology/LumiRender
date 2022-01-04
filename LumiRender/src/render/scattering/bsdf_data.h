@@ -31,8 +31,19 @@ namespace luminous {
         private:
             // todo Merge field
             float4 _color{};
+
+            // color_tint for disney
             float4 _params{};
+
+            // color_sheen_tint for disney
+            float4 _params1{};
+
+            // clearcoat gloss diff_trans spec_trans for disney
+            float4 _params2{};
+
             FresnelType _fresnel_type{NoOp};
+
+            friend class DisneyMaterialData;
         public:
             const float alpha_x{};
             const float alpha_y{};
@@ -104,34 +115,30 @@ namespace luminous {
                 return make_float4(1.f);
             }
 
+            ND_XPU_INLINE float4 color_tint() const {
+                return _params;
+            }
+
             ND_XPU_INLINE float4 color_sheen_tint() const {
                 // todo
-                return make_float4(1.f);
+                return _params1;
             }
 
-            ND_XPU_INLINE float4 color_tint() const {
-                // todo
-                return make_float4(1.f);
-            }
 
             ND_XPU_INLINE float clear_coat() const {
-                // todo
-                return 1;
+                return _params2.x;
             }
 
             ND_XPU_INLINE float gloss() const {
-                // todo
-                return 1;
+                return _params2.y;
             }
 
             ND_XPU_INLINE float diff_trans() const {
-                // todo
-                return 1;
+                return _params2.z;
             }
 
             ND_XPU_INLINE float spec_trans() const {
-                // todo
-                return 1;
+                return _params2.w;
             }
 
             ND_XPU_INLINE float4 color() const {
