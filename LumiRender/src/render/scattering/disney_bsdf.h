@@ -191,6 +191,30 @@ namespace luminous {
                 LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                               TransportMode mode = TransportMode::Radiance) const;
             };
+
+            class MicrofacetTransmission : public render::MicrofacetTransmission {
+            public:
+                LM_XPU MicrofacetTransmission() = default;
+
+                /**
+                 * must be reflection and eta must be corrected
+                 */
+                LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
+                                        TransportMode mode = TransportMode::Radiance) const;
+
+                LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
+                                             TransportMode mode = TransportMode::Radiance) const;
+
+                /**
+                 * eta must be corrected
+                 */
+                LM_ND_XPU BSDFSample _sample_f(float3 wo, float uc, float2 u,
+                                               Spectrum Fr, BSDFHelper helper,
+                                               TransportMode mode = TransportMode::Radiance) const;
+
+                LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
+                                              TransportMode mode = TransportMode::Radiance) const;
+            };
         }
     }
 }

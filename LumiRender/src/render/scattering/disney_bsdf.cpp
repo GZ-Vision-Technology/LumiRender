@@ -125,6 +125,7 @@ namespace luminous {
                 return {f_val, wi, pdf, BxDFFlags::GlossyRefl};
             }
 
+            // SpecularTransmission
             BSDFSample SpecularTransmission::_sample_f(float3 wo, float uc, float2 u, Spectrum Fr, BSDFHelper helper,
                                                        TransportMode mode) const {
                 float3 wi{};
@@ -150,6 +151,59 @@ namespace luminous {
                 }
                 auto Fr = helper.eval_fresnel(Frame::abs_cos_theta(wo))[0];
                 return _sample_f(wo, uc, u, Fr, helper, mode);
+            }
+
+            // MicrofacetReflection
+            Spectrum MicrofacetReflection::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
+                return _f(wo, wi, helper, helper.color(), mode);
+            }
+
+            Spectrum MicrofacetReflection::safe_eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
+                float cos_theta_o = Frame::cos_theta(wo);
+                if (!same_hemisphere(wi, wo)) {
+                    return {0.f};
+                }
+                helper.correct_eta(cos_theta_o);
+                return eval(wo, wi, helper, mode);
+            }
+
+            BSDFSample MicrofacetReflection::_sample_f(float3 wo, float uc, float2 u, Spectrum Fr,
+                                                       BSDFHelper helper, TransportMode mode) const {
+                return _sample_f_color(wo, uc, u, Fr, helper, helper.color(), mode);
+            }
+
+            BSDFSample MicrofacetReflection::sample_f(float3 wo, float uc, float2 u,
+                                                      BSDFHelper helper, TransportMode mode) const {
+                float cos_theta_o = Frame::cos_theta(wo);
+                helper.correct_eta(cos_theta_o);
+                return _sample_f(wo, uc, u, 0.f, helper, mode);
+            }
+
+            // MicrofacetTransmission
+            Spectrum MicrofacetTransmission::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
+                return _f(wo, wi, helper, color(helper), mode);
+            }
+
+            Spectrum MicrofacetTransmission::safe_eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
+                float cos_theta_o = Frame::cos_theta(wo);
+                if (same_hemisphere(wi, wo)) {
+                    return {0.f};
+                }
+                helper.correct_eta(cos_theta_o);
+                return eval(wo, wi, helper, mode);
+            }
+
+            BSDFSample MicrofacetTransmission::_sample_f(float3 wo, float uc, float2 u,
+                                                         Spectrum Fr, BSDFHelper helper,
+                                                         TransportMode mode) const {
+                return _sample_f_color(wo, uc, u, Fr, helper, helper.color(), mode);
+            }
+
+            BSDFSample MicrofacetTransmission::sample_f(float3 wo, float uc, float2 u,
+                                                        BSDFHelper helper, TransportMode mode) const {
+                float cos_theta_o = Frame::cos_theta(wo);
+                helper.correct_eta(cos_theta_o);
+                return _sample_f(wo, uc, u, 0.f, helper, mode);
             }
         }
     }

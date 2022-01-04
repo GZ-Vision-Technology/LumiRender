@@ -86,7 +86,7 @@ namespace luminous {
                                    cos_theta_o, helper.eta(), mode);
             return tr * color;
         }
-        
+
         BSDFSample MicrofacetTransmission::_sample_f_color(float3 wo, float uc, float2 u, Spectrum Fr,
                                                            BSDFHelper helper, float4 color, TransportMode mode) const {
             float3 wh = helper.sample_wh(wo, u);
@@ -143,10 +143,10 @@ namespace luminous {
         }
 
         BSDFSample MicrofacetTransmission::sample_f(float3 wo, float uc, float2 u,
-                                                    BSDFHelper data, TransportMode mode) const {
+                                                    BSDFHelper helper, TransportMode mode) const {
             float cos_theta_o = Frame::cos_theta(wo);
-            data.correct_eta(cos_theta_o);
-            return _sample_f(wo, uc, u, 0.f, data, mode);
+            helper.correct_eta(cos_theta_o);
+            return _sample_f(wo, uc, u, 0.f, helper, mode);
         }
 
     }
