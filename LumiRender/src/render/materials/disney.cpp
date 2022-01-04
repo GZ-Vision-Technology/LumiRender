@@ -37,12 +37,18 @@ namespace luminous {
                 disney::FakeSS fake_ss(diffuse_weight * flatness * (1 - diff_trans));
                 disney_bsdf.add_BxDF(fake_ss);
             } else {
-                // process BSSRDF
 
+                if (is_zero(scatter_distance)) {
+                    disney_bsdf.add_BxDF(disney::Diffuse(diffuse_weight));
+                } else {
+                    disney_bsdf.add_BxDF(disney::SpecularTransmission());
+                    // todo process BSSRDF
+                }
             }
 
             disney_bsdf.add_BxDF(disney::Retro(diffuse_weight));
-            disney::Sheen sheen(diffuse_weight * sheen_weight);
+
+            disney_bsdf.add_BxDF(disney::Sheen(diffuse_weight * sheen_weight));
 
             return BSDFWrapper();
         }
