@@ -218,7 +218,9 @@ namespace luminous {
                     case Dielectric:
                         return fresnel_dielectric(cos_theta, eta());
                     case DisneyFr:
-                        break;
+                        return lerp(metallic(),
+                                    Spectrum{fresnel_dielectric(cos_theta, eta())},
+                                    fresnel_schlick(R0(), cos_theta));
                     default:
                         DCHECK(0);
                 }

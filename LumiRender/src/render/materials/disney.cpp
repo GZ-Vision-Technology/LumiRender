@@ -58,7 +58,7 @@ namespace luminous {
                                schlick_R0_from_eta(eta) * lerp(spec_tint, Spectrum{1.f}, color_sheen_tint),
                                Spectrum(color));
 
-            return BSDFWrapper();
+            return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{disney_bsdf}};
         }
     }
 }
