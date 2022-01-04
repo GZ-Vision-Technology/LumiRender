@@ -18,14 +18,15 @@ namespace luminous {
             float spec_trans = scene_data->get_texture(_spec_trans).eval(ctx).x;
             float diffuse_weight = (1 - metallic) * (1 - spec_trans);
             float diff_trans = scene_data->get_texture(_diff_trans).eval(ctx).x / 2.f;
+            float spec_tint = scene_data->get_texture(_specular_tint).eval(ctx).x;
             float roughness = scene_data->get_texture(_roughness).eval(ctx).x;
             float lum = Spectrum{color}.Y();
-            float4 color_tint = lum > 0 ? (color / lum) : make_float4(1.f);
+            Spectrum color_tint = lum > 0 ? (color / lum) : Spectrum(1.f);
             float sheen_weight = scene_data->get_texture(_sheen).eval(ctx).x;
             float sheen_tint = scene_data->get_texture(_sheen_tint).eval(ctx).x;
-            float4 color_sheen_tint = sheen_weight > 0.f ?
-                                      lerp(sheen_tint, make_float4(1.f), color_tint) :
-                                      make_float4(0.f);
+            Spectrum color_sheen_tint = sheen_weight > 0.f ?
+                                      lerp(sheen_tint, Spectrum{1.f}, color_tint) :
+                                      Spectrum(0.f);
             float4 scatter_distance = scene_data->get_texture(_scatter_distance).eval(ctx);
 
             DisneyBSDF disney_bsdf;
@@ -49,6 +50,13 @@ namespace luminous {
             disney_bsdf.add_BxDF(disney::Retro(diffuse_weight));
 
             disney_bsdf.add_BxDF(disney::Sheen(diffuse_weight * sheen_weight));
+
+            float aspect = safe_sqrt(1 - scene_data->get_texture(_anisotropic).eval(ctx).x * 0.9f);
+            float ax = std::max(0.001f, sqr(roughness) / aspect);
+            float ay = std::max(0.001f, sqr(roughness) * aspect);
+            Spectrum R0 = lerp(metallic,
+                               schlick_R0_from_eta(eta) * lerp(spec_tint, Spectrum{1.f}, color_sheen_tint),
+                               Spectrum(color));
 
             return BSDFWrapper();
         }

@@ -32,14 +32,17 @@ namespace luminous {
             // todo Merge field
             float4 _color{};
 
-            // color_tint for disney
+            // color_tint, eta for disney
             float4 _params{};
 
-            // color_sheen_tint for disney
+            // color_sheen_tint disney
             float4 _params1{};
 
             // clearcoat gloss diff_trans spec_trans for disney
             float4 _params2{};
+
+            // R0, metallic for disney
+            float4 _params3{};
 
             FresnelType _fresnel_type{NoOp};
 
@@ -100,30 +103,26 @@ namespace luminous {
              * for metal
              * @return
              */
-            ND_XPU_INLINE float4 metal_eta() const {
+            ND_XPU_INLINE Spectrum metal_eta() const {
                 switch (_fresnel_type) {
                     case NoOp:
-                        break;
                     case Dielectric:
-                        break;
                     case DisneyFr:
                         break;
                     case Conductor:
                         return _color;
                 }
                 DCHECK(0);
-                return make_float4(1.f);
+                return {1.f};
             }
 
-            ND_XPU_INLINE float4 color_tint() const {
+            ND_XPU_INLINE Spectrum color_tint() const {
                 return _params;
             }
 
-            ND_XPU_INLINE float4 color_sheen_tint() const {
-                // todo
+            ND_XPU_INLINE Spectrum color_sheen_tint() const {
                 return _params1;
             }
-
 
             ND_XPU_INLINE float clear_coat() const {
                 return _params2.x;
@@ -139,6 +138,14 @@ namespace luminous {
 
             ND_XPU_INLINE float spec_trans() const {
                 return _params2.w;
+            }
+
+            ND_XPU_INLINE Spectrum R0() const {
+                return Spectrum{_params3};
+            }
+
+            ND_XPU_INLINE float metallic() const {
+                return _params3.w;
             }
 
             ND_XPU_INLINE float4 color() const {
@@ -210,6 +217,8 @@ namespace luminous {
                         return fresnel_complex(cos_theta, Spectrum(metal_eta()), Spectrum(k()));
                     case Dielectric:
                         return fresnel_dielectric(cos_theta, eta());
+                    case DisneyFr:
+                        break;
                     default:
                         DCHECK(0);
                 }
