@@ -42,7 +42,7 @@ namespace luminous {
                 if (is_zero(scatter_distance)) {
                     disney_bsdf.add_BxDF(disney::Diffuse(diffuse_weight));
                 } else {
-                    disney_bsdf.add_BxDF(disney::SpecularTransmission());
+                    disney_bsdf.add_BxDF(disney::SpecularTransmission(true));
                     // todo process BSSRDF
                 }
             }
@@ -57,6 +57,21 @@ namespace luminous {
             Spectrum R0 = lerp(metallic,
                                schlick_R0_from_eta(eta) * lerp(spec_tint, Spectrum{1.f}, color_sheen_tint),
                                Spectrum(color));
+
+            disney_bsdf.add_BxDF(disney::MicrofacetReflection{true});
+
+            float clearcoat = scene_data->get_texture(_clearcoat).eval(ctx).x;
+            disney_bsdf.add_BxDF(disney::Clearcoat{clearcoat});
+
+            if (spec_trans > 0) {
+                Spectrum T = spec_trans * sqrt(color);
+                if (_thin) {
+                    float rscaled = (0.65f * eta - 0.35f) * roughness;
+                    float ax = std::max(0.001f, sqr(rscaled) / aspect);
+                    float ay = std::max(0.001f, sqr(rscaled) * aspect);
+                }
+            }
+
 
             return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{disney_bsdf}};
         }

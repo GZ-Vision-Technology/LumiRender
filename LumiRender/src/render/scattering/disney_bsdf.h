@@ -134,7 +134,7 @@ namespace luminous {
 
             class DiffuseTransmission : public render::DiffuseTransmission {
             public:
-                LM_XPU DiffuseTransmission() = default;
+                using render::DiffuseTransmission::DiffuseTransmission;
 
                 LM_ND_XPU float4 color(BSDFHelper helper) const {
                     return helper.color() * helper.diff_trans();
@@ -158,8 +158,7 @@ namespace luminous {
 
             class SpecularTransmission : public render::SpecularTransmission {
             public:
-                LM_XPU SpecularTransmission() = default;
-
+                using render::SpecularTransmission::SpecularTransmission;
                 LM_ND_XPU BSDFSample _sample_f(float3 wo, float uc, float2 u,
                                                Spectrum Fr, BSDFHelper helper,
                                                TransportMode mode = TransportMode::Radiance) const;
@@ -170,8 +169,7 @@ namespace luminous {
 
             class MicrofacetReflection : public render::MicrofacetReflection {
             public:
-                LM_XPU MicrofacetReflection() = default;
-
+                using render::MicrofacetReflection::MicrofacetReflection;
                 /**
                  * must be reflection and eta must be corrected
                  */
@@ -194,8 +192,7 @@ namespace luminous {
 
             class MicrofacetTransmission : public render::MicrofacetTransmission {
             public:
-                LM_XPU MicrofacetTransmission() = default;
-
+                using render::MicrofacetTransmission::MicrofacetTransmission;
                 /**
                  * must be reflection and eta must be corrected
                  */

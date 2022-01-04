@@ -155,7 +155,7 @@ namespace luminous {
 
             // MicrofacetReflection
             Spectrum MicrofacetReflection::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
-                return _f(wo, wi, helper, helper.color(), mode);
+                return _f(wo, wi, helper, make_float4(1.f), mode);
             }
 
             Spectrum MicrofacetReflection::safe_eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
