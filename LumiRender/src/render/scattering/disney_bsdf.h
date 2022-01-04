@@ -8,6 +8,9 @@
 #include "base.h"
 #include "bsdf_data.h"
 #include "bsdf_ty.h"
+#include "diffuse_scatter.h"
+#include "microfacet_scatter.h"
+#include "specular_scatter.h"
 
 namespace luminous {
     inline namespace render {
@@ -127,6 +130,35 @@ namespace luminous {
                 LM_ND_XPU constexpr static BxDFFlags flags() {
                     return BxDFFlags::GlossyRefl;
                 }
+            };
+
+            class DiffuseTransmission : public render::DiffuseTransmission {
+            public:
+                LM_XPU DiffuseTransmission() = default;
+
+                LM_ND_XPU float4 color(BSDFHelper helper) const {
+                    return helper.color() * helper.diff_trans();
+                }
+
+                LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
+                                        TransportMode mode = TransportMode::Radiance) const {
+                    return _f(wo, wi, helper, helper.color(), mode);
+                }
+
+                LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
+                                             TransportMode mode = TransportMode::Radiance) const {
+                    return same_hemisphere(wo, wi) ? Spectrum{0.f} : eval(wo, wi, helper);
+                }
+
+                LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
+                                              TransportMode mode = TransportMode::Radiance) const {
+                    return _sample_f(wo, uc, u, helper, helper.color() * helper.diff_trans(), mode);
+                }
+            };
+
+            class SpecularTransmission : public render::SpecularTransmission {
+            public:
+
             };
         }
     }

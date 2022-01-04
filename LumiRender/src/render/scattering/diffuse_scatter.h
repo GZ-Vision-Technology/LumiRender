@@ -48,12 +48,30 @@ namespace luminous {
         };
 
         class DiffuseTransmission : public BxDF<DiffuseTransmission> {
+        protected:
+            LM_ND_XPU Spectrum _f(float3 wo, float3 wi, BSDFHelper helper, float4 color,
+                                 TransportMode mode = TransportMode::Radiance) const {
+                return Spectrum{color * constant::invPi};
+            }
+
+            LM_ND_XPU BSDFSample _sample_f(float3 wo, float uc, float2 u, BSDFHelper helper, float4 color,
+                                           TransportMode mode = TransportMode::Radiance) const {
+                float3 wi = square_to_cosine_hemisphere(u);
+                wi.z = wo.z > 0 ? -wi.z : wi.z;
+                float PDF_val = safe_PDF(wo, wi, helper, mode);
+                if (PDF_val == 0.f) {
+                    return {};
+                }
+                Spectrum f = _f(wo, wi, helper, color,mode);
+                return {f, wi, PDF_val, BxDFFlags::Reflection};
+            }
+
         public:
             using BxDF::BxDF;
 
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                     TransportMode mode = TransportMode::Radiance) const {
-                return Spectrum{color(helper) * constant::invPi};
+                return _f(wo, wi, helper, helper.color(), mode);
             }
 
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
@@ -69,14 +87,7 @@ namespace luminous {
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                           TransportMode mode = TransportMode::Radiance) const {
-                float3 wi = square_to_cosine_hemisphere(u);
-                wi.z = wo.z > 0 ? -wi.z : wi.z;
-                float PDF_val = safe_PDF(wo, wi, helper, mode);
-                if (PDF_val == 0.f) {
-                    return {};
-                }
-                Spectrum f = eval(wo, wi, helper, mode);
-                return {f, wi, PDF_val, BxDFFlags::Reflection};
+                return _sample_f(wo, uc, u, helper, helper.color(), mode);
             }
 
             LM_ND_XPU constexpr static BxDFFlags flags() {

@@ -4,13 +4,14 @@
 
 #include "render/scattering/bsdf_ty.h"
 #include "iostream"
-#include "render/scattering/specular_scatter.h"
-#include "render/scattering/microfacet.h"
+#include "render/scattering/specular_scatter.cpp"
 #include "render/scattering/bsdfs.h"
-#include "render/scattering/diffuse_scatter.h"
+#include "render/scattering/diffuse_scatter.cpp"
 #include "render/samplers/independent.cpp"
 #include "render/scattering/bsdf_wrapper.cpp"
 #include "render/scattering/bsdf_data.h"
+#include "render/scattering/disney_bsdf.cpp"
+#include "render/scattering/microfacet_scatter.cpp"
 
 using namespace luminous;
 using namespace std;
@@ -52,46 +53,6 @@ using namespace std;
 //    cout << fr << endl;
 //}
 
-float sample_bsdf(BSDFWrapper bsdf_wrapper, luminous::float3 wo, float eta) {
-    PCGSampler sampler{1};
-    int num = 100000;
-    Spectrum ret{0.f};
-    auto wi = wo;
-    bool valid = refract(wo, luminous::make_float3(0,0,1), eta, &wi);
-    if (!valid) {
-        return 0;
-    }
-    for (int i = 0; i < num; ++i) {
-        auto bs = bsdf_wrapper.sample_f(wo, sampler.next_1d(), sampler.next_2d());
-        if (bs.PDF == 0) {
-            --i;
-            continue;
-        }
-        auto result = bs.f_val / bs.PDF;
-        ret += result / float(num);
-    }
-    cout << ret.to_string() << endl;
-    return ret.x;
-}
-
-void test_microfacet_transmission(float deg) {
-    PCGSampler sampler{1};
-    cout << "\ndeg = " << deg << endl;
-    auto wo = luminous::spherical_direction(radians(deg), 120);
-    auto n = luminous::make_float3(0, 0, 1);
-    auto s = luminous::make_float3(1, 0, 0);
-    float eta = 1.5;
-    cout << "specular ";
-    BSDFWrapper bsdf_wrapper{n, n, s, BSDF{create_glass_bsdf(luminous::make_float4(1.f), eta, false, true)}};
-    float rs =  sample_bsdf(bsdf_wrapper, wo, eta);
-    cout << "rough ";
-    BSDFWrapper bsdf_wrapper2{n, n, s,
-                              BSDF{create_rough_glass_bsdf(luminous::make_float4(1.f), eta, 0.002, 0.002, false,
-                                                                true)}};
-    float rr = sample_bsdf(bsdf_wrapper2, wo ,eta);
-    cout << "rr : rs = " << rr / rs;
-    cout << endl;
-}
 
 enum FresnelType : uint8_t {
     NoOp,
@@ -106,12 +67,13 @@ void test_bsdf_data() {
 
 int main() {
 
-    std::tuple<std::string, int> ttt("adsfads", 1);
-    std::get<1>(ttt) = 6;
-    cout << std::get<1>(ttt) << endl;
-
     cout << sizeof (luminous::BSDF)<< endl;
 
+    disney::DiffuseTransmission dt;
+
+    BSDFHelper helper;
+    auto ret = dt.eval(luminous::make_float3(0,0,1), luminous::make_float3(0,0,-1), helper);
+    cout << ret.to_string() << endl;
 //    test_bsdf_data();
 
 //    BSDFData bsdf_data = BSDFData::create_diffuse_data(make_float4(12));

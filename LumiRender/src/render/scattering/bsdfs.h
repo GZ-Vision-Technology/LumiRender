@@ -70,7 +70,7 @@ namespace luminous {
 
         using DisneyBSDF = BSDF_Ty<DisneyMaterialData, disney::Diffuse, disney::FakeSS,
                 disney::Retro, disney::Sheen, disney::Clearcoat,
-                MicrofacetReflection, MicrofacetTransmission, DiffuseTransmission, SpecularTransmission>;
+                MicrofacetReflection, MicrofacetTransmission, disney::DiffuseTransmission, SpecularTransmission>;
 
 
         class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF,

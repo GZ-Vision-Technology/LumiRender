@@ -66,12 +66,8 @@ namespace luminous {
                 return 1.f;
             }
 
-            LM_XPU_INLINE float4 color_impl(BSDFHelper helper) const {
-                return helper.color();
-            }
-
             LM_XPU_INLINE float4 color(BSDFHelper helper) const {
-                return static_cast<const T *>(this)->color_impl(helper);
+                return helper.color();
             }
 
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,

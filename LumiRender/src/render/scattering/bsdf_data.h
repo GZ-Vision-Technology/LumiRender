@@ -124,6 +124,11 @@ namespace luminous {
                 return 1;
             }
 
+            ND_XPU_INLINE float diff_trans() const {
+                // todo
+                return 1;
+            }
+
             ND_XPU_INLINE float4 color() const {
                 switch (_fresnel_type) {
                     case NoOp:
