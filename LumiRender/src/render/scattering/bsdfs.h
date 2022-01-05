@@ -39,7 +39,7 @@ namespace luminous {
 
         ND_XPU_INLINE GlassBSDF create_glass_bsdf(float4 color, float eta,
                                                   bool valid_refl = true, bool valid_trans = true) {
-            return GlassBSDF(PhysicallyMaterialData::create_glass_data(color, eta, 0, 0),
+            return GlassBSDF(PhysicallyMaterialData::create_glass_data(color, eta),
                              SpecularReflection{color}, SpecularTransmission{color});
         }
 
@@ -48,7 +48,7 @@ namespace luminous {
         ND_XPU_INLINE RoughGlassBSDF
         create_rough_glass_bsdf(float4 color, float eta, float alpha_x, float alpha_y,
                                 bool valid_refl = true, bool valid_trans = true) {
-            auto param = PhysicallyMaterialData::create_glass_data(color, eta, alpha_x, alpha_y);
+            auto param = PhysicallyMaterialData::create_glass_data(color, eta);
             return RoughGlassBSDF(param,
                                   MicrofacetReflection{color, alpha_x, alpha_y, GGX},
                                   MicrofacetTransmission{color, alpha_x, alpha_y, GGX});
@@ -57,14 +57,14 @@ namespace luminous {
         using FakeMetalBSDF = BSDF_Ty<PhysicallyMaterialData, MicrofacetReflection>;
 
         ND_XPU_INLINE FakeMetalBSDF create_fake_metal_bsdf(float4 color, float alpha_x, float alpha_y) {
-            auto param = PhysicallyMaterialData::create_fake_metal_data(color, alpha_x, alpha_y);
+            auto param = PhysicallyMaterialData::create_fake_metal_data(color);
             return FakeMetalBSDF(param, MicrofacetReflection{color, alpha_x, alpha_y, GGX});
         }
 
         using MetalBSDF = BSDF_Ty<PhysicallyMaterialData, MicrofacetReflection>;
 
         ND_XPU_INLINE MetalBSDF create_metal_bsdf(float4 eta, float4 k, float alpha_x, float alpha_y) {
-            PhysicallyMaterialData data = PhysicallyMaterialData::create_metal_data(eta, k, alpha_x, alpha_y);
+            PhysicallyMaterialData data = PhysicallyMaterialData::create_metal_data(eta, k);
             return MetalBSDF(data, MicrofacetReflection{Spectrum{1.f}, alpha_x, alpha_y, GGX});
         }
 

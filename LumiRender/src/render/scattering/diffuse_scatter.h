@@ -83,7 +83,7 @@ namespace luminous {
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                           TransportMode mode = TransportMode::Radiance) const {
-                return _sample_f(wo, uc, u, helper, helper.color(), mode);
+                return _sample_f(wo, uc, u, helper, color(helper), mode);
             }
         };
     }

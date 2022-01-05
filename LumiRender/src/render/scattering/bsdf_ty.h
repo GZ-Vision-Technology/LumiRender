@@ -52,7 +52,7 @@ namespace luminous {
             }
 
             LM_ND_XPU Spectrum color() const {
-                return Spectrum{_data.get_helper().color()};
+                return std::get<0>(_bxdfs).spectrum();
             }
 
             template<typename T>

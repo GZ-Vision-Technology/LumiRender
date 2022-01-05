@@ -34,7 +34,7 @@ namespace luminous {
         }
 
         Spectrum MicrofacetReflection::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
-            return _f(wo, wi, helper, helper.color(), mode);
+            return _f(wo, wi, helper, color(helper), mode);
         }
 
         Spectrum MicrofacetReflection::safe_eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
@@ -60,7 +60,7 @@ namespace luminous {
 
         BSDFSample MicrofacetReflection::_sample_f(float3 wo, float uc, float2 u, Spectrum Fr,
                                                    BSDFHelper helper, TransportMode mode) const {
-            return _sample_f_color(wo, uc, u, Fr, helper, helper.color(), mode);
+            return _sample_f_color(wo, uc, u, Fr, helper, color(helper), mode);
         }
 
         BSDFSample MicrofacetReflection::sample_f(float3 wo, float uc, float2 u,
