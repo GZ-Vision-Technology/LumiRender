@@ -31,12 +31,14 @@ namespace luminous {
             Spectrum R0 = lerp(metallic,
                                schlick_R0_from_eta(eta) * lerp(spec_tint, Spectrum{1.f}, color_sheen_tint),
                                Spectrum(color));
+            float clearcoat = scene_data->get_texture(_clearcoat).eval(ctx).x;
             DisneyBSDF disney_bsdf;
             BSDFHelper helper;
             helper.set_roughness(roughness);
             helper.set_metallic(metallic);
             helper.set_R0(R0);
             helper.set_eta(eta);
+            disney_bsdf.set_data(helper);
 
             if (_thin) {
                 float flatness = scene_data->get_texture(_flatness).eval(ctx).x;
@@ -62,9 +64,6 @@ namespace luminous {
             float ay = std::max(0.001f, sqr(roughness) * aspect);
             Microfacet distrib{ax, ay, MicrofacetType::Disney};
             disney_bsdf.add_BxDF(MicrofacetReflection(Spectrum{1.f}, distrib));
-
-
-            float clearcoat = scene_data->get_texture(_clearcoat).eval(ctx).x;
             disney_bsdf.add_BxDF(disney::Clearcoat{clearcoat});
 
             Spectrum T = spec_trans * sqrt(color);
@@ -81,7 +80,6 @@ namespace luminous {
                 MicrofacetReflection microfacet_reflection{T, distrib};
                 disney_bsdf.add_BxDF(microfacet_reflection);
             }
-            disney_bsdf.set_data(helper);
 
             return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{disney_bsdf}};
         }
