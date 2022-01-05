@@ -9,7 +9,7 @@ namespace luminous {
 
         BSDFSample MicrofacetReflection::_sample_f_color(float3 wo, float uc, float2 u, Spectrum Fr, BSDFHelper helper,
                                                          Spectrum color, TransportMode mode) const {
-            float3 wh = helper.sample_wh(wo, u);
+            float3 wh = _microfacet.sample_wh(wo, u);
             if (dot(wh, wo) < 0) {
                 return {};
             }
