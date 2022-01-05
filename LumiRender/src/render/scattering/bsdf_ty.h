@@ -14,13 +14,13 @@
 namespace luminous {
     inline namespace render {
 
-        template<typename TParam, typename... TBxDF>
+        template<typename TData, typename... TBxDF>
         class BSDF_Ty {
         protected:
             using Tuple = std::tuple<TBxDF...>;
             static constexpr int size = std::tuple_size_v<Tuple>;
             Tuple _bxdfs;
-            TParam _data{};
+            TData _data{};
         protected:
             template<int index, typename F>
             LM_XPU void iterator(F &&func) const {
@@ -45,7 +45,7 @@ namespace luminous {
         public:
             LM_XPU BSDF_Ty() = default;
 
-            LM_XPU explicit BSDF_Ty(TParam data, TBxDF...args)
+            LM_XPU explicit BSDF_Ty(TData data, TBxDF...args)
                     : _data(data),
                       _bxdfs(std::make_tuple(std::forward<TBxDF>(args)...)) {
 
@@ -57,7 +57,7 @@ namespace luminous {
 
             template<typename T>
             LM_XPU void add_BxDF(T bxdf) {
-                for_each([&](auto &bxdf_ref, int index){
+                for_each([&](auto &bxdf_ref, int index) {
                     if constexpr(std::is_same_v<decltype(bxdf_ref), T>) {
                         std::get<index>(_bxdfs) = bxdf;
                         return false;
@@ -179,10 +179,10 @@ namespace luminous {
             }
         };
 
-        template<typename TParam, typename T1, typename T2, bool Delta = false>
-        class FresnelBSDF : public BSDF_Ty<TParam, T1, T2> {
+        template<typename TData, typename T1, typename T2, bool Delta = false>
+        class FresnelBSDF : public BSDF_Ty<TData, T1, T2> {
         protected:
-            using BaseClass = BSDF_Ty<TParam, T1, T2>;
+            using BaseClass = BSDF_Ty<TData, T1, T2>;
             static_assert(BaseClass::size == 2, "FresnelBSDF must be two BxDF lobe!");
             using Refl = std::tuple_element_t<0, typename BaseClass::Tuple>;
             using Trans = std::tuple_element_t<1, typename BaseClass::Tuple>;
