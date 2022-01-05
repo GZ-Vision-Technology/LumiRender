@@ -5,7 +5,6 @@
 #include "config.h"
 #include "core/logging.h"
 #include "util/image.h"
-#include "core/hash.h"
 
 namespace luminous {
     inline namespace render {
@@ -37,8 +36,6 @@ namespace luminous {
 
         void MaterialConfig::fill_tex_configs(vector<TextureConfig> &tex_configs) {
             // common data
-            fill_tex_idx_by_name(tex_configs, color_tex);
-
             if (type() == full_type("AssimpMaterial")) {
                 int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                     return tex_config == color_tex;
@@ -71,6 +68,7 @@ namespace luminous {
                 }
 
             } else if (type() == full_type("MetalMaterial")) {
+                fill_tex_idx_by_name(tex_configs, color_tex);
 
                 fill_tex_idx_by_name(tex_configs, roughness_tex);
 
@@ -79,16 +77,25 @@ namespace luminous {
                 fill_tex_idx_by_name(tex_configs, eta_tex);
 
             } else if (type() == full_type("GlassMaterial")) {
+                fill_tex_idx_by_name(tex_configs, color_tex);
 
                 fill_tex_idx_by_name(tex_configs, roughness_tex);
 
                 fill_tex_idx_by_name(tex_configs, eta_tex);
 
             } else if (type() == full_type("FakeMetalMaterial")) {
+                fill_tex_idx_by_name(tex_configs, color_tex);
 
                 fill_tex_idx_by_name(tex_configs, roughness_tex);
+
+            } else if (type() == full_type("DisneyMaterial")) {
+                fill_tex_idx_by_name(tex_configs, color_tex);
+
+                fill_tex_idx_by_name(tex_configs, roughness_tex);
+
+                fill_tex_idx_by_name(tex_configs, eta_tex);
+
             }
-            DCHECK(color_tex.valid());
         }
 
         void LightConfig::fill_tex_config(vector<TextureConfig> &tex_configs) {
