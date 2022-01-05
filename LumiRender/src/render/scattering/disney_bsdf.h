@@ -41,8 +41,6 @@ namespace luminous {
             };
 
             class Retro : public ColoredBxDF<Retro> {
-            private:
-                float _factor{};
             public:
                 using ColoredBxDF::ColoredBxDF;
             public:
@@ -74,7 +72,6 @@ namespace luminous {
             class Clearcoat : public BxDF<Clearcoat> {
             private:
                 float _weight{};
-                float _gloss{};
             public:
                 using BxDF::BxDF;
             public:

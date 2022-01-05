@@ -76,7 +76,7 @@ namespace luminous {
                 }
                 wh = normalize(wh);
 
-                float Dr = GTR1(Frame::abs_cos_theta(wh), _gloss);
+                float Dr = GTR1(Frame::abs_cos_theta(wh), helper.gloss());
                 float Fr = fresnel_schlick(0.04f, dot(wo, wh));
                 float Gr = smithG_GGX(Frame::abs_cos_theta(wo), 0.25f)
                            * smithG_GGX(Frame::abs_cos_theta(wi), 0.25f);
@@ -90,7 +90,7 @@ namespace luminous {
                 }
                 wh = normalize(wh);
 
-                float Dr = GTR1(Frame::abs_cos_theta(wh), _gloss);
+                float Dr = GTR1(Frame::abs_cos_theta(wh), helper.gloss());
                 return Dr * Frame::abs_cos_theta(wh) / (4 * dot(wo, wh));
             }
 
@@ -106,7 +106,7 @@ namespace luminous {
                 if (wo.z == 0) {
                     return {};
                 }
-                float alpha2 = sqr(_gloss);
+                float alpha2 = sqr(helper.gloss());
 
                 float cos_theta = safe_sqrt((1 - std::pow(alpha2, 1 - u[0])) / (1 - alpha2));
                 float sin_theta = safe_sqrt(1 - sqr(cos_theta));
