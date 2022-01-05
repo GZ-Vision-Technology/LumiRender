@@ -25,8 +25,8 @@ namespace luminous {
             float sheen_weight = scene_data->get_texture(_sheen).eval(ctx).x;
             float sheen_tint = scene_data->get_texture(_sheen_tint).eval(ctx).x;
             Spectrum color_sheen_tint = sheen_weight > 0.f ?
-                                      lerp(sheen_tint, Spectrum{1.f}, color_tint) :
-                                      Spectrum(0.f);
+                                        lerp(sheen_tint, Spectrum{1.f}, color_tint) :
+                                        Spectrum(0.f);
             float4 scatter_distance = scene_data->get_texture(_scatter_distance).eval(ctx);
             Spectrum R0 = lerp(metallic,
                                schlick_R0_from_eta(eta) * lerp(spec_tint, Spectrum{1.f}, color_sheen_tint),
@@ -66,18 +66,24 @@ namespace luminous {
 
             float clearcoat = scene_data->get_texture(_clearcoat).eval(ctx).x;
             disney_bsdf.add_BxDF(disney::Clearcoat{clearcoat});
-//
-//            if (spec_trans > 0) {
-//                Spectrum T = spec_trans * sqrt(color);
-//                if (_thin) {
-//                    float rscaled = (0.65f * eta - 0.35f) * roughness;
-//                    float ax = std::max(0.001f, sqr(rscaled) / aspect);
-//                    float ay = std::max(0.001f, sqr(rscaled) * aspect);
-//                }
-//            }
 
+            Spectrum T = spec_trans * sqrt(color);
+            if (_thin) {
+                float rscaled = (0.65f * eta - 0.35f) * roughness;
+                float ax = std::max(0.001f, sqr(rscaled) / aspect);
+                float ay = std::max(0.001f, sqr(rscaled) * aspect);
+                Microfacet distrib{ax, ay, GGX};
+                MicrofacetReflection microfacet_reflection{T, distrib};
+                disney_bsdf.add_BxDF(microfacet_reflection);
+                disney_bsdf.add_BxDF(DiffuseTransmission(diff_trans * color));
 
-            return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{}};
+            } else {
+                MicrofacetReflection microfacet_reflection{T, distrib};
+                disney_bsdf.add_BxDF(microfacet_reflection);
+            }
+            disney_bsdf.set_data(helper);
+
+            return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{disney_bsdf}};
         }
     }
 }
