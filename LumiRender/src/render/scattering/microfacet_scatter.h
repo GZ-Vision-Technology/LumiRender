@@ -10,7 +10,7 @@
 namespace luminous {
     inline namespace render {
 
-        class MicrofacetReflection : public BxDF<MicrofacetReflection> {
+        class MicrofacetReflection : public ColoredBxDF<MicrofacetReflection> {
         protected:
             LM_ND_XPU Spectrum _f(float3 wo, float3 wi, BSDFHelper helper, float4 color,
                                   TransportMode mode = TransportMode::Radiance) const;
@@ -20,9 +20,9 @@ namespace luminous {
                                                  TransportMode mode = TransportMode::Radiance) const;
 
         public:
-            using BxDF::BxDF;
+            using ColoredBxDF::ColoredBxDF;
 
-            LM_XPU explicit MicrofacetReflection(Spectrum color) : BxDF(color, GlossyRefl) {}
+            LM_XPU explicit MicrofacetReflection(Spectrum color) : ColoredBxDF(color, GlossyRefl) {}
 
             /**
              * must be reflection and eta must be corrected
@@ -60,7 +60,7 @@ namespace luminous {
 
         };
 
-        class MicrofacetTransmission : public BxDF<MicrofacetTransmission> {
+        class MicrofacetTransmission : public ColoredBxDF<MicrofacetTransmission> {
         protected:
             LM_ND_XPU Spectrum _f(float3 wo, float3 wi, BSDFHelper helper, Spectrum color,
                                   TransportMode mode = TransportMode::Radiance) const;
@@ -69,9 +69,9 @@ namespace luminous {
                                                  Spectrum Fr, BSDFHelper helper, Spectrum color,
                                                  TransportMode mode = TransportMode::Radiance) const;
         public:
-            using BxDF::BxDF;
+            using ColoredBxDF::ColoredBxDF;
 
-            LM_XPU explicit MicrofacetTransmission(Spectrum color) : BxDF(color, GlossyTrans) {}
+            LM_XPU explicit MicrofacetTransmission(Spectrum color) : ColoredBxDF(color, GlossyTrans) {}
             /**
              * must be transmission and eta must be corrected
              */

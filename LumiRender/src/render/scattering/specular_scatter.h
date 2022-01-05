@@ -10,11 +10,11 @@
 namespace luminous {
     inline namespace render {
 
-        class SpecularReflection : public BxDF<SpecularReflection> {
+        class SpecularReflection : public ColoredBxDF<SpecularReflection> {
         public:
-            using BxDF::BxDF;
+            using ColoredBxDF::ColoredBxDF;
 
-            LM_XPU explicit SpecularReflection(Spectrum color) : BxDF(color, SpecRefl) {}
+            LM_XPU explicit SpecularReflection(Spectrum color) : ColoredBxDF(color, SpecRefl) {}
 
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
                                          TransportMode mode = TransportMode::Radiance) const {
@@ -35,11 +35,11 @@ namespace luminous {
                                           TransportMode mode = TransportMode::Radiance) const;
         };
 
-        class SpecularTransmission : public BxDF<SpecularTransmission> {
+        class SpecularTransmission : public ColoredBxDF<SpecularTransmission> {
         public:
-            using BxDF::BxDF;
+            using ColoredBxDF::ColoredBxDF;
 
-            LM_XPU explicit SpecularTransmission(Spectrum color) : BxDF(color, SpecTrans) {}
+            LM_XPU explicit SpecularTransmission(Spectrum color) : ColoredBxDF(color, SpecTrans) {}
 
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
                                          TransportMode mode = TransportMode::Radiance) const {

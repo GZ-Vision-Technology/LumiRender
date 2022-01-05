@@ -15,21 +15,21 @@
 namespace luminous {
     inline namespace render {
         namespace disney {
-            class Diffuse : public BxDF<Diffuse> {
+            class Diffuse : public ColoredBxDF<Diffuse> {
             public:
-                using BxDF::BxDF;
+                using ColoredBxDF::ColoredBxDF;
 
-                LM_XPU explicit Diffuse(Spectrum color) : BxDF(color, DiffRefl) {}
+                LM_XPU explicit Diffuse(Spectrum color) : ColoredBxDF(color, DiffRefl) {}
 
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                         TransportMode mode = TransportMode::Radiance) const;
             };
 
-            class FakeSS : public BxDF<FakeSS> {
+            class FakeSS : public ColoredBxDF<FakeSS> {
             public:
-                using BxDF::BxDF;
+                using ColoredBxDF::ColoredBxDF;
             public:
-                LM_XPU explicit FakeSS(Spectrum color) : BxDF(color, DiffRefl) {}
+                LM_XPU explicit FakeSS(Spectrum color) : ColoredBxDF(color, DiffRefl) {}
 
                 ND_XPU_INLINE float weight(BSDFHelper helper) const {
                     return 1.f;
@@ -40,13 +40,13 @@ namespace luminous {
 
             };
 
-            class Retro : public BxDF<Retro> {
+            class Retro : public ColoredBxDF<Retro> {
             private:
                 float _factor{};
             public:
-                using BxDF::BxDF;
+                using ColoredBxDF::ColoredBxDF;
             public:
-                LM_XPU explicit Retro(Spectrum color) : BxDF(color, DiffRefl) {}
+                LM_XPU explicit Retro(Spectrum color) : ColoredBxDF(color, DiffRefl) {}
 
                 ND_XPU_INLINE float weight(BSDFHelper helper) const {
                     return 1;
@@ -57,11 +57,11 @@ namespace luminous {
 
             };
 
-            class Sheen : public BxDF<Sheen> {
+            class Sheen : public ColoredBxDF<Sheen> {
             public:
-                using BxDF::BxDF;
+                using ColoredBxDF::ColoredBxDF;
             public:
-                LM_XPU explicit Sheen(Spectrum color) : BxDF(color, DiffRefl) {}
+                LM_XPU explicit Sheen(Spectrum color) : ColoredBxDF(color, DiffRefl) {}
 
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                         TransportMode mode = TransportMode::Radiance) const;

@@ -57,28 +57,13 @@ namespace luminous {
 
         template<typename T>
         struct BxDF {
-        private:
+        protected:
             BxDFFlags _flags;
-            float _r;
-            float _g;
-            float _b;
         public:
             LM_XPU explicit BxDF(BxDFFlags flags = Unset) {}
 
-            LM_XPU explicit BxDF(Spectrum color, BxDFFlags flags)
-                    : _r(color.R()), _g(color.G()), _b(color.B()),
-                      _flags(color.is_black() ? Unset : flags) {}
-
             ND_XPU_INLINE float weight(BSDFHelper helper) const {
                 return 1.f;
-            }
-
-            LM_XPU_INLINE Spectrum spectrum() const {
-                return Spectrum{_r, _g, _b};
-            }
-
-            LM_XPU_INLINE Spectrum color(BSDFHelper helper) const {
-                return spectrum();
             }
 
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
@@ -111,6 +96,34 @@ namespace luminous {
 
             ND_XPU_INLINE bool match_flags(BxDFFlags bxdf_flags) {
                 return ((_flags & bxdf_flags) == _flags);
+            }
+        };
+
+        template<typename T>
+        struct ColoredBxDF : public BxDF<T>{
+        protected:
+            float _r;
+            float _g;
+            float _b;
+        public:
+            using BxDF<T>::BxDF;
+
+            LM_XPU explicit ColoredBxDF(BxDFFlags flags = Unset) {}
+
+            LM_XPU explicit ColoredBxDF(Spectrum color, BxDFFlags flags)
+                    : _r(color.R()), _g(color.G()), _b(color.B()),
+                    BxDF<T>(color.is_black() ? Unset : flags) {}
+
+            ND_XPU_INLINE float weight(BSDFHelper helper) const {
+                return spectrum().luminance();
+            }
+
+            ND_XPU_INLINE Spectrum spectrum() const {
+                return Spectrum{_r, _g, _b};
+            }
+
+            ND_XPU_INLINE Spectrum color(BSDFHelper helper) const {
+                return spectrum();
             }
         };
     }

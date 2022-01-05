@@ -12,11 +12,11 @@
 
 namespace luminous {
     inline namespace render {
-        class DiffuseReflection : public BxDF<DiffuseReflection> {
+        class DiffuseReflection : public ColoredBxDF<DiffuseReflection> {
         public:
-            using BxDF::BxDF;
+            using ColoredBxDF::ColoredBxDF;
 
-            LM_XPU explicit DiffuseReflection(Spectrum color) : BxDF(color, DiffRefl) {}
+            LM_XPU explicit DiffuseReflection(Spectrum color) : ColoredBxDF(color, DiffRefl) {}
 
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                     TransportMode mode = TransportMode::Radiance) const {
@@ -24,11 +24,11 @@ namespace luminous {
             }
         };
 
-        class OrenNayar : public BxDF<OrenNayar> {
+        class OrenNayar : public ColoredBxDF<OrenNayar> {
         public:
-            using BxDF::BxDF;
+            using ColoredBxDF::ColoredBxDF;
 
-            LM_XPU explicit OrenNayar(Spectrum color) : BxDF(color, DiffRefl) {}
+            LM_XPU explicit OrenNayar(Spectrum color) : ColoredBxDF(color, DiffRefl) {}
 
             /**
              * fr(wi,wo) = R / PI * (A + B * max(0,cos(phi_i - phi_o)) * sin_alpha * tan_beta)
@@ -41,7 +41,7 @@ namespace luminous {
                                     TransportMode mode = TransportMode::Radiance) const;
         };
 
-        class DiffuseTransmission : public BxDF<DiffuseTransmission> {
+        class DiffuseTransmission : public ColoredBxDF<DiffuseTransmission> {
         protected:
             LM_ND_XPU Spectrum _f(float3 wo, float3 wi, BSDFHelper helper, Spectrum color,
                                   TransportMode mode = TransportMode::Radiance) const {
@@ -61,9 +61,9 @@ namespace luminous {
             }
 
         public:
-            using BxDF::BxDF;
+            using ColoredBxDF::ColoredBxDF;
 
-            LM_XPU explicit DiffuseTransmission(Spectrum color) : BxDF(color, DiffTrans) {}
+            LM_XPU explicit DiffuseTransmission(Spectrum color) : ColoredBxDF(color, DiffTrans) {}
 
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                     TransportMode mode = TransportMode::Radiance) const {
