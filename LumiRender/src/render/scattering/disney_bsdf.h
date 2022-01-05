@@ -31,7 +31,7 @@ namespace luminous {
             public:
                 LM_XPU explicit FakeSS(Spectrum color) : ColoredBxDF(color, DiffRefl) {}
 
-                ND_XPU_INLINE float weight(BSDFHelper helper) const {
+                ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
                     return 1.f;
                 }
 
@@ -46,8 +46,8 @@ namespace luminous {
             public:
                 LM_XPU explicit Retro(Spectrum color) : ColoredBxDF(color, DiffRefl) {}
 
-                ND_XPU_INLINE float weight(BSDFHelper helper) const {
-                    return 1;
+                ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
+                    return 1.f;
                 }
 
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
@@ -64,8 +64,8 @@ namespace luminous {
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                         TransportMode mode = TransportMode::Radiance) const;
 
-                ND_XPU_INLINE float weight(BSDFHelper helper) const {
-                    return 1;
+                ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
+                    return 1.f;
                 }
             };
 
@@ -96,8 +96,8 @@ namespace luminous {
                 LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                               TransportMode mode = TransportMode::Radiance) const;
 
-                ND_XPU_INLINE float weight(BSDFHelper helper) const {
-                    return _weight;
+                ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
+                    return 1.f;
                 }
             };
         }
