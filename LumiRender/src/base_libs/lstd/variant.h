@@ -273,7 +273,7 @@ namespace luminous {
   if constexpr (std::is_same_v<void, Ret>) {                                                       \
     return;                                                                                        \
   } else {                                                                                         \
-    /* LM_ASSERT(0, "Error： %s: unknown type tag: %d\n", func_name, index); */                   \
+    /* LM_ASSERT(0, "Error: %s: unknown type tag: %d\n", func_name, index); */                   \
     return Ret{};                                                                                  \
         }
 
