@@ -50,22 +50,22 @@ namespace luminous {
                                 bool valid_refl = true, bool valid_trans = true) {
             auto param = PhysicallyMaterialData::create_glass_data(color, eta, alpha_x, alpha_y);
             return RoughGlassBSDF(param,
-                                  MicrofacetReflection{color},
-                                  MicrofacetTransmission{color});
+                                  MicrofacetReflection{color, alpha_x, alpha_y, GGX},
+                                  MicrofacetTransmission{color, alpha_x, alpha_y, GGX});
         }
 
         using FakeMetalBSDF = BSDF_Ty<PhysicallyMaterialData, MicrofacetReflection>;
 
         ND_XPU_INLINE FakeMetalBSDF create_fake_metal_bsdf(float4 color, float alpha_x, float alpha_y) {
             auto param = PhysicallyMaterialData::create_fake_metal_data(color, alpha_x, alpha_y);
-            return FakeMetalBSDF(param, MicrofacetReflection{color});
+            return FakeMetalBSDF(param, MicrofacetReflection{color, alpha_x, alpha_y, GGX});
         }
 
         using MetalBSDF = BSDF_Ty<PhysicallyMaterialData, MicrofacetReflection>;
 
         ND_XPU_INLINE MetalBSDF create_metal_bsdf(float4 eta, float4 k, float alpha_x, float alpha_y) {
             PhysicallyMaterialData data = PhysicallyMaterialData::create_metal_data(eta, k, alpha_x, alpha_y);
-            return MetalBSDF(data, MicrofacetReflection{Spectrum{1.f}});
+            return MetalBSDF(data, MicrofacetReflection{Spectrum{1.f}, alpha_x, alpha_y, GGX});
         }
 
 //        using DisneyBSDF = BSDF_Ty<DisneyMaterialData, disney::Diffuse, disney::FakeSS,

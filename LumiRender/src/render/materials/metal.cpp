@@ -13,8 +13,8 @@ namespace luminous {
             const Texture &roughness_tex = scene_data->get_texture(_roughness_idx);
             float2 roughness = make_float2(roughness_tex.eval(ctx));
             if (_remapping_roughness) {
-                roughness.x = MicrofacetDistrib::roughness_to_alpha(roughness.x);
-                roughness.y = MicrofacetDistrib::roughness_to_alpha(roughness.y);
+                roughness.x = Microfacet::roughness_to_alpha(roughness.x);
+                roughness.y = Microfacet::roughness_to_alpha(roughness.y);
             }
             static constexpr auto min_roughness = 0.001f;
             // todo change to vector compute
@@ -30,8 +30,8 @@ namespace luminous {
             float4 eta = scene_data->get_texture(_eta_idx).eval(ctx);
             float2 roughness = make_float2(scene_data->get_texture(_roughness_idx).eval(ctx));
             if (_remapping_roughness) {
-                roughness.x = MicrofacetDistrib::roughness_to_alpha(roughness.x);
-                roughness.y = MicrofacetDistrib::roughness_to_alpha(roughness.y);
+                roughness.x = Microfacet::roughness_to_alpha(roughness.x);
+                roughness.y = Microfacet::roughness_to_alpha(roughness.y);
             }
             static constexpr auto min_roughness = 0.001f;
             roughness.x = roughness.x < min_roughness ? min_roughness : roughness.x;

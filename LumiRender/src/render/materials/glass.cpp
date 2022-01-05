@@ -14,8 +14,8 @@ namespace luminous {
             float eta = scene_data->get_texture(_eta_idx).eval(ctx).x;
             float2 roughness = make_float2(scene_data->get_texture(_roughness_idx).eval(ctx));
             if (_remapping_roughness) {
-                roughness.x = MicrofacetDistrib::roughness_to_alpha(roughness.x);
-                roughness.y = MicrofacetDistrib::roughness_to_alpha(roughness.y);
+                roughness.x = Microfacet::roughness_to_alpha(roughness.x);
+                roughness.y = Microfacet::roughness_to_alpha(roughness.y);
             }
             if (max(roughness.x, roughness.y) < 0.001) {
                 auto glass_bsdf = create_glass_bsdf(color, eta);
