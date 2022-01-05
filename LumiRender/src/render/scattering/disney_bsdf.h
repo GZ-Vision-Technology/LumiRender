@@ -71,65 +71,62 @@ namespace luminous {
                 }
             };
 
-//            class Clearcoat : public BxDF<Clearcoat> {
-//            private:
-//                float _weight{};
-//            public:
-//                using BxDF::BxDF;
-//            public:
-//                LM_XPU explicit Clearcoat(float weight)
-//                        : BxDF(_weight > 0),
-//                          _weight(_weight) {}
-//
-//                LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
-//                                        TransportMode mode = TransportMode::Radiance) const;
-//
-//                /**
-//                 * must be reflection
-//                 */
-//                LM_ND_XPU float PDF(float3 wo, float3 wi,
-//                                    BSDFHelper helper,
-//                                    TransportMode mode = TransportMode::Radiance) const;
-//
-//                LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
-//                                         BSDFHelper helper,
-//                                         TransportMode mode = TransportMode::Radiance) const;
-//
-//                LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
-//                                              TransportMode mode = TransportMode::Radiance) const;
-//
-//                ND_XPU_INLINE float weight(BSDFHelper helper) const {
-//                    return _weight;
-//                }
-//
-//                LM_ND_XPU constexpr static BxDFFlags flags() {
-//                    return BxDFFlags::GlossyRefl;
-//                }
-//            };
+            class Clearcoat : public BxDF<Clearcoat> {
+            private:
+                float _weight{};
+                float _gloss{};
+            public:
+                using BxDF::BxDF;
+            public:
+                LM_XPU explicit Clearcoat(float weight)
+                        : BxDF(weight > 0 ? BxDFFlags::GlossyRefl : BxDFFlags::Unset),
+                          _weight(weight) {}
 
-//            class DiffuseTransmission : public render::DiffuseTransmission {
-//            public:
-//                using render::DiffuseTransmission::DiffuseTransmission;
-//
-//                LM_ND_XPU float4 color(BSDFHelper helper) const {
-//                    return helper.color() * helper.diff_trans();
-//                }
-//
-//                LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
-//                                        TransportMode mode = TransportMode::Radiance) const {
-//                    return _f(wo, wi, helper, helper.color(), mode);
-//                }
-//
-//                LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
-//                                             TransportMode mode = TransportMode::Radiance) const {
-//                    return same_hemisphere(wo, wi) ? Spectrum{0.f} : eval(wo, wi, helper);
-//                }
-//
-//                LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
-//                                              TransportMode mode = TransportMode::Radiance) const {
-//                    return _sample_f(wo, uc, u, helper, helper.color() * helper.diff_trans(), mode);
-//                }
-//            };
+                LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
+                                        TransportMode mode = TransportMode::Radiance) const;
+
+                /**
+                 * must be reflection
+                 */
+                LM_ND_XPU float PDF(float3 wo, float3 wi,
+                                    BSDFHelper helper,
+                                    TransportMode mode = TransportMode::Radiance) const;
+
+                LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
+                                         BSDFHelper helper,
+                                         TransportMode mode = TransportMode::Radiance) const;
+
+                LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
+                                              TransportMode mode = TransportMode::Radiance) const;
+
+                ND_XPU_INLINE float weight(BSDFHelper helper) const {
+                    return _weight;
+                }
+            };
+
+            class DiffuseTransmission : public render::DiffuseTransmission {
+            public:
+                using render::DiffuseTransmission::DiffuseTransmission;
+
+                LM_ND_XPU float4 color(BSDFHelper helper) const {
+                    return helper.color() * helper.diff_trans();
+                }
+
+                LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
+                                        TransportMode mode = TransportMode::Radiance) const {
+                    return _f(wo, wi, helper, helper.color(), mode);
+                }
+
+                LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
+                                             TransportMode mode = TransportMode::Radiance) const {
+                    return same_hemisphere(wo, wi) ? Spectrum{0.f} : eval(wo, wi, helper);
+                }
+
+                LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
+                                              TransportMode mode = TransportMode::Radiance) const {
+                    return _sample_f(wo, uc, u, helper, helper.color() * helper.diff_trans(), mode);
+                }
+            };
 //
 //            class SpecularTransmission : public render::SpecularTransmission {
 //            public:
