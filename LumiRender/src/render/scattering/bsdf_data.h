@@ -70,17 +70,42 @@ namespace luminous {
                 return {1.f};
             }
 
+            /**
+             * for disney material
+             * @return
+             */
             ND_XPU_INLINE Spectrum R0() const {
                 return _params;
             }
 
+            LM_XPU_INLINE void set_R0(Spectrum val) {
+                _params = make_float4(val.vec(), 1.f);
+            }
+
+            /**
+             * for disney material
+             * @return
+             */
             ND_XPU_INLINE float metallic() const {
                 return val1;
             }
 
+            LM_XPU_INLINE void set_metallic(float m) {
+                val1 = m;
+            }
+
+            /**
+             * for disney material
+             * @return
+             */
             ND_XPU_INLINE float roughness() const {
                 return val0;
             }
+
+            LM_XPU_INLINE void set_roughness(float rough) {
+                val0 = rough;
+            }
+
 
             /**
              * for dielectric material
@@ -88,6 +113,10 @@ namespace luminous {
              */
             ND_XPU_INLINE float eta() const {
                 return val2;
+            }
+
+            LM_XPU_INLINE void set_eta(float e) {
+                val2 = e;
             }
 
             /**
