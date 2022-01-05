@@ -8,14 +8,16 @@
 namespace luminous {
     inline namespace render {
 
-        BSDFWrapper Material::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
+        BSDFWrapper Material::get_BSDF(MaterialEvalContext ctx, const SceneData *scene_data) const {
 
           LUMINOUS_VAR_PTR_DISPATCH(get_BSDF, ctx, scene_data)
         }
 
 #ifndef __CUDACC__
         std::pair<Material, std::vector<size_t>> Material::create(const MaterialConfig &mc) {
-            return detail::create_ptr<Material>(mc);
+            auto ret = detail::create_ptr<Material>(mc);
+            ret.first._normal_idx = mc.normal_tex.tex_idx();
+            return ret;
         }
 #endif
     }

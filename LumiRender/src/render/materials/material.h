@@ -31,6 +31,8 @@ namespace luminous {
 
         class Material : BASE_CLASS(Variant<MatteMaterial *, AssimpMaterial *, MirrorMaterial *,
                                             GlassMaterial *, FakeMetalMaterial *, MetalMaterial *, DisneyMaterial *>) {
+        protected:
+            index_t _normal_idx{invalid_uint32};
         public:
             REFL_CLASS(Material)
 
@@ -38,7 +40,7 @@ namespace luminous {
         public:
             GEN_BASE_NAME(Material)
 
-            LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
+            LM_ND_XPU BSDFWrapper get_BSDF(MaterialEvalContext ctx, const SceneData *scene_data) const;
 
 #ifndef __CUDACC__
 
