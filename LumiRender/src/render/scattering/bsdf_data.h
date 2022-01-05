@@ -135,54 +135,24 @@ namespace luminous {
                 }
                 return {0.f};
             }
-        };
 
-        class PhysicallyMaterialData {
-        private:
-            // eta for metal
-            float4 _params{};
-
-            // k for metal
-            float val0;
-            float val1;
-            float val2;
-            FresnelType _fresnel_type{NoOp};
-        public:
-
-            LM_XPU PhysicallyMaterialData() = default;
-
-            LM_XPU explicit PhysicallyMaterialData(FresnelType fresnel_type)
-                    : _fresnel_type(fresnel_type) {}
-
-            LM_XPU PhysicallyMaterialData(float4 params, float3 val, FresnelType fresnel_type)
-                    : _params(params), val0(val.x), val1(val.y), val2(val.z), _fresnel_type(fresnel_type) {}
-
-            ND_XPU_INLINE float3 params1() const {
-                return make_float3(val0, val1, val2);
-            }
-
-            ND_XPU_INLINE BSDFHelper get_helper() const {
-                auto ret = BSDFHelper{_params, params1(), _fresnel_type};
+            LM_ND_XPU static BSDFHelper create_metal_data(float4 eta, float4 k) {
+                BSDFHelper ret{eta, make_float3(k), Conductor};
                 return ret;
             }
 
-            LM_ND_XPU static PhysicallyMaterialData create_metal_data(float4 eta, float4 k) {
-                PhysicallyMaterialData ret{eta, make_float3(k), Conductor};
+            LM_ND_XPU static BSDFHelper create_fake_metal_data(float4 color) {
+                BSDFHelper ret{NoOp};
                 return ret;
             }
 
-            LM_ND_XPU static PhysicallyMaterialData create_fake_metal_data(float4 color) {
-                PhysicallyMaterialData ret{NoOp};
+            LM_ND_XPU static BSDFHelper create_mirror_data(float4 color) {
+                BSDFHelper ret{NoOp};
                 return ret;
             }
 
-            LM_ND_XPU static PhysicallyMaterialData create_mirror_data(float4 color) {
-                PhysicallyMaterialData ret{NoOp};
-                return ret;
-            }
-
-            LM_ND_XPU static PhysicallyMaterialData create_oren_nayar_data(float4 color, float sigma) {
-                PhysicallyMaterialData ret{NoOp};
+            LM_ND_XPU static BSDFHelper create_oren_nayar_data(float4 color, float sigma) {
+                BSDFHelper ret{NoOp};
                 sigma = radians(sigma);
                 float sigma2 = sqr(sigma);
                 float A = 1.f - (sigma2 / (2.f * (sigma2 + 0.33f)));
@@ -191,13 +161,13 @@ namespace luminous {
                 return ret;
             }
 
-            LM_ND_XPU static PhysicallyMaterialData create_diffuse_data(float4 color) {
-                PhysicallyMaterialData ret{NoOp};
+            LM_ND_XPU static BSDFHelper create_diffuse_data(float4 color) {
+                BSDFHelper ret{NoOp};
                 return ret;
             }
 
-            LM_ND_XPU static PhysicallyMaterialData create_glass_data(float4 color, float eta) {
-                PhysicallyMaterialData ret{Dielectric};
+            LM_ND_XPU static BSDFHelper create_glass_data(float4 color, float eta) {
+                BSDFHelper ret{Dielectric};
                 ret.val2 = eta;
                 return ret;
             }
