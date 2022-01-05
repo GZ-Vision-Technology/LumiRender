@@ -4,13 +4,17 @@
 
 #include "material.h"
 #include "common.h"
+#include "render/scene/scene_data.h"
 
 namespace luminous {
     inline namespace render {
 
         BSDFWrapper Material::get_BSDF(MaterialEvalContext ctx, const SceneData *scene_data) const {
+            LUMINOUS_VAR_PTR_DISPATCH(get_BSDF, ctx, scene_data)
+        }
 
-          LUMINOUS_VAR_PTR_DISPATCH(get_BSDF, ctx, scene_data)
+        void Material::compute_shading_frame(MaterialEvalContext *ctx, const SceneData *scene_data) const {
+            float3 normal = make_float3(scene_data->get_texture(_normal_idx).eval(*ctx)) * 2.f - make_float3(1.f);
         }
 
 #ifndef __CUDACC__

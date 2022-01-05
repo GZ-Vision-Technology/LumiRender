@@ -40,6 +40,8 @@ namespace luminous {
         public:
             GEN_BASE_NAME(Material)
 
+            LM_XPU void compute_shading_frame(MaterialEvalContext *ctx, const SceneData *scene_data) const;
+
             LM_ND_XPU BSDFWrapper get_BSDF(MaterialEvalContext ctx, const SceneData *scene_data) const;
 
 #ifndef __CUDACC__
