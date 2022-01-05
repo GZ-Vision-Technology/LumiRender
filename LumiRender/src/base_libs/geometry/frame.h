@@ -27,6 +27,15 @@ namespace luminous {
                 coordinate_system(z, &x, &y);
             }
 
+            LM_XPU_INLINE void set(vector_t x_, vector_t y_, vector_t z_) {
+                x = x_;
+                y = y_;
+                z = z_;
+                CHECK_UNIT_VEC(x)
+                CHECK_UNIT_VEC(y)
+                CHECK_UNIT_VEC(z)
+            }
+
             LM_ND_XPU static TFrame from_xy(vector_t x, vector_t y) {
                 CHECK_UNIT_VEC(x)
                 CHECK_UNIT_VEC(y)

@@ -142,7 +142,7 @@ namespace luminous {
             SurfaceInteraction si = hit_ctx.compute_surface_interaction(mtl_item.wo);
             BSDFWrapper bsdf = si.get_BSDF(scene_data);
             if (mtl_item.depth == 0) {
-                pixel_sample_state->normal[mtl_item.pixel_index] = si.g_uvn.normal;
+                pixel_sample_state->normal[mtl_item.pixel_index] = si.g_uvn.normal();
                 pixel_sample_state->albedo[mtl_item.pixel_index] = make_float3(bsdf.color());
             }
 

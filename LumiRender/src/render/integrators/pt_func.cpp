@@ -30,7 +30,7 @@ namespace luminous {
             if (found_intersection) {
                 si = hit_ctx.compute_surface_interaction(ray);
                 L += throughput * si.Le(-ray.direction(), scene_data);
-                pixel_info.normal = si.s_uvn.normal;
+                pixel_info.normal = si.s_uvn.normal();
                 if (lm_likely(si.has_material())) {
                     pixel_info.albedo = make_float3(si.get_BSDF(scene_data).color());
                 }

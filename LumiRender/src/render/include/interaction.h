@@ -62,22 +62,19 @@ namespace luminous {
             }
         };
 
-        struct UVN {
-            float3 dp_du;
-            float3 dp_dv;
-            float3 normal;
-
-            LM_XPU void set(float3 u, float3 v, float3 n) {
-                CHECK_UNIT_VEC(u)
-                CHECK_UNIT_VEC(v)
-                CHECK_UNIT_VEC(n)
-                dp_du = u;
-                dp_dv = v;
-                normal = n;
+        struct UVN : Frame {
+            ND_XPU_INLINE float3 dp_du() const {
+                return x;
+            }
+            ND_XPU_INLINE float3 dp_dv() const {
+                return y;
+            }
+            ND_XPU_INLINE float3 normal() const {
+                return z;
             }
 
             ND_XPU_INLINE bool valid() const {
-                return nonzero(normal);
+                return nonzero(normal());
             }
         };
 
@@ -96,15 +93,15 @@ namespace luminous {
             }
 
             ND_XPU_INLINE Ray spawn_ray(float3 dir) const {
-                return Ray::spawn_ray(pos, g_uvn.normal, dir);
+                return Ray::spawn_ray(pos, g_uvn.normal(), dir);
             }
 
             ND_XPU_INLINE Ray spawn_ray_to(float3 p) const {
-                return Ray::spawn_ray_to(pos, g_uvn.normal, p);
+                return Ray::spawn_ray_to(pos, g_uvn.normal(), p);
             }
 
             ND_XPU_INLINE Ray spawn_ray_to(const Interaction &it) const {
-                return Ray::spawn_ray_to(pos, g_uvn.normal, it.pos, it.g_uvn.normal);
+                return Ray::spawn_ray_to(pos, g_uvn.normal(), it.pos, it.g_uvn.normal());
             }
         };
 
@@ -155,10 +152,10 @@ namespace luminous {
                     : pos(p), ng(n) {}
 
             LM_XPU explicit SurfacePoint(const Interaction &it)
-                    : pos(it.pos), ng(it.g_uvn.normal) {}
+                    : pos(it.pos), ng(it.g_uvn.normal()) {}
 
             LM_XPU explicit SurfacePoint(const SurfaceInteraction &it)
-                    : pos(it.pos), ng(it.g_uvn.normal) {}
+                    : pos(it.pos), ng(it.g_uvn.normal()) {}
 
             ND_XPU_INLINE Ray spawn_ray(float3 dir) const {
                 return Ray::spawn_ray(pos, ng, dir);
@@ -283,9 +280,9 @@ namespace luminous {
             LM_XPU MaterialEvalContext(const SurfaceInteraction &si)
                     : TextureEvalContext(si),
                       wo(si.wo),
-                      ng(si.g_uvn.normal),
-                      ns(si.s_uvn.normal),
-                      dp_dus(si.s_uvn.dp_du) {}
+                      ng(si.g_uvn.normal()),
+                      ns(si.s_uvn.normal()),
+                      dp_dus(si.s_uvn.dp_du()) {}
 
             float3 wo;
             float3 ng, ns;

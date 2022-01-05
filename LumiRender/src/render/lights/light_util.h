@@ -29,7 +29,7 @@ namespace luminous {
             LM_XPU LightSampleContext() = default;
 
             LM_XPU explicit LightSampleContext(const Interaction &it)
-                    : SurfacePoint(it), ns(it.g_uvn.normal) {}
+                    : SurfacePoint(it), ns(it.g_uvn.normal()) {}
 
             LM_XPU LightSampleContext(float3 p, float3 ng, float3 ns)
                     : SurfacePoint{p, ng}, ns(ns) {}
