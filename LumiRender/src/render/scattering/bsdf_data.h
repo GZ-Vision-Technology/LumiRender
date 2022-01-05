@@ -24,12 +24,20 @@ namespace luminous {
 
         struct BSDFHelper {
         private:
-            // eta for metal
+            // A B for oren nayar
+            // R0 for disney
             float4 _params{};
 
-            // k for metal
+            // roughness for disney
+            // k0 for metal
             float val0{};
+
+            // metallic for disney
+            // k1 for metal
             float val1{};
+
+            // eta for dielectric
+            // k2 for metal
             float val2{};
             FresnelType _fresnel_type{NoOp};
         public:
@@ -58,9 +66,24 @@ namespace luminous {
                 return {1.f};
             }
 
+            ND_XPU_INLINE Spectrum R0() const {
+                return _params;
+            }
+
+            ND_XPU_INLINE float metallic() const {
+                return val1;
+            }
+
             ND_XPU_INLINE float roughness() const {
-                // todo
-                return 1.f;
+                return val0;
+            }
+
+            /**
+             * for dielectric material
+             * @return
+             */
+            ND_XPU_INLINE float eta() const {
+                return val2;
             }
 
             /**
@@ -69,14 +92,6 @@ namespace luminous {
              */
             ND_XPU_INLINE float4 k() const {
                 return make_float4(val0, val1, val2, 1.f);
-            }
-
-            /**
-             * for dielectric material
-             * @return
-             */
-            ND_XPU_INLINE float eta() const {
-                return _params.w;
             }
 
             /**
@@ -91,7 +106,7 @@ namespace luminous {
                 switch (_fresnel_type) {
                     case DisneyFr:
                     case FresnelType::Dielectric: {
-                        _params.w = luminous::correct_eta(cos_theta, _params.w);
+                        val2 = luminous::correct_eta(cos_theta, val2);
                         break;
                     }
                     case FresnelType::NoOp:
@@ -111,10 +126,10 @@ namespace luminous {
                         return fresnel_complex(cos_theta, Spectrum(metal_eta()), Spectrum(k()));
                     case Dielectric:
                         return fresnel_dielectric(cos_theta, eta());
-//                    case DisneyFr:
-//                        return lerp(metallic(),
-//                                    Spectrum{fresnel_dielectric(cos_theta, eta())},
-//                                    fresnel_schlick(R0(), cos_theta));
+                    case DisneyFr:
+                        return lerp(metallic(),
+                                    Spectrum{fresnel_dielectric(cos_theta, eta())},
+                                    fresnel_schlick(R0(), cos_theta));
                     default:
                         DCHECK(0);
                 }
@@ -183,10 +198,9 @@ namespace luminous {
 
             LM_ND_XPU static PhysicallyMaterialData create_glass_data(float4 color, float eta) {
                 PhysicallyMaterialData ret{Dielectric};
-                ret._params.w = eta;
+                ret.val2 = eta;
                 return ret;
             }
-
         };
 
 //        class DisneyMaterialData {
