@@ -49,6 +49,10 @@ namespace luminous {
             LM_XPU BSDFHelper(float4 params, float3 val, FresnelType fresnel_type)
                     : _params(params), val0(val.x), val1(val.y), val2(val.z), _fresnel_type(fresnel_type) {}
 
+            ND_XPU_INLINE BSDFHelper get_helper() const {
+                return *this;
+            }
+
             /**
              * for metal
              * @return

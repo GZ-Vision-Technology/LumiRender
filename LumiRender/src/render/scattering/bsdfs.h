@@ -68,14 +68,14 @@ namespace luminous {
             return MetalBSDF(data, MicrofacetReflection{Spectrum{1.f}, alpha_x, alpha_y, GGX});
         }
 
-//        using DisneyBSDF = BSDF_Ty<DisneyMaterialData, disney::Diffuse, disney::FakeSS,
-//                disney::Retro, disney::Sheen, disney::Clearcoat,
-//                disney::MicrofacetReflection, disney::MicrofacetTransmission,
-//                disney::DiffuseTransmission, disney::SpecularTransmission>;
+        using DisneyBSDF = BSDF_Ty<BSDFHelper, disney::Diffuse, disney::FakeSS,
+                disney::Retro, disney::Sheen, disney::Clearcoat,
+                MicrofacetReflection, MicrofacetTransmission,
+                DiffuseTransmission, SpecularTransmission>;
 
 
         class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF,
-                GlassBSDF, RoughGlassBSDF,
+                GlassBSDF, RoughGlassBSDF,DisneyBSDF,
                 FakeMetalBSDF, MetalBSDF> {
         private:
             using Variant::Variant;
