@@ -22,6 +22,8 @@ namespace luminous {
         public:
             using BxDF::BxDF;
 
+            LM_XPU explicit MicrofacetReflection(Spectrum color) : BxDF(color, GlossyRefl) {}
+
             /**
              * must be reflection and eta must be corrected
              */
@@ -60,15 +62,16 @@ namespace luminous {
 
         class MicrofacetTransmission : public BxDF<MicrofacetTransmission> {
         protected:
-            LM_ND_XPU Spectrum _f(float3 wo, float3 wi, BSDFHelper helper, float4 color,
+            LM_ND_XPU Spectrum _f(float3 wo, float3 wi, BSDFHelper helper, Spectrum color,
                                   TransportMode mode = TransportMode::Radiance) const;
 
             LM_ND_XPU BSDFSample _sample_f_color(float3 wo, float uc, float2 u,
-                                                 Spectrum Fr, BSDFHelper helper, float4 color,
+                                                 Spectrum Fr, BSDFHelper helper, Spectrum color,
                                                  TransportMode mode = TransportMode::Radiance) const;
         public:
             using BxDF::BxDF;
 
+            LM_XPU explicit MicrofacetTransmission(Spectrum color) : BxDF(color, GlossyTrans) {}
             /**
              * must be transmission and eta must be corrected
              */

@@ -57,17 +57,28 @@ namespace luminous {
 
         template<typename T>
         struct BxDF {
+        private:
+            BxDFFlags _flags;
+            float _r;
+            float _g;
+            float _b;
         public:
-            const bool valid{};
-        public:
-            LM_XPU explicit BxDF(bool valid = false) : valid(valid) {}
+            LM_XPU explicit BxDF(BxDFFlags flags = Unset) {}
+
+            LM_XPU explicit BxDF(Spectrum color, BxDFFlags flags)
+                    : _r(color.R()), _g(color.G()), _b(color.B()),
+                      _flags(color.is_black() ? Unset : flags) {}
 
             ND_XPU_INLINE float weight(BSDFHelper helper) const {
                 return 1.f;
             }
 
-            LM_XPU_INLINE float4 color(BSDFHelper helper) const {
-                return helper.color();
+            LM_XPU_INLINE Spectrum spectrum() const {
+                return Spectrum{_r, _g, _b};
+            }
+
+            LM_XPU_INLINE Spectrum color(BSDFHelper helper) const {
+                return spectrum();
             }
 
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
@@ -94,9 +105,12 @@ namespace luminous {
                 return {f, wi, PDF_val, BxDFFlags::Reflection};
             }
 
+            ND_XPU_INLINE BxDFFlags flags() const {
+                return _flags;
+            }
+
             ND_XPU_INLINE bool match_flags(BxDFFlags bxdf_flags) {
-                static constexpr auto flags = T::flags();
-                return ((flags & bxdf_flags) == flags) && valid;
+                return ((_flags & bxdf_flags) == _flags);
             }
         };
     }

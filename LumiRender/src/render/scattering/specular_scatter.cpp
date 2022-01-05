@@ -10,9 +10,9 @@ namespace luminous {
         BSDFSample SpecularReflection::_sample_f(float3 wo, float uc, float2 u, Spectrum Fr,
                                                  BSDFHelper helper, TransportMode mode) const {
             float3 wi = make_float3(-wo.x, -wo.y, wo.z);
-            Spectrum val = Fr * Spectrum(color(helper)) / Frame::abs_cos_theta(wi);
+            Spectrum val = Fr * spectrum() / Frame::abs_cos_theta(wi);
             float PDF = 1.f;
-            return {val, wi, PDF, BxDFFlags::SpecRefl, helper.eta()};
+            return {val, wi, PDF, flags(), helper.eta()};
         }
 
         BSDFSample SpecularReflection::sample_f(float3 wo, float uc, float2 u,
@@ -34,8 +34,8 @@ namespace luminous {
             }
             Spectrum ft = (Spectrum(1.f) - Fr) / Frame::abs_cos_theta(wi);
             float factor = cal_factor(mode, helper.eta());
-            Spectrum val = ft * Spectrum(color(helper)) * factor;
-            return {val, wi, 1, SpecTrans, helper.eta()};
+            Spectrum val = ft * spectrum() * factor;
+            return {val, wi, 1, flags(), helper.eta()};
         }
 
         BSDFSample SpecularTransmission::sample_f(float3 wo, float uc, float2 u,

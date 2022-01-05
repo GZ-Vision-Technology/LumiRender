@@ -14,6 +14,8 @@ namespace luminous {
         public:
             using BxDF::BxDF;
 
+            LM_XPU explicit SpecularReflection(Spectrum color) : BxDF(color, SpecRefl) {}
+
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
                                          TransportMode mode = TransportMode::Radiance) const {
                 return 0.f;
@@ -31,17 +33,14 @@ namespace luminous {
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                           TransportMode mode = TransportMode::Radiance) const;
-
-            LM_ND_XPU constexpr static BxDFFlags flags() {
-                return BxDFFlags::SpecRefl;
-            }
-
         };
 
         class SpecularTransmission : public BxDF<SpecularTransmission> {
         public:
             using BxDF::BxDF;
 
+            LM_XPU explicit SpecularTransmission(Spectrum color) : BxDF(color, SpecTrans) {}
+
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
                                          TransportMode mode = TransportMode::Radiance) const {
                 return 0.f;
@@ -59,10 +58,6 @@ namespace luminous {
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                           TransportMode mode = TransportMode::Radiance) const;
-
-            LM_ND_XPU constexpr static BxDFFlags flags() {
-                return BxDFFlags::SpecTrans;
-            }
         };
     }
 }

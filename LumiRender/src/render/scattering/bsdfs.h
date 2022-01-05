@@ -19,20 +19,20 @@ namespace luminous {
         using DiffuseBSDF = BSDF_Ty<PhysicallyMaterialData, DiffuseReflection>;
 
         ND_XPU_INLINE DiffuseBSDF create_diffuse_bsdf(float4 color) {
-            return DiffuseBSDF(PhysicallyMaterialData::create_diffuse_data(color), DiffuseReflection{true});
+            return DiffuseBSDF(PhysicallyMaterialData::create_diffuse_data(color), DiffuseReflection{color});
         }
 
         using OrenNayarBSDF = BSDF_Ty<PhysicallyMaterialData, OrenNayar>;
 
         ND_XPU_INLINE OrenNayarBSDF create_oren_nayar_bsdf(float4 color, float sigma) {
-            return OrenNayarBSDF(PhysicallyMaterialData::create_oren_nayar_data(color, sigma), OrenNayar{true});
+            return OrenNayarBSDF(PhysicallyMaterialData::create_oren_nayar_data(color, sigma), OrenNayar{color});
         }
 
         using MirrorBSDF = BSDF_Ty<PhysicallyMaterialData, SpecularReflection>;
 
         ND_XPU_INLINE MirrorBSDF create_mirror_bsdf(float4 color) {
             return MirrorBSDF(PhysicallyMaterialData::create_mirror_data(color),
-                              SpecularReflection{true});
+                              SpecularReflection{color});
         }
 
         using GlassBSDF = FresnelBSDF<PhysicallyMaterialData, SpecularReflection, SpecularTransmission, true>;
@@ -40,7 +40,7 @@ namespace luminous {
         ND_XPU_INLINE GlassBSDF create_glass_bsdf(float4 color, float eta,
                                                   bool valid_refl = true, bool valid_trans = true) {
             return GlassBSDF(PhysicallyMaterialData::create_glass_data(color, eta, 0, 0),
-                             SpecularReflection{valid_refl}, SpecularTransmission{valid_trans});
+                             SpecularReflection{color}, SpecularTransmission{color});
         }
 
         using RoughGlassBSDF = FresnelBSDF<PhysicallyMaterialData, MicrofacetReflection, MicrofacetTransmission>;
@@ -50,33 +50,33 @@ namespace luminous {
                                 bool valid_refl = true, bool valid_trans = true) {
             auto param = PhysicallyMaterialData::create_glass_data(color, eta, alpha_x, alpha_y);
             return RoughGlassBSDF(param,
-                                  MicrofacetReflection{valid_refl},
-                                  MicrofacetTransmission{valid_trans});
+                                  MicrofacetReflection{color},
+                                  MicrofacetTransmission{color});
         }
 
         using FakeMetalBSDF = BSDF_Ty<PhysicallyMaterialData, MicrofacetReflection>;
 
         ND_XPU_INLINE FakeMetalBSDF create_fake_metal_bsdf(float4 color, float alpha_x, float alpha_y) {
             auto param = PhysicallyMaterialData::create_fake_metal_data(color, alpha_x, alpha_y);
-            return FakeMetalBSDF(param, MicrofacetReflection{true});
+            return FakeMetalBSDF(param, MicrofacetReflection{color});
         }
 
         using MetalBSDF = BSDF_Ty<PhysicallyMaterialData, MicrofacetReflection>;
 
         ND_XPU_INLINE MetalBSDF create_metal_bsdf(float4 eta, float4 k, float alpha_x, float alpha_y) {
             PhysicallyMaterialData data = PhysicallyMaterialData::create_metal_data(eta, k, alpha_x, alpha_y);
-            return MetalBSDF(data, MicrofacetReflection{true});
+            return MetalBSDF(data, MicrofacetReflection{Spectrum{1.f}});
         }
 
-        using DisneyBSDF = BSDF_Ty<DisneyMaterialData, disney::Diffuse, disney::FakeSS,
-                disney::Retro, disney::Sheen, disney::Clearcoat,
-                disney::MicrofacetReflection, disney::MicrofacetTransmission,
-                disney::DiffuseTransmission, disney::SpecularTransmission>;
+//        using DisneyBSDF = BSDF_Ty<DisneyMaterialData, disney::Diffuse, disney::FakeSS,
+//                disney::Retro, disney::Sheen, disney::Clearcoat,
+//                disney::MicrofacetReflection, disney::MicrofacetTransmission,
+//                disney::DiffuseTransmission, disney::SpecularTransmission>;
 
 
         class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF,
                 GlassBSDF, RoughGlassBSDF,
-                FakeMetalBSDF, MetalBSDF, DisneyBSDF> {
+                FakeMetalBSDF, MetalBSDF> {
         private:
             using Variant::Variant;
         public:
