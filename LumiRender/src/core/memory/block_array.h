@@ -7,7 +7,7 @@
 #include <list>
 #include <cstddef>
 #include "arena.h"
-#include "core/header.h"
+#include "base_libs/header.h"
 
 namespace luminous {
     inline namespace core {
@@ -60,7 +60,7 @@ namespace luminous {
           * |__0,7_|_1,7__|_2,7__|_3,7__| |_4,7__|_5,7__|_6,7__|_7,7__|
           *
           */
-        template <typename T, int logBlockSize>
+        template <typename T, int logBlockSize = 2>
         class BlockedArray {
 
         private:

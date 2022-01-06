@@ -6,7 +6,7 @@
 #pragma once
 
 #include "core/backend/device.h"
-
+#include "mipmap.h"
 
 namespace luminous {
 

@@ -9,10 +9,16 @@
 
 namespace luminous {
     inline namespace utility {
-        enum struct PixelFormat : uint32_t {
+        enum struct PixelFormat : uint8_t {
             R8U, RG8U, RGBA8U,
             R32F, RG32F, RGBA32F,
             UNKNOWN
+        };
+
+        enum struct ImageWrap : uint8_t {
+            Repeat,
+            Black,
+            Clamp
         };
 
         namespace detail {
@@ -73,8 +79,8 @@ namespace luminous {
 
         class ImageBase {
         protected:
-            PixelFormat _pixel_format;
-            uint2 _resolution;
+            PixelFormat _pixel_format{PixelFormat::UNKNOWN};
+            uint2 _resolution{};
         public:
             ImageBase(PixelFormat pixel_format, uint2 resolution)
                     : _pixel_format(pixel_format),
