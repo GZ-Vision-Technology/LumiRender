@@ -77,6 +77,7 @@ namespace luminous {
             // model param
             mutable std::string fn;
             bool smooth{};
+            bool use_normal_map{false};
             bool swap_handed{};
             uint subdiv_level{};
             // quad param

@@ -165,6 +165,7 @@
 //				"material": "quad",
 				"fn": "cornell_box.obj",
 				"smooth": false,
+				"use_normal_map": true,
 				"swap_handed": true,
 				"subdiv_level": 0,
 				"transform" : {

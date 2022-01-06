@@ -111,13 +111,14 @@ namespace luminous {
         }
 
         std::vector<MaterialConfig> AssimpParser::parse_materials(const aiScene *ai_scene,
-                                                                  const luminous_fs::path &directory) {
+                                                                  const luminous_fs::path &directory,
+                                                                  bool use_normal_map) {
             std::vector<MaterialConfig> ret;
             vector<aiMaterial *> ai_materials(ai_scene->mNumMaterials);
             ret.reserve(ai_materials.size());
             std::copy(ai_scene->mMaterials, ai_scene->mMaterials + ai_scene->mNumMaterials, ai_materials.begin());
             for (const auto &ai_material : ai_materials) {
-                MaterialConfig mc = parse_material(ai_material, directory);
+                MaterialConfig mc = parse_material(ai_material, directory, use_normal_map);
                 mc.set_full_type("AssimpMaterial");
                 ret.push_back(mc);
             }
@@ -125,7 +126,8 @@ namespace luminous {
         }
 
         MaterialConfig AssimpParser::parse_material(const aiMaterial *ai_material,
-                                                    const luminous_fs::path &directory) {
+                                                    const luminous_fs::path &directory,
+                                                    bool use_normal_map) {
             auto full_path = [&](const luminous_fs::path &fn) -> std::string {
                 return fn.empty() ? fn.string() : (directory / fn).string();
             };
@@ -150,7 +152,7 @@ namespace luminous {
                 mc.specular_tex.set_type(tex_type);
                 mc.specular_tex.color_space = LINEAR;
             }
-            {
+            if (use_normal_map) {
                 auto[normal_fn, normal] = load_texture(ai_material, aiTextureType_HEIGHT);
                 if (normal_fn.empty()) {
                     return mc;

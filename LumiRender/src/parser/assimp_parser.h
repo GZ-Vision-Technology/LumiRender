@@ -31,10 +31,12 @@ namespace luminous {
             LM_NODISCARD static std::pair<string, float4> load_texture(const aiMaterial *mat, aiTextureType type);
 
             LM_NODISCARD static std::vector<MaterialConfig> parse_materials(const aiScene *ai_scene,
-                                                                            const luminous_fs::path& directory);
+                                                                            const luminous_fs::path& directory,
+                                                                            bool use_normal_map);
 
             LM_NODISCARD static MaterialConfig parse_material(const aiMaterial *ai_material,
-                                                              const luminous_fs::path& directory);
+                                                              const luminous_fs::path& directory,
+                                                              bool use_normal_map);
         public:
 
             explicit AssimpParser(Context *context) : Parser(context) {}

@@ -25,7 +25,7 @@ namespace luminous {
 
             custom_material_name = sc.material_name;
             if (custom_material_name.empty()) {
-                materials = AssimpParser::parse_materials(ai_scene, directory);
+                materials = AssimpParser::parse_materials(ai_scene, directory, sc.use_normal_map);
             }
         }
     } // luminous::render
