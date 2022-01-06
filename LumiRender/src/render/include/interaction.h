@@ -63,12 +63,22 @@ namespace luminous {
         };
 
         struct UVN : Frame {
+            LM_XPU UVN() = default;
+
+            LM_XPU void set_frame(Frame frame) {
+                x = frame.x;
+                y = frame.y;
+                z = frame.z;
+            }
+
             ND_XPU_INLINE float3 dp_du() const {
                 return x;
             }
+
             ND_XPU_INLINE float3 dp_dv() const {
                 return y;
             }
+
             ND_XPU_INLINE float3 normal() const {
                 return z;
             }
@@ -114,7 +124,7 @@ namespace luminous {
 
         struct SurfaceInteraction : public Interaction {
             float2 uv;
-            UVN s_uvn;
+            mutable UVN s_uvn;
             float PDF_pos{-1.f};
             float prim_area{0.f};
             const Light *light{nullptr};

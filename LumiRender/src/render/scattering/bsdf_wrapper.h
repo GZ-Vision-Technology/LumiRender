@@ -35,6 +35,8 @@ namespace luminous {
                                           BxDFFlags sample_flags = BxDFFlags::All,
                                           TransportMode mode = TransportMode::Radiance) const;
 
+            ND_XPU_INLINE Frame shading_frame() const { return _shading_frame; }
+
             LM_ND_XPU Spectrum color() const;
 
             LM_ND_XPU float3 to_local(float3 val) const {
