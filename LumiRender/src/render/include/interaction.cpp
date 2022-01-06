@@ -63,7 +63,7 @@ namespace luminous {
             return data->compute_prim_PMF(hit_info);
         }
 
-        BSDFWrapper SurfaceInteraction::get_BSDF(const SceneData *scene_data) const {
+        BSDFWrapper SurfaceInteraction::compute_BSDF(const SceneData *scene_data) const {
             LM_ASSERT(bool(material), "material is nullptr!\n");
             BSDFWrapper bsdf_wrapper = material->get_BSDF(*this, scene_data);
             s_uvn.set_frame(bsdf_wrapper.shading_frame());

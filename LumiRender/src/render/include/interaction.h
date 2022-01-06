@@ -69,6 +69,9 @@ namespace luminous {
                 x = frame.x;
                 y = frame.y;
                 z = frame.z;
+                CHECK_UNIT_VEC(x)
+                CHECK_UNIT_VEC(y)
+                CHECK_UNIT_VEC(z)
             }
 
             ND_XPU_INLINE float3 dp_du() const {
@@ -149,7 +152,7 @@ namespace luminous {
 
             LM_ND_XPU Spectrum Le(float3 w, const SceneData *scene_data) const;
 
-            LM_ND_XPU BSDFWrapper get_BSDF(const SceneData *scene_data) const;
+            LM_ND_XPU BSDFWrapper compute_BSDF(const SceneData *scene_data) const;
         };
 
         struct SurfacePoint {

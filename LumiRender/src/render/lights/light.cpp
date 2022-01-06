@@ -98,7 +98,7 @@ namespace luminous {
         Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
                                                  uint64_t traversable_handle, const SceneData *scene_data,
                                                  NEEData *NEE_data) const {
-            auto bsdf = si.get_BSDF(scene_data);
+            auto bsdf = si.compute_BSDF(scene_data);
             Spectrum Ld = MIS_sample_light(si, bsdf, sampler, traversable_handle, scene_data);
             return Ld + MIS_sample_BSDF(si, bsdf, sampler, traversable_handle, NEE_data, scene_data);
         }
