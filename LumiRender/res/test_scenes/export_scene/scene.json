@@ -1,5 +1,12 @@
 {
     "textures": [
+        {
+            "type" : "ImageTexture",
+            "name" : "normal_map",
+            "param": {
+                "fn": "brickwall_normal.jpg"
+            }
+        }
 //        {
 //            "type": "ConstantTexture",
 //            "name": "matte_white_constant",
@@ -74,6 +81,7 @@
             "type": "MatteMaterial",
             "name": "matte_white",
             "param": {
+//                "normal" : "normal_map",
                 "color": [
                     0.7250000238418579,
                     0.7099999785423279,
@@ -419,8 +427,8 @@
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
-                "material": "glass_white",
-//                "material": "matte_white",
+//                "material": "glass_white",
+                "material": "matte_white",
 //                "material": "mirror_white",
 //                "material": "fake_metal",
 //                "material": "metal",
@@ -464,8 +472,8 @@
             "param": {
                 "fn": "meshes/Cube.001.ply",
                 "subdiv_level": 0,
-                "material": "glass_white",
-//                "material": "matte_white",
+//                "material": "glass_white",
+                "material": "matte_white",
 //                "material": "mirror_white",
 //                "material": "fake_metal",
 //                "material": "metal",

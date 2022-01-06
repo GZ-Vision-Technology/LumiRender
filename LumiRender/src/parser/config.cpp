@@ -26,16 +26,21 @@ namespace luminous {
             LUMINOUS_ERROR("unknown transform type ", type());
         }
 
-        void MaterialConfig::fill_tex_idx_by_name(vector<TextureConfig> &tex_configs, TextureConfig &tc, bool force) {
+        void MaterialConfig::fill_tex_idx_by_name(vector<TextureConfig> &tex_configs, TextureConfig &tc,
+                                                  bool force, bool check) {
             auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                 return tex_config.name == tc.name;
             });
             tc.fill_tex_idx(idx, force);
-            DCHECK(tc.valid())
+            if (check) {
+                DCHECK(tc.valid())
+            }
         }
 
         void MaterialConfig::fill_tex_configs(vector<TextureConfig> &tex_configs) {
             // common data
+            fill_tex_idx_by_name(tex_configs, normal_tex, false, false);
+
             if (type() == full_type("AssimpMaterial")) {
                 int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                     return tex_config == color_tex;
@@ -67,8 +72,11 @@ namespace luminous {
                     normal_tex.fill_tex_idx(index);
                 }
 
-            } else if (type() == full_type("MetalMaterial")) {
+            } else if (type() == full_type("MatteMaterial")) {
+
                 fill_tex_idx_by_name(tex_configs, color_tex);
+
+            } else if (type() == full_type("MetalMaterial")) {
 
                 fill_tex_idx_by_name(tex_configs, roughness_tex);
 

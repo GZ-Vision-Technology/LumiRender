@@ -290,6 +290,9 @@ namespace luminous {
             std::vector<TextureConfig> ret;
             for (const auto &texture : textures) {
                 TextureConfig config = parse_texture(ParameterSet(texture));
+//                if (is_contain(ret, config)) {
+//                    continue;
+//                }
                 config.fill_tex_idx(ret.size());
                 ret.push_back(config);
             }
@@ -298,6 +301,9 @@ namespace luminous {
 
         TextureConfig process_attr(const ParameterSet &ps, SceneGraph *scene_graph, float4 default_val = make_float4(1.f)) {
             TextureConfig ret;
+            if (ps.data().empty()) {
+                return ret;
+            }
             if (ps.data().is_string()) {
                 ret.name = ps.as_string();
                 return ret;
@@ -314,7 +320,7 @@ namespace luminous {
             MaterialConfig ret;
             ret.set_full_type(type);
             auto param = ps["param"];
-
+            ret.normal_tex = process_attr(param["normal"], scene_graph);
             ret.color_tex = process_attr(param["color"], scene_graph);
             if (type == "MatteMaterial") {
                 ret.sigma = param["sigma"].as_float(0.f);

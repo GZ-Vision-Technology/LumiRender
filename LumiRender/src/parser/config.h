@@ -198,7 +198,7 @@ namespace luminous {
             bool thin{};
 
             static void fill_tex_idx_by_name(std::vector<TextureConfig> &tex_configs,
-                                             TextureConfig &tc, bool force = false);
+                                             TextureConfig &tc, bool force = false, bool check = true);
 
             void fill_tex_configs(std::vector<TextureConfig> &tex_configs);
         };
