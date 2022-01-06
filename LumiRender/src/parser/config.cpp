@@ -60,7 +60,7 @@ namespace luminous {
                 index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                     return tex_config == normal_tex;
                 });
-                if (index == -1) {
+                if (index == -1 && !normal_tex.name.empty()) {
                     normal_tex.fill_tex_idx(tex_configs.size());
                     tex_configs.push_back(normal_tex);
                 } else {

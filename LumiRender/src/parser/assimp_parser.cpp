@@ -151,11 +151,16 @@ namespace luminous {
                 mc.specular_tex.color_space = LINEAR;
             }
             {
-                // process normal map
-                auto[normal_fn, _] = load_texture(ai_material, aiTextureType_HEIGHT);
+                auto[normal_fn, normal] = load_texture(ai_material, aiTextureType_HEIGHT);
+                if (normal_fn.empty()) {
+                    return mc;
+                }
                 mc.normal_tex.set_type(type_name<ImageTexture>());
                 mc.normal_tex.name = "normal";
+                mc.normal_tex.val = normal;
                 mc.normal_tex.fn = full_path(normal_fn);
+                auto tex_type = mc.normal_tex.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
+                mc.normal_tex.set_type(tex_type);
                 mc.normal_tex.color_space = LINEAR;
             }
             return mc;
@@ -215,7 +220,7 @@ namespace luminous {
             return ret;
         }
 
-        LightConfig AssimpParser::parse_light(const aiLight* ai_light) const {
+        LightConfig AssimpParser::parse_light(const aiLight *ai_light) const {
             LightConfig ret;
 
             return ret;
