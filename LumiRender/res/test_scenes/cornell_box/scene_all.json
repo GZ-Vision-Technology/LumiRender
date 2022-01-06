@@ -244,7 +244,7 @@
 			"film" : {
 				"param" : {
 					"resolution" : [768, 768],
-					"fb_state": 1
+					"fb_state": 0
 				}
 			},
 			"filter": {
