@@ -37,10 +37,6 @@ namespace luminous {
                 _vector.resize(num);
             }
 
-            void add_layer(const element_ty &element) {
-                _vector.push_back(element);
-            }
-
             LM_NODISCARD size_t levels() const { return _vector.size(); }
 
             void clear() { _vector.clear(); }
@@ -146,12 +142,12 @@ namespace luminous {
 
             /**
              * @tparam T
-             * @return pyramid index in
+             * @return pyramid index
              */
             template<typename T>
             LM_NODISCARD size_t generate_empty_pyramid() {
                 PyramidVector<T> &Vector = get_vector<T>();
-                Vector.template emplace_back();
+                Vector.emplace_back();
                 return Vector.size();
             }
 
