@@ -103,11 +103,15 @@ namespace luminous {
                 return _v_res;
             }
 
+            LM_NODISCARD size_t size_in_bytes() const {
+                return _v_res * _u_res * sizeof(T);
+            }
+
             ~BlockedArray() {
                 for (int i = 0; i < _u_res * _v_res; ++i) {
                     _data[i].~T();
                 }
-                free_aligned(_data);
+                aligned_free(_data);
             }
 
             LM_NODISCARD int block(int a) const {
