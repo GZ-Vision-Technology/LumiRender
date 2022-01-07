@@ -28,6 +28,11 @@ namespace luminous {
                 using scalar_t = T;
                 LM_XPU constexpr VectorStorage() noexcept: x{}, y{} {}
 
+                template<typename U>
+                ND_XPU_INLINE explicit operator VectorStorage<U, 2>() {
+                    return VectorStorage<U, 2>{U(x), U(y)};
+                }
+
                 LM_XPU explicit constexpr VectorStorage(T s) noexcept: x{s}, y{s} {}
 
                 LM_XPU explicit constexpr VectorStorage(T x, T y) noexcept: x{x}, y{y} {}
@@ -39,6 +44,11 @@ namespace luminous {
                 using scalar_t = T;
                 LM_XPU constexpr VectorStorage() noexcept: x{}, y{}, z{} {}
 
+                template<typename U>
+                ND_XPU_INLINE explicit operator VectorStorage<U, 3>() {
+                    return VectorStorage<U, 3>{U(x), U(y), U(z)};
+                }
+
                 LM_XPU explicit constexpr VectorStorage(T s) noexcept: x{s}, y{s}, z{s} {}
 
                 LM_XPU explicit constexpr VectorStorage(T x, T y, T z) noexcept: x{x}, y{y}, z{z} {}
@@ -49,6 +59,11 @@ namespace luminous {
                 T x, y, z, w;
                 using scalar_t = T;
                 LM_XPU constexpr VectorStorage() noexcept: x{}, y{}, z{}, w{} {}
+
+                template<typename U>
+                ND_XPU_INLINE explicit operator VectorStorage<U, 4>() {
+                    return VectorStorage<U, 4>{U(x), U(y), U(z), U(w)};
+                }
 
                 LM_XPU explicit constexpr VectorStorage(T s) noexcept: x{s}, y{s}, z{s}, w{s} {}
 

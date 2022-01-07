@@ -36,18 +36,18 @@ namespace luminous {
 
             void init(const Image &image) {
                 switch (pixel_format()) {
-//                    case PixelFormat::R8U: {
-//                        gen_pyramid<uchar>(reinterpret_cast<const uchar *>(image.pixel_ptr()));
-//                        break;
-//                    }
-//                    case PixelFormat::RG8U: {
-//                        gen_pyramid<uchar2>(reinterpret_cast<const uchar2 *>(image.pixel_ptr()));
-//                        break;
-//                    }
-//                    case PixelFormat::RGBA8U: {
-//                        gen_pyramid<uchar4>(reinterpret_cast<const uchar4 *>(image.pixel_ptr()));
-//                        break;
-//                    }
+                    case PixelFormat::R8U: {
+                        gen_pyramid<uchar, float>(reinterpret_cast<const uchar *>(image.pixel_ptr()));
+                        break;
+                    }
+                    case PixelFormat::RG8U: {
+                        gen_pyramid<uchar2, float2>(reinterpret_cast<const uchar2 *>(image.pixel_ptr()));
+                        break;
+                    }
+                    case PixelFormat::RGBA8U: {
+                        gen_pyramid<uchar4, float4>(reinterpret_cast<const uchar4 *>(image.pixel_ptr()));
+                        break;
+                    }
                     case PixelFormat::R32F: {
                         gen_pyramid<float>(reinterpret_cast<const float *>(image.pixel_ptr()));
                         break;
@@ -76,7 +76,7 @@ namespace luminous {
                 _index = PyramidMgr::instance()->template generate_empty_pyramid<T>();
             }
 
-            template<typename T>
+            template<typename T, typename U = T>
             void gen_pyramid(const T *img) {
                 std::unique_ptr<T[]> resampled_image = nullptr;
                 int2 res = make_int2(resolution());
@@ -92,7 +92,7 @@ namespace luminous {
 
                     parallel_for(res[1], [&](uint32_t t, uint32_t _) {
                         for (int s = 0; s < res_pot[0]; ++s) {
-                            resampled_image[t * res_pot[0] + s] = T(0);
+                            resampled_image[t * res_pot[0] + s] = T();
                             for (int j = 0; j < 4; ++j) {
                                 int origS = sWeights[s].firstTexel + j;
                                 if (_image_wrap == ImageWrap::Repeat) {
@@ -102,8 +102,8 @@ namespace luminous {
                                 }
                                 if (origS >= 0 && origS < res[0]) {
                                     resampled_image[t * res_pot[0] + s] +=
-                                            sWeights[s].weight[j] *
-                                            img[t * res[0] + origS];
+                                            T(sWeights[s].weight[j] *
+                                              U(img[t * res[0] + origS]));
                                 }
                             }
                         }
@@ -120,17 +120,17 @@ namespace luminous {
                     parallel_for(res_pot[0], [&](uint32_t s, uint tid) {
                         T *workData = resample_buf[tid];
                         for (int t = 0; t < res_pot[1]; ++t) {
-                            workData[t] = T(0.f);
+                            workData[t] = T();
                             for (int j = 0; j < 4; ++j) {
                                 int offset = tWeights[t].firstTexel + j;
                                 if (_image_wrap == ImageWrap::Repeat) {
                                     offset = Mod(offset, res[1]);
                                 } else if (_image_wrap == ImageWrap::Clamp) {
-                                    offset = clamp(offset, 0, (int)_resolution[1] - 1);
+                                    offset = clamp(offset, 0, (int) _resolution[1] - 1);
                                 }
-                                if (offset >= 0 && offset < (int)_resolution[1]) {
-                                    workData[t] += tWeights[t].weight[j] *
-                                                   resampled_image[offset * res_pot[0] + s];
+                                if (offset >= 0 && offset < (int) _resolution[1]) {
+                                    workData[t] += T(tWeights[t].weight[j] *
+                                                     U(resampled_image[offset * res_pot[0] + s]));
                                 }
                             }
                         }
