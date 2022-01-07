@@ -57,7 +57,7 @@ namespace luminous {
 
             void *allocate(size_t byte_size) noexcept {
                 _capacity = byte_size;
-                _address = reinterpret_cast<std::byte *>(aligned_alloc(alignof(std::byte), byte_size));
+                _address = aligned_alloc<std::byte>(byte_size);
                 if (_address == nullptr) {
                     LUMINOUS_ERROR(
                             string_printf("Failed to allocate memory: size = %u",byte_size));
@@ -73,7 +73,7 @@ namespace luminous {
                 auto alloc_size = (std::max(block_size, byte_size) + alloc_alignment - 1u) / alloc_alignment *
                                   alloc_alignment;
                 _capacity = alloc_size;
-                _address = static_cast<std::byte *>(aligned_alloc(alloc_alignment, alloc_size));
+                _address = aligned_alloc<std::byte>(alloc_alignment, alloc_size);
                 if (_address == nullptr) {
                     LUMINOUS_ERROR(
                             string_printf("Failed to allocate memory: size = %d, alignment = %d, count = %d",

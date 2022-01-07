@@ -16,7 +16,7 @@ namespace luminous {
 
         template<typename T = std::byte>
         LM_NODISCARD T *aligned_alloc(size_t num) noexcept {
-            return aligned_alloc(alignof(T), num * sizeof(T));
+            return aligned_alloc<T>(alignof(T), num * sizeof(T));
         }
 
         template<typename T = void>
