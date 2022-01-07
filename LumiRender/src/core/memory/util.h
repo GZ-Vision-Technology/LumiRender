@@ -35,6 +35,11 @@ namespace luminous {
             return new T[num];
         }
 
+        template<typename T>
+        void delete_array(T *ptr) noexcept {
+            delete[]ptr;
+        }
+
         template<typename T, typename... Args>
         LM_NODISCARD T *create(Args &&...args) {
             return construct_at(new T(), std::forward<Args>(args)...);

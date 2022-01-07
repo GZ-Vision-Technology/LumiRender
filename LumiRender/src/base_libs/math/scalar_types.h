@@ -173,9 +173,83 @@ namespace luminous {
             return v0;
         }
 
+        ND_XPU_INLINE int log2_int(uint32_t v) {
+#if defined(_MSC_VER)
+            unsigned long lz = 0;
+            if (_BitScanReverse(&lz, v)) {
+                return lz;
+            }
+            return 0;
+#else
+            return 31 - __builtin_clz(v);
+#endif
+        }
+
+        ND_XPU_INLINE int log2_int(int32_t v) {
+            return log2_int((uint32_t) v);
+        }
+
+        ND_XPU_INLINE int log2_int(uint64_t v) {
+#if defined(_MSC_VER)
+            unsigned long lz = 0;
+#if defined(_WIN64)
+            _BitScanReverse64(&lz, v);
+#else
+            if  (_BitScanReverse(&lz, v >> 32))
+                lz += 32;
+            else
+                _BitScanReverse(&lz, v & 0xffffffff);
+#endif
+            return lz;
+#else
+            return 63 - __builtin_clzll(v);
+#endif
+        }
+
+        ND_XPU_INLINE int log2_int(int64_t v) {
+            return log2_int((uint64_t) v);
+        }
+
         template<typename IntegerType>
         LM_XPU_INLINE IntegerType round_up(IntegerType x, IntegerType y) {
             return ((x + y - 1) / y) * y;
+        }
+
+        LM_XPU_INLINE int32_t round_up_POT(int32_t v) {
+            v--;
+            v |= v >> 1;
+            v |= v >> 2;
+            v |= v >> 4;
+            v |= v >> 8;
+            v |= v >> 16;
+            return v + 1;
+        }
+
+        template<typename T>
+        LM_XPU_INLINE T Mod(T a, T b) {
+            T result = a - (a / b) * b;
+            return (T) ((result < 0) ? result + b : result);
+        }
+
+        template<>
+        LM_XPU_INLINE float Mod(float a, float b) {
+            return std::fmodf(a, b);
+        }
+
+        template<>
+        LM_XPU_INLINE double Mod(double a, double b) {
+            return std::fmod(a, b);
+        }
+
+        LM_XPU_INLINE int64_t round_up_POT(int64_t v) {
+            v--;
+            v |= v >> 1;
+            v |= v >> 2;
+            v |= v >> 4;
+            v |= v >> 8;
+            v |= v >> 16;
+            v |= v >> 32;
+            return v + 1;
         }
 
         LM_XPU_INLINE bool is_power_of_two(uint32_t i) noexcept { return (i & (i - 1)) == 0; }

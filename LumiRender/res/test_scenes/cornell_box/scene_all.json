@@ -216,7 +216,7 @@
 //		"type" : "WavefrontPT",
 		"type" : "PT",
 		"param" : {
-			"max_depth" : 3,
+			"max_depth" : 10,
 			"rr_threshold" : 1
 		}
 	},
@@ -263,6 +263,7 @@
 	},
 	"output" : {
 		"fn":"cornell-box.png",
-		"frame_num" : 0
+		"dispatch_num" : 0,
+		"frame_per_dispatch": 1
 	}
 }

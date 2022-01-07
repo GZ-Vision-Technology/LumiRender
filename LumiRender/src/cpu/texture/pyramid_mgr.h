@@ -14,7 +14,7 @@ namespace luminous {
         template<typename T>
         class Pyramid {
         public:
-            using element_ty = std::unique_ptr<BlockedArray<T>>;
+            using element_ty = BlockedArray<T>;
             using vector_ty = std::vector<element_ty>;
         private:
             vector_ty _vector;
@@ -24,9 +24,13 @@ namespace luminous {
             LM_NODISCARD size_t size_in_bytes() const {
                 size_t ret = 0u;
                 for (const auto &elm : _vector) {
-                    ret += elm->size_in_bytes();
+                    ret += elm.size_in_bytes();
                 }
                 return ret;
+            }
+
+            void reserve(size_t num) {
+                _vector.reserve(num);
             }
 
             void add_layer(const element_ty &element) {
@@ -37,8 +41,8 @@ namespace luminous {
 
             void clear() { _vector.clear(); }
 
-            LM_NODISCARD static element_ty construct_layer(uint2 res, std::byte *data) {
-//                T * ptr = create<>()
+            void add_layer(uint2 res, const std::byte *data) {
+                _vector.template emplace_back(res.x, res.y, reinterpret_cast<T*>(data));
             }
         };
 

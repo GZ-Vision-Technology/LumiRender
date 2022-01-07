@@ -254,6 +254,20 @@ namespace luminous {
             return sin_x_over_x(Pi * x);
         }
 
+        ND_XPU_INLINE float lanczos(float x, float tau) {
+            x = std::abs(x);
+            if (x < 1e-5f) {
+                return 1;
+            }
+            if (x > 1.f) {
+                return 0;
+            }
+            x *= Pi;
+            float s = sin_x_over_x(x * tau);
+            float lanczos = sin_x_over_x(x);
+            return s * lanczos;
+        }
+
         ND_XPU_INLINE float windowed_sinc(float x, float radius, float tau) {
             if (std::abs(x) > radius) {
                 return 0;
