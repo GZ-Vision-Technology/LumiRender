@@ -30,6 +30,11 @@ namespace luminous {
                     T(std::forward<Args>(args)...);
         }
 
+        template<typename T = std::byte>
+        LM_NODISCARD T *new_array(size_t num) noexcept {
+            return new T[num];
+        }
+
         template<typename T, typename... Args>
         LM_NODISCARD T *create(Args &&...args) {
             return construct_at(new T(), std::forward<Args>(args)...);

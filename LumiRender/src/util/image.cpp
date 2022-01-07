@@ -16,6 +16,7 @@
 
 #include "ext/tinyexr/tinyexr.h"
 #include "core/logging.h"
+#include "core/memory/util.h"
 
 namespace luminous {
 
@@ -40,7 +41,7 @@ namespace luminous {
 
         Image Image::pure_color(float4 color, ColorSpace color_space) {
             constexpr auto pixel_size = PixelFormatImpl<float4>::pixel_size;
-            auto pixel = new std::byte[pixel_size];
+            auto pixel = new_array(pixel_size);
             auto dest = (float4 *) pixel;
             if (color_space == ColorSpace::LINEAR) {
                 *dest = color;
@@ -71,7 +72,7 @@ namespace luminous {
             PixelFormat pixel_format = detail::PixelFormatImpl<float4>::format;
             int pixel_size = detail::PixelFormatImpl<float4>::pixel_size;
             size_t size_in_bytes = pixel_num * pixel_size;
-            auto pixel = new std::byte[size_in_bytes];
+            auto pixel = new_array(size_in_bytes);
             float *src = rgb;
             auto dest = (float *) pixel;
             if (color_space == SRGB) {
@@ -139,7 +140,7 @@ namespace luminous {
                 case 1: {
                     using PixelType = float;
                     PixelFormat pixel_format = detail::PixelFormatImpl<PixelType>::format;
-                    PixelType *pixel = new PixelType[pixel_num];
+                    PixelType *pixel = new_array<PixelType>(pixel_num);
                     size_t size_in_bytes = pixel_num * detail::PixelFormatImpl<PixelType>::pixel_size;
                     if (color_space == SRGB) {
                         for (int i = 0; i < pixel_num; ++i) {
@@ -157,13 +158,15 @@ namespace luminous {
                 case 2: {
                     using PixelType = float2;
                     PixelFormat pixel_format = detail::PixelFormatImpl<PixelType>::format;
-                    PixelType *pixel = new PixelType[pixel_num];
+                    PixelType *pixel = new_array<PixelType>(pixel_num);
                     size_t size_in_bytes = pixel_num * detail::PixelFormatImpl<PixelType>::pixel_size;
                     if (color_space == SRGB) {
                         for (int i = 0; i < pixel_num; ++i) {
                             pixel[i] = make_float2(
-                                    Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[1])[i]) * scale.x,
-                                    Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[0])[i]) * scale.y);
+                                    Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[1])[i]) *
+                                    scale.x,
+                                    Spectrum::srgb_to_linear(reinterpret_cast<float *>(exr_image.images[0])[i]) *
+                                    scale.y);
                         }
                     } else {
                         for (int i = 0; i < pixel_num; ++i) {
@@ -177,7 +180,7 @@ namespace luminous {
                 case 3:
                 case 4: {
                     PixelFormat pixel_format = detail::PixelFormatImpl<float4>::format;
-                    auto pixel = new float4[pixel_num];
+                    float4 *pixel = new_array<float4>(pixel_num);
                     if (color_space == SRGB) {
                         for (int i = 0; i < pixel_num; ++i) {
                             pixel[i] = make_float4(
@@ -216,7 +219,7 @@ namespace luminous {
             size_t pixel_num = w * h;
             size_t size_in_bytes = pixel_size * pixel_num;
             uint2 resolution = make_uint2(w, h);
-            auto pixel = new std::byte[size_in_bytes];
+            auto pixel = new_array<std::byte>(size_in_bytes);
             uint8_t *src = rgba;
             auto dest = (uint32_t *) pixel;
             if (color_space == SRGB) {
@@ -331,7 +334,7 @@ namespace luminous {
             switch (_pixel_format) {
                 case PixelFormat::R8U: {
                     using TargetType = float;
-                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType)];
+                    auto pixel = new_array<std::byte>(pixel_num() * sizeof(TargetType));
                     auto dest = (TargetType *) pixel;
                     for (int i = 0; i < pixel_num(); ++i, ++dest) {
                         *dest = float(_pixel[i]) / 255.f;
@@ -342,7 +345,7 @@ namespace luminous {
                 }
                 case PixelFormat::RG8U: {
                     using TargetType = float2;
-                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType)];
+                    std::byte *pixel = new_array(pixel_num() * sizeof(TargetType));
                     auto src = (uint8_t *) _pixel.get();
                     auto dest = (TargetType *) pixel;
                     for (int i = 0; i < pixel_num(); ++i, ++dest, src += 2) {
@@ -354,7 +357,7 @@ namespace luminous {
                 }
                 case PixelFormat::RGBA8U: {
                     using TargetType = float4;
-                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType)];
+                    std::byte *pixel = new_array(pixel_num() * sizeof(TargetType));
                     auto src = (uint8_t *) _pixel.get();
                     auto dest = (TargetType *) pixel;
                     for (int i = 0; i < pixel_num(); ++i, ++dest, src += 4) {
@@ -379,7 +382,7 @@ namespace luminous {
             switch (_pixel_format) {
                 case PixelFormat::R32F: {
                     using TargetType = uint8_t;
-                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType)];
+                    std::byte *pixel = new_array(pixel_num() * sizeof(TargetType));
                     auto dest = (TargetType *) pixel;
                     auto src = (float *) _pixel.get();
                     for (int i = 0; i < pixel_num(); ++i, ++dest, ++src) {
@@ -391,7 +394,7 @@ namespace luminous {
                 }
                 case PixelFormat::RG32F: {
                     using TargetType = uint8_t;
-                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType) * channel_num()];
+                    std::byte *pixel = new_array(pixel_num() * sizeof(TargetType) * channel_num());
                     auto dest = (uint8_t *) pixel;
                     auto src = (float *) _pixel.get();
                     for (int i = 0; i < pixel_num(); ++i, dest += 2, src += 2) {
@@ -404,7 +407,7 @@ namespace luminous {
                 }
                 case PixelFormat::RGBA32F: {
                     using TargetType = uint32_t;
-                    auto pixel = new std::byte[pixel_num() * sizeof(TargetType)];
+                    std::byte *pixel = new_array(pixel_num() * sizeof(TargetType));
                     auto dest = (TargetType *) pixel;
                     auto src = (float4 *) _pixel.get();
                     for (int i = 0; i < pixel_num(); ++i, ++dest, ++src) {
