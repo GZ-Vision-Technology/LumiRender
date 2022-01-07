@@ -9,28 +9,13 @@
 #include "core/concepts.h"
 #include "base_libs/string_util.h"
 #include "core/logging.h"
+#include "util.h"
 #include "base_libs/math/common.h"
 
 
 namespace luminous {
     inline namespace core {
         static constexpr auto block_size = static_cast<size_t>(256ul * 1024ul);
-
-        template<typename T = void>
-        T *aligned_alloc(size_t alignment, size_t size) noexcept {
-            return reinterpret_cast<T *>(_aligned_malloc(size, alignment));
-        }
-
-        template<typename T = void>
-        void aligned_free(T *p) noexcept {
-            _aligned_free(p);
-        }
-
-        template<typename T, typename... Args>
-        constexpr T *construct_at(T *p, Args &&...args) {
-            return ::new(const_cast<void *>(static_cast<const volatile void *>(p)))
-                    T(std::forward<Args>(args)...);
-        }
 
         struct MemoryBlock {
         private:

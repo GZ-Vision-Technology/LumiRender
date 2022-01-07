@@ -21,7 +21,7 @@ namespace luminous {
             static_assert(!std::is_const_v<Ty>, "The C++ Standard forbids containers of const elements "
                                                 "because allocator<const T> is ill-formed.");
 
-            using _From_primary = Allocator;
+            using From_primary = Allocator;
 
             using value_type = Ty;
 

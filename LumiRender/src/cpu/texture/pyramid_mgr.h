@@ -37,8 +37,8 @@ namespace luminous {
 
             void clear() { _vector.clear(); }
 
-            LM_NODISCARD static element_ty construct_layer(uint2 res, std::byte *ptr) {
-                
+            LM_NODISCARD static element_ty construct_layer(uint2 res, std::byte *data) {
+//                T * ptr = create<>()
             }
         };
 
