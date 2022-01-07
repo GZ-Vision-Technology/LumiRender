@@ -101,6 +101,11 @@ namespace luminous {
                 int nLevels = 1 + log2_int(std::max(_resolution[0], _resolution[1]));
             }
 
+            template<typename T>
+            const T &texel(int level, int s, int t) const {
+
+            }
+
             static std::unique_ptr<ResampleWeight[]> resample_weights(int old_res, int new_res) {
                 std::unique_ptr<ResampleWeight[]> ret(new ResampleWeight[new_res]);
                 float filter_width = 2.0f;

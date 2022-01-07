@@ -33,6 +33,10 @@ namespace luminous {
                 _vector.reserve(num);
             }
 
+            void resize(size_t num) {
+                _vector.resize(num);
+            }
+
             void add_layer(const element_ty &element) {
                 _vector.push_back(element);
             }
@@ -41,8 +45,8 @@ namespace luminous {
 
             void clear() { _vector.clear(); }
 
-            void add_layer(uint2 res, const std::byte *data) {
-                _vector.template emplace_back(res.x, res.y, reinterpret_cast<T*>(data));
+            void set_layer(int level, BlockedArray<T> &&elm) {
+                _vector[level] = std::move(elm);
             }
         };
 
@@ -137,6 +141,17 @@ namespace luminous {
             LM_NODISCARD index_t add_pyramid(Pyramid<T> &&pyramid) {
                 PyramidVector<T> &Vector = get_vector<T>();
                 Vector.push_back(pyramid);
+                return Vector.size();
+            }
+
+            /**
+             * @tparam T
+             * @return pyramid index in
+             */
+            template<typename T>
+            LM_NODISCARD size_t generate_empty_pyramid() {
+                PyramidVector<T> &Vector = get_vector<T>();
+                Vector.template emplace_back();
                 return Vector.size();
             }
 
