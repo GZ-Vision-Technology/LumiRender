@@ -117,7 +117,7 @@ namespace luminous {
                 set = true;
             }
 
-            LM_XPU optional &operator=(optional &&v) {
+            LM_XPU optional &operator=(optional &&v)  noexcept {
                 reset();
                 if (v.has_value()) {
                     new(ptr()) T(std::move(v.value()));

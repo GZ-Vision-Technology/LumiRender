@@ -22,6 +22,16 @@ namespace luminous {
         private:
             luminous_fs::path _path;
             std::unique_ptr<const std::byte[]> _pixel;
+
+        private:
+            void _save_hdr(const luminous_fs::path &fn);
+
+            void _save_exr(const luminous_fs::path &fn);
+
+            /**
+             * ".bmp" or ".png" or ".tga" or ".jpg" or ".jpeg"
+             */
+            void _save_other(const luminous_fs::path &fn);
         public:
             Image() = default;
 
@@ -75,16 +85,7 @@ namespace luminous {
                 });
             }
 
-            void save_image(const luminous_fs::path &fn);
-
-            void save_hdr(const luminous_fs::path &fn);
-
-            void save_exr(const luminous_fs::path &fn);
-
-            /**
-             * ".bmp" or ".png" or ".tga" or ".jpg" or ".jpeg"
-             */
-            void save_other(const luminous_fs::path &fn);
+            void save(const luminous_fs::path &fn);
         };
     } // luminous::utility
 } // luminous

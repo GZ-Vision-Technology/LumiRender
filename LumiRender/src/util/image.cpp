@@ -246,26 +246,26 @@ namespace luminous {
             return Image(pixel_format, pixel, resolution, path);
         }
 
-        void Image::save_image(const luminous_fs::path &path) {
-            auto extension = to_lower(path.extension().string());
+        void Image::save(const luminous_fs::path &fn) {
+            auto extension = to_lower(fn.extension().string());
             if (extension == ".exr") {
-                save_exr(path);
+                _save_exr(fn);
             } else if (extension == ".hdr") {
-                save_hdr(path);
+                _save_hdr(fn);
             } else {
-                save_other(path);
+                _save_other(fn);
             }
-            LUMINOUS_INFO("save picture ", path);
+            LUMINOUS_INFO("save picture ", fn);
         }
 
-        void Image::save_hdr(const luminous_fs::path &path) {
+        void Image::_save_hdr(const luminous_fs::path &fn) {
             convert_to_32bit();
-            auto path_str = luminous_fs::absolute(path).string();
+            auto path_str = luminous_fs::absolute(fn).string();
             stbi_write_hdr(path_str.c_str(), _resolution.x, _resolution.y, 4,
                            reinterpret_cast<const float *>(_pixel.get()));
         }
 
-        void Image::save_exr(const luminous_fs::path &fn) {
+        void Image::_save_exr(const luminous_fs::path &fn) {
             convert_to_32bit();
             EXRHeader header;
             InitEXRHeader(&header);
@@ -311,9 +311,9 @@ namespace luminous {
             }
         }
 
-        void Image::save_other(const luminous_fs::path &path) {
-            auto path_str = luminous_fs::absolute(path).string();
-            auto extension = to_lower(path.extension().string());
+        void Image::_save_other(const luminous_fs::path &fn) {
+            auto path_str = luminous_fs::absolute(fn).string();
+            auto extension = to_lower(fn.extension().string());
             convert_to_8bit();
             if (extension == ".png") {
                 stbi_write_png(path_str.c_str(), _resolution.x, _resolution.y, 4, _pixel.get(), 0);

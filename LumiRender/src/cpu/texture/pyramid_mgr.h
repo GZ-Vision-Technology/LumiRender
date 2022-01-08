@@ -63,11 +63,11 @@ namespace luminous {
 
             template<typename T>
             LM_NODISCARD PyramidVector<T> &get_vector() {
-                if constexpr (std::is_same_v<T, char>) {
+                if constexpr (std::is_same_v<T, uchar>) {
                     return _pyramid_vector_uc;
-                } else if constexpr(std::is_same_v<T, char2>) {
+                } else if constexpr(std::is_same_v<T, uchar2>) {
                     return _pyramid_vector_uc2;
-                } else if constexpr(std::is_same_v<T, char4>) {
+                } else if constexpr(std::is_same_v<T, uchar4>) {
                     return _pyramid_vector_uc4;
                 } else if constexpr(std::is_same_v<T, float>) {
                     return _pyramid_vector_float;

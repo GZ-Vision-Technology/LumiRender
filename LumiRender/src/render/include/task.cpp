@@ -145,7 +145,7 @@ namespace luminous {
                 *fp = Spectrum::linear_to_srgb(val / val.w);
             });
             luminous_fs::path path = _context->scene_path() / _output_config.fn;
-            image.save_image(path);
+            image.save(path);
         }
 
         void Task::render_gui(double dt) {
