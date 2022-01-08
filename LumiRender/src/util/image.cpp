@@ -175,7 +175,7 @@ namespace luminous {
                                     reinterpret_cast<float *>(exr_image.images[0])[i] * scale.y);
                         }
                     }
-                    return Image(pixel_format, (std::byte *) pixel, resolution, fn);
+                    return {pixel_format, (std::byte *) pixel, resolution, fn};
                 }
                 case 3:
                 case 4: {
@@ -198,7 +198,7 @@ namespace luminous {
                                     1.f) * make_float4(scale, 1.f);
                         }
                     }
-                    return Image(pixel_format, (std::byte *) pixel, resolution, fn);
+                    return {pixel_format, (std::byte *) pixel, resolution, fn};
                 }
                 default:
                     LUMINOUS_ERROR("unknown")
@@ -243,34 +243,28 @@ namespace luminous {
                 }
             }
             free(rgba);
-            return Image(pixel_format, pixel, resolution, path);
+            return {pixel_format, pixel, resolution, path};
         }
 
         void Image::save(const luminous_fs::path &fn) {
-            auto extension = to_lower(fn.extension().string());
-            if (extension == ".exr") {
-                _save_exr(fn);
-            } else if (extension == ".hdr") {
-                save_hdr(fn, _pixel_format, resolution(), _pixel.get());
-            } else {
-                save_other(fn, _pixel_format, resolution(), _pixel.get());
-            }
-            LUMINOUS_INFO("save picture ", fn);
+            save_image(fn, _pixel_format, resolution(), _pixel.get());
         }
 
-        void Image::_save_exr(const luminous_fs::path &fn) {
-            _convert_to_32bit();
+        void Image::save_exr(const luminous_fs::path &fn, PixelFormat pixel_format,
+                             uint2 res, const std::byte *ptr) {
+            auto [format, pixel] = convert_to_32bit(pixel_format, ptr, res);
+
             EXRHeader header;
             InitEXRHeader(&header);
 
             EXRImage image;
             int c = 4;
             InitEXRImage(&image);
-            int count = _resolution.x * _resolution.y;
+            int count = res.x * res.y;
             std::array<float *, 4> image_ptr{nullptr, nullptr, nullptr, nullptr};
             image.num_channels = 4;
-            image.width = _resolution.x;
-            image.height = _resolution.y;
+            image.width = res.x;
+            image.height = res.y;
             image.images = reinterpret_cast<uint8_t **>(image_ptr.data());
 
             std::array<int, 4> pixel_types{TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT,
@@ -287,7 +281,7 @@ namespace luminous {
             image_ptr[1] = image_ptr[0] + count;
             image_ptr[2] = image_ptr[1] + count;
             image_ptr[3] = image_ptr[2] + count;
-            auto rgba = reinterpret_cast<const float4 *>(_pixel.get());
+            auto rgba = reinterpret_cast<const float4 *>(pixel);
             for (int i = 0u; i < count; i++) {
                 image_ptr[3][i] = rgba[i].x;
                 image_ptr[2][i] = rgba[i].y;
@@ -304,15 +298,9 @@ namespace luminous {
             }
         }
 
-        void Image::save_exr(const luminous_fs::path &fn, PixelFormat pixel_format,
-                             uint2 res, const std::byte *ptr) {
-
-        }
-
         void Image::save_hdr(const luminous_fs::path &fn, PixelFormat pixel_format,
                              uint2 res, const std::byte *ptr) {
             auto [format, pixel] = convert_to_32bit(pixel_format, ptr, res);
-            pixel_format = format;
             auto path_str = luminous_fs::absolute(fn).string();
             stbi_write_hdr(path_str.c_str(), res.x, res.y, 4,
                            reinterpret_cast<const float *>(pixel));
@@ -334,19 +322,6 @@ namespace luminous {
                 // jpg or jpeg
                 stbi_write_jpg(path_str.c_str(), res.x, res.y, 4, pixel, 100);
             }
-        }
-
-
-        void Image::_convert_to_32bit() {
-            auto [pixel_format, pixel] = convert_to_32bit(_pixel_format, _pixel.get(), resolution());
-            _pixel_format = pixel_format;
-            _pixel.reset(pixel);
-        }
-
-        void Image::_convert_to_8bit() {
-            auto [pixel_format, pixel] = convert_to_8bit(_pixel_format, _pixel.get(), resolution());
-            _pixel_format = pixel_format;
-            _pixel.reset(pixel);
         }
 
         void Image::save_image(const luminous_fs::path &fn, PixelFormat pixel_format,
@@ -460,5 +435,4 @@ namespace luminous {
             return {pixel_format, pixel};
         }
     }
-
 } // luminous

@@ -22,13 +22,6 @@ namespace luminous {
         private:
             luminous_fs::path _path;
             std::unique_ptr<const std::byte[]> _pixel;
-        private:
-            void _convert_to_32bit();
-
-            void _convert_to_8bit();
-
-            void _save_exr(const luminous_fs::path &fn);
-
         public:
             Image() = default;
 
