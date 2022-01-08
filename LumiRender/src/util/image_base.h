@@ -68,6 +68,18 @@ namespace luminous {
             }
         }
 
+        ND_XPU_INLINE bool is_8bit(PixelFormat pixel_format) {
+            return pixel_format == PixelFormat::R8U
+                   || pixel_format == PixelFormat::RG8U
+                   || pixel_format == PixelFormat::RGBA8U;
+        }
+
+        ND_XPU_INLINE bool is_32bit(PixelFormat pixel_format) {
+            return pixel_format == PixelFormat::R32F
+                   || pixel_format == PixelFormat::RG32F
+                   || pixel_format == PixelFormat::RGBA32F;
+        }
+
         ND_XPU_INLINE int channel_num(PixelFormat pixel_format) {
             if (pixel_format == PixelFormat::R8U || pixel_format == PixelFormat::R32F) { return 1u; }
             if (pixel_format == PixelFormat::RG8U || pixel_format == PixelFormat::RG32F) { return 2u; }
@@ -105,7 +117,9 @@ namespace luminous {
 
             LM_NODISCARD size_t pitch_byte_size() const { return _resolution.x * pixel_size(_pixel_format); }
 
-            LM_NODISCARD size_t size_in_bytes() const { return pixel_size(_pixel_format) * pixel_num() * channel_num(); }
+            LM_NODISCARD size_t size_in_bytes() const {
+                return pixel_size(_pixel_format) * pixel_num() * channel_num();
+            }
 
             LM_NODISCARD size_t pixel_num() const { return _resolution.x * _resolution.y; }
         };
