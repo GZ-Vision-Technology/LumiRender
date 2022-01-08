@@ -14,10 +14,10 @@ using namespace std;
 int main() {
 
     auto path = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\HelloWorld.png)";
-    auto path2 = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\png2hdr.hdr)";
+    auto path2 = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\test.hdr)";
 
-    auto image = Image::load(path2, LINEAR);
-    image.save(path);
+    auto image = Image::load(path, LINEAR);
+    image.save(path2);
 
 //    auto mipmap = MIPMap(image);
 

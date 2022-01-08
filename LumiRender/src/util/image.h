@@ -27,14 +27,7 @@ namespace luminous {
 
             void _convert_to_8bit();
 
-            void _save_hdr(const luminous_fs::path &fn);
-
             void _save_exr(const luminous_fs::path &fn);
-
-            /**
-             * ".bmp" or ".png" or ".tga" or ".jpg" or ".jpeg"
-             */
-            void _save_other(const luminous_fs::path &fn);
 
         public:
             Image() = default;

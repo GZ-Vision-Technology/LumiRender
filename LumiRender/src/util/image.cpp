@@ -251,18 +251,11 @@ namespace luminous {
             if (extension == ".exr") {
                 _save_exr(fn);
             } else if (extension == ".hdr") {
-                _save_hdr(fn);
+                save_hdr(fn, _pixel_format, resolution(), _pixel.get());
             } else {
-                _save_other(fn);
+                save_other(fn, _pixel_format, resolution(), _pixel.get());
             }
             LUMINOUS_INFO("save picture ", fn);
-        }
-
-        void Image::_save_hdr(const luminous_fs::path &fn) {
-            _convert_to_32bit();
-            auto path_str = luminous_fs::absolute(fn).string();
-            stbi_write_hdr(path_str.c_str(), _resolution.x, _resolution.y, 4,
-                           reinterpret_cast<const float *>(_pixel.get()));
         }
 
         void Image::_save_exr(const luminous_fs::path &fn) {
@@ -311,21 +304,38 @@ namespace luminous {
             }
         }
 
-        void Image::_save_other(const luminous_fs::path &fn) {
+        void Image::save_exr(const luminous_fs::path &fn, PixelFormat pixel_format,
+                             uint2 res, const std::byte *ptr) {
+
+        }
+
+        void Image::save_hdr(const luminous_fs::path &fn, PixelFormat pixel_format,
+                             uint2 res, const std::byte *ptr) {
+            auto [format, pixel] = convert_to_32bit(pixel_format, ptr, res);
+            pixel_format = format;
+            auto path_str = luminous_fs::absolute(fn).string();
+            stbi_write_hdr(path_str.c_str(), res.x, res.y, 4,
+                           reinterpret_cast<const float *>(pixel));
+        }
+
+        void Image::save_other(const luminous_fs::path &fn, PixelFormat pixel_format,
+                               uint2 res, const std::byte *ptr) {
             auto path_str = luminous_fs::absolute(fn).string();
             auto extension = to_lower(fn.extension().string());
-            _convert_to_8bit();
+            auto [format, pixel] = convert_to_8bit(pixel_format, ptr, res);
+            pixel_format = format;
             if (extension == ".png") {
-                stbi_write_png(path_str.c_str(), _resolution.x, _resolution.y, 4, _pixel.get(), 0);
+                stbi_write_png(path_str.c_str(), res.x, res.y, 4, pixel, 0);
             } else if (extension == ".bmp") {
-                stbi_write_bmp(path_str.c_str(), _resolution.x, _resolution.y, 4, _pixel.get());
+                stbi_write_bmp(path_str.c_str(), res.x, res.y, 4, pixel);
             } else if (extension == ".tga") {
-                stbi_write_tga(path_str.c_str(), _resolution.x, _resolution.y, 4, _pixel.get());
+                stbi_write_tga(path_str.c_str(), res.x, res.y, 4, pixel);
             } else {
                 // jpg or jpeg
-                stbi_write_jpg(path_str.c_str(), _resolution.x, _resolution.y, 4, _pixel.get(), 100);
+                stbi_write_jpg(path_str.c_str(), res.x, res.y, 4, pixel, 100);
             }
         }
+
 
         void Image::_convert_to_32bit() {
             auto [pixel_format, pixel] = convert_to_32bit(_pixel_format, _pixel.get(), resolution());
@@ -350,22 +360,6 @@ namespace luminous {
                 save_other(fn, pixel_format, res, ptr);
             }
             LUMINOUS_INFO("save picture ", fn);
-        }
-
-        void Image::save_exr(const luminous_fs::path &fn, PixelFormat pixel_format,
-                             uint2 res, const std::byte *ptr) {
-
-        }
-
-        void Image::save_hdr(const luminous_fs::path &fn, PixelFormat pixel_format,
-                             uint2 res, const std::byte *ptr) {
-
-        }
-
-        void Image::save_other(const luminous_fs::path &fn, PixelFormat pixel_format,
-                               uint2 res, const std::byte *ptr) {
-            auto path_str = luminous_fs::absolute(fn).string();
-            auto extension = to_lower(fn.extension().string());
         }
 
         std::pair<PixelFormat, const std::byte *>
