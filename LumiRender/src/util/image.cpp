@@ -296,6 +296,7 @@ namespace luminous {
             if (auto ret = SaveEXRImageToFile(&image, &header, fn.string().c_str(), &err); ret != TINYEXR_SUCCESS) {
                 LUMINOUS_EXCEPTION_IF("Failed to save texture as OpenEXR image: ", fn.string());
             }
+            delete_array(pixel);
         }
 
         void Image::save_hdr(const luminous_fs::path &fn, PixelFormat pixel_format,
@@ -304,6 +305,7 @@ namespace luminous {
             auto path_str = luminous_fs::absolute(fn).string();
             stbi_write_hdr(path_str.c_str(), res.x, res.y, 4,
                            reinterpret_cast<const float *>(pixel));
+            delete_array(pixel);
         }
 
         void Image::save_other(const luminous_fs::path &fn, PixelFormat pixel_format,
@@ -322,6 +324,7 @@ namespace luminous {
                 // jpg or jpeg
                 stbi_write_jpg(path_str.c_str(), res.x, res.y, 4, pixel, 100);
             }
+            delete_array(pixel);
         }
 
         void Image::save_image(const luminous_fs::path &fn, PixelFormat pixel_format,

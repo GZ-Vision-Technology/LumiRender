@@ -34,10 +34,6 @@ namespace luminous {
             template<typename T = std::byte>
             const T *pixel_ptr() const { return reinterpret_cast<const T *>(_pixel.get()); }
 
-            LM_NODISCARD bool is_8bit_image() const { return is_8bit(_pixel_format); }
-
-            LM_NODISCARD bool is_32bit_image() const { return is_32bit(_pixel_format); }
-
             static Image pure_color(float4 color, ColorSpace color_space);
 
             static Image load(const luminous_fs::path &fn, ColorSpace color_space, float3 scale = make_float3(1.f));
