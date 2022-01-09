@@ -35,7 +35,7 @@ namespace luminous {
             }
 
             static MIPMap create(Image &&image, ImageWrap image_wrap = ImageWrap::Repeat,
-                          float max_anisotropy = 8.f, bool tri_linear = true) {
+                                 float max_anisotropy = 8.f, bool tri_linear = true) {
                 image.convert_to_32bit_image();
                 return MIPMap(std::move(image), image_wrap, max_anisotropy, tri_linear);
             }
@@ -78,9 +78,31 @@ namespace luminous {
                 return val;
             }
 
-//            LM_NODISCARD float4 lookup(float2 st) const {
-//
-//            }
+            LM_NODISCARD float4 lookup(float2 st, float width = 0.f) const {
+                float4 ret = make_float4(0.f);
+                uint level = 0;
+                switch (pixel_format()) {
+                    case utility::PixelFormat::R8U:
+                    case utility::PixelFormat::RG8U:
+                    case utility::PixelFormat::RGBA8U:
+                        DCHECK(0);
+                    case utility::PixelFormat::R32F: {
+                        ret.x = texel<float>(level, st[0], st[1]);
+                        break;
+                    }
+                    case utility::PixelFormat::RG32F: {
+                        ret = make_float4(texel<float2>(level, st[0], st[1]),0,0);
+                        break;
+                    }
+                    case utility::PixelFormat::RGBA32F: {
+                        ret = make_float4(texel<float4>(level, st[0], st[1]));
+                        break;
+                    }
+                    default:
+                        break;
+                }
+                return ret;
+            }
 
             template<typename T>
             void gen_pyramid_index() {
@@ -175,10 +197,10 @@ namespace luminous {
                     parallel_for(tRes, [&](uint32_t t, uint32_t _) {
                         for (int s = 0; s < sRes; ++s) {
                             layer(s, t) = .25f *
-                                    (texel<T>(i - 1, 2 * s, 2 * t) +
-                                    texel<T>(i - 1, 2 * s + 1, 2 * t) +
-                                    texel<T>(i - 1, 2 * s, 2 * t + 1) +
-                                    texel<T>(i - 1, 2 * s + 1, 2 * t + 1));
+                                          (texel<T>(i - 1, 2 * s, 2 * t) +
+                                           texel<T>(i - 1, 2 * s + 1, 2 * t) +
+                                           texel<T>(i - 1, 2 * s, 2 * t + 1) +
+                                           texel<T>(i - 1, 2 * s + 1, 2 * t + 1));
                         }
                     }, 16);
                 }
@@ -205,12 +227,12 @@ namespace luminous {
                         t = Mod(t, layer.v_size());
                         break;
                     }
-                    case ImageWrap::Clamp:{
+                    case ImageWrap::Clamp: {
                         s = clamp(s, 0, layer.u_size() - 1);
                         t = clamp(t, 0, layer.v_size() - 1);
                         break;
                     }
-                    case ImageWrap::Black:{
+                    case ImageWrap::Black: {
                         static constexpr T black(0.f);
                         if (s < 0 || s >= layer.u_size() || t < 0 || t > layer.v_size()) {
                             return black;
