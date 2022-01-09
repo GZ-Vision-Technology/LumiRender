@@ -87,15 +87,15 @@ namespace luminous {
                     case utility::PixelFormat::RGBA8U:
                         DCHECK(0);
                     case utility::PixelFormat::R32F: {
-                        ret.x = texel<float>(level, st[0], st[1]);
+                        ret.x = texel<float>(level, st[0] * resolution()[0], st[1] * resolution()[1]);
                         break;
                     }
                     case utility::PixelFormat::RG32F: {
-                        ret = make_float4(texel<float2>(level, st[0], st[1]),0,0);
+                        ret = make_float4(texel<float2>(level, st[0] * resolution()[0], st[1] * resolution()[1]), 0, 0);
                         break;
                     }
                     case utility::PixelFormat::RGBA32F: {
-                        ret = make_float4(texel<float4>(level, st[0], st[1]));
+                        ret = make_float4(texel<float4>(level, st[0] * resolution()[0], st[1] * resolution()[1]));
                         break;
                     }
                     default:
