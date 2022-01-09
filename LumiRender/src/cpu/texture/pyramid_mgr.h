@@ -33,16 +33,20 @@ namespace luminous {
                 _vector.reserve(num);
             }
 
-            void resize(size_t num) {
-                _vector.resize(num);
+            LM_NODISCARD size_t levels() const { return _vector.size(); }
+
+            LM_NODISCARD element_ty &at(uint level) {
+                return _vector.at(level);
             }
 
-            LM_NODISCARD size_t levels() const { return _vector.size(); }
+            LM_NODISCARD const element_ty &at(uint level) const {
+                return _vector.at(level);
+            }
 
             void clear() { _vector.clear(); }
 
-            void set_layer(int level, BlockedArray<T> &&elm) {
-                _vector[level] = std::move(elm);
+            void emplace_back(uint2 res, const T *ptr = nullptr) {
+                _vector.emplace_back(res.x, res.y, ptr);
             }
         };
 
@@ -133,13 +137,6 @@ namespace luminous {
                 return ret;
             }
 
-            template<typename T>
-            LM_NODISCARD index_t add_pyramid(Pyramid<T> &&pyramid) {
-                PyramidVector<T> &Vector = get_vector<T>();
-                Vector.push_back(pyramid);
-                return Vector.size();
-            }
-
             /**
              * @tparam T
              * @return pyramid index
@@ -148,11 +145,16 @@ namespace luminous {
             LM_NODISCARD size_t generate_empty_pyramid() {
                 PyramidVector<T> &Vector = get_vector<T>();
                 Vector.emplace_back();
-                return Vector.size();
+                return Vector.size() - 1;
             }
 
             template<typename T>
             LM_NODISCARD const Pyramid<T> &get_pyramid(index_t index) const {
+                return get_vector<T>().at(index);
+            }
+
+            template<typename T>
+            LM_NODISCARD Pyramid<T> &get_pyramid(index_t index) {
                 return get_vector<T>().at(index);
             }
         };

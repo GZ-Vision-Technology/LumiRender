@@ -329,6 +329,7 @@ namespace luminous {
 
         void Image::save_image(const luminous_fs::path &fn, PixelFormat pixel_format,
                                uint2 res, const std::byte *ptr) {
+            DCHECK(ptr != nullptr);
             auto extension = to_lower(fn.extension().string());
             if (extension == ".exr") {
                 save_exr(fn, pixel_format, res, ptr);

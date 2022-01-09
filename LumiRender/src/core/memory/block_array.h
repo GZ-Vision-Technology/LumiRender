@@ -65,9 +65,10 @@ namespace luminous {
 
         private:
             T *_data;
-            const int _u_res, _v_res, _u_blocks;
+            const int _u_res{}, _v_res{}, _u_blocks{};
 
         public:
+            BlockedArray() = default;
   
             BlockedArray(int u_res, int v_res, const T *d = nullptr)
                     : _u_res(u_res),
