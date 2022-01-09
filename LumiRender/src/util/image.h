@@ -31,6 +31,10 @@ namespace luminous {
 
             Image(Image &&other) noexcept;
 
+            Image(const Image &other) = delete;
+
+            Image& operator = (const Image &other) = delete;
+
             template<typename T = std::byte>
             const T *pixel_ptr() const { return reinterpret_cast<const T *>(_pixel.get()); }
 
@@ -69,6 +73,10 @@ namespace luminous {
             }
 
             void save(const luminous_fs::path &fn);
+
+            void convert_to_8bit_image();
+
+            void convert_to_32bit_image();
 
             static std::pair<PixelFormat, const std::byte *> convert_to_32bit(PixelFormat pixel_format,
                                                                               const std::byte *ptr, uint2 res);

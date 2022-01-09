@@ -25,16 +25,24 @@ namespace luminous {
             ImageWrap _image_wrap{};
 
         public:
-            explicit MIPMap(const Image &image, ImageWrap image_wrap = ImageWrap::Repeat,
+            explicit MIPMap(Image &&image, ImageWrap image_wrap = ImageWrap::Repeat,
                             float max_anisotropy = 8.f, bool tri_linear = true)
                     : ImageBase(image.pixel_format(), image.resolution()),
                       _image_wrap(image_wrap),
                       _max_anisotropy(max_anisotropy),
                       _tri_linear(tri_linear) {
-                init(image);
+                init(std::move(image));
             }
 
-            void init(const Image &image) {
+            static MIPMap create(Image &&image, ImageWrap image_wrap = ImageWrap::Repeat,
+                          float max_anisotropy = 8.f, bool tri_linear = true) {
+                image.convert_to_32bit_image();
+                return MIPMap(std::move(image), image_wrap, max_anisotropy, tri_linear);
+            }
+
+            void init(Image &&image) {
+                DCHECK(is_32bit(pixel_format()));
+                // todo 8bit image is unsigned char,never have negative
                 switch (pixel_format()) {
 //                    case PixelFormat::R8U: {
 //                        gen_pyramid<uchar, float>(reinterpret_cast<const uchar *>(image.pixel_ptr()));
@@ -69,6 +77,10 @@ namespace luminous {
             LM_NODISCARD T clamp_pixel(T val) {
                 return val;
             }
+
+//            LM_NODISCARD float4 lookup(float2 st) const {
+//
+//            }
 
             template<typename T>
             void gen_pyramid_index() {

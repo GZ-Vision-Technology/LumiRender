@@ -327,6 +327,24 @@ namespace luminous {
             delete_array(pixel);
         }
 
+        void Image::convert_to_8bit_image() {
+            if (is_8bit(pixel_format())) {
+                return;
+            }
+            auto [new_format, ptr] = convert_to_32bit(pixel_format(), _pixel.get(), resolution());
+            _pixel_format = new_format;
+            _pixel.reset(ptr);
+        }
+
+        void Image::convert_to_32bit_image() {
+            if (is_32bit(pixel_format())) {
+                return;
+            }
+            auto [new_format, ptr] = convert_to_8bit(pixel_format(), _pixel.get(), resolution());
+            _pixel_format = new_format;
+            _pixel.reset(ptr);
+        }
+
         void Image::save_image(const luminous_fs::path &fn, PixelFormat pixel_format,
                                uint2 res, const std::byte *ptr) {
             DCHECK(ptr != nullptr);

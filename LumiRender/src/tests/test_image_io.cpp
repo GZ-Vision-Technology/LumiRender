@@ -13,13 +13,13 @@ using namespace std;
 
 int main() {
 
-    auto path = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\HelloWorldq.png)";
+    auto path = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\HelloWorld.png)";
     auto path2 = R"(E:\work\graphic\renderer\LumiRender\LumiRender\res\image\png2exr.hdr)";
 
-    auto image = Image::load(path2, LINEAR);
+    auto image = Image::load(path, LINEAR);
 //    image.save(path);
 
-    auto mipmap = MIPMap(image);
+    auto mipmap = MIPMap(move(image));
 
 
     return 0;
