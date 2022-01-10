@@ -82,6 +82,7 @@ namespace luminous {
             LM_NODISCARD float4 lookup(float2 st, float width = 0.f) const {
                 float4 ret = make_float4(0.f);
                 st.y = 1 - st.y;
+                //todo this is a bug for other level
                 uint level = 0;
                 switch (pixel_format()) {
                     case utility::PixelFormat::R8U:
