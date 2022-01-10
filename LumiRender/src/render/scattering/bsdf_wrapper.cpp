@@ -11,7 +11,7 @@ namespace luminous {
                                    TransportMode mode) const {
             float3 wo = to_local(wo_world);
             float3 wi = to_local(wi_world);
-            if (wo.z == 0) {
+            if (wo.z == 0 || dot(wo_world, _ng) * dot(wi_world, _ng) <= 0) {
                 return Spectrum{0};
             }
             return _bsdf.eval(wo, wi) * abs_dot(_shading_frame.z, wi_world);
@@ -22,6 +22,9 @@ namespace luminous {
                                TransportMode mode) const {
             float3 wo = to_local(wo_world);
             float3 wi = to_local(wi_world);
+            if (dot(wo_world, _ng) * dot(wi_world, _ng) <= 0) {
+                return 0.f;
+            }
             return _bsdf.PDF(wo, wi, sample_flags, mode);
         }
 
