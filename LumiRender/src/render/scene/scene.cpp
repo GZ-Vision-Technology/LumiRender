@@ -210,6 +210,9 @@ namespace luminous {
                         tc.fn = path.string();
                     }
                     Image image = Image::load(tc.fn, tc.color_space, tc.scale);
+                    if (_device->is_cpu()) {
+                        image.convert_to_32bit_image();
+                    }
                     DTexture &texture = _device->allocate_texture(image.pixel_format(), image.resolution());
                     texture.copy_from(image);
                     tc.handle = texture.tex_handle();

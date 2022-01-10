@@ -9,6 +9,11 @@
 #include "base_libs/math/common.h"
 #include "texture_base.h"
 
+#ifndef __CUDACC__
+
+#include "cpu/texture/mipmap.h"
+
+#endif
 
 namespace luminous {
     inline namespace render {
@@ -26,6 +31,16 @@ namespace luminous {
 
             ImageTexture(TypeHandle handle, PixelFormat pixel_format)
                     : TextureBase(pixel_format), _handle(handle) {}
+
+#ifndef __CUDACC__
+
+            LM_NODISCARD luminous::float4 eval_on_cpu(const TextureEvalContext &tec) const {
+                const MIPMap *mipmap = reinterpret_cast<const MIPMap *>(_handle);
+                return mipmap->lookup(tec.uv);
+//                return make_float4(1.0);
+            }
+
+#endif
 
             LM_ND_XPU luminous::float4 eval(const TextureEvalContext &tec) const {
 #ifdef IS_GPU_CODE
@@ -47,7 +62,7 @@ namespace luminous {
                     }
                 }
 #else
-                return make_float4(1.0);
+                return eval_on_cpu(tec);
 #endif
             }
 

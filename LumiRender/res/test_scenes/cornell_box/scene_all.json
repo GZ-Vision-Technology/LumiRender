@@ -190,20 +190,20 @@
 		}
 	],
 	"lights" : [
-//		{
-//			"type": "Envmap",
-//			"param": {
-//				"transform" : {
-//					"type" : "yaw_pitch",
-//					"param" : {
-//						"yaw" : 0,
-//						"pitch": 0,
-//						"position": [0,0,0]
-//					}
-//				},
-//				"key" : "envmap"
-//			}
-//		}
+		{
+			"type": "Envmap",
+			"param": {
+				"transform" : {
+					"type" : "yaw_pitch",
+					"param" : {
+						"yaw" : 0,
+						"pitch": 0,
+						"position": [0,0,0]
+					}
+				},
+				"key" : "envmap"
+			}
+		}
 //		{
 //			"type": "PointLight",
 //			"param": {

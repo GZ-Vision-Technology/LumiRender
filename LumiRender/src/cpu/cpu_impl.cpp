@@ -72,7 +72,8 @@ namespace luminous {
         }
 
         CPUTexture::CPUTexture(PixelFormat pixel_format, uint2 resolution)
-                : Impl(pixel_format, resolution) {
+                : Impl(pixel_format, resolution),
+                  _mipmap() {
             init();
         }
 
@@ -93,7 +94,7 @@ namespace luminous {
         }
 
         void CPUTexture::copy_from(const Image &image) {
-
+            _mipmap.init(image);
         }
 
         CPUTexture::~CPUTexture() {

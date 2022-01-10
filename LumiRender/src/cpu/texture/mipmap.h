@@ -34,7 +34,7 @@ namespace luminous {
             }
 
             explicit MIPMap(ImageWrap image_wrap = ImageWrap::Repeat,
-                   float max_anisotropy = 8.f, bool tri_linear = true)
+                            float max_anisotropy = 8.f, bool tri_linear = true)
                     : _image_wrap(image_wrap),
                       _max_anisotropy(max_anisotropy),
                       _tri_linear(tri_linear) {}
@@ -81,6 +81,7 @@ namespace luminous {
 
             LM_NODISCARD float4 lookup(float2 st, float width = 0.f) const {
                 float4 ret = make_float4(0.f);
+                st.y = 1 - st.y;
                 uint level = 0;
                 switch (pixel_format()) {
                     case utility::PixelFormat::R8U:
@@ -187,7 +188,7 @@ namespace luminous {
                 Pyramid<T> &pyramid = get_pyramid<T>(_pyramid_index);
                 pyramid.reserve(nLevels);
 
-                pyramid.emplace_back(_resolution, resampled_image.get());
+                pyramid.emplace_back(_resolution, resampled_image ? resampled_image.get() : img);
 
                 for (int i = 1; i < nLevels; ++i) {
                     uint sRes = std::max(1, pyramid.at(i - 1).u_size() / 2);

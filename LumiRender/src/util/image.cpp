@@ -331,7 +331,7 @@ namespace luminous {
             if (is_8bit(pixel_format())) {
                 return;
             }
-            auto [new_format, ptr] = convert_to_32bit(pixel_format(), _pixel.get(), resolution());
+            auto [new_format, ptr] = convert_to_8bit(pixel_format(), _pixel.get(), resolution());
             _pixel_format = new_format;
             _pixel.reset(ptr);
         }
@@ -340,7 +340,7 @@ namespace luminous {
             if (is_32bit(pixel_format())) {
                 return;
             }
-            auto [new_format, ptr] = convert_to_8bit(pixel_format(), _pixel.get(), resolution());
+            auto [new_format, ptr] = convert_to_32bit(pixel_format(), _pixel.get(), resolution());
             _pixel_format = new_format;
             _pixel.reset(ptr);
         }
