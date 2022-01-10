@@ -94,19 +94,20 @@
             "type": "MatteMaterial",
             "name": "matte_red",
             "param": {
-                "color": "normal_map"
-//                "color": [
-//                    0.6299999952316284,
-//                    0.06499999761581421,
-//                    0.05000000074505806,
-//                    1.0
-//                ]
+//                "normal": "normal_map",
+                "color": [
+                    0.6299999952316284,
+                    0.06499999761581421,
+                    0.05000000074505806,
+                    1.0
+                ]
             }
         },
         {
             "type": "MatteMaterial",
             "name": "matte_green",
             "param": {
+                "normal" : "normal_map",
                 "color": [
                     0.14000000059604645,
                     0.44999998807907104,

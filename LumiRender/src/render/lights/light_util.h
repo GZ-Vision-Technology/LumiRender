@@ -19,7 +19,7 @@ namespace luminous {
             Infinite
         };
 
-        enum class LightSamplingMode : uint8_t  {
+        enum class LightSamplingMode : uint8_t {
             WithMIS,
             WithoutMIS
         };
@@ -30,6 +30,9 @@ namespace luminous {
 
             LM_XPU explicit LightSampleContext(const Interaction &it)
                     : SurfacePoint(it), ns(it.g_uvn.normal()) {}
+
+            LM_XPU explicit LightSampleContext(const SurfaceInteraction &it)
+                    : SurfacePoint(it), ns(it.s_uvn.normal()) {}
 
             LM_XPU LightSampleContext(float3 p, float3 ng, float3 ns)
                     : SurfacePoint{p, ng}, ns(ns) {}
