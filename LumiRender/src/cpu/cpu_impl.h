@@ -6,6 +6,7 @@
 #pragma once
 
 #include "core/backend/device.h"
+#include "texture/mipmap.h"
 
 namespace luminous {
 
@@ -44,7 +45,7 @@ namespace luminous {
 
         class CPUTexture : public DTexture::Impl {
         private:
-            uint64_t _handle{};
+            MIPMap _mipmap{};
         public:
             CPUTexture(PixelFormat pixel_format, uint2 resolution);
 

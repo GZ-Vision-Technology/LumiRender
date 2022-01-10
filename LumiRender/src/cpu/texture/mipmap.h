@@ -25,24 +25,25 @@ namespace luminous {
             ImageWrap _image_wrap{};
 
         public:
-            explicit MIPMap(Image &&image, ImageWrap image_wrap = ImageWrap::Repeat,
+            explicit MIPMap(const Image &image, ImageWrap image_wrap = ImageWrap::Repeat,
                             float max_anisotropy = 8.f, bool tri_linear = true)
-                    : ImageBase(image.pixel_format(), image.resolution()),
-                      _image_wrap(image_wrap),
+                    : _image_wrap(image_wrap),
                       _max_anisotropy(max_anisotropy),
                       _tri_linear(tri_linear) {
-                init(std::move(image));
+                init(image);
             }
 
-            static MIPMap create(Image &&image, ImageWrap image_wrap = ImageWrap::Repeat,
-                                 float max_anisotropy = 8.f, bool tri_linear = true) {
-                image.convert_to_32bit_image();
-                return MIPMap(std::move(image), image_wrap, max_anisotropy, tri_linear);
-            }
+            explicit MIPMap(ImageWrap image_wrap = ImageWrap::Repeat,
+                   float max_anisotropy = 8.f, bool tri_linear = true)
+                    : _image_wrap(image_wrap),
+                      _max_anisotropy(max_anisotropy),
+                      _tri_linear(tri_linear) {}
 
-            void init(Image &&image) {
+            void init(const Image &image) {
+                _pixel_format = image.pixel_format();
+                _resolution = image.resolution();
                 DCHECK(is_32bit(pixel_format()));
-                // todo 8bit image is unsigned char,never have negative
+                // todo 8bit image is unsigned char,never have negative value,but lancoz filter have negative value
                 switch (pixel_format()) {
 //                    case PixelFormat::R8U: {
 //                        gen_pyramid<uchar, float>(reinterpret_cast<const uchar *>(image.pixel_ptr()));
@@ -87,15 +88,15 @@ namespace luminous {
                     case utility::PixelFormat::RGBA8U:
                         DCHECK(0);
                     case utility::PixelFormat::R32F: {
-                        ret.x = texel<float>(level, st[0] * resolution()[0], st[1] * resolution()[1]);
+                        ret.x = texel<float>(level, int2(st * float2(resolution())));
                         break;
                     }
                     case utility::PixelFormat::RG32F: {
-                        ret = make_float4(texel<float2>(level, st[0] * resolution()[0], st[1] * resolution()[1]), 0, 0);
+                        ret = make_float4(texel<float2>(level, int2(st * float2(resolution()))), 0, 0);
                         break;
                     }
                     case utility::PixelFormat::RGBA32F: {
-                        ret = make_float4(texel<float4>(level, st[0] * resolution()[0], st[1] * resolution()[1]));
+                        ret = make_float4(texel<float4>(level, int2(st * float2(resolution()))));
                         break;
                     }
                     default:
@@ -217,7 +218,12 @@ namespace luminous {
             }
 
             template<typename T>
-            LM_NODISCARD const T &texel(int level, int s, int t) const {
+            LM_NODISCARD const T &texel(uint level, int2 st) const {
+                return texel<T>(level, st[0], st[1]);
+            }
+
+            template<typename T>
+            LM_NODISCARD const T &texel(uint level, int s, int t) const {
                 const Pyramid<T> &pyramid = get_pyramid<T>(_pyramid_index);
                 DCHECK(level < pyramid.levels());
                 const BlockedArray<T> &layer = pyramid.at(level);

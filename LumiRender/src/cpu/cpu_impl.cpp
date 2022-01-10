@@ -81,7 +81,7 @@ namespace luminous {
         }
 
         uint64_t CPUTexture::tex_handle() const {
-            return _handle;
+            return reinterpret_cast<uint64_t>(&_mipmap);
         }
 
         void CPUTexture::copy_from(Dispatcher &dispatcher, const Image &image) {
