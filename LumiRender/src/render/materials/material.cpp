@@ -29,13 +29,13 @@ namespace luminous {
 
             Frame shading_frame = Frame::from_xz(ctx.dp_dus, ctx.ns);
 
-            normal = shading_frame.to_world(normal);
-            if (dot(normal, ctx.ng) < 0) {
+            float3 world_normal = shading_frame.to_world(normal);
+            if (dot(world_normal, ctx.ns) < 0) {
                 return ctx;
             }
-            ctx.ns = normal;
+            ctx.ns = normalize(world_normal);
             float3 dp_dvs = cross(ctx.dp_dus, ctx.ns);
-            ctx.dp_dus = cross(dp_dvs, ctx.ns);
+            ctx.dp_dus = normalize(cross(dp_dvs, ctx.ns));
             return ctx;
         }
 

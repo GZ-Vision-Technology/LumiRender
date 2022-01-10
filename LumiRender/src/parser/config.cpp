@@ -39,7 +39,9 @@ namespace luminous {
 
         void MaterialConfig::fill_tex_configs(vector<TextureConfig> &tex_configs) {
             // common data
-            fill_tex_idx_by_name(tex_configs, normal_tex, false, false);
+            if (!normal_tex.name.empty()) {
+                fill_tex_idx_by_name(tex_configs, normal_tex, false, false);
+            }
 
             if (type() == full_type("AssimpMaterial")) {
                 int64_t index = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
