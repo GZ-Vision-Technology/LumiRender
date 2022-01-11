@@ -28,6 +28,7 @@ namespace luminous {
                                       aiProcess_ImproveCacheLocality |
                                       aiProcess_FixInfacingNormals |
                                       aiProcess_FindInvalidData |
+                                      aiProcess_FindDegenerates |
                                       aiProcess_GenUVCoords |
                                       aiProcess_TransformUVCoords |
                                       aiProcess_OptimizeMeshes |

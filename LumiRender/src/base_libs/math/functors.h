@@ -184,24 +184,6 @@ namespace luminous {
         }
 
         template<typename T, uint N>
-        LM_ND_XPU constexpr auto safe_normalize(Vector <T, N> u) noexcept {
-            if constexpr(N == 2) {
-                if (is_zero(u)) {
-                    return Vector<T, N>(1, 0);
-                }
-            } else if constexpr(N == 3) {
-                if (is_zero(u)) {
-                    return Vector<T, N>(1, 0, 0);
-                }
-            } else {
-                if (is_zero(u)) {
-                    return Vector<T, N>(1, 0, 0, 0);
-                }
-            }
-            return normalize(u);
-        }
-
-        template<typename T, uint N>
         LM_ND_XPU constexpr auto distance(Vector <T, N> u, Vector <T, N> v) noexcept {
             return length(u - v);
         }

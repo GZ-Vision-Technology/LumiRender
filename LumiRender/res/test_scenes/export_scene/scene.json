@@ -423,111 +423,111 @@
                 }
             }
         },
+        {
+            "name": "bunny",
+            "type": "model",
+            "param": {
+                "fn": "bunny.obj",
+                "subdiv_level" : 0,
+                "material" : "fake_metal",
+                "transform": {
+                    "type": "yaw_pitch",
+                    "param": {
+                        "yaw" : 180,
+                        "pitch": 0,
+                        "position": [-0.1,0,0.1]
+                    }
+                }
+            }
+        },
 //        {
-//            "name": "bunny",
+//            "name": "Cube",
 //            "type": "model",
 //            "param": {
-//                "fn": "bunny.obj",
-//                "subdiv_level" : 0,
-//                "material" : "fake_metal",
+//                "fn": "meshes/Cube.ply",
+//                "subdiv_level": 0,
+////                "material": "glass_white",
+//                "material": "matte_white",
+////                "material": "mirror_white",
+////                "material": "fake_metal",
+////                "material": "metal",
 //                "transform": {
-//                    "type": "yaw_pitch",
+//                    "type": "matrix4x4",
 //                    "param": {
-//                        "yaw" : 180,
-//                        "pitch": 0,
-//                        "position": [-0.1,0,0.1]
+//                        "matrix4x4": [
+//                            [
+//                                0.2897777557373047,
+//                                -4.754429065187201e-18,
+//                                -0.07764571905136108,
+//                                0.0
+//                            ],
+//                            [
+//                                0.07764571905136108,
+//                                1.7743770051389686e-17,
+//                                0.2897777557373047,
+//                                0.0
+//                            ],
+//                            [
+//                                0.0,
+//                                0.30000001192092896,
+//                                -1.8369702717156673e-17,
+//                                0.0
+//                            ],
+//                            [
+//                                0.3500000059604645,
+//                                0.301000001192092896,
+//                                -0.3499999940395355,
+//                                1.0
+//                            ]
+//                        ]
 //                    }
 //                }
 //            }
 //        },
-        {
-            "name": "Cube",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Cube.ply",
-                "subdiv_level": 0,
-//                "material": "glass_white",
-                "material": "matte_white",
-//                "material": "mirror_white",
-//                "material": "fake_metal",
-//                "material": "metal",
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                0.2897777557373047,
-                                -4.754429065187201e-18,
-                                -0.07764571905136108,
-                                0.0
-                            ],
-                            [
-                                0.07764571905136108,
-                                1.7743770051389686e-17,
-                                0.2897777557373047,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.30000001192092896,
-                                -1.8369702717156673e-17,
-                                0.0
-                            ],
-                            [
-                                0.3500000059604645,
-                                0.301000001192092896,
-                                -0.3499999940395355,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Cube.001",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Cube.001.ply",
-                "subdiv_level": 0,
-//                "material": "glass_white",
-                "material": "matte_white",
-//                "material": "mirror_white",
-//                "material": "fake_metal",
-//                "material": "metal",
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                0.2819077968597412,
-                                6.282808120100845e-18,
-                                0.10260604321956635,
-                                0.0
-                            ],
-                            [
-                                -0.10260604321956635,
-                                1.7261874053948218e-17,
-                                0.2819077968597412,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.6000000238418579,
-                                -3.6739405434313346e-17,
-                                0.0
-                            ],
-                            [
-                                -0.35000000059604645,
-                                0.60100000238418579,
-                                0.2000000029802322,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
+//        {
+//            "name": "Cube.001",
+//            "type": "model",
+//            "param": {
+//                "fn": "meshes/Cube.001.ply",
+//                "subdiv_level": 0,
+////                "material": "glass_white",
+//                "material": "matte_white",
+////                "material": "mirror_white",
+////                "material": "fake_metal",
+////                "material": "metal",
+//                "transform": {
+//                    "type": "matrix4x4",
+//                    "param": {
+//                        "matrix4x4": [
+//                            [
+//                                0.2819077968597412,
+//                                6.282808120100845e-18,
+//                                0.10260604321956635,
+//                                0.0
+//                            ],
+//                            [
+//                                -0.10260604321956635,
+//                                1.7261874053948218e-17,
+//                                0.2819077968597412,
+//                                0.0
+//                            ],
+//                            [
+//                                0.0,
+//                                0.6000000238418579,
+//                                -3.6739405434313346e-17,
+//                                0.0
+//                            ],
+//                            [
+//                                -0.35000000059604645,
+//                                0.60100000238418579,
+//                                0.2000000029802322,
+//                                1.0
+//                            ]
+//                        ]
+//                    }
+//                }
+//            }
+//        },
         {
             "name": "light_Area",
             "type": "quad",
