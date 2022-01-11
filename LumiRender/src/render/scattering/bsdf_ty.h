@@ -55,16 +55,21 @@ namespace luminous {
                 return std::get<0>(_bxdfs).spectrum();
             }
 
+            template<typename T, int index>
+            LM_XPU void fill_BxDF(T bxdf) {
+                using Type = std::tuple_element_t<index, Tuple>;
+                if constexpr(std::is_same_v<Type, T>) {
+                    std::get<index>(_bxdfs) = bxdf;
+                } else if constexpr(index < size) {
+                    fill_BxDF<T, index + 1>(bxdf);
+                } else {
+                    static_assert(false, "!");
+                }
+            }
+
             template<typename T>
             LM_XPU void add_BxDF(T bxdf) {
-                for_each([&](auto &bxdf_ref, int index) {
-                    if constexpr(std::is_same_v<decltype(bxdf_ref), T>) {
-                        std::get<index>(_bxdfs) = bxdf;
-                        return false;
-                    } else {
-                        return true;
-                    }
-                });
+                fill_BxDF<T, 0>(bxdf);
             }
 
             template<typename T>
