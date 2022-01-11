@@ -78,6 +78,25 @@
     ],
     "materials": [
         {
+            "type": "DisneyMaterial",
+            "name":"disney",
+            "param" : {
+                "color": [1,1,1,0],
+                "eta": 1.5,
+                "metallic": 0.5,
+                "specular_tint": 0.5,
+                "anisotropic": 0.5,
+                "sheen": 0.5,
+                "sheen_tint": 0.5,
+                "clearcoat": 0.5,
+                "clearcoat_gloss": 0.5,
+                "spec_trans": 0.5,
+                "flatness": 0.5,
+                "diff_trans": 0.5,
+                "thin": false
+            }
+        },
+        {
             "type": "MatteMaterial",
             "name": "matte_white",
             "param": {
@@ -165,7 +184,7 @@
                     1,
                     0
                 ],
-                "roughness" : [0.00,0.00],
+                "roughness" : [0.002,0.002],
                 "eta": 1.9
             }
         },
@@ -429,7 +448,11 @@
             "param": {
                 "fn": "bunny.obj",
                 "subdiv_level" : 0,
-                "material" : "fake_metal",
+//                "material": "glass_white",
+//                "material": "matte_white",
+                //                "material": "mirror_white",
+                //                "material": "fake_metal",
+                                "material": "metal",
                 "transform": {
                     "type": "trs",
                     "param": {
@@ -656,7 +679,7 @@
     },
     "output" : {
         "fn":"cornell-box.png",
-        "dispatch_num" : 0,
+        "dispatch_num" : 4096,
         "frame_per_dispatch": 1
     }
 }

@@ -27,6 +27,8 @@ namespace luminous {
 
             PixelInfo pixel_info;
 
+            float eta_scale = 1.f;
+
             if (found_intersection) {
                 si = hit_ctx.compute_surface_interaction(ray);
                 L += throughput * si.Le(-ray.direction(), scene_data);
@@ -62,7 +64,13 @@ namespace luminous {
 
                 throughput *= bsdf_ei;
                 L += Ld * throughput;
-                float max_comp = throughput.max_comp();
+
+                if (is_transmissive(NEE_data.bxdf_flags)) {
+                    eta_scale *= dot(si.wo, si.g_uvn.normal()) > 0 ? sqr(NEE_data.eta) : sqr(rcp(NEE_data.eta));
+                }
+
+                Spectrum rr_throughput = throughput * eta_scale;
+                float max_comp = rr_throughput.max_comp();
                 if (max_comp < rr_threshold && bounces >= min_depth) {
                     float q = min(0.95f, max_comp);
                     if (q < sampler.next_1d()) {

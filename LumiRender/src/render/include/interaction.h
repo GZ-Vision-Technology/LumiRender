@@ -263,6 +263,8 @@ namespace luminous {
             Spectrum bsdf_val{0.f};
             float bsdf_PDF{-1.f};
             float3 wi{0.f};
+            BxDFFlags bxdf_flags{Unset};
+            float eta{1.f};
             SurfaceInteraction next_si;
             bool found_intersection{false};
             bool debug = false;

@@ -321,11 +321,11 @@ namespace luminous {
             ret.set_full_type(type);
             auto param = ps["param"];
             ret.normal_tex = process_attr(param["normal"], scene_graph);
-            ret.color_tex = process_attr(param["color"], scene_graph);
+            ret.color_tex = process_attr(param["color"], scene_graph, make_float4(1.f));
             if (type == "MatteMaterial") {
                 ret.sigma = param["sigma"].as_float(0.f);
             } else if (type == "GlassMaterial") {
-                ret.eta_tex = process_attr(param["eta"], scene_graph);
+                ret.eta_tex = process_attr(param["eta"], scene_graph, make_float4(1.5));
                 ret.roughness_tex = process_attr(param["roughness"], scene_graph);
                 ret.remapping_roughness = param["remapping_roughness"].as_bool(false);
             } else if (type == "FakeMetalMaterial") {
@@ -336,6 +336,19 @@ namespace luminous {
                 ret.remapping_roughness = param["remapping_roughness"].as_bool(false);
                 ret.eta_tex = process_attr(param["eta"], scene_graph, make_float4(0.19999069, 0.922084629, 1.09987593, 0));
                 ret.k_tex = process_attr(param["k"], scene_graph, make_float4(3.90463543, 2.44763327, 2.13765264, 0));
+            } else if (type == "DisneyMaterial") {
+                ret.metallic_tex = process_attr(param["metallic"], scene_graph, make_float4(0.f));
+                ret.specular_tint_tex = process_attr(param["specular_tint"], scene_graph, make_float4(0.f));
+                ret.anisotropic_tex = process_attr(param["anisotropic"], scene_graph, make_float4(0.f));
+                ret.sheen_tex = process_attr(param["sheen"], scene_graph, make_float4(0.f));
+                ret.sheen_tint_tex = process_attr(param["sheen_tint"], scene_graph, make_float4(0.f));
+                ret.clearcoat_tex = process_attr(param["clearcoat"], scene_graph, make_float4(0.f));
+                ret.clearcoat_gloss_tex = process_attr(param["clearcoat_gloss"], scene_graph, make_float4(0.f));
+                ret.spec_trans_tex = process_attr(param["spec_trans"], scene_graph, make_float4(0.f));
+                ret.scatter_distance_tex = process_attr(param["scatter_distance"], scene_graph, make_float4(0.f));
+                ret.flatness_tex = process_attr(param["flatness"], scene_graph, make_float4(0.f));
+                ret.diff_trans_tex = process_attr(param["diff_trans"], scene_graph, make_float4(0.f));
+                ret.thin = param["thin"].as_bool(false);
             }
             ret.name = ps["name"].as_string();
             return ret;
