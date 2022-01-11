@@ -81,20 +81,25 @@
             "type": "DisneyMaterial",
             "name":"disney",
             "param" : {
-                "color": [1,1,1,0],
-                "eta": 1.56,
-                "roughness":0.567,
-                "metallic": 0.56,
-                "specular_tint": 0.39,
-                "anisotropic": 0.45,
-                "sheen": 0.36,
-                "sheen_tint": 0.15,
-                "clearcoat": 0.59,
-                "clearcoat_gloss": 0.38,
-                "spec_trans": 0.16,
-                "flatness": 0.98,
-                "scatter_distance": [0,0,0],
-                "diff_trans": 0.11,
+                "color": [
+                    0.7250000238418579,
+                    0.7099999785423279,
+                    0.6800000071525574,
+                    1.0
+                ],
+//                "eta": 1.56,
+//                "roughness":0.567,
+//                "metallic": 0.56,
+//                "specular_tint": 0.39,
+//                "anisotropic": 0.45,
+//                "sheen": 0.36,
+//                "sheen_tint": 0.15,
+//                "clearcoat": 0.59,
+//                "clearcoat_gloss": 0.38,
+//                "spec_trans": 0.16,
+//                "flatness": 0.98,
+//                "scatter_distance": [0,0,0],
+//                "diff_trans": 0.11,
                 "thin": false
             }
         },
@@ -102,7 +107,7 @@
             "type": "MatteMaterial",
             "name": "matte_white",
             "param": {
-                "normal" : "normal_map",
+//                "normal" : "normal_map",
                 "color": [
                     0.7250000238418579,
                     0.7099999785423279,
@@ -115,7 +120,7 @@
             "type": "MatteMaterial",
             "name": "matte_red",
             "param": {
-                "normal": "normal_map",
+//                "normal": "normal_map",
                 "color": [
                     0.6299999952316284,
                     0.06499999761581421,
@@ -128,7 +133,7 @@
             "type": "MatteMaterial",
             "name": "matte_green",
             "param": {
-                "normal" : "normal_map",
+//                "normal" : "normal_map",
                 "color": [
                     0.14000000059604645,
                     0.44999998807907104,
@@ -517,9 +522,10 @@
             "param": {
                 "fn": "meshes/Cube.001.ply",
                 "subdiv_level": 0,
+//                "material": "disney",
 //                "material": "glass_white",
-//                "material": "matte_white",
-                "material": "mirror_white",
+                "material": "matte_white",
+//                "material": "mirror_white",
 //                "material": "fake_metal",
 //                "material": "metal",
                 "transform": {

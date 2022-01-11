@@ -28,6 +28,9 @@ namespace luminous {
 
         void MaterialConfig::fill_tex_idx_by_name(vector<TextureConfig> &tex_configs, TextureConfig &tc,
                                                   bool force, bool check) {
+            if (tc.name.empty()) {
+                return;
+            }
             auto idx = lstd::find_index_if(tex_configs, [&](const TextureConfig &tex_config) {
                 return tex_config.name == tc.name;
             });
