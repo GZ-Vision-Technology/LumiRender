@@ -302,6 +302,7 @@ namespace luminous {
         TextureConfig process_attr(const ParameterSet &ps, SceneGraph *scene_graph, float4 default_val = make_float4(1.f)) {
             TextureConfig ret;
             if (ps.data().empty()) {
+                ret.val = default_val;
                 return ret;
             }
             if (ps.data().is_string()) {
@@ -338,8 +339,10 @@ namespace luminous {
                 ret.k_tex = process_attr(param["k"], scene_graph, make_float4(3.90463543, 2.44763327, 2.13765264, 0));
             } else if (type == "DisneyMaterial") {
                 ret.metallic_tex = process_attr(param["metallic"], scene_graph, make_float4(0.f));
+                ret.eta_tex = process_attr(param["eta"], scene_graph, make_float4(1.5));
                 ret.specular_tint_tex = process_attr(param["specular_tint"], scene_graph, make_float4(0.f));
-                ret.anisotropic_tex = process_attr(param["anisotropic"], scene_graph, make_float4(0.f));
+                ret.roughness_tex = process_attr(param["roughness"], scene_graph, make_float4(0.5));
+                ret.anisotropic_tex = process_attr(param["anisotropic"], scene_graph, make_float4(1.f));
                 ret.sheen_tex = process_attr(param["sheen"], scene_graph, make_float4(0.f));
                 ret.sheen_tint_tex = process_attr(param["sheen_tint"], scene_graph, make_float4(0.f));
                 ret.clearcoat_tex = process_attr(param["clearcoat"], scene_graph, make_float4(0.f));

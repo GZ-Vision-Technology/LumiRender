@@ -82,17 +82,19 @@
             "name":"disney",
             "param" : {
                 "color": [1,1,1,0],
-                "eta": 1.5,
-                "metallic": 0.5,
-                "specular_tint": 0.5,
-                "anisotropic": 0.5,
-                "sheen": 0.5,
-                "sheen_tint": 0.5,
-                "clearcoat": 0.5,
-                "clearcoat_gloss": 0.5,
-                "spec_trans": 0.5,
-                "flatness": 0.5,
-                "diff_trans": 0.5,
+                "eta": 1.56,
+                "roughness":0.567,
+                "metallic": 0.56,
+                "specular_tint": 0.39,
+                "anisotropic": 0.45,
+                "sheen": 0.36,
+                "sheen_tint": 0.15,
+                "clearcoat": 0.59,
+                "clearcoat_gloss": 0.38,
+                "spec_trans": 0.16,
+                "flatness": 0.98,
+                "scatter_distance": [0,0,0],
+                "diff_trans": 0.11,
                 "thin": false
             }
         },
@@ -442,33 +444,35 @@
                 }
             }
         },
-        {
-            "name": "bunny",
-            "type": "model",
-            "param": {
-                "fn": "bunny.obj",
-                "subdiv_level" : 0,
-//                "material": "glass_white",
-//                "material": "matte_white",
-                //                "material": "mirror_white",
-                //                "material": "fake_metal",
-                                "material": "metal",
-                "transform": {
-                    "type": "trs",
-                    "param": {
-                        "t" : [0.3,0.6,-0.3],
-                        "r": [0,1,0,180],
-                        "s": [0.3,0.3,0.3]
-                    }
-                }
-            }
-        },
+//        {
+//            "name": "bunny",
+//            "type": "model",
+//            "param": {
+//                "fn": "bunny.obj",
+//                "subdiv_level" : 0,
+//                "material": "disney",
+////                "material": "glass_white",
+////                "material": "matte_white",
+//                //                "material": "mirror_white",
+//                //                "material": "fake_metal",
+////                                "material": "metal",
+//                "transform": {
+//                    "type": "trs",
+//                    "param": {
+//                        "t" : [0.3,0.6,-0.3],
+//                        "r": [0,1,0,180],
+//                        "s": [0.3,0.3,0.3]
+//                    }
+//                }
+//            }
+//        },
         {
             "name": "Cube",
             "type": "model",
             "param": {
                 "fn": "meshes/Cube.ply",
                 "subdiv_level": 0,
+//                "material": "disney",
 //                "material": "glass_white",
                 "material": "matte_white",
 //                "material": "mirror_white",
