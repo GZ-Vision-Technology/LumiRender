@@ -17,8 +17,13 @@ namespace luminous {
         using std::max;
         using std::min;
 
-        template<typename A, typename B>
-        ND_XPU_INLINE bool is_close(A a, B b, float epsilon = 0.00001) {
+        ND_XPU_INLINE bool is_close(float a, float b, float epsilon = 0.00001) {
+            return fabsf(a - b) < epsilon;
+        }
+
+        template<uint N>
+        ND_XPU_INLINE Vector<bool, N> is_close(Vector<float, N> a, Vector<float, N> b,
+                                               Vector<float, N> epsilon = Vector<float, N>(0.0001)) {
             return abs(a - b) < epsilon;
         }
 
@@ -176,6 +181,24 @@ namespace luminous {
 #else
             return u * ::rsqrt(dot(u,u));
 #endif
+        }
+
+        template<typename T, uint N>
+        LM_ND_XPU constexpr auto safe_normalize(Vector <T, N> u) noexcept {
+            if constexpr(N == 2) {
+                if (is_zero(u)) {
+                    return Vector<T, N>(1, 0);
+                }
+            } else if constexpr(N == 3) {
+                if (is_zero(u)) {
+                    return Vector<T, N>(1, 0, 0);
+                }
+            } else {
+                if (is_zero(u)) {
+                    return Vector<T, N>(1, 0, 0, 0);
+                }
+            }
+            return normalize(u);
         }
 
         template<typename T, uint N>

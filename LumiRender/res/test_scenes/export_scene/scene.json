@@ -81,7 +81,7 @@
             "type": "MatteMaterial",
             "name": "matte_white",
             "param": {
-                "normal" : "normal_map",
+//                "normal" : "normal_map",
                 "color": [
                     0.7250000238418579,
                     0.7099999785423279,
@@ -94,7 +94,7 @@
             "type": "MatteMaterial",
             "name": "matte_red",
             "param": {
-                "normal": "normal_map",
+//                "normal": "normal_map",
                 "color": [
                     0.6299999952316284,
                     0.06499999761581421,
@@ -107,7 +107,7 @@
             "type": "MatteMaterial",
             "name": "matte_green",
             "param": {
-                "normal" : "normal_map",
+//                "normal" : "normal_map",
                 "color": [
                     0.14000000059604645,
                     0.44999998807907104,
@@ -423,6 +423,23 @@
                 }
             }
         },
+//        {
+//            "name": "bunny",
+//            "type": "model",
+//            "param": {
+//                "fn": "bunny.obj",
+//                "subdiv_level" : 0,
+//                "material" : "fake_metal",
+//                "transform": {
+//                    "type": "yaw_pitch",
+//                    "param": {
+//                        "yaw" : 180,
+//                        "pitch": 0,
+//                        "position": [-0.1,0,0.1]
+//                    }
+//                }
+//            }
+//        },
         {
             "name": "Cube",
             "type": "model",
@@ -466,8 +483,7 @@
                     }
                 }
             }
-        }
-    ,
+        },
         {
             "name": "Cube.001",
             "type": "model",
