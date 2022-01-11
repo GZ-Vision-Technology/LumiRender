@@ -37,7 +37,6 @@ namespace luminous {
             LM_NODISCARD luminous::float4 eval_on_cpu(const TextureEvalContext &tec) const {
                 const MIPMap *mipmap = reinterpret_cast<const MIPMap *>(_handle);
                 return mipmap->lookup(tec.uv);
-//                return make_float4(1.0);
             }
 
 #endif
