@@ -94,16 +94,26 @@ namespace luminous {
                 fill_tex_idx_by_name(tex_configs, eta_tex);
 
             } else if (type() == full_type("FakeMetalMaterial")) {
-                fill_tex_idx_by_name(tex_configs, color_tex);
 
+                fill_tex_idx_by_name(tex_configs, color_tex);
                 fill_tex_idx_by_name(tex_configs, roughness_tex);
 
             } else if (type() == full_type("DisneyMaterial")) {
+
                 fill_tex_idx_by_name(tex_configs, color_tex);
-
                 fill_tex_idx_by_name(tex_configs, roughness_tex);
-
                 fill_tex_idx_by_name(tex_configs, eta_tex);
+                fill_tex_idx_by_name(tex_configs, metallic_tex);
+                fill_tex_idx_by_name(tex_configs, specular_tint_tex);
+                fill_tex_idx_by_name(tex_configs, anisotropic_tex);
+                fill_tex_idx_by_name(tex_configs, sheen_tex);
+                fill_tex_idx_by_name(tex_configs, sheen_tint_tex);
+                fill_tex_idx_by_name(tex_configs, clearcoat_tex);
+                fill_tex_idx_by_name(tex_configs, clearcoat_gloss_tex);
+                fill_tex_idx_by_name(tex_configs, spec_trans_tex);
+                fill_tex_idx_by_name(tex_configs, scatter_distance_tex);
+                fill_tex_idx_by_name(tex_configs, flatness_tex);
+                fill_tex_idx_by_name(tex_configs, diff_trans_tex);
 
             }
         }
