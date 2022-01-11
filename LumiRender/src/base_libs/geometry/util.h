@@ -23,6 +23,10 @@ namespace luminous {
             return w1.z * w2.z > 0;
         }
 
+        ND_XPU_INLINE bool same_hemisphere(float3 w1, float3 w2, float3 n) {
+            return dot(w1, n) * dot(w2, n) > 0;
+        }
+
         LM_XPU inline float3 offset_ray_origin(const float3 &p_in, const float3 &n_in) noexcept {
 
             constexpr auto origin = 1.0f / 32.0f;

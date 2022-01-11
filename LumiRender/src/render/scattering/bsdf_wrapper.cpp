@@ -11,9 +11,7 @@ namespace luminous {
                                    TransportMode mode) const {
             float3 wo = to_local(wo_world);
             float3 wi = to_local(wi_world);
-            if (wo.z == 0 || dot(wo_world, _ng) * dot(wi_world, _ng) <= 0) {
-                return Spectrum{0};
-            }
+            // todo normal map may lead light leak
             return _bsdf.eval(wo, wi) * abs_dot(_shading_frame.z, wi_world);
         }
 
@@ -22,9 +20,7 @@ namespace luminous {
                                TransportMode mode) const {
             float3 wo = to_local(wo_world);
             float3 wi = to_local(wi_world);
-            if (dot(wo_world, _ng) * dot(wi_world, _ng) <= 0) {
-                return 0.f;
-            }
+            // todo normal map may lead light leak
             return _bsdf.PDF(wo, wi, sample_flags, mode);
         }
 
@@ -33,8 +29,10 @@ namespace luminous {
                                          TransportMode mode) const {
             float3 local_wo = to_local(world_wo);
             BSDFSample ret = _bsdf.sample_f(local_wo, uc, u, sample_flags, mode);
+            ret.wi = to_world(ret.wi);
+            bool sh = same_hemisphere(world_wo, ret.wi, _ng);
+            // todo normal map may lead light leak ,change to bump map
             if (ret.valid()) {
-                ret.wi = to_world(ret.wi);
                 ret.f_val *= abs_dot(_shading_frame.z, ret.wi);
             }
             return ret;

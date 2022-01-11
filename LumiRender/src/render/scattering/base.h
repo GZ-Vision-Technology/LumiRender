@@ -26,6 +26,10 @@ namespace luminous {
                 CHECK_UNIT_VEC(wi_)
             }
 
+            LM_XPU void disable() {
+                PDF = -1.f;
+            }
+
             LM_ND_XPU bool valid() const {
                 return PDF >= 0.f;
             }
