@@ -43,7 +43,7 @@ namespace luminous {
             }
 
         public:
-            LM_XPU BSDF_Ty() : _bxdfs() {
+            LM_XPU BSDF_Ty() : _bxdfs(TBxDF()...) {
 
             }
 

@@ -69,32 +69,36 @@ namespace luminous {
                 }
             };
 
-            class Clearcoat : public ColoredBxDF<Clearcoat> {
+            class Clearcoat : public BxDF<Clearcoat> {
+            private:
+                float _weight{};
             public:
-                using ColoredBxDF::ColoredBxDF;
+                using BxDF::BxDF;
             public:
-                LM_XPU explicit Clearcoat(Spectrum color) : ColoredBxDF(color, GlossyRefl) {}
+                LM_XPU explicit Clearcoat(float weight)
+                        : BxDF(weight > 0 ? BxDFFlags::GlossyRefl : BxDFFlags::Unset),
+                          _weight(weight) {}
 
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                         TransportMode mode = TransportMode::Radiance) const;
 
-//                /**
-//                 * must be reflection
-//                 */
-//                LM_ND_XPU float PDF(float3 wo, float3 wi,
-//                                    BSDFHelper helper,
-//                                    TransportMode mode = TransportMode::Radiance) const;
-//
-//                LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
-//                                         BSDFHelper helper,
-//                                         TransportMode mode = TransportMode::Radiance) const;
-//
-//                LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
-//                                              TransportMode mode = TransportMode::Radiance) const;
-//
-//                ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
-//                    return 1.f;
-//                }
+                /**
+                 * must be reflection
+                 */
+                LM_ND_XPU float PDF(float3 wo, float3 wi,
+                                    BSDFHelper helper,
+                                    TransportMode mode = TransportMode::Radiance) const;
+
+                LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
+                                         BSDFHelper helper,
+                                         TransportMode mode = TransportMode::Radiance) const;
+
+                LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
+                                              TransportMode mode = TransportMode::Radiance) const;
+
+                ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
+                    return 1.f;
+                }
             };
         }
     }
