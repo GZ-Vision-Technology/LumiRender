@@ -69,13 +69,14 @@ namespace luminous {
         }
 
         using DisneyBSDF = BSDF_Ty<BSDFHelper, disney::Diffuse, disney::FakeSS,
-                disney::Retro, disney::Sheen, disney::Clearcoat,
+                disney::Retro, disney::Sheen,
+                disney::Clearcoat,
                 MicrofacetReflection, MicrofacetTransmission,
                 DiffuseTransmission, SpecularTransmission>;
 
 
         class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF,
-                GlassBSDF, RoughGlassBSDF,DisneyBSDF,
+                GlassBSDF, RoughGlassBSDF, DisneyBSDF,
                 FakeMetalBSDF, MetalBSDF> {
         private:
             using Variant::Variant;

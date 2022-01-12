@@ -62,7 +62,7 @@ namespace luminous {
         template<typename T>
         struct BxDF {
         protected:
-            BxDFFlags _flags;
+            BxDFFlags _flags{Unset};
         public:
             LM_XPU explicit BxDF(BxDFFlags flags = Unset): _flags(flags) {}
 

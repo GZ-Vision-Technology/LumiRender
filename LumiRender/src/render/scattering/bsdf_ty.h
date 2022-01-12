@@ -19,7 +19,7 @@ namespace luminous {
         protected:
             using Tuple = std::tuple<TBxDF...>;
             static constexpr int size = std::tuple_size_v<Tuple>;
-            Tuple _bxdfs;
+            Tuple _bxdfs{};
             TData _data{};
         protected:
             template<int index, typename F>
@@ -43,7 +43,10 @@ namespace luminous {
             }
 
         public:
-            LM_XPU BSDF_Ty() = default;
+            LM_XPU BSDF_Ty() : _bxdfs() {
+
+            }
+
 
             LM_XPU explicit BSDF_Ty(TData data, TBxDF...args)
                     : _data(data),
