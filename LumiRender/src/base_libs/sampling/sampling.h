@@ -38,7 +38,7 @@ namespace luminous {
         }
 
         ND_XPU_INLINE int sample_discrete(BufferView<const float> weights, float u,
-                                          float *pmf, float *uRemapped) {
+                                          float *pmf = nullptr, float *uRemapped = nullptr) {
             // Handle empty _weights_ for discrete sampling
             if (weights.empty()) {
                 if (pmf != nullptr)

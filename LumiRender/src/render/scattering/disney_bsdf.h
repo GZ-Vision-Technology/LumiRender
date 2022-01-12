@@ -31,10 +31,6 @@ namespace luminous {
             public:
                 LM_XPU explicit FakeSS(Spectrum color) : ColoredBxDF(color, DiffRefl) {}
 
-                ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
-                    return 1.f;
-                }
-
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                         TransportMode mode = TransportMode::Radiance) const;
 
@@ -45,10 +41,6 @@ namespace luminous {
                 using ColoredBxDF::ColoredBxDF;
             public:
                 LM_XPU explicit Retro(Spectrum color) : ColoredBxDF(color, DiffRefl) {}
-
-                ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
-                    return 1.f;
-                }
 
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                         TransportMode mode = TransportMode::Radiance) const;
@@ -64,9 +56,6 @@ namespace luminous {
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                         TransportMode mode = TransportMode::Radiance) const;
 
-                ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
-                    return 1.f;
-                }
             };
 
             class Clearcoat : public BxDF<Clearcoat> {
@@ -97,7 +86,7 @@ namespace luminous {
                                               TransportMode mode = TransportMode::Radiance) const;
 
                 ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
-                    return 1.f;
+                    return _weight;
                 }
             };
         }
