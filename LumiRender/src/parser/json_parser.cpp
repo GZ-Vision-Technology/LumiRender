@@ -317,7 +317,7 @@ namespace luminous {
             MaterialConfig ret;
             ret.set_full_type(type);
             auto param = ps["param"];
-            ret.normal_tex = process_attr(param["normal"], scene_graph);
+            ret.normal_tex.name = param["normal"].as_string("");
             ret.color_tex = process_attr(param["color"], scene_graph, make_float4(1.f));
             if (type == "MatteMaterial") {
                 ret.sigma = param["sigma"].as_float(0.f);
