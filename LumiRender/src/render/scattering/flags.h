@@ -14,7 +14,7 @@
 namespace luminous {
     inline namespace render {
         // BxDFFlags Definition
-        enum BxDFFlags : uint32_t {
+        enum BxDFFlags : uint8_t {
             Unset = 1,
             Reflection = 1 << 1,
             Transmission = 1 << 2,

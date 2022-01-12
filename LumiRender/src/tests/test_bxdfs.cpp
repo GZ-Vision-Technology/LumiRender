@@ -69,11 +69,15 @@ int main() {
 
     cout << sizeof (luminous::BSDF)<< endl;
 
-    disney::DiffuseTransmission dt;
+    MicrofacetReflection microfacet_reflection(GlossyRefl);
 
-    BSDFHelper helper;
-    auto ret = dt.eval(luminous::make_float3(0,0,1), luminous::make_float3(0,0,-1), helper);
-    cout << ret.to_string() << endl;
+    cout << microfacet_reflection.match_flags(BxDFFlags::GlossyRefl) << endl;
+
+//    disney::DiffuseTransmission dt;
+//
+//    BSDFHelper helper;
+//    auto ret = dt.eval(luminous::make_float3(0,0,1), luminous::make_float3(0,0,-1), helper);
+//    cout << ret.to_string() << endl;
 //    test_bsdf_data();
 
 //    BSDFData bsdf_data = BSDFData::create_diffuse_data(make_float4(12));
