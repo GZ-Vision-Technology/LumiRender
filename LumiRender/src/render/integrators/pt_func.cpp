@@ -65,6 +65,7 @@ namespace luminous {
                 throughput *= bsdf_ei;
                 L += Ld * throughput;
 
+                // todo performance
                 if (is_transmissive(NEE_data.bxdf_flags)) {
                     eta_scale *= dot(si.wo, si.g_uvn.normal()) > 0 ? sqr(NEE_data.eta) : sqr(rcp(NEE_data.eta));
                 }

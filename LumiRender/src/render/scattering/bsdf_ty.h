@@ -69,6 +69,7 @@ namespace luminous {
 
             template<typename T>
             LM_XPU void add_BxDF(T bxdf) {
+                // todo performance
                 fill_BxDF<T, 0>(bxdf);
             }
 
