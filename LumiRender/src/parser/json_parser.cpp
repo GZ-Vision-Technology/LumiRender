@@ -261,7 +261,7 @@ namespace luminous {
                     return val.as_float4(default_val);
                 }
             }
-            return make_float4(0.f);
+            return default_val;
         }
 
         TextureConfig parse_texture(const ParameterSet &ps) {
@@ -301,10 +301,6 @@ namespace luminous {
 
         TextureConfig process_attr(const ParameterSet &ps, SceneGraph *scene_graph, float4 default_val = make_float4(1.f)) {
             TextureConfig ret;
-            if (ps.data().empty()) {
-                ret.val = default_val;
-                return ret;
-            }
             if (ps.data().is_string()) {
                 ret.name = ps.as_string();
                 return ret;
