@@ -91,7 +91,7 @@ namespace luminous {
                     return {};
                 }
                 Spectrum f = static_cast<const T *>(this)->eval(wo, wi, helper, mode);
-                return {f, wi, PDF_val, BxDFFlags::Reflection};
+                return {f, wi, PDF_val, BxDFFlags::DiffRefl};
             }
 
             ND_XPU_INLINE BxDFFlags flags() const {
@@ -106,9 +106,9 @@ namespace luminous {
         template<typename T>
         struct ColoredBxDF : public BxDF<T> {
         protected:
-            float _r;
-            float _g;
-            float _b;
+            float _r{0.f};
+            float _g{0.f};
+            float _b{0.f};
         public:
             using BxDF<T>::BxDF;
 

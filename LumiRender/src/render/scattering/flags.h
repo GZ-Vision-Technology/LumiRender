@@ -15,12 +15,12 @@ namespace luminous {
     inline namespace render {
         // BxDFFlags Definition
         enum BxDFFlags : uint8_t {
-            Unset = 0,
-            Reflection = 1 << 0,
-            Transmission = 1 << 1,
-            Diffuse = 1 << 2,
-            Glossy = 1 << 3,
-            Specular = 1 << 4,
+            Unset = 1,
+            Reflection = 1 << 1,
+            Transmission = 1 << 2,
+            Diffuse = 1 << 3,
+            Glossy = 1 << 4,
+            Specular = 1 << 5,
             // Composite _BxDFFlags_ definitions
             DiffRefl = Diffuse | Reflection,
             DiffTrans = Diffuse | Transmission,
