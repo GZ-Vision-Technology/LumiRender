@@ -86,13 +86,13 @@ namespace luminous {
              * for disney material
              * @return
              */
-             ND_XPU_INLINE float gloss() const {
-                 return _params.w;
-             }
+            ND_XPU_INLINE float gloss() const {
+                return _params.w;
+            }
 
-             LM_XPU_INLINE void set_gloss(float gloss) {
-                 _params.w = gloss;
-             }
+            LM_XPU_INLINE void set_gloss(float gloss) {
+                _params.w = gloss;
+            }
 
             /**
              * for disney material

@@ -34,7 +34,7 @@ namespace luminous {
             float clearcoat = scene_data->get_texture(_clearcoat).eval(ctx).x;
             float clearcoat_gloss = scene_data->get_texture(_clearcoat_gloss).eval(ctx).x;
             DisneyBSDF disney_bsdf;
-            BSDFHelper helper;
+            BSDFHelper helper{DisneyFr};
             helper.set_roughness(roughness);
             helper.set_metallic(metallic);
             helper.set_R0(R0);
