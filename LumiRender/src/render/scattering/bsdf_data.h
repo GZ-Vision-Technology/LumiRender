@@ -18,10 +18,6 @@ namespace luminous {
             Conductor
         };
 
-        class DisneyMaterialData;
-
-        class PhysicallyMaterialData;
-
         struct BSDFHelper {
         private:
             // A B for oren nayar
@@ -217,30 +213,5 @@ namespace luminous {
                 return ret;
             }
         };
-
-//        class DisneyMaterialData {
-//        private:
-//            // disney params
-//            float4 _color{};
-//            float4 _color_tint{};
-//            float4 _color_sheen_tint{};
-//            float _eta;
-//            float _metallic{};
-//            float _roughness{};
-//            float _specular_tint{};
-//            float _anisotropic{};
-//            float _sheen{};
-//            float _sheen_tint{};
-//            float _clearcoat{};
-//            float _clearcoat_gloss{};
-//            float _spec_trans{};
-//            float4 _scatter_distance{};
-//            float _flatness{};
-//            float _diff_trans{};
-//        public:
-//            ND_XPU_INLINE BSDFHelper get_helper() const {
-//                return BSDFHelper();
-//            }
-//        };
     }
 }

@@ -75,6 +75,28 @@ namespace luminous {
                 DiffuseTransmission, SpecularTransmission>;
 
 
+        struct DisneyBSDFData {
+        public:
+            float4 color{make_float4(0.f)};
+            float metallic{0.f};
+            float eta{1.5};
+            float spec_trans{0.f};
+            float diff_trans{0.f};
+            float spec_tint{0.f};
+            float roughness{1.f};
+            float sheen_weight{0.f};
+            float sheen_tint{0.f};
+            float clearcoat{0.f};
+            float4 scatter_distance{make_float4(0.f)};
+            float clearcoat_gloss{0.f};
+            float aspect{0.f};
+            float flatness{0.f};
+            bool thin{false};
+
+            LM_ND_XPU DisneyBSDF create() const;
+        };
+
+
         class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF,
                 GlassBSDF, RoughGlassBSDF, DisneyBSDF,
                 FakeMetalBSDF, MetalBSDF> {

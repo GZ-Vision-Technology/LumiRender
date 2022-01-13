@@ -337,7 +337,7 @@ namespace luminous {
                 ret.metallic_tex = process_attr(param["metallic"], scene_graph, make_float4(0.f));
                 ret.eta_tex = process_attr(param["eta"], scene_graph, make_float4(1.5));
                 ret.specular_tint_tex = process_attr(param["specular_tint"], scene_graph, make_float4(0.f));
-                ret.roughness_tex = process_attr(param["roughness"], scene_graph, make_float4(0.5));
+                ret.roughness_tex = process_attr(param["roughness"], scene_graph, make_float4(1.f));
                 ret.anisotropic_tex = process_attr(param["anisotropic"], scene_graph, make_float4(0.f));
                 ret.sheen_tex = process_attr(param["sheen"], scene_graph, make_float4(0.f));
                 ret.sheen_tint_tex = process_attr(param["sheen_tint"], scene_graph, make_float4(0.f));
