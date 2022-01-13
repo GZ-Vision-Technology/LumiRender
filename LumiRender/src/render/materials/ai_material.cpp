@@ -19,6 +19,7 @@ namespace luminous {
             data.sheen_weight = spec.x;
             data.sheen_tint = spec.x;
             data.spec_tint = spec.x;
+            data.metallic = spec.x;
             BSDF bsdf{data.create()};
             return {ctx.ng, ctx.ns, ctx.dp_dus, bsdf};
         }
