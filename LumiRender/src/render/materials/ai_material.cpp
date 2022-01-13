@@ -10,10 +10,15 @@ namespace luminous {
 
         BSDFWrapper AssimpMaterial::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
             float4 color = scene_data->get_texture(_color_idx).eval(ctx);
-//            DiffuseBSDF diffuse_bsdf = create_diffuse_bsdf(color);
-//            BSDF bsdf{diffuse_bsdf};
             DisneyBSDFData data;
             data.color = color;
+            float4 spec = scene_data->get_texture(_specular_idx).eval(ctx);
+            data.roughness = 1 - spec.x;
+            data.clearcoat = spec.x;
+            data.clearcoat_gloss = spec.x;
+            data.sheen_weight = spec.x;
+            data.sheen_tint = spec.x;
+            data.spec_tint = spec.x;
             BSDF bsdf{data.create()};
             return {ctx.ng, ctx.ns, ctx.dp_dus, bsdf};
         }
