@@ -97,7 +97,7 @@
 //                "sheen_tint": 0.9,
 //                "clearcoat": 0.59,
 //                "clearcoat_gloss": 0.38,
-                "spec_trans": 1,
+                "spec_trans": 0,
 //                "flatness": 0.98,
 //                "scatter_distance": [0,0,0],
 //                "diff_trans": 0.11,
