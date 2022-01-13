@@ -21,7 +21,7 @@ namespace luminous {
             Albedo
         };
 
-        using FrameBufferType = float4;
+        using FrameBufferType = uint32_t;
 
         class Film : BASE_CLASS() {
         public:
