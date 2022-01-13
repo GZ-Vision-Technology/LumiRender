@@ -16,6 +16,9 @@
 #include "util/clock.h"
 #include "render/include/task.h"
 
+#include "luminous_view_config.h"
+#include "core/film_denoiser.h"
+
 namespace luminous {
 
     class App {
@@ -31,8 +34,9 @@ namespace luminous {
         int2 _size;
         GLContext _gl_ctx;
         GLFWwindow *_handle{nullptr};
-        uint32_t *test_color{};
         int2 _last_mouse_pos = make_int2(0);
+
+        bool _is_gpu_rendering = false;
 
         unique_ptr<Task> _task;
 
@@ -49,34 +53,35 @@ namespace luminous {
         struct FrameStats {
             float update_time{.0f};
             float render_time{.0f};
+            float denoise_time{.0f};
             float display_time{.0f};
             float last_frame_elapsed{.0f};
             float last_sample_elapsed{.0f};
             unsigned long frame_count = 0;
         } _frame_stats;
 
+        bool _reset_denoise_frame{false};
+        bool _enable_denoising{false};
+        std::unique_ptr<FilmDenoiser> _denoiser;
+        std::unique_ptr<float4[]> _denoise_output_buffer;
+
     public:
-        App() = default;
+        LUMINOUS_VIEW_LIB_VISIBILITY App() = default;
 
-        App(const std::string &title, const int2 &size, Context *context, const Parser &parser);
+        LUMINOUS_VIEW_LIB_VISIBILITY App(const std::string &title, const int2 &size, Context *context, const Parser &parser);
 
-        ~App();
+        LUMINOUS_VIEW_LIB_VISIBILITY  ~App();
 
-        void init(const std::string &title, const int2 &size, Context *context, const Parser &parser);
+        LUMINOUS_VIEW_LIB_VISIBILITY void init(const std::string &title, const int2 &size, Context *context, const Parser &parser);
 
-        void init_with_gui(const std::string &title) {
-            init_window(title, _task->resolution());
-            init_event_cb();
-            init_gl_context();
-        }
+        LUMINOUS_VIEW_LIB_VISIBILITY int run();
+
+    private:
+        void init_with_gui(const std::string &title);
 
         void init_gl_context();
 
-        void update_render_texture();
-
         void init_window(const std::string &title, const uint2 &size);
-
-        void init_event_cb();
 
         void init_imgui();
 
@@ -102,9 +107,9 @@ namespace luminous {
 
         void imgui_end();
 
-        void display_stats();
+        void update_pixel_buffer();
 
-        int run();
+        void display_stats();
 
         int run_with_gui();
 

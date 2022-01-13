@@ -7,6 +7,14 @@
 namespace luminous {
     inline namespace render {
 
+    template<class Td, std::enable_if_t<std::is_same_v<Td, uint32_t> || std::is_same_v<std::remove_reference_t<Td>, float4>, int> = 0>
+    LM_XPU static inline void fill_frame_buffer_pixel_loc(const float3 &src, Td &dest) {
+        if constexpr(std::is_same_v<Td, float4>)
+            dest = make_float4(src, 1.0f);
+        else
+            dest = make_rgba(src);
+    }
+
         void Film::fill_frame_buffer(uint pixel_index) {
             switch (_fb_state) {
                 case Render: {
@@ -15,7 +23,8 @@ namespace luminous {
                         return;
                     }
                     float3 color = make_float3(val) / val.w;
-                    _frame_buffer_view[pixel_index] = make_rgba(Spectrum::linear_to_srgb(color));
+                    // float4 framebuffer lead performance reduction about 10%
+                    fill_frame_buffer_pixel_loc(Spectrum::linear_to_srgb(color), _frame_buffer_view[pixel_index]);
                     break;
                 }
                 case Albedo: {
@@ -24,7 +33,7 @@ namespace luminous {
                         return;
                     }
                     float3 color = make_float3(val) / val.w;
-                    _frame_buffer_view[pixel_index] = make_rgba(Spectrum::linear_to_srgb(color));
+                    fill_frame_buffer_pixel_loc(Spectrum::linear_to_srgb(color), _frame_buffer_view[pixel_index]);
                     break;
                 }
                 case Normal: {
@@ -33,7 +42,7 @@ namespace luminous {
                         return;
                     }
                     float3 normal = make_float3(val) / val.w;
-                    _frame_buffer_view[pixel_index] = make_rgba((normal + 1.f) / 2.f);
+                    fill_frame_buffer_pixel_loc((normal + 1.f) / 2.f, _frame_buffer_view[pixel_index]);
                     break;
                 }
                 default: {

@@ -77,6 +77,8 @@ extern "C++"
 #define LUMINOUS_DBG(...) printf(__FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
 #define LM_XPU __host__ __device__
 #define LM_GPU __device__
+// host/device constant data visibility modifier
+#define LM_XPU_CONSTANT_VISIBILITY __constant__
 
 #define CPU_ONLY(...)
 
@@ -93,6 +95,8 @@ extern "C++"
 
 #define LM_XPU
 #define LM_GPU
+// host/device constant data visibility modifier
+#define LM_XPU_CONSTANT_VISIBILITY
 #define LUMINOUS_DBG(...) fprintf(stderr, __FILE__ ":" TO_STRING(__LINE__) ": " __VA_ARGS__)
 
 #define CPU_ONLY(...) __VA_ARGS__

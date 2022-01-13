@@ -57,15 +57,15 @@ namespace luminous {
 
             LM_NODISCARD Sensor *camera() { return _integrator->camera(); }
 
-            LM_NODISCARD FrameBufferType *get_frame_buffer();
+            LM_NODISCARD FrameBufferType *get_frame_buffer(bool host_side = true);
 
-            LM_NODISCARD float4 *get_render_buffer();
+            LM_NODISCARD float4 *get_render_buffer(bool host_side = true);
 
-            LM_NODISCARD float4 *get_normal_buffer();
+            LM_NODISCARD float4 *get_normal_buffer(bool host_side = true);
 
-            LM_NODISCARD float4 *get_albedo_buffer();
+            LM_NODISCARD float4 *get_albedo_buffer(bool host_side = true);
 
-            LM_NODISCARD float4 *get_buffer();
+            LM_NODISCARD float4 *get_buffer(bool host_side = true);
 
             LM_NODISCARD uint2 resolution();
 

@@ -73,21 +73,26 @@ namespace luminous {
               _argv{const_cast<const char **>(argv)},
               _cli_options{luminous_fs::path{argv[0]}.filename().string()} {
 
-        _cli_options.add_options()
-                ("d, device", "Select compute device: cuda or cpu",
-                        cxxopts::value<std::string>()->default_value("cuda"))
-                ("r, runtime-dir", "Specify runtime directory",
+        _cli_options.add_options(
+                "",
+            {
+                {"d, device", "Select compute device: cuda or cpu",
+                        cxxopts::value<std::string>()->default_value("cuda")},
+                {"r, runtime-dir", "Specify runtime directory",
                  cxxopts::value<luminous_fs::path>()->default_value(
-                         luminous_fs::canonical(argv[0]).parent_path().parent_path().string()))
-                ("w,working-dir", "Specify working directory",
+                         luminous_fs::canonical(argv[0]).parent_path().parent_path().string())},
+                {"w, working-dir", "Specify working directory",
                  cxxopts::value<luminous_fs::path>()->default_value(
-                         luminous_fs::canonical(luminous_fs::current_path()).string()))
-                ("c, clear-cache", "Clear cached", cxxopts::value<bool>())
-                ("m, mode", "run mode: cli or gui",cxxopts::value<std::string>()->default_value("cli"))
-                ("t, thread-num", "the num of threads to render", cxxopts::value<std::string>()->default_value("0"))
-                ("s, scene", "The scene to render,file name end with json or scene supported by assimp", cxxopts::value<std::string>())
-                ("positional", "Specify input file", cxxopts::value<std::string>())
-                ("h,help", "Print usage");
+                         luminous_fs::canonical(luminous_fs::current_path()).string())},
+                {"c, clear-cache", "Clear cached", cxxopts::value<bool>()},
+                {"m, mode", "run mode: cli or gui",cxxopts::value<std::string>()->default_value("cli")},
+                {"t, thread-num", "the num of threads to render", cxxopts::value<std::string>()->default_value("0")},
+                {"s, scene", "The scene to render,file name end with json or scene supported by assimp", cxxopts::value<std::string>()},
+                {"positional", "Specify input file", cxxopts::value<std::string>()},
+                {"denoise", "Denoise using default denoiser"},
+                {"h, help", "Print usage"}
+            }
+        );
     }
 
     const cxxopts::ParseResult &Context::_parse_result() const noexcept {
@@ -166,6 +171,10 @@ namespace luminous {
 
     bool Context::show_window() noexcept {
         return _parse_result()["mode"].as<std::string>() == "gui";
+    }
+
+    bool Context::denoise_output() noexcept {
+        return _parse_result().count("denoise") > 0;
     }
 
 }// namespace luminous

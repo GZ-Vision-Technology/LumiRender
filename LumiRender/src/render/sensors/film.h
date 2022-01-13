@@ -21,6 +21,8 @@ namespace luminous {
             Albedo
         };
 
+        using FrameBufferType = float4;
+
         class Film : BASE_CLASS() {
         public:
             REFL_CLASS(Film)

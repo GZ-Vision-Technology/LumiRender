@@ -6,6 +6,8 @@
 #include "render/integrators/megakernel_pt.h"
 #include "render/integrators/cpu_pt.h"
 #include "render/integrators/wavefront/integrator.h"
+#include <core/film_denoiser.h>
+#include <gpu/film_optix_denoiser.h>
 
 namespace luminous {
     inline namespace render {
@@ -80,31 +82,43 @@ namespace luminous {
 
         }
 
-        FrameBufferType *Task::get_frame_buffer() {
-            return _frame_buffer.synchronize_and_get_host_data();;
+        FrameBufferType *Task::get_frame_buffer(bool host_side) {
+            if(host_side)
+                return _frame_buffer.synchronize_and_get_host_data();
+            else
+                return _frame_buffer.device_data();
         }
 
-        float4 *Task::get_render_buffer() {
-            return _render_buffer.synchronize_and_get_host_data();
+        float4 *Task::get_render_buffer(bool host_side) {
+            if(host_side)
+                return _render_buffer.synchronize_and_get_host_data();
+            else
+                return _render_buffer.device_data();
         }
 
-        float4 *Task::get_normal_buffer() {
-            return _normal_buffer.synchronize_and_get_host_data();
+        float4 *Task::get_normal_buffer(bool host_side) {
+            if(host_side)
+                return _normal_buffer.synchronize_and_get_host_data();
+            else
+                return _normal_buffer.device_data();
         }
 
-        float4 *Task::get_albedo_buffer() {
-            return _albedo_buffer.synchronize_and_get_host_data();
+        float4 *Task::get_albedo_buffer(bool host_side) {
+            if(host_side)
+                return _albedo_buffer.synchronize_and_get_host_data();
+            else
+                return _albedo_buffer.device_data();
         }
 
-        float4 *Task::get_buffer() {
+        float4 *Task::get_buffer(bool host_side) {
             auto fb_state = camera()->film()->frame_buffer_state();
             switch (fb_state) {
                 case Render:
-                    return get_render_buffer();
+                    return get_render_buffer(host_side);
                 case Normal:
-                    return get_normal_buffer();
+                    return get_normal_buffer(host_side);
                 case Albedo:
-                    return get_albedo_buffer();
+                    return get_albedo_buffer(host_side);
             }
             DCHECK(0);
             return nullptr;
@@ -144,8 +158,50 @@ namespace luminous {
                 float4 val = buffer[i];
                 *fp = Spectrum::linear_to_srgb(val / val.w);
             });
-            luminous_fs::path path = _context->scene_path() / _output_config.fn;
-            image.save(path);
+
+            // denoising
+            if(_context->denoise_output()) {
+                auto denoiser = create_film_optix_denoiser();
+                std::unique_ptr<float4[]> denoise_output_buffer{new float4[res.x * res.y]};
+                denoiser->init_device();
+
+                bool is_gpu_rendering = _context->use_gpu();
+                const FilmDenoiserBufferViewType denoise_bv_type = is_gpu_rendering ? FILMDENOISER_BUFFER_VIEW_TYPE_CUDA_DEVICE_MEM
+                                                                                    : FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
+
+                FilmDenoiserInputData data;
+                data.width = res.x;
+                data.height = res.y;
+                data.color.type = FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
+                data.color.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
+                data.color.address = reinterpret_cast<unsigned long long>(p);
+                data.albedo.type = denoise_bv_type;
+                data.albedo.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
+                data.albedo.address = reinterpret_cast<unsigned long long>(this->get_albedo_buffer(!is_gpu_rendering));
+                data.normal.type = denoise_bv_type;
+                data.normal.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
+                data.normal.address = reinterpret_cast<unsigned long long>(this->get_normal_buffer(!is_gpu_rendering));
+                data.flow.type = FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
+                data.flow.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
+
+                data.output.type = FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
+                data.output.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
+                data.output.address = reinterpret_cast<unsigned long long>(denoise_output_buffer.get());
+
+                denoiser->init_context(data, res.x, res.y, false);
+
+                denoiser->exec();
+                denoiser->get_results();
+
+                std::byte *raw_buffer = reinterpret_cast<std::byte *>(denoise_output_buffer.release());
+                auto image2 = Image(PixelFormat::RGBA32F, raw_buffer, res);
+
+                luminous_fs::path path = _context->scene_path() / _output_config.fn;
+                image2.save(path);
+            } else {
+                luminous_fs::path path = _context->scene_path() / _output_config.fn;
+                image.save(path);
+            }
         }
 
         void Task::render_gui(double dt) {

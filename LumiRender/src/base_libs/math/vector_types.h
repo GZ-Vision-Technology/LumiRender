@@ -52,6 +52,9 @@ namespace luminous {
                 LM_XPU explicit constexpr VectorStorage(T s) noexcept: x{s}, y{s}, z{s} {}
 
                 LM_XPU explicit constexpr VectorStorage(T x, T y, T z) noexcept: x{x}, y{y}, z{z} {}
+
+                LM_XPU explicit constexpr VectorStorage(const VectorStorage<T, 2> &v, T z) noexcept:
+                  x{v.z}, y{v.y}, z{z} {}
             };
 
             template<typename T>
@@ -68,6 +71,9 @@ namespace luminous {
                 LM_XPU explicit constexpr VectorStorage(T s) noexcept: x{s}, y{s}, z{s}, w{s} {}
 
                 LM_XPU explicit constexpr VectorStorage(T x, T y, T z, T w) noexcept: x{x}, y{y}, z{z}, w{w} {}
+
+                LM_XPU explicit constexpr VectorStorage(const VectorStorage<T, 3> &v, T w) noexcept:
+                 x{v.x}, y{v.y}, z{v.z}, w(w) {}
             };
 
         }// namespace detail
@@ -77,12 +83,35 @@ namespace luminous {
 
             using Storage = detail::VectorStorage<T, N>;
 
-            LM_XPU constexpr Vector() noexcept: detail::VectorStorage<T, N>{static_cast<T>(0)} {}
+            using Storage::Storage;
 
-            LM_XPU explicit constexpr Vector(T u) noexcept: detail::VectorStorage<T, N>{u} {}
+            // implicit reference cast
+            template<uint32_t N2, std::enable_if_t<(N2 < N), int> = 0>
+            constexpr operator Vector<T, N2>&() & noexcept {
+                return *reinterpret_cast<Vector<T, N2> *>(this);
+            }
 
-            template<typename... U>
-            LM_XPU explicit constexpr Vector(U... u) noexcept : detail::VectorStorage<T, N>{u...} {}
+            template<uint32_t N2, std::enable_if_t<(N2 < N), int> = 0>
+            constexpr operator const Vector<T, N2> &() const &noexcept {
+                return *reinterpret_cast<const Vector<T, N2> *>(this);
+            }
+
+            template<class T2, uint32_t N2, std::enable_if_t<std::is_convertible_v<T2, T> && N <= N2, int> = 0>
+            constexpr Vector(const Vector<T2, N2> &v) {
+                if constexpr(N == 2) {
+                    x = static_cast<T>(v.x);
+                    y = static_cast<T>(v.y);
+                } else if constexpr(N == 3) {
+                    x = static_cast<T>(v.x);
+                    y = static_cast<T>(v.y);
+                    z = static_cast<T>(v.z);
+                } else {
+                    x = static_cast<T>(v.x);
+                    y = static_cast<T>(v.y);
+                    z = static_cast<T>(v.z);
+                    w = static_cast<T>(v.w);
+                }
+            }
 
             template<typename Index>
             LM_ND_XPU T &operator[](Index i) noexcept { return reinterpret_cast<T(&)[N]>(*this)[i]; }

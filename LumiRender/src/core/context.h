@@ -84,6 +84,8 @@ namespace luminous {
 
         LM_NODISCARD bool show_window() noexcept;
 
+        LM_NODISCARD bool denoise_output() noexcept;
+
         LM_NODISCARD int thread_num() const noexcept {
             return std::stoi(_parse_result()["thread-num"].as<std::string>());
         }
