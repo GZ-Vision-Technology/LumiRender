@@ -161,7 +161,7 @@ namespace luminous {
                 return match_count > 0 ? ret / match_count : 0;
             }
 
-            LM_ND_XPU BSDFSample sample_f_uniform(float3 wo, float uc, float2 u,
+            LM_ND_XPU BSDFSample uniform_sample_f(float3 wo, float uc, float2 u,
                                                   BxDFFlags flags = BxDFFlags::All,
                                                   TransportMode mode = TransportMode::Radiance) const {
                 int num = match_num(flags);
@@ -187,10 +187,41 @@ namespace luminous {
                 return ret;
             }
 
+            LM_ND_XPU BSDFSample importance_sample_f(float3 wo, float uc, float2 u,
+                                                     BxDFFlags flags = BxDFFlags::All,
+                                                     TransportMode mode = TransportMode::Radiance) const {
+                float weights[size] = {};
+                BSDFHelper helper = _data;
+                helper.correct_eta(Frame::cos_theta(wo));
+                float fr = helper.eval_fresnel(Frame::abs_cos_theta(wo))[0];
+                for_each([&](auto bxdf, int index) {
+                    weights[index] = bxdf.weight(helper, fr);
+                });
+
+                BufferView<const float> bfv(weights);
+                float PMF = 1;
+                int comp = sample_discrete(bfv, uc, &PMF, &uc);
+                BSDFSample ret;
+                for_each([&](auto bxdf, int index) {
+                    if (index == comp) {
+                        ret = bxdf.sample_f(wo, uc, u, _data.get_helper(), mode);
+                        return false;
+                    } else {
+                        return true;
+                    }
+                });
+                ret.PDF *= PMF;
+                return ret;
+            }
+
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u,
                                           BxDFFlags flags = BxDFFlags::All,
                                           TransportMode mode = TransportMode::Radiance) const {
-                return sample_f_uniform(wo, uc, u, flags, mode);
+                if constexpr(Uniform) {
+                    return uniform_sample_f(wo, uc, u, flags, mode);
+                } else {
+                    return importance_sample_f(wo, uc, u, flags, mode);
+                }
             }
         };
 
