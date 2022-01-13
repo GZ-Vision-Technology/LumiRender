@@ -31,7 +31,7 @@ namespace luminous {
             }
 
             LM_ND_XPU bool valid() const {
-                return PDF >= 0.f;
+                return PDF > 0.f;
             }
 
             LM_ND_XPU bool is_non_specular() const {

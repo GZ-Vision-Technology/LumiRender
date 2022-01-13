@@ -24,13 +24,14 @@ namespace luminous {
             helper.set_R0(R0);
             helper.set_eta(eta);
             helper.set_gloss(lerp(clearcoat_gloss, 1, 0.001f));
-
+            float dt = diff_trans / 2.f;
             disney_bsdf.set_data(helper);
+            float aspect = safe_sqrt(1 - anisotropic * 0.9f);
 
             if (thin) {
-                disney::Diffuse diffuse(diffuse_weight * (1 - flatness) * (1 - diff_trans) * color);
+                disney::Diffuse diffuse(diffuse_weight * (1 - flatness) * (1 - dt) * color);
                 disney_bsdf.add_BxDF(diffuse);
-                disney::FakeSS fake_ss(diffuse_weight * flatness * (1 - diff_trans) * color);
+                disney::FakeSS fake_ss(diffuse_weight * flatness * (1 - dt) * color);
                 disney_bsdf.add_BxDF(fake_ss);
             } else {
                 if (is_zero(scatter_distance)) {
@@ -58,7 +59,7 @@ namespace luminous {
                 float ay = std::max(0.001f, sqr(rscaled) * aspect);
                 Microfacet distrib{ax, ay, GGX};
                 disney_bsdf.add_BxDF(MicrofacetTransmission{T, distrib});
-                disney_bsdf.add_BxDF(DiffuseTransmission(diff_trans * color));
+                disney_bsdf.add_BxDF(DiffuseTransmission(dt * color));
 
             } else {
                 disney_bsdf.add_BxDF(MicrofacetTransmission{T, distrib});
