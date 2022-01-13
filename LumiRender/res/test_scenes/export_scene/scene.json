@@ -89,7 +89,7 @@
                     1.0
                 ],
                 "eta": 1.9,
-                "roughness":0.05,
+                "roughness":0.5,
                 "metallic": 0,
 //                "specular_tint": 0.9,
                 "anisotropic": 0,

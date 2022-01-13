@@ -11,6 +11,7 @@
     #include "microfacet_scatter.cpp"
     #include "specular_scatter.cpp"
     #include "disney_bsdf.cpp"
+    #include "bsdfs.cpp"
 #else
     #include "microfacet_scatter.h"
     #include "specular_scatter.h"
