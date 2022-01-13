@@ -68,7 +68,7 @@ namespace luminous {
             return MetalBSDF(data, MicrofacetReflection{Spectrum{1.f}, alpha_x, alpha_y, GGX});
         }
 
-        using DisneyBSDF = BSDF_Ty<BSDFHelper, true, disney::Diffuse, disney::FakeSS,
+        using DisneyBSDF = BSDF_Ty<BSDFHelper, false, disney::Diffuse, disney::FakeSS,
                 disney::Retro, disney::Sheen,
                 disney::Clearcoat,
                 MicrofacetReflection, MicrofacetTransmission,

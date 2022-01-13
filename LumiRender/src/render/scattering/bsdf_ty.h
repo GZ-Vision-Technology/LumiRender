@@ -196,6 +196,7 @@ namespace luminous {
                 float fr = helper.eval_fresnel(Frame::abs_cos_theta(wo))[0];
                 for_each([&](auto bxdf, int index) {
                     weights[index] = bxdf.weight(helper, fr);
+                    return true;
                 });
 
                 BufferView<const float> bfv(weights);
