@@ -14,7 +14,7 @@
 namespace luminous {
     inline namespace render {
 
-        template<typename TData, typename... TBxDF>
+        template<typename TData, bool Uniform, typename... TBxDF>
         class BSDF_Ty {
         protected:
             using Tuple = std::tuple<TBxDF...>;
@@ -161,9 +161,9 @@ namespace luminous {
                 return match_count > 0 ? ret / match_count : 0;
             }
 
-            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u,
-                                          BxDFFlags flags = BxDFFlags::All,
-                                          TransportMode mode = TransportMode::Radiance) const {
+            LM_ND_XPU BSDFSample sample_f_uniform(float3 wo, float uc, float2 u,
+                                                  BxDFFlags flags = BxDFFlags::All,
+                                                  TransportMode mode = TransportMode::Radiance) const {
                 int num = match_num(flags);
                 if (num == 0) {
                     return {};
@@ -186,12 +186,18 @@ namespace luminous {
                 ret.PDF /= num;
                 return ret;
             }
+
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u,
+                                          BxDFFlags flags = BxDFFlags::All,
+                                          TransportMode mode = TransportMode::Radiance) const {
+                return sample_f_uniform(wo, uc, u, flags, mode);
+            }
         };
 
         template<typename TData, typename T1, typename T2, bool Delta = false>
-        class FresnelBSDF : public BSDF_Ty<TData, T1, T2> {
+        class FresnelBSDF : public BSDF_Ty<TData, false, T1, T2> {
         protected:
-            using BaseClass = BSDF_Ty<TData, T1, T2>;
+            using BaseClass = BSDF_Ty<TData,false, T1, T2>;
             static_assert(BaseClass::size == 2, "FresnelBSDF must be two BxDF lobe!");
             using Refl = std::tuple_element_t<0, typename BaseClass::Tuple>;
             using Trans = std::tuple_element_t<1, typename BaseClass::Tuple>;

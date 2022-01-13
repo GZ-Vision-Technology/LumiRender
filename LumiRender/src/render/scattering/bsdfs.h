@@ -16,19 +16,19 @@
 namespace luminous {
     inline namespace render {
 
-        using DiffuseBSDF = BSDF_Ty<BSDFHelper, DiffuseReflection>;
+        using DiffuseBSDF = BSDF_Ty<BSDFHelper, true, DiffuseReflection>;
 
         ND_XPU_INLINE DiffuseBSDF create_diffuse_bsdf(float4 color) {
             return DiffuseBSDF(BSDFHelper::create_diffuse_data(color), DiffuseReflection{color});
         }
 
-        using OrenNayarBSDF = BSDF_Ty<BSDFHelper, OrenNayar>;
+        using OrenNayarBSDF = BSDF_Ty<BSDFHelper, true, OrenNayar>;
 
         ND_XPU_INLINE OrenNayarBSDF create_oren_nayar_bsdf(float4 color, float sigma) {
             return OrenNayarBSDF(BSDFHelper::create_oren_nayar_data(color, sigma), OrenNayar{color});
         }
 
-        using MirrorBSDF = BSDF_Ty<BSDFHelper, SpecularReflection>;
+        using MirrorBSDF = BSDF_Ty<BSDFHelper, true, SpecularReflection>;
 
         ND_XPU_INLINE MirrorBSDF create_mirror_bsdf(float4 color) {
             return MirrorBSDF(BSDFHelper::create_mirror_data(color),
@@ -54,21 +54,21 @@ namespace luminous {
                                   MicrofacetTransmission{color, alpha_x, alpha_y, GGX});
         }
 
-        using FakeMetalBSDF = BSDF_Ty<BSDFHelper, MicrofacetReflection>;
+        using FakeMetalBSDF = BSDF_Ty<BSDFHelper, true, MicrofacetReflection>;
 
         ND_XPU_INLINE FakeMetalBSDF create_fake_metal_bsdf(float4 color, float alpha_x, float alpha_y) {
             auto param = BSDFHelper::create_fake_metal_data(color);
             return FakeMetalBSDF(param, MicrofacetReflection{color, alpha_x, alpha_y, GGX});
         }
 
-        using MetalBSDF = BSDF_Ty<BSDFHelper, MicrofacetReflection>;
+        using MetalBSDF = BSDF_Ty<BSDFHelper, true, MicrofacetReflection>;
 
         ND_XPU_INLINE MetalBSDF create_metal_bsdf(float4 eta, float4 k, float alpha_x, float alpha_y) {
             BSDFHelper data = BSDFHelper::create_metal_data(eta, k);
             return MetalBSDF(data, MicrofacetReflection{Spectrum{1.f}, alpha_x, alpha_y, GGX});
         }
 
-        using DisneyBSDF = BSDF_Ty<BSDFHelper, disney::Diffuse, disney::FakeSS,
+        using DisneyBSDF = BSDF_Ty<BSDFHelper, true, disney::Diffuse, disney::FakeSS,
                 disney::Retro, disney::Sheen,
                 disney::Clearcoat,
                 MicrofacetReflection, MicrofacetTransmission,
