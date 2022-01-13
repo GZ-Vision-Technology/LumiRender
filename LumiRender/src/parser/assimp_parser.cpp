@@ -32,6 +32,7 @@ namespace luminous {
                                       aiProcess_GenUVCoords |
                                       aiProcess_TransformUVCoords |
                                       aiProcess_OptimizeMeshes |
+                                      aiProcess_Triangulate |
                                       aiProcess_FlipUVs;
             post_process_steps = swap_handed ?
                                  post_process_steps | aiProcess_ConvertToLeftHanded :
@@ -97,7 +98,8 @@ namespace luminous {
                                 ai_face.mIndices[2],
                                 ai_face.mIndices[3]});
                     } else {
-                        LUMINOUS_EXCEPTION("Only triangles and quads supported: ", ai_mesh->mName.data);
+                        LUMINOUS_EXCEPTION("Only triangles and quads supported: ", ai_mesh->mName.data, " num is ",
+                                           ai_face.mNumIndices);
                     }
                 }
                 auto mesh = Mesh(move(positions),
