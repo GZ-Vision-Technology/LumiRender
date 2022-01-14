@@ -98,8 +98,9 @@ namespace luminous {
                                 ai_face.mIndices[2],
                                 ai_face.mIndices[3]});
                     } else {
-                        LUMINOUS_EXCEPTION("Only triangles and quads supported: ", ai_mesh->mName.data, " num is ",
+                        LUMINOUS_WARNING("Only triangles and quads supported: ", ai_mesh->mName.data, " num is ",
                                            ai_face.mNumIndices);
+                        continue;
                     }
                 }
                 auto mesh = Mesh(move(positions),
