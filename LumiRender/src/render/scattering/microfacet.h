@@ -87,8 +87,9 @@ namespace luminous {
                         if (is_inf(abs_tan_theta)) {
                             return 0.f;
                         }
-                        float alpha = std::sqrt(Frame::cos_phi_2(w) * sqr(alpha_x) +
-                                                Frame::sin_phi_2(w) * sqr(alpha_y));
+                        float2 cs_theta_2 = Frame::cos_sin_phi_2(w);
+                        float alpha = std::sqrt(cs_theta_2.x * sqr(alpha_x) +
+                                                cs_theta_2.y * sqr(alpha_y));
                         float ret = (-1 + std::sqrt(1.f + sqr(alpha * abs_tan_theta))) / 2;
                         return ret;
                     }
@@ -97,8 +98,9 @@ namespace luminous {
                         if (is_inf(abs_tan_theta)) {
                             return 0.f;
                         }
-                        float alpha = std::sqrt(Frame::cos_phi_2(w) * sqr(alpha_x) +
-                                                Frame::sin_phi_2(w) * sqr(alpha_y));
+                        float2 cs_theta_2 = Frame::cos_sin_phi_2(w);
+                        float alpha = std::sqrt(cs_theta_2.x * sqr(alpha_x) +
+                                                cs_theta_2.y * sqr(alpha_y));
                         float a = 1.f / (alpha * abs_tan_theta);
                         if (a >= 1.6f) {
                             return 0.f;

@@ -127,11 +127,23 @@ namespace luminous {
             }
 
             LM_ND_XPU static scalar_t sin_phi_2(const vector_t &v) {
-                return clamp(sqr(v.y) / sin_theta_2(v), (scalar_t) 0, (scalar_t) 1);
+                scalar_t sinTheta2 = sin_theta_2(v);
+                return sinTheta2 == (scalar_t) 0 ? (scalar_t) 0 : clamp(sqr(v.y) / sinTheta2, (scalar_t) 0, (scalar_t) 1);
             }
 
             LM_ND_XPU static scalar_t cos_phi_2(const vector_t &v) {
-                return clamp(sqr(v.x) / sin_theta_2(v), (scalar_t) 0, (scalar_t) 1);
+                scalar_t sinTheta2 = sin_theta_2(v);
+                return sinTheta2 == (scalar_t) 0 ? (scalar_t) 1 : clamp(sqr(v.x) / sinTheta2, (scalar_t) 0, (scalar_t) 1);
+            }
+
+            LM_ND_XPU static Vector<T, 2> cos_sin_phi_2(const vector_t &v) {
+                scalar_t sinTheta2 = sin_theta_2(v);
+                if(sinTheta2 == (scalar_t)0)
+                    return Vector<T, 2>{(scalar_t) 1, (scalar_t) 0};
+                else
+                    return Vector<T, 2>{
+                            clamp(sqr(v.x) / sinTheta2, (scalar_t) 0, (scalar_t) 1),
+                            clamp(sqr(v.y) / sinTheta2, (scalar_t) 0, (scalar_t) 1)};
             }
 
             LM_ND_XPU bool operator==(const TFrame &frame) const {
