@@ -98,6 +98,8 @@ namespace luminous {
         private:
             index_t _tex_idx{invalid_uint32};
         public:
+            explicit TextureConfig(float4 v = make_float4(0.f)) : val(v) {}
+
             LM_NODISCARD bool is_image() const {
                 return !fn.empty();
             }
