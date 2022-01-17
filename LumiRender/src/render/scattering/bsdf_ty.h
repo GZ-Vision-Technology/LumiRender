@@ -190,12 +190,14 @@ namespace luminous {
             LM_ND_XPU BSDFSample importance_sample_f(float3 wo, float uc, float2 u,
                                                      BxDFFlags flags = BxDFFlags::All,
                                                      TransportMode mode = TransportMode::Radiance) const {
+                static constexpr float weight_threshold = 0.02;
                 float weights[size] = {};
                 BSDFHelper helper = _data;
                 helper.correct_eta(Frame::cos_theta(wo));
                 float fr = helper.eval_fresnel(Frame::abs_cos_theta(wo))[0];
                 for_each([&](auto bxdf, int index) {
-                    weights[index] = bxdf.weight(helper, fr);
+                    float weight = bxdf.weight(helper, fr);
+                    weights[index] = weight < weight_threshold ? 0 : weight;
                     return true;
                 });
 

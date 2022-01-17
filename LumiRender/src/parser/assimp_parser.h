@@ -23,7 +23,8 @@ namespace luminous {
             LM_NODISCARD static const aiScene *load_scene(const luminous_fs::path &fn,
                                                           Assimp::Importer &ai_importer,
                                                           bool swap_handed = false,
-                                                          bool smooth = true);
+                                                          bool smooth = true,
+                                                          bool flip_uv = false);
 
             LM_NODISCARD static std::vector<Mesh> parse_meshes(const aiScene *ai_scene,
                                                                uint32_t subdiv_level = 0u);

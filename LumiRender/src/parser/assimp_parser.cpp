@@ -11,7 +11,7 @@ namespace luminous {
     inline namespace utility {
 
         const aiScene *AssimpParser::load_scene(const luminous_fs::path &fn, Assimp::Importer &ai_importer,
-                                                bool swap_handed, bool smooth) {
+                                                bool swap_handed, bool smooth, bool flip_uv) {
             ai_importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
                                            aiComponent_COLORS |
                                            aiComponent_BONEWEIGHTS |
@@ -22,6 +22,7 @@ namespace luminous {
                                            aiComponent_MATERIALS);
             LUMINOUS_INFO("Loading triangle mesh: ", fn);
             aiPostProcessSteps normal_flag = smooth ? aiProcess_GenSmoothNormals : aiProcess_GenNormals;
+            aiPostProcessSteps flip_uv_flag = flip_uv ? aiProcess_FlipUVs : aiPostProcessSteps(0);
             auto post_process_steps = aiProcess_JoinIdenticalVertices |
                                       normal_flag |
                                       aiProcess_PreTransformVertices |
@@ -33,7 +34,7 @@ namespace luminous {
                                       aiProcess_TransformUVCoords |
                                       aiProcess_OptimizeMeshes |
                                       aiProcess_Triangulate |
-                                      aiProcess_FlipUVs;
+                                      flip_uv_flag;
             post_process_steps = swap_handed ?
                                  post_process_steps | aiProcess_ConvertToLeftHanded :
                                  post_process_steps;
@@ -99,7 +100,7 @@ namespace luminous {
                                 ai_face.mIndices[3]});
                     } else {
                         LUMINOUS_WARNING("Only triangles and quads supported: ", ai_mesh->mName.data, " num is ",
-                                           ai_face.mNumIndices);
+                                         ai_face.mNumIndices);
                         continue;
                     }
                 }
