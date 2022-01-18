@@ -153,7 +153,7 @@ namespace luminous {
                 fc.sigma = param["sigma"].as_float(0.5f);
             } else if (type == "LanczosSincFilter") {
                 fc.radius = param["radius"].as_float2(make_float2(4.f));
-                fc.tau = param["sigma"].as_float(3.f);
+                fc.tau = param["tau"].as_float(3.f);
             } else if (type == "Mitchell") {
                 fc.b = param["b"].as_float(1 / 3.f);
                 fc.c = param["c"].as_float(1 / 3.f);
