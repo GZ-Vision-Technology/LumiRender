@@ -43,10 +43,6 @@ namespace luminous {
                 LUMINOUS_VAR_DISPATCH(channel_num);
             }
 
-            LM_XPU void set_mapping(const TextureMapping2D &mapping) {
-                LUMINOUS_VAR_DISPATCH(set_mapping, mapping)
-            }
-
             CPU_ONLY(static Texture create(const TextureConfig &config) {
                 return detail::create<Texture>(config);
             })

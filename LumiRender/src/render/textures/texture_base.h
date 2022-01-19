@@ -59,7 +59,6 @@ namespace luminous {
         class TextureBase {
         protected:
             PixelFormat _pixel_format{};
-            TextureMapping2D _mapping;
         public:
             LM_XPU TextureBase() = default;
 
@@ -86,10 +85,6 @@ namespace luminous {
                 }
                 LM_ASSERT(0, "unknown pixel format %d", int(_pixel_format));
                 return -1;
-            }
-
-            LM_XPU_INLINE void set_mapping(const TextureMapping2D &mapping) {
-                _mapping = mapping;
             }
         };
 
