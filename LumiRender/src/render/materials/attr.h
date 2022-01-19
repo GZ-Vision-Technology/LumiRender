@@ -52,6 +52,12 @@ namespace luminous {
 
             LM_XPU explicit Attr2D(index_t idx) : TextureHandle(idx), _val({}) {}
 
+            template<typename Index>
+            LM_ND_XPU float operator[](Index i) noexcept {
+                DCHECK(i < 2);
+                return _val[i];
+            }
+
             ND_XPU_INLINE float2 eval(const SceneData *scene_data, const MaterialEvalContext &ctx) const {
                 return tex_valid() ? make_float2(eval_tex(scene_data, ctx)) : _val;
             }
@@ -67,9 +73,16 @@ namespace luminous {
                     : _val0(val.x), _val1(val.y), _val2(val.z),
                       TextureHandle() {}
 
+            LM_XPU explicit Attr3D(index_t idx) : TextureHandle(idx) {}
+
+            template<typename Index>
+            LM_ND_XPU float operator[](Index i) noexcept {
+                DCHECK(i < 3);
+                return (reinterpret_cast<float *>(&_val0))[i];
+            }
+
             ND_XPU_INLINE float3 value() const { return make_float3(_val0, _val1, _val2); }
 
-            LM_XPU explicit Attr3D(index_t idx) : TextureHandle(idx) {}
 
             ND_XPU_INLINE float3 eval(const SceneData *scene_data, const MaterialEvalContext &ctx) const {
                 return tex_valid() ? make_float3(eval_tex(scene_data, ctx)) : value();
@@ -83,6 +96,12 @@ namespace luminous {
             LM_XPU explicit Attr4D(float4 val = {}) : TextureHandle(), _val(val) {}
 
             LM_XPU explicit Attr4D(index_t idx) : TextureHandle(idx), _val({}) {}
+
+            template<typename Index>
+            LM_ND_XPU float operator[](Index i) noexcept {
+                DCHECK(i < 4);
+                return _val[i];
+            }
 
             ND_XPU_INLINE float4 eval(const SceneData *scene_data, const MaterialEvalContext &ctx) const {
                 return tex_valid() ? eval_tex(scene_data, ctx) : _val;
