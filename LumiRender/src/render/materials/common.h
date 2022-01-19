@@ -9,6 +9,5 @@
 #include "mirror.h"
 #include "glass.h"
 #include "metal.h"
-#include "plastic.h"
 #include "disney.h"
 #include "ai_material.h"
