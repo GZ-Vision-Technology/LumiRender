@@ -2,35 +2,35 @@
     "textures": [],
     "materials": [
         {
-            "name": "Plane_B2L Matte",
+            "name": "Plane_Matte",
             "type": "MatteMaterial",
             "param": {
                 "color": [
-                    0.8000000715255737,
-                    0.7502404451370239,
-                    0.49261602759361267
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929
                 ]
             }
         },
         {
-            "name": "Plane.001_B2L Matte",
+            "name": "Plane.001_Matte",
             "type": "MatteMaterial",
             "param": {
                 "color": [
-                    0.8000000715255737,
-                    0.7502404451370239,
-                    0.49261602759361267
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929
                 ]
             }
         },
         {
-            "name": "Plane.002_B2L Matte",
+            "name": "Plane.002_Matte",
             "type": "MatteMaterial",
             "param": {
                 "color": [
-                    0.8000000715255737,
-                    0.7502404451370239,
-                    0.49261602759361267
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929
                 ]
             }
         },
@@ -66,19 +66,19 @@
                     0.800000011920929
                 ],
                 "roughness": [
-                    0.009999999776482582,
-                    0.009999999776482582
+                    0.10000000149011612,
+                    0.10000000149011612
                 ]
             }
         },
         {
-            "name": "Cube.001_B2L Matte",
+            "name": "Cube.001_Matte",
             "type": "MatteMaterial",
             "param": {
                 "color": [
-                    0.8000000715255737,
-                    0.7502404451370239,
-                    0.49261602759361267
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929
                 ]
             }
         }
@@ -135,7 +135,7 @@
             "param": {
                 "fn": "meshes/Plane.gltf",
                 "smooth": false,
-                "material": "Plane_B2L Matte",
+                "material": "Plane_Matte",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -177,7 +177,7 @@
             "param": {
                 "fn": "meshes/Plane.001.gltf",
                 "smooth": false,
-                "material": "Plane.001_B2L Matte",
+                "material": "Plane.001_Matte",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -219,7 +219,7 @@
             "param": {
                 "fn": "meshes/Plane.002.gltf",
                 "smooth": false,
-                "material": "Plane.002_B2L Matte",
+                "material": "Plane.002_Matte",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -387,7 +387,7 @@
             "param": {
                 "fn": "meshes/Cube.001.gltf",
                 "smooth": false,
-                "material": "Cube.001_B2L Matte",
+                "material": "Cube.001_Matte",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
