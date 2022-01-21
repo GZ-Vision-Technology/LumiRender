@@ -26,7 +26,7 @@ namespace luminous {
 #endif
             TypeHandle _handle{0};
         public:
-            CPU_ONLY(explicit ImageTexture(const TextureConfig &config)
+            CPU_ONLY(explicit ImageTexture(const MaterialAttrConfig &config)
                     : ImageTexture((ImageTexture::TypeHandle) config.handle, config.pixel_format) {})
 
             ImageTexture(TypeHandle handle, PixelFormat pixel_format)

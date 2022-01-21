@@ -67,7 +67,7 @@ namespace luminous {
             Synchronizer<Material> _materials{_device};
 
             // prepare for texture out of core render
-            vector<TextureConfig> _tex_configs;
+            vector<MaterialAttrConfig> _tex_configs;
 
             vector<Image> _images;
 

@@ -264,10 +264,10 @@ namespace luminous {
             return default_val;
         }
 
-        TextureConfig parse_texture(const ParameterSet &ps) {
+        MaterialAttrConfig parse_texture(const ParameterSet &ps) {
             std::string type;
             type = ps["type"].as_string("ConstantTexture");
-            TextureConfig tc;
+            MaterialAttrConfig tc;
             auto param = ps["param"];
             tc.set_full_type(type);
             if (type == "ConstantTexture") {
@@ -286,10 +286,10 @@ namespace luminous {
             return tc;
         }
 
-        std::vector<TextureConfig> parse_textures(const DataWrap &textures) {
-            std::vector<TextureConfig> ret;
+        std::vector<MaterialAttrConfig> parse_textures(const DataWrap &textures) {
+            std::vector<MaterialAttrConfig> ret;
             for (const auto &texture : textures) {
-                TextureConfig config = parse_texture(ParameterSet(texture));
+                MaterialAttrConfig config = parse_texture(ParameterSet(texture));
 //                if (is_contain(ret, config)) {
 //                    continue;
 //                }
@@ -299,8 +299,8 @@ namespace luminous {
             return ret;
         }
 
-        TextureConfig process_attr(const ParameterSet &ps, SceneGraph *scene_graph, float4 default_val = make_float4(1.f)) {
-            TextureConfig ret;
+        MaterialAttrConfig process_attr(const ParameterSet &ps, SceneGraph *scene_graph, float4 default_val = make_float4(1.f)) {
+            MaterialAttrConfig ret;
             if (ps.data().is_string()) {
                 ret.name = ps.as_string();
                 return ret;

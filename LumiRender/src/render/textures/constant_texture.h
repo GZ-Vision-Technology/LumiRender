@@ -15,7 +15,7 @@ namespace luminous {
         private:
             const float4 _val;
         public:
-            CPU_ONLY(explicit ConstantTexture(const TextureConfig &config)
+            CPU_ONLY(explicit ConstantTexture(const MaterialAttrConfig &config)
                     : ConstantTexture(PixelFormat::RGBA32F, config.val) {})
 
             ConstantTexture(PixelFormat pixel_format, float4 val)

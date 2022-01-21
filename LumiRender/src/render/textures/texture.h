@@ -43,7 +43,7 @@ namespace luminous {
                 LUMINOUS_VAR_DISPATCH(channel_num);
             }
 
-            CPU_ONLY(static Texture create(const TextureConfig &config) {
+            CPU_ONLY(static Texture create(const MaterialAttrConfig &config) {
                 return detail::create<Texture>(config);
             })
         };

@@ -94,11 +94,11 @@ namespace luminous {
             float su{}, sv{}, du{}, dv{};
         };
 
-        struct TextureConfig : Config {
+        struct MaterialAttrConfig : Config {
         private:
             index_t _tex_idx{invalid_uint32};
         public:
-            explicit TextureConfig(float4 v = make_float4(0.f)) : val(v) {}
+            explicit MaterialAttrConfig(float4 v = make_float4(0.f)) : val(v) {}
 
             LM_NODISCARD bool is_image() const {
                 return !fn.empty();
@@ -114,7 +114,7 @@ namespace luminous {
                 }
             }
 
-            LM_NODISCARD bool valid() const {
+            LM_NODISCARD bool tex_valid() const {
                 return is_valid_index(_tex_idx);
             }
 
@@ -149,7 +149,7 @@ namespace luminous {
             }
         };
 
-        LM_ND_INLINE bool operator==(const TextureConfig &t1, const TextureConfig &t2) {
+        LM_ND_INLINE bool operator==(const MaterialAttrConfig &t1, const MaterialAttrConfig &t2) {
             return t1.type() == t2.type()
                    && t1.fn == t2.fn
                    && t1.color_space == t2.color_space
@@ -157,8 +157,8 @@ namespace luminous {
                    && t1.pixel_format == t2.pixel_format;
         }
 
-        inline bool is_contain(const std::vector<TextureConfig> &tex_configs,
-                               const TextureConfig &texture_config) {
+        inline bool is_contain(const std::vector<MaterialAttrConfig> &tex_configs,
+                               const MaterialAttrConfig &texture_config) {
             return std::any_of(tex_configs.cbegin(), tex_configs.cend(), [&](const auto &config) {
                 return config == texture_config;
             });
@@ -168,35 +168,35 @@ namespace luminous {
         struct MaterialConfig : Config {
 
             // common
-            TextureConfig color_tex;
+            MaterialAttrConfig color_tex;
             bool remapping_roughness{true};
-            TextureConfig roughness_tex;
+            MaterialAttrConfig roughness_tex;
 
             // matte
             float sigma{};
 
             // assimp material
-            TextureConfig specular_tex;
-            TextureConfig normal_tex;
+            MaterialAttrConfig specular_tex;
+            MaterialAttrConfig normal_tex;
 
             // glass material
-            TextureConfig eta_tex;
+            MaterialAttrConfig eta_tex;
 
             // metal material
-            TextureConfig k_tex;
+            MaterialAttrConfig k_tex;
 
             // disney material
-            TextureConfig metallic_tex;
-            TextureConfig specular_tint_tex;
-            TextureConfig anisotropic_tex;
-            TextureConfig sheen_tex;
-            TextureConfig sheen_tint_tex;
-            TextureConfig clearcoat_tex;
-            TextureConfig clearcoat_gloss_tex;
-            TextureConfig spec_trans_tex;
-            TextureConfig scatter_distance_tex;
-            TextureConfig flatness_tex;
-            TextureConfig diff_trans_tex;
+            MaterialAttrConfig metallic_tex;
+            MaterialAttrConfig specular_tint_tex;
+            MaterialAttrConfig anisotropic_tex;
+            MaterialAttrConfig sheen_tex;
+            MaterialAttrConfig sheen_tint_tex;
+            MaterialAttrConfig clearcoat_tex;
+            MaterialAttrConfig clearcoat_gloss_tex;
+            MaterialAttrConfig spec_trans_tex;
+            MaterialAttrConfig scatter_distance_tex;
+            MaterialAttrConfig flatness_tex;
+            MaterialAttrConfig diff_trans_tex;
             bool thin{};
 
             // Subsurface material, disable it temporarily
@@ -211,10 +211,10 @@ namespace luminous {
             // using remapping_roughness
 #endif
 
-            static void fill_tex_idx_by_name(std::vector<TextureConfig> &tex_configs,
-                                             TextureConfig &tc, bool force = false, bool check = true);
+            static void fill_tex_idx_by_name(std::vector<MaterialAttrConfig> &tex_configs,
+                                             MaterialAttrConfig &tc, bool force = false, bool check = true);
 
-            void fill_tex_configs(std::vector<TextureConfig> &tex_configs);
+            void fill_tex_configs(std::vector<MaterialAttrConfig> &tex_configs);
         };
 
         struct OutputConfig : Config {
@@ -274,13 +274,13 @@ namespace luminous {
             float theta_o{};
 
             // for env
-            TextureConfig texture_config;
+            MaterialAttrConfig texture_config;
             Distribution2D distribution;
             index_t distribution_idx{invalid_uint32};
             float3 scale{};
             TransformConfig o2w_config;
 
-            void fill_tex_config(std::vector<TextureConfig> &tex_configs);
+            void fill_tex_config(std::vector<MaterialAttrConfig> &tex_configs);
         };
     }
 }

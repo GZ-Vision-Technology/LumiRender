@@ -25,7 +25,7 @@ namespace luminous {
         }
 
         void Scene::append_light_material(vector<MaterialConfig> &material_configs) {
-            TextureConfig tc;
+            MaterialAttrConfig tc;
             tc.set_full_type("ConstantTexture");
             tc.val = make_float4(0.f);
             _tex_configs.push_back(tc);

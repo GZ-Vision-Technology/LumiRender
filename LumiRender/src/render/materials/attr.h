@@ -8,6 +8,7 @@
 #include "base_libs/math/common.h"
 #include "render/scene/scene_data.h"
 #include "render/textures/texture.h"
+#include "parser/config.h"
 
 namespace luminous {
     inline namespace render {
@@ -39,6 +40,17 @@ namespace luminous {
 
             LM_XPU explicit Attr1D(index_t idx) : TextureHandle(idx), _val(0.f) {}
 
+#ifndef __CUDACC__
+            LM_XPU explicit Attr1D(MaterialAttrConfig tc) {
+                if (tc.tex_valid()) {
+                    _tex_idx = tc.tex_idx();
+                } else {
+                    _val = tc.val[0];
+                }
+            }
+
+#endif
+
             ND_XPU_INLINE float eval(const SceneData *scene_data, const MaterialEvalContext &ctx) const {
                 return tex_valid() ? eval_tex(scene_data, ctx).x : _val;
             }
@@ -51,6 +63,17 @@ namespace luminous {
             LM_XPU explicit Attr2D(float2 val = {}) : TextureHandle(), _val(val) {}
 
             LM_XPU explicit Attr2D(index_t idx) : TextureHandle(idx), _val({}) {}
+
+#ifndef __CUDACC__
+            LM_XPU explicit Attr2D(MaterialAttrConfig tc) {
+                if (tc.tex_valid()) {
+                    _tex_idx = tc.tex_idx();
+                } else {
+                    _val = make_float2(tc.val);
+                }
+            }
+
+#endif
 
             template<typename Index>
             LM_ND_XPU float operator[](Index i) noexcept {
@@ -75,6 +98,18 @@ namespace luminous {
 
             LM_XPU explicit Attr3D(index_t idx) : TextureHandle(idx) {}
 
+#ifndef __CUDACC__
+            LM_XPU explicit Attr3D(MaterialAttrConfig tc) {
+                if (tc.tex_valid()) {
+                    _tex_idx = tc.tex_idx();
+                } else {
+                    _val0 = tc.val[0];
+                    _val1 = tc.val[1];
+                    _val2 = tc.val[2];
+                }
+            }
+#endif
+
             template<typename Index>
             LM_ND_XPU float operator[](Index i) noexcept {
                 DCHECK(i < 3);
@@ -96,6 +131,16 @@ namespace luminous {
             LM_XPU explicit Attr4D(float4 val = {}) : TextureHandle(), _val(val) {}
 
             LM_XPU explicit Attr4D(index_t idx) : TextureHandle(idx), _val({}) {}
+
+#ifndef __CUDACC__
+            LM_XPU explicit Attr4D(MaterialAttrConfig tc) {
+                if (tc.tex_valid()) {
+                    _tex_idx = tc.tex_idx();
+                } else {
+                    _val = tc.val;
+                }
+            }
+#endif
 
             template<typename Index>
             LM_ND_XPU float operator[](Index i) noexcept {
