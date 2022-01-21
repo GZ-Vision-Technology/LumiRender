@@ -87,7 +87,7 @@ extern "C++"
                                    }
 
 #define GEN_STRING_FUNC(args)
-
+#define LM_PRAGMA_UNROLL _Pragma(unroll)
 #else
 
 #define lm_likely(x) (x)
@@ -106,6 +106,12 @@ extern "C++"
 #define GEN_NAME_FUNC LM_ND_XPU const std::string name() {       \
                                         return this->dispatch([&, this](auto &&self) { return type_name(&self); });\
                                    }
+
+#ifdef _MSC_VER
+#define LM_PRAGMA_UNROLL 
+#else
+#define LM_PRAGMA_UNROLL _Pragrma(unroll)
+#endif
 #endif
 
 #define LUMINOUS_TO_STRING(...) return string_printf(__VA_ARGS__);

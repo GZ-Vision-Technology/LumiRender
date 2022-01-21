@@ -90,6 +90,29 @@ namespace luminous {
             }
         }
 
+        template<class T, uint32_t N>
+        LM_NODISCARD LM_XPU_INLINE constexpr Vector<T, N> vclamp(const Vector<T, N> &v, const Vector<T, N> &low, const Vector<T, N> &upper) {
+            Vector<T, N> ret;
+            if constexpr (N == 2) {
+                bool2 p0 = {low.x < v.x, low.y < v.y};
+                ret = select(p0, v, low);
+                p0 = {v.x < upper.x, v.y < upper.y};
+                ret = select(p0, v, upper);
+            } else if constexpr (N == 3) {
+                bool3 p0{low.x < v.x, low.y < v.y, low.z < v.z};
+                ret = select(p0, v, low);
+                p0 = {v.x < upper.x, v.y < upper.y, v.z < upper.z};
+                ret = select(p0, v, upper);
+            } else if constexpr (N == 4) {
+                bool4 p0 = {low.x < v.x, low.y < v.y, low.z < v.z, low.w < v.w};
+                ret = select(p0, v, low);
+                p0 = {v.x < upper.x, v.y < upper.y, v.z < upper.z, v.w < upper.w};
+                ret = select(p0, v, upper);
+            } else
+                static_assert(0, "unsupported type!");
+            return ret;
+        }
+
 #define MAKE_VECTOR_BINARY_FUNC(func)                                                             \
     template<typename T, uint N>                                                                  \
     LM_ND_XPU constexpr auto func(Vector<T, N> v, Vector<T, N> u) noexcept {                       \

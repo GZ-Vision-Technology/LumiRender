@@ -9,12 +9,13 @@
 #include "render/scattering/bsdf_wrapper.h"
 #include "parser/config.h"
 #include "core/concepts.h"
+#include "core/type_reflection.h"
 
 namespace luminous {
     inline namespace render {
-        class DisneyMaterial : BASE_CLASS() {
+        class DisneyMaterial {
         public:
-            REFL_CLASS(DisneyMaterial)
+            DECLARE_REFLECTION(DisneyMaterial)
 
         private:
             index_t _color{};

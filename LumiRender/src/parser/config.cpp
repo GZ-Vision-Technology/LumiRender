@@ -119,6 +119,17 @@ namespace luminous {
                 fill_tex_idx_by_name(tex_configs, diff_trans_tex);
 
             }
+        #if 0
+        // Disable SubsurfaceMaterial parsing temporarily
+        else if(type() == full_type("SubsurfaceMaterial")) {
+            fill_tex_idx_by_name(tex_configs, sigma_s);
+            fill_tex_idx_by_name(tex_configs, sigma_a);
+            fill_tex_idx_by_name(tex_configs, reflectance);
+            fill_tex_idx_by_name(tex_configs, mfp);
+            fill_tex_idx_by_name(tex_configs, uroughness);
+            fill_tex_idx_by_name(tex_configs, vroughness);
+        }
+        #endif
         }
 
         void LightConfig::fill_tex_config(vector<TextureConfig> &tex_configs) {

@@ -37,6 +37,10 @@ namespace luminous {
 
         LM_XPU BufferView(std::initializer_list<value_type> v) : BufferView(v.begin(), v.size()) {}
 
+        template<class U, std::enable_if_t<std::is_convertible_v<U, T> && !std::is_same_v<U, T>, int> = 0>
+        LM_XPU BufferView(const BufferView<U> &v)
+            : BufferView(const_cast<T *>(v.ptr()), v.size()) {}
+
         LM_ND_XPU T *ptr() { return _ptr; }
 
         LM_ND_XPU const T *ptr() const { return _ptr; }

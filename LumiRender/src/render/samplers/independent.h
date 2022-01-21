@@ -13,15 +13,14 @@
 namespace luminous {
     inline namespace render {
 
-        class LCGSampler : BASE_CLASS(SamplerBase) {
-        public:
-            REFL_CLASS(LCGSampler)
+        class LCGSampler: public SamplerBase {
+            DECLARE_REFLECTION(LCGSampler, SamplerBase)
         private:
             LCG<> _rng;
         public:
             CPU_ONLY(explicit LCGSampler(const SamplerConfig &config) : LCGSampler(config.spp) {})
 
-            LM_XPU explicit LCGSampler(int spp = 1) : BaseBinder<SamplerBase>(spp) {}
+            LM_XPU explicit LCGSampler(int spp = 1) : SamplerBase(spp) {}
 
             LM_XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 
@@ -36,16 +35,15 @@ namespace luminous {
                             })
         };
 
-        class PCGSampler : BASE_CLASS(SamplerBase) {
-        public:
-            REFL_CLASS(PCGSampler)
+        class PCGSampler : public SamplerBase {
+            DECLARE_REFLECTION(PCGSampler, SamplerBase)
         private:
             RNG _rng;
             int _seed{};
         public:
             CPU_ONLY(explicit PCGSampler(const SamplerConfig &sc) : PCGSampler(sc.spp) {})
 
-            LM_XPU explicit PCGSampler(int spp = 1) : BaseBinder<SamplerBase>(spp) {}
+            LM_XPU explicit PCGSampler(int spp = 1) : SamplerBase(spp) {}
 
             LM_XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 

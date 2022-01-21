@@ -10,9 +10,9 @@
 
 namespace luminous {
     inline namespace render {
-        class PointLight : BASE_CLASS(LightBase) {
+        class PointLight : public LightBase {
         public:
-            REFL_CLASS(PointLight)
+            DECLARE_REFLECTION(PointLight, LightBase)
         private:
             float3 _pos;
             Spectrum _intensity;
@@ -21,7 +21,7 @@ namespace luminous {
                     : PointLight(config.position, config.intensity) {})
 
             PointLight(float3 pos, float3 intensity)
-                    : BaseBinder<LightBase>(LightType::DeltaPosition),
+                    : LightBase(LightType::DeltaPosition),
                       _pos(pos),
                       _intensity(intensity) {}
 

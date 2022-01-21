@@ -7,7 +7,7 @@
 
 #include "../header.h"
 #include "common.h"
-#include "core/refl/reflection.h"
+#include "core/type_reflection.h"
 #include <algorithm>
 
 namespace luminous {
@@ -64,9 +64,8 @@ namespace luminous {
         using namespace detail;
 
         template<typename... Ts>
-        struct Variant : BASE_CLASS() {
+        struct Variant {
         public:
-            REFL_CLASS(Variant<Ts...>)
 
             static constexpr bool is_pointer_type = ((std::is_pointer_v<Ts>) && ...);
 
@@ -96,20 +95,7 @@ namespace luminous {
 
             int8_t index = -1;
 
-#ifndef __CUDACC__
-            static constexpr int data_refl_index = sizeof((_member_counter(0, (refl::Int<128> *)
-                                                                                   nullptr)));
-            static_assert(data_refl_index <= 128, "index must not greater than REFL_MAX_MEMBER_COUNT");
-
-            static refl::detail::Sizer<data_refl_index + 1> (_member_counter(int, refl::Int<data_refl_index + 1> *));
-
-            template<>
-            struct MemberRegister<data_refl_index - 1> {
-                template<typename F>
-                static void process(const F &f) { f(&ReflSelf::data, "data"); }
-            };
-#endif
-
+            DECLARE_MEMBER_MAP(Variant)
 
         public:
             using TypeTuple = std::tuple<Ts...>;
@@ -314,6 +300,11 @@ namespace luminous {
         }, "File:\"" __FILE__ "\",Line:" TO_STRING(__LINE__) ",Calling:" LM_FUNCSIG);
 
         };
+
+        template<class ...Types> inline
+        BEGIN_MEMBER_MAP(Variant<Types...>)
+            MEMBER_MAP_ENTRY_AUGMENTED(data, !is_pointer_type)
+        END_MEMBER_MAP()
 
         template<typename T>
         class Sizer {

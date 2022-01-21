@@ -29,11 +29,11 @@ namespace luminous {
 
         class SurfaceInteraction;
 
-        class LightSampler : BASE_CLASS(Variant<UniformLightSampler *>) {
+        class LightSampler : public Variant<UniformLightSampler *> {
         public:
-            using BaseBinder::BaseBinder;
+            using Variant::Variant;
 
-            REFL_CLASS(LightSampler)
+            DECLARE_REFLECTION(LightSampler, Variant)
 
             GEN_BASE_NAME(LightSampler)
 

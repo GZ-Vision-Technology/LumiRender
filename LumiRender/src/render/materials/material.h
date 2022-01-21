@@ -8,6 +8,7 @@
 
 #include "base_libs/lstd/variant.h"
 #include "core/refl/reflection.h"
+#include "core/type_reflection.h"
 #include "render/include/interaction.h"
 #include "parser/config.h"
 
@@ -29,15 +30,15 @@ namespace luminous {
 
         class DisneyMaterial;
 
-        class Material : BASE_CLASS(Variant<MatteMaterial *, AssimpMaterial *, MirrorMaterial *,
-                                            GlassMaterial *, FakeMetalMaterial *, MetalMaterial *, DisneyMaterial *>) {
+        class Material : public Variant<MatteMaterial *, AssimpMaterial *, MirrorMaterial *,
+                                            GlassMaterial *, FakeMetalMaterial *, MetalMaterial *, DisneyMaterial *> {
         protected:
+            DECLARE_REFLECTION(Material, Variant)
             index_t _normal_idx{invalid_uint32};
-        public:
-            REFL_CLASS(Material)
 
-            using BaseBinder::BaseBinder;
         public:
+            using Variant::Variant;
+
             GEN_BASE_NAME(Material)
 
             LM_ND_XPU MaterialEvalContext compute_shading_frame(MaterialEvalContext ctx, const SceneData *scene_data) const;
@@ -45,7 +46,6 @@ namespace luminous {
             LM_ND_XPU BSDFWrapper get_BSDF(MaterialEvalContext ctx, const SceneData *scene_data) const;
 
 #ifndef __CUDACC__
-
             LM_NODISCARD static std::pair<Material, std::vector<size_t>> create(const MaterialConfig &mc);
 
 #endif

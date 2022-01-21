@@ -199,6 +199,18 @@ namespace luminous {
             TextureConfig diff_trans_tex;
             bool thin{};
 
+            // Subsurface material, disable it temporarily
+#if 0
+            TextureConfig sigma_a;
+            TextureConfig sigma_s;
+            TextureConfig reflectance;
+            TextureConfig mfp;
+            float eta;
+            float g;
+            TextureConfig uroughness, vroughness;
+            // using remapping_roughness
+#endif
+
             static void fill_tex_idx_by_name(std::vector<TextureConfig> &tex_configs,
                                              TextureConfig &tc, bool force = false, bool check = true);
 

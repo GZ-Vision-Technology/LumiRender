@@ -24,11 +24,11 @@ namespace luminous {
 
         class SpotLight;
 
-        class Light : BASE_CLASS(Variant<AreaLight *, Envmap *>) {
+        class Light : public Variant<AreaLight *, Envmap *> {
         private:
-            using BaseBinder::BaseBinder;
+            using Variant::Variant;
         public:
-            REFL_CLASS(Light)
+            DECLARE_REFLECTION(Light, Variant)
 
             GEN_BASE_NAME(Light)
 

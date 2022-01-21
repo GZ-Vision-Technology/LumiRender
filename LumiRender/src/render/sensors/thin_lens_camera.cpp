@@ -13,7 +13,7 @@ namespace luminous {
     inline namespace render {
         ThinLensCamera::ThinLensCamera(const float4x4 &m, float fov_y, float velocity,
                                        float lens_radius, float focal_distance)
-                : BaseBinder<CameraBase>(m, fov_y, velocity),
+                : CameraBase(m, fov_y, velocity),
                   _lens_radius(lens_radius),
                   _focal_distance(focal_distance) {}
 

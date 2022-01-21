@@ -67,5 +67,27 @@ namespace luminous {
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                           TransportMode mode = TransportMode::Radiance) const;
         };
+
+        extern LM_XPU float fresnel_moment1(float eta);
+        extern LM_XPU float fresnel_moment2(float eta);
+
+        class NormalizedFresnelBxDF : public BxDF<NormalizedFresnelBxDF> {
+        public:
+            NormalizedFresnelBxDF(float eta);
+
+            BSDFSample sample_f(float3 wo, float uc, float2 u, const BSDFHelper &data, TransportMode mode = TransportMode::Radiance) const;
+
+            Spectrum safe_eval(float3 wo, float3 wi, const BSDFHelper &data, TransportMode mode = TransportMode::Radiance) const;
+
+            float safe_PDF(float3 wo, float3 wi, const BSDFHelper &data, TransportMode mode = TransportMode::Radiance) const;
+
+            Spectrum spectrum() const {
+                return {};
+            }
+
+        private:
+            float _inv_c_mul_pi;
+            float _eta;
+        };
     }
 }

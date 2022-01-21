@@ -80,7 +80,7 @@ namespace luminous {
         }
     }
 
-    GLuint createGLShader(const std::string &source, GLuint shader_type) {
+    inline GLuint createGLShader(const std::string &source, GLuint shader_type) {
         GLuint shader = glCreateShader(shader_type);
         {
             const GLchar *source_data = reinterpret_cast<const GLchar *>( source.data());
@@ -109,7 +109,7 @@ namespace luminous {
         return shader;
     }
 
-    GLuint createGLProgram(const std::string &vert_source, const std::string &frag_source) {
+    inline GLuint createGLProgram(const std::string &vert_source, const std::string &frag_source) {
         GLuint vert_shader = createGLShader(vert_source, GL_VERTEX_SHADER);
         if (vert_shader == 0)
             return 0;
@@ -152,7 +152,7 @@ namespace luminous {
     }
 
 
-    GLint getGLUniformLocation(GLuint program, const std::string &name) {
+    inline GLint getGLUniformLocation(GLuint program, const std::string &name) {
         GLint loc = glGetUniformLocation(program, name.c_str());
         assert(loc != -1);
         return loc;
@@ -187,7 +187,7 @@ namespace luminous {
     }
     )";
 
-    static const GLfloat vertex_buffer_data[] = {
+    const GLfloat vertex_buffer_data[] = {
             -1.0f, -1.0f, 0.0f,
             1.0f, -1.0f, 0.0f,
             -1.0f,  1.0f, 0.0f,

@@ -25,6 +25,8 @@ namespace luminous {
 
         class RGBSpectrum : public float3 {
         public:
+            static constexpr int nSamples = 3;
+
             using scalar_t = float;
             using vector_t = float3;
 
@@ -39,6 +41,16 @@ namespace luminous {
 
             LM_XPU RGBSpectrum(float4 vec)
                     : RGBSpectrum(make_float3(vec)) {}
+
+            LM_XPU const scalar_t& operator[](int i) const {
+                DCHECK_LE(i, nSamples);
+                return (&x)[i];
+            }
+
+            LM_XPU scalar_t& operator[](int i) {
+                DCHECK_LE(i, nSamples);
+                return (&x)[i];
+            }
 
             ND_XPU_INLINE scalar_t R() const noexcept { return x; }
 

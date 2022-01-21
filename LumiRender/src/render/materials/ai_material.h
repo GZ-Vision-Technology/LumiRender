@@ -8,13 +8,13 @@
 #include "render/textures/texture.h"
 #include "parser/config.h"
 #include "render/scattering/bsdf_wrapper.h"
-#include "core/refl/reflection.h"
+#include "core/type_reflection.h"
 
 namespace luminous {
     inline namespace render {
-        class AssimpMaterial : BASE_CLASS() {
+        class AssimpMaterial {
         public:
-            REFL_CLASS(AssimpMaterial)
+            DECLARE_REFLECTION(AssimpMaterial)
 
         private:
             index_t _color_idx{};

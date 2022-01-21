@@ -19,9 +19,8 @@ namespace luminous {
 
         class Film;
 
-        class CameraBase : BASE_CLASS() {
-        public:
-            REFL_CLASS(CameraBase)
+        class CameraBase {
+            DECLARE_REFLECTION(CameraBase)
 
         protected:
             constexpr static float z_near = 0.01f;
@@ -42,9 +41,12 @@ namespace luminous {
             Transform _camera_to_screen{};
             Transform _raster_to_camera{};
 
-            DEFINE_AND_REGISTER_MEMBER(Film *, _film);
+            Film *_film;
 
             Filter _filter;
+
+            // member mapping
+            DECLARE_MEMBER_MAP(CameraBase)
 
             LM_XPU void _update(const float4x4 &m);
 

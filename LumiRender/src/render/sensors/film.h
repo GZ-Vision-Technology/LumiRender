@@ -23,9 +23,9 @@ namespace luminous {
 
         using FrameBufferType = uint32_t;
 
-        class Film : BASE_CLASS() {
+        class Film {
         public:
-            REFL_CLASS(Film)
+            DECLARE_REFLECTION(Film)
 
         protected:
             uint2 _resolution;

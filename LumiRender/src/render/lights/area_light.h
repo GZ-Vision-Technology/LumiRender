@@ -10,9 +10,9 @@
 
 namespace luminous {
     inline namespace render {
-        class AreaLight : BASE_CLASS(LightBase) {
+        class AreaLight : public LightBase {
         public:
-            REFL_CLASS(AreaLight)
+            DECLARE_REFLECTION(AreaLight, LightBase)
 
         private:
             uint _inst_idx{};

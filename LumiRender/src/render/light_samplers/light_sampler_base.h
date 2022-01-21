@@ -35,9 +35,9 @@ namespace luminous {
             CPU_ONLY(LM_NODISCARD std::string to_string() const;)
         };
 
-        class LightSamplerBase : BASE_CLASS() {
+        class LightSamplerBase {
         public:
-            REFL_CLASS(LightSamplerBase)
+            DECLARE_REFLECTION(LightSamplerBase)
 
         private:
             BufferView<const Light> _lights;

@@ -12,9 +12,9 @@
 
 namespace luminous {
     inline namespace render {
-        class GlassMaterial : BASE_CLASS() {
+        class GlassMaterial {
         public:
-            REFL_CLASS(GlassMaterial)
+            DECLARE_REFLECTION(GlassMaterial)
 
         private:
             index_t _color_idx{};

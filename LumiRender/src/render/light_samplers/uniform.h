@@ -11,9 +11,9 @@
 namespace luminous {
     inline namespace render {
 
-        class UniformLightSampler : BASE_CLASS(LightSamplerBase) {
+        class UniformLightSampler : public LightSamplerBase {
         public:
-            REFL_CLASS(UniformLightSampler)
+            DECLARE_REFLECTION(UniformLightSampler, LightSamplerBase)
 
             UniformLightSampler() = default;
 

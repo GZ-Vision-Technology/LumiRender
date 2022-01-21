@@ -17,12 +17,12 @@ namespace luminous {
 
         class Filter;
 
-        class Sampler : BASE_CLASS(Variant<PCGSampler, LCGSampler>) {
-        public:
-            REFL_CLASS(Sampler)
+        class Sampler : public Variant<PCGSampler, LCGSampler> {
+        
+            DECLARE_REFLECTION(Sampler, Variant)
 
         private:
-            using BaseBinder::BaseBinder;
+            using Variant::Variant;
         public:
             GEN_BASE_NAME(Sampler)
 

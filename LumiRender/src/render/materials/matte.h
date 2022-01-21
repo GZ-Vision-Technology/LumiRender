@@ -14,9 +14,9 @@
 
 namespace luminous {
     inline namespace render {
-        class MatteMaterial : BASE_CLASS() {
+        class MatteMaterial {
         public:
-            REFL_CLASS(MatteMaterial)
+            DECLARE_REFLECTION(MatteMaterial)
         private:
             index_t _color_idx{};
             float _sigma{};

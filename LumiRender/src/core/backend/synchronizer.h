@@ -66,11 +66,16 @@ namespace luminous {
                 USE_BLOCK(&_memory_block);
                 std::pair<element_type, std::vector<size_t>> elm = element_type::create(config);
                 lstd::append(_address, elm.second);
+
                 BaseClass::push_back(elm.first);
-                refl::for_each_all_registered_member<T>([&](size_t offset, const char *name, auto __) {
-                    auto &element = BaseClass::back();
-                    _address.push_back(ptr_t(&element) + offset);
-                });
+                runtime_class<T>::visit_member_map(reinterpret_cast<size_t>(&BaseClass::back()),
+                                                   [this](const char *name, size_t offset) {
+                                                       _address.push_back(offset);
+                                                   });
+                // refl::for_each_all_registered_member<T>([&](size_t offset, const char *name, auto __) {
+                //     auto &element = BaseClass::back();
+                //     _address.push_back(ptr_t(&element) + offset);
+                // });
             }
 
             LM_NODISCARD const element_type *operator->() const {

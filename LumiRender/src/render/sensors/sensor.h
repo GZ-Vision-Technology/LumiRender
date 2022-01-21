@@ -20,11 +20,11 @@ namespace luminous {
 
         class Film;
 
-        class Sensor : BASE_CLASS(Variant < ThinLensCamera * >) {
+        class Sensor : public Variant<ThinLensCamera *> {
         public:
-            REFL_CLASS(Sensor)
+            DECLARE_REFLECTION(Sensor, Variant)
 
-            using BaseBinder::BaseBinder;
+            using Variant::Variant;
 
             GEN_BASE_NAME(Sensor)
 

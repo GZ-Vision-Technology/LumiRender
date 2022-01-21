@@ -6,7 +6,7 @@
 #pragma once
 
 #include "base_libs/geometry/common.h"
-#include "core/refl/reflection.h"
+#include "core/type_reflection.h"
 
 namespace luminous {
     inline namespace render {
@@ -25,9 +25,8 @@ namespace luminous {
             })
         };
 
-        class SamplerBase : BASE_CLASS() {
-        public:
-            REFL_CLASS(SamplerBase)
+        class SamplerBase {
+            DECLARE_REFLECTION(SamplerBase)
         protected:
             int _spp;
         public:

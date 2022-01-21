@@ -11,9 +11,9 @@
 namespace luminous {
 
     inline namespace render {
-        class ThinLensCamera : BASE_CLASS(CameraBase) {
+        class ThinLensCamera : public CameraBase {
         public:
-            REFL_CLASS(ThinLensCamera)
+            DECLARE_REFLECTION(ThinLensCamera, CameraBase)
         private:
             float _lens_radius{0};
 

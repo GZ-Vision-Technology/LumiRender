@@ -74,6 +74,7 @@ namespace luminous {
                 MicrofacetReflection, MicrofacetTransmission,
                 DiffuseTransmission, SpecularTransmission>;
 
+        using NormalizedFresnelBSDF = BSDF_Ty<BSDFHelper, false, NormalizedFresnelBxDF>;
 
         struct DisneyBSDFData {
         public:

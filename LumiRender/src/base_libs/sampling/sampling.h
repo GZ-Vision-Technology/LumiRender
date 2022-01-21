@@ -28,15 +28,6 @@ namespace luminous {
             return std::min(float(x), float(one_minus_epsilon));
         }
 
-
-        ND_XPU_INLINE float fast_exp(float x) {
-#ifdef IS_GPU_CODE
-            return __expf(x);
-#else
-            return std::exp(x);
-#endif
-        }
-
         ND_XPU_INLINE int sample_discrete(BufferView<const float> weights, float u,
                                           float *pmf = nullptr, float *uRemapped = nullptr) {
             // Handle empty _weights_ for discrete sampling

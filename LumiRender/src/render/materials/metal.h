@@ -12,9 +12,9 @@
 
 namespace luminous {
     inline namespace render {
-        class FakeMetalMaterial : BASE_CLASS() {
+        class FakeMetalMaterial {
         public:
-            REFL_CLASS(FakeMetalMaterial)
+            DECLARE_REFLECTION(FakeMetalMaterial)
 
         private:
             index_t _color_idx{};
@@ -30,9 +30,9 @@ namespace luminous {
                     : FakeMetalMaterial(mc.color_tex.tex_idx(), mc.roughness_tex.tex_idx(), mc.remapping_roughness) {})
         };
 
-        class MetalMaterial : BASE_CLASS() {
+        class MetalMaterial {
         public:
-            REFL_CLASS(MetalMaterial)
+            DECLARE_REFLECTION(MetalMaterial)
 
         private:
             index_t _eta_idx{};

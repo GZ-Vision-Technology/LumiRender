@@ -8,6 +8,10 @@
 namespace luminous {
     inline namespace render {
 
+        BEGIN_MEMBER_MAP(CameraBase)
+            MEMBER_MAP_ENTRY(_film)
+        END_MEMBER_MAP()
+
         CameraBase::CameraBase(float3 pos, float fov_y)
                 : _position(pos), _fov_y(fov_y) {}
 

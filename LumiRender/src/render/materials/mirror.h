@@ -12,9 +12,9 @@
 
 namespace luminous {
     inline namespace render {
-        class MirrorMaterial : BASE_CLASS() {
+        class MirrorMaterial {
         public:
-            REFL_CLASS(MirrorMaterial)
+            DECLARE_REFLECTION(MirrorMaterial)
 
         private:
             index_t _color_idx{};

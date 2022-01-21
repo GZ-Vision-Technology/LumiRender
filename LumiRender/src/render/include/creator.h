@@ -10,7 +10,7 @@
 #include "base_libs/lstd/lstd.h"
 #include "core/logging.h"
 #include "core/memory/allocator.h"
-#include "core/refl/reflection.h"
+#include "core/type_reflection.h"
 
 namespace luminous {
     inline namespace render {
@@ -27,8 +27,9 @@ namespace luminous {
             static auto create_ptr(Args &&...args) {
                 auto ptr = get_arena().template create<T>(std::forward<Args>(args)...);
                 std::vector<size_t> addresses;
-                refl::for_each_all_registered_member<T>([&](size_t offset, const char *name, auto __) {
-                    addresses.push_back(ptr_t(ptr) + offset);
+
+                reflection::runtime_class<T>::visit_member_map(ptr_t(ptr), [&addresses](const char *name, size_t offset) {
+                    addresses.push_back(offset);
                 });
                 return std::make_pair(ptr, addresses);
             }

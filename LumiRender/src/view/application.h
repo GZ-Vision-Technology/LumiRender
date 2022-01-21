@@ -12,12 +12,9 @@
 #include "base_libs/header.h"
 #include "core/logging.h"
 #include "base_libs/math/common.h"
-#include "gl_helper.h"
+#include <glad.h>
 #include "util/clock.h"
 #include "render/include/task.h"
-
-#include "luminous_view_config.h"
-#include "core/film_denoiser.h"
 
 namespace luminous {
 
@@ -53,28 +50,24 @@ namespace luminous {
         struct FrameStats {
             float update_time{.0f};
             float render_time{.0f};
-            float denoise_time{.0f};
             float display_time{.0f};
             float last_frame_elapsed{.0f};
             float last_sample_elapsed{.0f};
             unsigned long frame_count = 0;
         } _frame_stats;
 
-        bool _reset_denoise_frame{false};
-        bool _enable_denoising{false};
-        std::unique_ptr<FilmDenoiser> _denoiser;
-        std::unique_ptr<float4[]> _denoise_output_buffer;
+        void *_render_buffer_shared_resource{};
 
     public:
-        LUMINOUS_VIEW_LIB_VISIBILITY App() = default;
+        App() = default;
 
-        LUMINOUS_VIEW_LIB_VISIBILITY App(const std::string &title, const int2 &size, Context *context, const Parser &parser);
+        App(const std::string &title, const int2 &size, Context *context, const Parser &parser);
 
-        LUMINOUS_VIEW_LIB_VISIBILITY  ~App();
+        ~App();
 
-        LUMINOUS_VIEW_LIB_VISIBILITY void init(const std::string &title, const int2 &size, Context *context, const Parser &parser);
+        void init(const std::string &title, const int2 &size, Context *context, const Parser &parser);
 
-        LUMINOUS_VIEW_LIB_VISIBILITY int run();
+        int run();
 
     private:
         void init_with_gui(const std::string &title);

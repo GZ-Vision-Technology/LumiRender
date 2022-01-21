@@ -19,10 +19,11 @@ namespace luminous {
 
         using lstd::Variant;
 
-        class Filter : BASE_CLASS(Variant<BoxFilter, TriangleFilter, GaussianFilter,
-                                          LanczosSincFilter, MitchellFilter>) {
+        class Filter : public Variant<BoxFilter, TriangleFilter, GaussianFilter,
+                                          LanczosSincFilter, MitchellFilter> {
+          DECLARE_REFLECTION(Filter, Variant)
         private:
-            using BaseBinder::BaseBinder;
+            using Variant::Variant;
         public:
             GEN_BASE_NAME(Sampler)
 
