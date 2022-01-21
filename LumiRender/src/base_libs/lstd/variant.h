@@ -241,10 +241,8 @@ namespace luminous {
 #define GEN_DISPATCH_BODY()                                                                        \
   using Ret = std::invoke_result_t<Visitor, typename FirstOf<Ts...>::type &>;                      \
   static_assert(nTypes <= 16, "too many types");                                                   \
-  if (index < 0) {                                                                                 \
-  LM_ASSERT(0, "Error: %s: unknown type tag: %d\n", func_name, index);                               \
-                                                                                         \
-  }                                                                                                \
+  LM_ASSERT(index < 0, "Error: %s: unknown type tag: %d\n", func_name, index);                     \
+                                                                                                   \
   if constexpr (nTypes <= 2) {                                                                     \
     switch (index) { GEN_CASES_2() }                                                               \
   } else if constexpr (nTypes <= 4) {                                                              \
@@ -259,7 +257,7 @@ namespace luminous {
   if constexpr (std::is_same_v<void, Ret>) {                                                       \
     return;                                                                                        \
   } else {                                                                                         \
-    /* LM_ASSERT(0, "Error: %s: unknown type tag: %d\n", func_name, index); */                   \
+            LM_ASSERT(0, "Error: %s: unknown type tag: %d\n", func_name, index);                   \
     return Ret{};                                                                                  \
         }
 
