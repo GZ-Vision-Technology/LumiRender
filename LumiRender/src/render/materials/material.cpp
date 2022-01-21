@@ -40,7 +40,7 @@ namespace luminous {
 #ifndef __CUDACC__
         std::pair<Material, std::vector<size_t>> Material::create(const MaterialConfig &mc) {
             auto ret = detail::create_ptr<Material>(mc);
-            ret.first._normal_idx = mc.normal_tex.tex_idx();
+            ret.first._normal_idx = mc.normal.tex_idx();
             return ret;
         }
 #endif

@@ -27,7 +27,7 @@ namespace luminous {
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(explicit FakeMetalMaterial(const MaterialConfig &mc)
-                    : FakeMetalMaterial(mc.color_tex.tex_idx(), mc.roughness_tex.tex_idx(), mc.remapping_roughness) {})
+                    : FakeMetalMaterial(mc.color.tex_idx(), mc.roughness.tex_idx(), mc.remapping_roughness) {})
         };
 
         class MetalMaterial {
@@ -47,8 +47,8 @@ namespace luminous {
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(explicit MetalMaterial(const MaterialConfig &mc)
-                    : MetalMaterial(mc.eta_tex.tex_idx(), mc.k_tex.tex_idx(),
-                                    mc.roughness_tex.tex_idx(), mc.remapping_roughness) {})
+                    : MetalMaterial(mc.eta.tex_idx(), mc.k.tex_idx(),
+                                    mc.roughness.tex_idx(), mc.remapping_roughness) {})
         };
     }
 }

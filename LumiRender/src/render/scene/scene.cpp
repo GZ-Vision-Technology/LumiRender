@@ -32,7 +32,7 @@ namespace luminous {
 
             MaterialConfig mc;
             mc.set_full_type("MatteMaterial");
-            mc.color_tex.fill_tex_idx(_tex_configs.size() - 1);
+            mc.color.fill_tex_idx(_tex_configs.size() - 1);
             material_configs.push_back(mc);
         }
 

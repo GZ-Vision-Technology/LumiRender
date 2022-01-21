@@ -24,7 +24,7 @@ namespace luminous {
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(explicit MirrorMaterial(const MaterialConfig &mc)
-                    : MirrorMaterial(mc.color_tex.tex_idx()) {})
+                    : MirrorMaterial(mc.color.tex_idx()) {})
         };
     }
 }

@@ -140,35 +140,35 @@ namespace luminous {
             {
                 // process diffuse
                 auto[diffuse_fn, diffuse] = load_texture(ai_material, aiTextureType_DIFFUSE);
-                mc.color_tex.fn = full_path(diffuse_fn);
-                auto tex_type = mc.color_tex.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
-                mc.color_tex.val = diffuse;
-                mc.color_tex.name = "color";
-                mc.color_tex.set_type(tex_type);
-                mc.color_tex.color_space = LINEAR;
+                mc.color.fn = full_path(diffuse_fn);
+                auto tex_type = mc.color.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
+                mc.color.val = diffuse;
+                mc.color.name = "color";
+                mc.color.set_type(tex_type);
+                mc.color.color_space = LINEAR;
             }
             {
                 // process specular
                 auto[specular_fn, specular] = load_texture(ai_material, aiTextureType_SPECULAR);
-                mc.specular_tex.fn = full_path(specular_fn);
-                mc.specular_tex.val = specular;
-                mc.specular_tex.name = "specular";
-                auto tex_type = mc.specular_tex.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
-                mc.specular_tex.set_type(tex_type);
-                mc.specular_tex.color_space = LINEAR;
+                mc.specular.fn = full_path(specular_fn);
+                mc.specular.val = specular;
+                mc.specular.name = "specular";
+                auto tex_type = mc.specular.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
+                mc.specular.set_type(tex_type);
+                mc.specular.color_space = LINEAR;
             }
             if (use_normal_map) {
                 auto[normal_fn, normal] = load_texture(ai_material, aiTextureType_HEIGHT);
                 if (normal_fn.empty()) {
                     return mc;
                 }
-                mc.normal_tex.set_type(type_name<ImageTexture>());
-                mc.normal_tex.name = "normal";
-                mc.normal_tex.val = normal;
-                mc.normal_tex.fn = full_path(normal_fn);
-                auto tex_type = mc.normal_tex.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
-                mc.normal_tex.set_type(tex_type);
-                mc.normal_tex.color_space = LINEAR;
+                mc.normal.set_type(type_name<ImageTexture>());
+                mc.normal.name = "normal";
+                mc.normal.val = normal;
+                mc.normal.fn = full_path(normal_fn);
+                auto tex_type = mc.normal.fn.empty() ? type_name<ConstantTexture>() : type_name<ImageTexture>();
+                mc.normal.set_type(tex_type);
+                mc.normal.color_space = LINEAR;
             }
             return mc;
 

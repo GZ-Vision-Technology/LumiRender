@@ -168,35 +168,35 @@ namespace luminous {
         struct MaterialConfig : Config {
 
             // common
-            MaterialAttrConfig color_tex;
+            MaterialAttrConfig color;
             bool remapping_roughness{true};
-            MaterialAttrConfig roughness_tex;
+            MaterialAttrConfig roughness;
 
             // matte
             float sigma{};
 
             // assimp material
-            MaterialAttrConfig specular_tex;
-            MaterialAttrConfig normal_tex;
+            MaterialAttrConfig specular;
+            MaterialAttrConfig normal;
 
             // glass material
-            MaterialAttrConfig eta_tex;
+            MaterialAttrConfig eta;
 
             // metal material
-            MaterialAttrConfig k_tex;
+            MaterialAttrConfig k;
 
             // disney material
-            MaterialAttrConfig metallic_tex;
-            MaterialAttrConfig specular_tint_tex;
-            MaterialAttrConfig anisotropic_tex;
-            MaterialAttrConfig sheen_tex;
-            MaterialAttrConfig sheen_tint_tex;
-            MaterialAttrConfig clearcoat_tex;
-            MaterialAttrConfig clearcoat_gloss_tex;
-            MaterialAttrConfig spec_trans_tex;
-            MaterialAttrConfig scatter_distance_tex;
-            MaterialAttrConfig flatness_tex;
-            MaterialAttrConfig diff_trans_tex;
+            MaterialAttrConfig metallic;
+            MaterialAttrConfig specular_tint;
+            MaterialAttrConfig anisotropic;
+            MaterialAttrConfig sheen;
+            MaterialAttrConfig sheen_tint;
+            MaterialAttrConfig clearcoat;
+            MaterialAttrConfig clearcoat_gloss;
+            MaterialAttrConfig spec_trans;
+            MaterialAttrConfig scatter_distance;
+            MaterialAttrConfig flatness;
+            MaterialAttrConfig diff_trans;
             bool thin{};
 
             // Subsurface material, disable it temporarily

@@ -42,81 +42,81 @@ namespace luminous {
 
         void MaterialConfig::fill_tex_configs(vector<MaterialAttrConfig> &tex_configs) {
             // common data
-            if (!normal_tex.name.empty()) {
-                fill_tex_idx_by_name(tex_configs, normal_tex, false, false);
+            if (!normal.name.empty()) {
+                fill_tex_idx_by_name(tex_configs, normal, false, false);
             }
 
             if (type() == full_type("AssimpMaterial")) {
                 int64_t index = lstd::find_index_if(tex_configs, [&](const MaterialAttrConfig &tex_config) {
-                    return tex_config == color_tex;
+                    return tex_config == color;
                 });
                 if (index == -1) {
-                    color_tex.set_tex_idx(tex_configs.size());
-                    tex_configs.push_back(color_tex);
+                    color.set_tex_idx(tex_configs.size());
+                    tex_configs.push_back(color);
                 } else {
-                    color_tex.set_tex_idx(index);
+                    color.set_tex_idx(index);
                 }
 
                 index = lstd::find_index_if(tex_configs, [&](const MaterialAttrConfig &tex_config) {
-                    return tex_config == specular_tex;
+                    return tex_config == specular;
                 });
                 if (index == -1) {
-                    specular_tex.fill_tex_idx(tex_configs.size());
-                    tex_configs.push_back(specular_tex);
+                    specular.fill_tex_idx(tex_configs.size());
+                    tex_configs.push_back(specular);
                 } else {
-                    specular_tex.fill_tex_idx(index);
+                    specular.fill_tex_idx(index);
                 }
 
                 index = lstd::find_index_if(tex_configs, [&](const MaterialAttrConfig &tex_config) {
-                    return tex_config == normal_tex;
+                    return tex_config == normal;
                 });
-                if (index == -1 && !normal_tex.name.empty()) {
-                    normal_tex.fill_tex_idx(tex_configs.size());
-                    tex_configs.push_back(normal_tex);
+                if (index == -1 && !normal.name.empty()) {
+                    normal.fill_tex_idx(tex_configs.size());
+                    tex_configs.push_back(normal);
                 } else {
-                    normal_tex.fill_tex_idx(index);
+                    normal.fill_tex_idx(index);
                 }
 
             } else if (type() == full_type("MatteMaterial")) {
 
-                fill_tex_idx_by_name(tex_configs, color_tex);
+                fill_tex_idx_by_name(tex_configs, color);
 
             } else if (type() == full_type("MetalMaterial")) {
 
-                fill_tex_idx_by_name(tex_configs, roughness_tex);
+                fill_tex_idx_by_name(tex_configs, roughness);
 
-                fill_tex_idx_by_name(tex_configs, k_tex);
+                fill_tex_idx_by_name(tex_configs, k);
 
-                fill_tex_idx_by_name(tex_configs, eta_tex);
+                fill_tex_idx_by_name(tex_configs, eta);
 
             } else if (type() == full_type("GlassMaterial")) {
-                fill_tex_idx_by_name(tex_configs, color_tex);
+                fill_tex_idx_by_name(tex_configs, color);
 
-                fill_tex_idx_by_name(tex_configs, roughness_tex);
+                fill_tex_idx_by_name(tex_configs, roughness);
 
-                fill_tex_idx_by_name(tex_configs, eta_tex);
+                fill_tex_idx_by_name(tex_configs, eta);
 
             } else if (type() == full_type("FakeMetalMaterial")) {
 
-                fill_tex_idx_by_name(tex_configs, color_tex);
-                fill_tex_idx_by_name(tex_configs, roughness_tex);
+                fill_tex_idx_by_name(tex_configs, color);
+                fill_tex_idx_by_name(tex_configs, roughness);
 
             } else if (type() == full_type("DisneyMaterial")) {
 
-                fill_tex_idx_by_name(tex_configs, color_tex);
-                fill_tex_idx_by_name(tex_configs, roughness_tex);
-                fill_tex_idx_by_name(tex_configs, eta_tex);
-                fill_tex_idx_by_name(tex_configs, metallic_tex);
-                fill_tex_idx_by_name(tex_configs, specular_tint_tex);
-                fill_tex_idx_by_name(tex_configs, anisotropic_tex);
-                fill_tex_idx_by_name(tex_configs, sheen_tex);
-                fill_tex_idx_by_name(tex_configs, sheen_tint_tex);
-                fill_tex_idx_by_name(tex_configs, clearcoat_tex);
-                fill_tex_idx_by_name(tex_configs, clearcoat_gloss_tex);
-                fill_tex_idx_by_name(tex_configs, spec_trans_tex);
-                fill_tex_idx_by_name(tex_configs, scatter_distance_tex);
-                fill_tex_idx_by_name(tex_configs, flatness_tex);
-                fill_tex_idx_by_name(tex_configs, diff_trans_tex);
+                fill_tex_idx_by_name(tex_configs, color);
+                fill_tex_idx_by_name(tex_configs, roughness);
+                fill_tex_idx_by_name(tex_configs, eta);
+                fill_tex_idx_by_name(tex_configs, metallic);
+                fill_tex_idx_by_name(tex_configs, specular_tint);
+                fill_tex_idx_by_name(tex_configs, anisotropic);
+                fill_tex_idx_by_name(tex_configs, sheen);
+                fill_tex_idx_by_name(tex_configs, sheen_tint);
+                fill_tex_idx_by_name(tex_configs, clearcoat);
+                fill_tex_idx_by_name(tex_configs, clearcoat_gloss);
+                fill_tex_idx_by_name(tex_configs, spec_trans);
+                fill_tex_idx_by_name(tex_configs, scatter_distance);
+                fill_tex_idx_by_name(tex_configs, flatness);
+                fill_tex_idx_by_name(tex_configs, diff_trans);
 
             }
         #if 0

@@ -68,21 +68,21 @@ namespace luminous {
                       _diff_trans(diff_trans) {}
 
             CPU_ONLY(explicit DisneyMaterial(const MaterialConfig &mc)
-                    : DisneyMaterial(mc.color_tex.tex_idx(),
-                                     mc.metallic_tex.tex_idx(),
-                                     mc.eta_tex.tex_idx(),
-                                     mc.roughness_tex.tex_idx(),
-                                     mc.specular_tint_tex.tex_idx(),
-                                     mc.anisotropic_tex.tex_idx(),
-                                     mc.sheen_tex.tex_idx(),
-                                     mc.sheen_tint_tex.tex_idx(),
-                                     mc.clearcoat_tex.tex_idx(),
-                                     mc.clearcoat_gloss_tex.tex_idx(),
-                                     mc.spec_trans_tex.tex_idx(),
-                                     mc.scatter_distance_tex.tex_idx(),
+                    : DisneyMaterial(mc.color.tex_idx(),
+                                     mc.metallic.tex_idx(),
+                                     mc.eta.tex_idx(),
+                                     mc.roughness.tex_idx(),
+                                     mc.specular_tint.tex_idx(),
+                                     mc.anisotropic.tex_idx(),
+                                     mc.sheen.tex_idx(),
+                                     mc.sheen_tint.tex_idx(),
+                                     mc.clearcoat.tex_idx(),
+                                     mc.clearcoat_gloss.tex_idx(),
+                                     mc.spec_trans.tex_idx(),
+                                     mc.scatter_distance.tex_idx(),
                                      mc.thin,
-                                     mc.flatness_tex.tex_idx(),
-                                     mc.diff_trans_tex.tex_idx()) {})
+                                     mc.flatness.tex_idx(),
+                                     mc.diff_trans.tex_idx()) {})
 
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx,
                                            const SceneData *scene_data) const;

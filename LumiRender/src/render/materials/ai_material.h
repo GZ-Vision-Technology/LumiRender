@@ -25,9 +25,9 @@ namespace luminous {
             float4 _specular{};
         public:
             CPU_ONLY(explicit AssimpMaterial(const MaterialConfig &mc)
-                    : AssimpMaterial(mc.color_tex.tex_idx(), mc.specular_tex.tex_idx(),
-                                     mc.normal_tex.tex_idx(), mc.color_tex.val,
-                                     mc.specular_tex.val) {})
+                    : AssimpMaterial(mc.color.tex_idx(), mc.specular.tex_idx(),
+                                     mc.normal.tex_idx(), mc.color.val,
+                                     mc.specular.val) {})
 
             AssimpMaterial(index_t diffuse_idx, index_t specular_idx,
                            index_t normal_idx, float4 diffuse, float4 specular)
