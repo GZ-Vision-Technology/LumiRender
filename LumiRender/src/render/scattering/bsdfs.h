@@ -18,13 +18,13 @@ namespace luminous {
 
         using DiffuseBSDF = BSDF_Ty<BSDFHelper, true, DiffuseReflection>;
 
-        ND_XPU_INLINE DiffuseBSDF create_diffuse_bsdf(float4 color) {
+        ND_XPU_INLINE DiffuseBSDF create_diffuse_bsdf(float3 color) {
             return DiffuseBSDF(BSDFHelper::create_diffuse_data(color), DiffuseReflection{color});
         }
 
         using OrenNayarBSDF = BSDF_Ty<BSDFHelper, true, OrenNayar>;
 
-        ND_XPU_INLINE OrenNayarBSDF create_oren_nayar_bsdf(float4 color, float sigma) {
+        ND_XPU_INLINE OrenNayarBSDF create_oren_nayar_bsdf(float3 color, float sigma) {
             return OrenNayarBSDF(BSDFHelper::create_oren_nayar_data(color, sigma), OrenNayar{color});
         }
 

@@ -18,17 +18,18 @@ namespace luminous {
         public:
             DECLARE_REFLECTION(MatteMaterial)
         private:
-            index_t _color_idx{};
             float _sigma{};
 
             Attr3D _color{};
         public:
-            explicit MatteMaterial(index_t r, float sigma) : _color_idx(r), _sigma(sigma) {}
+//            MatteMaterial(index_t r, float sigma) : _color_idx(r), _sigma(sigma) {}
+
+            MatteMaterial(Attr3D color, float sigma) : _color(color), _sigma(sigma) {}
 
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(explicit MatteMaterial(const MaterialConfig &mc)
-                             :MatteMaterial(mc.color.tex_idx(),
+                             :MatteMaterial(Attr3D(mc.color),
                                             mc.sigma) {})
         };
     }

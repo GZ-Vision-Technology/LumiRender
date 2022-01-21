@@ -192,7 +192,7 @@ namespace luminous {
                 return ret;
             }
 
-            LM_ND_XPU static BSDFHelper create_oren_nayar_data(float4 color, float sigma) {
+            LM_ND_XPU static BSDFHelper create_oren_nayar_data(float3 color, float sigma) {
                 BSDFHelper ret{NoOp};
                 sigma = radians(sigma);
                 float sigma2 = sqr(sigma);
@@ -202,7 +202,7 @@ namespace luminous {
                 return ret;
             }
 
-            LM_ND_XPU static BSDFHelper create_diffuse_data(float4 color) {
+            LM_ND_XPU static BSDFHelper create_diffuse_data(float3 color) {
                 BSDFHelper ret{NoOp};
                 return ret;
             }
