@@ -187,7 +187,7 @@ namespace luminous {
                 return ret;
             }
 
-            LM_ND_XPU static BSDFHelper create_mirror_data(float4 color) {
+            LM_ND_XPU static BSDFHelper create_mirror_data(float3 color) {
                 BSDFHelper ret{NoOp};
                 return ret;
             }

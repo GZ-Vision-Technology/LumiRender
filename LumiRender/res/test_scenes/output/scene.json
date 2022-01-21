@@ -102,6 +102,13 @@
                     0.010000000149011612
                 ]
             }
+        },
+        {
+            "name": "mirror",
+            "type": "MirrorMaterial",
+            "param": {
+                "color" : [1,1,1]
+            }
         }
     ],
     "shapes": [
@@ -366,7 +373,7 @@
             "param": {
                 "fn": "meshes/Cube.gltf",
                 "smooth": false,
-                "material": "metal",
+                "material": "mirror",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {

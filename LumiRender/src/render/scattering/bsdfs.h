@@ -30,7 +30,7 @@ namespace luminous {
 
         using MirrorBSDF = BSDF_Ty<BSDFHelper, true, SpecularReflection>;
 
-        ND_XPU_INLINE MirrorBSDF create_mirror_bsdf(float4 color) {
+        ND_XPU_INLINE MirrorBSDF create_mirror_bsdf(float3 color) {
             return MirrorBSDF(BSDFHelper::create_mirror_data(color),
                               SpecularReflection{color});
         }

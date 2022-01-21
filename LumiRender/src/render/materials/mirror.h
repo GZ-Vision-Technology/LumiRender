@@ -7,7 +7,7 @@
 
 #include "render/textures/texture.h"
 #include "render/scattering/bsdf_wrapper.h"
-#include "parser/config.h"
+#include "attr.h"
 #include "core/concepts.h"
 
 namespace luminous {
@@ -15,16 +15,15 @@ namespace luminous {
         class MirrorMaterial {
         public:
             DECLARE_REFLECTION(MirrorMaterial)
-
         private:
-            index_t _color_idx{};
+            Attr3D _color{};
         public:
-            explicit MirrorMaterial(index_t color_idx) : _color_idx(color_idx) {}
+            explicit MirrorMaterial(Attr3D color) : _color(color) {}
 
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(explicit MirrorMaterial(const MaterialConfig &mc)
-                    : MirrorMaterial(mc.color.tex_idx()) {})
+                    : MirrorMaterial(Attr3D(mc.color)) {})
         };
     }
 }
