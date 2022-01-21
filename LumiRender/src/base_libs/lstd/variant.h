@@ -256,7 +256,7 @@ namespace luminous {
   using Ret = std::invoke_result_t<Visitor, typename FirstOf<Ts...>::type &>;                      \
   static_assert(nTypes <= 16, "too many types");                                                   \
   if (index < 0) {                                                                                 \
-    printf("Error: %s: unknown type tag: %d\n", func_name, index);                                 \
+  LM_ASSERT(0, "Error: %s: unknown type tag: %d\n", func_name, index);                               \
                                                                                          \
   }                                                                                                \
   if constexpr (nTypes <= 2) {                                                                     \

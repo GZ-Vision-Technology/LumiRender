@@ -36,7 +36,7 @@ int execute(int argc, char *argv[]) {
         }
         app.init("luminous", luminous::make_int2(1280,720), &context, *parser);
     } catch (std::exception &e1) {
-        cout << e1.what();
+        cout << "scene load exception : " << e1.what() << endl;
         return 0;
     }
     return app.run();
