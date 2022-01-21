@@ -119,6 +119,34 @@
 				"color" : [1, 1, 1],
 				"roughness": [0.01,0.01]
 			}
+		},
+		{
+			"type": "DisneyMaterial",
+			"name":"disney",
+			"param" : {
+//				"color" : "wall",
+				"color": [
+					1,1,1,
+					//                    0.7250000238418579,
+					//                    0.7099999785423279,
+					//                    0.6800000071525574,
+					1.0
+				],
+				"eta": 1.9,
+				"roughness":0.5,
+				"metallic": 0,
+				//                "specular_tint": 0.9,
+				"anisotropic": 0,
+				//                "sheen": 0.9,
+				//                "sheen_tint": 0.9,
+				//                "clearcoat": 0.59,
+				//                "clearcoat_gloss": 0.38,
+				"spec_trans": 0,
+				//                "flatness": 0.98,
+				//                "scatter_distance": [0,0,0],
+				//                "diff_trans": 0.11,
+				"thin": false
+			}
 		}
 	],
 	"shapes" : [
@@ -383,7 +411,7 @@
 			"param" : {
 				"fn" : "meshes/Cube.gltf",
 				"smooth" : false,
-				"material" : "glass",
+				"material" : "disney",
 				"swap_handed" : true,
 				"subdiv_level" : 0,
 				"transform" : {

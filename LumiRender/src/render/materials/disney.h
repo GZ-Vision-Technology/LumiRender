@@ -7,7 +7,7 @@
 
 #include "render/textures/texture.h"
 #include "render/scattering/bsdf_wrapper.h"
-#include "parser/config.h"
+#include "attr.h"
 #include "core/concepts.h"
 #include "core/type_reflection.h"
 
@@ -18,39 +18,39 @@ namespace luminous {
             DECLARE_REFLECTION(DisneyMaterial)
 
         private:
-            index_t _color{};
-            index_t _metallic{};
-            index_t _eta{};
-            index_t _roughness{};
-            index_t _specular_tint{};
-            index_t _anisotropic{};
-            index_t _sheen{};
-            index_t _sheen_tint{};
-            index_t _clearcoat{};
-            index_t _clearcoat_gloss{};
-            index_t _spec_trans{};
-            index_t _scatter_distance{};
-            index_t _flatness{};
-            index_t _diff_trans{};
+            Attr3D _color{};
+            Attr1D _metallic{};
+            Attr1D _eta{};
+            Attr1D _roughness{};
+            Attr1D _specular_tint{};
+            Attr1D _anisotropic{};
+            Attr1D _sheen{};
+            Attr1D _sheen_tint{};
+            Attr1D _clearcoat{};
+            Attr1D _clearcoat_gloss{};
+            Attr1D _spec_trans{};
+            Attr3D _scatter_distance{};
+            Attr1D _flatness{};
+            Attr1D _diff_trans{};
             bool _thin{};
 
         public:
 
-            LM_XPU DisneyMaterial(index_t color,
-                                  index_t metallic,
-                                  index_t eta,
-                                  index_t roughness,
-                                  index_t specular_tint,
-                                  index_t anisotropic,
-                                  index_t sheen,
-                                  index_t sheen_tint,
-                                  index_t clearcoat,
-                                  index_t clearcoat_gloss,
-                                  index_t spec_trans,
-                                  index_t scatter_distance,
+            LM_XPU DisneyMaterial(Attr3D color,
+                                  Attr1D metallic,
+                                  Attr1D eta,
+                                  Attr1D roughness,
+                                  Attr1D specular_tint,
+                                  Attr1D anisotropic,
+                                  Attr1D sheen,
+                                  Attr1D sheen_tint,
+                                  Attr1D clearcoat,
+                                  Attr1D clearcoat_gloss,
+                                  Attr1D spec_trans,
+                                  Attr3D scatter_distance,
                                   bool thin,
-                                  index_t flatness,
-                                  index_t diff_trans)
+                                  Attr1D flatness,
+                                  Attr1D diff_trans)
                     : _color(color),
                       _metallic(metallic),
                       _eta(eta),
@@ -68,21 +68,21 @@ namespace luminous {
                       _diff_trans(diff_trans) {}
 
             CPU_ONLY(explicit DisneyMaterial(const MaterialConfig &mc)
-                    : DisneyMaterial(mc.color.tex_idx(),
-                                     mc.metallic.tex_idx(),
-                                     mc.eta.tex_idx(),
-                                     mc.roughness.tex_idx(),
-                                     mc.specular_tint.tex_idx(),
-                                     mc.anisotropic.tex_idx(),
-                                     mc.sheen.tex_idx(),
-                                     mc.sheen_tint.tex_idx(),
-                                     mc.clearcoat.tex_idx(),
-                                     mc.clearcoat_gloss.tex_idx(),
-                                     mc.spec_trans.tex_idx(),
-                                     mc.scatter_distance.tex_idx(),
+                    : DisneyMaterial(Attr3D(mc.color),
+                                     Attr1D(mc.metallic),
+                                     Attr1D(mc.eta),
+                                     Attr1D(mc.roughness),
+                                     Attr1D(mc.specular_tint),
+                                     Attr1D(mc.anisotropic),
+                                     Attr1D(mc.sheen),
+                                     Attr1D(mc.sheen_tint),
+                                     Attr1D(mc.clearcoat),
+                                     Attr1D(mc.clearcoat_gloss),
+                                     Attr1D(mc.spec_trans),
+                                     Attr3D(mc.scatter_distance),
                                      mc.thin,
-                                     mc.flatness.tex_idx(),
-                                     mc.diff_trans.tex_idx()) {})
+                                     Attr1D(mc.flatness),
+                                     Attr1D(mc.diff_trans)) {})
 
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx,
                                            const SceneData *scene_data) const;

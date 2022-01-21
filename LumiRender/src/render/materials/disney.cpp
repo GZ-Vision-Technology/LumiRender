@@ -15,22 +15,22 @@ namespace luminous {
             DisneyBSDFData data;
 
             // todo merge texture
-            data.color = scene_data->get_texture(_color).eval(ctx);
-            data.metallic = scene_data->get_texture(_metallic).eval(ctx).x;
-            data.eta = scene_data->get_texture(_eta).eval(ctx).x;
-            data.spec_trans = scene_data->get_texture(_spec_trans).eval(ctx).x;
-            data.diff_trans = scene_data->get_texture(_diff_trans).eval(ctx).x;
-            data.spec_tint = scene_data->get_texture(_specular_tint).eval(ctx).x;
-            data.roughness = scene_data->get_texture(_roughness).eval(ctx).x;
-            data.sheen_weight = scene_data->get_texture(_sheen).eval(ctx).x;
-            data.sheen_tint = scene_data->get_texture(_sheen_tint).eval(ctx).x;
-            data.clearcoat = scene_data->get_texture(_clearcoat).eval(ctx).x;
-            data.scatter_distance = scene_data->get_texture(_scatter_distance).eval(ctx);
-            data.clearcoat_gloss = scene_data->get_texture(_clearcoat_gloss).eval(ctx).x;
-            data.anisotropic = scene_data->get_texture(_anisotropic).eval(ctx).x;
-            data.flatness = scene_data->get_texture(_flatness).eval(ctx).x;
-
-            return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{data.create()}};
+            data.color = make_float4(_color.eval(scene_data, ctx), 1.f);
+            data.metallic = _metallic.eval(scene_data, ctx);
+            data.eta = _eta.eval(scene_data, ctx);
+            data.spec_trans = _spec_trans.eval(scene_data, ctx);
+            data.diff_trans = _diff_trans.eval(scene_data, ctx);
+            data.spec_tint = _specular_tint.eval(scene_data, ctx);
+            data.roughness = _roughness.eval(scene_data, ctx);
+            data.sheen_weight = _sheen.eval(scene_data, ctx);
+            data.sheen_tint = _sheen_tint.eval(scene_data, ctx);
+            data.clearcoat = _clearcoat.eval(scene_data, ctx);
+            data.scatter_distance = make_float4(_scatter_distance.eval(scene_data, ctx), 0.f);
+            data.clearcoat_gloss = _clearcoat_gloss.eval(scene_data, ctx);
+            data.anisotropic = _anisotropic.eval(scene_data, ctx);
+            data.flatness = _flatness.eval(scene_data, ctx);
+            auto disney_bsdf = data.create();
+            return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{disney_bsdf}};
         }
     }
 }
