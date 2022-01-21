@@ -207,7 +207,7 @@ namespace luminous {
                 return ret;
             }
 
-            LM_ND_XPU static BSDFHelper create_glass_data(float4 color, float eta) {
+            LM_ND_XPU static BSDFHelper create_glass_data(float3 color, float eta) {
                 BSDFHelper ret{Dielectric};
                 ret.val2 = eta;
                 return ret;

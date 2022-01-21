@@ -37,7 +37,7 @@ namespace luminous {
 
         using GlassBSDF = FresnelBSDF<BSDFHelper, SpecularReflection, SpecularTransmission, true>;
 
-        ND_XPU_INLINE GlassBSDF create_glass_bsdf(float4 color, float eta,
+        ND_XPU_INLINE GlassBSDF create_glass_bsdf(float3 color, float eta,
                                                   bool valid_refl = true, bool valid_trans = true) {
             return GlassBSDF(BSDFHelper::create_glass_data(color, eta),
                              SpecularReflection{color}, SpecularTransmission{color});
@@ -46,7 +46,7 @@ namespace luminous {
         using RoughGlassBSDF = FresnelBSDF<BSDFHelper, MicrofacetReflection, MicrofacetTransmission>;
 
         ND_XPU_INLINE RoughGlassBSDF
-        create_rough_glass_bsdf(float4 color, float eta, float alpha_x, float alpha_y,
+        create_rough_glass_bsdf(float3 color, float eta, float alpha_x, float alpha_y,
                                 bool valid_refl = true, bool valid_trans = true) {
             auto param = BSDFHelper::create_glass_data(color, eta);
             return RoughGlassBSDF(param,

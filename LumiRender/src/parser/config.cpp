@@ -101,6 +101,8 @@ namespace luminous {
                 fill_tex_idx_by_name(tex_configs, color);
                 fill_tex_idx_by_name(tex_configs, roughness);
 
+            } else if (type() == full_type("MirrorMaterial")) {
+                fill_tex_idx_by_name(tex_configs, color);
             } else if (type() == full_type("DisneyMaterial")) {
 
                 fill_tex_idx_by_name(tex_configs, color);

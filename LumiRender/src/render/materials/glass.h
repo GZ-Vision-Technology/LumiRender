@@ -7,7 +7,7 @@
 
 #include "render/textures/texture.h"
 #include "render/scattering/bsdf_wrapper.h"
-#include "parser/config.h"
+#include "attr.h"
 #include "core/concepts.h"
 
 namespace luminous {
@@ -17,22 +17,22 @@ namespace luminous {
             DECLARE_REFLECTION(GlassMaterial)
 
         private:
-            index_t _color_idx{};
-            index_t _eta_idx{};
-            index_t _roughness_idx{};
+            Attr3D _color{};
+            Attr1D _eta{};
+            Attr2D _roughness{};
             bool _remapping_roughness{};
         public:
-            explicit GlassMaterial(index_t color_idx, index_t eta_idx, index_t roughness_idx, bool remapping_roughness)
-                    : _color_idx(color_idx), _eta_idx(eta_idx),
-                      _roughness_idx(roughness_idx),
+            explicit GlassMaterial(Attr3D color, Attr1D eta, Attr2D roughness, bool remapping_roughness)
+                    : _color(color), _eta(eta),
+                      _roughness(roughness),
                       _remapping_roughness(remapping_roughness) {}
 
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(explicit GlassMaterial(const MaterialConfig &mc)
-                    : GlassMaterial(mc.color.tex_idx(),
-                                    mc.eta.tex_idx(),
-                                    mc.roughness.tex_idx(),
+                    : GlassMaterial(Attr3D(mc.color),
+                                    Attr1D(mc.eta),
+                                    Attr2D(mc.roughness),
                                     mc.remapping_roughness) {})
         };
     }
