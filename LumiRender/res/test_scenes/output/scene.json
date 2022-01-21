@@ -92,6 +92,16 @@
                     0.800000011920929
                 ]
             }
+        },
+        {
+            "name": "metal",
+            "type": "MetalMaterial",
+            "param": {
+                "roughness": [
+                    0.010000000149011612,
+                    0.010000000149011612
+                ]
+            }
         }
     ],
     "shapes": [
@@ -356,7 +366,7 @@
             "param": {
                 "fn": "meshes/Cube.gltf",
                 "smooth": false,
-                "material": "Cube_B2L FakeMetal",
+                "material": "metal",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {

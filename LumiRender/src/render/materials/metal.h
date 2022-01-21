@@ -36,20 +36,20 @@ namespace luminous {
             DECLARE_REFLECTION(MetalMaterial)
 
         private:
-            index_t _eta_idx{};
-            index_t _k_idx{};
-            index_t _roughness_idx{};
+            Attr3D _eta{};
+            Attr3D _k{};
+            Attr2D _roughness{};
             bool _remapping_roughness{};
         public:
-            explicit MetalMaterial(index_t eta_idx, index_t k_idx, index_t roughness_idx, bool remapping)
-                    : _eta_idx(eta_idx), _k_idx(k_idx), _roughness_idx(roughness_idx),
+            explicit MetalMaterial(Attr3D eta, Attr3D k, Attr2D roughness, bool remapping)
+                    : _eta(eta), _k(k), _roughness(roughness),
                       _remapping_roughness(remapping) {}
 
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(explicit MetalMaterial(const MaterialConfig &mc)
-                    : MetalMaterial(mc.eta.tex_idx(), mc.k.tex_idx(),
-                                    mc.roughness.tex_idx(), mc.remapping_roughness) {})
+                    : MetalMaterial(Attr3D(mc.eta), Attr3D(mc.k),
+                                    Attr2D(mc.roughness), mc.remapping_roughness) {})
         };
     }
 }

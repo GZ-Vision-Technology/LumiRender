@@ -177,7 +177,7 @@ namespace luminous {
                 return {0.f};
             }
 
-            LM_ND_XPU static BSDFHelper create_metal_data(float4 eta, float4 k) {
+            LM_ND_XPU static BSDFHelper create_metal_data(float4 eta, float3 k) {
                 BSDFHelper ret{eta, make_float3(k), Conductor};
                 return ret;
             }

@@ -63,8 +63,8 @@ namespace luminous {
 
         using MetalBSDF = BSDF_Ty<BSDFHelper, true, MicrofacetReflection>;
 
-        ND_XPU_INLINE MetalBSDF create_metal_bsdf(float4 eta, float4 k, float alpha_x, float alpha_y) {
-            BSDFHelper data = BSDFHelper::create_metal_data(eta, k);
+        ND_XPU_INLINE MetalBSDF create_metal_bsdf(float3 eta, float3 k, float alpha_x, float alpha_y) {
+            BSDFHelper data = BSDFHelper::create_metal_data(make_float4(eta, 1.f), k);
             return MetalBSDF(data, MicrofacetReflection{Spectrum{1.f}, alpha_x, alpha_y, GGX});
         }
 
