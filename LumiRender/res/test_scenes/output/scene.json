@@ -435,7 +435,7 @@
     "camera": {
         "type": "ThinLensCamera",
         "param": {
-            "fov_y": 26.99146642997552,
+            "fov_y": 25.99146642997552,
             "velocity": 20,
             "focal_distance": 2.799999952316284,
             "lens_radius": 0.0,
@@ -443,7 +443,7 @@
                 "type": "yaw_pitch",
                 "param": {
                     "yaw": 0.0,
-                    "pitch": -6.100005292314364,
+                    "pitch": 0.0,
                     "position": [
                         0.0,
                         1.0,
