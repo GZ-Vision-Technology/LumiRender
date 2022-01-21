@@ -9,25 +9,26 @@
 #include "render/scattering/bsdf_wrapper.h"
 #include "parser/config.h"
 #include "core/concepts.h"
+#include "attr.h"
 
 namespace luminous {
     inline namespace render {
         class FakeMetalMaterial {
         public:
             DECLARE_REFLECTION(FakeMetalMaterial)
-
         private:
-            index_t _color_idx{};
-            index_t _roughness_idx{};
+            Attr3D _color{};
+            Attr2D _roughness{};
             bool _remapping_roughness{};
         public:
-            explicit FakeMetalMaterial(index_t color_idx, index_t roughness_idx, bool remapping)
-                    : _color_idx(color_idx), _roughness_idx(roughness_idx), _remapping_roughness(remapping) {}
+
+            FakeMetalMaterial(Attr3D color, Attr2D roughness, bool remapping)
+                    : _color(color), _roughness(roughness), _remapping_roughness(remapping) {}
 
             LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const;
 
             CPU_ONLY(explicit FakeMetalMaterial(const MaterialConfig &mc)
-                    : FakeMetalMaterial(mc.color.tex_idx(), mc.roughness.tex_idx(), mc.remapping_roughness) {})
+                    : FakeMetalMaterial(Attr3D(mc.color), Attr2D(mc.roughness), mc.remapping_roughness) {})
         };
 
         class MetalMaterial {

@@ -56,7 +56,7 @@ namespace luminous {
 
         using FakeMetalBSDF = BSDF_Ty<BSDFHelper, true, MicrofacetReflection>;
 
-        ND_XPU_INLINE FakeMetalBSDF create_fake_metal_bsdf(float4 color, float alpha_x, float alpha_y) {
+        ND_XPU_INLINE FakeMetalBSDF create_fake_metal_bsdf(float3 color, float alpha_x, float alpha_y) {
             auto param = BSDFHelper::create_fake_metal_data(color);
             return FakeMetalBSDF(param, MicrofacetReflection{color, alpha_x, alpha_y, GGX});
         }

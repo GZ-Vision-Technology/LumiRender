@@ -182,7 +182,7 @@ namespace luminous {
                 return ret;
             }
 
-            LM_ND_XPU static BSDFHelper create_fake_metal_data(float4 color) {
+            LM_ND_XPU static BSDFHelper create_fake_metal_data(float3 color) {
                 BSDFHelper ret{NoOp};
                 return ret;
             }
