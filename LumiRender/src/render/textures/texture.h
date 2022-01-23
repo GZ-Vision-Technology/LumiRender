@@ -13,7 +13,7 @@
 namespace luminous {
     inline namespace render {
         using lstd::Variant;
-        class Texture : public Variant<ConstantTexture, ImageTexture> {
+        class Texture : public Variant<ImageTexture> {
         private:
             using Variant::Variant;
         public:
