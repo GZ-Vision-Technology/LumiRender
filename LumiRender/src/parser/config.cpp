@@ -44,34 +44,19 @@ namespace luminous {
             }
 
             if (type() == full_type("AssimpMaterial")) {
-                int64_t index = lstd::find_index_if(tex_configs, [&](const MaterialAttrConfig &tex_config) {
-                    return tex_config == color;
-                });
-                if (index == -1) {
+                if (!color.fn.empty()) {
                     color.set_tex_idx(tex_configs.size());
                     tex_configs.push_back(color);
-                } else {
-                    color.set_tex_idx(index);
                 }
 
-                index = lstd::find_index_if(tex_configs, [&](const MaterialAttrConfig &tex_config) {
-                    return tex_config == specular;
-                });
-                if (index == -1) {
-                    specular.fill_tex_idx(tex_configs.size());
+                if (!specular.fn.empty()) {
+                    specular.set_tex_idx(tex_configs.size());
                     tex_configs.push_back(specular);
-                } else {
-                    specular.fill_tex_idx(index);
                 }
 
-                index = lstd::find_index_if(tex_configs, [&](const MaterialAttrConfig &tex_config) {
-                    return tex_config == normal;
-                });
-                if (index == -1 && !normal.name.empty()) {
-                    normal.fill_tex_idx(tex_configs.size());
+                if (!normal.fn.empty()) {
+                    normal.set_tex_idx(tex_configs.size());
                     tex_configs.push_back(normal);
-                } else {
-                    normal.fill_tex_idx(index);
                 }
 
             } else if (type() == full_type("MatteMaterial")) {
