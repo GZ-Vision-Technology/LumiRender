@@ -65,6 +65,10 @@ namespace luminous {
 #endif
             }
 
+            LM_ND_XPU float4 eval(float2 uv) const {
+                return eval(TextureEvalContext(uv));
+            }
+
             LM_XPU void print() const {
                 printf("ImageTexture\n");
             }

@@ -27,6 +27,8 @@ namespace luminous {
             }
 
             LM_ND_XPU float4 eval(const TextureEvalContext &tec) const {
+//                return get<ImageTexture>()->eval(tec);
+                // todo a strange bug
                 LUMINOUS_VAR_DISPATCH(eval, tec)
             }
 
