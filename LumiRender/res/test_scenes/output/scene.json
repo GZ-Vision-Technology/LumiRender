@@ -6,19 +6,20 @@
             "type": "DisneyMaterial",
             "param": {
                 "color": [
-                    0.7775325775146484,
-                    0.7831145524978638,
                     0.8000000715255737,
+                    0.07138955593109131,
+                    0.5696526765823364,
                     1.0
                 ],
-                "roughness": 0.5,
+                "roughness": 0.209090918302536,
                 "eta": 1.399999976158142,
-                "matallic": 0.0,
+                "metallic": 0.0,
                 "specular_tint": 0.0,
                 "anisotropic": 0.0,
                 "sheen": 0.0,
                 "sheen_tint": 0.5,
                 "clearcoat": 0.0,
+                "spec_trans": 1.0,
                 "clearcoat_roughness": 0.029999999329447746,
                 "normal": null
             }
@@ -79,32 +80,26 @@
             }
         },
         {
-            "name": "bunny_Disney",
+            "name": "bunny_builtin_disney.001",
             "type": "DisneyMaterial",
             "param": {
                 "color": [
-                    0.5304561853408813,
-                    0.4083440601825714,
-                    0.48161134123802185
+                    0.8000000715255737,
+                    0.07138955593109131,
+                    0.5696526765823364,
+                    1.0
                 ],
-                "metallic": 1.0,
-                "eta": 1.5,
-                "roughness": 0.3100000321865082,
-                "specular_tint": 1.0,
+                "roughness": 0.0209090918302536,
+                "eta": 1.399999976158142,
+                "metallic": 0.0,
+                "specular_tint": 0.0,
                 "anisotropic": 0.0,
                 "sheen": 0.0,
-                "sheen_tint": 0.0,
+                "sheen_tint": 0.5,
                 "clearcoat": 0.0,
-                "clearcoat_roughness": 0.0,
-                "spec_trans": 0.0,
-                "scatter_distance": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "flatness": 0.0,
-                "diff_trans": 0.0,
-                "thin": false
+                "spec_trans": 1.0,
+                "clearcoat_roughness": 0.029999999329447746,
+                "normal": null
             }
         }
     ],
@@ -454,7 +449,7 @@
             "param": {
                 "fn": "meshes/bunny.gltf",
                 "smooth": false,
-                "material": "bunny_Disney",
+                "material": "bunny_builtin_disney.001",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
