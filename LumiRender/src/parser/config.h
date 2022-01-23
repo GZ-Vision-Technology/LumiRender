@@ -192,7 +192,7 @@ namespace luminous {
             MaterialAttrConfig sheen;
             MaterialAttrConfig sheen_tint;
             MaterialAttrConfig clearcoat;
-            MaterialAttrConfig clearcoat_gloss;
+            MaterialAttrConfig clearcoat_roughness;
             MaterialAttrConfig spec_trans;
             MaterialAttrConfig scatter_distance;
             MaterialAttrConfig flatness;

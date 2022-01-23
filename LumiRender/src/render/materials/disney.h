@@ -27,7 +27,7 @@ namespace luminous {
             Attr1D _sheen{};
             Attr1D _sheen_tint{};
             Attr1D _clearcoat{};
-            Attr1D _clearcoat_gloss{};
+            Attr1D _clearcoat_roughness{};
             Attr1D _spec_trans{};
             Attr3D _scatter_distance{};
             Attr1D _flatness{};
@@ -45,7 +45,7 @@ namespace luminous {
                                   Attr1D sheen,
                                   Attr1D sheen_tint,
                                   Attr1D clearcoat,
-                                  Attr1D clearcoat_gloss,
+                                  Attr1D clearcoat_roughness,
                                   Attr1D spec_trans,
                                   Attr3D scatter_distance,
                                   bool thin,
@@ -60,7 +60,7 @@ namespace luminous {
                       _sheen(sheen),
                       _sheen_tint(sheen_tint),
                       _clearcoat(clearcoat),
-                      _clearcoat_gloss(clearcoat_gloss),
+                      _clearcoat_roughness(clearcoat_roughness),
                       _spec_trans(spec_trans),
                       _scatter_distance(scatter_distance),
                       _thin(thin),
@@ -77,7 +77,7 @@ namespace luminous {
                                      Attr1D(mc.sheen),
                                      Attr1D(mc.sheen_tint),
                                      Attr1D(mc.clearcoat),
-                                     Attr1D(mc.clearcoat_gloss),
+                                     Attr1D(mc.clearcoat_roughness),
                                      Attr1D(mc.spec_trans),
                                      Attr3D(mc.scatter_distance),
                                      mc.thin,

@@ -96,7 +96,7 @@ namespace luminous {
                 fill_tex_idx_by_name(tex_configs, sheen);
                 fill_tex_idx_by_name(tex_configs, sheen_tint);
                 fill_tex_idx_by_name(tex_configs, clearcoat);
-                fill_tex_idx_by_name(tex_configs, clearcoat_gloss);
+                fill_tex_idx_by_name(tex_configs, clearcoat_roughness);
                 fill_tex_idx_by_name(tex_configs, spec_trans);
                 fill_tex_idx_by_name(tex_configs, scatter_distance);
                 fill_tex_idx_by_name(tex_configs, flatness);

@@ -15,7 +15,7 @@ namespace luminous {
             float4 spec = make_float4(_specular.eval(scene_data, ctx), 1.f);
             data.roughness = 1 - spec.x;
             data.clearcoat = spec.x;
-            data.clearcoat_gloss = spec.x;
+            data.clearcoat_roughness = 1 - spec.x;
             data.sheen_weight = spec.x;
             data.sheen_tint = spec.x;
             data.spec_tint = spec.x;

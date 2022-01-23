@@ -341,7 +341,7 @@ namespace luminous {
                 ret.sheen = process_attr(param["sheen"], scene_graph, make_float4(0.f));
                 ret.sheen_tint = process_attr(param["sheen_tint"], scene_graph, make_float4(0.f));
                 ret.clearcoat = process_attr(param["clearcoat"], scene_graph, make_float4(0.f));
-                ret.clearcoat_gloss = process_attr(param["clearcoat_gloss"], scene_graph, make_float4(0.f));
+                ret.clearcoat_roughness = process_attr(param["clearcoat_roughness"], scene_graph, make_float4(1.f));
                 ret.spec_trans = process_attr(param["spec_trans"], scene_graph, make_float4(0.f));
                 ret.scatter_distance = process_attr(param["scatter_distance"], scene_graph, make_float4(0.f));
                 ret.flatness = process_attr(param["flatness"], scene_graph, make_float4(0.f));

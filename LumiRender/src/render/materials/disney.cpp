@@ -26,7 +26,7 @@ namespace luminous {
             data.sheen_tint = _sheen_tint.eval(scene_data, ctx);
             data.clearcoat = _clearcoat.eval(scene_data, ctx);
             data.scatter_distance = make_float4(_scatter_distance.eval(scene_data, ctx), 0.f);
-            data.clearcoat_gloss = _clearcoat_gloss.eval(scene_data, ctx);
+            data.clearcoat_roughness = _clearcoat_roughness.eval(scene_data, ctx);
             data.anisotropic = _anisotropic.eval(scene_data, ctx);
             data.flatness = _flatness.eval(scene_data, ctx);
             auto disney_bsdf = data.create();

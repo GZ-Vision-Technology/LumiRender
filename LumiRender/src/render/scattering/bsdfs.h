@@ -89,7 +89,7 @@ namespace luminous {
             float sheen_tint{0.f};
             float clearcoat{0.f};
             float4 scatter_distance{make_float4(0.f)};
-            float clearcoat_gloss{0.f};
+            float clearcoat_roughness{1.f};
             float anisotropic{0.f};
             float flatness{0.f};
             bool thin{false};

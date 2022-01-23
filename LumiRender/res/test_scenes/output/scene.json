@@ -83,8 +83,8 @@
                 "anisotropic": 0.0,
                 "sheen": 0.0,
                 "sheen_tint": 0.0,
-                "clearcoat": 0.010000050067901611,
-                "clearcoat_gloss": 0.0,
+                "clearcoat": 1.0,
+                "clearcoat_roughness": 1.0,
                 "spec_trans": 0.0,
                 "scatter_distance": [
                     0.0,
