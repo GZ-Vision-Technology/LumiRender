@@ -6,7 +6,6 @@
 #pragma once
 
 #include "base_libs/math/common.h"
-#include "constant_texture.h"
 #include "image_texture.h"
 #include "base_libs/lstd/lstd.h"
 
