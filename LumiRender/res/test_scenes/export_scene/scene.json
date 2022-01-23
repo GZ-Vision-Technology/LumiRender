@@ -108,7 +108,7 @@
             "type": "MatteMaterial",
             "name": "matte_white",
             "param": {
-//                "normal" : "normal_map",
+                "normal" : "normal_map",
                 "color": [
                     0.7250000238418579,
                     0.7099999785423279,
@@ -121,7 +121,7 @@
             "type": "MatteMaterial",
             "name": "matte_red",
             "param": {
-//                "normal": "normal_map",
+                "normal": "normal_map",
                 "color": [
                     0.6299999952316284,
                     0.06499999761581421,
@@ -134,7 +134,7 @@
             "type": "MatteMaterial",
             "name": "matte_green",
             "param": {
-//                "normal" : "normal_map",
+                "normal" : "normal_map",
                 "color": [
                     0.14000000059604645,
                     0.44999998807907104,
@@ -450,73 +450,73 @@
                 }
             }
         },
-//        {
-//            "name": "bunny",
-//            "type": "model",
-//            "param": {
-//                "fn": "bunny.obj",
-//                "subdiv_level" : 0,
-//                "material": "disney",
-////                "material": "glass_white",
-////                "material": "matte_white",
-//                //                "material": "mirror_white",
-////                                "material": "fake_metal",
-////                                "material": "metal",
-//                "transform": {
-//                    "type": "trs",
-//                    "param": {
-//                        "t" : [0.3,0.6,-0.3],
-//                        "r": [0,1,0,180],
-//                        "s": [0.3,0.3,0.3]
-//                    }
-//                }
-//            }
-//        },
         {
-            "name": "Cube",
+            "name": "bunny",
             "type": "model",
             "param": {
-                "fn": "meshes/Cube.ply",
-                "subdiv_level": 0,
-                "material": "disney",
+                "fn": "cheap_shearling_jacket_agisoftclotheschallenge/scene.gltf",
+                "subdiv_level" : 0,
+//                "material": "disney",
 //                "material": "glass_white",
 //                "material": "matte_white",
-//                "material": "mirror_white",
-//                "material": "fake_metal",
-//                "material": "metal",
+                //                "material": "mirror_white",
+//                                "material": "fake_metal",
+//                                "material": "metal",
                 "transform": {
-                    "type": "matrix4x4",
+                    "type": "trs",
                     "param": {
-                        "matrix4x4": [
-                            [
-                                0.2897777557373047,
-                                -4.754429065187201e-18,
-                                -0.07764571905136108,
-                                0.0
-                            ],
-                            [
-                                0.07764571905136108,
-                                1.7743770051389686e-17,
-                                0.2897777557373047,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.30000001192092896,
-                                -1.8369702717156673e-17,
-                                0.0
-                            ],
-                            [
-                                0.3500000059604645,
-                                0.301000001192092896,
-                                -0.3499999940395355,
-                                1.0
-                            ]
-                        ]
+                        "t" : [0.3,0.6,0.3],
+                        "r": [0,1,0,130],
+                        "s": [1,1,1]
                     }
                 }
             }
         },
+//        {
+//            "name": "Cube",
+//            "type": "model",
+//            "param": {
+//                "fn": "meshes/Cube.ply",
+//                "subdiv_level": 0,
+//                "material": "disney",
+////                "material": "glass_white",
+////                "material": "matte_white",
+////                "material": "mirror_white",
+////                "material": "fake_metal",
+////                "material": "metal",
+//                "transform": {
+//                    "type": "matrix4x4",
+//                    "param": {
+//                        "matrix4x4": [
+//                            [
+//                                0.2897777557373047,
+//                                -4.754429065187201e-18,
+//                                -0.07764571905136108,
+//                                0.0
+//                            ],
+//                            [
+//                                0.07764571905136108,
+//                                1.7743770051389686e-17,
+//                                0.2897777557373047,
+//                                0.0
+//                            ],
+//                            [
+//                                0.0,
+//                                0.30000001192092896,
+//                                -1.8369702717156673e-17,
+//                                0.0
+//                            ],
+//                            [
+//                                0.3500000059604645,
+//                                0.301000001192092896,
+//                                -0.3499999940395355,
+//                                1.0
+//                            ]
+//                        ]
+//                    }
+//                }
+//            }
+//        },
         {
             "name": "Cube.001",
             "type": "model",
@@ -525,8 +525,8 @@
                 "subdiv_level": 0,
 //                "material": "disney",
 //                "material": "glass_white",
-                "material": "matte_white",
-//                "material": "mirror_white",
+//                "material": "matte_white",
+                "material": "mirror_white",
 //                "material": "fake_metal",
 //                "material": "metal",
                 "transform": {
@@ -569,42 +569,58 @@
                 "width": 0.6000000238418579,
                 "height": 0.6000000238418579,
                 "emission": [
-                    0.17000000178813934,
+                    0.11000000178813934,
                     0.11999999731779099,
-                    0.03999999910593033
+                    0.11999999910593033
                 ],
                 "scale": 150.0,
-                "transform": {
-                    "type": "matrix4x4",
+//                "transform": {
+//                    "type": "trs",
+//                    "param": {
+//                        "t" : [0.3,0.6,0.3],
+//                        "r": [0,1,0,130],
+//                        "s": [1,1,1]
+//                    }
+//                },
+                "transform" : {
+                    "type" : "trs",
                     "param": {
-                        "matrix4x4": [
-                            [
-                                1.0,
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                6.123233995736766e-17,
-                                1.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                1.0,
-                                -6.123233995736766e-17,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                1.9800000190734863,
-                                -1.2124003428350216e-16,
-                                1.0
-                            ]
-                        ]
+                        "t": [0.6,1.98,-0.3],
+                        "r": [1,0,0,90],
+                        "s": [1,1,1]
                     }
                 },
+//                "transform": {
+//                    "type": "matrix4x4",
+//                    "param": {
+//                        "matrix4x4": [
+//                            [
+//                                1.0,
+//                                0.0,
+//                                0.0,
+//                                0.0
+//                            ],
+//                            [
+//                                0.0,
+//                                6.123233995736766e-17,
+//                                1.0,
+//                                0.0
+//                            ],
+//                            [
+//                                0.0,
+//                                1.0,
+//                                -6.123233995736766e-17,
+//                                0.0
+//                            ],
+//                            [
+//                                0.0,
+//                                1.9800000190734863,
+//                                -1.2124003428350216e-16,
+//                                1.0
+//                            ]
+//                        ]
+//                    }
+//                },
                 "material": ""
             }
         }
