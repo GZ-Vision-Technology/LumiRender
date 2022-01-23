@@ -250,19 +250,15 @@ def export_builtin_disney_material(bsdf, scene_json, mesh_name, mat):
     param["color"] = write_float4(bsdf.inputs.get("Base Color"))
     param["roughness"] = write_float1(bsdf.inputs.get("Roughness"))
     param["eta"] = write_float1(bsdf.inputs.get("Subsurface IOR"))
-    param["matallic"] = write_float1(bsdf.inputs.get("Metallic"))
-    param["specular_tint"] = write_float1(
-        bsdf.inputs.get("Specular Tint"))
-    param["anisotropic"] = write_float1(
-        bsdf.inputs.get("Anisotropic"))
+    param["metallic"] = write_float1(bsdf.inputs.get("Metallic"))
+    param["specular_tint"] = write_float1(bsdf.inputs.get("Specular Tint"))
+    param["anisotropic"] = write_float1(bsdf.inputs.get("Anisotropic"))
     param["sheen"] = write_float1(bsdf.inputs.get("Sheen"))
-    param["sheen_tint"] = write_float1(
-        bsdf.inputs.get("Sheen Tint"))
+    param["sheen_tint"] = write_float1(bsdf.inputs.get("Sheen Tint"))
     param["clearcoat"] = write_float1(bsdf.inputs.get("Clearcoat"))
-    param["clearcoat_roughness"] = write_float1(
-        bsdf.inputs.get("Clearcoat Roughness"))
-    param["normal"] = write_normal(
-        bsdf.inputs.get("Normal"))
+    param["spec_trans"] = write_float1(bsdf.inputs.get("Transmission"))
+    param["clearcoat_roughness"] = write_float1(bsdf.inputs.get("Clearcoat Roughness"))
+    param["normal"] = write_normal(bsdf.inputs.get("Normal"))
     
     m["param"] = param
     
