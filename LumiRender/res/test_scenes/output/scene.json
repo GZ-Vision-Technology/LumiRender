@@ -1,14 +1,5 @@
 {
-    "textures": [
-        {
-            "name": "forMayaAOblinn6_occlusion.png",
-            "type": "ImageTexture",
-            "param": {
-                "fn": "textures/forMayaAOblinn6_occlusion.png",
-                "color_space": "LINEAR"
-            }
-        }
-    ],
+    "textures": [],
     "materials": [
         {
             "name": "Cube_Matte",
@@ -58,7 +49,11 @@
             "name": "Plane.003_Matte",
             "type": "MatteMaterial",
             "param": {
-                "color": "forMayaAOblinn6_occlusion.png"
+                "color": [
+                    0.75,
+                    0.25,
+                    0.25
+                ]
             }
         },
         {
