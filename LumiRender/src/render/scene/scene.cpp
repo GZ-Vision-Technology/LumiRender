@@ -28,11 +28,10 @@ namespace luminous {
             MaterialAttrConfig tc;
             tc.set_full_type("ConstantTexture");
             tc.val = make_float4(0.f);
-            _tex_configs.push_back(tc);
 
             MaterialConfig mc;
             mc.set_full_type("MatteMaterial");
-            mc.color.fill_tex_idx(_tex_configs.size() - 1);
+            mc.color = tc;
             material_configs.push_back(mc);
         }
 

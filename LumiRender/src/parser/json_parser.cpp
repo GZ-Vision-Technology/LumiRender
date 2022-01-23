@@ -307,7 +307,6 @@ namespace luminous {
             }
             ret.val = construct_float4(ps, default_val);
             ret.set_full_type("ConstantTexture");
-            ret.fill_tex_idx(scene_graph->try_push(ret));
             return ret;
         }
 
