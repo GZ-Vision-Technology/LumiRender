@@ -1,555 +1,479 @@
 {
-	"textures" : [
-		{
-			"name" : "wall",
-			"type" : "ImageTexture",
-			"param" : {
-				"fn" : "brickwall.jpg",
-				"scale" : [1, 1, 1],
-				"color_space" : "LINEAR"
-			}
-		}
-	],
-	"materials" : [
-		{
-			"name" : "Plane_Matte",
-			"type" : "MatteMaterial",
-			"param" : {
-				"color" : [
-					0.800000011920929,
-					0.800000011920929,
-					0.800000011920929
-				]
-			}
-		},
-		{
-			"name" : "Plane.001_Matte",
-			"type" : "MatteMaterial",
-			"param" : {
-				"color" : [
-					0.800000011920929,
-					0.800000011920929,
-					0.800000011920929
-				]
-			}
-		},
-		{
-			"name" : "Plane.002_Matte",
-			"type" : "MatteMaterial",
-			"param" : {
-				"color" : [
-					0.800000011920929,
-					0.800000011920929,
-					0.800000011920929
-				]
-			}
-		},
-		{
-			"name" : "Plane.003_B2L Matte",
-			"type" : "MatteMaterial",
-			"param" : {
-				"color" : [
-					0.75,
-					0.25,
-					0.25
-				]
-			}
-		},
-		{
-			"name" : "Plane.004_B2L Matte",
-			"type" : "MatteMaterial",
-			"param" : {
-				"color" : [
-					0.25,
-					0.25,
-					0.75
-				]
-			}
-		},
-		{
-			"name" : "Cube_B2L FakeMetal",
-			"type" : "FakeMetalMaterial",
-			"param" : {
-				"color" : [
-					0.800000011920929,
-					0.800000011920929,
-					0.800000011920929
-				],
-				"roughness" : [
-					0.10000000149011612,
-					0.10000000149011612
-				]
-			}
-		},
-		{
-			"name" : "Cube.001_Matte",
-			"type" : "MatteMaterial",
-			"param" : {
-				//                "color": "wall"
-				"color" : [
-					0.800000011920929,
-					0.800000011920929,
-					0.800000011920929
-				]
-			}
-		},
-		{
-			"name" : "metal",
-			"type" : "MetalMaterial",
-			"param" : {
-				"roughness" : [
-					0.010000000149011612,
-					0.010000000149011612
-				]
-			}
-		},
-		{
-			"name" : "mirror",
-			"type" : "MirrorMaterial",
-			"param" : {
-				"color" : "wall"
-//                "color" : [1,1,1]
-			}
-		},
-		{
-			"name" : "glass",
-			"type" : "GlassMaterial",
-			"param" : {
-//				"color" : "wall",
-				"color" : [1, 1, 1],
-				"roughness": [0.01,0.01]
-			}
-		},
-		{
-			"type": "DisneyMaterial",
-			"name":"disney",
-			"param" : {
-				"color" : "wall",
-//				"color": [
-//					1,1,1,
-//					//                    0.7250000238418579,
-//					//                    0.7099999785423279,
-//					//                    0.6800000071525574,
-//					1.0
-//				],
-				"eta": 1.9,
-				"roughness":0.5,
-				"metallic": 0,
-				//                "specular_tint": 0.9,
-				"anisotropic": 0,
-				//                "sheen": 0.9,
-				//                "sheen_tint": 0.9,
-				//                "clearcoat": 0.59,
-				//                "clearcoat_gloss": 0.38,
-				"spec_trans": 0,
-				//                "flatness": 0.98,
-				//                "scatter_distance": [0,0,0],
-				//                "diff_trans": 0.11,
-				"thin": false
-			}
-		}
-	],
-	"shapes" : [
-		{
-			"name" : "light_Area",
-			"type" : "quad",
-			"param" : {
-				"width" : 0.6000000238418579,
-				"height" : 0.6000000238418579,
-				"emission" : [
-					1,
-					1,
-					1
-				],
-				"scale" : 32.0,
-				"transform" : {
-					"type" : "matrix4x4",
-					"param" : {
-						"matrix4x4" : [
-							[
-								1.0,
-								0.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								6.123233995736766e-17,
-								1.0,
-								0.0
-							],
-							[
-								0.0,
-								1.0,
-								-6.123233995736766e-17,
-								0.0
-							],
-							[
-								0.0,
-								1.9800000190734863,
-								-1.2124003428350216e-16,
-								1.0
-							]
-						]
-					}
-				}
-			}
-		},
-		{
-			"name" : "Plane",
-			"type" : "model",
-			"param" : {
-				"fn" : "meshes/Plane.gltf",
-				"smooth" : false,
-				"material" : "Plane_Matte",
-				"swap_handed" : true,
-				"subdiv_level" : 0,
-				"transform" : {
-					"type" : "matrix4x4",
-					"param" : {
-						"matrix4x4" : [
-							[
-								1.0,
-								0.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								1.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								1.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								0.0,
-								1.0
-							]
-						]
-					}
-				}
-			}
-		},
-		{
-			"name" : "Plane.001",
-			"type" : "model",
-			"param" : {
-				"fn" : "meshes/Plane.001.gltf",
-				"smooth" : false,
-				"material" : "Plane.001_Matte",
-				"swap_handed" : true,
-				"subdiv_level" : 0,
-				"transform" : {
-					"type" : "matrix4x4",
-					"param" : {
-						"matrix4x4" : [
-							[
-								1.0,
-								0.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								1.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								1.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								0.0,
-								1.0
-							]
-						]
-					}
-				}
-			}
-		},
-		{
-			"name" : "Plane.002",
-			"type" : "model",
-			"param" : {
-				"fn" : "meshes/Plane.002.gltf",
-				"smooth" : false,
-				"material" : "Plane.002_Matte",
-				"swap_handed" : true,
-				"subdiv_level" : 0,
-				"transform" : {
-					"type" : "matrix4x4",
-					"param" : {
-						"matrix4x4" : [
-							[
-								1.0,
-								0.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								1.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								1.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								0.0,
-								1.0
-							]
-						]
-					}
-				}
-			}
-		},
-		{
-			"name" : "Plane.003",
-			"type" : "model",
-			"param" : {
-				"fn" : "meshes/Plane.003.gltf",
-				"smooth" : false,
-				"material" : "Plane.003_B2L Matte",
-				"swap_handed" : true,
-				"subdiv_level" : 0,
-				"transform" : {
-					"type" : "matrix4x4",
-					"param" : {
-						"matrix4x4" : [
-							[
-								1.0,
-								0.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								1.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								1.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								0.0,
-								1.0
-							]
-						]
-					}
-				}
-			}
-		},
-		{
-			"name" : "Plane.004",
-			"type" : "model",
-			"param" : {
-				"fn" : "meshes/Plane.004.gltf",
-				"smooth" : false,
-				"material" : "Plane.004_B2L Matte",
-				"swap_handed" : true,
-				"subdiv_level" : 0,
-				"transform" : {
-					"type" : "matrix4x4",
-					"param" : {
-						"matrix4x4" : [
-							[
-								1.0,
-								0.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								1.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								1.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								0.0,
-								1.0
-							]
-						]
-					}
-				}
-			}
-		},
-		{
-			"name" : "Cube",
-			"type" : "model",
-			"param" : {
-				"fn" : "meshes/Cube.gltf",
-				"smooth" : false,
-				"material" : "disney",
-				"swap_handed" : true,
-				"subdiv_level" : 0,
-				"transform" : {
-					"type" : "matrix4x4",
-					"param" : {
-						"matrix4x4" : [
-							[
-								1.0,
-								0.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								1.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								1.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								0.0,
-								1.0
-							]
-						]
-					}
-				}
-			}
-		},
-		{
-			"name" : "Cube.001",
-			"type" : "model",
-			"param" : {
-				"fn" : "meshes/Cube.001.gltf",
-				"smooth" : false,
-				"material" : "Cube.001_Matte",
-				"swap_handed" : true,
-				"subdiv_level" : 0,
-				"transform" : {
-					"type" : "matrix4x4",
-					"param" : {
-						"matrix4x4" : [
-							[
-								1.0,
-								0.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								1.0,
-								0.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								1.0,
-								0.0
-							],
-							[
-								0.0,
-								0.0,
-								0.0,
-								1.0
-							]
-						]
-					}
-				}
-			}
-		}
-	],
-	"lights" : [],
-	"light_sampler" : {
-		"type" : "UniformLightSampler"
-	},
-	"output" : {
-		"fn" : "cornell-box.png",
-		"frame_num" : 0
-	},
-	"camera" : {
-		"type" : "ThinLensCamera",
-		"param" : {
-			"fov_y" : 25.99146642997552,
-			"velocity" : 20,
-			"focal_distance" : 2.799999952316284,
-			"lens_radius" : 0.0,
-			"transform" : {
-				"type" : "yaw_pitch",
-				"param" : {
-					"yaw" : 0.0,
-					"pitch" : 0.0,
-					"position" : [
-						0.0,
-						1.0,
-						-5.238682270050049
-					]
-				}
-			},
-			"film" : {
-				"param" : {
-					"resolution" : [
-						768,
-						768
-					],
-					"fb_state" : 0
-				}
-			},
-			"filter" : {
-				"type" : "GaussianFilter",
-				"param" : {
-					"radius" : [
-						2.0,
-						2.0
-					],
-					"sigma" : 0.5
-				}
-			}
-		}
-	},
-	"sampler" : {
-		"type" : "PCGSampler",
-		"param" : {
-			"spp" : 1
-		}
-	},
-	"integrator" : {
-		"type" : "PT",
-		"param" : {
-			"min_depth" : 0,
-			"max_depth" : 10,
-			"rr_threshold" : 1
-		}
-	}
+    "textures": [
+        {
+            "name": "forMayaAOblinn6_occlusion.png",
+            "type": "ImageTexture",
+            "param": {
+                "fn": "textures/forMayaAOblinn6_occlusion.png",
+                "color_space": "LINEAR"
+            }
+        }
+    ],
+    "materials": [
+        {
+            "name": "Cube_Matte",
+            "type": "MatteMaterial",
+            "param": {
+                "color": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929
+                ]
+            }
+        },
+        {
+            "name": "Plane_Matte",
+            "type": "MatteMaterial",
+            "param": {
+                "color": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929
+                ]
+            }
+        },
+        {
+            "name": "Plane.001_Matte",
+            "type": "MatteMaterial",
+            "param": {
+                "color": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929
+                ]
+            }
+        },
+        {
+            "name": "Plane.002_Matte",
+            "type": "MatteMaterial",
+            "param": {
+                "color": [
+                    0.25,
+                    0.25,
+                    0.75
+                ]
+            }
+        },
+        {
+            "name": "Plane.003_Matte",
+            "type": "MatteMaterial",
+            "param": {
+                "color": "forMayaAOblinn6_occlusion.png"
+            }
+        },
+        {
+            "name": "Cube.001_Matte",
+            "type": "MatteMaterial",
+            "param": {
+                "color": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929
+                ]
+            }
+        }
+    ],
+    "shapes": [
+        {
+            "name": "light_Area",
+            "type": "quad",
+            "param": {
+                "width": 1.0,
+                "height": 1.0,
+                "emission": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "scale": 19.799999237060547,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                0.6000000238418579,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                3.6739405434313346e-17,
+                                0.6000000238418579,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.6000000238418579,
+                                -3.6739405434313346e-17,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.9800000190734863,
+                                -1.2124003428350216e-16,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Cube",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Cube.gltf",
+                "smooth": false,
+                "material": "Cube_Matte",
+                "swap_handed": true,
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Plane",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Plane.gltf",
+                "smooth": false,
+                "material": "Plane_Matte",
+                "swap_handed": true,
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Plane.001",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Plane.001.gltf",
+                "smooth": false,
+                "material": "Plane.001_Matte",
+                "swap_handed": true,
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Plane.002",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Plane.002.gltf",
+                "smooth": false,
+                "material": "Plane.002_Matte",
+                "swap_handed": true,
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Plane.003",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Plane.003.gltf",
+                "smooth": false,
+                "material": "Plane.003_Matte",
+                "swap_handed": true,
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Plane.004",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Plane.004.gltf",
+                "smooth": false,
+                "material": null,
+                "swap_handed": true,
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Cube.001",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Cube.001.gltf",
+                "smooth": false,
+                "material": "Cube.001_Matte",
+                "swap_handed": true,
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        }
+    ],
+    "lights": [],
+    "light_sampler": {
+        "type": "UniformLightSampler"
+    },
+    "output": {
+        "fn": "cornell-box.png",
+        "frame_num": 0
+    },
+    "camera": {
+        "type": "ThinLensCamera",
+        "param": {
+            "fov_y": 26.99146642997552,
+            "velocity": 20,
+            "focal_distance": 2.799999952316284,
+            "lens_radius": 0.0,
+            "transform": {
+                "type": "yaw_pitch",
+                "param": {
+                    "yaw": 0.0,
+                    "pitch": 2.5044781608585254e-06,
+                    "position": [
+                        0.0,
+                        1.0,
+                        -5.827016830444336
+                    ]
+                }
+            },
+            "film": {
+                "param": {
+                    "resolution": [
+                        768,
+                        768
+                    ],
+                    "fb_state": 0
+                }
+            },
+            "filter": {
+                "type": "GaussianFilter",
+                "param": {
+                    "radius": [
+                        2.0,
+                        2.0
+                    ],
+                    "sigma": 0.5
+                }
+            }
+        }
+    },
+    "sampler": {
+        "type": "PCGSampler",
+        "param": {
+            "spp": 1
+        }
+    },
+    "integrator": {
+        "type": "PT",
+        "param": {
+            "min_depth": 0,
+            "max_depth": 10,
+            "rr_threshold": 1
+        }
+    }
 }

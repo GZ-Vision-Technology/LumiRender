@@ -35,9 +35,9 @@
             "name" : "matte_red",
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
-                    0.8000000715255737,
-                    0.016452588140964508,
-                    0.038316208869218826,
+                    0.75,
+                    0.25,
+                    0.25,
                     1
                 ],
                 "metallicFactor" : 0,

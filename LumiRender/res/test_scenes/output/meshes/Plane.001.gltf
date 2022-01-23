@@ -16,6 +16,12 @@
         {
             "mesh" : 0,
             "name" : "Plane.001",
+            "rotation" : [
+                0,
+                0,
+                -1,
+                -4.371138828673793e-08
+            ],
             "translation" : [
                 0,
                 2,
@@ -26,7 +32,7 @@
     "materials" : [
         {
             "doubleSided" : true,
-            "name" : "matte_whitte",
+            "name" : "matte_white",
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
                     0.800000011920929,
@@ -41,7 +47,7 @@
     ],
     "meshes" : [
         {
-            "name" : "Plane.001",
+            "name" : "Plane.002",
             "primitives" : [
                 {
                     "attributes" : {

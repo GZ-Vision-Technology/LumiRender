@@ -15,24 +15,13 @@
     "nodes" : [
         {
             "mesh" : 0,
-            "name" : "Plane",
-            "rotation" : [
-                0.7071068286895752,
-                0,
-                0,
-                0.7071068286895752
-            ],
-            "translation" : [
-                0,
-                1,
-                -1
-            ]
+            "name" : "Plane"
         }
     ],
     "materials" : [
         {
             "doubleSided" : true,
-            "name" : "matte_whitte",
+            "name" : "matte_white",
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
                     0.800000011920929,
