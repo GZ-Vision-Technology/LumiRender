@@ -120,7 +120,7 @@ luminous::BSDFWrapper create_bsdf() {
     helper.set_metallic(metallic);
     helper.set_R0(R0);
     helper.set_eta(eta);
-    helper.set_gloss(lerp(clearcoat_gloss, 1, 0.001f));
+    helper.set_clearcoat_alpha(lerp(clearcoat_gloss, 1, 0.001f));
 
     disney_bsdf.set_data(helper);
 

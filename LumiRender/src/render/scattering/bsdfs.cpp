@@ -23,7 +23,7 @@ namespace luminous {
             helper.set_metallic(metallic);
             helper.set_R0(R0);
             helper.set_eta(eta);
-            helper.set_gloss(lerp(clearcoat_gloss, 1, 0.001f));
+            helper.set_clearcoat_alpha(lerp(clearcoat_gloss, 0.1f, 0.001f));
             float dt = diff_trans / 2.f;
             disney_bsdf.set_data(helper);
             float aspect = safe_sqrt(1 - anisotropic * 0.9f);

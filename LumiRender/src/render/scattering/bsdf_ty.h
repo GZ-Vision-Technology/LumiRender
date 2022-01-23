@@ -133,7 +133,9 @@ namespace luminous {
                 Spectrum ret{0.f};
                 this->for_each([&](auto bxdf, int idx) {
                     if (bxdf.match_flags(flags)) {
-                        ret += bxdf.safe_eval(wo, wi, _data.get_helper());
+                        auto tmp = bxdf.safe_eval(wo, wi, _data.get_helper());
+                        DCHECK(!has_invalid(tmp));
+                        ret += tmp;
                     }
                     return true;
                 });

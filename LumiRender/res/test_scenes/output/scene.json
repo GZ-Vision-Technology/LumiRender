@@ -66,6 +66,35 @@
                     0.800000011920929
                 ]
             }
+        },
+        {
+            "name": "bunny_Disney",
+            "type": "DisneyMaterial",
+            "param": {
+                "color": [
+                    0.5304561853408813,
+                    0.4083440601825714,
+                    0.48161134123802185
+                ],
+                "metallic": 0.0,
+                "eta": 1.5,
+                "roughness": 0.12999999523162842,
+                "specular_tint": 0.0,
+                "anisotropic": 0.0,
+                "sheen": 0.0,
+                "sheen_tint": 0.0,
+                "clearcoat": 0.010000050067901611,
+                "clearcoat_gloss": 0.0,
+                "spec_trans": 0.0,
+                "scatter_distance": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "flatness": 0.0,
+                "diff_trans": 0.0,
+                "thin": false
+            }
         }
     ],
     "shapes": [
@@ -373,6 +402,48 @@
                 "fn": "meshes/Cube.001.gltf",
                 "smooth": false,
                 "material": "Cube.001_Matte",
+                "swap_handed": true,
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "bunny",
+            "type": "model",
+            "param": {
+                "fn": "meshes/bunny.gltf",
+                "smooth": false,
+                "material": "bunny_Disney",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {

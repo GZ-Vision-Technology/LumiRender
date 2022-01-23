@@ -21,7 +21,7 @@ namespace luminous {
         struct BSDFHelper {
         private:
             // A B for oren nayar
-            // R0 for disney _params.w is gloss for disney
+            // R0 for disney _params.w is clearcoat alpha for disney
             float4 _params{};
 
             // roughness for disney
@@ -82,12 +82,12 @@ namespace luminous {
              * for disney material
              * @return
              */
-            ND_XPU_INLINE float gloss() const {
+            ND_XPU_INLINE float clearcoat_alpha() const {
                 return _params.w;
             }
 
-            LM_XPU_INLINE void set_gloss(float gloss) {
-                _params.w = gloss;
+            LM_XPU_INLINE void set_clearcoat_alpha(float alpha) {
+                _params.w = alpha;
             }
 
             /**

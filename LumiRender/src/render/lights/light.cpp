@@ -58,6 +58,7 @@ namespace luminous {
                     }
                 }
             }
+            DCHECK(!has_invalid(Ld));
             return Ld;
         }
 
@@ -94,6 +95,7 @@ namespace luminous {
                 float weight = bsdf_sample.is_specular() ? 1 : MIS_weight(bsdf_PDF, light_PDF);
                 Ld = bsdf_val * Li * weight / bsdf_PDF;
             }
+            DCHECK(!has_invalid(Ld));
             return Ld;
         }
 
