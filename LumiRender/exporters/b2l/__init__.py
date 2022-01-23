@@ -14,23 +14,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from . import auto_load
+from . import material_nodes
 bl_info = {
     "name": "Blender-LumiRender Exporter",
     "description": "",
-    "author": "",
-    "version": (0, 1),
+    "author": "zijian",
+    "version": (0, 2),
     "blender": (3, 0, 0),
-    # "location": "Properties > Render > My Awesome Panel",
+    "location": " View3D > UI ",
     "warning": "",  # used for warning icon and text in add-ons panel
-    # "wiki_url": "http://my.wiki.url",
-    # "tracker_url": "http://my.bugtracker.url",
+    "wiki_url": "https://git.duowan.com/ouzijian/blender2luminous",
     "support": "COMMUNITY",
     "category": "Render",
 }
 
-
-from .temp import auto_load
-from .temp import exporter2
 
 auto_load.init()
 

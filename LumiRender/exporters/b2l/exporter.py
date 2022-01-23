@@ -1,14 +1,10 @@
-
 import bpy
 import os
-import shutil
 import json
 import math
-
 import numpy as np
 from math import radians
-# 工具
-
+import shutil
 # #####################################################
 # 工具、计算变换矩阵
 # #####################################################
@@ -63,109 +59,163 @@ def model_to_luminous():
 # #####################################################
 
 
-# def export_material(scene, scene_json, object, slot_idx):
-#     mat = object.material_slots[slot_idx].material
-#     if not mat or not mat.use_nodes:
-#         return
-
-#     def is_custom_node(node):
-#         return isinstance(node, material_nodes.MyCustomTreeNode)
-
-#     print('\nMat name: ', mat.name)
-#     for node in mat.node_tree.nodes:
-#         if not is_custom_node(node):
-#             continue
-#         if node.bl_idname == 'CustomNodeTypeMatte':
-#             export_matte(scene_json, node, mat.name)
-#     return mat.name
-
-def export_material(scene, scene_json, object, slot_idx):
-
-    mat = object.material_slots[slot_idx].material
+def create_imagetex(name, tex):
+    return {
+        "name": name,
+        "type": "ImageTexture",
+        "param": {
+            "fn": 'textures/'+tex,
+            "color_space": "LINEAR"
+        }
+    }
+# https://blenderartists.org/t/simple-exporter-script-need-some-python-advice/1238345/6
 
 
-def export_meshes(scene, scene_json):
-    directory_path = bpy.path.abspath(scene.exportpath)
-
-    def skip(object):
-        return object is None or object.type == 'CAMERA' or object.type != 'MESH'
-    # 一个mesh含有多个object
-    for i, object in enumerate(scene.objects):
-        if skip(object):
-            continue
-        mesh_name = object.name
-        print(len(object.material_slots))
-        # 每一个object 可能含有多个material
-        for slotIndex in range(len(object.material_slots)):
-            if len(object.material_slots) == 0:
-                print("no material on object")
-                continue
-            mat = object.data.materials[slotIndex]
-            if mat == None:
-                textureName = ""
-                links = mat.links
-                print('Number of links: ')
-                print(len(links))
-
-        r = rotate_x(0)
-        s = scale([1, 1, 1])
-        t = np.matmul(s, r)
-        # https://docs.blender.org/api/current/bpy.ops.export_scene.html?highlight=bpy%20ops%20export_scene%20obj#bpy.ops.export_scene.obj
-        # bpy.ops.export_scene.obj(filepath=obj_filepath,
-        #                          use_selection=False, path_mode='COPY')
-        # 这里函数也会导出贴图
-        bpy.ops.export_scene.gltf(filepath=directory_path+'/'+mesh_name+'.gltf',
-                                  export_format='GLTF_SEPARATE', export_materials='EXPORT', export_colors=True)
-        scene_json['shapes'].append({
-            'name': mesh_name,
-            'type': 'model',
-            'param': {
-                'fn': mesh_name+'.gltf',
-                'smooth': False,
-                'swap_handed': True,
-                'subdiv_level': 0,
-                'transform': {
-                    'type': 'matrix4x4',
-                    'param': {
-                        'matrix4x4':  t.tolist()
-                    }
-                }
-            }
-        })
+def export_texture_from_input(inputSlot, scene_json, mesh_name):
+    tex_name = ""
+    links = inputSlot.links
+    print('Number of links: ')
+    print(len(links))
+    for x in inputSlot.links:
+        tex_name = x.from_node.image.name
+        print(tex_name)
+        src_texture_path = bpy.path.abspath(x.from_node.image.filepath)
+        dst_texture_path = bpy.path.abspath(
+            bpy.data.scenes[0].exportpath + '/textures/' + tex_name)
+        # 自己拷贝纹理贴图
+        shutil.copyfile(src_texture_path, dst_texture_path)
+        # 写进json文件
+        tex_data = create_imagetex(tex_name, tex_name)
+        scene_json["textures"].append(tex_data)
+        print("Copy %s  from %s to %s, " %
+              (tex_name, src_texture_path, dst_texture_path))
+    return tex_name
 
 
-def export_meshes_all(scene, scene_json):
-    directory_path = bpy.path.abspath(scene.exportpath)
-    filepath = directory_path + '/all.gltf'
-    # print(f'[info] export mesh to {obj_filepath}')
-    # create_directory_if_needed('')
+def export_matte_material(mat, scene_json, mesh_name):
+    print('Currently exporting B2L Matte material')
+    kdTextureName = ""
+    material_name = mesh_name + "_" + mat.name
+    kdTextureName = export_texture_from_input(
+        mat.inputs[0], scene_json, mesh_name)
+    m = {}  # create a dictionary
+    m["name"] = material_name  # set material name
+    m["type"] = "MatteMaterial"
+    # 如果有贴图写贴图，没贴图写数值
+    if kdTextureName != "":
+        m["param"] = {"color": kdTextureName}
+    else:
+        m["param"] = {"color": [mat.Kd[0], mat.Kd[1], mat.Kd[2]]}
+    # list
+    scene_json['materials'].append(m)  # appending to list
+    return material_name
 
-    # def skip(object):
-    #     return object is None or object.type == 'CAMERA' or object.type != 'MESH'
 
-    # for i, object in enumerate(scene.objects):
-    #     if skip(object):
-    #         continue
-    #     mat_name = ""
-    #     for i in range(len(object.material_slots)):
-    #         mat_name = export_material(scene, scene_json, object, i)
-    #     export_mesh(scene, scene_json, object, mat_name, i)
+def export_fake_metal_material(mat, scene_json, mesh_name):
+    print('Currently exporting B2L fake metal material')
+    kdTextureName = ""
+    material_name = mesh_name + "_" + mat.name
+    kdTextureName = export_texture_from_input(
+        mat.inputs[0], scene_json, mesh_name)
+    m = {}  # create a dictionary
+    m["name"] = material_name  # set material name
+    m["type"] = "FakeMetalMaterial"
+    # 如果有贴图写贴图，没贴图写数值
+    if kdTextureName != "":
+        m["param"] = {"color": kdTextureName}
+    else:
+        m["param"] = {"color": [mat.color[0], mat.color[1], mat.color[2]]}
+    m["param"]["roughness"] = [mat.roughness, mat.roughness]
+    scene_json['materials'].append(m)  # appending to list
+    return material_name
 
+
+def export_disney_material(mat, scene_json, mesh_name):
+    print('Currently exporting B2L disney material')
+    kdTextureName = ""
+    material_name = mesh_name + "_" + mat.name
+    kdTextureName = export_texture_from_input(
+        mat.inputs[0], scene_json, mesh_name)
+    m = {}  # create a dictionary
+    m["name"] = material_name  # set material name
+    m["type"] = "DisneyMaterial"
+    param = {}
+    if kdTextureName != "":
+        param["color"] = kdTextureName
+    else:
+        param["color"] = [mat.color[0], mat.color[1], mat.color[2]]
+    param["metallic"] = mat.metallic
+    param["eta"] = mat.eta
+    param["roughness"] = mat.roughness
+    param["specular_tint"] = mat.specular_tint
+    param["anisotropic"] = mat.anisotropic
+    param["sheen"] = mat.sheen
+    param["sheen_tint"] = mat.sheen_tint
+    param["clearcoat"] = mat.clearcoat
+    param["clearcoat_gloss"] = mat.clearcoat_gloss
+    param["spec_trans"] = mat.spec_trans
+    param["scatter_distance"] = [mat.scatter_distance[0],
+                                 mat.scatter_distance[1],
+                                 mat.scatter_distance[2]]
+    param["flatness"] = mat.flatness
+    param["diff_trans"] = mat.diff_trans
+    param["thin"] = mat.thin
+
+    m["param"] = param
+    scene_json['materials'].append(m)
+
+    return material_name
+
+
+def export_material(scene, scene_json, object, mesh_name):
+    from. import material_nodes
+    # 一个mesh可能有多个材质
+    for slot_index, material in enumerate(object.material_slots):
+        print("slot_index", slot_index)
+        # 如果使用Nodes,则使用blender内建的BSDF,交给gltf导出对应材质，否则使用自定义的材质节点
+        mat = object.material_slots[slot_index].material
+        if not(mat):
+            return
+        elif (mat.use_nodes):
+            print("use blender bsdf")
+            return
+        else:
+            for material in mat.node_tree.nodes:
+                if material.bl_idname == material_nodes.B2L_Matte.bl_idname:
+                    return export_matte_material(material, scene_json, mesh_name)
+                elif material.bl_idname == material_nodes.B2L_FakeMetal.bl_idname:
+                    return export_fake_metal_material(material, scene_json, mesh_name)
+                elif material.bl_idname == material_nodes.B2L_Disney.bl_idname:
+                    return export_disney_material(material, scene_json, mesh_name)
+
+
+def export_mesh(scene, scene_json, object, directory_path):
+    mesh_name = object.name
+    # 模型变换矩阵
     r = rotate_x(0)
     s = scale([1, 1, 1])
     t = np.matmul(s, r)
-    # https://docs.blender.org/api/current/bpy.ops.export_scene.html?highlight=bpy%20ops%20export_scene%20obj#bpy.ops.export_scene.obj
-    # bpy.ops.export_scene.obj(filepath=obj_filepath,
-    #                          use_selection=False, path_mode='COPY')
 
-    bpy.ops.export_scene.gltf(filepath=filepath,
-                              export_format='GLTF_SEPARATE', export_materials='EXPORT', export_colors=True)
+    # 一个material可能会有多个材质
+    # 返回当前material的name,export_material导出材质并导出贴图
+    material_name = ""
+    material_name = export_material(scene, scene_json, object, mesh_name)
+
+    # export_materials ['EXPORT', 'PLACEHOLDER', 'NONE'] PLACEHOLDER保留material slot信息但不导出贴图
+    bpy.ops.export_scene.gltf(filepath=directory_path+'/meshes/'+mesh_name+'.gltf',
+                              export_texture_dir='../textures',
+                              export_format='GLTF_SEPARATE',
+                              export_materials='EXPORT',
+                              export_colors=False,
+                              use_selection=True)
+
     scene_json['shapes'].append({
-        'name': 'mesh',
+        'name': mesh_name,
         'type': 'model',
         'param': {
-            'fn': 'test.gltf',
+            'fn': 'meshes/'+mesh_name+'.gltf',
             'smooth': False,
+            'material': material_name,
             'swap_handed': True,
             'subdiv_level': 0,
             'transform': {
@@ -177,57 +227,30 @@ def export_meshes_all(scene, scene_json):
         }
     })
 
+# 每个模型单独导出.gltf
 
-def create_texture(type, name, color, color_sapce):
+
+def export_meshes(scene, scene_json):
+
+    directory_path = bpy.path.abspath(scene.exportpath)
+    obs = [o for o in scene.objects if o.type == 'MESH']
+    bpy.ops.object.select_all(action='DESELECT')
+    viewlayer = bpy.context.view_layer
+    for i, object in enumerate(obs):
+        viewlayer.objects.active = object
+        object.select_set(True)
+        export_mesh(scene, scene_json, object, directory_path)
+        object.select_set(False)
+
+
+def create_integrator(scene):
     return {
-        "type": type,
-        "name": name,
-        "param": {"val": color, "color_space": color_sapce},
-    }
-
-
-# type: MatteMaterial
-def create_material(type, name, param):
-    return {
-        "type": type,
-        "name": name,
-        "param": param,
-    }
-
-
-def create_shape_param(width, height, emission, scale, transform):
-    return {
-        "width": width,
-        "height": height,
-        "emission": emission,
-        "scale": scale,
-        "transform": transform,
-    }
-
-
-# type:yaw_pitch/rts
-def create_transform(type, yaw, pitch, position):
-    return {"type": type, "param": {"yaw": yaw, "pitch": pitch, "position": position}}
-
-
-# type: quad/ model
-def create_shape(type, name, shape_param):
-    return {
-        "type": type,
-        "name": name,
-        "param": shape_param,
-    }
-
-
-# type:
-# def create_light():
-#     return
-
-
-def create_integrator(type, max_depth, rr_threshold):
-    return {
-        "type": type,
-        "param": {"max_depth": max_depth, "rr_threshold": rr_threshold},
+        "type": scene.integrator,
+        "param": {
+            "min_depth": scene.min_depth,
+            "max_depth": scene.max_depth,
+            "rr_threshold": scene.rr_threshold
+        },
     }
 
 
@@ -254,7 +277,8 @@ def export_area_lights(scene, scene_json):
         mat = to_mat(light_obj.matrix_world)
 
         mat = np.matmul(mat, to_luminous())
-
+        # blender和引擎之间的灯光有一个单位转换系数，这里暂定为0.00002
+        lightscale = scene.lightscale
         light = {
             'name': 'light_' + light_obj.name,
             'type': 'quad',
@@ -262,7 +286,7 @@ def export_area_lights(scene, scene_json):
                 'width': width,
                 'height': height,
                 'emission': list(light_data.color),
-                'scale': light_data.energy * 0.00002,
+                'scale': light_data.energy * lightscale,
                 'transform': {
                     'type': 'matrix4x4',
                     'param': {
@@ -280,27 +304,24 @@ def export_area_lights(scene, scene_json):
         scene_json['shapes'] = lights
 
 
-def create_camera_param(
-    fov_y,
-    velocity,
-    focal_distance,
-    lens_radius,
-    transform,
-    width,
-    height,
-    fb_state,
-    filter_type,
-    filter_radius,
-):
-    return {
-        "fov_y": fov_y,
-        "velocity": velocity,
-        "focal_distance": focal_distance,
-        "lens_radius": lens_radius,
-        "transform": transform,
-        "film": {"param": {"resolution": [width, height], "fb_state": fb_state}},
-        "filter": {"type": filter_type, "param": {"radius": filter_radius}, },
+def create_filter(scene):
+    ret = {
+        "type": scene.filterType,
+        "param": {
+            "radius": [
+                scene.filter_radius_x,
+                scene.filter_radius_y
+            ]
+        }
     }
+    if scene.filterType == "LanczosSincFilter":
+        ret["param"]["tau"] = scene.filter_tau
+    elif scene.filterType == "GaussianFilter":
+        ret["param"]["sigma"] = scene.filter_sigma
+    elif scene.filterType == "MitchellFilter":
+        ret["param"]["B"] = scene.filter_B
+        ret["param"]["C"] = scene.filter_C
+    return ret
 
 
 def create_camera(scene):
@@ -327,6 +348,7 @@ def create_camera(scene):
     euler = camera_obj_blender.rotation_euler
     pitch = math.degrees(euler.x) - 90
     yaw = math.degrees(euler.z)
+
     return {
         'type': 'ThinLensCamera',
         'param': {
@@ -349,87 +371,97 @@ def create_camera(scene):
                     'fb_state': tab[scene.rendermode]
                 }
             },
-            "filter": {
-                "type": scene.filterType,
-                "param": {
-                    "radius": [
-                        scene.filter_radius_x,
-                        scene.filter_radius_y
-                    ]
-                }
-            }
+            "filter": create_filter(scene)
         }
     }
 
 
-def create_sampler(type, spp):
-    return {"type": type, "param": {"spp": spp}}
+def create_sampler(scene):
+    return {"type": scene.sampler, "param": {"spp": scene.spp}}
 
 
 def create_output(fn, frame_num):
     return {"fn": fn, "frame_num": frame_num}
 
 
-# def export_scene(scene_json, filepath):
-#     with open(filepath, "w") as outputfile:
-#         json.dump(scene_json, outputfile, indent=4)
+def write_scene(scene_json, filepath):
+    # print(scene_json)
+    with open(filepath, "w") as outputfile:
+        json.dump(scene_json, outputfile, indent=4)
+
+# 检查文件路径是否存在，因为在blender里面设置了，应该一般存在，如果存在则删除
 
 
-def export_test(scene):
+def create_directories(exportpath):
+    if not os.path.exists(exportpath):
+        os.makedirs(exportpath)
+        os.makedirs(exportpath+'/meshes')
+        os.makedirs(exportpath+'/textures')
+    else:
+        shutil.rmtree(exportpath)
+        os.makedirs(exportpath)
+        os.makedirs(exportpath+'/meshes')
+        os.makedirs(exportpath+'/textures')
 
-    # 默认添加了output light_sampler 和一个纯色材质
+
+def export_meshes_all(scene, scene_json):
+    directory_path = bpy.path.abspath(scene.exportpath)
+    filepath = directory_path + '/all.gltf'
+    r = rotate_x(0)
+    s = scale([1, 1, 1])
+    t = np.matmul(s, r)
+    bpy.ops.export_scene.gltf(filepath=directory_path+'/meshes/all.gltf',
+                              export_texture_dir='../textures',
+                              export_format='GLTF_SEPARATE',
+                              export_materials='EXPORT',
+                              export_colors=False,)
+    scene_json['shapes'].append({
+        'name': 'mesh',
+        'type': 'model',
+        'param': {
+            'fn': 'all.gltf',
+            'smooth': False,
+            'swap_handed': True,
+            'subdiv_level': 0,
+            'transform': {
+                'type': 'matrix4x4',
+                'param': {
+                    'matrix4x4':  t.tolist()
+                }
+            }
+        }
+    })
+
+
+def export_test(scene, filepath_full):
     scene_json = {
-        "textures": [{
-            "type": "ConstantTexture",
-            "name": "constant",
-            "param": {
-                "val": [
-                     1,
-                     1,
-                     1,
-                     0
-                     ],
-                "color_space": "SRGB"
-            }
-        }],
-        "materials": [{
-            "type": "MatteMaterial",
-            "name": "quad",
-            "param": {
-                "color": "constant"
-            }
-        }],
+        "textures": [],
+        "materials": [],
         "shapes": [],
         "lights": [],
         "light_sampler": {
             "type": "UniformLightSampler"
         },
-        "output": {
-            "fn": "cornell-box.png",
-            "frame_num": 0
-        }
+        "output": {}
     }
-
-    scene_json['camera'] = create_camera(scene)
-    scene_json['sampler'] = create_sampler(scene.sampler, scene.spp)
-    scene_json['integrator'] = create_integrator(
-        scene.integrator, scene.max_depth, scene.rr_threshold)
-
-    export_area_lights(scene, scene_json)
-
-    export_meshes(scene, scene_json)
-
     # export
-    exportpath = scene.exportpath  # "D:/code/blender2luminous/assets
-    # 检查文件路径是否存在，因为在blender里面设置了，应该一般存在，如果存在则删除
-    if not os.path.exists(exportpath):
-        os.makedirs(exportpath)
+    exportpath = filepath_full  # default: output
+
+    print("exportpath------------", exportpath)
+    create_directories(exportpath)
+    scene_json['camera'] = create_camera(scene)
+    scene_json['sampler'] = create_sampler(scene)
+    scene_json['integrator'] = create_integrator(scene)
+    export_area_lights(scene, scene_json)
+    if scene.meshtype == 'Single':
+        export_meshes(scene, scene_json)
     else:
-        os.rmdir(exportpath)
-        os.makedirs(exportpath)
+        export_meshes_all(scene, scene_json)
+    # 自定义材质导出
+    # exporter_custom_materials(scene, scene_json)
+    # 原先的BSDF材质
+    # exporter_materials(scene, scene_json)
+    scene_json['output'] = create_output("cornell-box.png", 0)
+
     # 导出
-    filename = scene.outputfilename  # output.json
-    json_out = exportpath+'/'+filename
-    print(scene_json)
-    with open(json_out, "w") as outputfile:
-        json.dump(scene_json, outputfile, indent=4)
+    write_scene(scene_json, exportpath+'/'+scene.outputfilename)

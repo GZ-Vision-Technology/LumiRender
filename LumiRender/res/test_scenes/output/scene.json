@@ -2,17 +2,6 @@
     "textures": [],
     "materials": [
         {
-            "name": "Cube_Matte",
-            "type": "MatteMaterial",
-            "param": {
-                "color": [
-                    0.800000011920929,
-                    0.800000011920929,
-                    0.800000011920929
-                ]
-            }
-        },
-        {
             "name": "Plane_Matte",
             "type": "MatteMaterial",
             "param": {
@@ -76,15 +65,15 @@
                     0.4083440601825714,
                     0.48161134123802185
                 ],
-                "metallic": 0.0,
+                "metallic": 1.0,
                 "eta": 1.5,
-                "roughness": 0.12999999523162842,
-                "specular_tint": 0.0,
+                "roughness": 0.6100000143051147,
+                "specular_tint": 1.0,
                 "anisotropic": 0.0,
                 "sheen": 0.0,
                 "sheen_tint": 0.0,
-                "clearcoat": 1.0,
-                "clearcoat_roughness": 1.0,
+                "clearcoat": 0.0,
+                "clearcoat_roughness": 0.0,
                 "spec_trans": 0.0,
                 "scatter_distance": [
                     0.0,
@@ -149,7 +138,7 @@
             "param": {
                 "fn": "meshes/Cube.gltf",
                 "smooth": false,
-                "material": "Cube_Matte",
+                "material": null,
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -485,8 +474,8 @@
         "type": "UniformLightSampler"
     },
     "output": {
-        "fn": "cornell-box.png",
-        "frame_num": 0
+        "fn": "scene.png",
+        "dispatch_num": 0
     },
     "camera": {
         "type": "ThinLensCamera",
