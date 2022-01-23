@@ -2,6 +2,28 @@
     "textures": [],
     "materials": [
         {
+            "name": "Cube_builtin_disney.001",
+            "type": "DisneyMaterial",
+            "param": {
+                "color": [
+                    0.7775325775146484,
+                    0.7831145524978638,
+                    0.8000000715255737,
+                    1.0
+                ],
+                "roughness": 0.5,
+                "eta": 1.399999976158142,
+                "matallic": 0.0,
+                "specular_tint": 0.0,
+                "anisotropic": 0.0,
+                "sheen": 0.0,
+                "sheen_tint": 0.5,
+                "clearcoat": 0.0,
+                "clearcoat_roughness": 0.029999999329447746,
+                "normal": null
+            }
+        },
+        {
             "name": "Plane_Matte",
             "type": "MatteMaterial",
             "param": {
@@ -67,7 +89,7 @@
                 ],
                 "metallic": 1.0,
                 "eta": 1.5,
-                "roughness": 0.6100000143051147,
+                "roughness": 0.3100000321865082,
                 "specular_tint": 1.0,
                 "anisotropic": 0.0,
                 "sheen": 0.0,
@@ -138,7 +160,7 @@
             "param": {
                 "fn": "meshes/Cube.gltf",
                 "smooth": false,
-                "material": null,
+                "material": "Cube_builtin_disney.001",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
