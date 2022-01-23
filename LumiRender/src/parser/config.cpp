@@ -27,7 +27,7 @@ namespace luminous {
         }
 
         void MaterialConfig::fill_tex_idx_by_name(vector<MaterialAttrConfig> &tex_configs, MaterialAttrConfig &tc,
-                                                  bool force, bool check) {
+                                                  bool force) {
             if (tc.name.empty()) {
                 return;
             }
@@ -35,15 +35,12 @@ namespace luminous {
                 return tex_config.name == tc.name;
             });
             tc.fill_tex_idx(idx, force);
-            if (check) {
-                DCHECK(tc.tex_valid())
-            }
         }
 
         void MaterialConfig::fill_tex_configs(vector<MaterialAttrConfig> &tex_configs) {
             // common data
             if (!normal.name.empty()) {
-                fill_tex_idx_by_name(tex_configs, normal, false, false);
+                fill_tex_idx_by_name(tex_configs, normal, false);
             }
 
             if (type() == full_type("AssimpMaterial")) {

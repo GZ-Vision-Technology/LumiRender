@@ -212,7 +212,7 @@ namespace luminous {
 #endif
 
             static void fill_tex_idx_by_name(std::vector<MaterialAttrConfig> &tex_configs,
-                                             MaterialAttrConfig &tc, bool force = false, bool check = true);
+                                             MaterialAttrConfig &tc, bool force = false);
 
             void fill_tex_configs(std::vector<MaterialAttrConfig> &tex_configs);
         };
