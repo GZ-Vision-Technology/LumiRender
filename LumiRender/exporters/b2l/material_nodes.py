@@ -129,7 +129,7 @@ class B2L_Disney(Node, MyCustomTreeNode):
     sheen: bpy.props.FloatProperty(default=0, min=0.0, max=1.0)
     sheen_tint: bpy.props.FloatProperty(default=0, min=0.0, max=1.0)
     clearcoat: bpy.props.FloatProperty(default=0, min=0.0, max=1.0)
-    clearcoat_gloss: bpy.props.FloatProperty(default=0, min=0.0, max=1.0)
+    clearcoat_roughness: bpy.props.FloatProperty(default=1.0, min=0.0, max=1.0)
     spec_trans: bpy.props.FloatProperty(default=0, min=0.0, max=1.0)
     scatter_distance: bpy.props.FloatVectorProperty(name="color", description="color", default=(
         0, 0, 0, 0), min=0, max=1, subtype='COLOR', size=4, update=updateViewportColor)
@@ -152,7 +152,7 @@ class B2L_Disney(Node, MyCustomTreeNode):
         layout.prop(self, "sheen", text='sheen')
         layout.prop(self, "sheen_tint", text='sheen_tint')
         layout.prop(self, "clearcoat", text='clearcoat')
-        layout.prop(self, "clearcoat_gloss", text='clearcoat_gloss')
+        layout.prop(self, "clearcoat_roughness", text='clearcoat_roughness')
         layout.prop(self, "spec_trans", text='spec_trans')
         layout.prop(self, "scatter_distance", text='scatter_distance')
         layout.prop(self, "flatness", text='flatness')

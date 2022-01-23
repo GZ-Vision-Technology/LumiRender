@@ -1,8 +1,18 @@
 # blender2luminous
-## plan
-| Feature                     | Progress |
-| --------------------------- | -------- |
-| Add Pannel                  | Done     |
-| json template generation    | Done     |
-| mesh texture and shapes etc | Working  |
-| test                        | Planned  |
+## Done
+- 界面：完成了blender 插件界面的初步绘制
+- 支持场景面光和模型整体导出，支持obj和gltf
+- 功能：实现迪斯尼材质的导出
+- 功能：实现材质和模型的json的写入
+- 功能：实现自定义材质
+- 功能：支持分模型和整个场景的导出
+- 界面：暴露灯光转换系数
+
+## To Do
+- 功能：导入环境贴图
+- 界面：导出时添加进度条
+- 
+
+## Others
+- 如果场景没有面光会导出失败
+- 材质如果开启`Use Node`则使用blender的材质导出，否则使用自定义材质导出

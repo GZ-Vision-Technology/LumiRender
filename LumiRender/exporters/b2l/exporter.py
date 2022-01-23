@@ -129,6 +129,146 @@ def export_fake_metal_material(mat, scene_json, mesh_name):
     scene_json['materials'].append(m)  # appending to list
     return material_name
 
+def exporter_materials(scene, scene_json):
+    # 在blender由于需要使用normal_map节点对法线贴图进行采样，需要特殊处理
+    def write_normal(node):
+        if len(node.links) == 1:
+            Normal_Map = node.links[0].from_node
+            texture_node = Normal_Map.inputs.get("Color").links[0].from_node
+            tex_name = texture_node.image.filepath.split("\\")[-1]
+            tex_data = create_imagetex(tex_name, tex_name)
+            scene_json["textures"].append(tex_data)
+            return tex_name
+
+    # color 节点返回float4
+    def write_color(node):
+        if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
+            tex_name = node.links[0].from_node.image.filepath.split("\\")[-1]
+            tex_data = create_imagetex(tex_name, tex_name)
+            scene_json["textures"].append(tex_data)
+            return tex_name
+        else:
+            Kd = [node.default_value[0],
+                  node.default_value[1], node.default_value[2], node.default_value[3]]
+            return Kd
+
+    def write_material(node):
+        # ensure input node is an image
+        if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
+            tex_name = node.links[0].from_node.image.filepath.split("\\")[-1]
+            tex_data = create_imagetex(tex_name, tex_name)
+            scene_json["textures"].append(tex_data)
+            return tex_name
+        else:
+            val = node.default_value
+            return val
+
+    # iterating all of the materials
+    for mat in bpy.data.materials:
+        # get the bsdf node
+        bsdf = None
+        if mat.node_tree != None:  # should have node tree
+            for n in mat.node_tree.nodes.keys():  # searching all nodes
+                node = mat.node_tree.nodes[n]
+                # 使用type进行判断
+                if node.type == 'BSDF_PRINCIPLED':  # node type should be bdsf
+                    bsdf = node  # setting the node
+                    break  # exit node tree
+
+        # bsdf not found, skipping
+        if bsdf == None:
+            continue
+        # dictionary
+        m = {}  # create a dictionary
+        m["name"] = mat.name  # set material name
+        m["type"] = "DisneyMaterial"
+        m["param"] = {"color": 0.0, "roughness": 1.0, "eta": 1.5, "matallic": 0.0, "specular_tint": 0.0,
+                      "anisotropic": 0.0, "sheen": 0.0, "sheen_tint": 0.0, "clearcoat": 0.0, "clearcoat_gloss": 0.0}
+
+        # get socket
+        # normal = bsdf.inputs.get("Normal")
+        m["param"]["color"] = write_color(
+            bsdf.inputs.get("Base Color"), mat.name)
+        m["param"]["roughness"] = write_material(bsdf.inputs.get("Roughness"))
+        m["param"]["eta"] = write_material(bsdf.inputs.get("Subsurface IOR"))
+        m["param"]["matallic"] = write_material(bsdf.inputs.get("Metallic"))
+        m["param"]["specular_tint"] = write_material(
+            bsdf.inputs.get("Specular Tint"))
+        m["param"]["anisotropic"] = write_material(
+            bsdf.inputs.get("Anisotropic"))
+        m["param"]["sheen"] = write_material(bsdf.inputs.get("Sheen"))
+        m["param"]["sheen_tint"] = write_material(
+            bsdf.inputs.get("Sheen Tint"))
+        m["param"]["clearcoat"] = write_material(bsdf.inputs.get("Clearcoat"))
+        m["param"]["clearcoat_gloss"] = write_material(
+            bsdf.inputs.get("Clearcoat Roughness"))
+        m["param"]["normal"] = write_normal(
+            bsdf.inputs.get("Normal"))
+        # list
+        scene_json['materials'].append(m)  # appending to list
+
+
+def export_builtin_disney_material(bsdf, scene_json, mesh_name, mat):
+    def write_normal(node):
+        if len(node.links) == 1:
+            Normal_Map = node.links[0].from_node
+            texture_node = Normal_Map.inputs.get("Color").links[0].from_node
+            tex_name = texture_node.image.filepath.split("\\")[-1]
+            tex_data = create_imagetex(tex_name, tex_name)
+            scene_json["textures"].append(tex_data)
+            return tex_name
+
+    # color 节点返回float4
+    def write_float4(node):
+        if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
+            tex_name = node.links[0].from_node.image.filepath.split("\\")[-1]
+            tex_data = create_imagetex(tex_name, tex_name)
+            scene_json["textures"].append(tex_data)
+            return tex_name
+        else:
+            Kd = [node.default_value[0],
+                  node.default_value[1], node.default_value[2], node.default_value[3]]
+            return Kd
+
+    def write_float1(node):
+        # ensure input node is an image
+        if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
+            tex_name = node.links[0].from_node.image.filepath.split("\\")[-1]
+            tex_data = create_imagetex(tex_name, tex_name)
+            scene_json["textures"].append(tex_data)
+            return tex_name
+        else:
+            val = node.default_value
+            return val
+        
+    material_name = mesh_name + "_" + mat.name
+    m = {}
+    m["name"] = material_name  # set material name
+    m["type"] = "DisneyMaterial"
+    
+    param = {}
+    param["color"] = write_float4(bsdf.inputs.get("Base Color"))
+    param["roughness"] = write_float1(bsdf.inputs.get("Roughness"))
+    param["eta"] = write_float1(bsdf.inputs.get("Subsurface IOR"))
+    param["matallic"] = write_float1(bsdf.inputs.get("Metallic"))
+    param["specular_tint"] = write_float1(
+        bsdf.inputs.get("Specular Tint"))
+    param["anisotropic"] = write_float1(
+        bsdf.inputs.get("Anisotropic"))
+    param["sheen"] = write_float1(bsdf.inputs.get("Sheen"))
+    param["sheen_tint"] = write_float1(
+        bsdf.inputs.get("Sheen Tint"))
+    param["clearcoat"] = write_float1(bsdf.inputs.get("Clearcoat"))
+    param["clearcoat_roughness"] = write_float1(
+        bsdf.inputs.get("Clearcoat Roughness"))
+    param["normal"] = write_normal(
+        bsdf.inputs.get("Normal"))
+    
+    m["param"] = param
+    
+    scene_json['materials'].append(m)
+    
+    return material_name
 
 def export_disney_material(mat, scene_json, mesh_name):
     print('Currently exporting B2L disney material')
@@ -152,7 +292,7 @@ def export_disney_material(mat, scene_json, mesh_name):
     param["sheen"] = mat.sheen
     param["sheen_tint"] = mat.sheen_tint
     param["clearcoat"] = mat.clearcoat
-    param["clearcoat_gloss"] = mat.clearcoat_gloss
+    param["clearcoat_roughness"] = mat.clearcoat_roughness
     param["spec_trans"] = mat.spec_trans
     param["scatter_distance"] = [mat.scatter_distance[0],
                                  mat.scatter_distance[1],
@@ -177,7 +317,10 @@ def export_material(scene, scene_json, object, mesh_name):
         if not(mat):
             return
         elif (mat.use_nodes):
-            print("use blender bsdf")
+            print("use blender bsdf--------", mat)
+            for node in mat.node_tree.nodes:
+                if node.type == "BSDF_PRINCIPLED":
+                    return export_builtin_disney_material(node, scene_json, mesh_name, mat)
             return
         else:
             for material in mat.node_tree.nodes:
@@ -380,8 +523,8 @@ def create_sampler(scene):
     return {"type": scene.sampler, "param": {"spp": scene.spp}}
 
 
-def create_output(fn, frame_num):
-    return {"fn": fn, "frame_num": frame_num}
+def create_output(scene):
+    return {"fn": scene.picture_name, "dispatch_num": scene.dispatch_num}
 
 
 def write_scene(scene_json, filepath):
@@ -461,7 +604,7 @@ def export_test(scene, filepath_full):
     # exporter_custom_materials(scene, scene_json)
     # 原先的BSDF材质
     # exporter_materials(scene, scene_json)
-    scene_json['output'] = create_output("cornell-box.png", 0)
+    scene_json['output'] = create_output(scene)
 
     # 导出
     write_scene(scene_json, exportpath+'/'+scene.outputfilename)
