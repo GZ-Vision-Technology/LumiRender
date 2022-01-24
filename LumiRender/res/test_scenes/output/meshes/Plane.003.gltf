@@ -17,10 +17,10 @@
             "mesh" : 0,
             "name" : "Plane.003",
             "rotation" : [
-                0,
-                0,
-                -0.7071068286895752,
-                0.7071068286895752
+                -0.5001093149185181,
+                -0.49989065527915955,
+                -0.5001093745231628,
+                0.49989062547683716
             ],
             "translation" : [
                 -1,
@@ -32,16 +32,18 @@
     "materials" : [
         {
             "doubleSided" : true,
-            "name" : "matte_red",
+            "name" : "disney_plane",
+            "normalTexture" : {
+                "index" : 0
+            },
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
-                    0.75,
-                    0.25,
-                    0.25,
+                    0.7500004768371582,
+                    0.4680975079536438,
+                    0.40630730986595154,
                     1
                 ],
-                "metallicFactor" : 0,
-                "roughnessFactor" : 0.4000000059604645
+                "metallicFactor" : 0
             }
         }
     ],
@@ -59,6 +61,19 @@
                     "material" : 0
                 }
             ]
+        }
+    ],
+    "textures" : [
+        {
+            "sampler" : 0,
+            "source" : 0
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/jpeg",
+            "name" : "brickwall_normal",
+            "uri" : "../textures/brickwall_normal.jpg"
         }
     ],
     "accessors" : [
@@ -117,6 +132,12 @@
             "buffer" : 0,
             "byteLength" : 12,
             "byteOffset" : 128
+        }
+    ],
+    "samplers" : [
+        {
+            "magFilter" : 9729,
+            "minFilter" : 9987
         }
     ],
     "buffers" : [

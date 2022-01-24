@@ -32,7 +32,10 @@
     "materials" : [
         {
             "doubleSided" : true,
-            "name" : "matte_white",
+            "name" : "disney_plane.002",
+            "normalTexture" : {
+                "index" : 0
+            },
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
                     0.800000011920929,
@@ -40,8 +43,7 @@
                     0.800000011920929,
                     1
                 ],
-                "metallicFactor" : 0,
-                "roughnessFactor" : 0.4000000059604645
+                "metallicFactor" : 0
             }
         }
     ],
@@ -59,6 +61,19 @@
                     "material" : 0
                 }
             ]
+        }
+    ],
+    "textures" : [
+        {
+            "sampler" : 0,
+            "source" : 0
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/jpeg",
+            "name" : "brickwall_normal",
+            "uri" : "../textures/brickwall_normal.jpg"
         }
     ],
     "accessors" : [
@@ -117,6 +132,12 @@
             "buffer" : 0,
             "byteLength" : 12,
             "byteOffset" : 128
+        }
+    ],
+    "samplers" : [
+        {
+            "magFilter" : 9729,
+            "minFilter" : 9987
         }
     ],
     "buffers" : [

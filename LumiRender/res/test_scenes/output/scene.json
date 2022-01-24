@@ -1,71 +1,148 @@
 {
-    "textures": [],
+    "textures": [
+        {
+            "name": "brickwall_normal.jpg",
+            "type": "ImageTexture",
+            "param": {
+                "fn": "textures/brickwall_normal.jpg",
+                "color_space": "LINEAR"
+            }
+        },
+        {
+            "name": "brickwall_normal.jpg",
+            "type": "ImageTexture",
+            "param": {
+                "fn": "textures/brickwall_normal.jpg",
+                "color_space": "LINEAR"
+            }
+        },
+        {
+            "name": "brickwall_normal.jpg",
+            "type": "ImageTexture",
+            "param": {
+                "fn": "textures/brickwall_normal.jpg",
+                "color_space": "LINEAR"
+            }
+        },
+        {
+            "name": "brickwall_normal.jpg",
+            "type": "ImageTexture",
+            "param": {
+                "fn": "textures/brickwall_normal.jpg",
+                "color_space": "LINEAR"
+            }
+        },
+        {
+            "name": "brickwall_normal.jpg",
+            "type": "ImageTexture",
+            "param": {
+                "fn": "textures/brickwall_normal.jpg",
+                "color_space": "LINEAR"
+            }
+        }
+    ],
     "materials": [
         {
-            "name": "Cube_builtin_disney.001",
+            "name": "Cube_Matte",
+            "type": "MatteMaterial",
+            "param": {
+                "color": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929
+                ]
+            }
+        },
+        {
+            "name": "Plane_disney_plane.002",
             "type": "DisneyMaterial",
             "param": {
                 "color": [
-                    0.8000000715255737,
-                    0.07138955593109131,
-                    0.5696526765823364,
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929,
                     1.0
                 ],
-                "roughness": 0.209090918302536,
-                "eta": 1.399999976158142,
+                "roughness": 1.0,
+                "eta": 1.6434907913208008,
                 "metallic": 0.0,
                 "specular_tint": 0.0,
                 "anisotropic": 0.0,
                 "sheen": 0.0,
-                "sheen_tint": 0.5,
+                "sheen_tint": 0.0,
                 "clearcoat": 0.0,
-                "spec_trans": 1.0,
-                "clearcoat_roughness": 0.029999999329447746,
-                "normal": null
+                "spec_trans": 0.0,
+                "clearcoat_roughness": 0.0,
+                "normal": "brickwall_normal.jpg"
             }
         },
         {
-            "name": "Plane_Matte",
-            "type": "MatteMaterial",
+            "name": "Plane.001_disney_plane.002",
+            "type": "DisneyMaterial",
             "param": {
                 "color": [
                     0.800000011920929,
                     0.800000011920929,
-                    0.800000011920929
-                ]
+                    0.800000011920929,
+                    1.0
+                ],
+                "roughness": 1.0,
+                "eta": 1.6434907913208008,
+                "metallic": 0.0,
+                "specular_tint": 0.0,
+                "anisotropic": 0.0,
+                "sheen": 0.0,
+                "sheen_tint": 0.0,
+                "clearcoat": 0.0,
+                "spec_trans": 0.0,
+                "clearcoat_roughness": 0.0,
+                "normal": "brickwall_normal.jpg"
             }
         },
         {
-            "name": "Plane.001_Matte",
-            "type": "MatteMaterial",
+            "name": "Plane.003_disney_plane",
+            "type": "DisneyMaterial",
+            "param": {
+                "color": [
+                    0.7500004768371582,
+                    0.4680975079536438,
+                    0.40630730986595154,
+                    1.0
+                ],
+                "roughness": 1.0,
+                "eta": 1.6434907913208008,
+                "metallic": 0.0,
+                "specular_tint": 0.0,
+                "anisotropic": 0.0,
+                "sheen": 0.0,
+                "sheen_tint": 0.0,
+                "clearcoat": 0.0,
+                "spec_trans": 0.0,
+                "clearcoat_roughness": 0.0,
+                "normal": "brickwall_normal.jpg"
+            }
+        },
+        {
+            "name": "Plane.004_disney_plane.002",
+            "type": "DisneyMaterial",
             "param": {
                 "color": [
                     0.800000011920929,
                     0.800000011920929,
-                    0.800000011920929
-                ]
-            }
-        },
-        {
-            "name": "Plane.002_Matte",
-            "type": "MatteMaterial",
-            "param": {
-                "color": [
-                    0.25,
-                    0.25,
-                    0.75
-                ]
-            }
-        },
-        {
-            "name": "Plane.003_Matte",
-            "type": "MatteMaterial",
-            "param": {
-                "color": [
-                    0.75,
-                    0.25,
-                    0.25
-                ]
+                    0.800000011920929,
+                    1.0
+                ],
+                "roughness": 1.0,
+                "eta": 1.6434907913208008,
+                "metallic": 0.0,
+                "specular_tint": 0.0,
+                "anisotropic": 0.0,
+                "sheen": 0.0,
+                "sheen_tint": 0.0,
+                "clearcoat": 0.0,
+                "spec_trans": 0.0,
+                "clearcoat_roughness": 0.0,
+                "normal": "brickwall_normal.jpg"
             }
         },
         {
@@ -84,22 +161,45 @@
             "type": "DisneyMaterial",
             "param": {
                 "color": [
-                    0.8000000715255737,
-                    0.07138955593109131,
-                    0.5696526765823364,
+                    0.5072532296180725,
+                    0.2891825735569,
+                    0.5031806230545044,
                     1.0
                 ],
-                "roughness": 0.0209090918302536,
-                "eta": 1.399999976158142,
-                "metallic": 0.0,
+                "roughness": 0.3327272832393646,
+                "eta": 1.6434907913208008,
+                "metallic": 0.8254545331001282,
                 "specular_tint": 0.0,
                 "anisotropic": 0.0,
                 "sheen": 0.0,
                 "sheen_tint": 0.5,
                 "clearcoat": 0.0,
-                "spec_trans": 1.0,
+                "spec_trans": 0.0,
                 "clearcoat_roughness": 0.029999999329447746,
                 "normal": null
+            }
+        },
+        {
+            "name": "Plane.002_disney_plane.001",
+            "type": "DisneyMaterial",
+            "param": {
+                "color": [
+                    0.25,
+                    0.25,
+                    0.75,
+                    1.0
+                ],
+                "roughness": 1.0,
+                "eta": 1.6434907913208008,
+                "metallic": 0.0,
+                "specular_tint": 0.0,
+                "anisotropic": 0.0,
+                "sheen": 0.0,
+                "sheen_tint": 0.0,
+                "clearcoat": 0.0,
+                "spec_trans": 0.0,
+                "clearcoat_roughness": 0.0,
+                "normal": "brickwall_normal.jpg"
             }
         }
     ],
@@ -155,7 +255,7 @@
             "param": {
                 "fn": "meshes/Cube.gltf",
                 "smooth": false,
-                "material": "Cube_builtin_disney.001",
+                "material": "Cube_Matte",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -197,7 +297,7 @@
             "param": {
                 "fn": "meshes/Plane.gltf",
                 "smooth": false,
-                "material": "Plane_Matte",
+                "material": "Plane_disney_plane.002",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -239,49 +339,7 @@
             "param": {
                 "fn": "meshes/Plane.001.gltf",
                 "smooth": false,
-                "material": "Plane.001_Matte",
-                "swap_handed": true,
-                "subdiv_level": 0,
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                1.0,
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                1.0,
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.0,
-                                1.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Plane.002",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Plane.002.gltf",
-                "smooth": false,
-                "material": "Plane.002_Matte",
+                "material": "Plane.001_disney_plane.002",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -323,7 +381,7 @@
             "param": {
                 "fn": "meshes/Plane.003.gltf",
                 "smooth": false,
-                "material": "Plane.003_Matte",
+                "material": "Plane.003_disney_plane",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -365,7 +423,7 @@
             "param": {
                 "fn": "meshes/Plane.004.gltf",
                 "smooth": false,
-                "material": null,
+                "material": "Plane.004_disney_plane.002",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -450,6 +508,48 @@
                 "fn": "meshes/bunny.gltf",
                 "smooth": false,
                 "material": "bunny_builtin_disney.001",
+                "swap_handed": true,
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Plane.002",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Plane.002.gltf",
+                "smooth": false,
+                "material": "Plane.002_disney_plane.001",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
