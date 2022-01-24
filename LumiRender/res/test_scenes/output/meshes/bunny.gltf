@@ -34,22 +34,6 @@
             ]
         }
     ],
-    "materials" : [
-        {
-            "doubleSided" : true,
-            "name" : "builtin_disney.001",
-            "pbrMetallicRoughness" : {
-                "baseColorFactor" : [
-                    0.5072532296180725,
-                    0.2891825735569,
-                    0.5031806230545044,
-                    1
-                ],
-                "metallicFactor" : 0.8254545331001282,
-                "roughnessFactor" : 0.3327272832393646
-            }
-        }
-    ],
     "meshes" : [
         {
             "name" : "bunny",
@@ -60,8 +44,7 @@
                         "NORMAL" : 1,
                         "TEXCOORD_0" : 2
                     },
-                    "indices" : 3,
-                    "material" : 0
+                    "indices" : 3
                 }
             ]
         }

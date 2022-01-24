@@ -7,50 +7,30 @@
                 "fn": "textures/brickwall_normal.jpg",
                 "color_space": "LINEAR"
             }
-        },
-        {
-            "name": "brickwall_normal.jpg",
-            "type": "ImageTexture",
-            "param": {
-                "fn": "textures/brickwall_normal.jpg",
-                "color_space": "LINEAR"
-            }
-        },
-        {
-            "name": "brickwall_normal.jpg",
-            "type": "ImageTexture",
-            "param": {
-                "fn": "textures/brickwall_normal.jpg",
-                "color_space": "LINEAR"
-            }
-        },
-        {
-            "name": "brickwall_normal.jpg",
-            "type": "ImageTexture",
-            "param": {
-                "fn": "textures/brickwall_normal.jpg",
-                "color_space": "LINEAR"
-            }
-        },
-        {
-            "name": "brickwall_normal.jpg",
-            "type": "ImageTexture",
-            "param": {
-                "fn": "textures/brickwall_normal.jpg",
-                "color_space": "LINEAR"
-            }
         }
     ],
     "materials": [
         {
-            "name": "Cube_Matte",
-            "type": "MatteMaterial",
+            "name": "Cube_disney_plane.002",
+            "type": "DisneyMaterial",
             "param": {
                 "color": [
                     0.800000011920929,
                     0.800000011920929,
-                    0.800000011920929
-                ]
+                    0.800000011920929,
+                    1.0
+                ],
+                "roughness": 1.0,
+                "eta": 1.6434907913208008,
+                "metallic": 0.0,
+                "specular_tint": 0.0,
+                "anisotropic": 0.0,
+                "sheen": 0.0,
+                "sheen_tint": 0.0,
+                "clearcoat": 0.0,
+                "spec_trans": 0.0,
+                "clearcoat_roughness": 0.0,
+                "normal": "brickwall_normal.jpg"
             }
         },
         {
@@ -146,14 +126,26 @@
             }
         },
         {
-            "name": "Cube.001_Matte",
-            "type": "MatteMaterial",
+            "name": "Cube.001_disney_plane.002",
+            "type": "DisneyMaterial",
             "param": {
                 "color": [
                     0.800000011920929,
                     0.800000011920929,
-                    0.800000011920929
-                ]
+                    0.800000011920929,
+                    1.0
+                ],
+                "roughness": 1.0,
+                "eta": 1.6434907913208008,
+                "metallic": 0.0,
+                "specular_tint": 0.0,
+                "anisotropic": 0.0,
+                "sheen": 0.0,
+                "sheen_tint": 0.0,
+                "clearcoat": 0.0,
+                "spec_trans": 0.0,
+                "clearcoat_roughness": 0.0,
+                "normal": "brickwall_normal.jpg"
             }
         },
         {
@@ -255,7 +247,7 @@
             "param": {
                 "fn": "meshes/Cube.gltf",
                 "smooth": false,
-                "material": "Cube_Matte",
+                "material": "Cube_disney_plane.002",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -465,7 +457,7 @@
             "param": {
                 "fn": "meshes/Cube.001.gltf",
                 "smooth": false,
-                "material": "Cube.001_Matte",
+                "material": "Cube.001_disney_plane.002",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
