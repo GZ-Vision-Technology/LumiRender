@@ -229,6 +229,7 @@ namespace luminous {
     void App::check_and_update() {
         if (_need_update) {
             _task->update();
+            _frame_stats.total_frame_count = 0;
             _need_update = false;
         }
     }

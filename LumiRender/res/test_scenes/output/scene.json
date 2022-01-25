@@ -126,93 +126,93 @@
             }
         },
         {
-            "name": "Mesh000_Default OBJ.001",
+            "name": "Mesh000_liquid",
             "type": "DisneyMaterial",
             "param": {
                 "color": [
-                    0.800000011920929,
-                    0.800000011920929,
-                    0.800000011920929,
+                    0.47086361050605774,
+                    0.2328295260667801,
+                    0.15283924341201782,
                     1.0
                 ],
-                "roughness": 0.5,
-                "eta": 1.399999976158142,
+                "roughness": 0.06000000238418579,
+                "eta": 1.3300000429153442,
+                "metallic": 0.0,
+                "specular_tint": 0.0,
+                "anisotropic": 0.0,
+                "sheen": 0.0,
+                "sheen_tint": 0.0,
+                "clearcoat": 0.0,
+                "spec_trans": 1.0,
+                "clearcoat_roughness": 0.0,
+                "normal": null
+            }
+        },
+        {
+            "name": "Mesh001_teapot_mat",
+            "type": "DisneyMaterial",
+            "param": {
+                "color": [
+                    0.6251271367073059,
+                    0.6076850891113281,
+                    0.6207395195960999,
+                    1.0
+                ],
+                "roughness": 0.07454542815685272,
+                "eta": 1.5,
                 "metallic": 0.0,
                 "specular_tint": 0.0,
                 "anisotropic": 0.0,
                 "sheen": 0.0,
                 "sheen_tint": 0.5,
                 "clearcoat": 0.0,
-                "spec_trans": 0.0,
+                "spec_trans": 1.0,
                 "clearcoat_roughness": 0.029999999329447746,
                 "normal": null
             }
         },
         {
-            "name": "Mesh001_Default OBJ.003",
+            "name": "Mesh002_liquid",
             "type": "DisneyMaterial",
             "param": {
                 "color": [
-                    0.800000011920929,
-                    0.800000011920929,
-                    0.800000011920929,
+                    0.47086361050605774,
+                    0.2328295260667801,
+                    0.15283924341201782,
                     1.0
                 ],
-                "roughness": 0.5,
-                "eta": 1.399999976158142,
+                "roughness": 0.06000000238418579,
+                "eta": 1.3300000429153442,
                 "metallic": 0.0,
                 "specular_tint": 0.0,
                 "anisotropic": 0.0,
                 "sheen": 0.0,
-                "sheen_tint": 0.5,
+                "sheen_tint": 0.0,
                 "clearcoat": 0.0,
-                "spec_trans": 0.0,
-                "clearcoat_roughness": 0.029999999329447746,
+                "spec_trans": 1.0,
+                "clearcoat_roughness": 0.0,
                 "normal": null
             }
         },
         {
-            "name": "Mesh002_Default OBJ.002",
+            "name": "Mesh003_teapot_mat",
             "type": "DisneyMaterial",
             "param": {
                 "color": [
-                    0.800000011920929,
-                    0.800000011920929,
-                    0.800000011920929,
+                    0.6251271367073059,
+                    0.6076850891113281,
+                    0.6207395195960999,
                     1.0
                 ],
-                "roughness": 0.5,
-                "eta": 1.399999976158142,
+                "roughness": 0.07454542815685272,
+                "eta": 1.5,
                 "metallic": 0.0,
                 "specular_tint": 0.0,
                 "anisotropic": 0.0,
                 "sheen": 0.0,
                 "sheen_tint": 0.5,
                 "clearcoat": 0.0,
-                "spec_trans": 0.0,
-                "clearcoat_roughness": 0.029999999329447746,
-                "normal": null
-            }
-        },
-        {
-            "name": "Mesh003_Default OBJ",
-            "type": "DisneyMaterial",
-            "param": {
-                "color": [
-                    0.800000011920929,
-                    0.800000011920929,
-                    0.800000011920929,
-                    1.0
-                ],
-                "roughness": 0.5,
-                "eta": 1.399999976158142,
-                "metallic": 0.0,
-                "specular_tint": 0.0,
-                "anisotropic": 0.0,
-                "sheen": 0.0,
-                "sheen_tint": 0.5,
-                "clearcoat": 0.0,
-                "spec_trans": 0.0,
+                "spec_trans": 1.0,
                 "clearcoat_roughness": 0.029999999329447746,
                 "normal": null
             }
@@ -480,7 +480,7 @@
             "param": {
                 "fn": "meshes/Mesh000.gltf",
                 "smooth": false,
-                "material": "Mesh000_Default OBJ.001",
+                "material": "Mesh000_liquid",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -522,7 +522,7 @@
             "param": {
                 "fn": "meshes/Mesh001.gltf",
                 "smooth": false,
-                "material": "Mesh001_Default OBJ.003",
+                "material": "Mesh001_teapot_mat",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -564,7 +564,7 @@
             "param": {
                 "fn": "meshes/Mesh002.gltf",
                 "smooth": false,
-                "material": "Mesh002_Default OBJ.002",
+                "material": "Mesh002_liquid",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -606,7 +606,7 @@
             "param": {
                 "fn": "meshes/Mesh003.gltf",
                 "smooth": false,
-                "material": "Mesh003_Default OBJ",
+                "material": "Mesh003_teapot_mat",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
