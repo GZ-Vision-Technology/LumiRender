@@ -1,0 +1,116 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.7.33",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "Mesh000",
+            "rotation" : [
+                0.6532815098762512,
+                -0.27059802412986755,
+                0.27059808373451233,
+                0.6532814502716064
+            ],
+            "scale" : [
+                0.15000000596046448,
+                0.15000000596046448,
+                0.15000000596046448
+            ],
+            "translation" : [
+                0,
+                0,
+                -0.19789397716522217
+            ]
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Mesh000",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3
+                }
+            ]
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 4782,
+            "max" : [
+                2.8483099937438965,
+                3.3965039253234863,
+                -0.24503199756145477
+            ],
+            "min" : [
+                -2.8483099937438965,
+                -2.8483099937438965,
+                -2.5558040142059326
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 4782,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 4782,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 27990,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 57384,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 57384,
+            "byteOffset" : 57384
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 38256,
+            "byteOffset" : 114768
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 55980,
+            "byteOffset" : 153024
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 209004,
+            "uri" : "Mesh000.bin"
+        }
+    ]
+}
