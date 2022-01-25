@@ -270,6 +270,7 @@ namespace luminous {
             _frame_stats.last_frame_elapsed = t2 - t0;
             _frame_stats.last_sample_elapsed += _frame_stats.last_frame_elapsed;
             ++_frame_stats.frame_count;
+            ++_frame_stats.total_frame_count;
 
             imgui_begin();
             display_stats();
@@ -318,10 +319,12 @@ namespace luminous {
                      "FPS          : %8.1f\n"
                      "state update : %8.1f ms\n"
                      "render       : %8.1f ms\n"
+                     "sample num   : %8.1lu  \n"
                      "display      : %8.1f ms",
                      _frame_stats.frame_count / _frame_stats.last_sample_elapsed,
                      _frame_stats.update_time * 1000.f / _frame_stats.frame_count,
                      _frame_stats.render_time * 1000.f / _frame_stats.frame_count,
+                     _frame_stats.total_frame_count,
                      _frame_stats.display_time * 1000.f / _frame_stats.frame_count
             );
             _frame_stats.frame_count = 0;

@@ -54,6 +54,7 @@ namespace luminous {
             float last_frame_elapsed{.0f};
             float last_sample_elapsed{.0f};
             unsigned long frame_count = 0;
+            unsigned long total_frame_count = 0;
         } _frame_stats;
 
         void *_render_buffer_shared_resource{};
