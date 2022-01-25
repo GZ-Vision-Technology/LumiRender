@@ -14,7 +14,7 @@ namespace luminous {
             luminous_fs::path path = sc.fn;
             directory = path.parent_path();
 
-            auto ai_scene = AssimpParser::load_scene(sc.fn, ai_importer, sc.swap_handed, sc.smooth);
+            auto ai_scene = AssimpParser::load_scene(sc.fn, ai_importer, sc.swap_handed, sc.smooth, false);
 
             LUMINOUS_EXCEPTION_IF(
                     ai_scene == nullptr || (ai_scene->mFlags & static_cast<uint>(AI_SCENE_FLAGS_INCOMPLETE)) ||
