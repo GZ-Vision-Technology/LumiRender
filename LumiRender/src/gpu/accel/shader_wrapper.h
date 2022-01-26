@@ -50,7 +50,7 @@ namespace luminous {
             }
         };
 
-        class ShaderWrapper : public Noncopyable {
+        class ShaderWrapper : public MovableNonCopyable {
         private:
             Buffer<SBTRecord> _sbt_records{nullptr};
             Buffer<SBTRecord> _callable_records{nullptr};
@@ -58,8 +58,6 @@ namespace luminous {
             ProgramGroupTable _program_group_table{};
         public:
             ShaderWrapper() = default;
-
-            ShaderWrapper(ShaderWrapper &&other) = default;
 
             ShaderWrapper(OptixModule optix_module, OptixDeviceContext optix_device_context,
                           const Scene *scene, Device *device,
@@ -82,8 +80,6 @@ namespace luminous {
                 _sbt_records.clear();
                 _callable_records.clear();
             }
-
-            ~ShaderWrapper() = default;
 
             ProgramGroupTable create_program_groups(OptixModule optix_module,
                                                     OptixDeviceContext optix_device_context,

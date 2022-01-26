@@ -17,7 +17,7 @@ namespace luminous {
 
     class Dispatcher;
 
-    class RawBuffer {
+    class RawBuffer: MovableNonCopyable {
     public:
         class Impl {
         public:
@@ -42,6 +42,15 @@ namespace luminous {
         };
 
         explicit RawBuffer(std::unique_ptr<Impl> impl) : _impl(std::move(impl)) {}
+
+        // Move constructor
+        RawBuffer(RawBuffer &&other) noexcept: _impl(std::forward<std::unique_ptr<Impl>>(other._impl)) {}
+
+        // Move assignment
+        RawBuffer& operator = (RawBuffer &&other) noexcept {
+            std::swap(_impl, other._impl);
+            return *this;
+        }
 
         LM_NODISCARD Impl *impl_mut() const {
             DCHECK(valid());
@@ -79,7 +88,7 @@ namespace luminous {
 
         using RawBuffer::RawBuffer;
 
-        explicit Buffer(RawBuffer buf) : RawBuffer(std::move(buf)) {}
+        explicit Buffer(RawBuffer &&buf) : RawBuffer(std::move(buf)) {}
 
         value_type *data() const { return reinterpret_cast<value_type *>(ptr()); }
 

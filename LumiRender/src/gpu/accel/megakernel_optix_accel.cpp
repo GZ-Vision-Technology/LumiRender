@@ -10,26 +10,25 @@ extern "C" char megakernel_pt[];
 namespace luminous {
     inline namespace gpu {
 
-      MegakernelOptixAccel::MegakernelOptixAccel(Device* device, Context* context, const Scene* scene)
-        : OptixAccel(device, context, scene) {
+        MegakernelOptixAccel::MegakernelOptixAccel(Device *device, Context *context, const Scene *scene)
+                : OptixAccel(device, context, scene) {
 
-          const char *callables[] = {/* "__direct_callable__get_bsdf_0",
+            const char *callables[] = {/* "__direct_callable__get_bsdf_0",
                                      "__direct_callable__get_bsdf_1",
                                      "__direct_callable__get_bsdf_2",
                                      "__direct_callable__sample_f_0",
                                      "__direct_callable__sample_f_1", */
-                                     nullptr};
-          ProgramName megakernel_shader{
-              "__raygen__rg",
-              "__closesthit__closest",
-              "__closesthit__any",
-              callables};
+                    nullptr};
+            ProgramName megakernel_shader{
+                    "__raygen__rg",
+                    "__closesthit__closest",
+                    "__closesthit__any",
+                    callables};
 
-          _shader_wrapper.~ShaderWrapper();
-          ::new (&_shader_wrapper) ShaderWrapper(create_shader_wrapper(megakernel_pt, megakernel_shader));
+            _shader_wrapper = create_shader_wrapper(megakernel_pt, megakernel_shader);
 
-          build_pipeline(_shader_wrapper.program_groups());
-      }
+            build_pipeline(_shader_wrapper.program_groups());
+        }
 
         void MegakernelOptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {
             auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;
@@ -50,10 +49,6 @@ namespace luminous {
         }
 
         void MegakernelOptixAccel::clear() {
-            if(_optix_pipeline) {
-                optixPipelineDestroy(_optix_pipeline);
-                _optix_pipeline = nullptr;
-            }
             _shader_wrapper.clear();
             OptixAccel::clear();
         }

@@ -15,5 +15,14 @@ namespace luminous {
         Noncopyable &operator=(const Noncopyable &) = delete;
     };
 
+    struct MovableNonCopyable {
+        MovableNonCopyable() = default;
+        MovableNonCopyable(MovableNonCopyable &&) = default;
+        MovableNonCopyable& operator = (MovableNonCopyable &&) = default;
+
+    private:
+        MovableNonCopyable(const MovableNonCopyable &) = delete;
+        MovableNonCopyable &operator=(const MovableNonCopyable &) = delete;
+    };
 }
 
