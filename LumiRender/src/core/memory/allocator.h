@@ -65,12 +65,12 @@ namespace luminous {
                 return &arena == &other.arena;
             }
 
-            LM_NODISCARD _DECL_ETW_ALLOCATOR Ty *allocate(_CRT_GUARDOVERFLOW const size_t count) {
+            LM_NODISCARD LM_DECL_ETW_ALLOCATOR Ty *allocate(LM_CRT_GUARDOVERFLOW const size_t count) {
                 return arena.template allocate<Ty>(count);
             }
 
-            LM_NODISCARD _DECL_ETW_ALLOCATOR Ty *allocate(
-                    _CRT_GUARDOVERFLOW const size_t count, const void *) {
+            LM_NODISCARD LM_DECL_ETW_ALLOCATOR Ty *allocate(
+                    LM_CRT_GUARDOVERFLOW const size_t count, const void *) {
                 return allocate(count);
             }
 

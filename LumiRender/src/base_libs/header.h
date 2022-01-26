@@ -165,17 +165,19 @@ namespace luminous {
 
 #ifdef _MSC_VER
 
-#define _DECL_ETW_ALLOCATOR      __declspec(allocator)
+#define LM_DECL_ETW_ALLOCATOR      __declspec(allocator)
+
+#define LM_CRT_GUARDOVERFLOW _CRT_GUARDOVERFLOW
 
 #endif
 
 #ifdef __GNUC__
 
-#define _DECL_ETW_ALLOCATOR
+#define LM_DECL_ETW_ALLOCATOR
 
 #define _aligned_malloc(size, alignment)   ::aligned_alloc(alignment, size)
 #define _aligned_free(p)                   ::free(p)
 
-#define _CRT_GUARDOVERFLOW
+#define LM_CRT_GUARDOVERFLOW
 
 #endif // __GNUC__
