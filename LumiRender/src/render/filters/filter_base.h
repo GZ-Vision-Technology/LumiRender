@@ -6,7 +6,7 @@
 #pragma once
 
 #include "base_libs/math/common.h"
-#include "core/type_reflection.h"
+#include "core/refl/type_reflection.h"
 #include "filter_sampler.h"
 
 namespace luminous {

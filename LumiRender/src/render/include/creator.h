@@ -10,7 +10,7 @@
 #include "base_libs/lstd/lstd.h"
 #include "core/logging.h"
 #include "core/memory/allocator.h"
-#include "core/type_reflection.h"
+#include "core/refl/type_reflection.h"
 
 namespace luminous {
     inline namespace render {

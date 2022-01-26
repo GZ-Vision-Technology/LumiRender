@@ -7,7 +7,7 @@
 
 #include "../header.h"
 #include "common.h"
-#include "core/type_reflection.h"
+#include "core/refl/type_reflection.h"
 #include <algorithm>
 
 namespace luminous {
