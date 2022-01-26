@@ -24,8 +24,6 @@ namespace luminous {
         private:
             using Variant::Variant;
         public:
-            GEN_BASE_NAME(Sampler)
-
             LM_NODISCARD LM_XPU int spp() const;
 
             LM_XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);

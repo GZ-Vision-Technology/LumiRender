@@ -6,7 +6,6 @@
 #include "render/samplers/sampler.h"
 #include "core/backend/managed.h"
 #include "cpu/cpu_impl.h"
-#include "core/refl/reflection.h"
 #include "core/backend/ptr_mapper.h"
 #include "core/backend/synchronizer.h"
 

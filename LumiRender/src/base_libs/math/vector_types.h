@@ -79,7 +79,7 @@ namespace luminous {
         }// namespace detail
 
         template<typename T, uint32_t N>
-        struct alignas(detail::vector_alignment<T, N>) Vector : detail::VectorStorage<T, N> {
+        struct alignas(detail::vector_alignment<T, N>) Vector : public detail::VectorStorage<T, N> {
 
             using Storage = detail::VectorStorage<T, N>;
 
@@ -99,17 +99,17 @@ namespace luminous {
             template<class T2, uint32_t N2, std::enable_if_t<std::is_convertible_v<T2, T> && N <= N2, int> = 0>
             constexpr Vector(const Vector<T2, N2> &v) {
                 if constexpr(N == 2) {
-                    x = static_cast<T>(v.x);
-                    y = static_cast<T>(v.y);
+                    this->x = static_cast<T>(v.x);
+                    this->y = static_cast<T>(v.y);
                 } else if constexpr(N == 3) {
-                    x = static_cast<T>(v.x);
-                    y = static_cast<T>(v.y);
-                    z = static_cast<T>(v.z);
+                    this->x = static_cast<T>(v.x);
+                    this->y = static_cast<T>(v.y);
+                    this->z = static_cast<T>(v.z);
                 } else {
-                    x = static_cast<T>(v.x);
-                    y = static_cast<T>(v.y);
-                    z = static_cast<T>(v.z);
-                    w = static_cast<T>(v.w);
+                    this->x = static_cast<T>(v.x);
+                    this->y = static_cast<T>(v.y);
+                    this->z = static_cast<T>(v.z);
+                    this->w = static_cast<T>(v.w);
                 }
             }
 

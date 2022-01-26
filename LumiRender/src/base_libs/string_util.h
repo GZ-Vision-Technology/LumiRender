@@ -58,8 +58,14 @@ namespace luminous {
         }
 
         inline std::string jsonc_to_json(const std::string &jsonc) {
-            std::string json = std::regex_replace(jsonc, std::regex(R"(\/\/.*\n)"), "\n");
-            return json;
+          const char regex_exprs[][64] = {
+              R"((?=[\r\n])\s*\/\/.*)",                                // Single line comment
+              R"((\".+?(?!\\\\)\"[\{\}\[\]:,\s]*?)\/\/.*?(?=[\r\n]))", // Single line comment in the line end
+              // Mutiple line comment is trick, we can not handle it.
+          };
+          std::string json = std::regex_replace(jsonc, std::regex(regex_exprs[0]), "");
+          json = std::regex_replace(json, std::regex(regex_exprs[1]), "$1");
+          return json;
         }
 
         inline void string_printf_recursive(std::string *s, const char *fmt) {

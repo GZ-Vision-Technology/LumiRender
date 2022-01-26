@@ -14,6 +14,9 @@ namespace luminous {
     inline namespace render {
 
         class LanczosSincFilter : public FittedFilter {
+
+            DECLARE_REFLECTION(LanczosSincFilter, FittedFilter)
+
         private:
             float _tau{};
         public:

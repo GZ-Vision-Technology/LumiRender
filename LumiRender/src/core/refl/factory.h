@@ -9,7 +9,6 @@
 #include <map>
 #include <vector>
 #include <string>
-#include "reflection.h"
 #include "core/logging.h"
 #include "core/macro_map.h"
 
@@ -40,9 +39,9 @@ namespace luminous {
 #undef SET_PTR_VALUE
 #undef GET_PTR_VALUE
 
-        class Object : public BaseBinder<> {
-        public:
-            REFL_CLASS(Object)
-        };
+        // class Object : public BaseBinder<> {
+        // public:
+        //     REFL_CLASS(Object)
+        // };
     }
 }

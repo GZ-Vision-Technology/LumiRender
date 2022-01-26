@@ -159,6 +159,22 @@ namespace luminous {
                 *fp = Spectrum::linear_to_srgb(val / val.w);
             });
 
+            luminous_fs::path film_out_path = _context->output_film_path();
+            luminous_fs::path scene_path = _context->scene_file();
+            if (film_out_path.empty()) {
+                // if command line --output is empty, retrieve path from scene description file.
+                film_out_path = _output_config.fn;
+            }
+
+            if(film_out_path.empty() || !film_out_path.has_filename()) {
+                // default path is <scene path without extend>.exr
+                film_out_path = scene_path.parent_path() / scene_path.stem();
+                film_out_path += ".exr";
+            } else if(film_out_path.is_relative()) {
+                // Relative path is relative to scene directory.
+                film_out_path = scene_path.parent_path() / film_out_path;
+            }
+
             // denoising
             if(_context->denoise_output()) {
                 auto denoiser = create_film_optix_denoiser();
@@ -196,11 +212,9 @@ namespace luminous {
                 std::byte *raw_buffer = reinterpret_cast<std::byte *>(denoise_output_buffer.release());
                 auto image2 = Image(PixelFormat::RGBA32F, raw_buffer, res);
 
-                luminous_fs::path path = _context->scene_path() / _output_config.fn;
-                image2.save(path);
+                image2.save(film_out_path);
             } else {
-                luminous_fs::path path = _context->scene_path() / _output_config.fn;
-                image.save(path);
+                image.save(film_out_path);
             }
         }
 

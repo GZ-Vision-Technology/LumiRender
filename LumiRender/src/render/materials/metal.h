@@ -14,7 +14,7 @@
 namespace luminous {
     inline namespace render {
         class FakeMetalMaterial {
-        public:
+
             DECLARE_REFLECTION(FakeMetalMaterial)
         private:
             Attr3D _color{};
@@ -32,7 +32,7 @@ namespace luminous {
         };
 
         class MetalMaterial {
-        public:
+
             DECLARE_REFLECTION(MetalMaterial)
 
         private:

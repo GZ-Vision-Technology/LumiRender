@@ -13,6 +13,9 @@
 namespace luminous {
     inline namespace render {
         class MitchellFilter : public FittedFilter {
+
+            DECLARE_REFLECTION(MitchellFilter, FittedFilter)
+
         private:
             float b;
             float c;

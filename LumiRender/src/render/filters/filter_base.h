@@ -6,12 +6,16 @@
 #pragma once
 
 #include "base_libs/math/common.h"
+#include "core/type_reflection.h"
 #include "filter_sampler.h"
 
 namespace luminous {
     inline namespace render {
 
         class FilterBase {
+
+            DECLARE_REFLECTION(FilterBase)
+
         protected:
             const float2 _radius;
         public:
@@ -28,6 +32,9 @@ namespace luminous {
         };
 
         class FittedFilter : public FilterBase {
+
+            DECLARE_REFLECTION(FittedFilter, FilterBase)
+
         protected:
             FilterSampler _sampler;
         public:

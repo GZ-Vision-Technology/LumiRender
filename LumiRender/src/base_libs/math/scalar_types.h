@@ -102,11 +102,7 @@ namespace luminous {
 
         template<typename FloatType>
         ND_XPU_INLINE FloatType safe_sqrt(FloatType x) noexcept {
-            if constexpr (std::is_same_v<FloatType, float>) {
-                return std::sqrtf(std::max(x, 0.f));
-            } else {
-                return std::sqrt(std::max(x, 0.f));
-            }
+            return std::sqrt(std::max(x, 0.f));
         }
 
         template<typename T>
@@ -124,20 +120,12 @@ namespace luminous {
 
         template<typename FloatType>
         ND_XPU_INLINE FloatType safe_acos(FloatType x) noexcept {
-            if constexpr (std::is_same_v<FloatType, float>) {
-                return std::acosf(clamp(x, -1.f, 1.f));
-            } else {
-                return std::acos(clamp(x, -1.f, 1.f));
-            }
+            return std::acos(clamp(x, -1.f, 1.f));
         }
 
         template<typename FloatType>
         ND_XPU_INLINE FloatType safe_asin(FloatType x) noexcept {
-            if constexpr (std::is_same_v<FloatType, float>) {
-                return std::asinf(clamp(x, -1.f, 1.f));
-            } else {
-                return std::asin(clamp(x, -1.f, 1.f));
-            }
+            return std::asin(clamp(x, -1.f, 1.f));
         }
 
         template<typename T>
@@ -233,7 +221,7 @@ namespace luminous {
 
         template<>
         LM_XPU_INLINE float Mod(float a, float b) {
-            return std::fmodf(a, b);
+            return std::fmod(a, b);
         }
 
         template<>

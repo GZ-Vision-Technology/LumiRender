@@ -21,12 +21,11 @@ namespace luminous {
         class Film;
 
         class Sensor : public Variant<ThinLensCamera *> {
-        public:
+
             DECLARE_REFLECTION(Sensor, Variant)
 
+        public:
             using Variant::Variant;
-
-            GEN_BASE_NAME(Sensor)
 
             LM_ND_XPU float3 position() const;
 

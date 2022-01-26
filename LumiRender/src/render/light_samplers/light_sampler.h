@@ -30,12 +30,11 @@ namespace luminous {
         class SurfaceInteraction;
 
         class LightSampler : public Variant<UniformLightSampler *> {
-        public:
-            using Variant::Variant;
-
+        
             DECLARE_REFLECTION(LightSampler, Variant)
 
-            GEN_BASE_NAME(LightSampler)
+        public:
+            using Variant::Variant;
 
             CPU_ONLY(LM_NODISCARD std::string to_string() const;)
 

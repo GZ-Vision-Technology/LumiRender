@@ -17,8 +17,8 @@
 namespace luminous {
     inline namespace render {
 
-        LM_ND_INLINE std::string full_type(const std::string &type) {
-            return "class luminous::render::" + type;
+        LM_ND_INLINE const std::string& full_type(const std::string &type) {
+            return type;
         }
 
         struct Config {

@@ -14,7 +14,7 @@
 namespace luminous {
     inline namespace render {
         class DisneyMaterial {
-        public:
+
             DECLARE_REFLECTION(DisneyMaterial)
 
         private:

@@ -13,7 +13,7 @@
 namespace luminous {
     inline namespace render {
         class MirrorMaterial {
-        public:
+
             DECLARE_REFLECTION(MirrorMaterial)
         private:
             Attr3D _color{};

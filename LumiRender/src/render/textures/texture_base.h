@@ -16,6 +16,9 @@ namespace luminous {
     inline namespace render {
 
         class UVMapping2D {
+
+            DECLARE_REFLECTION(UVMapping2D)
+
         private:
             float _su, _sv, _du, _dv;
         public:
@@ -40,11 +43,12 @@ namespace luminous {
         using lstd::Variant;
 
         class TextureMapping2D : public Variant<UVMapping2D> {
+
+            DECLARE_REFLECTION(TextureMapping2D, Variant)
+
         private:
             using Variant::Variant;
         public:
-            GEN_BASE_NAME(TextureMapping2D)
-
             LM_XPU float2 map(const TextureEvalContext &ctx, float2 *dst_dx, float2 *dst_dy) const {
                 LUMINOUS_VAR_DISPATCH(map, ctx, dst_dx, dst_dy)
             }

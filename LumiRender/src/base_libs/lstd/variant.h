@@ -291,11 +291,11 @@ namespace luminous {
 #define LUMINOUS_VAR_DISPATCH(method, ...)                                                                                 \
         return this->dispatch([&](auto &&self)-> decltype(auto) {                                                          \
             return self.method(__VA_ARGS__);                                                                               \
-        }, "File:\"" __FILE__ "\",Line:" TO_STRING(__LINE__) ",Calling:" LM_FUNCSIG);
+        }, "File:\"" __FILE__ "\",Line:" TO_STRING(__LINE__) ",Calling:" LM_FUNCSIG );
 #define LUMINOUS_VAR_PTR_DISPATCH(method, ...)                                                                             \
         return this->dispatch([&](auto &&self)-> decltype(auto) {                                                          \
             return self->method(__VA_ARGS__);                                                                              \
-        }, "File:\"" __FILE__ "\",Line:" TO_STRING(__LINE__) ",Calling:" LM_FUNCSIG);
+        }, "File:\"" __FILE__ "\",Line:" TO_STRING(__LINE__) ",Calling:" LM_FUNCSIG );
 
         };
 

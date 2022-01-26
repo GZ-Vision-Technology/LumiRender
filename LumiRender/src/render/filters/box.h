@@ -12,6 +12,9 @@
 namespace luminous {
     inline namespace render {
         class BoxFilter : public FilterBase {
+
+            DECLARE_REFLECTION(BoxFilter, FilterBase)
+
         public:
             CPU_ONLY(explicit BoxFilter(const FilterConfig &config) : BoxFilter(config.radius) {})
 

@@ -12,6 +12,9 @@
 namespace luminous {
     inline namespace render {
         class TriangleFilter : public FilterBase {
+
+            DECLARE_REFLECTION(TriangleFilter, FilterBase)
+
         public:
             CPU_ONLY(explicit TriangleFilter(const FilterConfig &config) : TriangleFilter(config.radius) {})
 

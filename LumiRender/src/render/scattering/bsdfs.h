@@ -101,11 +101,12 @@ namespace luminous {
         class BSDF : public Variant<DiffuseBSDF, OrenNayarBSDF, MirrorBSDF,
                 GlassBSDF, RoughGlassBSDF, DisneyBSDF,
                 FakeMetalBSDF, MetalBSDF> {
+
+            DECLARE_REFLECTION(BSDF, Variant)
+
         private:
             using Variant::Variant;
         public:
-            GEN_BASE_NAME(BSDF)
-
             LM_ND_XPU Spectrum color() const {
                 LUMINOUS_VAR_DISPATCH(color);
             }

@@ -26,7 +26,9 @@ namespace luminous {
         };
 
         class SamplerBase {
+
             DECLARE_REFLECTION(SamplerBase)
+
         protected:
             int _spp;
         public:

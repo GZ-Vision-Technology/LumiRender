@@ -43,11 +43,11 @@ namespace luminous {
             };
 
             LM_NODISCARD Ty *address(Ty &Val) const noexcept {
-                return _STD addressof(Val);
+                return std::addressof(Val);
             }
 
             LM_NODISCARD const Ty *address(const Ty &Val) const noexcept {
-                return _STD addressof(Val);
+                return std::addressof(Val);
             }
 
             constexpr Allocator() noexcept: arena(get_arena()) {}
@@ -65,11 +65,11 @@ namespace luminous {
                 return &arena == &other.arena;
             }
 
-            LM_NODISCARD __declspec(allocator) Ty *allocate(_CRT_GUARDOVERFLOW const size_t count) {
+            LM_NODISCARD _DECL_ETW_ALLOCATOR Ty *allocate(_CRT_GUARDOVERFLOW const size_t count) {
                 return arena.template allocate<Ty>(count);
             }
 
-            LM_NODISCARD __declspec(allocator) Ty *allocate(
+            LM_NODISCARD _DECL_ETW_ALLOCATOR Ty *allocate(
                     _CRT_GUARDOVERFLOW const size_t count, const void *) {
                 return allocate(count);
             }

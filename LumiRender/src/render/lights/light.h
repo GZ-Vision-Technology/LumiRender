@@ -25,13 +25,12 @@ namespace luminous {
         class SpotLight;
 
         class Light : public Variant<AreaLight *, Envmap *> {
+
+            DECLARE_REFLECTION(Light, Variant)
+
         private:
             using Variant::Variant;
         public:
-            DECLARE_REFLECTION(Light, Variant)
-
-            GEN_BASE_NAME(Light)
-
             LM_ND_XPU LightType type() const;
 
             CPU_ONLY(LM_NODISCARD std::string to_string() const;)

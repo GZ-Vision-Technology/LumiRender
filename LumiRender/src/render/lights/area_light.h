@@ -11,7 +11,7 @@
 namespace luminous {
     inline namespace render {
         class AreaLight : public LightBase {
-        public:
+
             DECLARE_REFLECTION(AreaLight, LightBase)
 
         private:

@@ -14,6 +14,9 @@ namespace luminous {
     inline namespace render {
 
         class GaussianFilter : public FittedFilter {
+
+            DECLARE_REFLECTION(GaussianFilter, FittedFilter)
+
         private:
             float _exp_x{};
             float _exp_y{};

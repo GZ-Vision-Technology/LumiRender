@@ -8,7 +8,6 @@
 #include "base_libs/geometry/common.h"
 #include "base_libs/optics/common.h"
 #include "parser/config.h"
-#include "core/refl/reflection.h"
 #include "light_util.h"
 
 namespace luminous {
@@ -17,7 +16,9 @@ namespace luminous {
         struct SceneData;
 
         class LightBase {
+
             DECLARE_REFLECTION(LightBase)
+
         protected:
             const LightType _type;
         public:

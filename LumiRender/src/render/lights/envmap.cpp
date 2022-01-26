@@ -52,7 +52,7 @@ namespace luminous {
             float3 w = _w2o.apply_vector(wi);
             float theta = spherical_theta(w);
             float phi = spherical_phi(w);
-            float sin_theta = std::sinf(theta);
+            float sin_theta = std::sin(theta);
             if (sin_theta == 0) {
                 return 0;
             }

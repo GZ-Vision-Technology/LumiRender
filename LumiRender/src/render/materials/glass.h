@@ -13,7 +13,7 @@
 namespace luminous {
     inline namespace render {
         class GlassMaterial {
-        public:
+
             DECLARE_REFLECTION(GlassMaterial)
 
         private:

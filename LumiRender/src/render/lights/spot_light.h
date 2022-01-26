@@ -12,8 +12,9 @@ namespace luminous {
     inline namespace render {
 
         class SpotLight : public LightBase {
-        public:
+
             DECLARE_REFLECTION(SpotLight, LightBase)
+
         private:
             float3 _pos;
             // center direction in world space

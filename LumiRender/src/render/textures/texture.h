@@ -13,11 +13,12 @@ namespace luminous {
     inline namespace render {
         using lstd::Variant;
         class Texture : public Variant<ImageTexture> {
+
+            DECLARE_REFLECTION(Texture, ImageTexture)
+
         private:
             using Variant::Variant;
         public:
-            GEN_BASE_NAME(Texture)
-
             Texture() = default;
 
             GEN_TO_STRING_FUNC

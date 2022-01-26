@@ -52,11 +52,11 @@ namespace luminous {
         }
 
         ND_XPU_INLINE float3 spherical_direction(float sin_theta, float cos_theta, float phi) {
-            return make_float3(sin_theta * std::cosf(phi), sin_theta * std::sinf(phi), cos_theta);
+            return make_float3(sin_theta * std::cos(phi), sin_theta * std::sin(phi), cos_theta);
         }
 
         ND_XPU_INLINE float3 spherical_direction(float theta, float phi) {
-            return spherical_direction(std::sinf(theta), std::cosf(theta), phi);
+            return spherical_direction(std::sin(theta), std::cos(theta), phi);
         }
 
         ND_XPU_INLINE float spherical_theta(float3 v) {
@@ -64,7 +64,7 @@ namespace luminous {
         }
 
         ND_XPU_INLINE float spherical_phi(float3 v) {
-            float p = std::atan2f(v.y, v.x);
+            float p = std::atan2(v.y, v.x);
             return (p < 0) ? (p + 2 * Pi) : p;
         }
 

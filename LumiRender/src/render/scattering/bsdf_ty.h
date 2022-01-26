@@ -66,7 +66,7 @@ namespace luminous {
                 } else if constexpr(index < size) {
                     fill_BxDF<T, index + 1>(bxdf);
                 } else {
-                    static_assert(false, "!");
+                    static_assert(index < size, "!");
                 }
             }
 

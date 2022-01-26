@@ -90,9 +90,9 @@ namespace luminous {
             return BufferView<value_type>(data() + offset, count);
         }
 
-        template<typename T>
-        LM_NODISCARD Buffer<T> cast() {
-            return Buffer<T>(std::move(_impl));
+        template<typename U>
+        LM_NODISCARD Buffer<U> cast() {
+            return Buffer<U>(std::move(_impl));
         }
 
         template<typename U = void *>

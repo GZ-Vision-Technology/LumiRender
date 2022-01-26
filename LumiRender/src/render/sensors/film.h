@@ -24,7 +24,7 @@ namespace luminous {
         using FrameBufferType = uint32_t;
 
         class Film {
-        public:
+
             DECLARE_REFLECTION(Film)
 
         protected:

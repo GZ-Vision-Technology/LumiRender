@@ -7,7 +7,6 @@
 
 #include "managed.h"
 #include "core/memory/arena.h"
-#include "core/refl/reflection.h"
 #include "core/refl/factory.h"
 #include "base_libs/lstd/variant.h"
 #include "render/include/creator.h"
@@ -68,7 +67,7 @@ namespace luminous {
                 lstd::append(_address, elm.second);
 
                 BaseClass::push_back(elm.first);
-                runtime_class<T>::visit_member_map(reinterpret_cast<size_t>(&BaseClass::back()),
+                reflection::runtime_class<T>::visit_member_map(reinterpret_cast<size_t>(&BaseClass::back()),
                                                    [this](const char *name, size_t offset) {
                                                        _address.push_back(offset);
                                                    });

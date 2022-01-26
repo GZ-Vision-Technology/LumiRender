@@ -9,6 +9,11 @@ add_executable(test_gui ${HEADER_FILES} ${SOURCE_FILES})
 target_link_libraries(test_gui PUBLIC glfw_config)
 
 add_library(luminous-ext-gui STATIC ${HEADER_FILES} ${SOURCE_FILES})
+
+if(UNIX)
+  target_compile_options(luminous-ext-gui PRIVATE "-fPIC")
+endif()
+
 target_link_libraries(luminous-ext-gui PUBLIC glfw_config)
 set_target_properties(luminous-ext-gui PROPERTIES
         PUBLIC_HEADER "${HEADER_FILES}"

@@ -74,6 +74,8 @@ namespace luminous {
 
         LM_NODISCARD const luminous_fs::path &scene_file() noexcept;
 
+        LM_NODISCARD luminous_fs::path output_film_path() noexcept;
+
         bool has_help_cmd() const noexcept {
             return _parse_result().count("help") > 0;
         }

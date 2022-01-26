@@ -21,12 +21,12 @@ namespace luminous {
 
         class Filter : public Variant<BoxFilter, TriangleFilter, GaussianFilter,
                                           LanczosSincFilter, MitchellFilter> {
+
           DECLARE_REFLECTION(Filter, Variant)
+
         private:
             using Variant::Variant;
         public:
-            GEN_BASE_NAME(Sampler)
-
             LM_ND_XPU float2 radius() const {
                 LUMINOUS_VAR_DISPATCH(radius);
             }

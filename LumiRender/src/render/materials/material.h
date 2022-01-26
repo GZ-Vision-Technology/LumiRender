@@ -7,7 +7,6 @@
 
 
 #include "base_libs/lstd/variant.h"
-#include "core/refl/reflection.h"
 #include "core/type_reflection.h"
 #include "render/include/interaction.h"
 #include "parser/config.h"
@@ -32,14 +31,14 @@ namespace luminous {
 
         class Material : public Variant<MatteMaterial *, AssimpMaterial *, MirrorMaterial *,
                                             GlassMaterial *, FakeMetalMaterial *, MetalMaterial *, DisneyMaterial *> {
-        protected:
+
             DECLARE_REFLECTION(Material, Variant)
+
+        protected:
             index_t _normal_idx{invalid_uint32};
 
         public:
             using Variant::Variant;
-
-            GEN_BASE_NAME(Material)
 
             LM_ND_XPU MaterialEvalContext compute_shading_frame(MaterialEvalContext ctx, const SceneData *scene_data) const;
 

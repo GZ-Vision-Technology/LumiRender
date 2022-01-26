@@ -11,7 +11,6 @@
 #include "render/include/creator.h"
 #include "core/concepts.h"
 #include "render/filters/shader_include.h"
-#include "core/refl/reflection.h"
 
 
 namespace luminous {
@@ -20,6 +19,7 @@ namespace luminous {
         class Film;
 
         class CameraBase {
+
             DECLARE_REFLECTION(CameraBase)
 
         protected:

@@ -8,6 +8,7 @@
 #include "matrix_types.h"
 #include "quaternion.h"
 #include "float.h"
+#include <cstring>
 
 namespace luminous {
     inline namespace functor {
@@ -92,24 +93,24 @@ namespace luminous {
 
         template<class T, uint32_t N>
         LM_NODISCARD LM_XPU_INLINE constexpr Vector<T, N> vclamp(const Vector<T, N> &v, const Vector<T, N> &low, const Vector<T, N> &upper) {
+            static_assert(N >= 2 && N <= 4, "unsupported type!");
             Vector<T, N> ret;
             if constexpr (N == 2) {
                 bool2 p0 = {low.x < v.x, low.y < v.y};
                 ret = select(p0, v, low);
-                p0 = {v.x < upper.x, v.y < upper.y};
+                p0 = bool2{v.x < upper.x, v.y < upper.y};
                 ret = select(p0, v, upper);
             } else if constexpr (N == 3) {
                 bool3 p0{low.x < v.x, low.y < v.y, low.z < v.z};
                 ret = select(p0, v, low);
-                p0 = {v.x < upper.x, v.y < upper.y, v.z < upper.z};
+                p0 = bool3{v.x < upper.x, v.y < upper.y, v.z < upper.z};
                 ret = select(p0, v, upper);
             } else if constexpr (N == 4) {
                 bool4 p0 = {low.x < v.x, low.y < v.y, low.z < v.z, low.w < v.w};
                 ret = select(p0, v, low);
-                p0 = {v.x < upper.x, v.y < upper.y, v.z < upper.z, v.w < upper.w};
+                p0 = bool4{v.x < upper.x, v.y < upper.y, v.z < upper.z, v.w < upper.w};
                 ret = select(p0, v, upper);
-            } else
-                static_assert(0, "unsupported type!");
+            }
             return ret;
         }
 

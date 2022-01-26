@@ -82,13 +82,13 @@ namespace luminous {
 
         template<typename T>
         LM_ND_XPU T abs(const Complex<T> &z) {
-            return std::sqrtf(lstd::norm(z));
+            return std::sqrt(lstd::norm(z));
         }
 
         template<typename T>
         LM_ND_XPU Complex<T> sqrt(const Complex<T> &z) {
             T n = lstd::abs(z);
-            T t1 = std::sqrtf(T(.5) * (n + functor::abs(z.re)));
+            T t1 = std::sqrt(T(.5) * (n + functor::abs(z.re)));
             T t2 = T(.5) * z.im / t1;
 
             if (n == 0)

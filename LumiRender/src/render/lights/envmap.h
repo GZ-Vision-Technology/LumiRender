@@ -18,8 +18,9 @@ namespace luminous {
 
         // todo make CPU support
         class Envmap : public LightBase {
-        public:
+
             DECLARE_REFLECTION(Envmap, LightBase)
+
         private:
             index_t _tex_idx{invalid_uint32};
             index_t _distribution_idx{invalid_uint32};

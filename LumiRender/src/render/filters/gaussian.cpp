@@ -4,6 +4,7 @@
 
 #include "gaussian.h"
 #include "filter.h"
+#include <memory>
 
 namespace luminous {
     inline namespace render {

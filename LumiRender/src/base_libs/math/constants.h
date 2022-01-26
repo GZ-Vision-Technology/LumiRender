@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cmath>
 #include "primes.h"
+#include <climits>
 #ifdef __CUDACC__
 #include <math_constants.h>
 #endif

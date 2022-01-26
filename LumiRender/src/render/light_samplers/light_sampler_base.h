@@ -36,7 +36,7 @@ namespace luminous {
         };
 
         class LightSamplerBase {
-        public:
+
             DECLARE_REFLECTION(LightSamplerBase)
 
         private:

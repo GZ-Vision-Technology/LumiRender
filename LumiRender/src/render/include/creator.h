@@ -39,11 +39,11 @@ namespace luminous {
             template<typename Handle, typename Config, uint8_t current_index = 0>
             LM_NODISCARD Handle create(const Config &config) {
                 using Class = std::tuple_element_t<current_index, typename Handle::TypeTuple>;
-                if (type_name<Class>() == config.type()) {
+                if (config.type().compare(type_name<Class>()) == 0) {
                     return Handle(Creator<Class>::create(config));
                 }
                 if constexpr (current_index + 1 == std::tuple_size_v<typename Handle::TypeTuple>) {
-                    LUMINOUS_ERROR(string_printf("unknown %s type %s", Handle::base_name(), config.type().c_str()));
+                    LUMINOUS_ERROR(string_printf("unknown %s type %s", type_name<Handle>(), config.type().c_str()));
                 } else {
                     return create<Handle, Config, current_index + 1>(config);
                 }
@@ -52,12 +52,12 @@ namespace luminous {
             template<typename Handle, typename Config, uint8_t current_index = 0>
             LM_NODISCARD auto create_ptr(const Config &config) {
                 using Class = std::remove_pointer_t<std::tuple_element_t<current_index, typename Handle::TypeTuple>>;
-                if (type_name<Class>() == config.type()) {
+                if (config.type().compare(type_name<Class>()) == 0) {
                     auto ret = Creator<Class>::create_ptr(config);
                     return std::make_pair(Handle(ret.first), ret.second);
                 }
                 if constexpr (current_index + 1 == std::tuple_size_v<typename Handle::TypeTuple>) {
-                    LUMINOUS_ERROR(string_printf("unknown %s type %s", Handle::base_name(), config.type().c_str()));
+                    LUMINOUS_ERROR(string_printf("unknown %s type %s", type_name<Handle>(), config.type().c_str()));
                 } else {
                     return create_ptr<Handle, Config, current_index + 1>(config);
                 }

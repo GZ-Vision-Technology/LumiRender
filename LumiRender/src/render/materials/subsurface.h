@@ -15,9 +15,10 @@ struct MaterialEvalContext;
 struct SceneData;
 
 class SubsurfaceMaterial {
-public:
-    GEN_BASE_NAME(SubsurfaceMaterial)
 
+    DECLARE_REFLECTION(SubsurfaceMaterial)
+
+public:
 #ifndef IS_GPU_CODE
     explicit SubsurfaceMaterial(const MaterialConfig &config);
 #endif

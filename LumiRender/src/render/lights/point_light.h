@@ -11,8 +11,9 @@
 namespace luminous {
     inline namespace render {
         class PointLight : public LightBase {
-        public:
+
             DECLARE_REFLECTION(PointLight, LightBase)
+
         private:
             float3 _pos;
             Spectrum _intensity;

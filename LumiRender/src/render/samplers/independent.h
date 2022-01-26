@@ -14,7 +14,9 @@ namespace luminous {
     inline namespace render {
 
         class LCGSampler: public SamplerBase {
+
             DECLARE_REFLECTION(LCGSampler, SamplerBase)
+
         private:
             LCG<> _rng;
         public:
@@ -36,7 +38,9 @@ namespace luminous {
         };
 
         class PCGSampler : public SamplerBase {
+
             DECLARE_REFLECTION(PCGSampler, SamplerBase)
+
         private:
             RNG _rng;
             int _seed{};

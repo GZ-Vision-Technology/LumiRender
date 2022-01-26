@@ -18,6 +18,9 @@
 namespace luminous {
     inline namespace render {
         class ImageTexture : public TextureBase {
+
+            DECLARE_REFLECTION(ImageTexture, TextureBase)
+
         private:
 #ifdef CUDA_SUPPORT
             using TypeHandle = CUtexObject;

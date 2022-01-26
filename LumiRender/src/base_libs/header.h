@@ -8,19 +8,22 @@
 
 #include <typeinfo>
 #include <assert.h>
+#include <stddef.h>
 #include <stdint.h>
 
-#ifdef FOUND_VLD
-#include <vld.h>
+#ifdef _WIN32
+    #ifdef FOUND_VLD
+    #include <vld.h>
+    #endif
+    #include "crtdbg.h"
 #endif
-#include "crtdbg.h"
 
 // _countof definination
 #ifndef _countof
 extern "C++"
 {
     template <typename _CountofType, size_t _SizeOfArray>
-    char (*__countof_helper(_UNALIGNED _CountofType (&_Array)[_SizeOfArray]))[_SizeOfArray];
+    char (*__countof_helper(_CountofType (&_Array)[_SizeOfArray]))[_SizeOfArray];
 
     #define __crt_countof(_Array) (sizeof(*__countof_helper(_Array)) + 0)
 }
@@ -29,7 +32,7 @@ extern "C++"
 
 
 #if defined(__GNUC__) || defined(__clang__)
-#define LM_FUNCSIG  __PRETTY_FUNCTION__
+#define LM_FUNCSIG ""
 #elif defined(_MSC_VER)
 #define LM_FUNCSIG __FUNCSIG__
 #endif
@@ -87,7 +90,6 @@ extern "C++"
                                    }
 
 #define GEN_STRING_FUNC(args)
-#define LM_PRAGMA_UNROLL _Pragma(unroll)
 #else
 
 #define lm_likely(x) (x)
@@ -103,15 +105,6 @@ extern "C++"
 
 #define GEN_STRING_FUNC(args) LM_NODISCARD std::string to_string() const args
 
-#define GEN_NAME_FUNC LM_ND_XPU const std::string name() {       \
-                                        return this->dispatch([&, this](auto &&self) { return type_name(&self); });\
-                                   }
-
-#ifdef _MSC_VER
-#define LM_PRAGMA_UNROLL 
-#else
-#define LM_PRAGMA_UNROLL _Pragrma(unroll)
-#endif
 #endif
 
 #define LUMINOUS_TO_STRING(...) return string_printf(__VA_ARGS__);
@@ -125,16 +118,6 @@ extern "C++"
 #define DEBUG_ONLY(...)
 
 #endif
-
-template<typename T>
-constexpr const char *type_name(T *ptr = nullptr) {
-    if (ptr == nullptr)
-        return typeid(T).name();
-    else
-        return typeid(*ptr).name();
-}
-
-#define GEN_BASE_NAME(arg) LM_XPU static constexpr const char *base_name() { return #arg; }
 
 #define GEN_TO_STRING_FUNC GEN_STRING_FUNC({LUMINOUS_VAR_DISPATCH(to_string);})
 
@@ -164,11 +147,11 @@ constexpr const char *type_name(T *ptr = nullptr) {
 
 
 #define DCHECK(a) assert(a);
-#define DCHECK_EQ(a, b) DCHECK(a == b)
-#define DCHECK_GT(a, b) DCHECK(a > b);
-#define DCHECK_GE(a, b) DCHECK(a >= b);
-#define DCHECK_LT(a, b) DCHECK(a < b);
-#define DCHECK_LE(a, b) DCHECK(a <= b);
+#define DCHECK_EQ(a, b) DCHECK((a) == (b))
+#define DCHECK_GT(a, b) DCHECK((a) > (b));
+#define DCHECK_GE(a, b) DCHECK((a) >= (b));
+#define DCHECK_LT(a, b) DCHECK((a) < (b));
+#define DCHECK_LE(a, b) DCHECK((a) <= (b));
 
 #define CONTINUE_IF(condition) if((condition)) { continue; }
 #define CONTINUE_IF_TIPS(condition, str) if((condition)) { LUMINOUS_DBG(str); continue; }
@@ -179,3 +162,20 @@ constexpr const char *type_name(T *ptr = nullptr) {
 namespace luminous {
     using ptr_t = uint64_t;
 }
+
+#ifdef _MSC_VER
+
+#define _DECL_ETW_ALLOCATOR      __declspec(allocator)
+
+#endif
+
+#ifdef __GNUC__
+
+#define _DECL_ETW_ALLOCATOR
+
+#define _aligned_malloc(size, alignment)   ::aligned_alloc(alignment, size)
+#define _aligned_free(p)                   ::free(p)
+
+#define _CRT_GUARDOVERFLOW
+
+#endif // __GNUC__

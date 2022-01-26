@@ -253,7 +253,6 @@ public:
     TabulatedBSSRDF(float3 po, float3 ns, float3 wo, float eta,
         Spectrum sigma_a, Spectrum sigma_s, const BSSRDFTable *table)
      : _po(po), _ns(ns), _wo(wo), _eta(eta), _table(table) {
-         LM_PRAGMA_UNROLL
          for (int ch = 0; ch < Spectrum::nSamples; ++ch) {
              _sigma_t[ch] = sigma_a[ch] + sigma_s[ch];
              _rho[ch] = _sigma_t[ch] != 0 ? sigma_s[ch] / _sigma_t[ch] : 0;

@@ -44,7 +44,7 @@ namespace luminous {
                 return *this;
             }
 
-            LM_ND_XPU interval<T> including(const T &t) { return interval<T>(min(begin, t), max(end, t)); }
+            LM_ND_XPU interval<T> including(const T &t) { return interval<T>(std::min(begin, t), std::max(end, t)); }
 
             LM_ND_XPU static interval<T> positive() {
                 return interval<T>(0.f, open_range_upper<T>());
@@ -52,7 +52,7 @@ namespace luminous {
         };
 
         template<typename T>
-        ND_XPU_INLINE interval<T> build_interval(const T &a, const T &b) { return interval<T>(min(a, b), max(a, b)); }
+        ND_XPU_INLINE interval<T> build_interval(const T &a, const T &b) { return interval<T>(std::min(a, b), std::max(a, b)); }
 
         template<typename T>
         ND_XPU_INLINE interval<T> intersect(const interval<T> &a, const interval<T> &b) {

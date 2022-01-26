@@ -13,7 +13,7 @@
 namespace luminous {
     inline namespace render {
         class AssimpMaterial {
-        public:
+
             DECLARE_REFLECTION(AssimpMaterial)
 
         private:

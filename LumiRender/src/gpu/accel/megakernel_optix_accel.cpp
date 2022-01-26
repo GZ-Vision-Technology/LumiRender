@@ -50,7 +50,10 @@ namespace luminous {
         }
 
         void MegakernelOptixAccel::clear() {
-            optixPipelineDestroy(_optix_pipeline);
+            if(_optix_pipeline) {
+                optixPipelineDestroy(_optix_pipeline);
+                _optix_pipeline = nullptr;
+            }
             _shader_wrapper.clear();
             OptixAccel::clear();
         }
