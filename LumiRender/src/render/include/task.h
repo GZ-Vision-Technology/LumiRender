@@ -43,7 +43,10 @@ namespace luminous {
 
             LM_NODISCARD std::shared_ptr<SceneGraph> build_scene_graph(const Parser &parser);
 
-            void update() { _integrator->update(); }
+            void update() {
+                _dispatch_num = 0;
+                _integrator->update();
+            }
 
             void save_to_file();
 

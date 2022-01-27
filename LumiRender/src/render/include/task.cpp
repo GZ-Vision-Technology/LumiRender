@@ -191,14 +191,14 @@ namespace luminous {
                 data.color.type = FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
                 data.color.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
                 data.color.address = reinterpret_cast<unsigned long long>(p);
-                data.albedo.type = denoise_bv_type;
-                data.albedo.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
-                data.albedo.address = reinterpret_cast<unsigned long long>(this->get_albedo_buffer(!is_gpu_rendering));
-                data.normal.type = denoise_bv_type;
-                data.normal.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
-                data.normal.address = reinterpret_cast<unsigned long long>(this->get_normal_buffer(!is_gpu_rendering));
-                data.flow.type = FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
-                data.flow.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
+//                data.albedo.type = denoise_bv_type;
+//                data.albedo.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
+//                data.albedo.address = reinterpret_cast<unsigned long long>(this->get_albedo_buffer(!is_gpu_rendering));
+//                data.normal.type = denoise_bv_type;
+//                data.normal.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
+//                data.normal.address = reinterpret_cast<unsigned long long>(this->get_normal_buffer(!is_gpu_rendering));
+//                data.flow.type = FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
+//                data.flow.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
 
                 data.output.type = FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
                 data.output.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;

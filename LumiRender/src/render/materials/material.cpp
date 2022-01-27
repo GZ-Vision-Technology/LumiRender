@@ -32,8 +32,8 @@ namespace luminous {
             float3 world_normal = shading_frame.to_world(normal);
 
             ctx.ns = normalize(face_forward(world_normal, ctx.ns));
-            float3 dp_dvs = cross(ctx.dp_dus, ctx.ns);
-            ctx.dp_dus = normalize(cross(dp_dvs, ctx.ns));
+            float3 dp_dvs = normalize(cross(ctx.dp_dus, ctx.ns));
+            ctx.dp_dus = cross(dp_dvs, ctx.ns);
             return ctx;
         }
 
