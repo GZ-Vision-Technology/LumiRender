@@ -30,3 +30,4 @@
 28.物理材质取消部分纹理参数
 29.材质纹理合并，降低访问内存次数
 30.优化distribution内部实现，改成alias table
+31.处理降噪，albedo贴图，normal贴图
