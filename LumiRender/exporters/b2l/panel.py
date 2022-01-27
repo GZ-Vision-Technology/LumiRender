@@ -32,18 +32,21 @@ class B2L_PT_Base_Panel(SidebarSetup, bpy.types.Panel):
 
         col_1.label(text="Name")
         col_2.prop(scene, "outputfilename")
-        
+
         picture_name_row = layout.row()
         picture_name_row.label(text="Picture Name")
         picture_name_row.prop(scene, "picture_name")
-        
+
         dispatch_num_row = layout.row()
         dispatch_num_row.label(text="dispatch num")
         dispatch_num_row.prop(scene, "dispatch_num")
-        
+
         layout = self.layout.box()
-        
-        scene = context.scene
+        row = layout.row()
+        layout.operator("b2l.split_bmesh",
+                        icon="COMMUNITY", text="split bmesh !")
+
+        layout = self.layout.box()
         row = layout.row()
         row.label(text="Mode")
         row.prop(scene, "rendermode",  expand=True)
@@ -68,9 +71,12 @@ class B2L_PT_Environment_Panel(SidebarSetup, bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout.box()
-        split = layout.split(factor=0.25)
         scene = context.scene
+        row = layout.row()
+        row.label(text='Use EnvMap')
+        row.prop(scene, 'use_envmap')
 
+        split = layout.split(factor=0.25)
         col_1 = split.column()
         col_2 = split.column()
         col_1.label(text="Path")
@@ -189,6 +195,16 @@ class B2L_OT_export_scene(bpy.types.Operator):
 # Assign a collection
 
 
+class B2L_OT_split_bmesh(bpy.types.Operator):
+    bl_idname = "b2l.split_bmesh"
+    bl_label = "Export Scene To Luminous Renderer"
+
+    def execute(self, context):
+        exporter.split_bmesh(bpy.data.scenes["Scene"])
+        self.report({"INFO"}, "Separate complete.")
+        return {"FINISHED"}
+
+
 class SceneSettingItem(bpy.types.PropertyGroup):
     # light_sampler_type
 
@@ -225,29 +241,19 @@ class SceneSettingItem(bpy.types.PropertyGroup):
         default="scene.json",
         maxlen=1024,
         subtype='FILE_NAME')
-    
+
     bpy.types.Scene.picture_name = bpy.props.StringProperty(
         name="",
         description="output render result",
         default="scene.png",
         maxlen=1024,
         subtype='FILE_NAME')
-    
+
     bpy.types.Scene.dispatch_num = bpy.props.IntProperty(
         name="", description="after dispatch num render output", default=0, min=0)
 
     bpy.types.Scene.rendermode = bpy.props.EnumProperty(
         name="rendermode", items=rendermodes, default="render")
-
-    bpy.types.Scene.environmentmaptpath = bpy.props.StringProperty(
-        name="",
-        description="Environment map",
-        default="",
-        maxlen=1024,
-        subtype='FILE_PATH')
-    bpy.types.Scene.environmentmapscale = bpy.props.FloatProperty(
-        name="", description="Env. map scale", default=1, min=0.001, max=9999)
-
     bpy.types.Scene.sampler = bpy.props.EnumProperty(
         name="Sampler", items=samplers, default="PCGSampler")
     bpy.types.Scene.meshtype = bpy.props.EnumProperty(
@@ -264,6 +270,21 @@ class SceneSettingItem(bpy.types.PropertyGroup):
         name="X", description="Resolution x", default=1024, min=1, max=9999)
     bpy.types.Scene.resolution_y = bpy.props.IntProperty(
         name="Y", description="Resolution y", default=768, min=1, max=9999)
+    # envmap setting
+    # https://blender.stackexchange.com/questions/128499/how-to-use-2-8s-default-hdris-in-renders
+    bpy.types.Scene.use_envmap = bpy.props.BoolProperty(
+        name='', default=False)
+    # 使用blender自带的环境贴图
+    envmap_path_forest = bpy.utils.resource_path(
+        'LOCAL') + '\\datafiles\\studiolights\\world\\forest.exr'
+    bpy.types.Scene.environmentmaptpath = bpy.props.StringProperty(
+        name="",
+        description="Environment map",
+        default=envmap_path_forest,
+        maxlen=1024,
+        subtype='FILE_PATH')
+    bpy.types.Scene.environmentmapscale = bpy.props.FloatProperty(
+        name="", description="Env. map scale", default=1, min=0.001, max=9999)
 
     # filter setting
     bpy.types.Scene.filter_radius_x = bpy.props.FloatProperty(
@@ -292,7 +313,6 @@ class SceneSettingItem(bpy.types.PropertyGroup):
         name="max_depth", description="Set max depth", default=10, min=1, max=999)
     bpy.types.Scene.rr_threshold = bpy.props.IntProperty(
         name="rr_threshold", description="rr_threshold", default=1, min=0, max=1)
-
     # light setting
     bpy.types.Scene.lightscale = bpy.props.FloatProperty(
         name="Light Scale", description="convert to engine light", default=1, min=0, max=10)

@@ -68,7 +68,14 @@ def create_imagetex(name, tex):
             "color_space": "LINEAR"
         }
     }
-# https://blenderartists.org/t/simple-exporter-script-need-some-python-advice/1238345/6
+
+
+def add_texture_data(scene_json, tex_data):
+    textures = scene_json["textures"]
+    for tex in textures:
+        if tex["name"] == tex_data["name"]:
+            return
+    textures.append(tex_data)
 
 
 def export_texture_from_input(inputSlot, scene_json, mesh_name):
@@ -86,7 +93,7 @@ def export_texture_from_input(inputSlot, scene_json, mesh_name):
         shutil.copyfile(src_texture_path, dst_texture_path)
         # 写进json文件
         tex_data = create_imagetex(tex_name, tex_name)
-        scene_json["textures"].append(tex_data)
+        add_texture_data(scene_json, tex_data)
         print("Copy %s  from %s to %s, " %
               (tex_name, src_texture_path, dst_texture_path))
     return tex_name
@@ -129,6 +136,7 @@ def export_fake_metal_material(mat, scene_json, mesh_name):
     scene_json['materials'].append(m)  # appending to list
     return material_name
 
+
 def exporter_materials(scene, scene_json):
     # 在blender由于需要使用normal_map节点对法线贴图进行采样，需要特殊处理
     def write_normal(node):
@@ -137,7 +145,7 @@ def exporter_materials(scene, scene_json):
             texture_node = Normal_Map.inputs.get("Color").links[0].from_node
             tex_name = texture_node.image.filepath.split("\\")[-1]
             tex_data = create_imagetex(tex_name, tex_name)
-            scene_json["textures"].append(tex_data)
+            add_texture_data(scene_json, tex_data)
             return tex_name
 
     # color 节点返回float4
@@ -145,7 +153,7 @@ def exporter_materials(scene, scene_json):
         if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
             tex_name = node.links[0].from_node.image.filepath.split("\\")[-1]
             tex_data = create_imagetex(tex_name, tex_name)
-            scene_json["textures"].append(tex_data)
+            add_texture_data(scene_json, tex_data)
             return tex_name
         else:
             Kd = [node.default_value[0],
@@ -157,7 +165,7 @@ def exporter_materials(scene, scene_json):
         if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
             tex_name = node.links[0].from_node.image.filepath.split("\\")[-1]
             tex_data = create_imagetex(tex_name, tex_name)
-            scene_json["textures"].append(tex_data)
+            add_texture_data(scene_json, tex_data)
             return tex_name
         else:
             val = node.default_value
@@ -208,22 +216,34 @@ def exporter_materials(scene, scene_json):
         scene_json['materials'].append(m)  # appending to list
 
 
-def export_builtin_disney_material(bsdf, scene_json, mesh_name, mat):
+def copy_tex(path, target_path):
+    abspath = bpy.path.abspath(path)
+    fn = os.path.basename(abspath)
+    dst_texture_path = bpy.path.abspath(
+        os.path.join(target_path, 'textures', fn))
+    shutil.copyfile(abspath, dst_texture_path)
+
+
+def export_builtin_disney_material(bsdf, scene_json, mesh_name, mat, scene):
+    directory_path = bpy.path.abspath(scene.exportpath)
+
     def write_normal(node):
-        if len(node.links) == 1:
-            Normal_Map = node.links[0].from_node
-            texture_node = Normal_Map.inputs.get("Color").links[0].from_node
-            tex_name = texture_node.image.filepath.split("\\")[-1]
+        if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
+            path = node.links[0].from_node.image.filepath
+            tex_name = os.path.basename(path)
             tex_data = create_imagetex(tex_name, tex_name)
-            scene_json["textures"].append(tex_data)
+            copy_tex(path, directory_path)
+            add_texture_data(scene_json, tex_data)
             return tex_name
 
     # color 节点返回float4
     def write_float4(node):
         if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
-            tex_name = node.links[0].from_node.image.filepath.split("\\")[-1]
+            path = node.links[0].from_node.image.filepath
+            tex_name = os.path.basename(path)
             tex_data = create_imagetex(tex_name, tex_name)
-            scene_json["textures"].append(tex_data)
+            copy_tex(path, directory_path)
+            add_texture_data(scene_json, tex_data)
             return tex_name
         else:
             Kd = [node.default_value[0],
@@ -233,19 +253,21 @@ def export_builtin_disney_material(bsdf, scene_json, mesh_name, mat):
     def write_float1(node):
         # ensure input node is an image
         if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
-            tex_name = node.links[0].from_node.image.filepath.split("\\")[-1]
+            path = node.links[0].from_node.image.filepath
+            tex_name = os.path.basename(path)
             tex_data = create_imagetex(tex_name, tex_name)
-            scene_json["textures"].append(tex_data)
+            copy_tex(path, directory_path)
+            add_texture_data(scene_json, tex_data)
             return tex_name
         else:
             val = node.default_value
             return val
-        
+
     material_name = mesh_name + "_" + mat.name
     m = {}
     m["name"] = material_name  # set material name
     m["type"] = "DisneyMaterial"
-    
+
     param = {}
     param["color"] = write_float4(bsdf.inputs.get("Base Color"))
     param["roughness"] = write_float1(bsdf.inputs.get("Roughness"))
@@ -257,14 +279,16 @@ def export_builtin_disney_material(bsdf, scene_json, mesh_name, mat):
     param["sheen_tint"] = write_float1(bsdf.inputs.get("Sheen Tint"))
     param["clearcoat"] = write_float1(bsdf.inputs.get("Clearcoat"))
     param["spec_trans"] = write_float1(bsdf.inputs.get("Transmission"))
-    param["clearcoat_roughness"] = write_float1(bsdf.inputs.get("Clearcoat Roughness"))
+    param["clearcoat_roughness"] = write_float1(
+        bsdf.inputs.get("Clearcoat Roughness"))
     param["normal"] = write_normal(bsdf.inputs.get("Normal"))
-    
+
     m["param"] = param
-    
+
     scene_json['materials'].append(m)
-    
+
     return material_name
+
 
 def export_disney_material(mat, scene_json, mesh_name):
     print('Currently exporting B2L disney material')
@@ -316,7 +340,7 @@ def export_material(scene, scene_json, object, mesh_name):
             print("use blender bsdf--------", mat)
             for node in mat.node_tree.nodes:
                 if node.type == "BSDF_PRINCIPLED":
-                    return export_builtin_disney_material(node, scene_json, mesh_name, mat)
+                    return export_builtin_disney_material(node, scene_json, mesh_name, mat, scene)
             return
         else:
             for material in mat.node_tree.nodes:
@@ -344,7 +368,7 @@ def export_mesh(scene, scene_json, object, directory_path):
     bpy.ops.export_scene.gltf(filepath=directory_path+'/meshes/'+mesh_name+'.gltf',
                               export_texture_dir='../textures',
                               export_format='GLTF_SEPARATE',
-                              export_materials='EXPORT',
+                              export_materials='PLACEHOLDER',
                               export_colors=False,
                               use_selection=True)
 
@@ -372,14 +396,14 @@ def export_mesh(scene, scene_json, object, directory_path):
 def export_meshes(scene, scene_json):
 
     directory_path = bpy.path.abspath(scene.exportpath)
-    obs = [o for o in scene.objects if o.type == 'MESH']
+    obs = [o for o in scene.objects if o.type == 'MESH' and o.visible_get()]
     bpy.ops.object.select_all(action='DESELECT')
     viewlayer = bpy.context.view_layer
-    for i, object in enumerate(obs):
-        viewlayer.objects.active = object
-        object.select_set(True)
-        export_mesh(scene, scene_json, object, directory_path)
-        object.select_set(False)
+    for i, ob in enumerate(obs):
+        viewlayer.objects.active = ob
+        ob.select_set(True)
+        export_mesh(scene, scene_json, ob, directory_path)
+        ob.select_set(False)
 
 
 def create_integrator(scene):
@@ -572,6 +596,37 @@ def export_meshes_all(scene, scene_json):
     })
 
 
+def export_envmap(scene, scene_json):
+    # 目前需要手动设置环境贴图，可以写成读取
+    use_map = scene.use_envmap
+    if not use_map:
+        return
+    else:
+        path = scene.environmentmaptpath
+        scale = scene.environmentmapscale
+        tex_name = os.path.basename(path)
+        tex_data = create_imagetex(tex_name, tex_name)
+        add_texture_data(scene_json, tex_data)
+
+
+def split_bmesh(scene):
+    obs = [o for o in scene.objects if o.type == 'MESH' and o.visible_get()]
+    bpy.ops.object.select_all(action='DESELECT')
+    viewlayer = bpy.context.view_layer
+    for i, ob in enumerate(obs):
+        viewlayer.objects.active = ob
+        ob.select_set(True)
+        if bpy.context.mode != 'EDIT':  # if not in edit mode
+            bpy.ops.object.editmode_toggle()  # enters in edit mode
+            # separate it by material parts
+            bpy.ops.mesh.separate(type='MATERIAL')
+            bpy.ops.object.editmode_toggle()  # exit edit mode
+        else:  # else
+            # separate it by material parts
+            bpy.ops.mesh.separate(type='MATERIAL')
+        ob.select_set(False)
+
+
 def export_test(scene, filepath_full):
     scene_json = {
         "textures": [],
@@ -592,6 +647,7 @@ def export_test(scene, filepath_full):
     scene_json['sampler'] = create_sampler(scene)
     scene_json['integrator'] = create_integrator(scene)
     export_area_lights(scene, scene_json)
+    export_envmap(scene, scene_json)
     if scene.meshtype == 'Single':
         export_meshes(scene, scene_json)
     else:
