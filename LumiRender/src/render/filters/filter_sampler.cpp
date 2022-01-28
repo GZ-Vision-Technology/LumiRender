@@ -34,8 +34,10 @@ namespace luminous {
             float PDF = 0;
             int2 offset{};
             float2 p = _distribution2d.sample_continuous(abs(u), &PDF, &offset);
+            float w = _distribution2d.func_at(offset);
             p = p * sign(u);
-            return FilterSample{p, 1.f * _signs(offset)};
+            // todo implement alias table sampling
+            return FilterSample{p, 1};
         }
     }
 }
