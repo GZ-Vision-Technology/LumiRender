@@ -9,10 +9,11 @@ namespace luminous {
         Spectrum BSDFWrapper::eval(float3 wo_world, float3 wi_world,
                                    BxDFFlags sample_flags,
                                    TransportMode mode) const {
+            // todo test single sample_flags
             float3 wo = to_local(wo_world);
             float3 wi = to_local(wi_world);
             // todo normal map may lead light leak
-            return _bsdf.eval(wo, wi) * abs_dot(_shading_frame.z, wi_world);
+            return _bsdf.eval(wo, wi, sample_flags, mode) * abs_dot(_shading_frame.z, wi_world);
         }
 
         float BSDFWrapper::PDF(float3 wo_world, float3 wi_world,
