@@ -83,28 +83,28 @@ namespace luminous {
         }
 
         FrameBufferType *Task::get_frame_buffer(bool host_side) {
-            if(host_side)
+            if (host_side)
                 return _frame_buffer.synchronize_and_get_host_data();
             else
                 return _frame_buffer.device_data();
         }
 
         float4 *Task::get_render_buffer(bool host_side) {
-            if(host_side)
+            if (host_side)
                 return _render_buffer.synchronize_and_get_host_data();
             else
                 return _render_buffer.device_data();
         }
 
         float4 *Task::get_normal_buffer(bool host_side) {
-            if(host_side)
+            if (host_side)
                 return _normal_buffer.synchronize_and_get_host_data();
             else
                 return _normal_buffer.device_data();
         }
 
         float4 *Task::get_albedo_buffer(bool host_side) {
-            if(host_side)
+            if (host_side)
                 return _albedo_buffer.synchronize_and_get_host_data();
             else
                 return _albedo_buffer.device_data();
@@ -156,7 +156,7 @@ namespace luminous {
             image.for_each_pixel([&](std::byte *pixel, int i) {
                 auto fp = reinterpret_cast<float4 *>(pixel);
                 float4 val = buffer[i];
-                *fp = Spectrum::linear_to_srgb(val / val.w);
+                *fp = Spectrum::linear_to_srgb(val);
             });
 
             luminous_fs::path film_out_path = _context->output_film_path();
@@ -166,24 +166,25 @@ namespace luminous {
                 film_out_path = _output_config.fn;
             }
 
-            if(film_out_path.empty() || !film_out_path.has_filename()) {
+            if (film_out_path.empty() || !film_out_path.has_filename()) {
                 // default path is <scene path without extend>.exr
                 film_out_path = scene_path.parent_path() / scene_path.stem();
                 film_out_path += ".exr";
-            } else if(film_out_path.is_relative()) {
+            } else if (film_out_path.is_relative()) {
                 // Relative path is relative to scene directory.
                 film_out_path = scene_path.parent_path() / film_out_path;
             }
 
             // denoising
-            if(_context->denoise_output()) {
+            if (_context->denoise_output()) {
                 auto denoiser = create_film_optix_denoiser();
                 std::unique_ptr<float4[]> denoise_output_buffer{new float4[res.x * res.y]};
                 denoiser->init_device();
 
-                bool is_gpu_rendering = _context->use_gpu();
-                const FilmDenoiserBufferViewType denoise_bv_type = is_gpu_rendering ? FILMDENOISER_BUFFER_VIEW_TYPE_CUDA_DEVICE_MEM
-                                                                                    : FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
+                bool is_cpu_rendering = _device->is_cpu();
+                const FilmDenoiserBufferViewType denoise_bv_type = is_cpu_rendering
+                                                                   ? FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM
+                                                                   : FILMDENOISER_BUFFER_VIEW_TYPE_CUDA_DEVICE_MEM;
 
                 FilmDenoiserInputData data;
                 data.width = res.x;
@@ -193,11 +194,11 @@ namespace luminous {
                 data.color.address = reinterpret_cast<unsigned long long>(p);
 //                data.albedo.type = denoise_bv_type;
 //                data.albedo.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
-//                data.albedo.address = reinterpret_cast<unsigned long long>(this->get_albedo_buffer(!is_gpu_rendering));
+//                data.albedo.address = reinterpret_cast<unsigned long long>(this->get_albedo_buffer(is_cpu_rendering));
 //                data.normal.type = denoise_bv_type;
-//                data.normal.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
-//                data.normal.address = reinterpret_cast<unsigned long long>(this->get_normal_buffer(!is_gpu_rendering));
-//                data.flow.type = FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
+                data.normal.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
+                data.normal.address = reinterpret_cast<unsigned long long>(this->get_normal_buffer(is_cpu_rendering));
+                data.flow.type = FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
 //                data.flow.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
 
                 data.output.type = FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
