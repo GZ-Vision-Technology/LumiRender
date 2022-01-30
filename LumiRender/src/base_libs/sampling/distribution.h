@@ -8,6 +8,7 @@
 #include "base_libs/math/common.h"
 #include "core/backend/buffer_view.h"
 #include "base_libs/lstd/common.h"
+#include "alias_table.h"
 #include <vector>
 
 namespace luminous {
