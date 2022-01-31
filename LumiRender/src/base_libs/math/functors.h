@@ -77,8 +77,19 @@ namespace luminous {
 
 #undef MAKE_VECTOR_UNARY_FUNC_BOOL
 
-        template<typename T, uint N, std::enable_if_t<scalar::is_scalar < T>, int> = 0>
+        template<typename T, std::enable_if_t<std::is_unsigned_v<T> && (sizeof(T) == 4u || sizeof(T) == 8u), int> = 0>
+        [[nodiscard]] constexpr auto next_pow2(T v) noexcept {
+            v--;
+            v |= v >> 1u;
+            v |= v >> 2u;
+            v |= v >> 4u;
+            v |= v >> 8u;
+            v |= v >> 16u;
+            if constexpr (sizeof(T) == 8u) { v |= v >> 32u; }
+            return v + 1u;
+        }
 
+        template<typename T, uint N, std::enable_if_t<scalar::is_scalar < T>, int> = 0>
         LM_ND_XPU constexpr auto select(Vector<bool, N> pred, Vector <T, N> t, Vector <T, N> f) noexcept {
             static_assert(N == 2 || N == 3 || N == 4);
             if constexpr (N == 2) {
@@ -92,9 +103,10 @@ namespace luminous {
         }
 
         template<class T, uint32_t N>
-        LM_NODISCARD LM_XPU_INLINE constexpr Vector<T, N> vclamp(const Vector<T, N> &v, const Vector<T, N> &low, const Vector<T, N> &upper) {
+        LM_NODISCARD LM_XPU_INLINE constexpr Vector <T, N>
+        vclamp(const Vector <T, N> &v, const Vector <T, N> &low, const Vector <T, N> &upper) {
             static_assert(N >= 2 && N <= 4, "unsupported type!");
-            Vector<T, N> ret;
+            Vector <T, N> ret;
             if constexpr (N == 2) {
                 bool2 p0 = {low.x < v.x, low.y < v.y};
                 ret = select(p0, v, low);
