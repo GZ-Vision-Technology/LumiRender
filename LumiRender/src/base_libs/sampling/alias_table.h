@@ -18,11 +18,14 @@ namespace luminous {
             uint alias;
         };
 
-        LM_ND_INLINE std::pair<std::vector<AliasEntry>, std::vector<float>>
+        using std::vector;
+        using std::pair;
+
+        LM_ND_INLINE pair<vector<AliasEntry>, vector<float>>
         create_alias_table(BufferView<const float> values) {
             auto sum = std::reduce(values.cbegin(), values.cend(), 0.0);
             auto inv_sum = 1.0 / sum;
-            std::vector<float> pdf(values.size());
+            vector<float> pdf(values.size());
             std::transform(
                     values.cbegin(), values.cend(), pdf.begin(),
                     [inv_sum](auto v) noexcept {
@@ -30,14 +33,14 @@ namespace luminous {
                     });
 
             auto ratio = static_cast<double>(values.size()) / sum;
-            static thread_local std::vector<uint> over;
-            static thread_local std::vector<uint> under;
+            static thread_local vector<uint> over;
+            static thread_local vector<uint> under;
             over.clear();
             under.clear();
             over.reserve(next_pow2(values.size()));
             under.reserve(next_pow2(values.size()));
 
-            std::vector<AliasEntry> table(values.size());
+            vector<AliasEntry> table(values.size());
             for (auto i = 0u; i < values.size(); i++) {
                 auto p = static_cast<float>(values[i] * ratio);
                 table[i] = {p, i};
@@ -66,14 +69,14 @@ namespace luminous {
         struct AliasData {
         public:
             BufferView <AliasEntry> table{};
-            BufferView<float> PDF{};
+            BufferView<float> PMF{};
         };
 
         template<uint N>
         struct StaticAliasData {
         public:
             Array <AliasEntry, N> table;
-            Array<float, N> PDF;
+            Array<float, N> PMF;
         };
 
         template<typename TData>
@@ -85,20 +88,41 @@ namespace luminous {
 
             }
 
+            LM_ND_XPU int sample_discrete(float u, float *p,
+                                          float *u_remapped) const {
+                u = u * size();
+                int offset = std::min(int(u), size() - 1);
+                u = std::min<float>(u - offset, OneMinusEpsilon);
+                AliasEntry alias_entry = _data.table[offset];
+                offset = select(alias_entry.prob < u, offset, alias_entry.alias);
+                *p = PMF(offset);
+                *u_remapped = select(alias_entry.prob < u,
+                                     std::min<float>(u / alias_entry.prob, OneMinusEpsilon),
+                                     std::min<float>((1 - u) / (1 - alias_entry.prob), OneMinusEpsilon));
+                DCHECK(*u_remapped >= 0.f && *u_remapped <= 1.f);
+                return offset;
+            }
 
-            LM_ND_XPU int sample_discrete(float u, float *p = nullptr,
-                                          float *u_remapped = nullptr) const;
+            LM_ND_XPU float sample_continuous(float u, float *p,
+                                              int *ofs) const {
+                u = u * size();
+                *ofs = std::min(int(u), size() - 1);
+                u = std::min<float>(u - *ofs, OneMinusEpsilon);
+                AliasEntry alias_entry = _data.table[*ofs];
+                *ofs = select(alias_entry.prob < u, *ofs, alias_entry.alias);
+                *p = PMF(*ofs);
+                float u_remapped = select(alias_entry.prob < u,
+                                          std::min<float>(u / alias_entry.prob, OneMinusEpsilon),
+                                          std::min<float>((1 - u) / (1 - alias_entry.prob), OneMinusEpsilon));
+                return (*ofs + u_remapped) / size();
+            }
 
-            LM_ND_XPU float sample_continuous(float u, float *pdf = nullptr,
-                                              int *ofs = nullptr) const;
+            LM_ND_XPU size_t size() const { return _data.PMF.size(); }
 
-            LM_ND_XPU size_t size() const;
-
-            LM_ND_XPU float integral() const;
-
-            LM_ND_XPU float func_at(uint32_t i) const;
-
-            LM_ND_XPU float PMF(uint32_t i) const;
+            LM_ND_XPU float PMF(uint32_t i) const {
+                DCHECK(i < size());
+                return _data.PMF[i];
+            }
         };
     }
 }

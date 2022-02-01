@@ -33,7 +33,7 @@ namespace luminous {
                 : _ptr(ptr), _num(num) {}
 
         template<size_t N>
-        LM_XPU explicit BufferView(T (&a)[N]) : BufferView(a, N) {}
+        LM_XPU BufferView(T (&a)[N]) : BufferView(a, N) {}
 
         LM_XPU BufferView(std::initializer_list<value_type> v) : BufferView(v.begin(), v.size()) {}
 

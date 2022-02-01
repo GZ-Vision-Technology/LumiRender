@@ -34,14 +34,14 @@ namespace luminous {
             using const_value_type = const float;
         public:
             // todo change to indice mode, reduce memory usage
-            BufferView <const_value_type> func{};
-            BufferView <const_value_type> CDF{};
+            BufferView<const_value_type> func{};
+            BufferView<const_value_type> CDF{};
             float func_integral{};
 
             DistribData() = default;
 
-            DistribData(BufferView <const_value_type> func,
-                        BufferView <const_value_type> CDF, float integral)
+            DistribData(BufferView<const_value_type> func,
+                        BufferView<const_value_type> CDF, float integral)
                     : func(func), CDF(CDF), func_integral(integral) {}
         };
 
@@ -87,14 +87,12 @@ namespace luminous {
 
             LM_ND_XPU size_t size() const { return _data.func.size(); }
 
-            LM_ND_XPU float sample_continuous(float u, float *pdf = nullptr, int *ofs = nullptr) const {
+            LM_ND_XPU float sample_continuous(float u, float *pdf, int *ofs) const {
                 auto predicate = [&](int index) {
                     return _data.CDF[index] <= u;
                 };
                 size_t offset = find_interval((int) _data.CDF.size(), predicate);
-                if (ofs) {
-                    *ofs = offset;
-                }
+                *ofs = offset;
                 float du = u - _data.CDF[offset];
                 if ((_data.CDF[offset + 1] - _data.CDF[offset]) > 0) {
                     DCHECK_GT(_data.CDF[offset + 1], _data.CDF[offset]);
@@ -102,25 +100,18 @@ namespace luminous {
                 }
                 DCHECK(!is_nan(du));
 
-                if (pdf) {
-                    *pdf = (_data.func_integral > 0) ? _data.func[offset] / _data.func_integral : 0;
-                }
+                *pdf = (_data.func_integral > 0) ? _data.func[offset] / _data.func_integral : 0;
                 return (offset + du) / size();
             }
 
-            LM_ND_XPU int sample_discrete(float u, float *p = nullptr, float *u_remapped = nullptr) const {
+            LM_ND_XPU int sample_discrete(float u, float *p, float *u_remapped) const {
                 auto predicate = [&](int index) {
                     return _data.CDF[index] <= u;
                 };
                 int offset = find_interval(_data.CDF.size(), predicate);
-                if (p) {
-                    //todo
-                    *p = PMF(offset);
-                }
-                if (u_remapped) {
-                    *u_remapped = (u - _data.CDF[offset]) / (_data.CDF[offset + 1] - _data.CDF[offset]);
-                    DCHECK(*u_remapped >= 0.f && *u_remapped <= 1.f);
-                }
+                *p = PMF(offset);
+                *u_remapped = (u - _data.CDF[offset]) / (_data.CDF[offset + 1] - _data.CDF[offset]);
+                DCHECK(*u_remapped >= 0.f && *u_remapped <= 1.f);
                 return offset;
             }
 
@@ -185,12 +176,12 @@ namespace luminous {
         template<int U, int V>
         struct CDistribution2DData {
         public:
-            Array <StaticDistribution1D<U>, V> conditional_v{};
+            Array<StaticDistribution1D<U>, V> conditional_v{};
             StaticDistribution1D<V> marginal;
 
             CDistribution2DData() = default;
 
-            CDistribution2DData(Array <StaticDistribution1D<U>, V> conditional_v,
+            CDistribution2DData(Array<StaticDistribution1D<U>, V> conditional_v,
                                 StaticDistribution1D<V> marginal)
                     : conditional_v(conditional_v),
                       marginal(marginal) {}
@@ -260,7 +251,7 @@ namespace luminous {
         template<int U, int V>
         LM_NODISCARD StaticDistribution2D<U, V> create_static_distrib2d(const float *func) {
             auto builder2d = Distribution2D::create_builder(func, U, V);
-            Array <StaticDistribution1D<U>, V> conditional_v;
+            Array<StaticDistribution1D<U>, V> conditional_v;
             for (int i = 0; i < builder2d.conditional_v.size(); ++i) {
                 auto builder = builder2d.conditional_v[i];
                 StaticDistribution1D<U> static_distribution(builder.func.data(),
