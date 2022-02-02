@@ -21,13 +21,18 @@ namespace luminous {
         using std::vector;
         using std::pair;
 
+        struct AliasTableBuilder {
+            vector<AliasEntry> table;
+            vector<float> PMF;
+        };
+
         LM_ND_INLINE pair<vector<AliasEntry>, vector<float>>
         create_alias_table(BufferView<const float> values) {
             auto sum = std::reduce(values.cbegin(), values.cend(), 0.0);
             auto inv_sum = 1.0 / sum;
-            vector<float> pdf(values.size());
+            vector<float> pmf(values.size());
             std::transform(
-                    values.cbegin(), values.cend(), pdf.begin(),
+                    values.cbegin(), values.cend(), pmf.begin(),
                     [inv_sum](auto v) noexcept {
                         return static_cast<float>(v * inv_sum);
                     });
@@ -63,7 +68,7 @@ namespace luminous {
             for (auto i : over) { table[i] = {1.0f, i}; }
             for (auto i : under) { table[i] = {1.0f, i}; }
 
-            return std::make_pair(std::move(table), std::move(pdf));
+            return std::make_pair(std::move(table), std::move(pmf));
         }
 
         struct AliasData {
@@ -80,18 +85,17 @@ namespace luminous {
         };
 
         template<typename TData>
-        class TAliasTable1D {
+        class TAliasTable {
         private:
             TData _data;
         public:
-            explicit TAliasTable1D(const TData &data) {
-
-            }
+            explicit TAliasTable(const TData &data)
+                    : _data(data) {}
 
             LM_ND_XPU int sample_discrete(float u, float *p,
                                           float *u_remapped) const {
                 u = u * size();
-                int offset = std::min(int(u), size() - 1);
+                int offset = std::min<int>(int(u), size() - 1);
                 u = std::min<float>(u - offset, OneMinusEpsilon);
                 AliasEntry alias_entry = _data.table[offset];
                 offset = select(alias_entry.prob < u, offset, alias_entry.alias);
@@ -106,7 +110,7 @@ namespace luminous {
             LM_ND_XPU float sample_continuous(float u, float *p,
                                               int *ofs) const {
                 u = u * size();
-                *ofs = std::min(int(u), size() - 1);
+                *ofs = std::min<int>(int(u), size() - 1);
                 u = std::min<float>(u - *ofs, OneMinusEpsilon);
                 AliasEntry alias_entry = _data.table[*ofs];
                 *ofs = select(alias_entry.prob < u, *ofs, alias_entry.alias);
