@@ -86,10 +86,14 @@ namespace luminous {
 
         template<typename TData>
         class TAliasTable {
-        private:
-            TData _data;
         public:
-            explicit TAliasTable(const TData &data)
+            using data_type = TData;
+        private:
+            data_type _data;
+        public:
+            LM_XPU TAliasTable() = default;
+
+            LM_XPU explicit TAliasTable(const TData &data)
                     : _data(data) {}
 
             LM_ND_XPU int sample_discrete(float u, float *p,
@@ -127,6 +131,45 @@ namespace luminous {
                 DCHECK(i < size());
                 return _data.PMF[i];
             }
+        };
+
+        using AliasTable = TAliasTable<AliasData>;
+
+        template<uint N>
+        using StaticAliasTable = TAliasTable<StaticAliasData<N>>;
+
+        struct AliasData2D {
+            BufferView<const AliasTable> conditional_v{};
+            AliasTable marginal{};
+
+            AliasData2D() = default;
+
+            AliasData2D(BufferView<const AliasTable> conditional_v,
+                        AliasTable marginal)
+                    : conditional_v(conditional_v),
+                      marginal(marginal) {}
+        };
+
+        template<int U, int V>
+        struct StaticAliasData2D {
+        public:
+            Array <StaticAliasData<U>, V> conditional_v{};
+            StaticAliasData<V> marginal;
+
+            StaticAliasData2D() = default;
+
+            StaticAliasData2D(Array <StaticAliasData<U>, V> conditional_v,
+                              StaticAliasData<V> marginal)
+                    : conditional_v(conditional_v),
+                      marginal(marginal) {}
+        };
+
+        template<typename TData>
+        class TAliasTable2D {
+        public:
+            using data_type = TData;
+        private:
+            data_type _data;
         };
     }
 }
