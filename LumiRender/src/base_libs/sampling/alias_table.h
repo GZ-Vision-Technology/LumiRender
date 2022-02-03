@@ -170,6 +170,37 @@ namespace luminous {
             using data_type = TData;
         private:
             data_type _data;
+
+        public:
+            TAliasTable2D() = default;
+
+            explicit TAliasTable2D(const data_type &data) : _data(data) {}
+
+            template<typename ...Args>
+            explicit TAliasTable2D(Args ...args) : TAliasTable2D(data_type(std::forward<Args>(args)...)) {}
+
+            LM_ND_XPU float2 sample_continuous(float2 u, float *PDF, int2 *offset = nullptr) const {
+                float PDFs[2];
+                int2 uv;
+                float d1 = _data.marginal.sample_continuous(u[1], &PDFs[1], &uv[1]);
+                float d0 = _data.conditional_v[uv[1]].sample_continuous(u[0], &PDFs[0], &uv[0]);
+                *PDF = PDFs[0] * PDFs[1];
+                if (offset) {
+                    *offset = uv;
+                }
+                return make_float2(d0, d1);
+            }
+
+            LM_ND_XPU float func_at(int2 coord) const {
+                auto row = _data.conditional_v[coord.y];
+                return row.func_at(coord.x);
+            }
+
+            LM_ND_XPU float PDF(float2 p) const {
+                size_t iu = clamp(size_t(p[0] * _data.conditional_v[0].size()), 0, _data.conditional_v[0].size() - 1);
+                size_t iv = clamp(size_t(p[1] * _data.marginal.size()), 0, _data.marginal.size() - 1);
+                return _data.conditional_v[iv].func_at(iu) / _data.marginal.integral();
+            }
         };
     }
 }
