@@ -12,9 +12,7 @@ using namespace luminous;
 using namespace std;
 int main() {
 
-    float weight[] = {1,2,3};
-
-    auto[table, PDF] = luminous::create_alias_table(BufferView<float>(weight));
+    auto[table, PDF] = luminous::create_alias_table(vector<float>({1,1,1}));
 
     AliasData alias_data{BufferView(table.data(), table.size()), BufferView(PDF.data(), PDF.size())};
 
