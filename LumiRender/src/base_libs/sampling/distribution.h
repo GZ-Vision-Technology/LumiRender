@@ -201,15 +201,13 @@ namespace luminous {
             template<typename ...Args>
             explicit TDistribution2D(Args ...args) : TDistribution2D(T(std::forward<Args>(args)...)) {}
 
-            LM_ND_XPU float2 sample_continuous(float2 u, float *PDF, int2 *offset = nullptr) const {
+            LM_ND_XPU float2 sample_continuous(float2 u, float *PDF, int2 *offset) const {
                 float PDFs[2];
                 int2 uv;
                 float d1 = _data.marginal.sample_continuous(u[1], &PDFs[1], &uv[1]);
                 float d0 = _data.conditional_v[uv[1]].sample_continuous(u[0], &PDFs[0], &uv[0]);
                 *PDF = PDFs[0] * PDFs[1];
-                if (offset) {
-                    *offset = uv;
-                }
+                *offset = uv;
                 return make_float2(d0, d1);
             }
 

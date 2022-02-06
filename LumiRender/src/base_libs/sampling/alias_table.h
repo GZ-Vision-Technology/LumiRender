@@ -88,6 +88,8 @@ namespace luminous {
             Array <AliasEntry, N> table;
             Array<float, N> PMF;
         public:
+            StaticAliasData() = default;
+
             StaticAliasData(Array <AliasEntry, N> t, Array<float, N> p)
                     : table(t), PMF(p) {}
 
@@ -112,6 +114,9 @@ namespace luminous {
 
             LM_XPU explicit TAliasTable(const TData &data)
                     : _data(data) {}
+
+            template<typename ...Args>
+            explicit TAliasTable(Args ...args) : TAliasTable(data_type(std::forward<Args>(args)...)) {}
 
             LM_ND_XPU int sample_discrete(float u, float *p,
                                           float *u_remapped) const {
@@ -180,13 +185,13 @@ namespace luminous {
         template<int U, int V>
         struct StaticAliasData2D {
         public:
-            Array <StaticAliasData<U>, V> conditional_v{};
-            StaticAliasData<V> marginal;
+            Array <StaticAliasTable<U>, V> conditional_v{};
+            StaticAliasTable<V> marginal;
 
             StaticAliasData2D() = default;
 
-            StaticAliasData2D(Array <StaticAliasData<U>, V> conditional_v,
-                              StaticAliasData<V> marginal)
+            StaticAliasData2D(Array <StaticAliasTable<U>, V> conditional_v,
+                              StaticAliasTable<V> marginal)
                     : conditional_v(conditional_v),
                       marginal(marginal) {}
         };
@@ -257,7 +262,7 @@ namespace luminous {
         template<int U, int V>
         LM_NODISCARD StaticAliasTable2D<U, V> create_static_alias_table2d(const float *func) {
             auto builder2d = AliasTable2D::create_builder(func, U, V);
-            Array<StaticAliasData<U>, V> conditional_v;
+            Array<StaticAliasTable<U>, V> conditional_v;
             for (int i = 0; i < builder2d.conditional_v.size(); ++i) {
                 auto builder = builder2d.conditional_v[i];
                 StaticAliasTable<U> static_alias_table(builder.table.data(),
@@ -265,7 +270,7 @@ namespace luminous {
                 conditional_v[i] = static_alias_table;
             }
             StaticAliasTable<V> marginal(builder2d.marginal.table.data(),
-                                             builder2d.marginal.PMF.data());
+                                         builder2d.marginal.PMF.data());
             StaticAliasTable2D<U, V> ret(conditional_v, marginal);
             return ret;
         }

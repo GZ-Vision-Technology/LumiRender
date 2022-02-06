@@ -17,7 +17,8 @@ namespace luminous {
         LightEvalContext Envmap::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             const Distribution2D &distribution2d = scene_data->get_distribution2d(_distribution_idx);
             float map_PDF = 0;
-            float2 uv = distribution2d.sample_continuous(u, &map_PDF);
+            int2 offset;
+            float2 uv = distribution2d.sample_continuous(u, &map_PDF, &offset);
             if (map_PDF == 0) {
                 lls->PDF_dir = 0;
                 return {};
