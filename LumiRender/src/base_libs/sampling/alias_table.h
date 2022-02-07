@@ -124,9 +124,9 @@ namespace luminous {
                 int offset = std::min<int>(int(u), size() - 1);
                 u = std::min<float>(u - offset, OneMinusEpsilon);
                 AliasEntry alias_entry = _data.table[offset];
-                offset = select(alias_entry.prob < u, offset, alias_entry.alias);
+                offset = select(u < alias_entry.prob, offset, alias_entry.alias);
                 *p = PMF(offset);
-                *u_remapped = select(alias_entry.prob < u,
+                *u_remapped = select(u < alias_entry.prob,
                                      std::min<float>(u / alias_entry.prob, OneMinusEpsilon),
                                      std::min<float>((1 - u) / (1 - alias_entry.prob), OneMinusEpsilon));
                 DCHECK(*u_remapped >= 0.f && *u_remapped <= 1.f);
@@ -136,12 +136,12 @@ namespace luminous {
             LM_ND_XPU float sample_continuous(float u, float *p,
                                               int *ofs) const {
                 u = u * size();
-                *ofs = std::min<int>(int(u), size() - 1);
+                *ofs = std::min<int>(int(u * size()), size() - 1);
                 u = std::min<float>(u - *ofs, OneMinusEpsilon);
                 AliasEntry alias_entry = _data.table[*ofs];
-                *ofs = select(alias_entry.prob < u, *ofs, alias_entry.alias);
+                *ofs = select(u < alias_entry.prob, *ofs, alias_entry.alias);
                 *p = PMF(*ofs);
-                float u_remapped = select(alias_entry.prob < u,
+                float u_remapped = select(u < alias_entry.prob,
                                           std::min<float>(u / alias_entry.prob, OneMinusEpsilon),
                                           std::min<float>((1 - u) / (1 - alias_entry.prob), OneMinusEpsilon));
                 return (*ofs + u_remapped) / size();
