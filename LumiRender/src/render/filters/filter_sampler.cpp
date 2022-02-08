@@ -19,9 +19,16 @@ namespace luminous {
                 float2 p = make_float2((x + 0.5f) / tab_size * r.x,
                                        (y + 0.5f) / tab_size * r.y);
                 float val = filter->evaluate(p);
-                _signs(x, y) = sign(val);
+                _lut(x, y) = val;
                 func[i] = abs(val);
             }
+            auto sum = std::reduce(_lut.cbegin(), _lut.cend(), 0.0);
+            auto inv_sum = 1.0 / sum;
+            std::transform(
+                    _lut.cbegin(), _lut.cend(), _lut.begin(),
+                    [inv_sum](auto v) noexcept {
+                        return static_cast<float>(v * inv_sum);
+                    });
             init(func.data());
         }
 
@@ -34,9 +41,10 @@ namespace luminous {
             float PDF = 0;
             int2 offset{};
             float2 p = _distribution2d.sample_continuous(abs(u), &PDF, &offset);
+            float f = _lut(offset);
             p = p * sign(u);
             //todo implement alias table sampling
-            return FilterSample{p, 1};
+            return FilterSample{p, f / PDF};
         }
     }
 }

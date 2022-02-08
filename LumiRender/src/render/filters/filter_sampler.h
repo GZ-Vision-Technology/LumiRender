@@ -27,7 +27,7 @@ namespace luminous {
             using array_type = Array2D<float, tab_size, tab_size>;
         private:
             Distrib _distribution2d;
-            array_type _signs{};
+            array_type _lut{};
         public:
             FilterSampler() = default;
 

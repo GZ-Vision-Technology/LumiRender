@@ -300,7 +300,7 @@ namespace luminous {
 
             LM_ND_XPU bool operator!=(const Array2D<T, Row, Col> &array) const { return !(*this == array); }
 
-            LM_ND_XPU iterator begin() { return value; }
+            LM_ND_XPU iterator begin() { return reinterpret_cast<iterator>(value); }
 
             LM_ND_XPU iterator end() { return begin() + size(); }
 
