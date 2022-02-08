@@ -136,7 +136,7 @@ namespace luminous {
             LM_ND_XPU float sample_continuous(float u, float *p,
                                               int *ofs) const {
                 u = u * size();
-                *ofs = std::min<int>(int(u * size()), size() - 1);
+                *ofs = std::min<int>(int(u), size() - 1);
                 u = std::min<float>(u - *ofs, OneMinusEpsilon);
                 AliasEntry alias_entry = _data.table[*ofs];
                 *ofs = select(u < alias_entry.prob, *ofs, alias_entry.alias);
