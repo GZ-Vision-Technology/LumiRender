@@ -181,3 +181,5 @@ namespace luminous {
 #define LM_CRT_GUARDOVERFLOW
 
 #endif // __GNUC__
+
+#define USE_ALIAS_TABLE 0

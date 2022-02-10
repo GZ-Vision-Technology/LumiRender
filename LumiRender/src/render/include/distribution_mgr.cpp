@@ -27,6 +27,15 @@ namespace luminous {
             }
         }
 
+        void DistributionMgr::add_distribution(const AliasTableBuilder &builder, bool need_count) {
+            _alias_table_handles.push_back({_alias_entry_buffer.size(), builder.table.size()});
+            _alias_entry_buffer.append(builder.table);
+            _alias_PMF_buffer.append(builder.PMF);
+            if (need_count) {
+                ++_count_distribution;
+            }
+        }
+
         void DistributionMgr::init_on_device(Device *device) {
             if (_handles.empty()) {
                 return;

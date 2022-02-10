@@ -31,6 +31,12 @@ namespace luminous {
             float integral;
         };
 
+        struct AliasTableHandle {
+        public:
+            size_t offset;
+            size_t size;
+        };
+
         class DistributionMgr {
         protected:
             Device * _device;
@@ -45,15 +51,26 @@ namespace luminous {
              * and the rest are distribution1d make up the distribution2d
              */
             std::vector<DistributionHandle> _handles;
+
+            Managed<AliasEntry> _alias_entry_buffer{_device};
+            Managed<float> _alias_PMF_buffer{_device};
+
+            std::vector<AliasTableHandle> _alias_table_handles;
+
         public:
             Managed<Distribution1D> distributions{_device};
             Managed<Distribution2D> distribution2ds{_device};
+
+            Managed<AliasTable> alias_tables{_device};
+            Managed<AliasTable2D> alias_table2ds{_device};
 
             explicit DistributionMgr(Device *device) : _device(device) {}
 
             void add_distribution(const Distribution1DBuilder &builder, bool need_count = false);
 
             void add_distribution2d(const vector<float> &f, int nu, int nv);
+
+            void add_distribution(const AliasTableBuilder &builder, bool need_count = false);
 
             void init_on_host();
 
