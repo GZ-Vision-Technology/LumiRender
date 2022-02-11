@@ -58,12 +58,13 @@ namespace luminous {
             std::vector<AliasTableHandle> _alias_table_handles;
 
         public:
-            Managed<Distribution1D> distributions{_device};
-            Managed<Distribution2D> distribution2ds{_device};
-
+#if USE_ALIAS_TABLE
             Managed<AliasTable> alias_tables{_device};
             Managed<AliasTable2D> alias_table2ds{_device};
-
+#else
+            Managed<Distribution1D> distributions{_device};
+            Managed<Distribution2D> distribution2ds{_device};
+#endif
             explicit DistributionMgr(Device *device) : _device(device) {}
 
             void add_distribution(const Distribution1DBuilder &builder, bool need_count = false);

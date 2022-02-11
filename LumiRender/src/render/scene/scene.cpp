@@ -74,7 +74,13 @@ namespace luminous {
         }
 
         void Scene::preprocess_meshes() {
+#if USE_ALIAS_TABLE
+            vector<AliasTableBuilder> builders;
+            using Distrib = AliasTable;
+#else
             vector<Distribution1DBuilder> builders;
+            using Distrib = Distribution1D;
+#endif
             auto process_mesh = [&](MeshHandle mesh) {
                 if (!mesh.has_distribute()) {
                     return;
@@ -92,7 +98,7 @@ namespace luminous {
                     float area = triangle_area(p0, p1, p2);
                     areas.push_back(area);
                 }
-                auto builder = Distribution1D::create_builder(move(areas));
+                auto builder = Distrib::create_builder(move(areas));
                 builders.push_back(builder);
             };
 
