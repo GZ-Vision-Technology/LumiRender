@@ -16,19 +16,19 @@ namespace luminous {
         using std::vector;
         using std::move;
 
-        struct Distribution1DBuilder {
+        struct DichotomyBuilder {
         public:
             std::vector<float> func;
             std::vector<float> CDF;
             float func_integral{};
 
-            Distribution1DBuilder() = default;
+            DichotomyBuilder() = default;
 
-            Distribution1DBuilder(std::vector<float> func, std::vector<float> CDF, float integral)
+            DichotomyBuilder(std::vector<float> func, std::vector<float> CDF, float integral)
                     : func(move(func)), CDF(move(CDF)), func_integral(integral) {}
         };
 
-        struct DistribData {
+        struct DichotomyData {
         public:
             using value_type = float;
             using const_value_type = const float;
@@ -38,15 +38,15 @@ namespace luminous {
             BufferView<const_value_type> CDF{};
             float func_integral{};
 
-            DistribData() = default;
+            DichotomyData() = default;
 
-            DistribData(BufferView<const_value_type> func,
-                        BufferView<const_value_type> CDF, float integral)
+            DichotomyData(BufferView<const_value_type> func,
+                          BufferView<const_value_type> CDF, float integral)
                     : func(func), CDF(CDF), func_integral(integral) {}
         };
 
         template<int Size>
-        struct CDistribData {
+        struct StaticDichotomyData {
         private:
             static constexpr int size_in_bytes = Size * sizeof(float);
         public:
@@ -54,13 +54,13 @@ namespace luminous {
             Array<float, Size + 1> CDF;
             float func_integral{};
 
-            CDistribData() = default;
+            StaticDichotomyData() = default;
 
-            CDistribData(Array<float, Size> func,
-                         Array<float, Size + 1> CDF, float integral)
+            StaticDichotomyData(Array<float, Size> func,
+                                Array<float, Size + 1> CDF, float integral)
                     : func(func), CDF(CDF), func_integral(integral) {}
 
-            CDistribData(const float *f, const float *C, float integral) {
+            StaticDichotomyData(const float *f, const float *C, float integral) {
                 init(f, C, integral);
             }
 
@@ -71,19 +71,19 @@ namespace luminous {
             }
         };
 
-        template<typename T = DistribData>
-        class TDistribution {
+        template<typename T = DichotomyData>
+        class TDichotomySampler {
         public:
             using data_type = T;
         private:
             data_type _data;
         public:
-            TDistribution() = default;
+            TDichotomySampler() = default;
 
-            explicit TDistribution(const data_type &data) : _data(data) {}
+            explicit TDichotomySampler(const data_type &data) : _data(data) {}
 
             template<typename ...Args>
-            explicit TDistribution(Args ...args) : TDistribution(T(std::forward<Args>(args)...)) {}
+            explicit TDichotomySampler(Args ...args) : TDichotomySampler(T(std::forward<Args>(args)...)) {}
 
             LM_ND_XPU size_t size() const { return _data.func.size(); }
 
@@ -126,7 +126,7 @@ namespace luminous {
                 return integral() > 0 ? (func_at(i) / (integral() * size())) : 0;
             }
 
-            static Distribution1DBuilder create_builder(std::vector<float> func) {
+            static DichotomyBuilder create_builder(std::vector<float> func) {
                 size_t num = func.size();
                 std::vector<float> CDF(num + 1);
                 CDF[0] = 0;
@@ -147,42 +147,42 @@ namespace luminous {
             }
         };
 
-        using Distribution1D = TDistribution<DistribData>;
+        using Distribution1D = TDichotomySampler<DichotomyData>;
 
         template<int Size>
-        using StaticDistribution1D = TDistribution<CDistribData<Size>>;
+        using StaticDistribution1D = TDichotomySampler<StaticDichotomyData<Size>>;
 
-        struct Distribution2DBuilder {
-            vector<Distribution1DBuilder> conditional_v;
-            Distribution1DBuilder marginal;
+        struct Dichotomy2DBuilder {
+            vector<DichotomyBuilder> conditional_v;
+            DichotomyBuilder marginal;
 
-            Distribution2DBuilder(vector<Distribution1DBuilder> conditional_v, Distribution1DBuilder marginal)
+            Dichotomy2DBuilder(vector<DichotomyBuilder> conditional_v, DichotomyBuilder marginal)
                     : conditional_v(move(conditional_v)), marginal(move(marginal)) {}
         };
 
-        struct Distribution2DData {
+        struct Dichotomy2DData {
         public:
             BufferView<const Distribution1D> conditional_v{};
             Distribution1D marginal{};
 
-            Distribution2DData() = default;
+            Dichotomy2DData() = default;
 
-            Distribution2DData(BufferView<const Distribution1D> conditional_v,
-                               Distribution1D marginal)
+            Dichotomy2DData(BufferView<const Distribution1D> conditional_v,
+                            Distribution1D marginal)
                     : conditional_v(conditional_v),
                       marginal(marginal) {}
         };
 
         template<int U, int V>
-        struct CDistribution2DData {
+        struct StaticDichotomy2DData {
         public:
             Array<StaticDistribution1D<U>, V> conditional_v{};
             StaticDistribution1D<V> marginal;
 
-            CDistribution2DData() = default;
+            StaticDichotomy2DData() = default;
 
-            CDistribution2DData(Array<StaticDistribution1D<U>, V> conditional_v,
-                                StaticDistribution1D<V> marginal)
+            StaticDichotomy2DData(Array<StaticDistribution1D<U>, V> conditional_v,
+                                  StaticDistribution1D<V> marginal)
                     : conditional_v(conditional_v),
                       marginal(marginal) {}
         };
@@ -222,13 +222,13 @@ namespace luminous {
                 return _data.conditional_v[iv].func_at(iu) / _data.marginal.integral();
             }
 
-            static Distribution2DBuilder create_builder(const float *func, int nu, int nv) {
-                vector<Distribution1DBuilder> conditional_v;
+            static Dichotomy2DBuilder create_builder(const float *func, int nu, int nv) {
+                vector<DichotomyBuilder> conditional_v;
                 conditional_v.reserve(nv);
                 for (int v = 0; v < nv; ++v) {
                     vector<float> func_v;
                     func_v.insert(func_v.end(), &func[v * nu], &func[v * nu + nu]);
-                    Distribution1DBuilder builder = Distribution1D::create_builder(func_v);
+                    DichotomyBuilder builder = Distribution1D::create_builder(func_v);
                     conditional_v.push_back(builder);
                 }
                 vector<float> marginal_func;
@@ -236,15 +236,15 @@ namespace luminous {
                 for (int v = 0; v < nv; ++v) {
                     marginal_func.push_back(conditional_v[v].func_integral);
                 }
-                Distribution1DBuilder marginal_builder = Distribution1D::create_builder(marginal_func);
+                DichotomyBuilder marginal_builder = Distribution1D::create_builder(marginal_func);
                 return {move(conditional_v), move(marginal_builder)};
             }
         };
 
-        using Distribution2D = TDistribution2D<Distribution2DData>;
+        using Distribution2D = TDistribution2D<Dichotomy2DData>;
 
         template<int U, int V>
-        using StaticDistribution2D = TDistribution2D<CDistribution2DData<U, V>>;
+        using StaticDistribution2D = TDistribution2D<StaticDichotomy2DData<U, V>>;
 
         template<int U, int V>
         LM_NODISCARD StaticDistribution2D<U, V> create_static_distrib2d(const float *func) {

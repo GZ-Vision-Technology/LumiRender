@@ -11,12 +11,12 @@ namespace luminous {
         void DistributionMgr::add_distribution2d(const vector<float> &f, int u, int v) {
 #if USE_ALIAS_TABLE
             AliasTable2DBuilder builder2d = AliasTable2D::create_builder(f.data(), u, v);
-            for (const auto &builder_1d : builder.conditional_v) {
+            for (const auto &builder_1d : builder2d.conditional_v) {
                 add_distribution(builder_1d);
             }
             add_distribution(builder2d.marginal);
 #else
-            Distribution2DBuilder builder = Distribution2D::create_builder(f.data(), u, v);
+            Dichotomy2DBuilder builder = Distribution2D::create_builder(f.data(), u, v);
             for (const auto& builder_1D : builder.conditional_v) {
                 add_distribution(builder_1D);
             }
@@ -24,10 +24,10 @@ namespace luminous {
 #endif
         }
 
-        void DistributionMgr::add_distribution(const Distribution1DBuilder &builder, bool need_count) {
+        void DistributionMgr::add_distribution(const DichotomyBuilder &builder, bool need_count) {
             _handles.emplace_back(_func_buffer.size(), builder.func.size(),
-                                 _CDF_buffer.size(), builder.CDF.size(),
-                                 builder.func_integral);
+                                  _CDF_buffer.size(), builder.CDF.size(),
+                                  builder.func_integral);
             _func_buffer.append(builder.func);
             _CDF_buffer.append(builder.CDF);
             if (need_count) {
@@ -58,7 +58,8 @@ namespace luminous {
             _alias_PMF_buffer.synchronize_to_device();
 
             for (const auto &handle : _alias_table_handles) {
-                BufferView<const AliasEntry> alias_entry = _alias_entry_buffer.device_buffer_view(handle.offset, handle.size);
+                BufferView<const AliasEntry> alias_entry = _alias_entry_buffer.device_buffer_view(handle.offset,
+                                                                                                  handle.size);
                 BufferView<const float> alias_PMF = _alias_PMF_buffer.device_buffer_view(handle.offset, handle.size);
                 alias_tables.emplace_back(alias_entry, alias_PMF);
             }
@@ -106,7 +107,8 @@ namespace luminous {
             alias_tables.clear();
             alias_table2ds.clear();
             for (const auto &handle : _alias_table_handles) {
-                BufferView<const AliasEntry> alias_entry = _alias_entry_buffer.device_buffer_view(handle.offset, handle.size);
+                BufferView<const AliasEntry> alias_entry = _alias_entry_buffer.device_buffer_view(handle.offset,
+                                                                                                  handle.size);
                 BufferView<const float> alias_PMF = _alias_PMF_buffer.device_buffer_view(handle.offset, handle.size);
                 alias_tables.emplace_back(alias_entry, alias_PMF);
             }
@@ -142,24 +144,40 @@ namespace luminous {
             _func_buffer.shrink_to_fit();
             _CDF_buffer.shrink_to_fit();
             _handles.shrink_to_fit();
+#if USE_ALIAS_TABLE
+            alias_tables.shrink_to_fit();
+            alias_table2ds.shrink_to_fit();
+#else
             distribution2ds.shrink_to_fit();
             distributions.shrink_to_fit();
+#endif
         }
 
         void DistributionMgr::clear() {
             _func_buffer.clear();
             _CDF_buffer.clear();
             _handles.clear();
+#if USE_ALIAS_TABLE
+            alias_tables.clear();
+            alias_table2ds.clear();
+#else
             distribution2ds.clear();
             distributions.clear();
+#endif
         }
 
         size_t DistributionMgr::size_in_bytes() const {
             size_t ret = _func_buffer.size_in_bytes();
             ret += _CDF_buffer.size_in_bytes();
             ret += _handles.size() * sizeof(DistributionHandle);
+
+#if USE_ALIAS_TABLE
+            ret += alias_tables.size_in_bytes();
+            ret += alias_table2ds.size_in_bytes();
+#else
             ret += distribution2ds.size_in_bytes();
             ret += distributions.size_in_bytes();
+#endif
             return ret;
         }
 

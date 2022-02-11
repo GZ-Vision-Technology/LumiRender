@@ -14,19 +14,19 @@
 namespace luminous {
 
     inline namespace sampling {
-        struct DistribData;
+        struct DichotomyData;
 
         template<typename T>
-        class TDistribution;
+        class TDichotomySampler;
 
-        using Distribution1D = TDistribution<DistribData>;
+        using Distribution1D = TDichotomySampler<DichotomyData>;
 
-        struct Distribution2DData;
+        struct Dichotomy2DData;
 
         template<typename T>
         class TDistribution2D;
 
-        using Distribution2D = TDistribution2D<Distribution2DData>;
+        using Distribution2D = TDistribution2D<Dichotomy2DData>;
     }
 
     inline namespace render {

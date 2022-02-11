@@ -78,7 +78,7 @@ namespace luminous {
             vector<AliasTableBuilder> builders;
             using Distrib = AliasTable;
 #else
-            vector<Distribution1DBuilder> builders;
+            vector<DichotomyBuilder> builders;
             using Distrib = Distribution1D;
 #endif
             auto process_mesh = [&](MeshHandle mesh) {

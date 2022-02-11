@@ -67,7 +67,7 @@ namespace luminous {
 #endif
             explicit DistributionMgr(Device *device) : _device(device) {}
 
-            void add_distribution(const Distribution1DBuilder &builder, bool need_count = false);
+            void add_distribution(const DichotomyBuilder &builder, bool need_count = false);
 
             void add_distribution2d(const vector<float> &f, int nu, int nv);
 
