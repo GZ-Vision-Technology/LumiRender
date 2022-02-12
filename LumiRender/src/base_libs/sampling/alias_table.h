@@ -23,19 +23,13 @@ namespace luminous {
 
         struct AliasTableBuilder {
             vector<AliasEntry> table;
-            vector<float> PMF;
+            vector<float> func;
             float integral{};
         };
 
         LM_ND_INLINE auto create_alias_table(vector<float> weights) {
             auto sum = std::reduce(weights.cbegin(), weights.cend(), 0.0);
             auto inv_sum = 1.0 / sum;
-            vector<float> pmf(weights.size());
-            std::transform(
-                    weights.cbegin(), weights.cend(), pmf.begin(),
-                    [inv_sum](auto v) noexcept {
-                        return static_cast<float>(v * inv_sum);
-                    });
 
             auto ratio = static_cast<double>(weights.size()) / sum;
             static thread_local vector<uint> over;
@@ -68,41 +62,41 @@ namespace luminous {
             for (auto i : over) { table[i] = {1.0f, i}; }
             for (auto i : under) { table[i] = {1.0f, i}; }
 
-            return std::tuple{std::move(table), std::move(pmf), float(sum)};
+            return std::tuple{std::move(table), std::move(weights), float(sum)};
         }
 
         struct AliasData {
         public:
             BufferView<const AliasEntry> table{};
-            BufferView<const float> PMF{};
+            BufferView<const float> func{};
             float integral{};
         public:
             AliasData() = default;
 
             AliasData(BufferView<const AliasEntry> t, BufferView<const float> p, float integral)
-                    : table(t), PMF(p), integral(integral) {}
+                    : table(t), func(p), integral(integral) {}
         };
 
         template<uint N>
         struct StaticAliasData {
         public:
             Array <AliasEntry, N> table;
-            Array<float, N> PMF;
+            Array<float, N> func;
             float integral{};
         public:
             StaticAliasData() = default;
 
             StaticAliasData(Array <AliasEntry, N> t, Array<float, N> p, float integral)
-                    : table(t), PMF(p), integral(integral) {}
+                    : table(t), func(p), integral(integral) {}
 
             StaticAliasData(const AliasEntry *alias_entry, const float *p, float integral) {
                 init(alias_entry, p, integral);
             }
 
-            void init(const AliasEntry *alias_entry, const float *p, float integral) {
+            void init(const AliasEntry *alias_entry, const float *p, float func_int) {
                 std::memcpy(table.begin(), alias_entry, N * sizeof(AliasEntry));
-                std::memcpy(PMF.begin(), p, N * sizeof(float));
-                this->integral = integral;
+                std::memcpy(func.begin(), p, N * sizeof(float));
+                this->integral = func_int;
             }
         };
 
@@ -128,7 +122,7 @@ namespace luminous {
                 u = std::min<float>(u - offset, OneMinusEpsilon);
                 AliasEntry alias_entry = _data.table[offset];
                 offset = select(u < alias_entry.prob, offset, alias_entry.alias);
-                *p = PMF(offset);
+                *p = PDF(offset);
                 *u_remapped = select(u < alias_entry.prob,
                                      std::min<float>(u / alias_entry.prob, OneMinusEpsilon),
                                      std::min<float>((1 - u) / (1 - alias_entry.prob), OneMinusEpsilon));
@@ -143,23 +137,27 @@ namespace luminous {
                 u = std::min<float>(u - *ofs, OneMinusEpsilon);
                 AliasEntry alias_entry = _data.table[*ofs];
                 *ofs = select(u < alias_entry.prob, *ofs, alias_entry.alias);
-                *p = PMF(*ofs);
+                *p = PDF(*ofs);
                 float u_remapped = select(u < alias_entry.prob,
                                           std::min<float>(u / alias_entry.prob, OneMinusEpsilon),
                                           std::min<float>((1 - u) / (1 - alias_entry.prob), OneMinusEpsilon));
                 return (*ofs + u_remapped) / size();
             }
 
-            LM_ND_XPU size_t size() const { return _data.PMF.size(); }
+            LM_ND_XPU float integral() const { return _data.integral; }
 
-            LM_ND_XPU float PMF(uint32_t i) const {
+            LM_ND_XPU float func_at(uint32_t i) const { return _data.func[i]; }
+
+            LM_ND_XPU size_t size() const { return _data.func.size(); }
+
+            LM_ND_XPU float PDF(uint32_t i) const {
                 DCHECK(i < size());
-                return _data.PMF[i];
+                return func_at(i) / integral();
             }
 
             static AliasTableBuilder create_builder(std::vector<float> weights) {
-                auto[table, PMF, sum] = create_alias_table(std::move(weights));
-                return {table, PMF, sum};
+                auto[table, func, integral] = create_alias_table(std::move(weights));
+                return {table, func, integral};
             }
         };
 
@@ -229,10 +227,14 @@ namespace luminous {
                 return row.func_at(coord.x);
             }
 
+            LM_ND_XPU float integral() const {
+                return _data.marginal.integral();
+            }
+
             LM_ND_XPU float PDF(float2 p) const {
                 size_t iu = clamp(size_t(p[0] * _data.conditional_v[0].size()), 0, _data.conditional_v[0].size() - 1);
                 size_t iv = clamp(size_t(p[1] * _data.marginal.size()), 0, _data.marginal.size() - 1);
-                return _data.conditional_v[iv].PMF(iu);
+                return _data.conditional_v[iv].func_at(iu) / integral();
             }
 
             static AliasTable2DBuilder create_builder(const float *func, int nu, int nv) {
@@ -269,12 +271,12 @@ namespace luminous {
             for (int i = 0; i < builder2d.conditional_v.size(); ++i) {
                 auto builder = builder2d.conditional_v[i];
                 StaticAliasTable<U> static_alias_table(builder.table.data(),
-                                                       builder.PMF.data(),
+                                                       builder.func.data(),
                                                        builder.integral);
                 conditional_v[i] = static_alias_table;
             }
             StaticAliasTable<V> marginal(builder2d.marginal.table.data(),
-                                         builder2d.marginal.PMF.data(),
+                                         builder2d.marginal.func.data(),
                                          builder2d.marginal.integral);
             StaticAliasTable2D<U, V> ret(conditional_v, marginal);
             return ret;

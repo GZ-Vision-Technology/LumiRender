@@ -23,11 +23,11 @@ namespace luminous {
         public:
             static constexpr int tab_size = 20;
             static constexpr int CDF_size = tab_size + 1;
-#if USE_ALIAS_TABLE
+//#if USE_ALIAS_TABLE
             using Distrib = StaticAliasTable2D<tab_size, tab_size>;
-#else
-            using Distrib = StaticDistribution2D<tab_size, tab_size>;
-#endif
+//#else
+//            using Distrib = StaticDistribution2D<tab_size, tab_size>;
+//#endif
             using array_type = Array2D<float, tab_size, tab_size>;
         private:
             Distrib _distribution2d;

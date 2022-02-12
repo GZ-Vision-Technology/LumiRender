@@ -25,11 +25,11 @@ namespace luminous {
         }
 
         void FilterSampler::init(const float *func) {
-#if USE_ALIAS_TABLE
+//#if USE_ALIAS_TABLE
             _distribution2d = create_static_alias_table2d<tab_size, tab_size>(func);
-#else
-            _distribution2d = create_static_distrib2d<tab_size, tab_size>(func);
-#endif
+//#else
+//            _distribution2d = create_static_distrib2d<tab_size, tab_size>(func);
+//#endif
         }
 
         FilterSample FilterSampler::sample(float2 u) const {
