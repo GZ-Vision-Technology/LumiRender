@@ -79,7 +79,7 @@ namespace luminous {
             using Distrib = AliasTable;
 #else
             vector<DichotomyBuilder> builders;
-            using Distrib = Distribution1D;
+            using Distrib = DichotomySampler;
 #endif
             auto process_mesh = [&](MeshHandle mesh) {
                 if (!mesh.has_distribute()) {

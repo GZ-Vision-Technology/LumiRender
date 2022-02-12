@@ -28,12 +28,12 @@ void test_alias() {
 
     int a[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    auto builder = Distribution1D::create_builder({1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+    auto builder = DichotomySampler::create_builder({1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
 
 
 
-    Distribution1D distribution(BufferView<const float>(builder.func.data(), builder.func.size()),
-                                BufferView<const float>(builder.CDF.data(), builder.CDF.size()), builder.func_integral);
+    DichotomySampler distribution(BufferView<const float>(builder.func.data(), builder.func.size()),
+                                  BufferView<const float>(builder.CDF.data(), builder.CDF.size()), builder.func_integral);
 
     int count = 1000000;
     for (int i = 0; i < count; ++i) {

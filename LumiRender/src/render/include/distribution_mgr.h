@@ -62,7 +62,7 @@ namespace luminous {
             Managed<AliasTable> alias_tables{_device};
             Managed<AliasTable2D> alias_table2ds{_device};
 #else
-            Managed<Distribution1D> distributions{_device};
+            Managed<DichotomySampler> distributions{_device};
             Managed<Dichotomy2D> distribution2ds{_device};
 #endif
             explicit DistributionMgr(Device *device) : _device(device) {}

@@ -153,10 +153,10 @@ namespace luminous {
             }
         };
 
-        using Distribution1D = TDichotomySampler<DichotomyData>;
+        using DichotomySampler = TDichotomySampler<DichotomyData>;
 
         template<int Size>
-        using StaticDistribution1D = TDichotomySampler<StaticDichotomyData<Size>>;
+        using StaticDichotomySampler = TDichotomySampler<StaticDichotomyData<Size>>;
 
         struct Dichotomy2DBuilder {
             vector<DichotomyBuilder> conditional_v;
@@ -168,13 +168,13 @@ namespace luminous {
 
         struct Dichotomy2DData {
         public:
-            BufferView<const Distribution1D> conditional_v{};
-            Distribution1D marginal{};
+            BufferView<const DichotomySampler> conditional_v{};
+            DichotomySampler marginal{};
 
             Dichotomy2DData() = default;
 
-            Dichotomy2DData(BufferView<const Distribution1D> conditional_v,
-                            Distribution1D marginal)
+            Dichotomy2DData(BufferView<const DichotomySampler> conditional_v,
+                            DichotomySampler marginal)
                     : conditional_v(conditional_v),
                       marginal(marginal) {}
         };
@@ -182,13 +182,13 @@ namespace luminous {
         template<int U, int V>
         struct StaticDichotomy2DData {
         public:
-            Array<StaticDistribution1D<U>, V> conditional_v{};
-            StaticDistribution1D<V> marginal;
+            Array<StaticDichotomySampler<U>, V> conditional_v{};
+            StaticDichotomySampler<V> marginal;
 
             StaticDichotomy2DData() = default;
 
-            StaticDichotomy2DData(Array<StaticDistribution1D<U>, V> conditional_v,
-                                  StaticDistribution1D<V> marginal)
+            StaticDichotomy2DData(Array<StaticDichotomySampler<U>, V> conditional_v,
+                                  StaticDichotomySampler<V> marginal)
                     : conditional_v(conditional_v),
                       marginal(marginal) {}
         };
@@ -238,7 +238,7 @@ namespace luminous {
                 for (int v = 0; v < nv; ++v) {
                     vector<float> func_v;
                     func_v.insert(func_v.end(), &func[v * nu], &func[v * nu + nu]);
-                    DichotomyBuilder builder = Distribution1D::create_builder(func_v);
+                    DichotomyBuilder builder = DichotomySampler::create_builder(func_v);
                     conditional_v.push_back(builder);
                 }
                 vector<float> marginal_func;
@@ -246,7 +246,7 @@ namespace luminous {
                 for (int v = 0; v < nv; ++v) {
                     marginal_func.push_back(conditional_v[v].func_integral);
                 }
-                DichotomyBuilder marginal_builder = Distribution1D::create_builder(marginal_func);
+                DichotomyBuilder marginal_builder = DichotomySampler::create_builder(marginal_func);
                 return {move(conditional_v), move(marginal_builder)};
             }
         };
@@ -259,13 +259,13 @@ namespace luminous {
         template<int U, int V>
         LM_NODISCARD StaticDichotomy2D<U, V> create_static_distrib2d(const float *func) {
             auto builder2d = Dichotomy2D::create_builder(func, U, V);
-            Array<StaticDistribution1D<U>, V> conditional_v;
+            Array<StaticDichotomySampler<U>, V> conditional_v;
             for (int i = 0; i < builder2d.conditional_v.size(); ++i) {
                 auto builder = builder2d.conditional_v[i];
-                StaticDistribution1D<U> static_distribution(builder);
+                StaticDichotomySampler<U> static_distribution(builder);
                 conditional_v[i] = static_distribution;
             }
-            StaticDistribution1D<V> marginal(builder2d.marginal);
+            StaticDichotomySampler<V> marginal(builder2d.marginal);
             StaticDichotomy2D<U, V> ret(conditional_v, marginal);
             return ret;
         }
