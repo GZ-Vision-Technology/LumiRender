@@ -80,6 +80,8 @@ namespace luminous {
         template<uint N>
         struct StaticAliasData {
         public:
+            using Builder = AliasTableBuilder;
+        public:
             Array <AliasEntry, N> table;
             Array<float, N> func;
             float func_integral{};
@@ -93,6 +95,10 @@ namespace luminous {
                 init(alias_entry, p, integral);
             }
 
+            explicit StaticAliasData(const Builder &builder) {
+                init(builder.table.data(), builder.func.data(), builder.func_integral);
+            }
+
             void init(const AliasEntry *alias_entry, const float *p, float func_int) {
                 std::memcpy(table.begin(), alias_entry, N * sizeof(AliasEntry));
                 std::memcpy(func.begin(), p, N * sizeof(float));
@@ -104,6 +110,7 @@ namespace luminous {
         class TAliasTable {
         public:
             using data_type = TData;
+            using Builder = AliasTableBuilder;
         private:
             data_type _data;
         public:
@@ -270,14 +277,10 @@ namespace luminous {
             Array<StaticAliasTable<U>, V> conditional_v;
             for (int i = 0; i < builder2d.conditional_v.size(); ++i) {
                 auto builder = builder2d.conditional_v[i];
-                StaticAliasTable<U> static_alias_table(builder.table.data(),
-                                                       builder.func.data(),
-                                                       builder.func_integral);
+                StaticAliasTable<U> static_alias_table(builder);
                 conditional_v[i] = static_alias_table;
             }
-            StaticAliasTable<V> marginal(builder2d.marginal.table.data(),
-                                         builder2d.marginal.func.data(),
-                                         builder2d.marginal.func_integral);
+            StaticAliasTable<V> marginal(builder2d.marginal);
             StaticAliasTable2D<U, V> ret(conditional_v, marginal);
             return ret;
         }
