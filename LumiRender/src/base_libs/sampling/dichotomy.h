@@ -194,18 +194,18 @@ namespace luminous {
         };
 
         template<typename T>
-        class TDistribution2D {
+        class TDichotomy2D {
         public:
             using data_type = T;
         private:
             data_type _data;
         public:
-            TDistribution2D() = default;
+            TDichotomy2D() = default;
 
-            explicit TDistribution2D(const data_type &data) : _data(data) {}
+            explicit TDichotomy2D(const data_type &data) : _data(data) {}
 
             template<typename ...Args>
-            explicit TDistribution2D(Args ...args) : TDistribution2D(T(std::forward<Args>(args)...)) {}
+            explicit TDichotomy2D(Args ...args) : TDichotomy2D(T(std::forward<Args>(args)...)) {}
 
             LM_ND_XPU float2 sample_continuous(float2 u, float *PDF, int2 *offset) const {
                 float PDFs[2];
@@ -251,14 +251,14 @@ namespace luminous {
             }
         };
 
-        using Distribution2D = TDistribution2D<Dichotomy2DData>;
+        using Dichotomy2D = TDichotomy2D<Dichotomy2DData>;
 
         template<int U, int V>
-        using StaticDistribution2D = TDistribution2D<StaticDichotomy2DData<U, V>>;
+        using StaticDichotomy2D = TDichotomy2D<StaticDichotomy2DData<U, V>>;
 
         template<int U, int V>
-        LM_NODISCARD StaticDistribution2D<U, V> create_static_distrib2d(const float *func) {
-            auto builder2d = Distribution2D::create_builder(func, U, V);
+        LM_NODISCARD StaticDichotomy2D<U, V> create_static_distrib2d(const float *func) {
+            auto builder2d = Dichotomy2D::create_builder(func, U, V);
             Array<StaticDistribution1D<U>, V> conditional_v;
             for (int i = 0; i < builder2d.conditional_v.size(); ++i) {
                 auto builder = builder2d.conditional_v[i];
@@ -266,7 +266,7 @@ namespace luminous {
                 conditional_v[i] = static_distribution;
             }
             StaticDistribution1D<V> marginal(builder2d.marginal);
-            StaticDistribution2D<U, V> ret(conditional_v, marginal);
+            StaticDichotomy2D<U, V> ret(conditional_v, marginal);
             return ret;
         }
 

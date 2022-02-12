@@ -7,3 +7,9 @@
 
 #include "alias_table.h"
 #include "dichotomy.h"
+
+namespace luminous {
+    inline namespace sampling {
+
+    }
+}

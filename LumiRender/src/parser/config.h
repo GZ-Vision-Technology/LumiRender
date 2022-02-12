@@ -275,7 +275,7 @@ namespace luminous {
 
             // for env
             MaterialAttrConfig texture_config;
-            Distribution2D distribution;
+            Dichotomy2D distribution;
             index_t distribution_idx{invalid_uint32};
             float3 scale{};
             TransformConfig o2w_config;
