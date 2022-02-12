@@ -24,7 +24,7 @@ namespace luminous {
         struct AliasTableBuilder {
             vector<AliasEntry> table;
             vector<float> func;
-            float integral{};
+            float func_integral{};
         };
 
         LM_ND_INLINE auto create_alias_table(vector<float> weights) {
@@ -82,12 +82,12 @@ namespace luminous {
         public:
             Array <AliasEntry, N> table;
             Array<float, N> func;
-            float integral{};
+            float func_integral{};
         public:
             StaticAliasData() = default;
 
             StaticAliasData(Array <AliasEntry, N> t, Array<float, N> p, float integral)
-                    : table(t), func(p), integral(integral) {}
+                    : table(t), func(p), func_integral(integral) {}
 
             StaticAliasData(const AliasEntry *alias_entry, const float *p, float integral) {
                 init(alias_entry, p, integral);
@@ -96,7 +96,7 @@ namespace luminous {
             void init(const AliasEntry *alias_entry, const float *p, float func_int) {
                 std::memcpy(table.begin(), alias_entry, N * sizeof(AliasEntry));
                 std::memcpy(func.begin(), p, N * sizeof(float));
-                this->integral = func_int;
+                this->func_integral = func_int;
             }
         };
 
@@ -144,7 +144,7 @@ namespace luminous {
                 return (*ofs + u_remapped) / size();
             }
 
-            LM_ND_XPU float integral() const { return _data.integral; }
+            LM_ND_XPU float integral() const { return _data.func_integral; }
 
             LM_ND_XPU float func_at(uint32_t i) const { return _data.func[i]; }
 
@@ -252,7 +252,7 @@ namespace luminous {
                 vector<float> marginal_func;
                 marginal_func.reserve(nv);
                 for (int v = 0; v < nv; ++v) {
-                    marginal_func.push_back(integrals[v]);
+                    marginal_func.push_back(conditional_v[v].func_integral);
                 }
                 AliasTableBuilder marginal_builder = AliasTable::create_builder(marginal_func);
                 return {move(conditional_v), marginal_builder};
@@ -272,12 +272,12 @@ namespace luminous {
                 auto builder = builder2d.conditional_v[i];
                 StaticAliasTable<U> static_alias_table(builder.table.data(),
                                                        builder.func.data(),
-                                                       builder.integral);
+                                                       builder.func_integral);
                 conditional_v[i] = static_alias_table;
             }
             StaticAliasTable<V> marginal(builder2d.marginal.table.data(),
                                          builder2d.marginal.func.data(),
-                                         builder2d.marginal.integral);
+                                         builder2d.marginal.func_integral);
             StaticAliasTable2D<U, V> ret(conditional_v, marginal);
             return ret;
         }
