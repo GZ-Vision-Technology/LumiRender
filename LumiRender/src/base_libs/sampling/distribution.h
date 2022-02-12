@@ -222,6 +222,10 @@ namespace luminous {
                 return _data.conditional_v[iv].func_at(iu) / _data.marginal.integral();
             }
 
+            LM_ND_XPU float integral() const {
+                return _data.marginal.integral();
+            }
+
             static Dichotomy2DBuilder create_builder(const float *func, int nu, int nv) {
                 vector<DichotomyBuilder> conditional_v;
                 conditional_v.reserve(nv);

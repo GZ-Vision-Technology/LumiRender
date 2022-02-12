@@ -12,11 +12,10 @@
 using namespace luminous;
 using namespace std;
 
-int main() {
+void test_alias() {
+    auto[table, PDF, sum] = luminous::create_alias_table(vector<float>({1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
 
-    auto[table, PDF] = luminous::create_alias_table(vector<float>({1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
-
-    AliasData alias_data{BufferView(table.data(), table.size()), BufferView(PDF.data(), PDF.size())};
+    AliasData alias_data{BufferView(table.data(), table.size()), BufferView(PDF.data(), PDF.size()), 0.f};
 
     PCGSampler sampler;
 
@@ -31,6 +30,8 @@ int main() {
 
     auto builder = Distribution1D::create_builder({1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
 
+
+
     Distribution1D distribution(BufferView<const float>(builder.func.data(), builder.func.size()),
                                 BufferView<const float>(builder.CDF.data(), builder.CDF.size()), builder.func_integral);
 
@@ -43,15 +44,30 @@ int main() {
     for (int i = 0; i < 10; ++i) {
         cout << a[i] << endl;
     }
+}
 
-    //    auto builder = Distribution1D::create_builder({1,2,3});
-    //
-    //    Distribution1D distribution(BufferView<const float>(builder.func.data(), builder.func.size()),
-    //                             BufferView<const float>(builder.CDF.data(), builder.CDF.size()), builder.func_integral);
-    //
-    //    float ur2, pdf2;
-    //    int ofs2;
-    //    auto uc2 = distribution.sample_discrete(u, &pdf2, &ur2);
+void test_2d() {
+    vector<float> weight;
+    for(int i = 0; i < 25; ++i) {
+        weight.push_back(i);
+    }
+
+    auto d2d = create_static_distrib2d<5,5>(weight.data());
+//    auto d2d = create_static_alias_table2d<5,5>(weight.data());
+
+    luminous::int2 offset;
+    float p;
+    auto uv = d2d.sample_continuous(luminous::make_float2(0.5, 0.5), &p, &offset);
+    float pdf = d2d.PDF(uv);
+    return;
+}
+
+int main() {
+
+
+
+
+    test_2d();
 
     return 0;
 }
