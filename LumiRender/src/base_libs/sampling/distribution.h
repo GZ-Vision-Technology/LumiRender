@@ -12,13 +12,43 @@ namespace luminous {
     inline namespace sampling {
 
 #if USE_ALIAS_TABLE
+        using Distribution1D = TAliasTable<AliasData>;
 
+        template<int Size>
+        using StaticDistribution1D = TAliasTable<StaticAliasData<Size>>;
 #else
         using Distribution1D = TDichotomySampler<DichotomyData>;
 
         template<int Size>
         using StaticDistribution1D = TDichotomySampler<StaticDichotomyData<Size>>;
 #endif
+
+        struct Distribution2DData {
+        public:
+            BufferView<const Distribution1D> conditional_v{};
+            Distribution1D marginal{};
+
+            Distribution2DData() = default;
+
+            Distribution2DData(BufferView<const Distribution1D> conditional_v,
+                               Distribution1D marginal)
+                    : conditional_v(conditional_v),
+                      marginal(marginal) {}
+        };
+
+        template<int U, int V>
+        struct StaticDistribution2DData {
+        public:
+            Array<StaticDistribution1D<U>, V> conditional_v{};
+            StaticDistribution1D<V> marginal;
+
+            StaticDistribution2DData() = default;
+
+            StaticDistribution2DData(Array<StaticDistribution1D<U>, V> conditional_v,
+                                     StaticDistribution1D<V> marginal)
+                    : conditional_v(conditional_v),
+                      marginal(marginal) {}
+        };
 
         template<typename T>
         class TDistribution2D {
@@ -78,5 +108,10 @@ namespace luminous {
                 return {move(conditional_v), move(marginal_builder)};
             }
         };
+
+        using Distribution2D = TDistribution2D<Dichotomy2DData>;
+
+        template<int U, int V>
+        using StaticDistribution2D = TDistribution2D<StaticDichotomy2DData<U, V>>;
     }
 }
