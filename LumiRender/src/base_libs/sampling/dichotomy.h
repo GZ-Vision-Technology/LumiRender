@@ -80,6 +80,7 @@ namespace luminous {
         template<typename T = DichotomyData>
         class TDichotomySampler {
         public:
+            using Builder = DichotomyBuilder;
             using data_type = T;
         private:
             data_type _data;

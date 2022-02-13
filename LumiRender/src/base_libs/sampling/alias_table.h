@@ -178,111 +178,111 @@ namespace luminous {
             AliasTableBuilder marginal;
         };
 
-        struct AliasData2D {
-            BufferView<const AliasTable> conditional_v{};
-            AliasTable marginal{};
-
-            AliasData2D() = default;
-
-            AliasData2D(BufferView<const AliasTable> conditional_v,
-                        AliasTable marginal)
-                    : conditional_v(conditional_v),
-                      marginal(marginal) {}
-        };
-
-        template<int U, int V>
-        struct StaticAliasData2D {
-        public:
-            Array <StaticAliasTable<U>, V> conditional_v{};
-            StaticAliasTable<V> marginal;
-
-            StaticAliasData2D() = default;
-
-            StaticAliasData2D(Array <StaticAliasTable<U>, V> conditional_v,
-                              StaticAliasTable<V> marginal)
-                    : conditional_v(conditional_v),
-                      marginal(marginal) {}
-        };
-
-        template<typename TData>
-        class TAliasTable2D {
-        public:
-            using data_type = TData;
-        private:
-            data_type _data;
-
-        public:
-            TAliasTable2D() = default;
-
-            explicit TAliasTable2D(const data_type &data) : _data(data) {}
-
-            template<typename ...Args>
-            explicit TAliasTable2D(Args ...args) : TAliasTable2D(data_type(std::forward<Args>(args)...)) {}
-
-            LM_ND_XPU float2 sample_continuous(float2 u, float *PDF, int2 *offset) const {
-                float PDFs[2];
-                int2 uv;
-                float d1 = _data.marginal.sample_continuous(u[1], &PDFs[1], &uv[1]);
-                float d0 = _data.conditional_v[uv[1]].sample_continuous(u[0], &PDFs[0], &uv[0]);
-                *PDF = PDFs[0] * PDFs[1];
-                *offset = uv;
-                return make_float2(d0, d1);
-            }
-
-            LM_ND_XPU float func_at(int2 coord) const {
-                auto row = _data.conditional_v[coord.y];
-                return row.func_at(coord.x);
-            }
-
-            LM_ND_XPU float integral() const {
-                return _data.marginal.integral();
-            }
-
-            LM_ND_XPU float PDF(float2 p) const {
-                size_t iu = clamp(size_t(p[0] * _data.conditional_v[0].size()), 0, _data.conditional_v[0].size() - 1);
-                size_t iv = clamp(size_t(p[1] * _data.marginal.size()), 0, _data.marginal.size() - 1);
-                return _data.conditional_v[iv].func_at(iu) / integral();
-            }
-
-            static AliasTable2DBuilder create_builder(const float *func, int nu, int nv) {
-                vector<AliasTableBuilder> conditional_v;
-                conditional_v.reserve(nv);
-                vector<float> integrals;
-                integrals.reserve(nv);
-                for (int v = 0; v < nv; ++v) {
-                    vector<float> func_v;
-                    func_v.insert(func_v.end(), &func[v * nu], &func[v * nu + nu]);
-                    AliasTableBuilder builder = AliasTable::create_builder(func_v);
-                    integrals.push_back(std::reduce(func_v.cbegin(), func_v.cend(), 0.0));
-                    conditional_v.push_back(builder);
-                }
-                vector<float> marginal_func;
-                marginal_func.reserve(nv);
-                for (int v = 0; v < nv; ++v) {
-                    marginal_func.push_back(conditional_v[v].func_integral);
-                }
-                AliasTableBuilder marginal_builder = AliasTable::create_builder(marginal_func);
-                return {move(conditional_v), marginal_builder};
-            }
-        };
-
-        using AliasTable2D = TAliasTable2D<AliasData2D>;
-
-        template<int U, int V>
-        using StaticAliasTable2D = TAliasTable2D<StaticAliasData2D<U, V>>;
-
-        template<int U, int V>
-        LM_NODISCARD StaticAliasTable2D<U, V> create_static_alias_table2d(const float *func) {
-            auto builder2d = AliasTable2D::create_builder(func, U, V);
-            Array<StaticAliasTable<U>, V> conditional_v;
-            for (int i = 0; i < builder2d.conditional_v.size(); ++i) {
-                auto builder = builder2d.conditional_v[i];
-                StaticAliasTable<U> static_alias_table(builder);
-                conditional_v[i] = static_alias_table;
-            }
-            StaticAliasTable<V> marginal(builder2d.marginal);
-            StaticAliasTable2D<U, V> ret(conditional_v, marginal);
-            return ret;
-        }
+//        struct AliasData2D {
+//            BufferView<const AliasTable> conditional_v{};
+//            AliasTable marginal{};
+//
+//            AliasData2D() = default;
+//
+//            AliasData2D(BufferView<const AliasTable> conditional_v,
+//                        AliasTable marginal)
+//                    : conditional_v(conditional_v),
+//                      marginal(marginal) {}
+//        };
+//
+//        template<int U, int V>
+//        struct StaticAliasData2D {
+//        public:
+//            Array <StaticAliasTable<U>, V> conditional_v{};
+//            StaticAliasTable<V> marginal;
+//
+//            StaticAliasData2D() = default;
+//
+//            StaticAliasData2D(Array <StaticAliasTable<U>, V> conditional_v,
+//                              StaticAliasTable<V> marginal)
+//                    : conditional_v(conditional_v),
+//                      marginal(marginal) {}
+//        };
+//
+//        template<typename TData>
+//        class TAliasTable2D {
+//        public:
+//            using data_type = TData;
+//        private:
+//            data_type _data;
+//
+//        public:
+//            TAliasTable2D() = default;
+//
+//            explicit TAliasTable2D(const data_type &data) : _data(data) {}
+//
+//            template<typename ...Args>
+//            explicit TAliasTable2D(Args ...args) : TAliasTable2D(data_type(std::forward<Args>(args)...)) {}
+//
+//            LM_ND_XPU float2 sample_continuous(float2 u, float *PDF, int2 *offset) const {
+//                float PDFs[2];
+//                int2 uv;
+//                float d1 = _data.marginal.sample_continuous(u[1], &PDFs[1], &uv[1]);
+//                float d0 = _data.conditional_v[uv[1]].sample_continuous(u[0], &PDFs[0], &uv[0]);
+//                *PDF = PDFs[0] * PDFs[1];
+//                *offset = uv;
+//                return make_float2(d0, d1);
+//            }
+//
+//            LM_ND_XPU float func_at(int2 coord) const {
+//                auto row = _data.conditional_v[coord.y];
+//                return row.func_at(coord.x);
+//            }
+//
+//            LM_ND_XPU float integral() const {
+//                return _data.marginal.integral();
+//            }
+//
+//            LM_ND_XPU float PDF(float2 p) const {
+//                size_t iu = clamp(size_t(p[0] * _data.conditional_v[0].size()), 0, _data.conditional_v[0].size() - 1);
+//                size_t iv = clamp(size_t(p[1] * _data.marginal.size()), 0, _data.marginal.size() - 1);
+//                return _data.conditional_v[iv].func_at(iu) / integral();
+//            }
+//
+//            static AliasTable2DBuilder create_builder(const float *func, int nu, int nv) {
+//                vector<AliasTableBuilder> conditional_v;
+//                conditional_v.reserve(nv);
+//                vector<float> integrals;
+//                integrals.reserve(nv);
+//                for (int v = 0; v < nv; ++v) {
+//                    vector<float> func_v;
+//                    func_v.insert(func_v.end(), &func[v * nu], &func[v * nu + nu]);
+//                    AliasTableBuilder builder = AliasTable::create_builder(func_v);
+//                    integrals.push_back(std::reduce(func_v.cbegin(), func_v.cend(), 0.0));
+//                    conditional_v.push_back(builder);
+//                }
+//                vector<float> marginal_func;
+//                marginal_func.reserve(nv);
+//                for (int v = 0; v < nv; ++v) {
+//                    marginal_func.push_back(conditional_v[v].func_integral);
+//                }
+//                AliasTableBuilder marginal_builder = AliasTable::create_builder(marginal_func);
+//                return {move(conditional_v), marginal_builder};
+//            }
+//        };
+//
+//        using AliasTable2D = TAliasTable2D<AliasData2D>;
+//
+//        template<int U, int V>
+//        using StaticAliasTable2D = TAliasTable2D<StaticAliasData2D<U, V>>;
+//
+//        template<int U, int V>
+//        LM_NODISCARD StaticAliasTable2D<U, V> create_static_alias_table2d(const float *func) {
+//            auto builder2d = AliasTable2D::create_builder(func, U, V);
+//            Array<StaticAliasTable<U>, V> conditional_v;
+//            for (int i = 0; i < builder2d.conditional_v.size(); ++i) {
+//                auto builder = builder2d.conditional_v[i];
+//                StaticAliasTable<U> static_alias_table(builder);
+//                conditional_v[i] = static_alias_table;
+//            }
+//            StaticAliasTable<V> marginal(builder2d.marginal);
+//            StaticAliasTable2D<U, V> ret(conditional_v, marginal);
+//            return ret;
+//        }
     }
 }

@@ -54,7 +54,6 @@ namespace luminous {
         class TDistribution2D {
         public:
             using data_type = T;
-            using Builder = typename data_type::Buidler;
         private:
             data_type _data;
         public:
@@ -90,23 +89,23 @@ namespace luminous {
                 return _data.marginal.integral();
             }
 
-            static Builder create_builder(const float *func, int nu, int nv) {
-                vector<Builder> conditional_v;
-                conditional_v.reserve(nv);
-                for (int v = 0; v < nv; ++v) {
-                    vector<float> func_v;
-                    func_v.insert(func_v.end(), &func[v * nu], &func[v * nu + nu]);
-                    Builder builder = Distribution1D::create_builder(func_v);
-                    conditional_v.push_back(builder);
-                }
-                vector<float> marginal_func;
-                marginal_func.reserve(nv);
-                for (int v = 0; v < nv; ++v) {
-                    marginal_func.push_back(conditional_v[v].func_integral);
-                }
-                Builder marginal_builder = Distribution1D::create_builder(marginal_func);
-                return {move(conditional_v), move(marginal_builder)};
-            }
+//            static Builder create_builder(const float *func, int nu, int nv) {
+//                vector<Builder> conditional_v;
+//                conditional_v.reserve(nv);
+//                for (int v = 0; v < nv; ++v) {
+//                    vector<float> func_v;
+//                    func_v.insert(func_v.end(), &func[v * nu], &func[v * nu + nu]);
+//                    Builder builder = Distribution1D::create_builder(func_v);
+//                    conditional_v.push_back(builder);
+//                }
+//                vector<float> marginal_func;
+//                marginal_func.reserve(nv);
+//                for (int v = 0; v < nv; ++v) {
+//                    marginal_func.push_back(conditional_v[v].func_integral);
+//                }
+//                Builder marginal_builder = Distribution1D::create_builder(marginal_func);
+//                return {move(conditional_v), move(marginal_builder)};
+//            }
         };
 
         using Distribution2D = TDistribution2D<Dichotomy2DData>;
