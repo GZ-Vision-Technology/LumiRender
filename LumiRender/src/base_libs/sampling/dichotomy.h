@@ -32,6 +32,7 @@ namespace luminous {
         public:
             using value_type = float;
             using const_value_type = const float;
+            using Builder = DichotomyBuilder;
         public:
             // todo change to indice mode, reduce memory usage
             BufferView<const_value_type> func{};

@@ -74,13 +74,7 @@ namespace luminous {
         }
 
         void Scene::preprocess_meshes() {
-#if USE_ALIAS_TABLE
-            vector<AliasTableBuilder> builders;
-            using Distrib = AliasTable;
-#else
             vector<DichotomyBuilder> builders;
-            using Distrib = DichotomySampler;
-#endif
             auto process_mesh = [&](MeshHandle mesh) {
                 if (!mesh.has_distribute()) {
                     return;
@@ -98,7 +92,7 @@ namespace luminous {
                     float area = triangle_area(p0, p1, p2);
                     areas.push_back(area);
                 }
-                auto builder = Distrib::create_builder(move(areas));
+                auto builder = DichotomySampler::create_builder(move(areas));
                 builders.push_back(builder);
             };
 
