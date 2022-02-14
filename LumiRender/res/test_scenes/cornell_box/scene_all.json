@@ -239,7 +239,7 @@
 				}
 			},
 			"filter": {
-				"type": "TriangleFilter",
+				"type": "GaussianFilter",
 				"param": {
 					"radius": [2,2]
 				}

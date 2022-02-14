@@ -28,7 +28,7 @@ namespace luminous {
 #if USE_ALIAS_TABLE
             _distribution2d = create_static_alias_table2d<tab_size, tab_size>(func);
 #else
-            _distribution2d = create_static_distrib2d<tab_size, tab_size>(func);
+            _distribution2d = create_static_distrib2d_old<tab_size, tab_size>(func);
 #endif
         }
 

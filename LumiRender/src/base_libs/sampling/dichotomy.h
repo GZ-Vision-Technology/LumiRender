@@ -259,7 +259,7 @@ namespace luminous {
         using StaticDichotomy2D = TDichotomy2D<StaticDichotomy2DData<U, V>>;
 
         template<int U, int V>
-        LM_NODISCARD StaticDichotomy2D<U, V> create_static_distrib2d(const float *func) {
+        LM_NODISCARD StaticDichotomy2D<U, V> create_static_distrib2d_old(const float *func) {
             auto builder2d = Dichotomy2D::create_builder(func, U, V);
             Array<StaticDichotomySampler<U>, V> conditional_v;
             for (int i = 0; i < builder2d.conditional_v.size(); ++i) {
