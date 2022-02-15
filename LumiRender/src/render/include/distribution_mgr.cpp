@@ -24,7 +24,8 @@ namespace luminous {
 #endif
         }
 
-        void DistributionMgr::add_distribution(const DichotomyBuilder &builder, bool need_count) {
+        void DistributionMgr::add_distribution(const Distribution1D::Builder &builder, bool need_count) {
+
             _handles.emplace_back(_func_buffer.size(), builder.func.size(),
                                   _CDF_buffer.size(), builder.CDF.size(),
                                   builder.func_integral);
@@ -43,14 +44,18 @@ namespace luminous {
             distributions.clear();
             _func_buffer.allocate_device();
             _func_buffer.synchronize_to_device();
+
+#if USE_ALIAS_TABLE
+
+#else
             _CDF_buffer.allocate_device();
             _CDF_buffer.synchronize_to_device();
-
             for (const auto &handle : _handles) {
                 BufferView<const float> func = _func_buffer.device_buffer_view(handle.func_offset, handle.func_size);
                 BufferView<const float> CDF = _CDF_buffer.device_buffer_view(handle.CDF_offset, handle.CDF_size);
                 distributions.emplace_back(func, CDF, handle.integral);
             }
+#endif
             distributions.allocate_device();
             int count = distributions.size() - _count_distribution;
             if (count > 0) {
@@ -67,11 +72,15 @@ namespace luminous {
             }
             distribution2ds.clear();
             distributions.clear();
+#if USE_ALIAS_TABLE
+
+#else
             for (const auto &handle : _handles) {
                 BufferView<const float> func = _func_buffer.const_host_buffer_view(handle.func_offset, handle.func_size);
                 BufferView<const float> CDF = _CDF_buffer.const_host_buffer_view(handle.CDF_offset, handle.CDF_size);
                 distributions.emplace_back(func, CDF, handle.integral);
             }
+#endif
             int count = distributions.size() - _count_distribution;
             if (count > 0) {
                 auto distribution = Distribution2D(distributions.const_host_buffer_view(_count_distribution, count),
@@ -107,7 +116,7 @@ namespace luminous {
         }
 
         size_t DistributionMgr::size_in_bytes() const {
-            size_t ret;
+            size_t ret = 0u;
             ret += distribution2ds.size_in_bytes();
             ret += distributions.size_in_bytes();
             ret += _handles.size() * sizeof(DistributionHandle);

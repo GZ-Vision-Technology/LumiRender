@@ -74,7 +74,7 @@ namespace luminous {
         }
 
         void Scene::preprocess_meshes() {
-            vector<DichotomyBuilder> builders;
+            vector<Distribution1D::Builder> builders;
             auto process_mesh = [&](MeshHandle mesh) {
                 if (!mesh.has_distribute()) {
                     return;

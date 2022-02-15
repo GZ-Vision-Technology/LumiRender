@@ -14,6 +14,10 @@
 namespace luminous {
 
     inline namespace sampling {
+
+#if USE_ALIAS_TABLE
+
+#else
         struct DichotomyData;
 
         template<typename T>
@@ -27,6 +31,7 @@ namespace luminous {
         class TDistribution2D;
 
         using Distribution2D = TDistribution2D<Distribution2DData>;
+#endif
     }
 
     inline namespace render {
