@@ -38,7 +38,7 @@ namespace luminous {
             template<typename T = std::byte>
             const T *pixel_ptr() const { return reinterpret_cast<const T *>(_pixel.get()); }
 
-            static Image pure_color(float4 color, ColorSpace color_space);
+            static Image pure_color(float4 color, ColorSpace color_space, uint2 res = make_uint2(1u));
 
             static Image load(const luminous_fs::path &fn, ColorSpace color_space, float3 scale = make_float3(1.f));
 
