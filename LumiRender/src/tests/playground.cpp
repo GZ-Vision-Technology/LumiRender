@@ -3,71 +3,58 @@
 //
 
 #include "render/include/distribution_mgr.h"
-#include "gpu/framework/cuda_impl.h"
 #include "core/backend/managed.h"
 #include "base_libs/sampling/alias_table.h"
 #include "base_libs/sampling/distribution.h"
 #include "render/samplers/independent.cpp"
+//#include "render/include/distribution_mgr.cpp"
+//#include "cpu/cpu_impl.cpp"
+#include "util/clock.h"
 
 using namespace luminous;
 using namespace std;
 
-void test_alias() {
-    auto[table, PDF, sum] = luminous::create_alias_table(vector<float>({1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
-
-    AliasData alias_data{BufferView(table.data(), table.size()), BufferView(PDF.data(), PDF.size()), 0.f};
-
-    PCGSampler sampler;
-
-    TAliasTable alias_table(alias_data);
-
-    float ur, pdf;
-    int ofs;
-    float u = 0.1;
-    auto uc = alias_table.sample_discrete(u, &pdf, &ur);
-
-    int a[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-    auto builder = Distribution1D::create_builder({1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-
-
-
-    Distribution1D distribution(BufferView<const float>(builder.func.data(), builder.func.size()),
-                                  BufferView<const float>(builder.CDF.data(), builder.CDF.size()), builder.func_integral);
-
-    int count = 1000000;
-    for (int i = 0; i < count; ++i) {
-        ofs = alias_table.sample_discrete(sampler.next_1d(), &pdf, &ur);
-        a[ofs] += 1;
-    }
-
-    for (int i = 0; i < 10; ++i) {
-        cout << a[i] << endl;
-    }
-}
 
 void test_2d() {
+//    auto device = create_cpu_device();
+//    DistributionMgr _distribution_mgr{device.get()};
     vector<float> weight;
-    for(int i = 0; i < 25; ++i) {
+    static constexpr int width = 5;
+    static constexpr int height = 2 * width;
+    static constexpr int area = width * height;
+    int a[area] = {0};
+    for(int i = 0; i < area; ++i) {
         weight.push_back(i);
+        a[i] = 0;
     }
 
-    auto d2d = create_static_distrib2d<5,5>(weight.data());
-//    auto d2d = create_static_alias_table2d<5,5>(weight.data());
+    auto d2d = create_static_distrib2d<width, height>(weight.data());
+    auto builder = Distribution2D::create_builder(weight.data(), width, height);
 
-    luminous::int2 offset;
-    float p;
-    auto uv = d2d.sample_continuous(luminous::make_float2(0.5, 0.5), &p, &offset);
-    float pdf = d2d.PDF(uv);
-    return;
+    Clock clk;
+
+    PCGSampler sampler;
+    int num = 1000000;
+    for (int i = 0; i < num; ++i) {
+        float p;
+        int2 offset;
+        auto ret = d2d.sample_continuous(sampler.next_2d(), &p, &offset);
+        int index = offset.y * width + offset.x;
+        a[index] += 1;
+    }
+    int cc = 0;
+    for (int i = 0; i < area; ++i) {
+//        cc += a[i];
+        cout << i << "  " << a[i] << "  " << a[i] / float(i) << endl;
+    }
+//    cout << cc << endl;
+//
+//    cout << clk.get_elapsed_time() << endl;
 }
 
 int main() {
 
-
-
-
-    test_alias();
+    test_2d();
 
     return 0;
 }
