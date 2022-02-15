@@ -168,15 +168,15 @@ namespace luminous {
             }
         };
 
-        using AliasTable = TAliasTable<AliasData>;
-
-        template<uint N>
-        using StaticAliasTable = TAliasTable<StaticAliasData<N>>;
-
-        struct AliasTable2DBuilder {
-            vector<AliasTableBuilder> conditional_v;
-            AliasTableBuilder marginal;
-        };
+//        using AliasTable = TAliasTable<AliasData>;
+//
+//        template<uint N>
+//        using StaticAliasTable = TAliasTable<StaticAliasData<N>>;
+//
+//        struct AliasTable2DBuilder {
+//            vector<AliasTableBuilder> conditional_v;
+//            AliasTableBuilder marginal;
+//        };
 
 //        struct AliasData2D {
 //            BufferView<const AliasTable> conditional_v{};

@@ -67,7 +67,7 @@ int main() {
 
 
 
-    test_2d();
+    test_alias();
 
     return 0;
 }
