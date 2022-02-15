@@ -195,7 +195,7 @@ namespace luminous {
             return distributions[mesh.distribute_idx];
         }
 
-        const Dichotomy2D &SceneData::get_distribution2d(index_t idx) const {
+        const Distribution2D &SceneData::get_distribution2d(index_t idx) const {
             return distribution2ds[idx];
         }
 

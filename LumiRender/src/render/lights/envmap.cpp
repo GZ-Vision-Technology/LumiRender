@@ -15,7 +15,7 @@ namespace luminous {
         }
 
         LightEvalContext Envmap::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
-            const Dichotomy2D &distribution2d = scene_data->get_distribution2d(_distribution_idx);
+            const Distribution2D &distribution2d = scene_data->get_distribution2d(_distribution_idx);
             float map_PDF = 0;
             int2 offset;
             float2 uv = distribution2d.sample_continuous(u, &map_PDF, &offset);
@@ -57,7 +57,7 @@ namespace luminous {
             if (sin_theta == 0) {
                 return 0;
             }
-            const Dichotomy2D &distribution2d = data->get_distribution2d(_distribution_idx);
+            const Distribution2D &distribution2d = data->get_distribution2d(_distribution_idx);
             float2 uv = make_float2(phi * inv2Pi, theta * invPi);
             return distribution2d.PDF(uv) / (_2Pi * Pi * sin_theta);
         }

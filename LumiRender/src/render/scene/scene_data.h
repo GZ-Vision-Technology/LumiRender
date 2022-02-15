@@ -21,12 +21,12 @@ namespace luminous {
 
         using Distribution1D = TDichotomySampler<DichotomyData>;
 
-        struct Dichotomy2DData;
+        struct Distribution2DData;
 
         template<typename T>
-        class TDichotomy2D;
+        class TDistribution2D;
 
-        using Dichotomy2D = TDichotomy2D<Dichotomy2DData>;
+        using Distribution2D = TDistribution2D<Distribution2DData>;
     }
 
     inline namespace render {
@@ -58,7 +58,7 @@ namespace luminous {
             // light data
             const LightSampler *light_sampler{};
             BufferView<const Distribution1D> distributions;
-            BufferView<const Dichotomy2D> distribution2ds;
+            BufferView<const Distribution2D> distribution2ds;
 
 #define GEN_GET_FUNCTION(attribute)                                                     \
             ND_XPU_INLINE auto get_##attribute(const MeshHandle &mesh) const {          \
@@ -163,7 +163,7 @@ namespace luminous {
 
             LM_ND_XPU const Distribution1D &get_distribution(index_t inst_id) const;
 
-            LM_ND_XPU const Dichotomy2D &get_distribution2d(index_t idx) const;
+            LM_ND_XPU const Distribution2D &get_distribution2d(index_t idx) const;
         };
     }
 }

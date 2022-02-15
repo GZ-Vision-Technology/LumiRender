@@ -16,7 +16,7 @@ namespace luminous {
             }
             add_distribution(builder2d.marginal);
 #else
-            Dichotomy2DBuilder builder = Dichotomy2D::create_builder(f.data(), u, v);
+            Distribution2DBuilder builder = Distribution2D::create_builder(f.data(), u, v);
             for (const auto& builder_1D : builder.conditional_v) {
                 add_distribution(builder_1D);
             }
@@ -91,7 +91,7 @@ namespace luminous {
             distributions.allocate_device();
             int count = distributions.size() - _count_distribution;
             if (count > 0) {
-                auto distribution = Dichotomy2D(distributions.const_device_buffer_view(_count_distribution, count),
+                auto distribution = Distribution2D(distributions.const_device_buffer_view(_count_distribution, count),
                                                 distributions.back());
                 distribution2ds.push_back(distribution);
                 distribution2ds.allocate_device();
@@ -133,7 +133,7 @@ namespace luminous {
             }
             int count = distributions.size() - _count_distribution;
             if (count > 0) {
-                auto distribution = Dichotomy2D(distributions.const_host_buffer_view(_count_distribution, count),
+                auto distribution = Distribution2D(distributions.const_host_buffer_view(_count_distribution, count),
                                                 distributions.back());
                 distribution2ds.push_back(distribution);
             }

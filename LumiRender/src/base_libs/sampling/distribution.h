@@ -118,10 +118,10 @@ namespace luminous {
             }
         };
 
-        using Distribution2D = TDistribution2D<Dichotomy2DData>;
+        using Distribution2D = TDistribution2D<Distribution2DData>;
 
         template<int U, int V>
-        using StaticDistribution2D = TDistribution2D<StaticDichotomy2DData<U, V>>;
+        using StaticDistribution2D = TDistribution2D<StaticDistribution2DData<U, V>>;
 
 
         template<int U, int V>
