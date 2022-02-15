@@ -12,7 +12,7 @@
 #include <vector>
 
 namespace luminous {
-    inline namespace render {
+    inline namespace sampling {
         struct AliasEntry {
             float prob;
             uint alias;
@@ -69,12 +69,12 @@ namespace luminous {
         public:
             BufferView<const AliasEntry> table{};
             BufferView<const float> func{};
-            float integral{};
+            float func_integral{};
         public:
             AliasData() = default;
 
             AliasData(BufferView<const AliasEntry> t, BufferView<const float> p, float integral)
-                    : table(t), func(p), integral(integral) {}
+                    : table(t), func(p), func_integral(integral) {}
         };
 
         template<uint N>
@@ -129,7 +129,7 @@ namespace luminous {
                 u = std::min<float>(u - offset, OneMinusEpsilon);
                 AliasEntry alias_entry = _data.table[offset];
                 offset = select(u < alias_entry.prob, offset, alias_entry.alias);
-                *p = PDF(offset);
+                *p = PMF(offset);
                 *u_remapped = select(u < alias_entry.prob,
                                      std::min<float>(u / alias_entry.prob, OneMinusEpsilon),
                                      std::min<float>((1 - u) / (1 - alias_entry.prob), OneMinusEpsilon));
@@ -144,7 +144,7 @@ namespace luminous {
                 u = std::min<float>(u - *ofs, OneMinusEpsilon);
                 AliasEntry alias_entry = _data.table[*ofs];
                 *ofs = select(u < alias_entry.prob, *ofs, alias_entry.alias);
-                *p = PDF(*ofs);
+                *p = PMF(*ofs);
                 float u_remapped = select(u < alias_entry.prob,
                                           std::min<float>(u / alias_entry.prob, OneMinusEpsilon),
                                           std::min<float>((1 - u) / (1 - alias_entry.prob), OneMinusEpsilon));
@@ -157,7 +157,7 @@ namespace luminous {
 
             LM_ND_XPU size_t size() const { return _data.func.size(); }
 
-            LM_ND_XPU float PDF(uint32_t i) const {
+            LM_ND_XPU float PMF(uint32_t i) const {
                 DCHECK(i < size());
                 return func_at(i) / integral();
             }

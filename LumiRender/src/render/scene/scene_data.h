@@ -16,7 +16,19 @@ namespace luminous {
     inline namespace sampling {
 
 #if USE_ALIAS_TABLE
+        struct AliasData;
 
+        template<typename T>
+        class TAliasTable;
+
+        using Distribution1D = TAliasTable<AliasData>;
+
+        struct Distribution2DData;
+
+        template<typename T>
+        class TDistribution2D;
+
+        using Distribution2D = TDistribution2D<Distribution2DData>;
 #else
         struct DichotomyData;
 

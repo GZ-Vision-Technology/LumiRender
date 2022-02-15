@@ -12,11 +12,21 @@ namespace luminous {
     inline namespace render {
 
 #if USE_ALIAS_TABLE
+
         struct DistributionHandle {
         public:
             size_t offset;
             size_t size;
+            float integral;
+
+            DistributionHandle(size_t offset,
+                               size_t size,
+                               float integral)
+                    : offset(offset),
+                      size(size),
+                      integral(integral) {}
         };
+
 #else
         struct DistributionHandle {
             DistributionHandle() = default;
@@ -42,7 +52,7 @@ namespace luminous {
 
         class DistributionMgr {
         protected:
-            Device * _device;
+            Device *_device;
 #if  USE_ALIAS_TABLE
             Managed<AliasEntry> _alias_entry_buffer{_device};
 #else

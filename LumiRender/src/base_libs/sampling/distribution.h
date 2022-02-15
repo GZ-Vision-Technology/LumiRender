@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "alias_table.h"
 #include "dichotomy.h"
+#include "alias_table.h"
 
 namespace luminous {
     inline namespace sampling {
