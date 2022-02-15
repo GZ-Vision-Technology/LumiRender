@@ -107,7 +107,7 @@ namespace luminous {
                 }
                 DCHECK(!is_nan(du));
 
-                *pdf = (_data.func_integral > 0) ? _data.func[offset] / _data.func_integral : 0;
+                *pdf = PDF(offset);
                 return (offset + du) / size();
             }
 
@@ -131,6 +131,12 @@ namespace luminous {
             LM_ND_XPU float PMF(Index i) const {
                 DCHECK(i >= 0 && i < size());
                 return integral() > 0 ? (func_at(i) / (integral() * size())) : 0;
+            }
+
+            LM_ND_XPU float PDF(uint32_t i) const {
+                DCHECK(i < size());
+                float f = func_at(i);
+                return integral() > 0 ? (func_at(i) / integral()) : 0;
             }
 
             static DichotomyBuilder create_builder(std::vector<float> func) {

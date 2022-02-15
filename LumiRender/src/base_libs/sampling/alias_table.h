@@ -29,8 +29,6 @@ namespace luminous {
 
         LM_ND_INLINE auto create_alias_table(vector<float> weights) {
             auto sum = std::reduce(weights.cbegin(), weights.cend(), 0.0);
-            auto inv_sum = 1.0 / sum;
-
             auto ratio = static_cast<double>(weights.size()) / sum;
             static thread_local vector<uint> over;
             static thread_local vector<uint> under;
@@ -62,7 +60,7 @@ namespace luminous {
             for (auto i : over) { table[i] = {1.0f, i}; }
             for (auto i : under) { table[i] = {1.0f, i}; }
 
-            return std::tuple{std::move(table), std::move(weights), float(sum)};
+            return std::tuple{std::move(table), std::move(weights), float(sum / weights.size())};
         }
 
         struct AliasData {
@@ -144,7 +142,7 @@ namespace luminous {
                 u = std::min<float>(u - *ofs, OneMinusEpsilon);
                 AliasEntry alias_entry = _data.table[*ofs];
                 *ofs = select(u < alias_entry.prob, *ofs, alias_entry.alias);
-                *p = PMF(*ofs);
+                *p = PDF(*ofs);
                 float u_remapped = select(u < alias_entry.prob,
                                           std::min<float>(u / alias_entry.prob, OneMinusEpsilon),
                                           std::min<float>((1 - u) / (1 - alias_entry.prob), OneMinusEpsilon));
@@ -157,9 +155,16 @@ namespace luminous {
 
             LM_ND_XPU size_t size() const { return _data.func.size(); }
 
+            LM_ND_XPU float PDF(uint32_t i) const {
+                DCHECK(i < size());
+                float f = func_at(i);
+                return integral() > 0 ? (func_at(i) / integral()) : 0;
+            }
+
             LM_ND_XPU float PMF(uint32_t i) const {
                 DCHECK(i < size());
-                return func_at(i) / integral();
+                float f = func_at(i);
+                return integral() > 0 ? (func_at(i) / (integral() * size())) : 0;
             }
 
             static AliasTableBuilder create_builder(std::vector<float> weights) {
