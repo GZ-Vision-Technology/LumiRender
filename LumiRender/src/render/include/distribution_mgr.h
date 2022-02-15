@@ -10,6 +10,14 @@
 
 namespace luminous {
     inline namespace render {
+
+#if USE_ALIAS_TABLE
+        struct DistributionHandle {
+        public:
+            size_t offset;
+            size_t size;
+        };
+#else
         struct DistributionHandle {
             DistributionHandle() = default;
 
@@ -30,48 +38,39 @@ namespace luminous {
             size_t CDF_size;
             float integral;
         };
-
-        struct AliasTableHandle {
-        public:
-            size_t offset;
-            size_t size;
-        };
+#endif
 
         class DistributionMgr {
         protected:
             Device * _device;
-            Managed<float> _func_buffer{_device};
+#if  USE_ALIAS_TABLE
+            Managed<AliasEntry> _alias_entry_buffer{_device};
+#else
             Managed<float> _CDF_buffer{_device};
-            /**
-             * count of distribution1d
-             */
-            size_t _count_distribution{0};
+#endif
+            Managed<float> _func_buffer{_device};
+
             /**
              * the first _count_distribution is independent distribution1d
              * and the rest are distribution1d make up the distribution2d
              */
             std::vector<DistributionHandle> _handles;
 
-            Managed<AliasEntry> _alias_entry_buffer{_device};
-            Managed<float> _alias_PMF_buffer{_device};
-
-            std::vector<AliasTableHandle> _alias_table_handles;
+            /**
+             * count of distribution1d
+             */
+            size_t _count_distribution{0};
 
         public:
-#if USE_ALIAS_TABLE
-            Managed<AliasTable> alias_tables{_device};
-            Managed<AliasTable2D> alias_table2ds{_device};
-#else
+
             Managed<Distribution1D> distributions{_device};
             Managed<Distribution2D> distribution2ds{_device};
-#endif
+
             explicit DistributionMgr(Device *device) : _device(device) {}
 
-            void add_distribution(const DichotomyBuilder &builder, bool need_count = false);
+            void add_distribution(const Distribution1D::Builder &builder, bool need_count = false);
 
             void add_distribution2d(const vector<float> &f, int nu, int nv);
-
-            void add_distribution(const AliasTableBuilder &builder, bool need_count = false);
 
             void init_on_host();
 
