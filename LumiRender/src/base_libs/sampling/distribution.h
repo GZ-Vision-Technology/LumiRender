@@ -126,7 +126,7 @@ namespace luminous {
 
         template<int U, int V>
         LM_NODISCARD static StaticDistribution2D<U, V> create_static_distrib2d(const float *func) {
-            auto builder2d = Dichotomy2D::create_builder(func, U, V);
+            auto builder2d = Distribution2D::create_builder(func, U, V);
             Array<StaticDistribution1D<U>, V> conditional_v;
             for (int i = 0; i < builder2d.conditional_v.size(); ++i) {
                 auto builder = builder2d.conditional_v[i];
@@ -134,7 +134,7 @@ namespace luminous {
                 conditional_v[i] = static_distribution;
             }
             StaticDistribution1D<V> marginal(builder2d.marginal);
-            StaticDichotomy2D<U, V> ret(conditional_v, marginal);
+            StaticDistribution2D<U, V> ret(conditional_v, marginal);
             return ret;
         }
     }

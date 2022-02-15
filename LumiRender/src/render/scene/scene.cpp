@@ -92,7 +92,7 @@ namespace luminous {
                     float area = triangle_area(p0, p1, p2);
                     areas.push_back(area);
                 }
-                auto builder = DichotomySampler::create_builder(move(areas));
+                auto builder = Distribution1D::create_builder(move(areas));
                 builders.push_back(builder);
             };
 

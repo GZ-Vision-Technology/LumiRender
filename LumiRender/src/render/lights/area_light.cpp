@@ -17,7 +17,7 @@ namespace luminous {
 
         LightEvalContext AreaLight::sample(LightLiSample *lls, float2 u, const SceneData *scene_data) const {
             auto mesh = scene_data->get_mesh(_inst_idx);
-            const DichotomySampler &distrib = scene_data->distributions[mesh.distribute_idx];
+            const Distribution1D &distrib = scene_data->distributions[mesh.distribute_idx];
             float PMF = 0;
             size_t triangle_id = distrib.sample_discrete(u.x, &PMF, &u.x);
             float2 bary = square_to_triangle(u);

@@ -19,7 +19,7 @@ namespace luminous {
         template<typename T>
         class TDichotomySampler;
 
-        using DichotomySampler = TDichotomySampler<DichotomyData>;
+        using Distribution1D = TDichotomySampler<DichotomyData>;
 
         struct Dichotomy2DData;
 
@@ -57,7 +57,7 @@ namespace luminous {
 
             // light data
             const LightSampler *light_sampler{};
-            BufferView<const DichotomySampler> distributions;
+            BufferView<const Distribution1D> distributions;
             BufferView<const Dichotomy2D> distribution2ds;
 
 #define GEN_GET_FUNCTION(attribute)                                                     \
@@ -161,7 +161,7 @@ namespace luminous {
 
             LM_ND_XPU const Texture &get_texture(index_t idx) const;
 
-            LM_ND_XPU const DichotomySampler &get_distribution(index_t inst_id) const;
+            LM_ND_XPU const Distribution1D &get_distribution(index_t inst_id) const;
 
             LM_ND_XPU const Dichotomy2D &get_distribution2d(index_t idx) const;
         };
