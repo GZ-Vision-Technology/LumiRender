@@ -182,4 +182,4 @@ namespace luminous {
 
 #endif // __GNUC__
 
-#define USE_ALIAS_TABLE 0
+#define USE_ALIAS_TABLE 1
