@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.17)
 project(LumiRender)
 
+set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};$ENV{OIDN_INSTALL_PATH}")
+
+message("adsfadsfsafdsaf ${CMAKE_PREFIX_PATH}")
+
+
 if (WIN32)
     if(NOT DEFINED ENV{VLD_SDK_PATH})
         message(STATUS "Can not find VLD SDK $ENV{VLD_SDK_PATH} in build environment!")
@@ -52,6 +57,9 @@ set(LUMINOUS_LOCAL_EMBREE ON)
 
 find_package(embree 3 CONFIG REQUIRED)
 
+find_package(OpenImageDenoise CONFIG REQUIRED)
+add_library(oidn_config INTERFACE)
+target_link_libraries(oidn_config INTERFACE OpenImageDenoise)
 
 find_package(OpenImageIO CONFIG REQUIRED)
 
