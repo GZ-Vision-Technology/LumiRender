@@ -20,7 +20,13 @@ namespace luminous {
                                        (y + 0.5f) / tab_size * r.y);
                 float val = filter->evaluate(p);
                 func[i] = abs(val);
+                _lut(x, y) = val;
             }
+            auto sum = std::reduce(_lut.cbegin(), _lut.cend(), 0.0);
+            auto integral = sum / len;
+            std::transform(_lut.cbegin(), _lut.cend(), _lut.begin(), [&](auto val) {
+                return val / integral;
+            });
             init(func.data());
         }
 
@@ -33,10 +39,8 @@ namespace luminous {
             float PDF = 0;
             int2 offset{};
             float2 p = _distribution2d.sample_continuous(abs(u), &PDF, &offset);
-            auto pdf = _distribution2d.PDF(p);
-            float f = _distribution2d.func_at(offset);
             p = p * sign(u);
-            return FilterSample{p, f / _distribution2d.integral() / PDF};
+            return FilterSample{p, _lut(offset) / PDF};
         }
     }
 }
