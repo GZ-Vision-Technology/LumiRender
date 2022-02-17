@@ -3,9 +3,6 @@ project(LumiRender)
 
 set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};$ENV{OIDN_INSTALL_PATH}")
 
-message("adsfadsfsafdsaf ${CMAKE_PREFIX_PATH}")
-
-
 if (WIN32)
     if(NOT DEFINED ENV{VLD_SDK_PATH})
         message(STATUS "Can not find VLD SDK $ENV{VLD_SDK_PATH} in build environment!")
