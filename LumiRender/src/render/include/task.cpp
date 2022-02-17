@@ -183,12 +183,20 @@ namespace luminous {
                 std::unique_ptr<float4[]> output{new float4[res.x * res.y]};
                 bool is_cpu_rendering = _device->is_cpu();
                 float4 *render = _render_buffer.synchronize_and_get_host_data();
-
+                float4 *normal = _normal_buffer.synchronize_and_get_host_data();
                 denoiser.execute(res, output.get(), render);
 
                 std::byte *raw_buffer = reinterpret_cast<std::byte *>(output.release());
-                auto image2 = Image(PixelFormat::RGBA32F, raw_buffer, res);
-                image2.save(film_out_path);
+                auto image_denoised = Image(PixelFormat::RGBA32F, raw_buffer, res);
+                image_denoised.for_each_pixel([&](std::byte *pixel, int i) {
+                    auto fp = reinterpret_cast<float4 *>(pixel);
+                    float4 val = *fp;
+                    val.w = 1.f;
+                    *fp = Spectrum::linear_to_srgb(val);
+                });
+                auto fn = film_out_path.stem().string() + "-denoised" + film_out_path.extension().string();
+                auto denoised_fn = film_out_path.parent_path() / fn;
+                image_denoised.save(denoised_fn);
 
 //                auto denoiser = create_film_optix_denoiser();
 //                std::unique_ptr<float4[]> denoise_output_buffer{new float4[res.x * res.y]};
@@ -225,11 +233,9 @@ namespace luminous {
 //
 //                std::byte *raw_buffer = reinterpret_cast<std::byte *>(denoise_output_buffer.release());
 //                auto image2 = Image(PixelFormat::RGBA32F, raw_buffer, res);
-//
 //                image2.save(film_out_path);
-            } else {
-                image.save(film_out_path);
             }
+            image.save(film_out_path);
         }
 
         void Task::render_gui(double dt) {
