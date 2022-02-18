@@ -29,7 +29,7 @@ namespace luminous {
 
             float eta_scale = 1.f;
 
-            bool non_specular = false;
+            bool fill_denoise_data = false;
 
             if (found_intersection) {
                 si = hit_ctx.compute_surface_interaction(ray);
@@ -66,6 +66,12 @@ namespace luminous {
 
                 if (is_transmissive(NEE_data.bxdf_flags)) {
                     eta_scale *= dot(si.wo, si.g_uvn.normal()) > 0 ? sqr(NEE_data.eta) : sqr(rcp(NEE_data.eta));
+                }
+
+                if (!fill_denoise_data && is_denoise_specular(NEE_data.bxdf_flags)) {
+                    pixel_info.normal = si.g_uvn.normal();
+                    fill_denoise_data = true;
+//                    pixel_info.albedo =
                 }
 
                 Spectrum rr_throughput = throughput * eta_scale;
