@@ -148,12 +148,11 @@ namespace luminous {
             return scene_graph;
         }
 
-        void Task::save_to_file() {
+        void Task::save_to_file(const OutputConfig& oc) {
             float4 *buffer = get_buffer();
             auto res = resolution();
             size_t size = res.x * res.y * pixel_size(PixelFormat::RGBA32F);
-            auto p = new std::byte[size];
-            Image image = Image(PixelFormat::RGBA32F, p, res);
+            Image image = Image::from_data(buffer, res);
             image.for_each_pixel([&](std::byte *pixel, int i) {
                 auto fp = reinterpret_cast<float4 *>(pixel);
                 float4 val = buffer[i];
@@ -178,17 +177,12 @@ namespace luminous {
 
             // denoising
             if (_context->denoise_output()) {
-
                 auto denoiser = Denoiser();
-                std::unique_ptr<float4[]> output{new float4[res.x * res.y]};
-                bool is_cpu_rendering = _device->is_cpu();
+                auto image_denoised = Image::create_empty(PixelFormat::RGBA32F, res);
                 float4 *render = _render_buffer.synchronize_and_get_host_data();
                 float4 *normal = _normal_buffer.synchronize_and_get_host_data();
                 float4 *albedo = _albedo_buffer.synchronize_and_get_host_data();
-                denoiser.execute(res, output.get(), render, normal, albedo);
-
-                std::byte *raw_buffer = reinterpret_cast<std::byte *>(output.release());
-                auto image_denoised = Image(PixelFormat::RGBA32F, raw_buffer, res);
+                denoiser.execute(res, image_denoised.pixel_ptr<float4>(), render, normal, albedo);
                 image_denoised.for_each_pixel([&](std::byte *pixel, int i) {
                     auto fp = reinterpret_cast<float4 *>(pixel);
                     float4 val = *fp;
@@ -198,43 +192,6 @@ namespace luminous {
                 auto fn = film_out_path.stem().string() + "-denoised" + film_out_path.extension().string();
                 auto denoised_fn = film_out_path.parent_path() / fn;
                 image_denoised.save(denoised_fn);
-
-//                auto denoiser = create_film_optix_denoiser();
-//                std::unique_ptr<float4[]> denoise_output_buffer{new float4[res.x * res.y]};
-//                denoiser->init_device();
-//
-//                bool is_cpu_rendering = _device->is_cpu();
-//                const FilmDenoiserBufferViewType denoise_bv_type = is_cpu_rendering
-//                                                                   ? FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM
-//                                                                   : FILMDENOISER_BUFFER_VIEW_TYPE_CUDA_DEVICE_MEM;
-//
-//                FilmDenoiserInputData data;
-//                data.width = res.x;
-//                data.height = res.y;
-//                data.color.type = FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
-//                data.color.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
-//                data.color.address = reinterpret_cast<unsigned long long>(p);
-////                data.albedo.type = denoise_bv_type;
-////                data.albedo.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
-////                data.albedo.address = reinterpret_cast<unsigned long long>(this->get_albedo_buffer(is_cpu_rendering));
-////                data.normal.type = denoise_bv_type;
-////                data.normal.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
-////                data.normal.address = reinterpret_cast<unsigned long long>(this->get_normal_buffer(is_cpu_rendering));
-////                data.flow.type = FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
-////                data.flow.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
-//
-//                data.output.type = FILMDENOISER_BUFFER_VIEW_TYPE_HOST_MEM;
-//                data.output.format = FILMDENOISER_PIXEL_FORMAT_FLOAT4;
-//                data.output.address = reinterpret_cast<unsigned long long>(denoise_output_buffer.get());
-//
-//                denoiser->init_context(data, res.x, res.y, false);
-//
-//                denoiser->exec();
-//                denoiser->get_results();
-//
-//                std::byte *raw_buffer = reinterpret_cast<std::byte *>(denoise_output_buffer.release());
-//                auto image2 = Image(PixelFormat::RGBA32F, raw_buffer, res);
-//                image2.save(film_out_path);
             }
             image.save(film_out_path);
         }
@@ -247,7 +204,7 @@ namespace luminous {
                 auto t = _clock.get_time();
                 cout << "render is complete elapse " << t << " s" << endl;
                 cout << (_output_config.dispatch_num * _output_config.frame_per_dispatch) / t << " fps" << endl;
-                save_to_file();
+                save_to_file(_output_config);
             }
         }
     }
