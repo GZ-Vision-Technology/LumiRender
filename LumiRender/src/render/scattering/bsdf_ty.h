@@ -170,7 +170,7 @@ namespace luminous {
                 if (num == 0) {
                     return {};
                 }
-
+                BSDFHelper helper = _data;
                 int comp = std::min((int) std::floor(uc * num), num - 1);
                 uc = remapping(uc, float(comp) / num, float(comp + 1) / num);
                 int count = 0;
@@ -179,6 +179,7 @@ namespace luminous {
                     if (bxdf.match_flags(flags)) {
                         if (count == comp) {
                             ret = bxdf.sample_f(wo, uc, u, _data.get_helper(), mode);
+                            ret.albedo = bxdf.color(helper);
                             return false;
                         }
                         count += 1;
@@ -186,6 +187,7 @@ namespace luminous {
                     return true;
                 });
                 ret.PDF /= num;
+
                 return ret;
             }
 
@@ -210,6 +212,7 @@ namespace luminous {
                 for_each([&](auto bxdf, int index) {
                     if (index == comp) {
                         ret = bxdf.sample_f(wo, uc, u, _data.get_helper(), mode);
+                        ret.albedo = bxdf.color(helper);
                         return false;
                     } else {
                         return true;
@@ -292,6 +295,7 @@ namespace luminous {
                     ret = std::get<1>(BaseClass::_bxdfs)._sample_f(wo, uc, u, Fr, helper, mode);
                     ret.PDF *= 1 - Fr;
                 }
+                ret.albedo = std::get<0>(BaseClass::_bxdfs).color(helper);
                 return ret;
             }
         };

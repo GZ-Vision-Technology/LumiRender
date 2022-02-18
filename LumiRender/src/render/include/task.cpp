@@ -184,7 +184,8 @@ namespace luminous {
                 bool is_cpu_rendering = _device->is_cpu();
                 float4 *render = _render_buffer.synchronize_and_get_host_data();
                 float4 *normal = _normal_buffer.synchronize_and_get_host_data();
-                denoiser.execute(res, output.get(), render);
+                float4 *albedo = _albedo_buffer.synchronize_and_get_host_data();
+                denoiser.execute(res, output.get(), render, normal, albedo);
 
                 std::byte *raw_buffer = reinterpret_cast<std::byte *>(output.release());
                 auto image_denoised = Image(PixelFormat::RGBA32F, raw_buffer, res);
