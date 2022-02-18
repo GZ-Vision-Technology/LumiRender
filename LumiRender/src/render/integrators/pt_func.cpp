@@ -68,10 +68,10 @@ namespace luminous {
                     eta_scale *= dot(si.wo, si.g_uvn.normal()) > 0 ? sqr(NEE_data.eta) : sqr(rcp(NEE_data.eta));
                 }
 
-                if (!fill_denoise_data && is_denoise_specular(NEE_data.bxdf_flags)) {
-                    pixel_info.normal = si.g_uvn.normal();
+                if (!fill_denoise_data && is_non_specular(NEE_data.bxdf_flags)) {
+                    pixel_info.normal = si.s_uvn.normal();
+                    pixel_info.albedo = NEE_data.albedo;
                     fill_denoise_data = true;
-//                    pixel_info.albedo =
                 }
 
                 Spectrum rr_throughput = throughput * eta_scale;

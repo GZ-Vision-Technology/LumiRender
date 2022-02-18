@@ -77,6 +77,7 @@ namespace luminous {
                 NEE_data->bsdf_PDF = bsdf_sample.PDF;
                 NEE_data->bxdf_flags = bsdf_sample.flags;
                 NEE_data->eta = bsdf_sample.eta;
+                NEE_data->albedo = bsdf_sample.albedo;
                 bsdf_PDF = bsdf_sample.PDF;
                 bsdf_val = bsdf_sample.f_val;
                 Ray ray = si.spawn_ray(NEE_data->wi);
