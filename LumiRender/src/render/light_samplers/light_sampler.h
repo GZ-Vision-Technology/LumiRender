@@ -21,7 +21,7 @@ namespace luminous {
 
         struct SampledLight;
 
-        struct NEEData;
+        struct PathVertex;
 
         struct LightSampleContext;
 
@@ -62,7 +62,7 @@ namespace luminous {
 
             LM_ND_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
                                                         uint64_t traversable_handle,
-                                                        const SceneData *scene_data, NEEData *NEE_data) const;
+                                                        const SceneData *scene_data, PathVertex *vertex) const;
 
             LM_ND_XPU float PMF(const Light &light) const;
 

@@ -51,26 +51,26 @@ namespace luminous {
                     --bounces;
                     continue;
                 }
-                NEEData NEE_data;
-                NEE_data.debug = debug;
+                PathVertex vertex;
+                vertex.debug = debug;
                 Spectrum Ld = light_sampler->estimate_direct_lighting(si, sampler,
                                                                       scene_handle,
-                                                                      hit_ctx.scene_data(), &NEE_data);
-                found_intersection = NEE_data.found_intersection;
-                Spectrum bsdf_ei = NEE_data.bsdf_val / NEE_data.bsdf_PDF;
+                                                                      hit_ctx.scene_data(), &vertex);
+                found_intersection = vertex.found_intersection;
+                Spectrum bsdf_ei = vertex.bsdf_val / vertex.bsdf_PDF;
 
                 throughput *= bsdf_ei;
                 L += Ld * throughput;
 
                 DCHECK(!has_invalid(L));
 
-                if (is_transmissive(NEE_data.bxdf_flags)) {
-                    eta_scale *= dot(si.wo, si.g_uvn.normal()) > 0 ? sqr(NEE_data.eta) : sqr(rcp(NEE_data.eta));
+                if (is_transmissive(vertex.bxdf_flags)) {
+                    eta_scale *= dot(si.wo, si.g_uvn.normal()) > 0 ? sqr(vertex.eta) : sqr(rcp(vertex.eta));
                 }
 
-                if (!fill_denoise_data && is_non_specular(NEE_data.bxdf_flags)) {
+                if (!fill_denoise_data && is_non_specular(vertex.bxdf_flags)) {
                     pixel_info.normal = si.s_uvn.normal();
-                    pixel_info.albedo = NEE_data.albedo;
+                    pixel_info.albedo = vertex.albedo;
                     fill_denoise_data = true;
                 }
 
@@ -83,7 +83,7 @@ namespace luminous {
                     }
                     throughput /= q;
                 }
-                si = NEE_data.next_si;
+                si = vertex.next_si;
             }
 
             pixel_info.Li = L;

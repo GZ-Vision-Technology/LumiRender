@@ -88,9 +88,5 @@ namespace luminous {
         ND_XPU_INLINE bool is_non_specular(BxDFFlags f) {
             return (f & (BxDFFlags::Diffuse | BxDFFlags::Glossy));
         }
-
-        ND_XPU_INLINE bool is_denoise_specular(BxDFFlags f) {
-            return !is_non_specular(f);
-        }
     }
 }
