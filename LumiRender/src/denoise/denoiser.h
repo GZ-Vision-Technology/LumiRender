@@ -24,10 +24,8 @@ namespace luminous {
                 oidn::FilterRef filter = _device.newFilter("RT");
                 filter.setImage("output", output, oidn::Format::Float3, res.x, res.y, 0, sizeof(float4));
                 filter.setImage("color", color, oidn::Format::Float3, res.x, res.y, 0, sizeof(float4));
-                if (normal) {
+                if (normal && albedo) {
                     filter.setImage("normal", normal, oidn::Format::Float3, res.x, res.y, 0, sizeof(float4));
-                }
-                if (albedo) {
                     filter.setImage("albedo", albedo, oidn::Format::Float3, res.x, res.y, 0, sizeof(float4));
                 }
                 // color image is HDR

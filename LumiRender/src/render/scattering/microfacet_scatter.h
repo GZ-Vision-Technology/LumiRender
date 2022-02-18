@@ -29,10 +29,12 @@ namespace luminous {
             }
 
             LM_XPU explicit MicrofacetReflection(Spectrum color, Microfacet microfacet)
-                    : ColoredBxDF(color, GlossyRefl), _microfacet(microfacet) {}
+                    : ColoredBxDF(color, flags_by_alpha(microfacet.max_alpha()) | Reflection),
+                      _microfacet(microfacet) {}
 
             LM_XPU explicit MicrofacetReflection(Spectrum color, float alpha_x, float alpha_y, MicrofacetType type)
-                    : ColoredBxDF(color, GlossyRefl), _microfacet(alpha_x, alpha_y, type) {}
+                    : ColoredBxDF(color, flags_by_alpha(alpha_x, alpha_y) | Reflection),
+                      _microfacet(alpha_x, alpha_y, type) {}
 
             /**
              * must be reflection and eta must be corrected
@@ -80,10 +82,12 @@ namespace luminous {
             using ColoredBxDF::ColoredBxDF;
 
             LM_XPU explicit MicrofacetTransmission(Spectrum color, Microfacet microfacet)
-                    : ColoredBxDF(color, GlossyRefl), _microfacet(microfacet) {}
+                    : ColoredBxDF(color, flags_by_alpha(microfacet.max_alpha()) | Transmission),
+                      _microfacet(microfacet) {}
 
             LM_XPU explicit MicrofacetTransmission(Spectrum color, float alpha_x, float alpha_y, MicrofacetType type)
-                    : ColoredBxDF(color, GlossyRefl), _microfacet(alpha_x, alpha_y, type) {}
+                    : ColoredBxDF(color, flags_by_alpha(alpha_x, alpha_y) | Transmission),
+                      _microfacet(alpha_x, alpha_y, type) {}
 
             ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
                 return ColoredBxDF::weight(helper, Fr) * (1 - Fr);

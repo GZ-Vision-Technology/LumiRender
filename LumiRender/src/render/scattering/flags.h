@@ -21,6 +21,7 @@ namespace luminous {
             Diffuse = 1 << 3,
             Glossy = 1 << 4,
             Specular = 1 << 5,
+            NearSpec = 1 << 6,
             // Composite _BxDFFlags_ definitions
             DiffRefl = Diffuse | Reflection,
             DiffTrans = Diffuse | Transmission,
@@ -30,6 +31,16 @@ namespace luminous {
             SpecTrans = Specular | Transmission,
             All = Diffuse | Glossy | Specular | Reflection | Transmission
         };
+
+        static constexpr float AlphaThreshold = 0.05f;
+
+        ND_XPU_INLINE BxDFFlags flags_by_alpha(float alpha) {
+            return alpha > AlphaThreshold ? Glossy : NearSpec;
+        }
+
+        ND_XPU_INLINE BxDFFlags flags_by_alpha(float alpha_x, float alpha_y) {
+            return flags_by_alpha(std::max(alpha_x, alpha_y));
+        }
 
         enum class TransportMode : uint8_t {
             Radiance,

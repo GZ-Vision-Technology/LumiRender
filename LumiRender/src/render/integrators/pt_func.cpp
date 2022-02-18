@@ -29,14 +29,11 @@ namespace luminous {
 
             float eta_scale = 1.f;
 
+            bool non_specular = false;
+
             if (found_intersection) {
                 si = hit_ctx.compute_surface_interaction(ray);
                 L += throughput * si.Le(-ray.direction(), scene_data);
-                // todo strange performance bug
-//                if (lm_likely(si.has_material())) {
-//                    pixel_info.albedo = make_float3(si.compute_BSDF(scene_data).color());
-//                }
-                pixel_info.normal = si.s_uvn.normal();
             } else {
                 Spectrum env_color = light_sampler->on_miss(ray.direction(), hit_ctx.scene_data(),
                                                                                   throughput);
@@ -67,7 +64,6 @@ namespace luminous {
 
                 DCHECK(!has_invalid(L));
 
-                // todo performance
                 if (is_transmissive(NEE_data.bxdf_flags)) {
                     eta_scale *= dot(si.wo, si.g_uvn.normal()) > 0 ? sqr(NEE_data.eta) : sqr(rcp(NEE_data.eta));
                 }
