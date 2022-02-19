@@ -6,7 +6,7 @@
 #pragma once
 
 #include "render/textures/texture.h"
-#include "attr.h"
+#include "render/textures/attr.h"
 #include "render/scattering/bsdf_wrapper.h"
 #include "core/refl/type_reflection.h"
 

@@ -8,7 +8,7 @@
 #include "light_base.h"
 #include "base_libs/sampling/distribution.h"
 #include "render/textures/texture.h"
-#include "render/materials/attr.h"
+#include "render/textures/attr.h"
 
 #ifndef __CUDACC__
 

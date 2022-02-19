@@ -8,7 +8,7 @@
 #include "render/textures/texture.h"
 #include "render/scattering/bsdf_wrapper.h"
 #include "parser/config.h"
-#include "attr.h"
+#include "render/textures/attr.h"
 #include "core/concepts.h"
 
 

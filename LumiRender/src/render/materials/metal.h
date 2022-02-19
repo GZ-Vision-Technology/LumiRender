@@ -9,7 +9,7 @@
 #include "render/scattering/bsdf_wrapper.h"
 #include "parser/config.h"
 #include "core/concepts.h"
-#include "attr.h"
+#include "render/textures/attr.h"
 
 namespace luminous {
     inline namespace render {
