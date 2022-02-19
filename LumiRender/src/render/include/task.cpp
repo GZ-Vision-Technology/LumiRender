@@ -6,8 +6,6 @@
 #include "render/integrators/megakernel_pt.h"
 #include "render/integrators/cpu_pt.h"
 #include "render/integrators/wavefront/integrator.h"
-#include <core/film_denoiser.h>
-#include <gpu/film_optix_denoiser.h>
 #include "denoise/denoiser.h"
 
 namespace luminous {
