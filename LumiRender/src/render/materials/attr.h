@@ -27,7 +27,8 @@ namespace luminous {
                 return scene_data->get_texture(_tex_idx);
             }
 
-            ND_XPU_INLINE float4 eval_tex(const SceneData *scene_data, const MaterialEvalContext &ctx) const {
+            template<typename T>
+            ND_XPU_INLINE float4 eval_tex(const SceneData *scene_data, T ctx) const {
                 return get_texture(scene_data).eval(ctx);
             }
         };
@@ -51,7 +52,8 @@ namespace luminous {
 
 #endif
 
-            ND_XPU_INLINE float eval(const SceneData *scene_data, const MaterialEvalContext &ctx) const {
+            template<typename T>
+            ND_XPU_INLINE float eval(const SceneData *scene_data, T ctx) const {
                 return tex_valid() ? eval_tex(scene_data, ctx).x : _val;
             }
         };
@@ -81,7 +83,8 @@ namespace luminous {
                 return _val[i];
             }
 
-            ND_XPU_INLINE float2 eval(const SceneData *scene_data, const MaterialEvalContext &ctx) const {
+            template<typename T>
+            ND_XPU_INLINE float2 eval(const SceneData *scene_data, T ctx) const {
                 return tex_valid() ? make_float2(eval_tex(scene_data, ctx)) : _val;
             }
         };
@@ -119,7 +122,8 @@ namespace luminous {
             ND_XPU_INLINE float3 value() const { return make_float3(_val0, _val1, _val2); }
 
 
-            ND_XPU_INLINE float3 eval(const SceneData *scene_data, const MaterialEvalContext &ctx) const {
+            template<typename T>
+            ND_XPU_INLINE float3 eval(const SceneData *scene_data, T ctx) const {
                 return tex_valid() ? make_float3(eval_tex(scene_data, ctx)) : value();
             }
         };
@@ -148,7 +152,8 @@ namespace luminous {
                 return _val[i];
             }
 
-            ND_XPU_INLINE float4 eval(const SceneData *scene_data, const MaterialEvalContext &ctx) const {
+            template<typename T>
+            ND_XPU_INLINE float4 eval(const SceneData *scene_data, T ctx) const {
                 return tex_valid() ? eval_tex(scene_data, ctx) : _val;
             }
         };

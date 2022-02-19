@@ -8,8 +8,12 @@
 #include "light_base.h"
 #include "base_libs/sampling/distribution.h"
 #include "render/textures/texture.h"
+#include "render/materials/attr.h"
+
 #ifndef __CUDACC__
+
 #include "util/image.h"
+
 #endif
 
 namespace luminous {
@@ -19,10 +23,11 @@ namespace luminous {
         // todo make CPU support
         class Envmap : public LightBase {
 
-            DECLARE_REFLECTION(Envmap, LightBase)
+        DECLARE_REFLECTION(Envmap, LightBase)
 
         private:
-            index_t _tex_idx{invalid_uint32};
+//            index_t _tex_idx{invalid_uint32};
+            Attr4D _emission;
             index_t _distribution_idx{invalid_uint32};
             Transform _w2o;
             float3 _scene_center{};
@@ -30,7 +35,7 @@ namespace luminous {
         public:
             CPU_ONLY(explicit Envmap(const LightConfig &config)
                     : LightBase(LightType::Infinite),
-                      _tex_idx(config.texture_config.tex_idx()),
+                      _emission(config.texture_config),
                       _scene_center(config.scene_box.center()),
                       _scene_diameter(config.scene_box.radius() * 2.f),
                       _distribution_idx(config.distribution_idx) {
@@ -39,9 +44,9 @@ namespace luminous {
                 _w2o = (o2w * rotate_x).inverse();
             })
 
-            Envmap(index_t tex_idx, Transform w2o, index_t distribution_idx, Box3f scene_box)
+            Envmap(Attr4D emission, Transform w2o, index_t distribution_idx, Box3f scene_box)
                     : LightBase(LightType::Infinite),
-                      _tex_idx(tex_idx),
+                      _emission(emission),
                       _w2o(w2o),
                       _scene_center(scene_box.center()),
                       _scene_diameter(scene_box.radius() * 2.f),

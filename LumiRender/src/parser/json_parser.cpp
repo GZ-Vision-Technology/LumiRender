@@ -9,90 +9,90 @@
 namespace luminous {
     inline namespace utility {
 
-static
-std::string remove_cxx_comment(std::string source) {
+        static
+        std::string remove_cxx_comment(std::string source) {
 
-  if(source.size() < 2)
-    return std::move(source);
+            if (source.size() < 2)
+                return std::move(source);
 
-  const char *p0 = source.data();
-  const char *p = p0;
-  const char *p2 = p + 1;
-  const char *pend = p + source.size();
+            const char *p0 = source.data();
+            const char *p = p0;
+            const char *p2 = p + 1;
+            const char *pend = p + source.size();
 
-  bool in_quote = false;
-  bool in_sline_comment = false;
-  bool in_mline_comment = false;
-  bool all_whitespace = true;
-  const char *pcontent = p;
+            bool in_quote = false;
+            bool in_sline_comment = false;
+            bool in_mline_comment = false;
+            bool all_whitespace = true;
+            const char *pcontent = p;
 
-  std::ostringstream ostrm;
+            std::ostringstream ostrm;
 
-  for(; p2 < pend; ++p, ++p2) {
+            for (; p2 < pend; ++p, ++p2) {
 
-    if(in_quote) {
-      if(*p == '"')
-        in_quote = false;
-      continue;
-    }
+                if (in_quote) {
+                    if (*p == '"')
+                        in_quote = false;
+                    continue;
+                }
 
-    if(in_sline_comment) {
-      if(*p == '\n') {
-        in_sline_comment = false;
-        pcontent = p + (int)all_whitespace;
-      } else if(*p == '\r' && *p2 == '\n') {
-        in_sline_comment = false;
-        pcontent = p + ((int)all_whitespace << 1);
-        p = p2;
-        ++p2;
-      }
-    } else {
-      if(in_mline_comment) {
-        if(*p == '*' && *p2 == '/') {
-          in_mline_comment = false;
-          pcontent = p + 2;
-          p = p2;
-          ++p2;
+                if (in_sline_comment) {
+                    if (*p == '\n') {
+                        in_sline_comment = false;
+                        pcontent = p + (int) all_whitespace;
+                    } else if (*p == '\r' && *p2 == '\n') {
+                        in_sline_comment = false;
+                        pcontent = p + ((int) all_whitespace << 1);
+                        p = p2;
+                        ++p2;
+                    }
+                } else {
+                    if (in_mline_comment) {
+                        if (*p == '*' && *p2 == '/') {
+                            in_mline_comment = false;
+                            pcontent = p + 2;
+                            p = p2;
+                            ++p2;
+                        }
+                    } else {
+                        // !in_quote && !in_sline_comment && !in_mline_comment
+                        if (*p == '"') {
+                            in_quote = true;
+                            all_whitespace = false;
+                        } else if (*p == '/') {
+                            if (*p2 == '*') {
+                                in_mline_comment = true;
+                                ostrm.write(pcontent, p - pcontent);
+                                p = p2;
+                                ++p2;
+                            } else if (*p2 == '/') {
+                                in_sline_comment = true;
+                                ostrm.write(pcontent, p - pcontent);
+                                p = p2;
+                                ++p2;
+                            } else
+                                all_whitespace = false;
+                        } else if (*p == '\n') {
+                            all_whitespace = true;
+                        } else if (*p == '\r' && *p2 == '\n') {
+                            all_whitespace = true;
+                            p = p2;
+                            ++p2;
+                        } else if (all_whitespace && *p != ' ')
+                            all_whitespace = false;
+                    }
+                }
+            }
+
+            if (!in_sline_comment && pcontent != pend) {
+                if (pcontent == p0)
+                    return std::move(source);
+                else
+                    ostrm.write(pcontent, pend - pcontent);
+            }
+
+            return ostrm.str();
         }
-      } else {
-        // !in_quote && !in_sline_comment && !in_mline_comment
-        if(*p == '"') {
-          in_quote = true;
-          all_whitespace = false;
-        } else if(*p == '/') {
-          if(*p2 == '*') {
-            in_mline_comment = true;
-            ostrm.write(pcontent, p - pcontent);
-            p = p2;
-            ++p2;
-          } else if(*p2 == '/') {
-            in_sline_comment = true;
-            ostrm.write(pcontent, p - pcontent);
-            p = p2;
-            ++p2;
-          } else
-            all_whitespace = false;
-        } else if(*p == '\n') {
-          all_whitespace = true;
-        } else if(*p == '\r' && *p2 == '\n') {
-          all_whitespace = true;
-          p = p2;
-          ++p2;
-        } else if(all_whitespace && *p != ' ')
-          all_whitespace = false;
-      }
-    }
-  }
-
-  if(!in_sline_comment && pcontent != pend) {
-    if(pcontent == p0)
-      return std::move(source);
-    else
-      ostrm.write(pcontent, pend - pcontent);
-  }
-
-  return ostrm.str();
-}
 
 
         DataWrap create_json_from_file(const luminous_fs::path &fn) {
@@ -249,6 +249,34 @@ std::string remove_cxx_comment(std::string source) {
             return fc;
         }
 
+        LM_NODISCARD float4 construct_float4(const ParameterSet &val, float4 default_val = make_float4(1.f)) {
+            if (val.data().is_number()) {
+                return make_float4(val.as_float(1.f), 0, 0, 0);
+            } else if (val.data().is_array()) {
+                auto size = val.data().size();
+                if (size == 2) {
+                    return make_float4(val.as_float2(make_float2(default_val)), 0, 0);
+                } else if (size == 3) {
+                    return make_float4(val.as_float3(make_float3(default_val)), 0);
+                } else if (size == 4) {
+                    return val.as_float4(default_val);
+                }
+            }
+            return default_val;
+        }
+
+        MaterialAttrConfig process_attr(const ParameterSet &ps, SceneGraph *scene_graph,
+                                        float4 default_val = make_float4(1.f)) {
+            MaterialAttrConfig ret;
+            if (ps.data().is_string()) {
+                ret.name = ps.as_string();
+                return ret;
+            }
+            ret.val = construct_float4(ps, default_val);
+            ret.set_full_type("ConstantTexture");
+            return ret;
+        }
+
         //	"camera" : {
         //		"type" : "PinholeCamera",
         //		"param" : {
@@ -288,7 +316,7 @@ std::string remove_cxx_comment(std::string source) {
         //            "intensity": [10,1,6]
         //        }
         //    }
-        LightConfig parse_light(const ParameterSet &ps) {
+        LightConfig parse_light(const ParameterSet &ps, SceneGraph *scene_graph) {
             LightConfig ret;
             std::string type = ps["type"].as_string("PointLight");
             ret.set_full_type(type);
@@ -297,7 +325,7 @@ std::string remove_cxx_comment(std::string source) {
                 ret.position = param["pos"].as_float3(make_float3(0.f));
                 ret.intensity = param["intensity"].as_float3(make_float3(0.f));
             } else if (type == "Envmap") {
-                ret.texture_config.name = param["key"].as_string("");
+                ret.texture_config = process_attr(param["key"], scene_graph, make_float4(0.f));
                 ret.scale = param["scale"].as_float3(make_float3(1.f));
                 ret.o2w_config = parse_transform(param["transform"]);
             } else if (type == "SpotLight") {
@@ -309,14 +337,14 @@ std::string remove_cxx_comment(std::string source) {
             return ret;
         }
 
-        std::vector<LightConfig> parse_lights(const DataWrap &lights) {
+        std::vector<LightConfig> parse_lights(const DataWrap &lights, SceneGraph *scene_graph) {
             std::vector<LightConfig> ret;
             if (!lights.is_array()) {
                 return ret;
             }
             ret.reserve(lights.size());
             for (const auto &light : lights) {
-                LightConfig lc = parse_light(ParameterSet(light));
+                LightConfig lc = parse_light(ParameterSet(light), scene_graph);
                 ret.push_back(lc);
             }
             return ret;
@@ -335,21 +363,6 @@ std::string remove_cxx_comment(std::string source) {
             }
         }
 
-        LM_NODISCARD float4 construct_float4(const ParameterSet &val, float4 default_val = make_float4(1.f)) {
-            if (val.data().is_number()) {
-                return make_float4(val.as_float(1.f), 0, 0, 0);
-            } else if (val.data().is_array()) {
-                auto size = val.data().size();
-                if (size == 2) {
-                    return make_float4(val.as_float2(make_float2(default_val)), 0, 0);
-                } else if (size == 3) {
-                    return make_float4(val.as_float3(make_float3(default_val)), 0);
-                } else if (size == 4) {
-                    return val.as_float4(default_val);
-                }
-            }
-            return default_val;
-        }
 
         MaterialAttrConfig parse_texture(const ParameterSet &ps) {
             std::string type;
@@ -383,17 +396,6 @@ std::string remove_cxx_comment(std::string source) {
                 config.fill_tex_idx(ret.size());
                 ret.push_back(config);
             }
-            return ret;
-        }
-
-        MaterialAttrConfig process_attr(const ParameterSet &ps, SceneGraph *scene_graph, float4 default_val = make_float4(1.f)) {
-            MaterialAttrConfig ret;
-            if (ps.data().is_string()) {
-                ret.name = ps.as_string();
-                return ret;
-            }
-            ret.val = construct_float4(ps, default_val);
-            ret.set_full_type("ConstantTexture");
             return ret;
         }
 
@@ -474,7 +476,7 @@ std::string remove_cxx_comment(std::string source) {
             scene_graph->shape_configs = parse_shapes(shapes);
             scene_graph->sensor_config = parse_sensor(ParameterSet(_data["camera"]));
             scene_graph->sampler_config = parse_sampler(ParameterSet(_data["sampler"]));
-            scene_graph->light_configs = parse_lights(_data.value("lights", DataWrap()));
+            scene_graph->light_configs = parse_lights(_data.value("lights", DataWrap()), scene_graph.get());
             scene_graph->light_sampler_config = parse_light_sampler(ParameterSet(_data["light_sampler"]));
             scene_graph->set_tex_configs(move(parse_textures(_data["textures"])));
             scene_graph->material_configs = parse_materials(_data["materials"], scene_graph.get());
