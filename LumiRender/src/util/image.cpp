@@ -16,7 +16,6 @@
 
 #include "ext/tinyexr/tinyexr.h"
 #include "core/logging.h"
-#include "core/memory/util.h"
 
 namespace luminous {
 

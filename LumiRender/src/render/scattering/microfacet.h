@@ -342,6 +342,10 @@ namespace luminous {
                        0.000640711f * Pow<4>(x);
             }
 
+            LM_ND_XPU float max_alpha() const {
+                return std::max(_alpha_x, _alpha_y);
+            }
+
             LM_ND_XPU bool effectively_smooth() const {
                 return std::max(_alpha_x, _alpha_y) < 1e-3f;
             }

@@ -41,12 +41,12 @@ namespace luminous {
         Spectrum LightSampler::estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
                                                         uint64_t traversable_handle,
                                                         const SceneData *scene_data,
-                                                        NEEData *NEE_data) const {
+                                                        PathVertex *vertex) const {
             auto sampled_light = sample(LightSampleContext(si), sampler.next_1d());
             if (sampled_light.is_valid()) {
                 return sampled_light.light->estimate_direct_lighting(si, sampler,
                                                                      traversable_handle, scene_data,
-                                                                     NEE_data) / sampled_light.PMF;
+                                                                     vertex) / sampled_light.PMF;
             }
             return {0.f};
         }

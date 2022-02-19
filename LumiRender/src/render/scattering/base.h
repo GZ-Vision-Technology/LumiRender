@@ -14,6 +14,7 @@ namespace luminous {
 
         struct BSDFSample {
             Spectrum f_val{};
+            Spectrum albedo{};
             float3 wi{};
             float PDF{-1.f};
             BxDFFlags flags{};

@@ -29,14 +29,11 @@ namespace luminous {
 
             float eta_scale = 1.f;
 
+            bool fill_denoise_data = false;
+
             if (found_intersection) {
                 si = hit_ctx.compute_surface_interaction(ray);
                 L += throughput * si.Le(-ray.direction(), scene_data);
-                // todo strange performance bug
-//                if (lm_likely(si.has_material())) {
-//                    pixel_info.albedo = make_float3(si.compute_BSDF(scene_data).color());
-//                }
-                pixel_info.normal = si.s_uvn.normal();
             } else {
                 Spectrum env_color = light_sampler->on_miss(ray.direction(), hit_ctx.scene_data(),
                                                                                   throughput);
@@ -54,22 +51,27 @@ namespace luminous {
                     --bounces;
                     continue;
                 }
-                NEEData NEE_data;
-                NEE_data.debug = debug;
+                PathVertex vertex;
+                vertex.debug = debug;
                 Spectrum Ld = light_sampler->estimate_direct_lighting(si, sampler,
                                                                       scene_handle,
-                                                                      hit_ctx.scene_data(), &NEE_data);
-                found_intersection = NEE_data.found_intersection;
-                Spectrum bsdf_ei = NEE_data.bsdf_val / NEE_data.bsdf_PDF;
+                                                                      hit_ctx.scene_data(), &vertex);
+                found_intersection = vertex.found_intersection;
+                Spectrum bsdf_ei = vertex.bsdf_val / vertex.bsdf_PDF;
 
                 throughput *= bsdf_ei;
                 L += Ld * throughput;
 
                 DCHECK(!has_invalid(L));
 
-                // todo performance
-                if (is_transmissive(NEE_data.bxdf_flags)) {
-                    eta_scale *= dot(si.wo, si.g_uvn.normal()) > 0 ? sqr(NEE_data.eta) : sqr(rcp(NEE_data.eta));
+                if (is_transmissive(vertex.bxdf_flags)) {
+                    eta_scale *= dot(si.wo, si.g_uvn.normal()) > 0 ? sqr(vertex.eta) : sqr(rcp(vertex.eta));
+                }
+
+                if (!fill_denoise_data && is_non_specular(vertex.bxdf_flags)) {
+                    pixel_info.normal = si.s_uvn.normal();
+                    pixel_info.albedo = vertex.albedo;
+                    fill_denoise_data = true;
                 }
 
                 Spectrum rr_throughput = throughput * eta_scale;
@@ -81,7 +83,7 @@ namespace luminous {
                     }
                     throughput /= q;
                 }
-                si = NEE_data.next_si;
+                si = vertex.next_si;
             }
 
             pixel_info.Li = L;

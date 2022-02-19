@@ -259,8 +259,9 @@ namespace luminous {
             ND_XPU_INLINE const SceneData *scene_data() const { return data; }
         };
 
-        struct NEEData {
+        struct PathVertex {
             Spectrum bsdf_val{0.f};
+            Spectrum albedo{};
             float bsdf_PDF{-1.f};
             float3 wi{0.f};
             BxDFFlags bxdf_flags{Unset};

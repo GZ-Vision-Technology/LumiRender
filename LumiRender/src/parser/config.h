@@ -221,6 +221,9 @@ namespace luminous {
             std::string fn;
             int dispatch_num{};
             int frame_per_dispatch{};
+            bool normal{false};
+            bool albedo{false};
+            bool normal_remapping{false};
         };
 
         struct FilterConfig : Config {

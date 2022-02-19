@@ -649,7 +649,10 @@
     },
     "output": {
         "fn": "scene.png",
-        "dispatch_num": 4096
+        "albedo" : true,
+        "normal" : true,
+        "normal_remapping" : true,
+        "dispatch_num": 64
     },
     "camera": {
         "type": "ThinLensCamera",

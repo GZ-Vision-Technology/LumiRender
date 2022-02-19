@@ -71,6 +71,10 @@ namespace luminous {
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                         TransportMode mode = TransportMode::Radiance) const;
 
+                ND_XPU_INLINE Spectrum color(BSDFHelper helper) const {
+                    return Spectrum(_weight);
+                }
+
                 /**
                  * must be reflection
                  */

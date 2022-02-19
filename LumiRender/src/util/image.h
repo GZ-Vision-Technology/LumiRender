@@ -14,6 +14,7 @@
 #include "core/concepts.h"
 #include "image_base.h"
 #include "parallel.h"
+#include "core/memory/util.h"
 
 namespace luminous {
     inline namespace utility {
@@ -33,10 +34,13 @@ namespace luminous {
 
             Image(const Image &other) = delete;
 
-            Image& operator = (const Image &other) = delete;
+            Image &operator=(const Image &other) = delete;
 
             template<typename T = std::byte>
             const T *pixel_ptr() const { return reinterpret_cast<const T *>(_pixel.get()); }
+
+            template<typename T = std::byte>
+            T *pixel_ptr() { return reinterpret_cast<T*>(const_cast<std::byte *>(_pixel.get())); }
 
             static Image pure_color(float4 color, ColorSpace color_space, uint2 res = make_uint2(1u));
 
@@ -45,6 +49,21 @@ namespace luminous {
             static Image load_hdr(const luminous_fs::path &fn, ColorSpace color_space, float3 scale = make_float3(1.f));
 
             static Image load_exr(const luminous_fs::path &fn, ColorSpace color_space, float3 scale = make_float3(1.f));
+
+            static Image create_empty(PixelFormat pixel_format, uint2 res) {
+                size_t size_in_bytes = pixel_size(pixel_format) * res.x * res.y;
+                auto pixel = new_array(size_in_bytes);
+                return {pixel_format, pixel, res};
+            }
+
+            template<typename T>
+            static Image from_data(T *data, uint2 res) {
+                size_t size_in_bytes = sizeof(T) * res.x * res.y;
+                auto pixel = new_array(size_in_bytes);
+                auto pixel_format = PixelFormatImpl<T>::format;
+                std::memcpy(pixel, data, size_in_bytes);
+                return {pixel_format, pixel, res};
+            }
 
             /**
              * ".bmp" or ".png" or ".tga" or ".jpg" or ".jpeg"

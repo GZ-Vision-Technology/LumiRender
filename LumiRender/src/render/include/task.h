@@ -48,7 +48,7 @@ namespace luminous {
                 _integrator->update();
             }
 
-            void save_to_file();
+            void save_to_file(const OutputConfig& oc);
 
             LM_NODISCARD bool complete() const {
                 return _dispatch_num > _output_config.dispatch_num;

@@ -17,6 +17,7 @@ if (LUMINOUS_RENDER_ENABLE_CUDA_DEFAULT)
                 luminous-gpu
                 luminous-cpu
                 luminous-render
+                luminous-denoise
                 luminous-base_libs
                 luminous-view
                 luminous-util)
@@ -61,3 +62,4 @@ add_subdirectory(base_libs)
 add_subdirectory(tests)
 add_subdirectory(apps)
 add_subdirectory(render)
+add_subdirectory(denoise)

@@ -462,6 +462,9 @@ std::string remove_cxx_comment(std::string source) {
             ret.fn = ps["fn"].as_string("luminous.png");
             ret.dispatch_num = ps["dispatch_num"].as_int(0);
             ret.frame_per_dispatch = ps["frame_per_dispatch"].as_int(1);
+            ret.albedo = ps["albedo"].as_bool(false);
+            ret.normal = ps["normal"].as_bool(false);
+            ret.normal_remapping = ps["normal_remapping"].as_bool(false);
             return ret;
         }
 

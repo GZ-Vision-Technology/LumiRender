@@ -63,7 +63,7 @@ namespace luminous {
         }
 
         Spectrum Light::MIS_sample_BSDF(const SurfaceInteraction &si, const BSDFWrapper &bsdf,
-                                        Sampler &sampler, uint64_t traversable_handle, NEEData *NEE_data,
+                                        Sampler &sampler, uint64_t traversable_handle, PathVertex *vertex,
                                         const SceneData *data) const {
             Spectrum Ld(0.f);
             float light_PDF = 0, bsdf_PDF = 0;
@@ -72,25 +72,26 @@ namespace luminous {
             float2 u = sampler.next_2d();
             auto bsdf_sample = bsdf.sample_f(si.wo, uc, u);
             if (bsdf_sample.valid()) {
-                NEE_data->wi = bsdf_sample.wi;
-                NEE_data->bsdf_val = bsdf_sample.f_val;
-                NEE_data->bsdf_PDF = bsdf_sample.PDF;
-                NEE_data->bxdf_flags = bsdf_sample.flags;
-                NEE_data->eta = bsdf_sample.eta;
+                vertex->wi = bsdf_sample.wi;
+                vertex->bsdf_val = bsdf_sample.f_val;
+                vertex->bsdf_PDF = bsdf_sample.PDF;
+                vertex->bxdf_flags = bsdf_sample.flags;
+                vertex->eta = bsdf_sample.eta;
+                vertex->albedo = bsdf_sample.albedo;
                 bsdf_PDF = bsdf_sample.PDF;
                 bsdf_val = bsdf_sample.f_val;
-                Ray ray = si.spawn_ray(NEE_data->wi);
+                Ray ray = si.spawn_ray(vertex->wi);
                 HitContext hit_ctx{data};
-                NEE_data->found_intersection = intersect_closest(traversable_handle, ray, &hit_ctx.hit_info);
-                if (hit_ctx.is_hit() && (NEE_data->next_si = hit_ctx.compute_surface_interaction(ray)).light == this) {
-                    NEE_data->next_si.update_PDF_pos(data->compute_prim_PMF(hit_ctx.hit_info));
-                    Li = NEE_data->next_si.Le(-NEE_data->wi, data);
-                    light_PDF = as<AreaLight>()->PDF_Li(LightSampleContext(si), LightEvalContext{NEE_data->next_si},
-                                                        NEE_data->wi, data);
-                } else if (!NEE_data->found_intersection && is_infinite()) {
+                vertex->found_intersection = intersect_closest(traversable_handle, ray, &hit_ctx.hit_info);
+                if (hit_ctx.is_hit() && (vertex->next_si = hit_ctx.compute_surface_interaction(ray)).light == this) {
+                    vertex->next_si.update_PDF_pos(data->compute_prim_PMF(hit_ctx.hit_info));
+                    Li = vertex->next_si.Le(-vertex->wi, data);
+                    light_PDF = as<AreaLight>()->PDF_Li(LightSampleContext(si), LightEvalContext{vertex->next_si},
+                                                        vertex->wi, data);
+                } else if (!vertex->found_intersection && is_infinite()) {
                     Li = as<Envmap>()->on_miss(ray.direction(), hit_ctx.scene_data());
-                    light_PDF = as<Envmap>()->PDF_Li(LightSampleContext(si), LightEvalContext{NEE_data->next_si},
-                                                     NEE_data->wi, data);
+                    light_PDF = as<Envmap>()->PDF_Li(LightSampleContext(si), LightEvalContext{vertex->next_si},
+                                                     vertex->wi, data);
                 }
                 float weight = bsdf_sample.is_specular() ? 1 : MIS_weight(bsdf_PDF, light_PDF);
                 Ld = bsdf_val * Li * weight / bsdf_PDF;
@@ -101,10 +102,10 @@ namespace luminous {
 
         Spectrum Light::estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
                                                  uint64_t traversable_handle, const SceneData *scene_data,
-                                                 NEEData *NEE_data) const {
+                                                 PathVertex *vertex) const {
             auto bsdf = si.compute_BSDF(scene_data);
             Spectrum Ld = MIS_sample_light(si, bsdf, sampler, traversable_handle, scene_data);
-            return Ld + MIS_sample_BSDF(si, bsdf, sampler, traversable_handle, NEE_data, scene_data);
+            return Ld + MIS_sample_BSDF(si, bsdf, sampler, traversable_handle, vertex, scene_data);
         }
 
         bool Light::is_delta() const {
