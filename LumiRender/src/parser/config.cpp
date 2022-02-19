@@ -117,7 +117,7 @@ namespace luminous {
         }
 
         void LightConfig::fill_tex_config(vector<MaterialAttrConfig> &tex_configs) {
-            if (type() != full_type("Envmap") || !texture_config.has_image()) {
+            if (type() != full_type("Envmap") || texture_config.name.empty()) {
                 return;
             }
             int idx = lstd::find_index_if(tex_configs, [&](const MaterialAttrConfig &tex_config) {
