@@ -148,7 +148,7 @@ namespace luminous {
             return scene_graph;
         }
 
-        void Task::save_to_file(const OutputConfig& oc) {
+        void Task::save_to_file(const OutputConfig &oc) {
             float4 *buffer = get_buffer();
             auto res = resolution();
             size_t size = res.x * res.y * pixel_size(PixelFormat::RGBA32F);
@@ -158,6 +158,14 @@ namespace luminous {
                 float4 val = buffer[i];
                 *fp = Spectrum::linear_to_srgb(val);
             });
+
+            auto change_fn = [&](const std::filesystem::path &output_path,
+                                 const std::string &suffix,
+                                 std::string ext = "") {
+                ext = ext.empty() ? output_path.extension().string() : ext;
+                auto fn = output_path.stem().string() + suffix + ext;
+                return output_path.parent_path() / fn;
+            };
 
             luminous_fs::path film_out_path = _context->output_film_path();
             luminous_fs::path scene_path = _context->scene_file();
@@ -174,14 +182,14 @@ namespace luminous {
                 // Relative path is relative to scene directory.
                 film_out_path = scene_path.parent_path() / film_out_path;
             }
-
+            float4 *render = _render_buffer.synchronize_and_get_host_data();
+            float4 *normal = _normal_buffer.synchronize_and_get_host_data();
+            float4 *albedo = _albedo_buffer.synchronize_and_get_host_data();
             // denoising
             if (_context->denoise_output()) {
                 auto denoiser = Denoiser();
                 auto image_denoised = Image::create_empty(PixelFormat::RGBA32F, res);
-                float4 *render = _render_buffer.synchronize_and_get_host_data();
-                float4 *normal = _normal_buffer.synchronize_and_get_host_data();
-                float4 *albedo = _albedo_buffer.synchronize_and_get_host_data();
+
                 denoiser.execute(res, image_denoised.pixel_ptr<float4>(), render, normal, albedo);
                 image_denoised.for_each_pixel([&](std::byte *pixel, int i) {
                     auto fp = reinterpret_cast<float4 *>(pixel);
@@ -189,9 +197,24 @@ namespace luminous {
                     val.w = 1.f;
                     *fp = Spectrum::linear_to_srgb(val);
                 });
-                auto fn = film_out_path.stem().string() + "-denoised" + film_out_path.extension().string();
-                auto denoised_fn = film_out_path.parent_path() / fn;
+                auto denoised_fn = change_fn(film_out_path,"-denoised");
                 image_denoised.save(denoised_fn);
+            }
+            if (oc.albedo) {
+                auto image_albedo = Image::create_empty(PixelFormat::RGBA32F, res);
+                image_albedo.for_each_pixel([&](std::byte *pixel, int i) {
+                    auto fp = reinterpret_cast<float4 *>(pixel);
+                    *fp = albedo[i];
+                });
+                image_albedo.save(change_fn(film_out_path, "-albedo"));
+            }
+            if (oc.normal_remapping) {
+                auto image_normal = Image::create_empty(PixelFormat::RGBA32F, res);
+                image_normal.for_each_pixel([&](std::byte *pixel, int i) {
+                    auto fp = reinterpret_cast<float4 *>(pixel);
+                    *fp = (normal[i] + 1.f) / 2.f;
+                });
+                image_normal.save(change_fn(film_out_path, "-normal_remapping"));
             }
             image.save(film_out_path);
         }

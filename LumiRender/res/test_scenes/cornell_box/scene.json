@@ -250,7 +250,9 @@
 	},
 	"output" : {
 		"fn":"cornell-box.png",
-		"dispatch_num" : 0,
+		"dispatch_num" : 512,
+		"normal_remapping": true,
+		"albedo": true,
 		"frame_per_dispatch": 1
 	}
 }
