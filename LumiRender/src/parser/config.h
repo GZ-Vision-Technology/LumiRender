@@ -83,6 +83,10 @@ namespace luminous {
             // quad param
             float width{};
             float height{};
+
+            // cube param
+            float x{1},y{1},z{1};
+
             // mesh param
             mutable std::vector<float2> tex_coords;
             mutable std::vector<float3> positions;
