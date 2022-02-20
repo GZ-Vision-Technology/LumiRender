@@ -60,17 +60,6 @@ namespace luminous {
             x = x / 2.f;
             y = y / 2.f;
             z = z / 2.f;
-            auto points = vector<float3>{
-                    float3(-x, -y, z),
-                    float3(x, -y, z),
-                    float3(-x, y, z),
-                    float3(x, y, z),
-                    float3(-x, y, -z),
-                    float3(x, y, -z),
-                    float3(-x, -y, -z),
-                    float3(x, -y, -z)
-            };
-
             auto P = vector<float3>{
                     float3(-x, -y, z), float3(x, -y, z), float3(-x, y, z), float3(x, y, z), // +z
                     float3(-x, y, -z), float3(x, y, -z), float3(-x, -y, -z), float3(x, -y, -z), // -z
@@ -97,27 +86,12 @@ namespace luminous {
             };
             auto triangles = vector<TriangleHandle>{
                 TriangleHandle(0,1,3), TriangleHandle(0,3,2),
-                TriangleHandle(2,1,3), TriangleHandle(0,1,2),
-                TriangleHandle(2,1,3), TriangleHandle(0,1,2),
-                TriangleHandle(2,1,3), TriangleHandle(0,1,2),
-                TriangleHandle(2,1,3), TriangleHandle(0,1,3),
-                TriangleHandle(2,1,3), TriangleHandle(0,1,3),
+                TriangleHandle(6,5,7), TriangleHandle(4,5,6),
+                TriangleHandle(10,9,11), TriangleHandle(8,9,10),
+                TriangleHandle(13,14,15), TriangleHandle(13,12,14),
+                TriangleHandle(18,17,19), TriangleHandle(17,16,19),
+                TriangleHandle(21,22,23), TriangleHandle(20,21,23),
             };
-            for (int i = 0; i < triangles.size(); ++i) {
-                int index = i / 2;
-                auto &tri = triangles[i];
-                tri.i += index * 4;
-                tri.j += index * 4;
-                tri.k += index * 4;
-                auto normal = N[tri.i];
-                auto p0 = P[tri.i];
-                auto p1 = P[tri.j];
-                auto p2 = P[tri.k];
-                auto ng = cross(p2 - p0, p1 - p0);
-                if (dot(ng, normal) > 0) {
-                    std::swap(tri.i, tri.j);
-                }
-            }
             Model model;
             Box3f aabb;
             for (auto p : P) {

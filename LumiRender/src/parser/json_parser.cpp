@@ -155,6 +155,10 @@ namespace luminous {
             } else if (shape_config.type() == "quad") {
                 shape_config.width = param["width"].as_float(1);
                 shape_config.height = param["height"].as_float(1);
+            } else if (shape_config.type() == "cube") {
+                shape_config.x = param["x"].as_float(1);
+                shape_config.x = param["y"].as_float(1);
+                shape_config.x = param["z"].as_float(1);
             } else if (shape_config.type() == "mesh") {
                 shape_config.positions = param["positions"].as_vector<float3>();
                 shape_config.normals = param["normals"].as_vector<float3>();

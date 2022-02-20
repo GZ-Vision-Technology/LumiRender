@@ -14,6 +14,10 @@ namespace luminous {
             index_t i{};
             index_t j{};
             index_t k{};
+
+            TriangleHandle(index_t i, index_t j, index_t k)
+                    : i(i), j(j), k(k) {}
+
             LM_XPU void print() const {
                 printf("i:%u, j:%u, k:%u \n", i, j, k);
             }
