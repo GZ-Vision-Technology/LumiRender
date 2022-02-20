@@ -192,15 +192,15 @@ namespace luminous {
             }
 
             GEN_STRING_FUNC({
-                float3 tt;
-                Quaternion rr;
-                float3 ss;
-                decompose(mat4x4(), &tt, &rr, &ss);
-                return string_printf("transform : {t:%s,r:{%s},s:%s}",
-                                     tt.to_string().c_str(),
-                                     rr.to_string().c_str(),
-                                     ss.to_string().c_str());
-            })
+                                float3 tt;
+                                Quaternion rr;
+                                float3 ss;
+                                decompose(mat4x4(), &tt, &rr, &ss);
+                                return string_printf("transform : {t:%s,r:{%s},s:%s}",
+                                                     tt.to_string().c_str(),
+                                                     rr.to_string().c_str(),
+                                                     ss.to_string().c_str());
+                            })
 
             LM_ND_XPU static Transform translation(float3 t) {
                 auto mat = make_float4x4(
@@ -275,6 +275,19 @@ namespace luminous {
                 auto R = rotation(make_float3(r), r.w);
                 auto S = scale(s);
                 return T * R * S;
+            }
+
+            LM_ND_XPU static Transform look_at(float3 eye, float3 target_pos, float3 up) noexcept {
+                float3 fwd = normalize(target_pos - eye);
+                float3 right = normalize(cross(up, fwd));
+                up = normalize(cross(fwd,right));
+                float4x4 mat(
+                        right.x, right.y, right.z, 0.f,
+                        up.x, up.y, up.z, 0.f,
+                        fwd.x, fwd.y, fwd.z, 0.f,
+                        eye.x, eye.y, eye.z, 1.f
+                );
+                return {mat, functor::inverse(mat)};
             }
 
             LM_ND_XPU static Transform rotation_x(float angle, bool radian = false) noexcept {

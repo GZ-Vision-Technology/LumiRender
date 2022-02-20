@@ -132,11 +132,15 @@ namespace luminous {
                 ret.t = param["t"].as_float3();
                 ret.r = param["r"].as_float4(make_float4(1, 0, 0, 0));
                 ret.s = param["s"].as_float3(make_float3(1, 1, 1));
-            } else {
+            } else if (ret.type() == "yaw_pitch") {
                 // yaw pitch position
                 ret.yaw = -param["yaw"].as_float();
                 ret.pitch = param["pitch"].as_float();
                 ret.position = param["position"].as_float3();
+            } else if (ret.type() == "look_at") {
+                ret.position = param["position"].as_float3();
+                ret.up = param["up"].as_float3();
+                ret.target_pos = param["target_pos"].as_float3();
             }
             return ret;
         }

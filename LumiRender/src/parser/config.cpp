@@ -22,6 +22,8 @@ namespace luminous {
                 auto pitch_t = Transform::rotation_x(-pitch);
                 auto tt = Transform::translation(position);
                 return tt * pitch_t * yaw_t;
+            } else if (type() == "look_at") {
+                return Transform::look_at(position, target_pos, up);
             }
             LUMINOUS_ERROR("unknown transform type ", type());
         }

@@ -60,9 +60,12 @@ namespace luminous {
 
             float4x4 mat4x4;
 
+            float3 position;
             float yaw{};
             float pitch{};
-            float3 position;
+
+            float3 up{};
+            float3 target_pos{};
 
             LM_NODISCARD Transform create() const;
         };
