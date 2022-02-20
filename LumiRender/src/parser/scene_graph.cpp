@@ -20,6 +20,37 @@ namespace luminous {
             }
         }
 
+        Model SceneGraph::create_quad_y(const ShapeConfig &config) {
+            auto model = Model();
+            auto width = config.width / 2;
+            auto height = config.height / 2;
+            Box3f aabb;
+            vector<float3> P{make_float3(width,0, height),
+                             make_float3(width,0, -height),
+                             make_float3(-width, 0,height),
+                             make_float3(-width, 0,-height)};
+
+            for (auto p : P) {
+                aabb.extend(p);
+            }
+
+            vector<float3> N(4, make_float3(0, 0, 0));
+
+            vector<float2> UV{make_float2(1, 1),
+                              make_float2(1, 0),
+                              make_float2(0, 1),
+                              make_float2(0, 0)};
+
+            vector<TriangleHandle> triangles{TriangleHandle{1, 0, 2},
+                                             TriangleHandle{1, 2, 3}};
+
+            auto mesh = Mesh(move(P), move(N), move(UV), move(triangles), aabb);
+            model.meshes.push_back(mesh);
+            model.custom_material_name = config.material_name;
+            update_counter(model);
+            return model;
+        }
+
         Model SceneGraph::create_quad(const ShapeConfig &config) {
             auto model = Model();
             auto width = config.width / 2;
