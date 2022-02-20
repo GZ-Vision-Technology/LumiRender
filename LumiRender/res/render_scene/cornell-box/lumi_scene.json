@@ -1,0 +1,138 @@
+{
+    "textures": [],
+    "materials": [
+        {
+            "type": "MatteMaterial",
+            "name": "LeftWall",
+            "param": {
+                "color": [
+                    0.63,
+                    0.065,
+                    0.05
+                ]
+            }
+        },
+        {
+            "type": "MatteMaterial",
+            "name": "RightWall",
+            "param": {
+                "color": [
+                    0.14,
+                    0.45,
+                    0.091
+                ]
+            }
+        },
+        {
+            "type": "MatteMaterial",
+            "name": "Floor",
+            "param": {
+                "color": [
+                    0.725,
+                    0.71,
+                    0.68
+                ]
+            }
+        },
+        {
+            "type": "MatteMaterial",
+            "name": "Ceiling",
+            "param": {
+                "color": [
+                    0.725,
+                    0.71,
+                    0.68
+                ]
+            }
+        },
+        {
+            "type": "MatteMaterial",
+            "name": "BackWall",
+            "param": {
+                "color": [
+                    0.725,
+                    0.71,
+                    0.68
+                ]
+            }
+        },
+        {
+            "type": "MatteMaterial",
+            "name": "ShortBox",
+            "param": {
+                "color": [
+                    0.725,
+                    0.71,
+                    0.68
+                ]
+            }
+        },
+        {
+            "type": "MatteMaterial",
+            "name": "TallBox",
+            "param": {
+                "color": [
+                    0.725,
+                    0.71,
+                    0.68
+                ]
+            }
+        }
+    ],
+    "shapes": [
+        {
+            "type": "quad_y",
+            "name": "shape_0",
+            "width": 1.0,
+            "height": 1.0,
+            "material": "Floor",
+            "transform": {}
+        },
+        {
+            "type": "quad_y",
+            "name": "shape_1",
+            "width": 1.0,
+            "height": 1.0,
+            "material": "Ceiling",
+            "transform": {}
+        },
+        {
+            "type": "quad_y",
+            "name": "shape_2",
+            "width": 1.0,
+            "height": 1.0,
+            "material": "BackWall",
+            "transform": {}
+        },
+        {
+            "type": "quad_y",
+            "name": "shape_3",
+            "width": 1.0,
+            "height": 1.0,
+            "material": "RightWall",
+            "transform": {}
+        },
+        {
+            "type": "quad_y",
+            "name": "shape_4",
+            "width": 1.0,
+            "height": 1.0,
+            "material": "LeftWall",
+            "transform": {}
+        },
+        {
+            "type": "quad_y",
+            "name": "shape_7",
+            "width": 1.0,
+            "height": 1.0,
+            "material": "Light",
+            "transform": {}
+        }
+    ],
+    "lights": [],
+    "light_sampler": {},
+    "sampler": {},
+    "output": {},
+    "camera": {},
+    "integrator": {}
+}

@@ -143,6 +143,8 @@ namespace luminous {
                 return model;
             } else if (config.type() == "quad") {
                 return create_quad(config);
+            } else if (config.type() == "quad_y") {
+                return create_quad_y(config);
             } else if (config.type() == "mesh") {
                 auto model = Model();
                 Box3f aabb;

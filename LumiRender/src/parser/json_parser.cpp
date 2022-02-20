@@ -156,7 +156,7 @@ namespace luminous {
                 shape_config.smooth = param["smooth"].as_bool(true);
                 shape_config.use_normal_map = param["use_normal_map"].as_bool(false);
                 shape_config.swap_handed = param["swap_handed"].as_bool(false);
-            } else if (shape_config.type() == "quad") {
+            } else if (shape_config.type() == "quad" || shape_config.type() == "quad_y") {
                 shape_config.width = param["width"].as_float(1);
                 shape_config.height = param["height"].as_float(1);
             } else if (shape_config.type() == "cube") {
