@@ -7153,7 +7153,7 @@
                     -179.99998474121094
                 ]
             },
-            "emission": 30.0,
+            "emission": 15.0,
             "type": "quad",
             "bsdf": {
                 "albedo": 1.0,
@@ -7165,7 +7165,7 @@
         "tonemap": "filmic",
         "resolution": [
             720,
-            1280
+            1024
         ],
         "reconstruction_filter": "tent",
         "transform": {
@@ -7203,7 +7203,7 @@
         "enable_resume_render": false,
         "stratified_sampler": true,
         "scene_bvh": true,
-        "spp": 64,
+        "spp": 0,
         "spp_step": 16,
         "checkpoint_interval": "0",
         "timeout": "0",

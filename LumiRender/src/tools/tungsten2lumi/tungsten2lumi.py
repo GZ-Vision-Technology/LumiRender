@@ -219,6 +219,21 @@ def convert_cube(shape_input, index):
     }
     return ret
 
+def convert_mesh(shape_input, index):
+    fn = shape_input["file"]
+    fn = fn[:-4] + ".obj"
+    ret = {
+        "type" : "model",
+        "name" : "shape_" + str(index),
+        "param" : {
+            "fn" : fn,
+            "smooth" : shape_input.get("smooth", True),
+            "material" : shape_input["bsdf"],
+            "transform" : convert_shpe_transform(shape_input["transform"])
+        }
+    }
+    return ret
+
 def convert_shapes(scene_input):
     shape_outputs = []
     shape_inputs = scene_input["primitives"]
@@ -226,11 +241,13 @@ def convert_shapes(scene_input):
         shape_output = None
         if shape_input["type"] == "quad":
             shape_output = convert_quad(shape_input, i)
-        if shape_input["type"] == "cube":    
+        elif shape_input["type"] == "cube":    
             shape_output = convert_cube(shape_input, i)
+        elif shape_input["type"] == "mesh":
+            shape_output = convert_mesh(shape_input, i)
             
         if "emission" in shape_input:
-            shape_output["param"]["emission"] = shape_input["emission"]
+            shape_output["param"]["emission"] = convert_vec(shape_input["emission"], 3)
             shape_output["param"]["material"] = None
         shape_outputs.append(shape_output)
     return shape_outputs
@@ -309,7 +326,7 @@ def write_scene(scene_output, filepath):
     print("lumi scene save to:", abspath)
 
 def main():
-    fn = 'LumiRender\\res\\render_scene\\cornell-box\\tungsten_scene.json'
+    fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
     parent = os.path.dirname(fn)
     output_fn = os.path.join(parent, "lumi_scene.json")
     # print()
