@@ -29,7 +29,7 @@ namespace luminous {
             GlossyTrans = Glossy | Transmission,
             SpecRefl = Specular | Reflection,
             SpecTrans = Specular | Transmission,
-            All = Diffuse | Glossy | Specular | Reflection | Transmission
+            All = Diffuse | Glossy | Specular | Reflection | Transmission | NearSpec
         };
 
         static constexpr float AlphaThreshold = 0.05f;
