@@ -67,7 +67,7 @@ def convert_shpe_transform(transform):
     scale = transform.get("scale", [1,1,1])
     # scale[0] = -scale[0]
     S = glm.vec3(scale)
-    M = convert_srt(S, R, T)
+    M = glm.scale(glm.vec3([-1,1,1]))* convert_srt(S, R, T)
     matrix4x4 = []
     for i in M:
         arr = []

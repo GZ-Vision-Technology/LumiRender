@@ -41,8 +41,8 @@ namespace luminous {
                               make_float2(0, 1),
                               make_float2(0, 0)};
 
-            vector<TriangleHandle> triangles{TriangleHandle{1, 2, 0},
-                                             TriangleHandle{1, 3, 2}};
+            vector<TriangleHandle> triangles{TriangleHandle{1, 0, 2},
+                                             TriangleHandle{1, 2, 3}};
 
             auto mesh = Mesh(move(P), move(N), move(UV), move(triangles), aabb);
             model.meshes.push_back(mesh);
