@@ -52,13 +52,21 @@ def rotateXYZ(R):
 def rotateYXZ(R):
     return glm.rotate(R.z, (0, 0, 1)) * glm.rotate(R.x, (1, 0, 0)) * glm.rotate(R.y, (0, 1, 0))
 
-def convert_srt(S, R, T):
-    return glm.translate(T) * rotateYXZ(R) * glm.scale(S)
+def rotateZXY(R):
+    return glm.rotate(R.y, (0, 1, 0)) * glm.rotate(R.x, (1, 0, 0)) * glm.rotate(R.z, (0, 0, 1)) 
 
-def convert_transform(transform):
-    T = glm.vec3(transform.get("position", 0))
-    R = glm.radians(glm.vec3(transform.get("rotation", 0)))
-    S = glm.vec3(transform.get("scale", 1))
+def rotateZYX(R):
+    return glm.rotate(R.x, (1, 0, 0)) * glm.rotate(R.y, (0, 1, 0)) * glm.rotate(R.z, (0, 0, 1)) 
+
+def convert_srt(S, R, T):
+    return glm.translate(T) * rotateZXY(R) * glm.scale(S)
+
+def convert_shpe_transform(transform):
+    T = glm.vec3(transform.get("position", [0,0,0]))
+    R = glm.radians(glm.vec3(transform.get("rotation", [0,0,0])))
+    scale = transform.get("scale", [1,1,1])
+    # scale[0] = -scale[0]
+    S = glm.vec3(scale)
     M = convert_srt(S, R, T)
     matrix4x4 = []
     for i in M:
@@ -83,7 +91,7 @@ def convert_quad(shape_input, index):
             "width": 1.0,
             "height": 1.0,
             "material" : shape_input["bsdf"],
-            "transform" : convert_transform(shape_input["transform"])
+            "transform" : convert_shpe_transform(shape_input["transform"])
         }
     }
     return ret
@@ -97,7 +105,7 @@ def convert_cube(shape_input, index):
             "y" : 1,
             "z" : 1,
             "material" : shape_input["bsdf"],
-            "transform" : convert_transform(shape_input["transform"])
+            "transform" : convert_shpe_transform(shape_input["transform"])
         }
     }
     return ret
@@ -120,12 +128,20 @@ def convert_shapes(scene_input):
 
 def convert_camera(scene_input):
     camera_input = scene_input["camera"]
+    transform = camera_input["transform"]
     ret = {
         "type" : "ThinLensCamera",
         "param" : {
             "fov_y" : camera_input["fov"],
             "velocity" : 20,
-            "transform" : convert_transform(camera_input.get("transform", {})),
+            "transform" : {
+                "type" : "look_at",
+                "param": {
+                    "position" : transform["position"],
+                    "up" : transform["up"],
+                    "target_pos" : transform["look_at"]
+                }
+            },
             "film" : {
                 "param" : {
                     "resolution" : camera_input.get("resolution", [768, 768]),
