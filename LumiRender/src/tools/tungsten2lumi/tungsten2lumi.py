@@ -7,6 +7,10 @@ from sys import argv
 import os
 import glm
 
+
+def convert_roughness(r):
+    return glm.sqrt(r)
+
 def try_add_textures(scene_output, name):
     textures = scene_output["textures"]
     for tex in textures:
@@ -26,37 +30,65 @@ def parse_attr(attr):
         try_add_textures(attr)
     return attr
 
-def convert_diffuse(mat_input):
+def convert_vec(value, dim=3):
+    if type(value) == str:
+        return parse_attr(value)
+    if type(value) != list:
+        ret = []
+        for i in range(0, dim):
+            ret.append(value)
+        return ret
+    assert (len(value) == dim)
+    return value
+
+def convert_matte(mat_input):
     ret = {
         "type" : "MatteMaterial",
         "name" : mat_input["name"],
         "param" :{
-            "color" : parse_attr(mat_input["albedo"]),
+            "color" : convert_vec(mat_input["albedo"], 3)
         }
     }
     return ret
     
 def convert_plastic(mat_input):
     ret = {
-        "type" : "PlasticMaterial"
+        "type" : "PlasticMaterial",
+        "param" : {
+            
+        }
     }
     return ret
 
 def convert_metal(mat_input):
     ret = {
-        "type" : "MetalMaterial"
+        "type" : "MetalMaterial",
+        "param" : {
+            "material" : mat_input.get("material", ""),
+            "eta" : mat_input.get("eta", [0,0,0]),
+            "k" : mat_input.get("k", [0,0,0]),
+            "roughness" : mat_input.get("roughness", 0)
+        }
     }
     return ret
 
 def convert_glass(mat_input):
     ret = {
-        "type" : "GlassMaterial"
+        "type" : "GlassMaterial",
+        "param" : {
+            "eta" : mat_input["ior"],
+            "roughness" : mat_input.get("roughness", 0),
+            "color" : convert_vec(mat_input.get("albedo", 1), 3)
+        }
     }
     return ret
 
 def convert_mirror(mat_input):
     ret = {
-        "type" : "MirrorMaterial"
+        "type" : "MirrorMaterial",
+        "param" : {
+            "color" : convert_vec(mat_input.get("albedo", 1), 3)
+        }
     }
     return ret
 
@@ -67,7 +99,7 @@ def convert_materials(scene_input):
         mat_type = mat_input["type"]
         mat_output = None
         if mat_type == "lambert" or mat_type == "oren_nayar":
-            mat_output = convert_diffuse(mat_input)
+            mat_output = convert_matte(mat_input)
         elif mat_type == "dielectric" or mat_type == "rough_dielectric":
             mat_output = convert_glass(mat_input)
         elif mat_type == "mirror":
@@ -76,7 +108,7 @@ def convert_materials(scene_input):
             mat_output = convert_metal(mat_input)
         elif mat_type == "plastic" or mat_type == "rough_plastic":
             mat_output = convert_plastic(mat_input)
-            
+
         if mat_output:
             mat_outputs.append(mat_output)
             

@@ -437,7 +437,7 @@ namespace luminous {
                 ret.roughness = process_attr(param["roughness"], scene_graph);
                 ret.remapping_roughness = param["remapping_roughness"].as_bool(false);
             } else if (type == "MetalMaterial") {
-                ret.roughness = process_attr(param["roughness"], scene_graph);
+                ret.roughness = process_attr(param["roughness"], scene_graph, make_float4(0.f));
                 ret.remapping_roughness = param["remapping_roughness"].as_bool(false);
                 ret.eta = process_attr(param["eta"], scene_graph, make_float4(0));
                 ret.k = process_attr(param["k"], scene_graph, make_float4(0));
