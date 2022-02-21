@@ -54,16 +54,39 @@ def convert_matte(mat_input):
     
 def convert_plastic(mat_input):
     ret = {
-        "type" : "PlasticMaterial",
+        "type" : "DisneyMaterial",
+        "name" : mat_input["name"],
         "param" : {
-            
+            "color" : convert_vec(mat_input.get("albedo", 1), 3),
+            "eta": 1.5,
+            "roughness": convert_vec(mat_input.get("roughness", 1), 1),
+            "metallic": 0,
+            "specular_tint": 0.9,
+            "anisotropic": 0,
+            "sheen": 0.0,
+            "sheen_tint": 0.0,
+            "clearcoat": 0.8,
+            "clearcoat_roughness": 0.2,
+            "spec_trans": 0,
+            "flatness": 0,
+            "scatter_distance": [0,0,0],
+            "diff_trans": 0,
+            "thin": False
         }
     }
     return ret
+    # ret = {
+    #     "type" : "PlasticMaterial",
+    #     "param" : {
+    #         "name" : mat_input["name"],
+    #     }
+    # }
+    # return ret
 
 def convert_metal(mat_input):
     ret = {
         "type" : "MetalMaterial",
+        "name" : mat_input["name"],
         "param" : {
             "material" : mat_input.get("material", ""),
             "eta" : mat_input.get("eta", [0,0,0]),
@@ -76,6 +99,7 @@ def convert_metal(mat_input):
 def convert_glass(mat_input):
     ret = {
         "type" : "GlassMaterial",
+        "name" : mat_input["name"],
         "param" : {
             "eta" : mat_input["ior"],
             "roughness" : mat_input.get("roughness", 0),
@@ -87,8 +111,33 @@ def convert_glass(mat_input):
 def convert_mirror(mat_input):
     ret = {
         "type" : "MirrorMaterial",
+        "name" : mat_input["name"],
         "param" : {
             "color" : convert_vec(mat_input.get("albedo", 1), 3)
+        }
+    }
+    return ret
+
+def convert_disney(mat_input):
+    ret = {
+        "type" : "DisneyMaterial",
+        "name" : mat_input["name"],
+        "param" : {
+            "color" : convert_vec(mat_input.get("albedo", 1), 3),
+            "eta": 1.5,
+            "roughness":0.2,
+            "metallic": 0,
+            "specular_tint": 0.9,
+            "anisotropic": 0,
+            "sheen": 0.0,
+            "sheen_tint": 0.0,
+            "clearcoat": 0.59,
+            "clearcoat_gloss": 0.38,
+            "spec_trans": 0,
+            "flatness": 0,
+            "scatter_distance": [0,0,0],
+            "diff_trans": 0,
+            "thin": False
         }
     }
     return ret
@@ -109,6 +158,8 @@ def convert_materials(scene_input):
             mat_output = convert_metal(mat_input)
         elif mat_type == "plastic" or mat_type == "rough_plastic":
             mat_output = convert_plastic(mat_input)
+        elif mat_type != "null":
+            mat_output = convert_disney(mat_input)
 
         if mat_output:
             mat_outputs.append(mat_output)
