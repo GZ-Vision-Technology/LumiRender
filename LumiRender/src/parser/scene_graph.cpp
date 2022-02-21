@@ -25,10 +25,10 @@ namespace luminous {
             auto width = config.width / 2;
             auto height = config.height / 2;
             Box3f aabb;
-            vector<float3> P{make_float3(width,0, height),
-                             make_float3(width,0, -height),
-                             make_float3(-width, 0,height),
-                             make_float3(-width, 0,-height)};
+            vector<float3> P{make_float3(width, 0, height),
+                             make_float3(width, 0, -height),
+                             make_float3(-width, 0, height),
+                             make_float3(-width, 0, -height)};
 
             for (auto p : P) {
                 aabb.extend(p);
@@ -41,8 +41,8 @@ namespace luminous {
                               make_float2(0, 1),
                               make_float2(0, 0)};
 
-            vector<TriangleHandle> triangles{TriangleHandle{1, 0, 2},
-                                             TriangleHandle{1, 2, 3}};
+            vector<TriangleHandle> triangles{TriangleHandle{1, 2, 0},
+                                             TriangleHandle{1, 3, 2}};
 
             auto mesh = Mesh(move(P), move(N), move(UV), move(triangles), aabb);
             model.meshes.push_back(mesh);
@@ -108,20 +108,20 @@ namespace luminous {
                     float3(-1, 0, 0), float3(-1, 0, 0), float3(-1, 0, 0), float3(-1, 0, 0),
             };
             auto UVs = vector<float2>{
-                float2(0, 0),float2(0, 0),float2(0, 0),float2(0, 0),
-                float2(0, 0),float2(0, 0),float2(0, 0),float2(0, 0),
-                float2(0, 0),float2(0, 0),float2(0, 0),float2(0, 0),
-                float2(0, 0),float2(0, 0),float2(0, 0),float2(0, 0),
-                float2(0, 0),float2(0, 0),float2(0, 0),float2(0, 0),
-                float2(0, 0),float2(0, 0),float2(0, 0),float2(0, 0),
+                    float2(0, 0), float2(0, 0), float2(0, 0), float2(0, 0),
+                    float2(0, 0), float2(0, 0), float2(0, 0), float2(0, 0),
+                    float2(0, 0), float2(0, 0), float2(0, 0), float2(0, 0),
+                    float2(0, 0), float2(0, 0), float2(0, 0), float2(0, 0),
+                    float2(0, 0), float2(0, 0), float2(0, 0), float2(0, 0),
+                    float2(0, 0), float2(0, 0), float2(0, 0), float2(0, 0),
             };
             auto triangles = vector<TriangleHandle>{
-                TriangleHandle(0,1,3), TriangleHandle(0,3,2),
-                TriangleHandle(6,5,7), TriangleHandle(4,5,6),
-                TriangleHandle(10,9,11), TriangleHandle(8,9,10),
-                TriangleHandle(13,14,15), TriangleHandle(13,12,14),
-                TriangleHandle(18,17,19), TriangleHandle(17,16,19),
-                TriangleHandle(21,22,23), TriangleHandle(20,21,23),
+                    TriangleHandle(0, 1, 3), TriangleHandle(0, 3, 2),
+                    TriangleHandle(6, 5, 7), TriangleHandle(4, 5, 6),
+                    TriangleHandle(10, 9, 11), TriangleHandle(8, 9, 10),
+                    TriangleHandle(13, 14, 15), TriangleHandle(13, 12, 14),
+                    TriangleHandle(18, 17, 19), TriangleHandle(17, 16, 19),
+                    TriangleHandle(21, 22, 23), TriangleHandle(20, 21, 23),
             };
             Model model;
             Box3f aabb;
