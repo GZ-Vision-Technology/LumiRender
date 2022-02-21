@@ -7,12 +7,13 @@ from sys import argv
 import os
 import glm
 
+g_textures = []
 
 def convert_roughness(r):
     return glm.sqrt(r)
 
-def try_add_textures(scene_output, name):
-    textures = scene_output["textures"]
+def try_add_textures(name):
+    textures = g_textures
     for tex in textures:
         if tex["name"] == name:
             return
@@ -263,8 +264,9 @@ def main():
     # print()
     with open(fn) as file:
         scene_input = json.load(file)
+        
     scene_output = {
-        "textures" : [],
+        "textures" : g_textures,
         "materials" : convert_materials(scene_input),
         "shapes" : convert_shapes(scene_input),
         "lights" : [],
