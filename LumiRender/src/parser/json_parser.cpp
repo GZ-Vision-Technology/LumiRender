@@ -4,6 +4,7 @@
 
 #include "json_parser.h"
 #include "parameter_set.h"
+#include "render/materials/metal_ior_data.h"
 #include <iomanip>
 
 namespace luminous {
@@ -407,7 +408,18 @@ namespace luminous {
             return ret;
         }
 
-        MaterialConfig parse_material(const ParameterSet &ps, SceneGraph *scene_graph) {
+        LM_NODISCARD std::pair<float3, float3> get_ior(const std::string &name) {
+            for (int i = 0; i < sizeof(complex_ior_list); ++i) {
+                ComplexIor elm = complex_ior_list[i];
+                if (name == elm.name) {
+                    return {elm.eta, elm.k};
+                }
+            }
+            ComplexIor elm = complex_ior_list[0];
+            return {elm.eta, elm.k};
+        }
+
+        LM_NODISCARD MaterialConfig parse_material(const ParameterSet &ps, SceneGraph *scene_graph) {
             std::string type;
             type = ps["type"].as_string("MatteMaterial");
             MaterialConfig ret;
@@ -427,8 +439,13 @@ namespace luminous {
             } else if (type == "MetalMaterial") {
                 ret.roughness = process_attr(param["roughness"], scene_graph);
                 ret.remapping_roughness = param["remapping_roughness"].as_bool(false);
-                ret.eta = process_attr(param["eta"], scene_graph, make_float4(0.19999069, 0.922084629, 1.09987593, 0));
-                ret.k = process_attr(param["k"], scene_graph, make_float4(3.90463543, 2.44763327, 2.13765264, 0));
+                ret.eta = process_attr(param["eta"], scene_graph, make_float4(0));
+                ret.k = process_attr(param["k"], scene_graph, make_float4(0));
+                if (is_zero(ret.eta.val)) {
+                    auto[eta, k] = get_ior(param["material"].as_string("Ag"));
+                    ret.eta.val = make_float4(eta, 0);
+                    ret.k.val = make_float4(k, 0);
+                }
             } else if (type == "DisneyMaterial") {
                 ret.metallic = process_attr(param["metallic"], scene_graph, make_float4(0.f));
                 ret.eta = process_attr(param["eta"], scene_graph, make_float4(1.5));
@@ -449,7 +466,7 @@ namespace luminous {
             return ret;
         }
 
-        std::vector<MaterialConfig> parse_materials(const DataWrap &materials, SceneGraph *scene_graph) {
+        LM_NODISCARD std::vector<MaterialConfig> parse_materials(const DataWrap &materials, SceneGraph *scene_graph) {
             std::vector<MaterialConfig> ret;
             for (const auto &material : materials) {
                 ret.push_back(parse_material(ParameterSet(material), scene_graph));
@@ -457,7 +474,7 @@ namespace luminous {
             return ret;
         }
 
-        IntegratorConfig parse_integrator(const ParameterSet &ps) {
+        LM_NODISCARD IntegratorConfig parse_integrator(const ParameterSet &ps) {
             IntegratorConfig ret;
             auto param = ps["param"];
             ret.set_type(ps["type"].as_string("PT"));
@@ -467,7 +484,7 @@ namespace luminous {
             return ret;
         }
 
-        OutputConfig parse_output(const ParameterSet &ps) {
+        LM_NODISCARD OutputConfig parse_output(const ParameterSet &ps) {
             OutputConfig ret;
             ret.fn = ps["fn"].as_string("luminous.png");
             ret.dispatch_num = ps["dispatch_num"].as_int(0);
