@@ -108,12 +108,12 @@ namespace luminous {
                     float3(-1, 0, 0), float3(-1, 0, 0), float3(-1, 0, 0), float3(-1, 0, 0),
             };
             auto UVs = vector<float2>{
-                    float2(0, 0), float2(0, 0), float2(0, 0), float2(0, 0),
-                    float2(0, 0), float2(0, 0), float2(0, 0), float2(0, 0),
-                    float2(0, 0), float2(0, 0), float2(0, 0), float2(0, 0),
-                    float2(0, 0), float2(0, 0), float2(0, 0), float2(0, 0),
-                    float2(0, 0), float2(0, 0), float2(0, 0), float2(0, 0),
-                    float2(0, 0), float2(0, 0), float2(0, 0), float2(0, 0),
+                    float2(0, 0), float2(1, 0), float2(0, 1), float2(1, 1),
+                    float2(0, 1), float2(1, 1), float2(0, 0), float2(1, 0),
+                    float2(0, 1), float2(1, 1), float2(0, 0), float2(1, 0),
+                    float2(0, 1), float2(1, 1), float2(0, 0), float2(1, 0),
+                    float2(0, 1), float2(1, 1), float2(1, 0), float2(0, 0),
+                    float2(0, 1), float2(1, 1), float2(1, 0), float2(0, 0),
             };
             auto triangles = vector<TriangleHandle>{
                     TriangleHandle(0, 1, 3), TriangleHandle(0, 3, 2),
