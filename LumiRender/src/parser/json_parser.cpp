@@ -447,6 +447,10 @@ namespace luminous {
                     ret.eta.val = make_float4(eta, 0);
                     ret.k.val = make_float4(k, 0);
                 }
+            } else if (type == "PlasticMaterial") {
+                ret.roughness = process_attr(param["roughness"], scene_graph, make_float4(0.f));
+                ret.remapping_roughness = param["remapping_roughness"].as_bool(false);
+                ret.specular = process_attr(param["specular"], scene_graph, make_float4(1.f));
             } else if (type == "DisneyMaterial") {
                 ret.metallic = process_attr(param["metallic"], scene_graph, make_float4(0.f));
                 ret.eta = process_attr(param["eta"], scene_graph, make_float4(1.5));

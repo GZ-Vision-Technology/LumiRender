@@ -652,7 +652,7 @@
         "albedo" : true,
         "normal" : true,
         "normal_remapping" : true,
-        "dispatch_num": 64
+        "dispatch_num": 0
     },
     "camera": {
         "type": "ThinLensCamera",
