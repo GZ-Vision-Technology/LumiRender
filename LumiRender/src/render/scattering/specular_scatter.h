@@ -16,8 +16,8 @@ namespace luminous {
 
             LM_XPU explicit SpecularReflection(Spectrum color) : ColoredBxDF(color, SpecRefl) {}
 
-            ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
-                return ColoredBxDF::weight(helper, Fr) * Fr;
+            ND_XPU_INLINE float weight(BSDFHelper helper, Spectrum Fr) const {
+                return ColoredBxDF::weight(helper, Fr) * Fr.luminance();
             }
 
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
@@ -45,8 +45,8 @@ namespace luminous {
 
             LM_XPU explicit SpecularTransmission(Spectrum color) : ColoredBxDF(color, SpecTrans) {}
 
-            ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
-                return ColoredBxDF::weight(helper, Fr) * (1 - Fr);
+            ND_XPU_INLINE float weight(BSDFHelper helper, Spectrum Fr) const {
+                return luminance((spectrum() * (Spectrum(1.f) - Fr)));
             }
 
             LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,

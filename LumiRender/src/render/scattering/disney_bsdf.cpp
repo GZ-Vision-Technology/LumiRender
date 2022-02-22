@@ -23,11 +23,12 @@ namespace luminous {
             Spectrum Diffuse::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
                 float Fo = schlick_weight(Frame::abs_cos_theta(wo));
                 float Fi = schlick_weight(Frame::abs_cos_theta(wi));
-                return spectrum() * invPi * (1 - Fo / 2) * (1 - Fi / 2);
+                return spectrum() * invPi * (1 - 0.5f * Fo) * (1 - 0.5f * Fi);
             }
 
             Spectrum FakeSS::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
                 float3 wh = wi + wo;
+                //todo optimize branch
                 if (length_squared(wh) == 0.f) {
                     return {0.f};
                 }

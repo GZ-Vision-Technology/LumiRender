@@ -81,8 +81,8 @@ namespace luminous {
                 return {0.f};
             }
             wh = face_forward(wh, make_float3(0, 0, 1));
-            float F = helper.eval_fresnel(abs_dot(wo, wh))[0];
-            float tr = _microfacet.BTDF(wo, wh, wi, eta_type(1.f) - F, cos_theta_i,
+            Spectrum F = helper.eval_fresnel(abs_dot(wo, wh));
+            Spectrum tr = _microfacet.BTDF(wo, wh, wi, Spectrum(1.f) - F, cos_theta_i,
                                    cos_theta_o, helper.eta(), mode);
             return tr * color;
         }

@@ -24,8 +24,8 @@ namespace luminous {
         public:
             using ColoredBxDF::ColoredBxDF;
 
-            ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
-                return ColoredBxDF::weight(helper, Fr) * Fr;
+            ND_XPU_INLINE float weight(BSDFHelper helper, Spectrum Fr) const {
+                return luminance(ColoredBxDF::weight(helper, Fr) * Fr);
             }
 
             LM_XPU explicit MicrofacetReflection(Spectrum color, Microfacet microfacet)
@@ -89,8 +89,8 @@ namespace luminous {
                     : ColoredBxDF(color, flags_by_alpha(alpha_x, alpha_y) | Transmission),
                       _microfacet(alpha_x, alpha_y, type) {}
 
-            ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
-                return ColoredBxDF::weight(helper, Fr) * (1 - Fr);
+            ND_XPU_INLINE float weight(BSDFHelper helper, Spectrum Fr) const {
+                return luminance(spectrum() * (Spectrum(1.f) - Fr));
             }
 
             /**

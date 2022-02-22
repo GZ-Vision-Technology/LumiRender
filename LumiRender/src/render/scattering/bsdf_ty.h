@@ -198,7 +198,7 @@ namespace luminous {
                 float weights[size] = {};
                 BSDFHelper helper = _data;
                 helper.correct_eta(Frame::cos_theta(wo));
-                float fr = helper.eval_fresnel(Frame::abs_cos_theta(wo))[0];
+                Spectrum fr = helper.eval_fresnel(Frame::abs_cos_theta(wo));
                 for_each([&](auto bxdf, int index) {
                     float weight = bxdf.weight(helper, fr);
                     weights[index] = weight < weight_threshold ? 0 : weight;

@@ -281,14 +281,14 @@ namespace luminous {
              * @param mode
              * @return
              */
-            ND_XPU_INLINE float BTDF(float3 wo, float3 wh, float3 wi, float Ft,
+            ND_XPU_INLINE Spectrum BTDF(float3 wo, float3 wh, float3 wi, Spectrum Ft,
                                      float cos_theta_i, float cos_theta_o, float eta,
                                      float alpha_x, float alpha_y, MicrofacetType type = GGX,
                                      TransportMode mode = TransportMode::Radiance) {
-                float numerator = D(wh, alpha_x, alpha_y, type) * Ft * G(wo, wi, alpha_x, alpha_y, type) *
+                Spectrum numerator = D(wh, alpha_x, alpha_y, type) * Ft * G(wo, wi, alpha_x, alpha_y, type) *
                                   std::abs(dot(wi, wh) * dot(wo, wh));
                 float denom = sqr(dot(wi, wh) * eta + dot(wo, wh)) * abs(cos_theta_i * cos_theta_o);
-                float ft = numerator / denom;
+                Spectrum ft = numerator / denom;
                 float factor = cal_factor(mode, eta);
                 DCHECK(!invalid(ft));
                 DCHECK(all_positive(ft));
@@ -301,7 +301,7 @@ namespace luminous {
              * @param mode
              * @return
              */
-            ND_XPU_INLINE float BTDF(float3 wo, float3 wi, float Ft,
+            ND_XPU_INLINE Spectrum BTDF(float3 wo, float3 wi, Spectrum Ft,
                                      float cos_theta_i, float cos_theta_o, float eta,
                                      float alpha_x, float alpha_y, MicrofacetType type = GGX,
                                      TransportMode mode = TransportMode::Radiance) {
@@ -426,7 +426,7 @@ namespace luminous {
              * @param mode
              * @return
              */
-            LM_ND_XPU float BTDF(float3 wo, float3 wh, float3 wi, float Ft,
+            LM_ND_XPU Spectrum BTDF(float3 wo, float3 wh, float3 wi, Spectrum Ft,
                                  float cos_theta_i, float cos_theta_o, float eta,
                                  TransportMode mode = TransportMode::Radiance) const {
                 return microfacet::BTDF(wo, wh, wi, Ft, cos_theta_i, cos_theta_o, eta, _alpha_x, _alpha_y, _type, mode);
@@ -438,7 +438,7 @@ namespace luminous {
              * @param mode
              * @return
              */
-            LM_ND_XPU float BTDF(float3 wo, float3 wi, float Ft,
+            LM_ND_XPU Spectrum BTDF(float3 wo, float3 wi, Spectrum Ft,
                                  float cos_theta_i, float cos_theta_o, float eta,
                                  TransportMode mode = TransportMode::Radiance) const {
                 float3 wh = normalize(wo + wi * eta);

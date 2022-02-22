@@ -67,7 +67,7 @@ namespace luminous {
         public:
             LM_XPU explicit BxDF(BxDFFlags flags = Unset): _flags(flags) {}
 
-            ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
+            ND_XPU_INLINE float weight(BSDFHelper helper, Spectrum Fr) const {
                 return 1.f;
             }
 
@@ -117,7 +117,7 @@ namespace luminous {
                     : _r(color.R()), _g(color.G()), _b(color.B()),
                       BxDF<T>(color.is_black() ? Unset : flags) {}
 
-            ND_XPU_INLINE float weight(BSDFHelper helper, float Fr) const {
+            ND_XPU_INLINE float weight(BSDFHelper helper, Spectrum Fr) const {
                 return spectrum().luminance();
             }
 
