@@ -241,7 +241,7 @@
         }
     ],
     "camera": {
-        "tonemap": "filmic",
+        "tonemap": "Gamma",
         "resolution": [
             1024,
             1024
