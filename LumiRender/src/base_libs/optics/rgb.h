@@ -15,6 +15,13 @@ namespace luminous {
             SRGB
         };
 
+        enum EToneMap {
+            Filmic,
+            Reinhard,
+            Gamma,
+            Linear
+        };
+
         ND_XPU_INLINE float luminance(float3 v) {
             return dot(v, make_float3(0.212671f, 0.715160f, 0.072169f));
         }
@@ -42,12 +49,12 @@ namespace luminous {
             LM_XPU RGBSpectrum(float4 vec)
                     : RGBSpectrum(make_float3(vec)) {}
 
-            LM_XPU const scalar_t& operator[](int i) const {
+            LM_XPU const scalar_t &operator[](int i) const {
                 DCHECK_LE(i, nSamples);
                 return (&x)[i];
             }
 
-            LM_XPU scalar_t& operator[](int i) {
+            LM_XPU scalar_t &operator[](int i) {
                 DCHECK_LE(i, nSamples);
                 return (&x)[i];
             }
@@ -100,6 +107,45 @@ namespace luminous {
             LM_ND_XPU static RGBSpectrum linear_to_srgb(RGBSpectrum color) {
                 auto vec = (vector_t) (color);
                 return RGBSpectrum(linear_to_srgb(vec));
+            }
+
+            template<typename T>
+            LM_ND_XPU static T reinhard(T c) {
+                return pow(c / (c + 1.0f), 1.0f / 2.2f);
+            }
+
+            LM_ND_XPU static RGBSpectrum reinhard(RGBSpectrum color) {
+                auto vec = (vector_t) (color);
+                return RGBSpectrum(reinhard(vec));
+            }
+
+            template<typename T>
+            LM_ND_XPU static T filmic(T c) {
+                float3 x = max(float3(0.0f), c - 0.004f);
+                return (x * (6.2f * x + 0.5f)) / (x * (6.2f * x + 1.7f) + 0.06f);
+            }
+
+            LM_ND_XPU static RGBSpectrum filmic(RGBSpectrum color) {
+                auto vec = (vector_t) (color);
+                return RGBSpectrum(filmic(vec));
+            }
+
+            template<typename T>
+            LM_ND_XPU static T tone_mapping(T c, EToneMap tone_map) {
+                switch (tone_map) {
+                    case Linear:
+                        return c;
+                    case Gamma:
+                        return linear_to_srgb(c);
+                    case Reinhard:
+                        return reinhard(c);
+                    case Filmic:
+                        return filmic(c);
+                    default:
+                        break;
+                }
+                DCHECK(0);
+                return c;
             }
 
             template<typename T>
