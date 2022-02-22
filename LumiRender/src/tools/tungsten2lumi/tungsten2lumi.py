@@ -9,6 +9,13 @@ import glm
 
 g_textures = []
 
+table = {
+    "Gamma" : 0,
+    "filmic" : 1,
+    "reinhard" : 2,
+    "linear" : 3,
+}
+
 def convert_roughness(r):
     return glm.sqrt(r)
 
@@ -91,7 +98,7 @@ def convert_metal(mat_input):
             "material" : mat_input.get("material", ""),
             "eta" : mat_input.get("eta", [0,0,0]),
             "k" : mat_input.get("k", [0,0,0]),
-            "roughness" : mat_input.get("roughness", 0)
+            "roughness" :convert_roughness(mat_input.get("roughness", 0))
         }
     }
     return ret
@@ -102,7 +109,7 @@ def convert_glass(mat_input):
         "name" : mat_input["name"],
         "param" : {
             "eta" : mat_input["ior"],
-            "roughness" : mat_input.get("roughness", 0),
+            "roughness" :convert_roughness(mat_input.get("roughness", 0)),
             "color" : convert_vec(mat_input.get("albedo", 1), 3)
         }
     }
@@ -125,7 +132,7 @@ def convert_disney(mat_input):
         "param" : {
             "color" : convert_vec(mat_input.get("albedo", 1), 3),
             "eta": 1.5,
-            "roughness":0.2,
+            "roughness":0.1,
             "metallic": 0,
             "specular_tint": 0.9,
             "anisotropic": 0,
@@ -254,6 +261,7 @@ def convert_shapes(scene_input):
 
 def convert_camera(scene_input):
     camera_input = scene_input["camera"]
+    renderer = scene_input["renderer"]
     transform = camera_input["transform"]
     ret = {
         "type" : "ThinLensCamera",
@@ -271,7 +279,8 @@ def convert_camera(scene_input):
             "film" : {
                 "param" : {
                     "resolution" : camera_input.get("resolution", [768, 768]),
-                    "fb_state": 0
+                    "fb_state": 0,
+                    "tone_map" : table[renderer.get("tonemap", "filmic")]
                 }
             },
             "filter": {
@@ -315,7 +324,8 @@ def convert_output_config(scene_input):
     renderer = scene_input["renderer"]
     ret = {
         "fn" : renderer.get("output_file", "scene.png"),
-        "dispatch_num" : renderer.get("spp", 0)
+        "dispatch_num" : renderer.get("spp", 0),
+        "tone_map" : table[renderer.get("tonemap", "filmic")]
     }
     return ret
 
@@ -326,7 +336,8 @@ def write_scene(scene_output, filepath):
     print("lumi scene save to:", abspath)
 
 def main():
-    fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
+    fn = 'LumiRender\\res\\render_scene\\cornell-box\\tungsten_scene.json'
     parent = os.path.dirname(fn)
     output_fn = os.path.join(parent, "lumi_scene.json")
     # print()

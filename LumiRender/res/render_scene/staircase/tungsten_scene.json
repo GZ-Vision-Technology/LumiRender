@@ -7153,7 +7153,7 @@
                     -179.99998474121094
                 ]
             },
-            "emission": 15.0,
+            "emission": 30.0,
             "type": "quad",
             "bsdf": {
                 "albedo": 1.0,
@@ -7165,7 +7165,7 @@
         "tonemap": "filmic",
         "resolution": [
             720,
-            1024
+            1280
         ],
         "reconstruction_filter": "tent",
         "transform": {

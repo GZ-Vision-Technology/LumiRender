@@ -457,7 +457,8 @@
                         1024,
                         1024
                     ],
-                    "fb_state": 0
+                    "fb_state": 0,
+                    "tone_map": 1
                 }
             },
             "filter": {
@@ -473,6 +474,7 @@
     },
     "output": {
         "fn": "cornell-box.png",
-        "dispatch_num": 0
+        "dispatch_num": 0,
+        "tone_map": 1
     }
 }
