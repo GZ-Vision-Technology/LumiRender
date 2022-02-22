@@ -124,6 +124,9 @@ namespace luminous {
             std::copy(ai_scene->mMaterials, ai_scene->mMaterials + ai_scene->mNumMaterials, ai_materials.begin());
             for (const auto &ai_material : ai_materials) {
                 MaterialConfig mc = parse_material(ai_material, directory, use_normal_map);
+                mc.roughness.val = make_float4(1,1,1,1);
+                mc.clearcoat_roughness.val = make_float4(1,1,1,1);
+                mc.eta.val = make_float4(1.5f);
                 mc.set_full_type("MatteMaterial");
                 ret.push_back(mc);
             }
