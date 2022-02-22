@@ -11,11 +11,11 @@ namespace luminous {
 
         BSDFWrapper MatteMaterial::get_BSDF(const MaterialEvalContext &ctx, const SceneData *scene_data) const {
             float3 color = _color.eval(scene_data, ctx);
-            if (_sigma > 0) {
-                OrenNayarBSDF oren_nayar_bsdf = create_oren_nayar_bsdf(color, _sigma);
-                BSDF bsdf{oren_nayar_bsdf};
-                return {ctx.ng, ctx.ns, ctx.dp_dus, bsdf};
-            }
+//            if (_sigma > 0) {
+//                OrenNayarBSDF oren_nayar_bsdf = create_oren_nayar_bsdf(color, _sigma);
+//                BSDF bsdf{oren_nayar_bsdf};
+//                return {ctx.ng, ctx.ns, ctx.dp_dus, bsdf};
+//            }
             DiffuseBSDF diffuse_bsdf = create_diffuse_bsdf(color);
             BSDF bsdf{diffuse_bsdf};
             return {ctx.ng, ctx.ns, ctx.dp_dus, bsdf};

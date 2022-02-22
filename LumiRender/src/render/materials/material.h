@@ -29,10 +29,12 @@ namespace luminous {
 
         class DisneyMaterial;
 
-        class Material : public Variant<MatteMaterial *, AssimpMaterial *, MirrorMaterial *,
-                                            GlassMaterial *, FakeMetalMaterial *, MetalMaterial *, DisneyMaterial *> {
+        class PlasticMaterial;
 
-            DECLARE_REFLECTION(Material, Variant)
+        class Material : public Variant<MatteMaterial *, MirrorMaterial *, PlasticMaterial *,
+                GlassMaterial *, FakeMetalMaterial *, MetalMaterial *, DisneyMaterial *> {
+
+        DECLARE_REFLECTION(Material, Variant)
 
         protected:
             index_t _normal_idx{invalid_uint32};
@@ -40,11 +42,13 @@ namespace luminous {
         public:
             using Variant::Variant;
 
-            LM_ND_XPU MaterialEvalContext compute_shading_frame(MaterialEvalContext ctx, const SceneData *scene_data) const;
+            LM_ND_XPU MaterialEvalContext
+            compute_shading_frame(MaterialEvalContext ctx, const SceneData *scene_data) const;
 
             LM_ND_XPU BSDFWrapper get_BSDF(MaterialEvalContext ctx, const SceneData *scene_data) const;
 
 #ifndef __CUDACC__
+
             LM_NODISCARD static std::pair<Material, std::vector<size_t>> create(const MaterialConfig &mc);
 
 #endif
