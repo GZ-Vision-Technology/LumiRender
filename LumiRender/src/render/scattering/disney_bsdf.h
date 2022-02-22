@@ -45,6 +45,9 @@ namespace luminous {
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                         TransportMode mode = TransportMode::Radiance) const;
 
+                ND_XPU_INLINE float weight(BSDFHelper helper, Spectrum Fr) const {
+                    return luminance(spectrum() * Fr);
+                }
             };
 
             class Sheen : public ColoredBxDF<Sheen> {
