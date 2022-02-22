@@ -75,7 +75,7 @@
     ],
     "materials": [
         {
-            "type": "DisneyMaterial",
+            "type": "PlasticMaterial",
             "name": "WoodFloor",
             "param": {
                 "color": "textures/WoodFloor.jpg",
@@ -102,7 +102,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "PlasticMaterial",
             "name": "WoodStairs",
             "param": {
                 "color": "textures/WoodPanel.jpg",
@@ -129,7 +129,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "PlasticMaterial",
             "name": "WoodChair",
             "param": {
                 "color": "textures/Wood.jpg",
@@ -156,7 +156,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "PlasticMaterial",
             "name": "WoodLamp",
             "param": {
                 "color": "textures/WoodChair.jpg",
@@ -250,7 +250,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "PlasticMaterial",
             "name": "MagnoliaPaint",
             "param": {
                 "color": [
@@ -281,7 +281,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "PlasticMaterial",
             "name": "WhitePaint",
             "param": {
                 "color": [
@@ -31460,9 +31460,9 @@
                     }
                 },
                 "emission": [
-                    10.0,
-                    10.0,
-                    10.0
+                    7.0,
+                    7.0,
+                    7.0
                 ]
             }
         }
@@ -31514,17 +31514,18 @@
                 "param": {
                     "resolution": [
                         720,
-                        1024
+                        1280
                     ],
-                    "fb_state": 0
+                    "fb_state": 0,
+                    "tone_map": 0
                 }
             },
             "filter": {
-                "type": "BoxFilter",
+                "type": "GaussianFilter",
                 "param": {
                     "radius": [
-                        0.5,
-                        0.5
+                        2,
+                        2
                     ]
                 }
             }
@@ -31532,6 +31533,7 @@
     },
     "output": {
         "fn": "staircase.png",
-        "dispatch_num": 0
+        "dispatch_num": 0,
+        "tone_map": 0
     }
 }

@@ -61,12 +61,12 @@ def convert_matte(mat_input):
     
 def convert_plastic(mat_input):
     ret = {
-        "type" : "DisneyMaterial",
+        "type" : "PlasticMaterial",
         "name" : mat_input["name"],
         "param" : {
             "color" : convert_vec(mat_input.get("albedo", 1), 3),
             "eta": 1.5,
-            "roughness": convert_vec(mat_input.get("roughness", 1)**0.5, 1),
+            "roughness": convert_vec(mat_input.get("roughness", 1)**1, 1),
             "metallic": 0,
             "specular_tint": 0.9,
             "anisotropic": 0,
@@ -337,6 +337,9 @@ def write_scene(scene_output, filepath):
 
 def main():
     fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\living-room\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\cornell-box\\tungsten_scene.json'
     parent = os.path.dirname(fn)
     output_fn = os.path.join(parent, "lumi_scene.json")
