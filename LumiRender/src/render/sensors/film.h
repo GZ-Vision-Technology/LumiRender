@@ -9,6 +9,7 @@
 #include "base_libs/lstd/lstd.h"
 #include "parser/config.h"
 #include "core/backend/buffer_view.h"
+#include "base_libs/optics/rgb.h"
 #include "render/include/pixel_info.h"
 
 namespace luminous {
@@ -25,12 +26,13 @@ namespace luminous {
 
         class Film {
 
-            DECLARE_REFLECTION(Film)
+        DECLARE_REFLECTION(Film)
 
         protected:
             uint2 _resolution;
             Box2f _screen_window;
             FBState _fb_state{Render};
+            EToneMap _tone_map{optics::Filmic};
             BufferView<float4> _normal_buffer_view;
             BufferView<float4> _albedo_buffer_view;
             BufferView<float4> _render_buffer_view;
@@ -44,11 +46,12 @@ namespace luminous {
 
         public:
             CPU_ONLY(explicit Film(const FilmConfig &config)
-                    : Film(config.resolution, FBState(config.state)) {})
+                    : Film(config.resolution, EToneMap(config.tone_map), FBState(config.state)) {})
 
-            explicit Film(uint2 res, FBState state = FBState::Render)
+            explicit Film(uint2 res, EToneMap tone_map, FBState state = FBState::Render)
                     : _resolution(res),
-                    _fb_state(state) {
+                      _tone_map(tone_map),
+                      _fb_state(state) {
                 _update();
             }
 
@@ -77,7 +80,7 @@ namespace luminous {
             }
 
             LM_XPU static void fill_buffer(uint pixel_index, float3 val, float weight,
-                                    uint frame_index, BufferView<float4> buffer_view);
+                                           uint frame_index, BufferView<float4> buffer_view);
 
             LM_XPU void add_render_sample(uint pixel_index, Spectrum color, float weight, uint frame_index = 0u) {
                 fill_buffer(pixel_index, color.vec(), weight, frame_index, _render_buffer_view);

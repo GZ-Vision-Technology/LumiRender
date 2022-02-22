@@ -154,7 +154,7 @@ namespace luminous {
             image.for_each_pixel([&](std::byte *pixel, int i) {
                 auto fp = reinterpret_cast<float4 *>(pixel);
                 float4 val = buffer[i];
-                *fp = Spectrum::linear_to_srgb(val);
+                *fp = Spectrum::tone_mapping(val, oc.tone_map);
             });
 
             auto change_fn = [&](const std::filesystem::path &output_path,
@@ -193,7 +193,7 @@ namespace luminous {
                     auto fp = reinterpret_cast<float4 *>(pixel);
                     float4 val = *fp;
                     val.w = 1.f;
-                    *fp = Spectrum::linear_to_srgb(val);
+                    *fp = Spectrum::tone_mapping(val, oc.tone_map);
                 });
                 auto denoised_fn = change_fn(film_out_path,"-denoised");
                 image_denoised.save(denoised_fn);

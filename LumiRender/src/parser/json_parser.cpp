@@ -226,6 +226,7 @@ namespace luminous {
             ParameterSet param(ps["param"]);
             fc.resolution = param["resolution"].as_uint2(make_uint2(500, 500));
             fc.state = param["fb_state"].as_int(0);
+            fc.tone_map = param["tone_map"].as_int(0);
             return fc;
         }
 
@@ -487,6 +488,7 @@ namespace luminous {
         LM_NODISCARD OutputConfig parse_output(const ParameterSet &ps) {
             OutputConfig ret;
             ret.fn = ps["fn"].as_string("luminous.png");
+            ret.tone_map = EToneMap(ps["tone_map"].as_int(0));
             ret.dispatch_num = ps["dispatch_num"].as_int(0);
             ret.frame_per_dispatch = ps["frame_per_dispatch"].as_int(1);
             ret.albedo = ps["albedo"].as_bool(false);

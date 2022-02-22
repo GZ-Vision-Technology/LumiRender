@@ -16,9 +16,9 @@ namespace luminous {
         };
 
         enum EToneMap {
+            Gamma,
             Filmic,
             Reinhard,
-            Gamma,
             Linear
         };
 
@@ -121,7 +121,7 @@ namespace luminous {
 
             template<typename T>
             LM_ND_XPU static T filmic(T c) {
-                float3 x = max(float3(0.0f), c - 0.004f);
+                T x = max(T(0.0f), c - 0.004f);
                 return (x * (6.2f * x + 0.5f)) / (x * (6.2f * x + 1.7f) + 0.06f);
             }
 

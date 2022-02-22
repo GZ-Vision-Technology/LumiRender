@@ -226,6 +226,7 @@ namespace luminous {
 
         struct OutputConfig : Config {
             std::string fn;
+            EToneMap tone_map{optics::Gamma};
             int dispatch_num{};
             int frame_per_dispatch{};
             bool normal{false};
@@ -248,6 +249,7 @@ namespace luminous {
 
         struct FilmConfig : Config {
             int state{0};
+            int tone_map{0};
             uint2 resolution{};
         };
 
