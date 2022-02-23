@@ -277,7 +277,6 @@ namespace luminous {
             uint instance_idx{};
             float3 emission{};
             bool two_sided{false};
-            float surface_area{1.f};
 
             // for point light and spot light
             float3 intensity;

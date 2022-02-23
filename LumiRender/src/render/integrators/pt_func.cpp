@@ -59,8 +59,8 @@ namespace luminous {
                 found_intersection = vertex.found_intersection;
                 Spectrum bsdf_ei = vertex.bsdf_val / vertex.bsdf_PDF;
 
-                throughput *= bsdf_ei;
                 L += Ld * throughput;
+                throughput *= bsdf_ei;
 
                 DCHECK(!has_invalid(L));
 

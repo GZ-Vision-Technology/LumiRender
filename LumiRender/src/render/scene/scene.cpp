@@ -149,21 +149,21 @@ namespace luminous {
             append_light_material(scene_graph->material_configs);
             init_materials(scene_graph);
 
-            auto compute_surface_area = [&](MeshHandle mesh, const Transform &transform) {
-                auto tri_start = mesh.triangle_offset;
-                auto tri_end = tri_start + mesh.triangle_count;
-                float surface_area = 0;
-                BufferView<const float3> mesh_positions = _positions.const_host_buffer_view(mesh.vertex_offset,
-                                                                                            mesh.vertex_count);
-                for (size_t i = tri_start; i < tri_end; ++i) {
-                    TriangleHandle tri = _triangles[i];
-                    float3 p0 = transform.apply_point(mesh_positions[tri.i]);
-                    float3 p1 = transform.apply_point(mesh_positions[tri.j]);
-                    float3 p2 = transform.apply_point(mesh_positions[tri.k]);
-                    surface_area += triangle_area(p0, p1, p2);
-                }
-                return surface_area;
-            };
+//            auto compute_surface_area = [&](MeshHandle mesh, const Transform &transform) {
+//                auto tri_start = mesh.triangle_offset;
+//                auto tri_end = tri_start + mesh.triangle_count;
+//                float surface_area = 0;
+//                BufferView<const float3> mesh_positions = _positions.const_host_buffer_view(mesh.vertex_offset,
+//                                                                                            mesh.vertex_count);
+//                for (size_t i = tri_start; i < tri_end; ++i) {
+//                    TriangleHandle tri = _triangles[i];
+//                    float3 p0 = transform.apply_point(mesh_positions[tri.i]);
+//                    float3 p1 = transform.apply_point(mesh_positions[tri.j]);
+//                    float3 p2 = transform.apply_point(mesh_positions[tri.k]);
+//                    surface_area += triangle_area(p0, p1, p2);
+//                }
+//                return surface_area;
+//            };
 
             index_t distribute_idx = 0;
             for (const auto &instance : scene_graph->instance_list) {
@@ -178,7 +178,7 @@ namespace luminous {
                         lc.instance_idx = _inst_to_mesh_idx.size();
                         MeshHandle &mesh_handle = _meshes[mesh.idx_in_meshes];
                         mesh_handle.light_idx = scene_graph->light_configs.size();
-                        lc.surface_area = compute_surface_area(mesh_handle, instance.o2w);
+//                        lc.surface_area = compute_surface_area(mesh_handle, instance.o2w);
                         scene_graph->light_configs.push_back(lc);
                         mesh_handle.material_idx = _materials.size() - 1;
                         if (!mesh_handle.has_distribute()) {
