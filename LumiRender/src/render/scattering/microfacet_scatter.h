@@ -122,6 +122,25 @@ namespace luminous {
                                           TransportMode mode = TransportMode::Radiance) const;
         };
 
+        /**
+         * diffuse and clearcoat blend
+         *
+         * specular is
+         *
+         *                                  D(wh) F(wo)
+         * fr(p, wo, wi) = -----------------------------------------------
+         *                   4 * dot(wh, wi) * max(dot(n,wi), dot(n,wo))
+         *
+         *
+         * Fr(cos_theta) = R +(1 - R)(1 - cos_theta)^5
+         *
+         * diffuse is
+         *
+         *                  28 * Rd
+         * fr(p, wo, wi) = --------- (1 - Rs) (1 - (1 - dot(n, wi)/2)^5) (1 - (1 - dot(n, wo)/2)^5)
+         *                  23 * pi
+         *
+         */
         class MicrofacetFresnel : public ColoredBxDF<MicrofacetFresnel> {
         protected:
             Microfacet _microfacet{};
@@ -140,7 +159,7 @@ namespace luminous {
                       _spec(spec),
                       _microfacet(alpha_x, alpha_y, type) {}
 
-            LM_XPU Spectrum schlick_fresnel(float cos_theta, BSDFHelper helper) const {
+            LM_ND_XPU Spectrum schlick_fresnel(float cos_theta, BSDFHelper helper) const {
                 return color(helper) + Pow<5>(1 - cos_theta) * (Spectrum(1.f) - _spec);
             }
 
@@ -163,13 +182,6 @@ namespace luminous {
             LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
                                      BSDFHelper helper,
                                      TransportMode mode = TransportMode::Radiance) const;
-
-            /**
-             * eta must be corrected
-             */
-            LM_ND_XPU BSDFSample _sample_f(float3 wo, float uc, float2 u,
-                                           Spectrum Fr, BSDFHelper helper,
-                                           TransportMode mode = TransportMode::Radiance) const;
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                           TransportMode mode = TransportMode::Radiance) const;

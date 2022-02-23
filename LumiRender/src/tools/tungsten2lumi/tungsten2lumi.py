@@ -66,19 +66,19 @@ def convert_substrate(mat_input):
         "param" : {
             "color" : convert_vec(mat_input.get("albedo", 1), 3),
             "eta": 1.5,
-            "roughness": convert_vec(mat_input.get("roughness", 1)**1, 1),
-            "metallic": 0,
-            "specular_tint": 0.9,
-            "anisotropic": 0,
-            "sheen": 0.0,
-            "sheen_tint": 0.0,
-            "clearcoat": 0.8,
-            "clearcoat_roughness": 0.2,
-            "spec_trans": 0,
-            "flatness": 0,
-            "scatter_distance": [0,0,0],
-            "diff_trans": 0,
-            "thin": False
+            "roughness": convert_vec(mat_input.get("roughness", 1)**0.5, 1),
+            # "metallic": 0,
+            # "specular_tint": 0.9,
+            # "anisotropic": 0,
+            # "sheen": 0.0,
+            # "sheen_tint": 0.0,
+            # "clearcoat": 0.8,
+            # "clearcoat_roughness": 0.2,
+            # "spec_trans": 0,
+            # "flatness": 0,
+            # "scatter_distance": [0,0,0],
+            # "diff_trans": 0,
+            # "thin": False
         }
     }
     return ret
