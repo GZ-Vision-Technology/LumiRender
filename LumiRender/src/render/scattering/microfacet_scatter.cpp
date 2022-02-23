@@ -162,18 +162,22 @@ namespace luminous {
             Spectrum Rd = color(helper);
             Spectrum Rs = _spec;
             Spectrum diffuse = (28.f / (23.f * Pi)) * Rd * (Spectrum(1.f) - Rs) *
-                    (1 - Pow<5>(1 - .5f * Frame::abs_cos_theta(wi))) *
-                    (1 - Pow<5>(1 - .5f * Frame::abs_cos_theta(wo)));
+                               (1 - Pow<5>(1 - .5f * Frame::abs_cos_theta(wi))) *
+                               (1 - Pow<5>(1 - .5f * Frame::abs_cos_theta(wo)));
             float3 wh = wi + wo;
             if (is_zero(wh)) {
                 return {0.f};
             }
             wh = normalize(wh);
             Spectrum specular = _microfacet.D(wh) /
-                    (4 * abs_dot(wi, wh) * std::max(Frame::abs_cos_theta(wi), Frame::abs_cos_theta(wo))) *
-                    schlick_fresnel(dot(wi, wh), helper);
+                                (4 * abs_dot(wi, wh) * std::max(Frame::abs_cos_theta(wi), Frame::abs_cos_theta(wo))) *
+                                schlick_fresnel(dot(wi, wh), helper);
 
             return diffuse + specular;
+        }
+
+        Spectrum MicrofacetFresnel::schlick_fresnel(float cos_theta, BSDFHelper helper) const {
+            return _spec + Pow<5>(1 - cos_theta) * (Spectrum(1.f) - _spec);
         }
 
         float MicrofacetFresnel::PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
@@ -186,7 +190,8 @@ namespace luminous {
         float MicrofacetFresnel::safe_PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
             float3 wh = normalize(wo + wi);
             float pdf_wh = _microfacet.PDF_wh(wo, wh);
-            return .5f * (Frame::abs_cos_theta(wi) * invPi + pdf_wh / (4 * dot(wo, wh)));
+            auto ret = .5f * (Frame::abs_cos_theta(wi) * invPi + pdf_wh / (4 * dot(wo, wh)));
+            return ret;
         }
 
         BSDFSample MicrofacetFresnel::sample_f(float3 wo, float uc, float2 u,
@@ -195,7 +200,7 @@ namespace luminous {
             Spectrum f_val{0.f};
             float pdf = 0.f;
             if (uc < 0.5) {
-                wi = square_to_hemisphere(u);
+                wi = square_to_cosine_hemisphere(u);
                 wi.z = select(wo.z < 0, -wi.z, wi.z);
             } else {
                 float3 wh = _microfacet.sample_wh(wo, u);
@@ -208,5 +213,6 @@ namespace luminous {
             f_val = safe_eval(wo, wi, helper, mode);
             return BSDFSample(f_val, wi, pdf, flags(), helper.eta());
         }
+
     }
 }

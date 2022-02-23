@@ -159,9 +159,7 @@ namespace luminous {
                       _spec(spec),
                       _microfacet(alpha_x, alpha_y, type) {}
 
-            LM_ND_XPU Spectrum schlick_fresnel(float cos_theta, BSDFHelper helper) const {
-                return color(helper) + Pow<5>(1 - cos_theta) * (Spectrum(1.f) - _spec);
-            }
+            LM_ND_XPU Spectrum schlick_fresnel(float cos_theta, BSDFHelper helper) const;
 
             /**
              * must be reflection and eta must be corrected
