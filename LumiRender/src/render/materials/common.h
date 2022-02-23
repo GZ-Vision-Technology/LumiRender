@@ -10,5 +10,5 @@
 #include "glass.h"
 #include "metal.h"
 #include "disney.h"
-#include "plastic.h"
+#include "substrate.h"
 #include "ai_material.h"

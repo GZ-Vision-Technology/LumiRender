@@ -2,7 +2,7 @@
     "textures": [],
     "materials": [
         {
-            "type": "PlasticMaterial",
+            "type": "SubstrateMaterial",
             "name": "Plastic_Orange",
             "param": {
                 "color": [
@@ -33,7 +33,7 @@
             }
         },
         {
-            "type": "PlasticMaterial",
+            "type": "SubstrateMaterial",
             "name": "Plastic_Black",
             "param": {
                 "color": [
@@ -88,7 +88,7 @@
             }
         },
         {
-            "type": "PlasticMaterial",
+            "type": "SubstrateMaterial",
             "name": "Floor",
             "param": {
                 "color": [
@@ -1122,7 +1122,7 @@
     },
     "output": {
         "fn": "coffee.png",
-        "dispatch_num": 1024,
+        "dispatch_num": 2048,
         "tone_map": 1
     }
 }

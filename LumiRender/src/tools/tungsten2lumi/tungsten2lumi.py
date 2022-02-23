@@ -59,9 +59,9 @@ def convert_matte(mat_input):
     }
     return ret
     
-def convert_plastic(mat_input):
+def convert_substrate(mat_input):
     ret = {
-        "type" : "PlasticMaterial",
+        "type" : "SubstrateMaterial",
         "name" : mat_input["name"],
         "param" : {
             "color" : convert_vec(mat_input.get("albedo", 1), 3),
@@ -164,7 +164,7 @@ def convert_materials(scene_input):
         elif mat_type == "conductor" or mat_type == "rough_conductor":
             mat_output = convert_metal(mat_input)
         elif mat_type == "plastic" or mat_type == "rough_plastic":
-            mat_output = convert_plastic(mat_input)
+            mat_output = convert_substrate(mat_input)
         elif mat_type != "null":
             mat_output = convert_disney(mat_input)
 
@@ -336,8 +336,8 @@ def write_scene(scene_output, filepath):
     print("lumi scene save to:", abspath)
 
 def main():
-    fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
-    # fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
+    fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\living-room\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\cornell-box\\tungsten_scene.json'

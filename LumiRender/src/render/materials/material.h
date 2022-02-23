@@ -29,9 +29,9 @@ namespace luminous {
 
         class DisneyMaterial;
 
-        class PlasticMaterial;
+        class SubstrateMaterial;
 
-        class Material : public Variant<MatteMaterial *, MirrorMaterial *, PlasticMaterial *,
+        class Material : public Variant<MatteMaterial *, MirrorMaterial *, SubstrateMaterial *,
                 GlassMaterial *, FakeMetalMaterial *, MetalMaterial *, DisneyMaterial *> {
 
         DECLARE_REFLECTION(Material, Variant)

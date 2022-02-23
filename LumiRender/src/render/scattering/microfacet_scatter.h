@@ -121,5 +121,58 @@ namespace luminous {
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                           TransportMode mode = TransportMode::Radiance) const;
         };
+
+        class MicrofacetFresnel : public ColoredBxDF<MicrofacetFresnel> {
+        protected:
+            Microfacet _microfacet{};
+            Spectrum _spec{};
+        public:
+            using ColoredBxDF::ColoredBxDF;
+
+            LM_XPU explicit MicrofacetFresnel(Spectrum color, Spectrum spec, Microfacet microfacet)
+                    : ColoredBxDF(color, flags_by_alpha(microfacet.max_alpha()) | Reflection),
+                      _spec(spec),
+                      _microfacet(microfacet) {}
+
+            LM_XPU explicit MicrofacetFresnel(Spectrum color, Spectrum spec, float alpha_x, float alpha_y,
+                                              MicrofacetType type)
+                    : ColoredBxDF(color, flags_by_alpha(alpha_x, alpha_y) | Reflection),
+                      _spec(spec),
+                      _microfacet(alpha_x, alpha_y, type) {}
+
+            LM_XPU Spectrum schlick_fresnel(float cos_theta, BSDFHelper helper) const {
+                return color(helper) + Pow<5>(1 - cos_theta) * (Spectrum(1.f) - _spec);
+            }
+
+            /**
+             * must be reflection and eta must be corrected
+             */
+            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
+                                    TransportMode mode = TransportMode::Radiance) const;
+
+            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
+                                         TransportMode mode = TransportMode::Radiance) const;
+
+            /**
+             * must be reflection
+             */
+            LM_ND_XPU float PDF(float3 wo, float3 wi,
+                                BSDFHelper helper,
+                                TransportMode mode = TransportMode::Radiance) const;
+
+            LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
+                                     BSDFHelper helper,
+                                     TransportMode mode = TransportMode::Radiance) const;
+
+            /**
+             * eta must be corrected
+             */
+            LM_ND_XPU BSDFSample _sample_f(float3 wo, float uc, float2 u,
+                                           Spectrum Fr, BSDFHelper helper,
+                                           TransportMode mode = TransportMode::Radiance) const;
+
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
+                                          TransportMode mode = TransportMode::Radiance) const;
+        };
     }
 }

@@ -87,7 +87,7 @@ namespace luminous {
 
             } else if (type() == full_type("MirrorMaterial")) {
                 fill_tex_idx_by_name(tex_configs, color);
-            } else if (type() == full_type("PlasticMaterial")){
+            } else if (type() == full_type("SubstrateMaterial")){
                 fill_tex_idx_by_name(tex_configs, color);
                 fill_tex_idx_by_name(tex_configs, specular);
                 fill_tex_idx_by_name(tex_configs, roughness);

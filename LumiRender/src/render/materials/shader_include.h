@@ -12,7 +12,7 @@
     #include "metal.cpp"
     #include "mirror.cpp"
     #include "disney.cpp"
-    #include "plastic.cpp"
+    #include "substrate.cpp"
     #include "ai_material.cpp"
 #else
     #include "common.h"
