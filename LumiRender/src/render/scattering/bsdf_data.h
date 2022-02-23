@@ -177,7 +177,7 @@ namespace luminous {
                 return {0.f};
             }
 
-            LM_ND_XPU static BSDFHelper create_plastic_data(float eta) {
+            LM_ND_XPU static BSDFHelper create_substrate_data(float eta) {
                 BSDFHelper ret{Dielectric};
                 ret.val2 = eta;
                 return ret;

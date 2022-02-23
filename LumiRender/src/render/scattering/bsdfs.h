@@ -76,12 +76,12 @@ namespace luminous {
 
         using NormalizedFresnelBSDF = BSDF_Ty<BSDFHelper, false, NormalizedFresnelBxDF>;
 
-        using PlasticBSDF = BSDF_Ty<BSDFHelper, false, DiffuseReflection, MicrofacetReflection>;
+        using SubstrateBSDF = BSDF_Ty<BSDFHelper, false, DiffuseReflection, MicrofacetReflection>;
 
-        ND_XPU_INLINE PlasticBSDF create_plastic_bsdf(float3 color, float3 spec, float2 alpha) {
-            BSDFHelper data = BSDFHelper::create_plastic_data(1.5);
-            return PlasticBSDF(data, DiffuseReflection(color),
-                               MicrofacetReflection{Spectrum{spec}, alpha.x, alpha.y, GGX});
+        ND_XPU_INLINE SubstrateBSDF create_substrate_bsdf(float3 color, float3 spec, float2 alpha, float eta = 1.5f) {
+            BSDFHelper data = BSDFHelper::create_substrate_data(1.5);
+            return SubstrateBSDF(data, DiffuseReflection(color),
+                                 MicrofacetReflection{Spectrum{spec}, alpha.x, alpha.y, GGX});
         }
 
         struct DisneyBSDFData {
@@ -108,7 +108,7 @@ namespace luminous {
 
         class BSDF : public Variant<DiffuseBSDF, MirrorBSDF,
                 GlassBSDF, RoughGlassBSDF, DisneyBSDF,
-                FakeMetalBSDF, MetalBSDF, PlasticBSDF> {
+                FakeMetalBSDF, MetalBSDF, SubstrateBSDF> {
 
         DECLARE_REFLECTION(BSDF, Variant)
 

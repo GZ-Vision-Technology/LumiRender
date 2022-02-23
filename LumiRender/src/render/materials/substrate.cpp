@@ -19,8 +19,8 @@ namespace luminous {
             // todo change to vector compute
             roughness.x = roughness.x < min_roughness ? min_roughness : roughness.x;
             roughness.y = roughness.y < min_roughness ? min_roughness : roughness.y;
-            PlasticBSDF plastic_bsdf = create_plastic_bsdf(color, spec, roughness);
-            return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF(plastic_bsdf)};
+            SubstrateBSDF bsdf = create_substrate_bsdf(color, spec, roughness);
+            return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF(bsdf)};
         }
     }
 }
