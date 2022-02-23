@@ -10,7 +10,7 @@ import glm
 g_textures = []
 
 table = {
-    "Gamma" : 0,
+    "gamma" : 0,
     "filmic" : 1,
     "reinhard" : 2,
     "linear" : 3,
@@ -66,7 +66,7 @@ def convert_substrate(mat_input):
         "param" : {
             "color" : convert_vec(mat_input.get("albedo", 1), 3),
             "eta": 1.5,
-            "roughness": convert_vec(mat_input.get("roughness", 1)**0.5, 1),
+            "roughness": convert_vec(mat_input.get("roughness", 0.001) ** 2, 1),
             # "metallic": 0,
             # "specular_tint": 0.9,
             # "anisotropic": 0,
@@ -336,8 +336,8 @@ def write_scene(scene_output, filepath):
     print("lumi scene save to:", abspath)
 
 def main():
-    # fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
-    fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
+    fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\living-room\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\cornell-box\\tungsten_scene.json'

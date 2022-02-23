@@ -264,7 +264,9 @@ namespace luminous {
                 return make_float4(val.as_float(1.f), 0, 0, 0);
             } else if (val.data().is_array()) {
                 auto size = val.data().size();
-                if (size == 2) {
+                if (size == 1) {
+                    return make_float4(val[0].as_float(default_val.x));
+                } if (size == 2) {
                     return make_float4(val.as_float2(make_float2(default_val)), 0, 0);
                 } else if (size == 3) {
                     return make_float4(val.as_float3(make_float3(default_val)), 0);
@@ -449,7 +451,7 @@ namespace luminous {
                 }
             } else if (type == "SubstrateMaterial") {
                 ret.roughness = process_attr(param["roughness"], scene_graph, make_float4(0.1f));
-                ret.remapping_roughness = param["remapping_roughness"].as_bool(true);
+                ret.remapping_roughness = param["remapping_roughness"].as_bool(false);
                 ret.specular = process_attr(param["specular"], scene_graph, make_float4(0.04f));
             } else if (type == "DisneyMaterial") {
                 ret.metallic = process_attr(param["metallic"], scene_graph, make_float4(0.f));
