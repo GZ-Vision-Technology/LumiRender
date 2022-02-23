@@ -203,8 +203,9 @@ namespace luminous {
                 if (!same_hemisphere(wi, wo)) {
                     return BSDFSample(f_val, wi, 0, flags(), helper.eta());
                 }
-                pdf = safe_PDF(wo, wi, helper, mode);
             }
+            pdf = safe_PDF(wo, wi, helper, mode);
+            f_val = safe_eval(wo, wi, helper, mode);
             return BSDFSample(f_val, wi, pdf, flags(), helper.eta());
         }
     }

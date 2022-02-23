@@ -450,7 +450,7 @@ namespace luminous {
             } else if (type == "SubstrateMaterial") {
                 ret.roughness = process_attr(param["roughness"], scene_graph, make_float4(0.f));
                 ret.remapping_roughness = param["remapping_roughness"].as_bool(false);
-                ret.specular = process_attr(param["specular"], scene_graph, make_float4(1.f));
+                ret.specular = process_attr(param["specular"], scene_graph, make_float4(0.04f));
             } else if (type == "DisneyMaterial") {
                 ret.metallic = process_attr(param["metallic"], scene_graph, make_float4(0.f));
                 ret.eta = process_attr(param["eta"], scene_graph, make_float4(1.5));
