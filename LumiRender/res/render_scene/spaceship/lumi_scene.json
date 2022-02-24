@@ -27,7 +27,11 @@
                     0,
                     0
                 ],
-                "roughness": 0.31622776601683794
+                "roughness": [
+                    0.1,
+                    0.1
+                ],
+                "remapping_roughness": false
             }
         },
         {
@@ -35,9 +39,21 @@
             "name": "RoughSteel",
             "param": {
                 "material": "",
-                "eta": 2.0,
-                "k": 0.0,
-                "roughness": 0.31622776601683794
+                "eta": [
+                    2.0,
+                    2.0,
+                    2.0
+                ],
+                "k": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "roughness": [
+                    0.1,
+                    0.1
+                ],
+                "remapping_roughness": false
             }
         },
         {
@@ -3920,7 +3936,7 @@
             "film": {
                 "param": {
                     "resolution": [
-                        1280,
+                        1024,
                         720
                     ],
                     "fb_state": 0,
@@ -3940,7 +3956,7 @@
     },
     "output": {
         "fn": "spaceship.png",
-        "dispatch_num": 64,
+        "dispatch_num": 4096,
         "tone_map": 1
     }
 }

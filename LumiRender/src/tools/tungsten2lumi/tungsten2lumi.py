@@ -83,9 +83,10 @@ def convert_metal(mat_input):
         "name" : mat_input["name"],
         "param" : {
             "material" : mat_input.get("material", ""),
-            "eta" : mat_input.get("eta", [0,0,0]),
-            "k" : mat_input.get("k", [0,0,0]),
-            "roughness" :convert_roughness(mat_input.get("roughness", 0))
+            "eta" : convert_vec(mat_input.get("eta", 0), 3),
+            "k" : convert_vec(mat_input.get("k", 0), 3),
+            "roughness" :convert_vec(mat_input.get("roughness", 0.01), 2),
+            "remapping_roughness" : False
         }
     }
     return ret
@@ -96,7 +97,7 @@ def convert_glass(mat_input):
         "name" : mat_input["name"],
         "param" : {
             "eta" : mat_input["ior"],
-            "roughness" :convert_vec(mat_input.get("roughness", 0), 2),
+            "roughness" :convert_vec(mat_input.get("roughness", 0.01), 2),
             "color" : convert_vec(mat_input.get("albedo", 1), 3)
         }
     }
