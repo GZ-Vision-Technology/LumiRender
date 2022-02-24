@@ -31482,7 +31482,7 @@
     },
     "output": {
         "fn": "staircase.png",
-        "dispatch_num": 256,
+        "dispatch_num": 1024,
         "tone_map": 0
     }
 }

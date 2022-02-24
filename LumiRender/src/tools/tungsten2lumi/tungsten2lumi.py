@@ -8,6 +8,7 @@ import os
 import glm
 
 g_textures = []
+g_lights = []
 
 table = {
     "gamma" : 0,
@@ -32,6 +33,9 @@ def try_add_textures(name):
             "color_space": "SRGB"
         }
     })
+    
+def add_light(data):
+    g_lights.append(data)
 
 def parse_attr(attr):
     if type(attr) == str:
@@ -46,7 +50,7 @@ def convert_vec(value, dim=3):
         for i in range(0, dim):
             ret.append(value)
         return ret
-    assert (len(value) == dim)
+    assert len(value) == dim
     return value
 
 def convert_matte(mat_input):
@@ -69,25 +73,6 @@ def convert_substrate(mat_input):
             "specular" : [0.04,0.04,0.04],
             "roughness": convert_vec(mat_input.get("roughness", 0.01), 2),
             "remapping_roughness" : False
-            # "metallic": 0,
-            # "specular_tint": 0.9,
-            # "anisotropic": 0,
-            # "sheen": 0.0,
-            # "sheen_tint": 0.0,
-            # "clearcoat": 0.8,
-            # "clearcoat_roughness": 0.2,
-            # "spec_trans": 0,
-            # "flatness": 0,
-            # "scatter_distance": [0,0,0],
-            # "diff_trans": 0,
-            # "thin": False
-        }
-    }
-    return ret
-    ret = {
-        "type" : "PlasticMaterial",
-        "param" : {
-            "name" : mat_input["name"],
         }
     }
     return ret
@@ -231,17 +216,58 @@ def convert_cube(shape_input, index):
 def convert_mesh(shape_input, index):
     fn = shape_input["file"]
     fn = fn[:-4] + ".obj"
+    bsdf = shape_input["bsdf"]
+    bsdf = None if type(bsdf) == dict else bsdf
     ret = {
         "type" : "model",
         "name" : "shape_" + str(index),
         "param" : {
             "fn" : fn,
             "smooth" : shape_input.get("smooth", True),
-            "material" : shape_input["bsdf"],
+            "material" : bsdf,
             "transform" : convert_shpe_transform(shape_input["transform"])
         }
     }
     return ret
+
+def convert_area_light(shape_input, shape_output):
+    shape_output["param"]["emission"] = convert_vec(shape_input["emission"], 3)
+    shape_output["param"]["material"] = None
+
+def get_emission(shape):
+    if "emission" in shape:
+        return convert_vec(shape["emission"], 3)
+    else:
+        power_scale = 100 * glm.pi()
+        power = convert_vec(shape["power"], 3)
+        emission = glm.vec3(power) / power_scale;
+        return [emission[0], emission[1], emission[2]]
+
+def convert_envmap(shape_input, shape_output):
+    assert shape_output is None
+    
+    data = {
+        "type": "Envmap",
+        "param": {
+            "transform" : {
+                "type" : "yaw_pitch",
+                "param" : {
+                    "yaw" : 0,
+                    "pitch": 0,
+                    "position": [0,0,0]
+                }
+            },
+            "key" : get_emission(shape_input)
+        }
+    }
+    add_light(data)
+
+def convert_light(shape_input, shape_output):
+    type = shape_input["type"]
+    if type == "infinite_sphere":
+        convert_envmap(shape_input, shape_output)
+    else:
+        convert_area_light(shape_input, shape_output)
 
 def convert_shapes(scene_input):
     shape_outputs = []
@@ -256,9 +282,9 @@ def convert_shapes(scene_input):
             shape_output = convert_mesh(shape_input, i)
             
         if "emission" in shape_input:
-            shape_output["param"]["emission"] = convert_vec(shape_input["emission"], 3)
-            shape_output["param"]["material"] = None
-        shape_outputs.append(shape_output)
+            convert_light(shape_input, shape_output)
+        if shape_output:
+            shape_outputs.append(shape_output)
     return shape_outputs
 
 def convert_camera(scene_input):
@@ -338,9 +364,9 @@ def write_scene(scene_output, filepath):
     print("lumi scene save to:", abspath)
 
 def main():
-    fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
-    # fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
+    fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\living-room\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\cornell-box\\tungsten_scene.json'
     parent = os.path.dirname(fn)
@@ -353,7 +379,7 @@ def main():
         "textures" : g_textures,
         "materials" : convert_materials(scene_input),
         "shapes" : convert_shapes(scene_input),
-        "lights" : [],
+        "lights" : g_lights,
         "light_sampler" : convert_light_sampler(scene_input),
         "sampler" : convert_sampler(scene_input),
         "integrator" : convert_integrator(scene_input),
