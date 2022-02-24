@@ -12,7 +12,7 @@
                 ],
                 "eta": 1.5,
                 "roughness": [
-                    1.0
+                    0.001
                 ]
             }
         },
@@ -27,7 +27,7 @@
                 ],
                 "eta": 1.5,
                 "roughness": [
-                    0.31622776601683794
+                    0.1
                 ]
             }
         },
@@ -66,7 +66,7 @@
                 ],
                 "eta": 1.5,
                 "roughness": [
-                    1.0
+                    0.001
                 ]
             }
         }
@@ -1021,8 +1021,8 @@
     "integrator": {
         "type": "PT",
         "param": {
-            "min_depth": 0,
-            "max_depth": 16,
+            "min_depth": 4,
+            "max_depth": 17,
             "rr_threshold": 1
         }
     },
@@ -1058,7 +1058,7 @@
                         1000
                     ],
                     "fb_state": 0,
-                    "tone_map": 1
+                    "tone_map": 0
                 }
             },
             "filter": {
@@ -1074,7 +1074,7 @@
     },
     "output": {
         "fn": "coffee.png",
-        "dispatch_num": 2048,
-        "tone_map": 1
+        "dispatch_num": 64,
+        "tone_map": 0
     }
 }

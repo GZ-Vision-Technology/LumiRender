@@ -66,7 +66,9 @@ def convert_substrate(mat_input):
         "param" : {
             "color" : convert_vec(mat_input.get("albedo", 1), 3),
             "eta": 1.5,
-            "roughness": convert_vec(mat_input.get("roughness", 0.001) ** 2, 1),
+            "specular" : [0.04,0.04,0.04],
+            "roughness": convert_vec(mat_input.get("roughness", 0.1), 2),
+            "remapping_roughness" : False
             # "metallic": 0,
             # "specular_tint": 0.9,
             # "anisotropic": 0,

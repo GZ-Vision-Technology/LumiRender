@@ -26,7 +26,7 @@ namespace luminous {
             constexpr static float z_near = 0.01f;
             constexpr static float z_far = 1000.f;
             constexpr static float fov_max = 120.f;
-            constexpr static float fov_min = 20.f;
+            constexpr static float fov_min = 15.f;
             constexpr static float pitch_max = 80.f;
             constexpr static float3 right_vec = make_float3(1, 0, 0);
             constexpr static float3 up_vec = make_float3(0, 1, 0);

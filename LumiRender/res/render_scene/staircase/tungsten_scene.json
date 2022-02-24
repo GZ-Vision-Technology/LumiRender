@@ -7162,7 +7162,7 @@
         }
     ],
     "camera": {
-        "tonemap": "Gamma",
+        "tonemap": "gamma",
         "resolution": [
             720,
             1280

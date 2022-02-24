@@ -75,111 +75,71 @@
     ],
     "materials": [
         {
-            "type": "PlasticMaterial",
+            "type": "MatteMaterial",
             "name": "WoodFloor",
             "param": {
                 "color": "textures/WoodFloor.jpg",
                 "eta": 1.5,
+                "specular": [
+                    0.04,
+                    0.04,
+                    0.04
+                ],
                 "roughness": [
                     0.1
                 ],
-                "metallic": 0,
-                "specular_tint": 0.9,
-                "anisotropic": 0,
-                "sheen": 0.0,
-                "sheen_tint": 0.0,
-                "clearcoat": 0.8,
-                "clearcoat_roughness": 0.2,
-                "spec_trans": 0,
-                "flatness": 0,
-                "scatter_distance": [
-                    0,
-                    0,
-                    0
-                ],
-                "diff_trans": 0,
-                "thin": false
+                "remapping_roughness": false
             }
         },
         {
-            "type": "PlasticMaterial",
+            "type": "MatteMaterial",
             "name": "WoodStairs",
             "param": {
                 "color": "textures/WoodPanel.jpg",
                 "eta": 1.5,
+                "specular": [
+                    0.04,
+                    0.04,
+                    0.04
+                ],
                 "roughness": [
                     0.1
                 ],
-                "metallic": 0,
-                "specular_tint": 0.9,
-                "anisotropic": 0,
-                "sheen": 0.0,
-                "sheen_tint": 0.0,
-                "clearcoat": 0.8,
-                "clearcoat_roughness": 0.2,
-                "spec_trans": 0,
-                "flatness": 0,
-                "scatter_distance": [
-                    0,
-                    0,
-                    0
-                ],
-                "diff_trans": 0,
-                "thin": false
+                "remapping_roughness": false
             }
         },
         {
-            "type": "PlasticMaterial",
+            "type": "MatteMaterial",
             "name": "WoodChair",
             "param": {
                 "color": "textures/Wood.jpg",
                 "eta": 1.5,
+                "specular": [
+                    0.04,
+                    0.04,
+                    0.04
+                ],
                 "roughness": [
                     0.1
                 ],
-                "metallic": 0,
-                "specular_tint": 0.9,
-                "anisotropic": 0,
-                "sheen": 0.0,
-                "sheen_tint": 0.0,
-                "clearcoat": 0.8,
-                "clearcoat_roughness": 0.2,
-                "spec_trans": 0,
-                "flatness": 0,
-                "scatter_distance": [
-                    0,
-                    0,
-                    0
-                ],
-                "diff_trans": 0,
-                "thin": false
+                "remapping_roughness": false
             }
         },
         {
-            "type": "PlasticMaterial",
+            "type": "MatteMaterial",
             "name": "WoodLamp",
             "param": {
                 "color": "textures/WoodChair.jpg",
                 "eta": 1.5,
+                "specular": [
+                    0.04,
+                    0.04,
+                    0.04
+                ],
                 "roughness": [
                     0.1
                 ],
-                "metallic": 0,
-                "specular_tint": 0.9,
-                "anisotropic": 0,
-                "sheen": 0.0,
-                "sheen_tint": 0.0,
-                "clearcoat": 0.8,
-                "clearcoat_roughness": 0.2,
-                "spec_trans": 0,
-                "flatness": 0,
-                "scatter_distance": [
-                    0,
-                    0,
-                    0
-                ],
-                "diff_trans": 0,
-                "thin": false
+                "remapping_roughness": false
             }
         },
         {
@@ -250,7 +210,7 @@
             }
         },
         {
-            "type": "PlasticMaterial",
+            "type": "MatteMaterial",
             "name": "MagnoliaPaint",
             "param": {
                 "color": [
@@ -259,29 +219,19 @@
                     0.578596
                 ],
                 "eta": 1.5,
+                "specular": [
+                    0.04,
+                    0.04,
+                    0.04
+                ],
                 "roughness": [
                     0.1
                 ],
-                "metallic": 0,
-                "specular_tint": 0.9,
-                "anisotropic": 0,
-                "sheen": 0.0,
-                "sheen_tint": 0.0,
-                "clearcoat": 0.8,
-                "clearcoat_roughness": 0.2,
-                "spec_trans": 0,
-                "flatness": 0,
-                "scatter_distance": [
-                    0,
-                    0,
-                    0
-                ],
-                "diff_trans": 0,
-                "thin": false
+                "remapping_roughness": false
             }
         },
         {
-            "type": "PlasticMaterial",
+            "type": "MatteMaterial",
             "name": "WhitePaint",
             "param": {
                 "color": [
@@ -290,25 +240,15 @@
                     0.578596
                 ],
                 "eta": 1.5,
+                "specular": [
+                    0.04,
+                    0.04,
+                    0.04
+                ],
                 "roughness": [
                     0.2
                 ],
-                "metallic": 0,
-                "specular_tint": 0.9,
-                "anisotropic": 0,
-                "sheen": 0.0,
-                "sheen_tint": 0.0,
-                "clearcoat": 0.8,
-                "clearcoat_roughness": 0.2,
-                "spec_trans": 0,
-                "flatness": 0,
-                "scatter_distance": [
-                    0,
-                    0,
-                    0
-                ],
-                "diff_trans": 0,
-                "thin": false
+                "remapping_roughness": false
             }
         },
         {
@@ -31460,9 +31400,9 @@
                     }
                 },
                 "emission": [
-                    7.0,
-                    7.0,
-                    7.0
+                    15,
+                    15,
+                    15
                 ]
             }
         }
@@ -31532,8 +31472,8 @@
         }
     },
     "output": {
-        "fn": "staircase.png",
-        "dispatch_num": 0,
+        "fn": "staircase-matte.png",
+        "dispatch_num": 64,
         "tone_map": 0
     }
 }
