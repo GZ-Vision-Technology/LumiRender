@@ -29,7 +29,7 @@ def try_add_textures(name):
         "type": "ImageTexture",
         "param": {
             "fn": name,
-            "color_space": "LINEAR"
+            "color_space": "SRGB"
         }
     })
 
@@ -338,8 +338,8 @@ def write_scene(scene_output, filepath):
     print("lumi scene save to:", abspath)
 
 def main():
-    # fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
-    fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
+    fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\living-room\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\cornell-box\\tungsten_scene.json'

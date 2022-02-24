@@ -5,7 +5,7 @@
             "type": "ImageTexture",
             "param": {
                 "fn": "textures/WoodFloor.jpg",
-                "color_space": "LINEAR"
+                "color_space": "SRGB"
             }
         },
         {
@@ -13,7 +13,7 @@
             "type": "ImageTexture",
             "param": {
                 "fn": "textures/WoodPanel.jpg",
-                "color_space": "LINEAR"
+                "color_space": "SRGB"
             }
         },
         {
@@ -21,7 +21,7 @@
             "type": "ImageTexture",
             "param": {
                 "fn": "textures/Wood.jpg",
-                "color_space": "LINEAR"
+                "color_space": "SRGB"
             }
         },
         {
@@ -29,7 +29,7 @@
             "type": "ImageTexture",
             "param": {
                 "fn": "textures/WoodChair.jpg",
-                "color_space": "LINEAR"
+                "color_space": "SRGB"
             }
         },
         {
@@ -37,7 +37,7 @@
             "type": "ImageTexture",
             "param": {
                 "fn": "textures/Fabric.jpg",
-                "color_space": "LINEAR"
+                "color_space": "SRGB"
             }
         },
         {
@@ -45,7 +45,7 @@
             "type": "ImageTexture",
             "param": {
                 "fn": "textures/Painting1.jpg",
-                "color_space": "LINEAR"
+                "color_space": "SRGB"
             }
         },
         {
@@ -53,7 +53,7 @@
             "type": "ImageTexture",
             "param": {
                 "fn": "textures/Painting2.jpg",
-                "color_space": "LINEAR"
+                "color_space": "SRGB"
             }
         },
         {
@@ -61,7 +61,7 @@
             "type": "ImageTexture",
             "param": {
                 "fn": "textures/Painting3.jpg",
-                "color_space": "LINEAR"
+                "color_space": "SRGB"
             }
         },
         {
@@ -69,13 +69,13 @@
             "type": "ImageTexture",
             "param": {
                 "fn": "textures/Wallpaper.jpg",
-                "color_space": "LINEAR"
+                "color_space": "SRGB"
             }
         }
     ],
     "materials": [
         {
-            "type": "MatteMaterial",
+            "type": "SubstrateMaterial",
             "name": "WoodFloor",
             "param": {
                 "color": "textures/WoodFloor.jpg",
@@ -86,13 +86,14 @@
                     0.04
                 ],
                 "roughness": [
+                    0.1,
                     0.1
                 ],
                 "remapping_roughness": false
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "SubstrateMaterial",
             "name": "WoodStairs",
             "param": {
                 "color": "textures/WoodPanel.jpg",
@@ -103,13 +104,14 @@
                     0.04
                 ],
                 "roughness": [
+                    0.1,
                     0.1
                 ],
                 "remapping_roughness": false
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "SubstrateMaterial",
             "name": "WoodChair",
             "param": {
                 "color": "textures/Wood.jpg",
@@ -120,13 +122,14 @@
                     0.04
                 ],
                 "roughness": [
+                    0.1,
                     0.1
                 ],
                 "remapping_roughness": false
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "SubstrateMaterial",
             "name": "WoodLamp",
             "param": {
                 "color": "textures/WoodChair.jpg",
@@ -137,6 +140,7 @@
                     0.04
                 ],
                 "roughness": [
+                    0.1,
                     0.1
                 ],
                 "remapping_roughness": false
@@ -201,7 +205,10 @@
             "name": "Glass",
             "param": {
                 "eta": 1.5,
-                "roughness": 0.0,
+                "roughness": [
+                    0,
+                    0
+                ],
                 "color": [
                     1.0,
                     1.0,
@@ -210,7 +217,7 @@
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "SubstrateMaterial",
             "name": "MagnoliaPaint",
             "param": {
                 "color": [
@@ -225,13 +232,14 @@
                     0.04
                 ],
                 "roughness": [
+                    0.1,
                     0.1
                 ],
                 "remapping_roughness": false
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "SubstrateMaterial",
             "name": "WhitePaint",
             "param": {
                 "color": [
@@ -246,6 +254,7 @@
                     0.04
                 ],
                 "roughness": [
+                    0.2,
                     0.2
                 ],
                 "remapping_roughness": false
@@ -31400,9 +31409,9 @@
                     }
                 },
                 "emission": [
-                    15,
-                    15,
-                    15
+                    30,
+                    30,
+                    30
                 ]
             }
         }
@@ -31472,8 +31481,8 @@
         }
     },
     "output": {
-        "fn": "staircase-matte.png",
-        "dispatch_num": 64,
+        "fn": "staircase.png",
+        "dispatch_num": 256,
         "tone_map": 0
     }
 }
