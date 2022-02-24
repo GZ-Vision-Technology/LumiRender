@@ -11,9 +11,16 @@
                     0.013473397120833397
                 ],
                 "eta": 1.5,
+                "specular": [
+                    0.04,
+                    0.04,
+                    0.04
+                ],
                 "roughness": [
-                    0.001
-                ]
+                    0.01,
+                    0.01
+                ],
+                "remapping_roughness": false
             }
         },
         {
@@ -26,9 +33,16 @@
                     0.00631
                 ],
                 "eta": 1.5,
+                "specular": [
+                    0.04,
+                    0.04,
+                    0.04
+                ],
                 "roughness": [
+                    0.1,
                     0.1
-                ]
+                ],
+                "remapping_roughness": false
             }
         },
         {
@@ -36,7 +50,10 @@
             "name": "Glass",
             "param": {
                 "eta": 1.5,
-                "roughness": 0.0,
+                "roughness": [
+                    0,
+                    0
+                ],
                 "color": [
                     1.0,
                     1.0,
@@ -65,9 +82,16 @@
                     0.578596
                 ],
                 "eta": 1.5,
+                "specular": [
+                    0.04,
+                    0.04,
+                    0.04
+                ],
                 "roughness": [
-                    0.001
-                ]
+                    0.01,
+                    0.01
+                ],
+                "remapping_roughness": false
             }
         }
     ],
@@ -1021,8 +1045,8 @@
     "integrator": {
         "type": "PT",
         "param": {
-            "min_depth": 4,
-            "max_depth": 17,
+            "min_depth": 0,
+            "max_depth": 16,
             "rr_threshold": 1
         }
     },
@@ -1058,7 +1082,7 @@
                         1000
                     ],
                     "fb_state": 0,
-                    "tone_map": 0
+                    "tone_map": 1
                 }
             },
             "filter": {
@@ -1074,7 +1098,7 @@
     },
     "output": {
         "fn": "coffee.png",
-        "dispatch_num": 64,
-        "tone_map": 0
+        "dispatch_num": 2048,
+        "tone_map": 1
     }
 }

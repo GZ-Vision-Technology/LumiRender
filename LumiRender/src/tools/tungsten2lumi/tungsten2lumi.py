@@ -67,7 +67,7 @@ def convert_substrate(mat_input):
             "color" : convert_vec(mat_input.get("albedo", 1), 3),
             "eta": 1.5,
             "specular" : [0.04,0.04,0.04],
-            "roughness": convert_vec(mat_input.get("roughness", 0.1), 2),
+            "roughness": convert_vec(mat_input.get("roughness", 0.01), 2),
             "remapping_roughness" : False
             # "metallic": 0,
             # "specular_tint": 0.9,
@@ -111,7 +111,7 @@ def convert_glass(mat_input):
         "name" : mat_input["name"],
         "param" : {
             "eta" : mat_input["ior"],
-            "roughness" :convert_roughness(mat_input.get("roughness", 0)),
+            "roughness" :convert_vec(mat_input.get("roughness", 0), 2),
             "color" : convert_vec(mat_input.get("albedo", 1), 3)
         }
     }
@@ -338,8 +338,8 @@ def write_scene(scene_output, filepath):
     print("lumi scene save to:", abspath)
 
 def main():
-    fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
-    # fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
+    fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\living-room\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\cornell-box\\tungsten_scene.json'
