@@ -174,7 +174,7 @@ namespace luminous {
             }
             uint idx = _key_to_idx[key];
             Transform o2w = config.o2w.create();
-            auto instance = ModelInstance(idx, o2w, config.name.c_str(), config.emission);
+            auto instance = ModelInstance(idx, o2w, config.name.c_str(), config.emission, config.two_sided);
             instance_num += model_list[instance.model_idx].meshes.size();
             instance_list.push_back(instance);
         }

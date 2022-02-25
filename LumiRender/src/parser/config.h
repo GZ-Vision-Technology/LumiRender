@@ -95,6 +95,8 @@ namespace luminous {
             mutable std::vector<float3> positions;
             mutable std::vector<float3> normals;
             mutable std::vector<TriangleHandle> triangles;
+
+            bool two_sided{false};
         };
 
         struct TextureMappingConfig : Config {

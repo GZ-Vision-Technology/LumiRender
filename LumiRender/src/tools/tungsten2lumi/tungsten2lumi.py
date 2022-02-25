@@ -97,7 +97,7 @@ def convert_glass(mat_input):
         "name" : mat_input["name"],
         "param" : {
             "eta" : mat_input["ior"],
-            "roughness" :convert_vec(mat_input.get("roughness", 0.01), 2),
+            "roughness" :convert_vec(mat_input.get("roughness", 0), 2),
             "color" : convert_vec(mat_input.get("albedo", 1), 3)
         }
     }
@@ -171,7 +171,8 @@ def convert_shpe_transform(transform):
     T = glm.vec3(transform.get("position", [0,0,0]))
     R = glm.radians(glm.vec3(transform.get("rotation", [0,0,0])))
     S = glm.vec3(transform.get("scale", [1,1,1]))
-    M = glm.scale(glm.vec3([-1,1,1])) * convert_srt(S, R, T)
+    M = convert_srt(S, R, T)
+    M = glm.scale(glm.vec3([-1,1,1])) * M
     matrix4x4 = []
     for i in M:
         arr = []
@@ -277,6 +278,10 @@ def convert_shapes(scene_input):
         shape_output = None
         if shape_input["type"] == "quad":
             shape_output = convert_quad(shape_input, i)
+            shape_output["param"]["two_sided"] = True
+        elif shape_input["type"] == "disk":
+            shape_output = convert_quad(shape_input, i)
+            shape_output["param"]["two_sided"] = True
         elif shape_input["type"] == "cube":    
             shape_output = convert_cube(shape_input, i)
         elif shape_input["type"] == "mesh":
@@ -306,7 +311,7 @@ def convert_camera(scene_input):
             },
             "film" : {
                 "param" : {
-                    "resolution" : camera_input.get("resolution", [768, 768]),
+                    "resolution" : convert_vec(camera_input.get("resolution", [768, 768]), 2),
                     "fb_state": 0,
                     "tone_map" : table[camera_input.get("tonemap", "filmic")]
                 }
@@ -366,9 +371,10 @@ def write_scene(scene_output, filepath):
 
 def main():
     # fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
+    fn = 'LumiRender\\res\\render_scene\\staircase2\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
-    fn = 'LumiRender\\res\\render_scene\\glass-of-water\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\glass-of-water\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\living-room\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\cornell-box\\tungsten_scene.json'
     parent = os.path.dirname(fn)

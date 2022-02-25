@@ -151,6 +151,7 @@ namespace luminous {
             shape_config.set_type(string(shape["type"]));
             shape_config.name = shape["name"];
             ParameterSet param(shape["param"]);
+            shape_config.two_sided = param["two_sided"].as_bool(false);
             if (shape_config.type() == "model") {
                 shape_config.subdiv_level = param["subdiv_level"].as_uint(0u);
                 shape_config.fn = param["fn"].as_string();
