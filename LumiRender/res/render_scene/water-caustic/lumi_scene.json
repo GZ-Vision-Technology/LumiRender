@@ -82,7 +82,7 @@
             "type": "GlassMaterial",
             "name": "Water",
             "param": {
-                "eta": 1.8,
+                "eta": 1.3,
                 "roughness": [
                     0,
                     0
@@ -422,8 +422,7 @@
                     4
                 ]
             }
-        }
-        ,
+        },
         {
             "type": "model",
             "name": "shape_8",
@@ -551,8 +550,8 @@
             "film": {
                 "param": {
                     "resolution": [
-                        1024,
-                        1024
+                        800,
+                        800
                     ],
                     "fb_state": 0,
                     "tone_map": 1
@@ -571,7 +570,7 @@
     },
     "output": {
         "fn": "water-caustic.png",
-        "dispatch_num": 64,
+        "dispatch_num": 8192,
         "tone_map": 1
     }
 }
