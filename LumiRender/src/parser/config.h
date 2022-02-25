@@ -259,8 +259,8 @@ namespace luminous {
             TransformConfig transform_config;
             float fov_y{};
             float velocity{};
-            float focal_distance{};
-            float lens_radius{};
+            float focal_distance{5.f};
+            float lens_radius{0.f};
             FilmConfig film_config;
             FilterConfig filter_config;
         };

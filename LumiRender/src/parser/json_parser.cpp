@@ -314,7 +314,7 @@ namespace luminous {
             ret.velocity = param["velocity"].as_float();
             ret.transform_config = parse_transform(param["transform"]);
             if (type == "ThinLensCamera") {
-                ret.focal_distance = param["focal_distance"].as_float(0);
+                ret.focal_distance = param["focal_distance"].as_float(5);
                 ret.lens_radius = param["lens_radius"].as_float(0);
             }
             ret.film_config = parse_film(param["film"]);
