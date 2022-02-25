@@ -243,7 +243,7 @@ def get_emission(shape):
 
 def convert_area_light(shape_input, shape_output):
     shape_output["param"]["emission"] = get_emission(shape_input)
-    shape_output["param"]["scale"] = 30
+    # shape_output["param"]["scale"] = 30
     shape_output["param"]["material"] = None
 
 def convert_envmap(shape_input, shape_output):
@@ -378,12 +378,13 @@ def main():
     # fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\staircase2\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\bathroom2\\tungsten_scene.json'
-    fn = 'LumiRender\\res\\render_scene\\kitchen\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\kitchen\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\glass-of-water\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\living-room\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\cornell-box\\tungsten_scene.json'
+    fn = 'LumiRender\\res\\render_scene\\water-caustic\\tungsten_scene.json'
     parent = os.path.dirname(fn)
     output_fn = os.path.join(parent, "lumi_scene.json")
     # print()
