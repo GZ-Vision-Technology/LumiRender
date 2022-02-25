@@ -48,6 +48,13 @@ namespace luminous {
                 ND_XPU_INLINE float weight(BSDFHelper helper, Spectrum Fr) const {
                     return luminance(spectrum() * Fr);
                 }
+
+                LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
+                                         BSDFHelper helper,
+                                         TransportMode mode = TransportMode::Radiance) const;
+
+                LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
+                                              TransportMode mode = TransportMode::Radiance) const;
             };
 
             class Sheen : public ColoredBxDF<Sheen> {

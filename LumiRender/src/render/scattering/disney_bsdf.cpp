@@ -26,6 +26,23 @@ namespace luminous {
                 return spectrum() * invPi * (1 - 0.5f * Fo) * (1 - 0.5f * Fi);
             }
 
+            ND_XPU_INLINE float Retro::safe_PDF(float3 wo, float3 wi, BSDFHelper helper,
+                                         TransportMode mode) const {
+                return same_hemisphere(wo, wi) ? uniform_hemisphere_PDF() : 0.f;
+            }
+
+            LM_ND_XPU BSDFSample Retro::sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
+                                          TransportMode mode) const {
+                float3 wi = square_to_hemisphere(u);
+                wi.z = wo.z < 0 ? -wi.z : wi.z;
+                float PDF_val = safe_PDF(wo, wi, helper, mode);
+                if (PDF_val == 0.f) {
+                    return {};
+                }
+                Spectrum f = this->eval(wo, wi, helper, mode);
+                return {f, wi, PDF_val, BxDFFlags::DiffRefl};
+            }
+
             Spectrum FakeSS::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
                 float3 wh = wi + wo;
                 //todo optimize branch
