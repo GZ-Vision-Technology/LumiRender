@@ -304,7 +304,7 @@ def convert_camera(scene_input):
         "type" : "ThinLensCamera",
         "param" : {
             "fov_y" : camera_input["fov"],
-            "velocity" : 20,
+            "velocity" : 5,
             "transform" : {
                 "type" : "look_at",
                 "param": {
@@ -376,7 +376,7 @@ def write_scene(scene_output, filepath):
 def main():
     # fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\staircase2\\tungsten_scene.json'
-    fn = 'LumiRender\\res\\render_scene\\living-room\\tungsten_scene.json'
+    fn = 'LumiRender\\res\\render_scene\\bathroom2\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\glass-of-water\\tungsten_scene.json'
