@@ -248,6 +248,10 @@ def convert_area_light(shape_input, shape_output):
 def convert_envmap(shape_input, shape_output):
     assert shape_output is None
     
+    emission = get_emission(shape_input)
+    if type(emission) == str:
+        try_add_textures(emission)
+    
     data = {
         "type": "Envmap",
         "param": {
@@ -259,7 +263,7 @@ def convert_envmap(shape_input, shape_output):
                     "position": [0,0,0]
                 }
             },
-            "key" : get_emission(shape_input)
+            "key" : emission
         }
     }
     add_light(data)
@@ -278,7 +282,7 @@ def convert_shapes(scene_input):
         shape_output = None
         if shape_input["type"] == "quad":
             shape_output = convert_quad(shape_input, i)
-            shape_output["param"]["two_sided"] = True
+            # shape_output["param"]["two_sided"] = True
         elif shape_input["type"] == "disk":
             shape_output = convert_quad(shape_input, i)
             shape_output["param"]["two_sided"] = True
@@ -371,7 +375,8 @@ def write_scene(scene_output, filepath):
 
 def main():
     # fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
-    fn = 'LumiRender\\res\\render_scene\\staircase2\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\staircase2\\tungsten_scene.json'
+    fn = 'LumiRender\\res\\render_scene\\living-room\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\glass-of-water\\tungsten_scene.json'
