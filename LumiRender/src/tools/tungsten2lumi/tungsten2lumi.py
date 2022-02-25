@@ -231,10 +231,6 @@ def convert_mesh(shape_input, index):
     }
     return ret
 
-def convert_area_light(shape_input, shape_output):
-    shape_output["param"]["emission"] = convert_vec(shape_input["emission"], 3)
-    shape_output["param"]["material"] = None
-
 def get_emission(shape):
     if "emission" in shape:
         return convert_vec(shape["emission"], 3)
@@ -243,6 +239,10 @@ def get_emission(shape):
         power = convert_vec(shape["power"], 3)
         emission = glm.vec3(power) / power_scale;
         return [emission[0], emission[1], emission[2]]
+
+def convert_area_light(shape_input, shape_output):
+    shape_output["param"]["emission"] = get_emission(shape_input)
+    shape_output["param"]["material"] = None
 
 def convert_envmap(shape_input, shape_output):
     assert shape_output is None
@@ -282,7 +282,7 @@ def convert_shapes(scene_input):
         elif shape_input["type"] == "mesh":
             shape_output = convert_mesh(shape_input, i)
             
-        if "emission" in shape_input:
+        if "emission" in shape_input or "power" in shape_input:
             convert_light(shape_input, shape_output)
         if shape_output:
             shape_outputs.append(shape_output)
@@ -367,7 +367,8 @@ def write_scene(scene_output, filepath):
 def main():
     # fn = 'LumiRender\\res\\render_scene\\staircase\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\coffee\\tungsten_scene.json'
-    fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
+    fn = 'LumiRender\\res\\render_scene\\glass-of-water\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\living-room\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\cornell-box\\tungsten_scene.json'
     parent = os.path.dirname(fn)
