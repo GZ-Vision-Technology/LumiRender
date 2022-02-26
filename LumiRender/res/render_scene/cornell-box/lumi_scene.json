@@ -10,9 +10,10 @@
                     0.065,
                     0.05
                 ],
-                "sheen" : 0.5,
-                "sheen_tint" : 0.5,
-                "clearcoat" : 0.99,
+                "sheen" : 0.0,
+                "sheen_tint" : 0.0,
+                "metallic" : 0,
+                "clearcoat" : 0,
                 "clearcoat_roughness" : 0.01,
                 "roughness" : 0.5,
                 "anisotropic" : 0
@@ -27,9 +28,10 @@
                     0.45,
                     0.091
                 ],
-                "sheen" : 0.5,
-                "sheen_tint" : 0.5,
-                "clearcoat" : 0.99,
+                "sheen" : 0.0,
+                "sheen_tint" : 0.0,
+                "metallic" : 0,
+                "clearcoat" : 0,
                 "clearcoat_roughness" : 0.01,
                 "roughness" : 0.5,
                 "anisotropic" : 0
@@ -44,9 +46,10 @@
                     0.71,
                     0.68
                 ],
-                "sheen" : 0.5,
-                "sheen_tint" : 0.5,
-                "clearcoat" : 0.9,
+                "sheen" : 0.0,
+                "sheen_tint" : 0.0,
+                "metallic" : 0,
+                "clearcoat" : 0,
                 "clearcoat_roughness" : 0.1,
                 "roughness" : 0.5,
                 "anisotropic" : 0       
@@ -61,9 +64,10 @@
                     0.71,
                     0.68
                 ],
-                "sheen" : 0.5,
-                "sheen_tint" : 0.5,
-                "clearcoat" : 0.9,
+                "sheen" : 0.0,
+                "sheen_tint" : 0.0,
+                "metallic" : 0,
+                "clearcoat" : 0,
                 "clearcoat_roughness" : 0.1,
                 "roughness" : 0.5,
                 "anisotropic" : 0   
@@ -78,9 +82,10 @@
                     0.71,
                     0.68
                 ],
-                "sheen" : 0.5,
-                "sheen_tint" : 0.5,
-                "clearcoat" : 0.9,
+                "sheen" : 0.0,
+                "sheen_tint" : 0.0,
+                "metallic" : 0,
+                "clearcoat" : 0,
                 "clearcoat_roughness" : 0.1,
                 "roughness" : 0.5,
                 "anisotropic" : 0            
@@ -95,9 +100,10 @@
                     0.71,
                     0.68
                 ],
-                "sheen" : 0.5,
-                "sheen_tint" : 0.5,
-                "clearcoat" : 0.9,
+                "sheen" : 0.0,
+                "sheen_tint" : 0.0,
+                "metallic" : 0,
+                "clearcoat" : 0,
                 "clearcoat_roughness" : 0.1,
                 "roughness" : 0.5,
                 "anisotropic" : 0
@@ -112,9 +118,10 @@
                     0.71,
                     0.68
                 ],
-                "sheen" : 0.5,
-                "sheen_tint" : 0.5,
-                "clearcoat" : 0.9,
+                "sheen" : 0.0,
+                "sheen_tint" : 0.0,
+                "metallic" : 0,
+                "clearcoat" : 0,
                 "clearcoat_roughness" : 0.1,
                 "roughness" : 0.5,
                 "anisotropic" : 0
@@ -516,8 +523,8 @@
         }
     },
     "output": {
-        "fn": "cornell-box.png",
-        "dispatch_num": 0,
+        "fn": "cornell-boxsheen0-clear0-new.png",
+        "dispatch_num": 32,
         "tone_map": 0
     }
 }
