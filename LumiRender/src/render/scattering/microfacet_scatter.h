@@ -161,6 +161,20 @@ namespace luminous {
 
             LM_ND_XPU Spectrum schlick_fresnel(float cos_theta, BSDFHelper helper) const;
 
+            LM_ND_XPU Spectrum eval_diffuse(float3 wo, float3 wi, BSDFHelper helper,
+                                            TransportMode mode = TransportMode::Radiance) const;
+
+            LM_ND_XPU float PDF_diffuse(float3 wo, float3 wi,
+                                        BSDFHelper helper,
+                                        TransportMode mode = TransportMode::Radiance) const;
+
+            LM_ND_XPU Spectrum eval_specular(float3 wo, float3 wi, BSDFHelper helper,
+                                            TransportMode mode = TransportMode::Radiance) const;
+
+            LM_ND_XPU float PDF_specular(float3 wo, float3 wi,
+                                        BSDFHelper helper,
+                                        TransportMode mode = TransportMode::Radiance) const;
+
             /**
              * must be reflection and eta must be corrected
              */

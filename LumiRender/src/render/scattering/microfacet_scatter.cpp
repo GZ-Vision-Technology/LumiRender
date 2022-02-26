@@ -151,6 +151,37 @@ namespace luminous {
         }
 
         // MicrofacetFresnel
+        float MicrofacetFresnel::PDF_specular(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
+            float3 wh = normalize(wo + wi);
+            float pdf_wh = _microfacet.PDF_wh(wo, wh);
+            return pdf_wh / (4 * dot(wo, wh));
+        }
+
+        Spectrum MicrofacetFresnel::eval_specular(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
+            float3 wh = wi + wo;
+            if (is_zero(wh)) {
+                return {0.f};
+            }
+            wh = normalize(wh);
+            Spectrum specular = _microfacet.D(wh) /
+                    (4 * abs_dot(wi, wh) * std::max(Frame::abs_cos_theta(wi), Frame::abs_cos_theta(wo))) *
+                    schlick_fresnel(dot(wi, wh), helper);
+            return specular;
+        }
+
+        float MicrofacetFresnel::PDF_diffuse(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
+            return cosine_hemisphere_PDF(Frame::abs_cos_theta(wi));
+        }
+
+        Spectrum MicrofacetFresnel::eval_diffuse(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
+            Spectrum Rd = color(helper);
+            Spectrum Rs = _spec;
+            Spectrum diffuse = (28.f / (23.f * Pi)) * Rd * (Spectrum(1.f) - Rs) *
+                    (1 - Pow<5>(1 - .5f * Frame::abs_cos_theta(wi))) *
+                    (1 - Pow<5>(1 - .5f * Frame::abs_cos_theta(wo)));
+            return diffuse;
+        }
+
         Spectrum MicrofacetFresnel::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
             if (!same_hemisphere(wo, wi)) {
                 return {0.f};
@@ -159,19 +190,8 @@ namespace luminous {
         }
 
         Spectrum MicrofacetFresnel::safe_eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
-            Spectrum Rd = color(helper);
-            Spectrum Rs = _spec;
-            Spectrum diffuse = (28.f / (23.f * Pi)) * Rd * (Spectrum(1.f) - Rs) *
-                               (1 - Pow<5>(1 - .5f * Frame::abs_cos_theta(wi))) *
-                               (1 - Pow<5>(1 - .5f * Frame::abs_cos_theta(wo)));
-            float3 wh = wi + wo;
-            if (is_zero(wh)) {
-                return {0.f};
-            }
-            wh = normalize(wh);
-            Spectrum specular = _microfacet.D(wh) /
-                                (4 * abs_dot(wi, wh) * std::max(Frame::abs_cos_theta(wi), Frame::abs_cos_theta(wo))) *
-                                schlick_fresnel(dot(wi, wh), helper);
+            Spectrum diffuse = eval_diffuse(wo, wi, helper, mode);
+            Spectrum specular = eval_specular(wo, wi, helper, mode);
 
             return diffuse + specular;
         }
@@ -188,10 +208,7 @@ namespace luminous {
         }
 
         float MicrofacetFresnel::safe_PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
-            float3 wh = normalize(wo + wi);
-            float pdf_wh = _microfacet.PDF_wh(wo, wh);
-            auto ret = .5f * (Frame::abs_cos_theta(wi) * invPi + pdf_wh / (4 * dot(wo, wh)));
-            return ret;
+            return 0.5 * (PDF_diffuse(wo, wi, helper, mode) + PDF_specular(wo, wi, helper, mode));
         }
 
         BSDFSample MicrofacetFresnel::sample_f(float3 wo, float uc, float2 u,
@@ -213,6 +230,5 @@ namespace luminous {
             f_val = safe_eval(wo, wi, helper, mode);
             return BSDFSample(f_val, wi, pdf, flags(), helper.eta());
         }
-
     }
 }
