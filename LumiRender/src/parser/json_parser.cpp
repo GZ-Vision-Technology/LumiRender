@@ -435,7 +435,7 @@ namespace luminous {
                 ret.sigma = param["sigma"].as_float(0.f);
             } else if (type == "GlassMaterial") {
                 ret.eta = process_attr(param["eta"], scene_graph, make_float4(1.5));
-                ret.roughness = process_attr(param["roughness"], scene_graph);
+                ret.roughness = process_attr(param["roughness"], scene_graph, make_float4(0.f));
                 ret.remapping_roughness = param["remapping_roughness"].as_bool(false);
             } else if (type == "FakeMetalMaterial") {
                 ret.roughness = process_attr(param["roughness"], scene_graph);
