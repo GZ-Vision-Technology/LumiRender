@@ -6,7 +6,7 @@
 #include "base.h"
 #include "bsdf_data.h"
 #include "specular_scatter.h"
-#include "diffuse_scatter.h"
+#include "lambert_scatter.h"
 #include "bsdfs.h"
 #include <utility>
 #include "render/include/interaction.h"

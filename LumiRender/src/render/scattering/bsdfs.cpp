@@ -59,7 +59,7 @@ namespace luminous {
                 float ay = std::max(0.001f, sqr(rscaled) * aspect);
                 Microfacet distrib{ax, ay, GGX};
                 disney_bsdf.add_BxDF(MicrofacetTransmission{T, distrib});
-                disney_bsdf.add_BxDF(DiffuseTransmission(dt * color));
+                disney_bsdf.add_BxDF(LambertTransmission(dt * color));
 
             } else {
                 disney_bsdf.add_BxDF(MicrofacetTransmission{T, distrib});

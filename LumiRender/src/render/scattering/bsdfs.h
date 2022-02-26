@@ -8,7 +8,7 @@
 #include "bsdf_ty.h"
 #include "microfacet.h"
 #include "bsdf_data.h"
-#include "diffuse_scatter.h"
+#include "lambert_scatter.h"
 #include "microfacet_scatter.h"
 #include "specular_scatter.h"
 #include "disney_bsdf.h"
@@ -16,10 +16,10 @@
 namespace luminous {
     inline namespace render {
 
-        using DiffuseBSDF = BSDF_Ty<BSDFHelper, true, DiffuseReflection>;
+        using DiffuseBSDF = BSDF_Ty<BSDFHelper, true, LambertReflection>;
 
         ND_XPU_INLINE DiffuseBSDF create_diffuse_bsdf(float3 color) {
-            return DiffuseBSDF(BSDFHelper::create_diffuse_data(color), DiffuseReflection{color});
+            return DiffuseBSDF(BSDFHelper::create_diffuse_data(color), LambertReflection{color});
         }
 
         using OrenNayarBSDF = BSDF_Ty<BSDFHelper, true, OrenNayar>;
@@ -72,7 +72,7 @@ namespace luminous {
                 disney::Retro, disney::Sheen,
                 disney::Clearcoat,
                 MicrofacetReflection, MicrofacetTransmission,
-                DiffuseTransmission, SpecularTransmission>;
+                LambertTransmission, SpecularTransmission>;
 
         using NormalizedFresnelBSDF = BSDF_Ty<BSDFHelper, false, NormalizedFresnelBxDF>;
 

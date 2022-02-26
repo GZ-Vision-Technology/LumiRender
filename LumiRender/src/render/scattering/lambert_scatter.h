@@ -12,11 +12,11 @@
 
 namespace luminous {
     inline namespace render {
-        class DiffuseReflection : public ColoredBxDF<DiffuseReflection> {
+        class LambertReflection : public ColoredBxDF<LambertReflection> {
         public:
             using ColoredBxDF::ColoredBxDF;
 
-            LM_XPU explicit DiffuseReflection(Spectrum color) : ColoredBxDF(color, DiffRefl) {}
+            LM_XPU explicit LambertReflection(Spectrum color) : ColoredBxDF(color, DiffRefl) {}
 
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                     TransportMode mode = TransportMode::Radiance) const {
@@ -41,7 +41,7 @@ namespace luminous {
                                     TransportMode mode = TransportMode::Radiance) const;
         };
 
-        class DiffuseTransmission : public ColoredBxDF<DiffuseTransmission> {
+        class LambertTransmission : public ColoredBxDF<LambertTransmission> {
         protected:
             LM_ND_XPU Spectrum _f(float3 wo, float3 wi, BSDFHelper helper, Spectrum color,
                                   TransportMode mode = TransportMode::Radiance) const {
@@ -63,7 +63,7 @@ namespace luminous {
         public:
             using ColoredBxDF::ColoredBxDF;
 
-            LM_XPU explicit DiffuseTransmission(Spectrum color) : ColoredBxDF(color, DiffTrans) {}
+            LM_XPU explicit LambertTransmission(Spectrum color) : ColoredBxDF(color, DiffTrans) {}
 
             LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                     TransportMode mode = TransportMode::Radiance) const {

@@ -6,7 +6,7 @@
 #include "iostream"
 #include "render/scattering/specular_scatter.cpp"
 #include "render/scattering/bsdfs.h"
-#include "render/scattering/diffuse_scatter.cpp"
+#include "render/scattering/lambert_scatter.cpp"
 #include "render/samplers/independent.cpp"
 #include "render/scattering/bsdf_wrapper.cpp"
 #include "render/scattering/bsdf_data.h"

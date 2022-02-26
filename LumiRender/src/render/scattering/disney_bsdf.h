@@ -8,7 +8,7 @@
 #include "base.h"
 #include "bsdf_data.h"
 #include "bsdf_ty.h"
-#include "diffuse_scatter.h"
+#include "lambert_scatter.h"
 #include "microfacet_scatter.h"
 #include "specular_scatter.h"
 
