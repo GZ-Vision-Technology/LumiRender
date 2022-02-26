@@ -216,18 +216,21 @@ namespace luminous {
             float3 wi{0.f};
             Spectrum f_val{0.f};
             float pdf = 0.f;
-            if (uc < 0.5) {
+            float fr = helper.eval_fresnel(Frame::abs_cos_theta(wo))[0];
+            if (uc > fr) {
                 wi = square_to_cosine_hemisphere(u);
                 wi.z = select(wo.z < 0, -wi.z, wi.z);
+                pdf = PDF_diffuse(wo, wi, helper, mode) * (1 - fr);
+                f_val = eval_diffuse(wo, wi, helper, mode);
             } else {
                 float3 wh = _microfacet.sample_wh(wo, u);
                 wi = reflect(wo, wh);
                 if (!same_hemisphere(wi, wo)) {
                     return BSDFSample(f_val, wi, 0, flags(), helper.eta());
                 }
+                pdf = PDF_specular(wo, wi, helper, mode) * fr;
+                f_val = eval_specular(wo, wi, helper, mode);
             }
-            pdf = safe_PDF(wo, wi, helper, mode);
-            f_val = safe_eval(wo, wi, helper, mode);
             return BSDFSample(f_val, wi, pdf, flags(), helper.eta());
         }
     }
