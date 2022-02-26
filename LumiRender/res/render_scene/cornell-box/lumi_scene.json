@@ -2,80 +2,122 @@
     "textures": [],
     "materials": [
         {
-            "type": "MatteMaterial",
+            "type": "DisneyMaterial",
             "name": "LeftWall",
             "param": {
                 "color": [
                     0.63,
                     0.065,
                     0.05
-                ]
+                ],
+                "sheen" : 0.5,
+                "sheen_tint" : 0.5,
+                "clearcoat" : 0.99,
+                "clearcoat_roughness" : 0.01,
+                "roughness" : 0.5,
+                "anisotropic" : 0
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "DisneyMaterial",
             "name": "RightWall",
             "param": {
                 "color": [
                     0.14,
                     0.45,
                     0.091
-                ]
+                ],
+                "sheen" : 0.5,
+                "sheen_tint" : 0.5,
+                "clearcoat" : 0.99,
+                "clearcoat_roughness" : 0.01,
+                "roughness" : 0.5,
+                "anisotropic" : 0
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "DisneyMaterial",
             "name": "Floor",
             "param": {
                 "color": [
                     0.725,
                     0.71,
                     0.68
-                ]
+                ],
+                "sheen" : 0.5,
+                "sheen_tint" : 0.5,
+                "clearcoat" : 0.9,
+                "clearcoat_roughness" : 0.1,
+                "roughness" : 0.5,
+                "anisotropic" : 0       
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "DisneyMaterial",
             "name": "Ceiling",
             "param": {
                 "color": [
                     0.725,
                     0.71,
                     0.68
-                ]
+                ],
+                "sheen" : 0.5,
+                "sheen_tint" : 0.5,
+                "clearcoat" : 0.9,
+                "clearcoat_roughness" : 0.1,
+                "roughness" : 0.5,
+                "anisotropic" : 0   
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "DisneyMaterial",
             "name": "BackWall",
             "param": {
                 "color": [
                     0.725,
                     0.71,
                     0.68
-                ]
+                ],
+                "sheen" : 0.5,
+                "sheen_tint" : 0.5,
+                "clearcoat" : 0.9,
+                "clearcoat_roughness" : 0.1,
+                "roughness" : 0.5,
+                "anisotropic" : 0            
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "DisneyMaterial",
             "name": "ShortBox",
             "param": {
                 "color": [
                     0.725,
                     0.71,
                     0.68
-                ]
+                ],
+                "sheen" : 0.5,
+                "sheen_tint" : 0.5,
+                "clearcoat" : 0.9,
+                "clearcoat_roughness" : 0.1,
+                "roughness" : 0.5,
+                "anisotropic" : 0
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "DisneyMaterial",
             "name": "TallBox",
             "param": {
                 "color": [
                     0.725,
                     0.71,
                     0.68
-                ]
+                ],
+                "sheen" : 0.5,
+                "sheen_tint" : 0.5,
+                "clearcoat" : 0.9,
+                "clearcoat_roughness" : 0.1,
+                "roughness" : 0.5,
+                "anisotropic" : 0
             }
         }
     ],
@@ -404,7 +446,8 @@
                     17,
                     12,
                     4
-                ]
+                ],
+                "scale" : 1
             }
         }
     ],
