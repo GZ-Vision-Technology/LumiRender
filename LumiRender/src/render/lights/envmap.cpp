@@ -38,7 +38,6 @@ namespace luminous {
 
         Spectrum Envmap::L(float3 dir_in_obj, const SceneData *data) const {
             float2 uv = make_float2(spherical_phi(dir_in_obj) * inv2Pi, spherical_theta(dir_in_obj) * invPi);
-//            const Texture &tex = data->get_texture(_tex_idx);
             float4 ret = _emission.eval(data, uv);
             return {make_float3(ret)};
         }

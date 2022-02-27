@@ -8,6 +8,57 @@ namespace luminous {
     inline namespace render {
         namespace disney {
 
+            LM_ND_XPU Spectrum diffuse_f(Spectrum color, float3 wo, float3 wi, TransportMode mode) {
+                float Fo = schlick_weight(Frame::abs_cos_theta(wo));
+                float Fi = schlick_weight(Frame::abs_cos_theta(wi));
+                return color * invPi * (1 - 0.5f * Fo) * (1 - 0.5f * Fi);
+            }
+
+            LM_ND_XPU Spectrum retro_f(Spectrum color, float roughness,
+                                       float3 wo, float3 wi, TransportMode mode) {
+                float3 wh = wi + wo;
+                if (length_squared(wh) == 0.f) {
+                    return {0.f};
+                }
+                wh = normalize(wh);
+                float cos_theta_d = dot(wi, wh);
+
+                float Fo = schlick_weight(Frame::abs_cos_theta(wo));
+                float Fi = schlick_weight(Frame::abs_cos_theta(wi));
+                float Rr = 2 * roughness * sqr(cos_theta_d);
+
+                return color * invPi * Rr * (Fo + Fi + Fo * Fi * (Rr - 1));
+            }
+
+            LM_ND_XPU Spectrum sheen_f(Spectrum color, float3 wo, float3 wi, TransportMode mode) {
+                float3 wh = wi + wo;
+                if (length_squared(wh) == 0.f) {
+                    return {0.f};
+                }
+                wh = normalize(wh);
+                float cos_theta_d = dot(wi, wh);
+                return color * schlick_weight(cos_theta_d);
+            }
+
+            LM_ND_XPU Spectrum fake_ss_f(Spectrum color, float roughness,
+                                       float3 wo, float3 wi, TransportMode mode) {
+                float3 wh = wi + wo;
+                //todo optimize branch
+                if (length_squared(wh) == 0.f) {
+                    return {0.f};
+                }
+                wh = normalize(wh);
+                float cos_theta_d = dot(wi, wh);
+
+                float Fss90 = sqr(cos_theta_d) * roughness;
+                float Fo = schlick_weight(Frame::abs_cos_theta(wo)),
+                Fi = schlick_weight(Frame::abs_cos_theta(wi));
+                float Fss = lerp(Fo, 1.f, Fss90) * lerp(Fi, 1.f, Fss90);
+                float ss = 1.25f * (Fss * (1 / (Frame::abs_cos_theta(wo) + Frame::abs_cos_theta(wi)) - .5f) + .5f);
+
+                return color * invPi * ss;
+            }
+
             ND_XPU_INLINE float GTR1(float cos_theta, float alpha) {
                 float alpha2 = sqr(alpha);
                 return (alpha2 - 1) /
@@ -21,9 +72,11 @@ namespace luminous {
             }
 
             Spectrum Diffuse::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
-                float Fo = schlick_weight(Frame::abs_cos_theta(wo));
-                float Fi = schlick_weight(Frame::abs_cos_theta(wi));
-                return spectrum() * invPi * (1 - 0.5f * Fo) * (1 - 0.5f * Fi);
+                return diffuse_f(spectrum(), wo, wi, mode);
+            }
+
+            Spectrum FakeSS::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
+                return fake_ss_f(spectrum(), helper.roughness(), wo, wi, mode);
             }
 
             float Retro::weight(BSDFHelper helper, Spectrum Fr) const {
@@ -47,48 +100,13 @@ namespace luminous {
                 return {f, wi, PDF_val, BxDFFlags::DiffRefl};
             }
 
-            Spectrum FakeSS::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
-                float3 wh = wi + wo;
-                //todo optimize branch
-                if (length_squared(wh) == 0.f) {
-                    return {0.f};
-                }
-                wh = normalize(wh);
-                float cos_theta_d = dot(wi, wh);
-
-                float Fss90 = sqr(cos_theta_d) * helper.roughness();
-                float Fo = schlick_weight(Frame::abs_cos_theta(wo)),
-                        Fi = schlick_weight(Frame::abs_cos_theta(wi));
-                float Fss = lerp(Fo, 1.f, Fss90) * lerp(Fi, 1.f, Fss90);
-                float ss = 1.25f * (Fss * (1 / (Frame::abs_cos_theta(wo) + Frame::abs_cos_theta(wi)) - .5f) + .5f);
-
-                return spectrum() * invPi * ss;
-            }
-
             Spectrum Retro::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
-                float3 wh = wi + wo;
-                if (length_squared(wh) == 0.f) {
-                    return {0.f};
-                }
-                wh = normalize(wh);
-                float cos_theta_d = dot(wi, wh);
-
-                float Fo = schlick_weight(Frame::abs_cos_theta(wo));
-                float Fi = schlick_weight(Frame::abs_cos_theta(wi));
-                float Rr = 2 * helper.roughness() * sqr(cos_theta_d);
-
-                return spectrum() * invPi * Rr * (Fo + Fi + Fo * Fi * (Rr - 1));
+                return retro_f(spectrum(), helper.roughness(), wo, wi, mode);
             }
 
             // sheen
             Spectrum Sheen::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
-                float3 wh = wi + wo;
-                if (length_squared(wh) == 0.f) {
-                    return {0.f};
-                }
-                wh = normalize(wh);
-                float cos_theta_d = dot(wi, wh);
-                return spectrum() * schlick_weight(cos_theta_d);
+                return sheen_f(spectrum(), wo, wi, mode);
             }
 
             float Sheen::weight(BSDFHelper helper, Spectrum Fr) const {
