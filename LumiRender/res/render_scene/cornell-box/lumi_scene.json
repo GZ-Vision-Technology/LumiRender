@@ -2,7 +2,7 @@
     "textures": [],
     "materials": [
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "LeftWall",
             "param": {
                 "color": [
@@ -20,7 +20,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "RightWall",
             "param": {
                 "color": [
@@ -38,7 +38,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "Floor",
             "param": {
                 "color": [
@@ -56,7 +56,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "Ceiling",
             "param": {
                 "color": [
@@ -74,7 +74,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "BackWall",
             "param": {
                 "color": [
@@ -92,7 +92,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "ShortBox",
             "param": {
                 "color": [
@@ -110,7 +110,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "TallBox",
             "param": {
                 "color": [
@@ -524,7 +524,7 @@
     },
     "output": {
         "fn": "cornell-boxsheen0-clear0-new.png",
-        "dispatch_num": 32,
+        "dispatch_num": 0,
         "tone_map": 0
     }
 }
