@@ -13,7 +13,6 @@
     #include "mirror.cpp"
     #include "disney.cpp"
     #include "substrate.cpp"
-    #include "ai_material.cpp"
 #else
     #include "common.h"
 #endif

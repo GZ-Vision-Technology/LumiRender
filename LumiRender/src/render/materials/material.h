@@ -15,8 +15,6 @@ namespace luminous {
     inline namespace render {
         class MatteMaterial;
 
-        class AssimpMaterial;
-
         class MirrorMaterial;
 
         class GlassMaterial;
