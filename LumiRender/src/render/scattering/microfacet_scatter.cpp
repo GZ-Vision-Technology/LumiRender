@@ -22,6 +22,10 @@ namespace luminous {
             return {val, wi, PDF, flags(), helper.eta()};
         }
 
+        float MicrofacetReflection::weight(BSDFHelper helper, Spectrum Fr) const {
+            return luminance(ColoredBxDF::weight(helper, Fr) * Fr);
+        }
+
         Spectrum MicrofacetReflection::_f(float3 wo, float3 wi, BSDFHelper helper,
                                           Spectrum color, TransportMode mode) const {
             float cos_theta_o = Frame::cos_theta(wo);

@@ -149,7 +149,7 @@ namespace luminous {
                 float Fr = fresnel_schlick(0.04f, dot(wo, wh));
                 float Gr = smithG_GGX(Frame::abs_cos_theta(wo), 0.25f)
                            * smithG_GGX(Frame::abs_cos_theta(wi), 0.25f);
-                Spectrum ret = _weight * Gr * Fr * Dr / 4;
+                Spectrum ret = _weight * Gr * Fr * Dr * 0.25f;
                 DCHECK(!has_invalid(ret))
                 return ret;
             }
@@ -194,6 +194,9 @@ namespace luminous {
                 return {f_val, wi, pdf, BxDFFlags::GlossyRefl};
             }
 
+            float Clearcoat::weight(BSDFHelper helper, Spectrum Fr) const {
+                return _weight * 0.15f;
+            }
         }
     }
 }

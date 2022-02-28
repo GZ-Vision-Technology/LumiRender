@@ -128,9 +128,7 @@ namespace luminous {
                 LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                               TransportMode mode = TransportMode::Radiance) const;
 
-                ND_XPU_INLINE float weight(BSDFHelper helper, Spectrum Fr) const {
-                    return _weight;
-                }
+                LM_ND_XPU float weight(BSDFHelper helper, Spectrum Fr) const;
             };
         }
     }
