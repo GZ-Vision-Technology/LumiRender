@@ -28,23 +28,33 @@ namespace luminous {
             disney_bsdf.set_data(helper);
             float aspect = safe_sqrt(1 - anisotropic * 0.9f);
 
-            if (thin) {
-                disney::Diffuse diffuse(diffuse_weight * (1 - flatness) * (1 - dt) * color);
-                disney_bsdf.add_BxDF(diffuse);
-                disney::FakeSS fake_ss(diffuse_weight * flatness * (1 - dt) * color);
-                disney_bsdf.add_BxDF(fake_ss);
-            } else {
-                if (is_zero(scatter_distance)) {
-                    disney_bsdf.add_BxDF(disney::Diffuse(diffuse_weight * color));
-                } else {
-                    disney_bsdf.add_BxDF(SpecularTransmission(Spectrum{1.f}));
-                    // todo process BSSRDF
-                }
-            }
+            Spectrum thin_diffuse_c = diffuse_weight * (1 - flatness) * (1 - dt) * color;
+            Spectrum diffuse_c = diffuse_weight * color;
+            diffuse_c = select(thin, thin_diffuse_c, diffuse_c);
+            Spectrum fake_ss_c = diffuse_weight * flatness * (1 - dt) * color;
+            fake_ss_c = select(thin, fake_ss_c, Spectrum{0.f});
+            Spectrum retro_c = diffuse_weight * color;
+            Spectrum sheen_c = diffuse_weight * sheen_weight * color_sheen_tint;
 
-            disney_bsdf.add_BxDF(disney::Retro(diffuse_weight * color));
+            disney::DiffuseLobes lobes(diffuse_c, retro_c, sheen_c, fake_ss_c);
 
-            disney_bsdf.add_BxDF(disney::Sheen(diffuse_weight * sheen_weight * color_sheen_tint));
+//            if (thin) {
+//                disney::Diffuse diffuse(diffuse_c);
+//                disney_bsdf.add_BxDF(diffuse);
+//                disney::FakeSS fake_ss(fake_ss_c);
+//                disney_bsdf.add_BxDF(fake_ss);
+//            } else {
+//                if (is_zero(scatter_distance)) {
+//                    disney_bsdf.add_BxDF(disney::Diffuse(diffuse_weight * color));
+//                } else {
+//                    disney_bsdf.add_BxDF(SpecularTransmission(Spectrum{1.f}));
+//                    // todo process BSSRDF
+//                }
+//            }
+
+//            disney_bsdf.add_BxDF(disney::Retro(retro_c));
+//            disney_bsdf.add_BxDF(disney::Sheen(sheen_c));
+            disney_bsdf.add_BxDF(lobes);
 
             float ax = std::max(0.001f, sqr(roughness) / aspect);
             float ay = std::max(0.001f, sqr(roughness) * aspect);

@@ -88,7 +88,10 @@ namespace luminous {
                         : ColoredBxDF(diffuse, DiffRefl),
                           _retro(retro),
                           _sheen(sheen),
-                          _fake_ss(fake_ss) {}
+                          _fake_ss(fake_ss) {
+                    bool black = diffuse.is_black() && retro.is_black() && sheen.is_black() && fake_ss.is_black();
+                    _flags = black ? Unset : DiffRefl;
+                }
 
                 LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
                                         TransportMode mode = TransportMode::Radiance) const;

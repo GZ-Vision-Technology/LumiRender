@@ -201,7 +201,7 @@ namespace luminous {
                 Spectrum fr = helper.eval_fresnel(Frame::abs_cos_theta(wo));
                 for_each([&](auto bxdf, int index) {
                     float weight = bxdf.weight(helper, fr);
-                    weights[index] = weight < weight_threshold ? 0 : weight;
+                    weights[index] = weight;
                     return true;
                 });
 
