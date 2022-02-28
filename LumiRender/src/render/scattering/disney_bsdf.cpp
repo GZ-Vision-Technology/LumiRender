@@ -41,7 +41,7 @@ namespace luminous {
             }
 
             LM_ND_XPU Spectrum fake_ss_f(Spectrum color, float roughness,
-                                       float3 wo, float3 wi, TransportMode mode) {
+                                         float3 wo, float3 wi, TransportMode mode) {
                 float3 wh = wi + wo;
                 //todo optimize branch
                 if (length_squared(wh) == 0.f) {
@@ -52,7 +52,7 @@ namespace luminous {
 
                 float Fss90 = sqr(cos_theta_d) * roughness;
                 float Fo = schlick_weight(Frame::abs_cos_theta(wo)),
-                Fi = schlick_weight(Frame::abs_cos_theta(wi));
+                        Fi = schlick_weight(Frame::abs_cos_theta(wi));
                 float Fss = lerp(Fo, 1.f, Fss90) * lerp(Fi, 1.f, Fss90);
                 float ss = 1.25f * (Fss * (1 / (Frame::abs_cos_theta(wo) + Frame::abs_cos_theta(wi)) - .5f) + .5f);
 
@@ -84,12 +84,12 @@ namespace luminous {
             }
 
             float Retro::safe_PDF(float3 wo, float3 wi, BSDFHelper helper,
-                                                TransportMode mode) const {
+                                  TransportMode mode) const {
                 return same_hemisphere(wo, wi) ? uniform_hemisphere_PDF() : 0.f;
             }
 
             BSDFSample Retro::sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
-                                                 TransportMode mode) const {
+                                       TransportMode mode) const {
                 float3 wi = square_to_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
                 float PDF_val = safe_PDF(wo, wi, helper, mode);
@@ -114,12 +114,12 @@ namespace luminous {
             }
 
             float Sheen::safe_PDF(float3 wo, float3 wi, BSDFHelper helper,
-                                                TransportMode mode) const {
+                                  TransportMode mode) const {
                 return same_hemisphere(wo, wi) ? uniform_hemisphere_PDF() : 0.f;
             }
 
             BSDFSample Sheen::sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
-                                                 TransportMode mode) const {
+                                       TransportMode mode) const {
                 float3 wi = square_to_hemisphere(u);
                 wi.z = wo.z < 0 ? -wi.z : wi.z;
                 float PDF_val = safe_PDF(wo, wi, helper, mode);
@@ -128,6 +128,13 @@ namespace luminous {
                 }
                 Spectrum f = this->eval(wo, wi, helper, mode);
                 return {f, wi, PDF_val, BxDFFlags::DiffRefl};
+            }
+
+            Spectrum DiffuseLobes::eval(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
+                return diffuse_f(spectrum(), wo, wi, mode) +
+                       retro_f(_retro, helper.roughness(), wo, wi, mode) +
+                       sheen_f(_sheen, wo, wi, mode) +
+                       fake_ss_f(_fake_ss, helper.roughness(), wo, wi, mode);
             }
 
             // Clearcoat

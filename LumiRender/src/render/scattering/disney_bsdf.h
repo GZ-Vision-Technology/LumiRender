@@ -15,6 +15,7 @@
 namespace luminous {
     inline namespace render {
         namespace disney {
+
             class Diffuse : public ColoredBxDF<Diffuse> {
             public:
                 using ColoredBxDF::ColoredBxDF;
@@ -72,6 +73,25 @@ namespace luminous {
 
                 LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                               TransportMode mode = TransportMode::Radiance) const;
+            };
+
+            class DiffuseLobes : public ColoredBxDF<DiffuseLobes> {
+            public:
+                using ColoredBxDF::ColoredBxDF;
+            private:
+                Spectrum _retro{};
+                Spectrum _sheen{};
+                Spectrum _fake_ss{};
+            public:
+                LM_XPU explicit DiffuseLobes(Spectrum diffuse, Spectrum retro,
+                                             Spectrum sheen, Spectrum fake_ss)
+                        : ColoredBxDF(diffuse, DiffRefl),
+                          _retro(retro),
+                          _sheen(sheen),
+                          _fake_ss(fake_ss) {}
+
+                LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
+                                        TransportMode mode = TransportMode::Radiance) const;
             };
 
             class Clearcoat : public BxDF<Clearcoat> {
