@@ -22,20 +22,20 @@ params;
 GLOBAL __raygen__find_closest() {
     using namespace luminous;
     int task_id = getLaunchIndex();
-    if (task_id >= params.ray_queue->size()) {
-        return;
-    }
-    RayWorkItem r = (*params.ray_queue)[task_id];
-    Ray ray = r.ray;
-    HitContext hit_ctx;
-    bool hit = traceClosestHit(params.traversable_handle, ray, &hit_ctx.hit_info);
-    if (hit) {
-        enqueue_item_after_intersect(r, hit_ctx, params.next_ray_queue,
-                                     params.hit_area_light_queue,
-                                     params.material_eval_queue);
-    } else {
-        enqueue_item_after_miss(r, params.escaped_ray_queue);
-    }
+//    if (task_id >= params.ray_queue->size()) {
+//        return;
+//    }
+//    RayWorkItem r = (*params.ray_queue)[task_id];
+//    Ray ray = r.ray;
+//    HitContext hit_ctx;
+//    bool hit = traceClosestHit(params.traversable_handle, ray, &hit_ctx.hit_info);
+//    if (hit) {
+//        enqueue_item_after_intersect(r, hit_ctx, params.next_ray_queue,
+//                                     params.hit_area_light_queue,
+//                                     params.material_eval_queue);
+//    } else {
+//        enqueue_item_after_miss(r, params.escaped_ray_queue);
+//    }
 }
 
 GLOBAL __raygen__occlusion() {
