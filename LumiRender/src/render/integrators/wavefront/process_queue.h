@@ -6,6 +6,7 @@
 #pragma once
 
 #include "work_items.h"
+#include "render/scattering/shader_include.h"
 
 namespace luminous {
     inline namespace render {

@@ -6,6 +6,9 @@
 #include "render/samplers/shader_include.h"
 #include "render/light_samplers/shader_include.h"
 #include "render/lights/shader_include.h"
+#include "render/materials/shader_include.h"
+#include "render/scattering/shader_include.h"
+#include "render/scene/shader_include.h"
 
 #ifdef __CUDACC__
 #define GLOBAL_PREFIX extern "C" __constant__
@@ -98,32 +101,32 @@ namespace luminous {
                 return;
             }
             auto light_sampler = rt_param->scene_data.light_sampler;
-            HitAreaLightWorkItem item = (*hit_area_light_queue)[task_id];
-            const SceneData *scene_data = &(rt_param->scene_data);
-            HitInfo hit_info = item.light_hit_info;
-            HitContext hit_ctx{hit_info, scene_data};
-
-            LightEvalContext lec = hit_ctx.compute_light_eval_context();
-
-            const Light *light = hit_ctx.light();
-
-            float3 wo = item.wo;
-            Spectrum temp_Li = pixel_sample_state->Li[item.pixel_index];
-            if (item.depth == 0) {
-                Spectrum Le = light->as<AreaLight>()->radiance(lec, wo, scene_data);
-                temp_Li += Le * item.throughput;
-            } else {
-                LightLiSample lls{item.prev_lsc, lec};
-                float light_select_PMF = scene_data->light_sampler->PMF(*light);
-                lls = light->Li(lls, scene_data);
-                float light_PDF = lls.PDF_dir;
-                float bsdf_PDF = item.prev_bsdf_PDF;
-                Spectrum bsdf_val = item.prev_bsdf_val;
-                float weight = MIS_weight(bsdf_PDF, light_PDF);
-                Spectrum L = item.throughput * lls.L * bsdf_val * weight / bsdf_PDF;
-                temp_Li += L / light_select_PMF;
-            }
-            pixel_sample_state->Li[item.pixel_index] = temp_Li;
+//            HitAreaLightWorkItem item = (*hit_area_light_queue)[task_id];
+//            const SceneData *scene_data = &(rt_param->scene_data);
+//            HitInfo hit_info = item.light_hit_info;
+//            HitContext hit_ctx{hit_info, scene_data};
+//
+//            LightEvalContext lec = hit_ctx.compute_light_eval_context();
+//
+//            const Light *light = hit_ctx.light();
+//
+//            float3 wo = item.wo;
+//            Spectrum temp_Li = pixel_sample_state->Li[item.pixel_index];
+//            if (item.depth == 0) {
+//                Spectrum Le = light->as<AreaLight>()->radiance(lec, wo, scene_data);
+//                temp_Li += Le * item.throughput;
+//            } else {
+//                LightLiSample lls{item.prev_lsc, lec};
+//                float light_select_PMF = scene_data->light_sampler->PMF(*light);
+//                lls = light->Li(lls, scene_data);
+//                float light_PDF = lls.PDF_dir;
+//                float bsdf_PDF = item.prev_bsdf_PDF;
+//                Spectrum bsdf_val = item.prev_bsdf_val;
+//                float weight = MIS_weight(bsdf_PDF, light_PDF);
+//                Spectrum L = item.throughput * lls.L * bsdf_val * weight / bsdf_PDF;
+//                temp_Li += L / light_select_PMF;
+//            }
+//            pixel_sample_state->Li[item.pixel_index] = temp_Li;
         }
 
         void estimate_direct_lighting(int task_id, int n_item,
@@ -131,43 +134,43 @@ namespace luminous {
                                       RayQueue *next_ray_queue,
                                       MaterialEvalQueue *material_eval_queue,
                                       SOA<PixelSampleState> *pixel_sample_state) {
-            if (task_id >= material_eval_queue->size()) {
-                return;
-            }
-            MaterialEvalWorkItem mtl_item = (*material_eval_queue)[task_id];
-            const SceneData *scene_data = &(rt_param->scene_data);
-
-
-            HitContext hit_ctx{mtl_item.hit_info, scene_data};
-            SurfaceInteraction si = hit_ctx.compute_surface_interaction(mtl_item.wo);
-            BSDFWrapper bsdf = si.compute_BSDF(scene_data);
-            if (mtl_item.depth == 0) {
-                pixel_sample_state->normal[mtl_item.pixel_index] = si.g_uvn.normal();
-                pixel_sample_state->albedo[mtl_item.pixel_index] = make_float3(bsdf.color());
-            }
-
-            RaySamples rs = pixel_sample_state->ray_samples[mtl_item.pixel_index];
-
-            // sample BSDF
-            auto bsdf_sample = bsdf.sample_f(mtl_item.wo, rs.indirect.uc, rs.indirect.u);
-            if (bsdf_sample.valid()) {
-                Spectrum throughput = mtl_item.throughput * bsdf_sample.f_val / bsdf_sample.PDF;
-                RayWorkItem ray_item;
-                ray_item.prev_bsdf_val = bsdf_sample.f_val;
-                ray_item.prev_bsdf_PDF = bsdf_sample.PDF;
-                Ray new_ray = si.spawn_ray(bsdf_sample.wi);
-                next_ray_queue->push_secondary_ray(new_ray, mtl_item.depth + 1, LightSampleContext(si),
-                                                   throughput, bsdf_sample.PDF,
-                                                   bsdf_sample.f_val, 1,
-                                                   mtl_item.pixel_index);
-            }
-
-            // sample light
-            const LightSampler *light_sampler = scene_data->light_sampler;
-            LightSampleContext lsc{si};
-            SampledLight sampled_light = light_sampler->sample(lsc, rs.direct.uc);
-            const Light *light = sampled_light.light;
-            LightLiSample lls{lsc};
+//            if (task_id >= material_eval_queue->size()) {
+//                return;
+//            }
+//            MaterialEvalWorkItem mtl_item = (*material_eval_queue)[task_id];
+//            const SceneData *scene_data = &(rt_param->scene_data);
+//
+//
+//            HitContext hit_ctx{mtl_item.hit_info, scene_data};
+//            SurfaceInteraction si = hit_ctx.compute_surface_interaction(mtl_item.wo);
+//            BSDFWrapper bsdf = si.compute_BSDF(scene_data);
+//            if (mtl_item.depth == 0) {
+//                pixel_sample_state->normal[mtl_item.pixel_index] = si.g_uvn.normal();
+//                pixel_sample_state->albedo[mtl_item.pixel_index] = make_float3(bsdf.color());
+//            }
+//
+//            RaySamples rs = pixel_sample_state->ray_samples[mtl_item.pixel_index];
+//
+//            // sample BSDF
+//            auto bsdf_sample = bsdf.sample_f(mtl_item.wo, rs.indirect.uc, rs.indirect.u);
+//            if (bsdf_sample.valid()) {
+//                Spectrum throughput = mtl_item.throughput * bsdf_sample.f_val / bsdf_sample.PDF;
+//                RayWorkItem ray_item;
+//                ray_item.prev_bsdf_val = bsdf_sample.f_val;
+//                ray_item.prev_bsdf_PDF = bsdf_sample.PDF;
+//                Ray new_ray = si.spawn_ray(bsdf_sample.wi);
+//                next_ray_queue->push_secondary_ray(new_ray, mtl_item.depth + 1, LightSampleContext(si),
+//                                                   throughput, bsdf_sample.PDF,
+//                                                   bsdf_sample.f_val, 1,
+//                                                   mtl_item.pixel_index);
+//            }
+//
+//            // sample light
+//            const LightSampler *light_sampler = scene_data->light_sampler;
+//            LightSampleContext lsc{si};
+//            SampledLight sampled_light = light_sampler->sample(lsc, rs.direct.uc);
+//            const Light *light = sampled_light.light;
+//            LightLiSample lls{lsc};
 
 
 //            auto op_lls = light->sample_Li(rs.direct.u, lls)
