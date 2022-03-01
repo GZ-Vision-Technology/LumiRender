@@ -20,6 +20,7 @@ namespace luminous {
             EscapedRayQueue *escaped_ray_queue;
             MaterialEvalQueue *material_eval_queue;
             ShadowRayQueue *shadow_ray_queue;
+            const SceneData *scene_data;
             SOA <PixelSampleState> *pixel_sample_state;
         public:
             WavefrontParams() = default;
