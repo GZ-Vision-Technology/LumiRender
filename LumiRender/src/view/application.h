@@ -17,7 +17,6 @@
 #include "render/include/task.h"
 
 namespace luminous {
-
     class App {
         struct GLContext {
             GLuint program{0};

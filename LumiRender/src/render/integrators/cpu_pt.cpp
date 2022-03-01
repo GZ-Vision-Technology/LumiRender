@@ -7,6 +7,7 @@
 #include "render/scene/cpu_scene.h"
 #include "render/sensors/common.h"
 #include "render/sensors/sensor.h"
+#include "util/progressreporter.h"
 
 using std::cout;
 
@@ -29,7 +30,7 @@ namespace luminous {
             _frame_index = 0;
         }
 
-        void CPUPathTracer::render(int frame_num) {
+        void CPUPathTracer::render(int frame_num, ProgressReporter *progressor) {
             const uint tile_size = 16;
             uint2 res = _camera->resolution();
             for (int i = 0; i < frame_num; ++i) {
@@ -50,6 +51,7 @@ namespace luminous {
                     pixel_info /= float(spp);
                     film->add_sample(pixel, pixel_info, weight, _frame_index);
                 });
+                if(progressor) progressor->update(1);
                 ++_frame_index;
             }
         }

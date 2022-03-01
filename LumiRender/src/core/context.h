@@ -92,6 +92,8 @@ namespace luminous {
             return std::stoi(_parse_result()["thread-num"].as<std::string>());
         }
 
+        LM_NODISCARD short progressinfo_port();
+
         void print_help() const noexcept {
             std::cout << _cli_options.help() << std::endl;
         }

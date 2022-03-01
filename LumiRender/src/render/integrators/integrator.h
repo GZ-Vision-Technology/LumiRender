@@ -11,8 +11,12 @@
 #include "render/samplers/sampler.h"
 #include "render/sensors/sensor.h"
 
-
 namespace luminous {
+
+    inline namespace utility {
+    class ProgressReporter;
+    };
+
     inline namespace render {
 
         class Scene;
@@ -55,7 +59,7 @@ namespace luminous {
 
             virtual void update() = 0;
 
-            virtual void render(int frame_num) = 0;
+            virtual void render(int frame_num, ProgressReporter *progressor) = 0;
         };
 
         class GPUIntegrator : public Integrator {

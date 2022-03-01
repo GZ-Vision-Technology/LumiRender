@@ -20,7 +20,7 @@ namespace luminous {
                                        "__closesthit__any"};
 
         OptixAggregate::OptixAggregate(Device *device, Context *context, const Scene *scene)
-                : OptixAccel(device, context, scene), WavefrontAggregate(scene->scene_data_device_ptr()),
+                : OptixAccel(device, context, scene), WavefrontAggregate(scene->scene_data_host_ptr()),
                   _intersect_any(create_shader_wrapper(intersect_shader, intersect_any_func)),
                   _intersect_closet(create_shader_wrapper(intersect_shader, intersect_closest_func)) {
             auto program_groups = _intersect_closet.program_groups();
@@ -42,7 +42,6 @@ namespace luminous {
             _params->hit_area_light_queue = hit_area_light_queue;
             _params->escaped_ray_queue = escaped_ray_queue;
             _params->material_eval_queue = material_eval_queue;
-            _params->scene_data = _scene_data;
             _params.synchronize_to_device();
 
             auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;

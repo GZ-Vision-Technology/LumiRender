@@ -38,7 +38,7 @@ namespace luminous {
 
             void synchronize_to_gpu();
 
-            void render(int frame_num) override;
+            void render(int frame_num, ProgressReporter *progressor) override;
         };
     }
 }

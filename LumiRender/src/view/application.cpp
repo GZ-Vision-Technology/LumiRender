@@ -112,23 +112,26 @@ namespace luminous {
 
 
     void App::init(const string &title, const int2 &size, Context *context, const Parser &parser) {
-        TASK_TAG("launch app")
+        {
+            TASK_TAG("launch app")
 
-        _is_gpu_rendering = context->use_gpu();
+            _is_gpu_rendering = context->use_gpu();
 
-        _size = size;
-        if (context->use_gpu()) {
-            _task = std::make_unique<Task>(create_cuda_device(), context);
-        } else {
-            _task = std::make_unique<Task>(create_cpu_device(), context);
+            _size = size;
+            if (context->use_gpu()) {
+                _task = std::make_unique<Task>(create_cuda_device(), context);
+            } else {
+                _task = std::make_unique<Task>(create_cpu_device(), context);
+            }
+            _task->init(parser);
+
+            _show_window = context->show_window();
+
+            if (_show_window) {
+                init_with_gui(title);
+            }
         }
-        _task->init(parser);
-
-        _show_window = context->show_window();
-
-        if (_show_window) {
-            init_with_gui(title);
-        }
+        _task->post_init();
     }
 
     void App::init_with_gui(const std::string &title) {
@@ -350,6 +353,13 @@ namespace luminous {
         while (!_task->complete()) {
             check_and_update();
             render(.0);
+        }
+        _task->finalize();
+
+        if(_task->result_available()) {
+            _task->save_to_file();
+
+            printf("Rendering complete, FPS: %.2f", _task->get_fps());
         }
 
         return 0;

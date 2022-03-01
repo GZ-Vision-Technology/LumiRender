@@ -12,7 +12,7 @@
 #include "render/integrators/integrator.h"
 #include "core/backend/managed.h"
 #include "render/sensors/common.h"
-#include "util/clock.h"
+#include "util/progressreporter.h"
 
 namespace luminous {
     inline namespace render {
@@ -28,18 +28,19 @@ namespace luminous {
             double _dt{0};
             OutputConfig _output_config;
             int _dispatch_num{0};
-            Clock _clock;
             FBState _fb_state;
             Managed<float4, float4> _render_buffer{_device.get()};
             Managed<float4, float4> _normal_buffer{_device.get()};
             Managed<float4, float4> _albedo_buffer{_device.get()};
             Managed<FrameBufferType, FrameBufferType> _frame_buffer{_device.get()};
+            ProgressReporter _progressor;
         public:
             Task(std::unique_ptr<Device> device, Context *context)
                     : _device(move(device)),
                       _context(context) {}
 
             void init(const Parser &parser);
+            void post_init();
 
             LM_NODISCARD std::shared_ptr<SceneGraph> build_scene_graph(const Parser &parser);
 
@@ -48,10 +49,18 @@ namespace luminous {
                 _integrator->update();
             }
 
-            void save_to_file(const OutputConfig& oc);
+            void finalize();
+
+            float get_fps() const;
+
+            void save_to_file();
 
             LM_NODISCARD bool complete() const {
-                return _dispatch_num > _output_config.dispatch_num;
+                return _dispatch_num >= _output_config.dispatch_num;
+            }
+
+            bool result_available() const {
+                return _dispatch_num > 0;
             }
 
             void render_gui(double dt);

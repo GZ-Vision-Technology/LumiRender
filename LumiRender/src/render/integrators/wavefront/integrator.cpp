@@ -5,6 +5,7 @@
 #include "integrator.h"
 #include "embree_aggregate.h"
 #include "gpu/accel/optix_aggregate.h"
+#include "util/progressreporter.h"
 
 extern "C" char wavefront_kernels[];
 
@@ -108,10 +109,11 @@ namespace luminous {
             }
         }
 
-        void WavefrontPT::render(int frame_num) {
+        void WavefrontPT::render(int frame_num, ProgressReporter *progressor) {
             auto spp = _sampler->spp();
             for (int sample_idx = 0; sample_idx < spp; ++sample_idx) {
                 render_per_sample(sample_idx, spp);
+                if (progressor) progressor->update(1);
             }
             _rt_param->frame_index += 1;
             _rt_param.synchronize_to_device();

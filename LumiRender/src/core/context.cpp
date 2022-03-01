@@ -78,7 +78,7 @@ namespace luminous {
               _cli_options{luminous_fs::path{argv[0]}.filename().string()} {
 
         _cli_options.add_options(
-                "",
+                "Renderer",
             {
                 {"d, device", "Select compute device: cuda or cpu",
                         cxxopts::value<std::string>()->default_value("cuda")},
@@ -102,6 +102,11 @@ namespace luminous {
                 {"h, help", "Print usage"}
             }
         );
+        _cli_options.add_options(
+                "Miscellaneous",
+                {{"progressinfo-port", "(Linux) socket port used for pulling CLI progress bar status.\n"
+                                       "When 0 is specified, no outgoing message will be sent.",
+                  cxxopts::value<std::string>()->default_value("0")}});
     }
 
     const cxxopts::ParseResult &Context::_parse_result() const noexcept {
@@ -184,6 +189,15 @@ namespace luminous {
 
     bool Context::denoise_output() noexcept {
         return _parse_result().count("denoise") > 0;
+    }
+
+    short Context::progressinfo_port() {
+        char *pend;
+        unsigned long portl = std::strtoul(_parse_result()["progressinfo-port"].as<std::string>().c_str(), &pend, 10);
+        if(pend == nullptr || *pend != '\0')
+            portl = 0;
+
+        return static_cast<short>(portl);
     }
 
 }// namespace luminous

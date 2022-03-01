@@ -6,38 +6,39 @@
 #pragma once
 
 #include "base_libs/common.h"
-#include <OpenImageDenoise/oidn.hpp>
-#include <iostream>
+
+#ifdef LUMINOUS_DENOISER_BUILD
+#ifdef _WIN32
+#define LUMINOUS_DENOISER_LIB_VISIBILITY  __declspec(dllexport)
+#else
+#define LUMINOUS_DENOISER_LIB_VISIBILITY __attribute__((visibility("default")))
+#endif
+#else
+#ifdef _WIN32
+#define LUMINOUS_DENOISER_LIB_VISIBILITY __declspec(dllimport)
+#else
+#define LUMINOUS_DENOISER_LIB_VISIBILITY
+#endif
+#endif
+
+namespace oidn {
+class DeviceRef;
+};
 
 namespace luminous {
     inline namespace denoise {
-        class Denoiser {
+        class LUMINOUS_DENOISER_LIB_VISIBILITY Denoiser {
         private:
-            oidn::DeviceRef _device{};
+            Denoiser(const Denoiser &) = delete;
+            Denoiser &operator=(const Denoiser &) = delete;
+
+            oidn::DeviceRef *_device{};
         public:
-            Denoiser() : _device(oidn::newDevice()) {
-                _device.commit();
-            }
+            Denoiser();
+            ~Denoiser();
 
             void execute(uint2 res, float4 *output, float4 *color,
-                         float4 *normal = nullptr, float4 *albedo = nullptr) {
-                oidn::FilterRef filter = _device.newFilter("RT");
-                filter.setImage("output", output, oidn::Format::Float3, res.x, res.y, 0, sizeof(float4));
-                filter.setImage("color", color, oidn::Format::Float3, res.x, res.y, 0, sizeof(float4));
-                if (normal && albedo) {
-                    filter.setImage("normal", normal, oidn::Format::Float3, res.x, res.y, 0, sizeof(float4));
-                    filter.setImage("albedo", albedo, oidn::Format::Float3, res.x, res.y, 0, sizeof(float4));
-                }
-                // color image is HDR
-                filter.set("hdr", true);
-                filter.commit();
-                filter.execute();
-
-                const char *errorMessage;
-                if (_device.getError(errorMessage) != oidn::Error::None) {
-                    std::cout << "oidn Error: " << errorMessage << std::endl;
-                }
-            }
+                         float4 *normal = nullptr, float4 *albedo = nullptr);
         };
     }
 }

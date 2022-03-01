@@ -29,7 +29,7 @@ namespace luminous {
 
             void update() override;
 
-            void render(int frame_num) override;
+            void render(int frame_num, ProgressReporter *progressor) override;
         };
 
     } // luminous::render

@@ -112,7 +112,7 @@ namespace luminous {
                 _camera.synchronize_all_to_device();
             }
 
-            void render(int frame_num) override;
+            void render(int frame_num, ProgressReporter *progressor) override;
 
             void render_per_sample(int sample_idx, int spp);
 

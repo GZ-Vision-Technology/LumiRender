@@ -4,6 +4,7 @@
 
 #include "megakernel_pt.h"
 #include "render/scene/gpu_scene.h"
+#include "util/progressreporter.h"
 
 namespace luminous {
     inline namespace gpu {
@@ -31,10 +32,11 @@ namespace luminous {
             init_launch_params();
         }
 
-        void MegakernelPT::render(int frame_num) {
+        void MegakernelPT::render(int frame_num, ProgressReporter *progressor) {
             auto res = _camera->resolution();
             for (int i = 0; i < frame_num; ++i) {
                 _scene->accel<MegakernelOptixAccel>()->launch(res, _launch_params);
+                if(progressor) progressor->update(1);
                 _launch_params->frame_index += 1;
             }
         }

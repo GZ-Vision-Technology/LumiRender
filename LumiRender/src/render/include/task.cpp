@@ -137,7 +137,17 @@ namespace luminous {
             }
             _integrator->init(scene_graph);
             update_device_buffer();
-            _clock.reset();
+        }
+
+        void Task::post_init() {
+            if(!_context->show_window()) {
+                _progressor.reset("Rendering", _output_config.dispatch_num * _output_config.frame_per_dispatch, false, false,
+                   _context->progressinfo_port());
+            }
+        }
+
+        void Task::finalize() {
+            _progressor.done();
         }
 
         std::shared_ptr<SceneGraph> Task::build_scene_graph(const Parser &parser) {
@@ -146,7 +156,10 @@ namespace luminous {
             return scene_graph;
         }
 
-        void Task::save_to_file(const OutputConfig &oc) {
+        void Task::save_to_file() {
+
+            auto &oc = _output_config;
+
             float4 *buffer = get_buffer();
             auto res = resolution();
             size_t size = res.x * res.y * pixel_size(PixelFormat::RGBA32F);
@@ -220,14 +233,14 @@ namespace luminous {
 
         void Task::render_gui(double dt) {
             _dt = dt;
-            _integrator->render(_output_config.frame_per_dispatch);
-            if (_dispatch_num++ == _output_config.dispatch_num
-                && _output_config.dispatch_num != 0) {
-                auto t = _clock.get_time();
-                cout << "render is complete elapse " << t << " s" << endl;
-                cout << (_output_config.dispatch_num * _output_config.frame_per_dispatch) / t << " fps" << endl;
-                save_to_file(_output_config);
-            }
+            _integrator->render(_output_config.frame_per_dispatch, &_progressor);
+            ++_dispatch_num;
+        }
+
+        float Task::get_fps() const {
+            return _progressor.is_valid() ? static_cast<float>(_progressor.elapsed_seconds() /
+                                                               (_output_config.frame_per_dispatch * _output_config.dispatch_num))
+                                          : .0f;
         }
     }
 }
