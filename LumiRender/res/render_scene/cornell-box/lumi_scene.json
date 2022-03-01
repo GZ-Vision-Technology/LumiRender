@@ -2,7 +2,7 @@
     "textures": [],
     "materials": [
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "LeftWall",
             "param": {
                 "color": [
@@ -13,15 +13,15 @@
                 ,
                 "sheen" : 0.9,
                 "sheen_tint" : 0.9,
-                "metallic" : 0,
+                // "metallic" : 0,
                 "clearcoat" : 0,
                 "clearcoat_roughness" : 0.01,
-                "roughness" : 1.0,
+                "roughness" : 0.09,
                 "anisotropic" : 0
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "RightWall",
             "param": {
                 "color": [
@@ -32,15 +32,15 @@
                 ,
                 "sheen" : 0.9,
                 "sheen_tint" : 0.9,
-                "metallic" : 0,
+                // "metallic" : 0,
                 "clearcoat" : 0,
                 "clearcoat_roughness" : 0.01,
-                "roughness" : 1.0,
+                "roughness" : 0.09,
                 "anisotropic" : 0
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "Floor",
             "param": {
                 "color": [
@@ -51,15 +51,15 @@
                 ,
                 "sheen" : 0.9,
                 "sheen_tint" : 0.9,
-                "metallic" : 0,
+                // "metallic" : 0,
                 "clearcoat" : 0,
                 "clearcoat_roughness" : 0.1,
-                "roughness" : 1.0,
+                "roughness" : 0.09,
                 "anisotropic" : 0       
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "Ceiling",
             "param": {
                 "color": [
@@ -70,15 +70,15 @@
                 ,
                 "sheen" : 0.9,
                 "sheen_tint" : 0.9,
-                "metallic" : 0,
+                // "metallic" : 0,
                 "clearcoat" : 0,
                 "clearcoat_roughness" : 0.1,
-                "roughness" : 1.0,
+                "roughness" : 0.09,
                 "anisotropic" : 0   
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "BackWall",
             "param": {
                 "color": [
@@ -89,15 +89,15 @@
                 ,
                 "sheen" : 0.9,
                 "sheen_tint" : 0.9,
-                "metallic" : 0,
+                // "metallic" : 0,
                 "clearcoat" : 0,
                 "clearcoat_roughness" : 0.1,
-                "roughness" : 1.0,
+                "roughness" : 0.09,
                 "anisotropic" : 0            
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "ShortBox",
             "param": {
                 "color": [
@@ -108,15 +108,15 @@
                 ,
                 "sheen" : 0.9,
                 "sheen_tint" : 0.9,
-                "metallic" : 0,
+                // "metallic" : 0,
                 "clearcoat" : 0,
                 "clearcoat_roughness" : 0.1,
-                "roughness" : 1.0,
+                "roughness" : 0.09,
                 "anisotropic" : 0
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "TallBox",
             "param": {
                 "color": [
@@ -127,10 +127,10 @@
                 ,
                 "sheen" : 0.9,
                 "sheen_tint" : 0.9,
-                "metallic" : 0,
+                // "metallic" : 0,
                 "clearcoat" : 0,
                 "clearcoat_roughness" : 0.1,
-                "roughness" : 1.0,
+                "roughness" : 0.09,
                 "anisotropic" : 0
             }
         }
@@ -461,7 +461,7 @@
                     12,
                     4
                 ],
-                "scale" : 1
+                "scale" : 2
             }
         }
     ],
@@ -476,6 +476,7 @@
         }
     },
     "integrator": {
+        // "type": "WavefrontPT",
         "type": "PT",
         "param": {
             "min_depth": 0,
@@ -530,8 +531,8 @@
         }
     },
     "output": {
-        "fn": "cornell-boxsheen0-clear0-new.png",
-        "dispatch_num": 0,
+        "fn": "cornell-boxsheen0.9-clear0-weight-1-1024.png",
+        "dispatch_num": 1024,
         "tone_map": 0
     }
 }
