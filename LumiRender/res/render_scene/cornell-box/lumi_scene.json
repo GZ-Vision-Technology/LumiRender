@@ -1,5 +1,15 @@
 {
-    "textures": [],
+    "textures": [
+        {
+			"name": "envmap",
+			"type": "ImageTexture",
+			"param": {
+				"fn": "textures/spruit_sunrise_2k.hdr",
+				"scale": [1,1,1],
+				"color_space": "LINEAR"
+			}
+		}
+    ],
     "materials": [
         {
             "type": "MatteMaterial",
@@ -465,7 +475,22 @@
             }
         }
     ],
-    "lights": [],
+    "lights": [
+        // {
+		// 	"type": "Envmap",
+		// 	"param": {
+		// 		"transform" : {
+		// 			"type" : "yaw_pitch",
+		// 			"param" : {
+		// 				"yaw" : 0,
+		// 				"pitch": 0,
+		// 				"position": [0,0,0]
+		// 			}
+		// 		},
+		// 		"key" : "envmap"
+		// 	}
+		// }
+    ],
     "light_sampler": {
         "type": "UniformLightSampler"
     },
@@ -512,8 +537,8 @@
             "film": {
                 "param": {
                     "resolution": [
-                        1024,
-                        1024
+                        768,
+                        768
                     ],
                     "fb_state": 0,
                     "tone_map": 0
@@ -532,7 +557,7 @@
     },
     "output": {
         "fn": "cornell-boxsheen0.9-clear0-weight-1-1024.png",
-        "dispatch_num": 1024,
+        "dispatch_num": 0,
         "tone_map": 0
     }
 }
