@@ -69,8 +69,13 @@ namespace luminous {
                 wi = w;
             }
 
-            LM_XPU void update_Li(Spectrum Li) {
+            LM_XPU void set_Li(Spectrum Li) {
                 L = Li;
+            }
+
+            LM_XPU void update_Li() {
+                float factor = PDF_dir == 0 ? 0 : 1;
+                L *= factor;
             }
 
             LM_ND_XPU bool has_contribution() const {

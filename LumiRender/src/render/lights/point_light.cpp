@@ -29,7 +29,7 @@ namespace luminous {
 
         LightLiSample PointLight::Li(LightLiSample lls, const SceneData *data) const {
             float3 wi = lls.lec.pos - lls.lsc.pos;
-            lls.update_Li(_intensity / length_squared(wi));
+            lls.set_Li(_intensity / length_squared(wi));
             return lls;
         }
 

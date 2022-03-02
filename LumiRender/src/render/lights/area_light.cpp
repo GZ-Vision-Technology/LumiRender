@@ -30,7 +30,7 @@ namespace luminous {
         }
 
         LightLiSample AreaLight::Li(LightLiSample lls, const SceneData *data) const {
-            lls.update_Li(radiance(lls.lec, -lls.wi, data));
+            lls.set_Li(radiance(lls.lec, -lls.wi, data));
             return lls;
         }
 

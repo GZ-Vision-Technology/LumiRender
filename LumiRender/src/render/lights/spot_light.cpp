@@ -34,7 +34,7 @@ namespace luminous {
             float3 wi = lls.lsc.pos - lls.lec.pos;
             float3 L = _intensity / length_squared(wi);
             float f = fall_off(normalize(wi));
-            lls.update_Li(L * f);
+            lls.set_Li(L * f);
             return lls;
         }
 

@@ -173,8 +173,11 @@ namespace luminous {
             const Light *light = sampled_light.light;
             LightLiSample lls{lsc};
 
-
-//            auto op_lls = light->sample_Li(rs.direct.u, lls)
+            light->sample(&lls, rs.direct.u, scene_data);
+            if (lls.valid()) {
+                Ray new_ray = si.spawn_ray_to(lls.lec.pos);
+                ShadowRayWorkItem shadow_ray_work_item;
+            }
         }
 
         void add_samples(int task_id, int n_item,

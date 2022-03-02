@@ -10,7 +10,7 @@ namespace luminous {
     inline namespace render {
 
         LightLiSample Envmap::Li(LightLiSample lls, const SceneData *data) const {
-            lls.update_Li(L(_w2o.apply_vector(lls.wi), data));
+            lls.set_Li(L(_w2o.apply_vector(lls.wi), data));
             return lls;
         }
 

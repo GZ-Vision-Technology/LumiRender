@@ -33,8 +33,7 @@ namespace luminous {
                 return {};
             }
             lls = Li(lls, scene_data);
-            float factor = lls.PDF_dir == 0 ? 0 : 1;
-            lls.L *= factor;
+            lls.update_Li();
             return lls;
         }
 
