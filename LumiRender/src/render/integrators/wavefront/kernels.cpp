@@ -147,7 +147,7 @@ namespace luminous {
             SurfaceInteraction si = hit_ctx.compute_surface_interaction(mtl_item.wo);
             BSDFWrapper bsdf = si.compute_BSDF(scene_data);
             if (mtl_item.depth == 0) {
-                pixel_sample_state->normal[mtl_item.pixel_index] = si.g_uvn.normal();
+                pixel_sample_state->normal[mtl_item.pixel_index] = si.s_uvn.normal();
                 pixel_sample_state->albedo[mtl_item.pixel_index] = make_float3(bsdf.color());
             }
 
@@ -184,7 +184,7 @@ namespace luminous {
                 Spectrum bsdf_val = bsdf.eval(mtl_item.wo, lls.wi);
                 Spectrum Ld = lls.L * bsdf_val * weight / light_PDF;
                 DCHECK(!has_invalid(Ld))
-                Ray new_ray = si.spawn_ray_to(lls.lec.pos);
+                Ray new_ray = lls.lsc.spawn_ray_to(lls.lec);
                 ShadowRayWorkItem shadow_ray_work_item{new_ray, Ld, mtl_item.pixel_index};
                 shadow_ray_queue->push(shadow_ray_work_item);
             }
