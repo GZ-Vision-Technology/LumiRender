@@ -182,7 +182,7 @@ namespace luminous {
                 float light_PDF = lls.PDF_dir;
                 float weight = MIS_weight(light_PDF, bsdf_PDF);
                 Spectrum bsdf_val = bsdf.eval(mtl_item.wo, lls.wi);
-                Spectrum Ld = lls.L * bsdf_val * weight / light_PDF;
+                Spectrum Ld = lls.L * bsdf_val * weight / light_PDF * mtl_item.throughput;
                 DCHECK(!has_invalid(Ld))
                 Ray new_ray = lls.lsc.spawn_ray_to(lls.lec);
                 ShadowRayWorkItem shadow_ray_work_item{new_ray, Ld, mtl_item.pixel_index};
