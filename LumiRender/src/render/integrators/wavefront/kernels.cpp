@@ -193,12 +193,14 @@ namespace luminous {
         void add_samples(int task_id, int n_item,
                          SOA<PixelSampleState> *pixel_sample_state) {
             Sensor *camera = rt_param->camera;
+            float inv_spp = 1.f / rt_param->sampler->spp();
             uint2 pixel = pixel_sample_state->pixel[task_id];
             Film *film = camera->film();
             Spectrum L = pixel_sample_state->Li[task_id];
             float3 normal = pixel_sample_state->normal[task_id];
             float3 albedo = pixel_sample_state->albedo[task_id];
-            film->add_samples(pixel, L, albedo, normal, 1, rt_param->frame_index);
+
+            film->add_samples(pixel, L * inv_spp, albedo * inv_spp, normal * inv_spp, 1, rt_param->frame_index);
         }
     }
 }
