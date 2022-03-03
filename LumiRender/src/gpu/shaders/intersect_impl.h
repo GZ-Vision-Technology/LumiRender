@@ -9,6 +9,7 @@
 #include "render/integrators/wavefront/params.h"
 #include "render/integrators/wavefront/process_queue.cpp"
 #include "render/scene/shader_include.h"
+#include "render/include/shader_include.h"
 #include "render/integrators/wavefront/work_items.h"
 
 #define GLOBAL extern "C" __global__ void
@@ -26,7 +27,7 @@ GLOBAL __raygen__find_closest() {
     }
     RayWorkItem r = (*params.ray_queue)[task_id];
     Ray ray = r.ray;
-    HitContext hit_ctx;
+    HitContext hit_ctx{params.scene_data};
     bool hit = traceClosestHit(params.traversable_handle, ray, &hit_ctx.hit_info);
     if (hit) {
         enqueue_item_after_intersect(r, hit_ctx, params.next_ray_queue,
