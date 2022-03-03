@@ -62,7 +62,7 @@ namespace luminous {
                     : L(L), wi(wi), PDF_dir(PDF), lec(lec) {}
 
             ND_XPU_INLINE bool valid() const {
-                return PDF_dir >= 0.f;
+                return PDF_dir > 0.f;
             }
 
             LM_XPU void compute_PDF_dir() {

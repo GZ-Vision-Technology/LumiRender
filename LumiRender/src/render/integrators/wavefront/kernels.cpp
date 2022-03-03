@@ -176,9 +176,16 @@ namespace luminous {
 
             light->sample(&lls, rs.direct.u, scene_data);
             if (lls.valid()) {
+                lls = light->Li(lls, scene_data);
                 lls.update_Li();
+                float bsdf_PDF = bsdf.PDF(mtl_item.wo, lls.wi);
+                float light_PDF = lls.PDF_dir;
+                float weight = MIS_weight(light_PDF, bsdf_PDF);
+                Spectrum bsdf_val = bsdf.eval(mtl_item.wo, lls.wi);
+                Spectrum Ld = lls.L * bsdf_val * weight / light_PDF;
+                DCHECK(!has_invalid(Ld))
                 Ray new_ray = si.spawn_ray_to(lls.lec.pos);
-                ShadowRayWorkItem shadow_ray_work_item{new_ray, lls.L, mtl_item.pixel_index};
+                ShadowRayWorkItem shadow_ray_work_item{new_ray, Ld, mtl_item.pixel_index};
                 shadow_ray_queue->push(shadow_ray_work_item);
             }
         }
