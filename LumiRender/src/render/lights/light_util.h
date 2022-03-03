@@ -52,6 +52,7 @@ namespace luminous {
                                  LightEvalContext lec)
                     : lsc(lsc), lec(lec) {
                 wi = normalize(lec.pos - lsc.pos);
+                compute_PDF_dir();
             }
 
             LM_XPU explicit LightLiSample(LightSampleContext lsc, float3 wi = make_float3(0.f))

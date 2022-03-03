@@ -186,7 +186,7 @@ namespace luminous {
             int pixel_index{};
             Spectrum throughput;
             LightSampleContext prev_lsc;
-            float prev_bsdf_PDF;
+            float prev_bsdf_PDF{};
             Spectrum prev_bsdf_val;
         };
 
@@ -199,7 +199,8 @@ namespace luminous {
 
             LM_XPU_INLINE int push(RayWorkItem r) {
                 EscapedRayWorkItem item{r.ray.origin(), r.ray.direction(), r.depth,
-                                        r.pixel_index, r.throughput, r.prev_lsc};
+                                        r.pixel_index, r.throughput, r.prev_lsc,
+                                        r.prev_bsdf_PDF, r.prev_bsdf_val};
                 return WorkQueue::push(item);
             }
         };
@@ -210,7 +211,7 @@ namespace luminous {
             int depth{};
             Spectrum throughput;
             LightSampleContext prev_lsc;
-            float prev_bsdf_PDF;
+            float prev_bsdf_PDF{};
             Spectrum prev_bsdf_val;
             int pixel_index{};
         };
