@@ -80,15 +80,7 @@ namespace luminous {
 
             LM_NODISCARD ShaderWrapper create_shader_wrapper(const std::string_view &ptx_code, const ProgramName &program_name);
 
-            void clear() override {
-                if(_optix_pipeline) {
-                    optixPipelineDestroy(_optix_pipeline);
-                    _optix_pipeline = nullptr;
-                }
-                clear_modules();
-                _as_buffer_list.clear();
-                optixDeviceContextDestroy(_optix_device_context);
-            }
+            void clear() override;
 
             LM_NODISCARD std::string description() const override {
                 float size_in_M = (_bvh_size_in_bytes * 1.f) / (sqr(1024));

@@ -305,5 +305,15 @@ namespace luminous {
                                                   2 // maxTraversableDepth
                                                   ));
         }
+
+        void OptixAccel::clear() {
+            if (_optix_pipeline) {
+                optixPipelineDestroy(_optix_pipeline);
+                _optix_pipeline = nullptr;
+            }
+            clear_modules();
+            _as_buffer_list.clear();
+            optixDeviceContextDestroy(_optix_device_context);
+        }
     }
 }

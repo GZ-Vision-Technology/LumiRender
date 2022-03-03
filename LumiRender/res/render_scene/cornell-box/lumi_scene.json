@@ -501,7 +501,7 @@
         }
     },
     "integrator": {
-        // "type": "WavefrontPT",
+        // // "type": "WavefrontPT",
         "type": "PT",
         "param": {
             "min_depth": 0,

@@ -8,7 +8,21 @@
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
+#include <netdb.h>
+
+#define closesocket(fd) close(fd)
+
+#endif
+
+#ifdef _WIN32
+#include <Windows.h>
+#include <WinSock2.h>
+#include <WS2tcpip.h>
+
+#ifdef _WIN32
+#define perror(msg) fprintf(stderr, "%s error: %u\n", msg, WSAGetLastError());
+#endif
+
 #endif
 
 namespace luminous {
@@ -41,59 +55,73 @@ inline namespace utility {
 #endif
 }
 
-int create_udp_connection(short port, int *pfd) {
+int create_udp_connection(short port, psocket_t fds[2]) {
 
-#ifdef __linux__
-    int fd;
-    struct in6_addr inaddr_loopback = IN6ADDR_LOOPBACK_INIT;
-    struct sockaddr_in6 addr;
-    const int max_buff_len = 1024;
-
-    *pfd = 0;
+    int ret_count = 0;
+    int fd_count = 0;
+    struct addrinfo hints;
+    struct addrinfo *res = NULL, *ptr;
+    char service_port[8];
+    int i;
+    int max_buff_len = 1024;
 
     if(port == 0)
-        return 0;
+        return ret_count;
 
-    if ((fd = socket(AF_INET6, SOCK_DGRAM, 0)) == 0) {
-        perror("socket");
-        return -1;
+    snprintf(service_port, 8, "%u", port);
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_flags = AI_NUMERICSERV;
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_DGRAM;
+    hints.ai_protocol = 0;
+
+    if (getaddrinfo(NULL, service_port, &hints, &res)) {
+        perror("getaddrinfo");
+        goto cleanup;
     }
 
-    if ((setsockopt(fd, SOL_SOCKET, SO_SNDBUF, &max_buff_len,
-                    sizeof(max_buff_len))) < 0) {
-        perror("setsockop");
-        close(fd);
-        return -1;
+    for (ptr = res, i = 0; ptr != NULL && i < 2; ptr = ptr->ai_next, ++i) {
+
+        if ((fds[i] = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol)) ==
+            0) {
+            perror("socket");
+            goto cleanup;
+        }
+        fd_count = i + 1;
+
+        if ((setsockopt(fds[i], SOL_SOCKET, SO_SNDBUF, (const char *) &max_buff_len,
+                        sizeof(max_buff_len))) < 0) {
+            perror("setsockop");
+            goto cleanup;
+        }
+
+        if (connect(fds[i], ptr->ai_addr, (int) ptr->ai_addrlen) < 0) {
+            perror("connect");
+            goto cleanup;
+        }
     }
 
-    addr.sin6_family = AF_INET6;
-    addr.sin6_addr = inaddr_loopback;
-    addr.sin6_port = htons(port);
+    ret_count = fd_count;
+    fd_count = 0;
 
-    if (connect(fd, (const struct sockaddr *) (&addr), sizeof(addr)) < 0) {
-        perror("connect");
-        close(fd);
-        return -1;
-    }
+cleanup:
+    for (i = 0; i < fd_count; ++i)
+        closesocket(fds[i]);
+    freeaddrinfo(res);
 
-    *pfd = fd;
-    return 0;
-#else
-    *pfd = 0;
-    return 0;
-#endif
+    return ret_count;
 }
 
-void close_udp_connection(int fd) {
-#ifdef __linux__
-    if(fd)
-        close(fd);
-#else
-#endif
+void close_udp_connection(int fd_count, const psocket_t fds[2]) {
+
+    for (int i = 0; i < fd_count; ++i)
+        closesocket(fds[i]);
 }
 
 void write_progress_info_to_file(
-    int fd,
+    int fd_count,
+    const psocket_t fds[2],
     bool terminate,
     uint64_t sn,
     const char *title,
@@ -101,8 +129,7 @@ void write_progress_info_to_file(
     float ELA,
     float ETA) {
 
-#ifdef __linux__
-    if(fd == 0)
+    if(fd_count == 0)
         return;
 
     const int max_buff_len = 1024;
@@ -112,16 +139,15 @@ void write_progress_info_to_file(
             R"PROGRESSINFO({ "type":"ProgressInfo","sn":%llu,"title":"%s","percentage":%.3f,"ELA":%.3f,"ETA":%.3f })PROGRESSINFO";
     char progress_end_json_fmt[] =
             R"PROGRESSEND({ "type":"ProgressEndSpecifier","sn":%llu,"title":"%s" })PROGRESSEND";
+    int i;
 
     if(!terminate)
         buff_len = snprintf(buffer, max_buff_len, progress_json_fmt, sn, title, percentage, ELA, ETA);
     else
         buff_len = snprintf(buffer, max_buff_len, progress_end_json_fmt, sn, title);
 
-    write(fd, buffer, buff_len);
-#else
-    return;
-#endif
+    for (i = 0; i < fd_count; ++i)
+        send(fds[i], buffer, buff_len, 0);
 }
 
 
@@ -131,14 +157,15 @@ void update_progress_proc(ProgressReporter *progressor) {
     uint64_t iter_count = 0;
     long terminal_width = get_terminal_width();
     std::string out_buffer;
-    int fd;
+    int fd_count;
+    psocket_t fds[2];
 
     out_buffer.resize(terminal_width * 8);
 
-    create_udp_connection(progressor->_client_port, &fd);
+    fd_count = create_udp_connection(progressor->_client_port, fds);
 
     while (!progressor->_terminate_update) {
-        progressor->update_progress_bar(out_buffer.data(), terminal_width, iter_count, fd);
+        progressor->update_progress_bar(fd_count, fds, out_buffer.data(), terminal_width, iter_count);
         std::this_thread::sleep_for(sleep_duration);
 
         // Periodically increase sleepDuration to reduce overhead of
@@ -156,20 +183,48 @@ void update_progress_proc(ProgressReporter *progressor) {
     }
 
     // Update for the last time
-    progressor->update_progress_bar(out_buffer.data(), terminal_width, iter_count, fd);
+    progressor->update_progress_bar(fd_count, fds, out_buffer.data(), terminal_width, iter_count);
 
-    if(fd) {
+    if(fd_count) {
         std::this_thread::sleep_for(std::chrono::milliseconds(0));
         // Write end specifier for 5 times
         for(iter_count = 0; iter_count < 5; ++iter_count) {
-            write_progress_info_to_file(fd, true, iter_count, progressor->_title.c_str(), .0f, .0f, .0f);
+            write_progress_info_to_file(fd_count, fds, true, iter_count, progressor->_title.c_str(), .0f, .0f, .0f);
             std::this_thread::sleep_for(std::chrono::milliseconds(0));
         }
     }
 
-    close_udp_connection(fd);
+    close_udp_connection(fd_count, fds);
 }
 
+static struct ProgressReporterGuard {
+
+    ProgressReporterGuard() {
+        ProgressReporter::init();
+    }
+
+    ~ProgressReporterGuard() {
+        ProgressReporter::cleanup();
+    }
+} _ProgressReporterGuard;
+
+void ProgressReporter::init() {
+#ifdef _WIN32
+  int rc;
+  WSADATA wsaData;
+if ((rc = WSAStartup(MAKEWORD(2, 2), &wsaData))) {
+    fprintf(stderr, "WSAStartup failed: %u\n", rc);
+  }
+#endif
+}
+
+void ProgressReporter::cleanup() {
+#ifdef _WIN32
+  if (WSACleanup()) {
+    fprintf(stderr, "WSACleanup failed: %u\n", WSAGetLastError());
+  }
+#endif
+}
 
 ProgressReporter::ProgressReporter()
     : _quiet(true), _total_work(0) {
@@ -264,7 +319,7 @@ void ProgressReporter::update(uint64_t num) {
         _timer.stop();
 }
 
-void ProgressReporter::update_progress_bar(char *out_buffer, int terminal_width, uint64_t sn, int fd) {
+void ProgressReporter::update_progress_bar(int fd_count, const psocket_t fds[2], char *out_buffer, int terminal_width, uint64_t sn) {
 
     if (!_cu_profile_events.empty()) {
 
@@ -286,7 +341,7 @@ void ProgressReporter::update_progress_bar(char *out_buffer, int terminal_width,
     double estimated_total((long long) (elapsed / std::max(percentage / 100.0f, 1.0E-3f)));
     auto remaining = estimated_total - elapsed;
 
-    write_progress_info_to_file(fd, false, sn, _title.c_str(),
+    write_progress_info_to_file(fd_count, fds, false, sn, _title.c_str(),
         percentage,
         static_cast<float>(elapsed),
         static_cast<float>(remaining));
