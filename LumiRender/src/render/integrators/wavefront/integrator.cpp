@@ -122,6 +122,9 @@ namespace luminous {
         void WavefrontPT::reset_queues(int depth) {
             _reset_next_ray_queue(depth);
 
+            _shadow_ray_queue->reset();
+            _shadow_ray_queue.synchronize_to_device();
+
             _escaped_ray_queue->reset();
             _escaped_ray_queue.synchronize_to_device();
 

@@ -50,7 +50,9 @@ namespace luminous {
 
             LM_XPU LightLiSample(LightSampleContext lsc,
                                  LightEvalContext lec)
-                    : lsc(lsc), lec(lec) {}
+                    : lsc(lsc), lec(lec) {
+                wi = normalize(lec.pos - lsc.pos);
+            }
 
             LM_XPU explicit LightLiSample(LightSampleContext lsc, float3 wi = make_float3(0.f))
                     : lsc(lsc), wi(wi) {}
@@ -61,6 +63,12 @@ namespace luminous {
 
             ND_XPU_INLINE bool valid() const {
                 return PDF_dir >= 0.f;
+            }
+
+            LM_XPU void compute_PDF_dir() {
+                float3 wi_un = lec.pos - lsc.pos;
+                float PDF = luminous::PDF_dir(lec.PDF_pos, lsc.ng, -wi_un);
+                PDF_dir = select(is_inf(PDF), 0, PDF);
             }
 
             LM_XPU void set_sample_result(float PDF, LightEvalContext ctx, float3 w) {

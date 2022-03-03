@@ -29,12 +29,9 @@ namespace luminous {
             lls.lec = sample(&lls, u, scene_data);
             Ray ray = lls.lsc.spawn_ray_to(lls.lec);
             bool occluded = intersect_any(traversable_handle, ray);
-            if (occluded) {
-                return {};
-            }
             lls = Li(lls, scene_data);
             lls.update_Li();
-            return lls;
+            return select(occluded, LightLiSample(), lls);
         }
 
 
@@ -45,7 +42,7 @@ namespace luminous {
             Spectrum Ld(0.f);
             LightLiSample lls{LightSampleContext(si)};
             lls = sample_Li(sampler.next_2d(), lls, traversable_handle, scene_data);
-            if (lls.valid() && lls.has_contribution()) {
+//            if (lls.valid() && lls.has_contribution()) {
                 bsdf_val = bsdf.eval(si.wo, lls.wi);
                 bsdf_PDF = bsdf.PDF(si.wo, lls.wi);
                 Li = lls.L;
@@ -56,9 +53,9 @@ namespace luminous {
                         Ld = bsdf_val * Li * weight / light_PDF;
                     }
                 }
-            }
+//            }
             DCHECK(!has_invalid(Ld));
-            return Ld;
+            return select(lls.valid() && lls.has_contribution(), Ld, Spectrum{0.f});
         }
 
         Spectrum Light::MIS_sample_BSDF(const SurfaceInteraction &si, const BSDFWrapper &bsdf,

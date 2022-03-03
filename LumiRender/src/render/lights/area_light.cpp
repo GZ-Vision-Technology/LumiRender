@@ -37,10 +37,7 @@ namespace luminous {
         float AreaLight::PDF_Li(const LightSampleContext &p_ref, const LightEvalContext &p_light,
                                 float3 wi_un, const SceneData *data) const {
             float PDF = luminous::PDF_dir(p_light.PDF_pos, p_light.ng, -wi_un);
-            if (is_inf(PDF)) {
-                return 0;
-            }
-            return PDF;
+            return select(is_inf(PDF), 0, PDF);
         }
 
         Spectrum AreaLight::power() const {
@@ -54,7 +51,7 @@ namespace luminous {
         }
 
         Spectrum AreaLight::radiance(float2 uv, float3 ng, float3 w, const SceneData *scene_data) const {
-            return (_two_sided || dot(w, ng) > 0) ? L : make_float3(0.f);
+            return select(_two_sided || dot(w, ng) > 0, L, Spectrum{0.f});
         }
 
         void AreaLight::print() const {

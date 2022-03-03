@@ -118,6 +118,7 @@ namespace luminous {
                 temp_Li += Le * item.throughput;
             } else {
                 LightLiSample lls{item.prev_lsc, lec};
+                lls.compute_PDF_dir();
                 float light_select_PMF = scene_data->light_sampler->PMF(*light);
                 lls = light->Li(lls, scene_data);
                 float light_PDF = lls.PDF_dir;
@@ -175,8 +176,10 @@ namespace luminous {
 
             light->sample(&lls, rs.direct.u, scene_data);
             if (lls.valid()) {
+                lls.update_Li();
                 Ray new_ray = si.spawn_ray_to(lls.lec.pos);
-                ShadowRayWorkItem shadow_ray_work_item;
+                ShadowRayWorkItem shadow_ray_work_item{new_ray, lls.L, mtl_item.pixel_index};
+                shadow_ray_queue->push(shadow_ray_work_item);
             }
         }
 
