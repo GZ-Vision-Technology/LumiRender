@@ -1,5 +1,15 @@
 {
-    "textures": [],
+    "textures": [
+        {
+			"name": "envmap",
+			"type": "ImageTexture",
+			"param": {
+				"fn": "textures/spruit_sunrise_2k.hdr",
+				"scale": [1,1,1],
+				"color_space": "LINEAR"
+			}
+		}
+    ],
     "materials": [
         {
             "type": "MatteMaterial",
@@ -408,7 +418,22 @@
             }
         }
     ],
-    "lights": [],
+    "lights": [
+        {
+			"type": "Envmap",
+			"param": {
+				"transform" : {
+					"type" : "yaw_pitch",
+					"param" : {
+						"yaw" : 0,
+						"pitch": 0,
+						"position": [0,0,0]
+					}
+				},
+				"key" : "envmap"
+			}
+		}
+    ],
     "light_sampler": {
         "type": "UniformLightSampler"
     },
@@ -420,9 +445,10 @@
     },
     "integrator": {
         "type": "PT",
+        // "type": "WavefrontPT",
         "param": {
             "min_depth": 0,
-            "max_depth": 64,
+            "max_depth": 5,
             "rr_threshold": 1
         }
     },

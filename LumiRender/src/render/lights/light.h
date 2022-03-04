@@ -48,18 +48,6 @@ namespace luminous {
             LM_ND_XPU LightLiSample sample_Li(float2 u, LightLiSample lls, uint64_t traversable_handle,
                                                               const SceneData *scene_data) const;
 
-            LM_ND_XPU Spectrum MIS_sample_light(const SurfaceInteraction &si, const BSDFWrapper &bsdf,
-                                                Sampler &sampler, uint64_t traversable_handle,
-                                                const SceneData *scene_data) const;
-
-            LM_ND_XPU Spectrum MIS_sample_BSDF(const SurfaceInteraction &si, const BSDFWrapper &bsdf,
-                                               Sampler &sampler, uint64_t traversable_handle,
-                                               PathVertex *vertex, const SceneData *data) const;
-
-            LM_ND_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si,
-                                                        Sampler &sampler, uint64_t traversable_handle,
-                                                        const SceneData *scene_data, PathVertex *vertex) const;
-
             LM_ND_XPU float PDF_Li(const LightSampleContext &ctx, const LightEvalContext &p_light,
                                    float3 wi, const SceneData *data) const;
 

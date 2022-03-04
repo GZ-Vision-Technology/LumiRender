@@ -30,8 +30,8 @@ namespace luminous {
         class SurfaceInteraction;
 
         class LightSampler : public Variant<UniformLightSampler *> {
-        
-            DECLARE_REFLECTION(LightSampler, Variant)
+
+        DECLARE_REFLECTION(LightSampler, Variant)
 
         public:
             using Variant::Variant;
@@ -60,9 +60,16 @@ namespace luminous {
 
             LM_ND_XPU Spectrum on_miss(float3 dir, const SceneData *scene_data, Spectrum throughput) const;
 
+            LM_ND_XPU Spectrum MIS_sample_light(const SurfaceInteraction &si, const BSDFWrapper &bsdf, Sampler &sampler,
+                                                uint64_t traversable_handle, const SceneData *scene_data) const;
+
+            LM_ND_XPU Spectrum MIS_sample_BSDF(const SurfaceInteraction &si, const BSDFWrapper &bsdf,
+                                               Sampler &sampler, uint64_t traversable_handle, PathVertex *vertex,
+                                               const SceneData *data) const;
+
             LM_ND_XPU Spectrum estimate_direct_lighting(const SurfaceInteraction &si, Sampler &sampler,
-                                                        uint64_t traversable_handle,
-                                                        const SceneData *scene_data, PathVertex *vertex) const;
+                                              uint64_t traversable_handle,
+                                              const SceneData *scene_data, PathVertex *vertex) const;
 
             LM_ND_XPU float PMF(const Light &light) const;
 
