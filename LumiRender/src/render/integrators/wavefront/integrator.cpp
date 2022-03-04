@@ -63,41 +63,41 @@ namespace luminous {
             auto res = _camera->resolution();
             for (int y0 = 0; y0 < res.y; y0 += _scanline_per_pass) {
                 _reset_ray_queue(0);
-                _generate_primary_ray.launch(_dispatcher, _max_queue_size, y0, sample_idx,
+                _generate_primary_ray.launch(*_dispatcher, _max_queue_size, y0, sample_idx,
                                              _ray_queues.device_data(),
                                              _pixel_sample_state.device_data());
-                _dispatcher.wait();
+                _dispatcher->wait();
 
                 for (int depth = 0; true; ++depth) {
                     reset_queues(depth);
                     RayQueue *cur_ray_queue = _current_ray_queue(depth);
-                    _generate_ray_samples.launch(_dispatcher, _max_queue_size,
+                    _generate_ray_samples.launch(*_dispatcher, _max_queue_size,
                                                  sample_idx, cur_ray_queue,
                                                  _pixel_sample_state.device_data());
-                    _dispatcher.wait();
+                    _dispatcher->wait();
 
                     intersect_closest(depth);
 
-                    _process_escape_ray.launch(_dispatcher, _max_queue_size,
+                    _process_escape_ray.launch(*_dispatcher, _max_queue_size,
                                                _escaped_ray_queue.device_data(),
                                                _pixel_sample_state.device_data());
-                    _dispatcher.wait();
+                    _dispatcher->wait();
 
-                    _process_emission.launch(_dispatcher, _max_queue_size,
+                    _process_emission.launch(*_dispatcher, _max_queue_size,
                                              _hit_area_light_queue.device_data(),
                                              _pixel_sample_state.device_data());
-                    _dispatcher.wait();
+                    _dispatcher->wait();
 
                     BREAK_IF(depth == _max_depth)
 
                     RayQueue *next_ray_queue = _next_ray_queue(depth);
 
-                    _estimate_direct_lighting.launch(_dispatcher, _max_queue_size,
+                    _estimate_direct_lighting.launch(*_dispatcher, _max_queue_size,
                                                      _shadow_ray_queue.device_data(),
                                                      next_ray_queue,
                                                      _material_eval_queue.device_data(),
                                                      _pixel_sample_state.device_data());
-                    _dispatcher.wait();
+                    _dispatcher->wait();
 
                     intersect_any_and_compute_lighting(depth);
                 }
@@ -110,9 +110,9 @@ namespace luminous {
                 render_per_sample(_rt_param->frame_index, spp);
                 if (progressor) progressor->update(1);
             }
-            _add_samples.launch(_dispatcher, _max_queue_size,
+            _add_samples.launch(*_dispatcher, _max_queue_size,
                                 _pixel_sample_state.device_data());
-            _dispatcher.wait();
+            _dispatcher->wait();
             _rt_param->frame_index += 1;
             _rt_param.synchronize_to_device();
         }

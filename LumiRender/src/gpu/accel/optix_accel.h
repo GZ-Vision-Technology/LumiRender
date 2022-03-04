@@ -43,7 +43,7 @@ namespace luminous {
             OptixDeviceContext _optix_device_context{};
             OptixPipelineCompileOptions _pipeline_compile_options = {};
             Device *_device{};
-            mutable Dispatcher _dispatcher;
+            mutable Dispatcher *_dispatcher;
             OptixTraversableHandle _root_as_handle{};
             std::list<Buffer<std::byte>> _as_buffer_list;
             Buffer<OptixInstance> _instances{nullptr};

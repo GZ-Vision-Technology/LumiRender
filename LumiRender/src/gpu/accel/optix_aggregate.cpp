@@ -45,7 +45,7 @@ namespace luminous {
             _params->material_eval_queue = material_eval_queue;
             _params.synchronize_to_device();
 
-            auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;
+            auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher->impl_mut())->stream;
             OPTIX_CHECK(optixLaunch(_optix_pipeline,
                                     stream,
                                     _params.device_ptr<CUdeviceptr>(),
@@ -53,7 +53,7 @@ namespace luminous {
                                     _intersect_closet.sbt_ptr(),
                                     max_rays, 1, 1));
 
-            _dispatcher.wait();
+            _dispatcher->wait();
         }
 
         void OptixAggregate::intersect_any_and_compute_lighting(int max_rays, ShadowRayQueue *shadow_ray_queue,
@@ -63,7 +63,7 @@ namespace luminous {
             _params->pixel_sample_state = pixel_sample_state;
             _params.synchronize_to_device();
 
-            auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;
+            auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher->impl_mut())->stream;
             OPTIX_CHECK(optixLaunch(_optix_pipeline,
                                     stream,
                                     _params.device_ptr<CUdeviceptr>(),
@@ -71,7 +71,7 @@ namespace luminous {
                                     _intersect_any.sbt_ptr(),
                                     max_rays, 1, 1));
 
-            _dispatcher.wait();
+            _dispatcher->wait();
         }
 
         void OptixAggregate::intersect_any_tr(int max_rays, ShadowRayQueue *shadow_ray_queue,
