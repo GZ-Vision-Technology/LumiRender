@@ -151,9 +151,9 @@ namespace luminous {
             if (config.type() == "model") {
                 config.fn = (_context->scene_path() / config.fn).string();
                 ret = Model(config);
-                if (config.swap_handed) {
-                    swap_handed(ret);
-                }
+//                if (config.swap_handed) {
+//                    swap_handed(ret);
+//                }
             } else if (config.type() == "quad") {
                 ret = create_quad(config);
                 if (config.swap_handed) {

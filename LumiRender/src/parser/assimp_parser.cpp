@@ -35,9 +35,9 @@ namespace luminous {
                                       aiProcess_OptimizeMeshes |
                                       aiProcess_Triangulate |
                                       flip_uv_flag;
-//            post_process_steps = swap_handed ?
-//                                 post_process_steps | aiProcess_MakeLeftHanded | aiProcess_FlipWindingOrder :
-//                                 post_process_steps;
+            post_process_steps = swap_handed ?
+                                 post_process_steps | aiProcess_MakeLeftHanded | aiProcess_FlipWindingOrder :
+                                 post_process_steps;
             auto ai_scene = ai_importer.ReadFile(fn.string().c_str(),
                                                  post_process_steps);
 
