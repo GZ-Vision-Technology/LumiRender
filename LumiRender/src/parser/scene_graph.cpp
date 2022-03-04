@@ -47,7 +47,6 @@ namespace luminous {
             auto mesh = Mesh(move(P), move(N), move(UV), move(triangles), aabb);
             model.meshes.push_back(mesh);
             model.custom_material_name = config.material_name;
-            update_counter(model);
             return model;
         }
 
@@ -78,7 +77,6 @@ namespace luminous {
             auto mesh = Mesh(move(P), move(N), move(UV), move(triangles), aabb);
             model.meshes.push_back(mesh);
             model.custom_material_name = config.material_name;
-            update_counter(model);
             return model;
         }
 
@@ -131,37 +129,36 @@ namespace luminous {
             auto mesh = Mesh(move(P), move(N), move(UVs), move(triangles), aabb);
             model.meshes.push_back(mesh);
             model.custom_material_name = config.material_name;
-            update_counter(model);
             return model;
         }
 
         Model SceneGraph::create_shape(const ShapeConfig &config) {
+            Model ret;
             if (config.type() == "model") {
                 config.fn = (_context->scene_path() / config.fn).string();
-                auto model = Model(config);
-                update_counter(model);
-                return model;
+                ret = Model(config);
+                update_counter(ret);
             } else if (config.type() == "quad") {
-                return create_quad(config);
+                ret = create_quad(config);
             } else if (config.type() == "quad_y") {
-                return create_quad_y(config);
+                ret =  create_quad_y(config);
             } else if (config.type() == "mesh") {
-                auto model = Model();
                 Box3f aabb;
                 for (auto pos : config.positions) {
                     aabb.extend(pos);
                 }
                 Mesh mesh(move(config.positions), move(config.normals),
                           move(config.tex_coords), move(config.triangles), aabb);
-                model.meshes.push_back(mesh);
-                model.custom_material_name = config.material_name;
-                update_counter(model);
-                return model;
+                ret.meshes.push_back(mesh);
+                ret.custom_material_name = config.material_name;
+                update_counter(ret);
             } else if (config.type() == "cube") {
-                return create_cube(config);
+                ret = create_cube(config);
             } else {
                 LUMINOUS_ERROR("unknown shape type !")
             }
+            update_counter(ret);
+            return ret;
         }
 
         void SceneGraph::create_shape_instance(const ShapeConfig &config) {

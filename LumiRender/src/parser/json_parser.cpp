@@ -152,12 +152,12 @@ namespace luminous {
             shape_config.name = shape["name"];
             ParameterSet param(shape["param"]);
             shape_config.two_sided = param["two_sided"].as_bool(false);
+            shape_config.swap_handed = param["swap_handed"].as_bool(false);
             if (shape_config.type() == "model") {
                 shape_config.subdiv_level = param["subdiv_level"].as_uint(0u);
                 shape_config.fn = param["fn"].as_string();
                 shape_config.smooth = param["smooth"].as_bool(true);
                 shape_config.use_normal_map = param["use_normal_map"].as_bool(false);
-                shape_config.swap_handed = param["swap_handed"].as_bool(false);
             } else if (shape_config.type() == "quad" || shape_config.type() == "quad_y") {
                 shape_config.width = param["width"].as_float(1);
                 shape_config.height = param["height"].as_float(1);
