@@ -16,10 +16,25 @@ set(SOURCE_FILES
 
 
 add_library(luminous-util SHARED ${HEADER_FILES} ${SOURCE_FILES})
+
+if(WIN32)
 target_link_libraries(luminous-util PUBLIC
         luminous-core
         luminous-parser
-        CUDA::cudart)
+        PRIVATE
+        CUDA::cudart
+        Ws2_32.lib
+        )
+endif()
+
+if(UNIX)
+target_link_libraries(luminous-util PUBLIC
+        luminous-core
+        luminous-parser
+        PRIVATE
+        CUDA::cudart
+        )
+endif()
 
 set_target_properties(luminous-util PROPERTIES
         PUBLIC_HEADER "${HEADER_FILES}"

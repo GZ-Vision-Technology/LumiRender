@@ -9,8 +9,13 @@
 namespace luminous {
 inline namespace utility {
 
+using psocket_t = uint64_t;
+
 class ProgressReporter {
 public:
+    static void init();
+    static void cleanup();
+
     ProgressReporter();
     ~ProgressReporter();
 
@@ -33,7 +38,7 @@ public:
     float elapsed_seconds() const;
 
 private:
-  void update_progress_bar(char *out_buffer, int terminal_width, uint64_t sn, int fd);
+  void update_progress_bar(int fd_count, const psocket_t fds[2], char *out_buffer, int terminal_width, uint64_t sn);
   friend void update_progress_proc(ProgressReporter *progressor);
 
   uint64_t _total_work;
