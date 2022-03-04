@@ -167,12 +167,12 @@ def rotateZXY(R):
 def convert_srt(S, R, T):
     return glm.translate(T) * rotateZXY(R) * glm.scale(S)
 
-def convert_shpe_transform(transform):
+def convert_shape_transform(transform, scale=1):
     T = glm.vec3(transform.get("position", [0,0,0]))
     R = glm.radians(glm.vec3(transform.get("rotation", [0,0,0])))
     S = glm.vec3(transform.get("scale", [1,1,1]))
     M = convert_srt(S, R, T)
-    M = glm.scale(glm.vec3([-1,1,1])) * M
+    M = glm.scale(glm.vec3([scale,1,1])) * M
     matrix4x4 = []
     for i in M:
         arr = []
@@ -196,7 +196,8 @@ def convert_quad(shape_input, index):
             "width": 1.0,
             "height": 1.0,
             "material" : shape_input["bsdf"],
-            "transform" : convert_shpe_transform(shape_input["transform"])
+            # "swap_handed" : True,
+            "transform" : convert_shape_transform(shape_input["transform"], -1)
         }
     }
     return ret
@@ -209,8 +210,9 @@ def convert_cube(shape_input, index):
             "x" : 1,
             "y" : 1,
             "z" : 1,
+            # "swap_handed" : True,
             "material" : shape_input["bsdf"],
-            "transform" : convert_shpe_transform(shape_input["transform"])
+            "transform" : convert_shape_transform(shape_input["transform"], -1)
         }
     }
     return ret
@@ -225,9 +227,10 @@ def convert_mesh(shape_input, index):
         "name" : "shape_" + str(index),
         "param" : {
             "fn" : fn,
+            "swap_handed" : True,
             "smooth" : shape_input.get("smooth", True),
             "material" : bsdf,
-            "transform" : convert_shpe_transform(shape_input["transform"])
+            "transform" : convert_shape_transform(shape_input["transform"])
         }
     }
     return ret
@@ -383,8 +386,8 @@ def main():
     # fn = 'LumiRender\\res\\render_scene\\spaceship\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\glass-of-water\\tungsten_scene.json'
     # fn = 'LumiRender\\res\\render_scene\\living-room\\tungsten_scene.json'
-    # fn = 'LumiRender\\res\\render_scene\\cornell-box\\tungsten_scene.json'
-    fn = 'LumiRender\\res\\render_scene\\water-caustic\\tungsten_scene.json'
+    fn = 'LumiRender\\res\\render_scene\\cornell-box\\tungsten_scene.json'
+    # fn = 'LumiRender\\res\\render_scene\\water-caustic\\tungsten_scene.json'
     parent = os.path.dirname(fn)
     output_fn = os.path.join(parent, "lumi_scene.json")
     # print()

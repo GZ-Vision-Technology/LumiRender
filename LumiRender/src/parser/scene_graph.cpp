@@ -132,16 +132,38 @@ namespace luminous {
             return model;
         }
 
+        void swap_handed(Model &model, int dim = 0) {
+            for (auto &mesh : model.meshes) {
+                for (auto &pos : mesh.positions) {
+                    pos[dim] *= -1.f;
+                }
+                for (auto &normal : mesh.normals) {
+                    normal[dim] *= -1.f;
+                }
+                for (auto &tri : mesh.triangles) {
+                    std::swap(tri.i, tri.j);
+                }
+            }
+        }
+
         Model SceneGraph::create_shape(const ShapeConfig &config) {
             Model ret;
             if (config.type() == "model") {
                 config.fn = (_context->scene_path() / config.fn).string();
                 ret = Model(config);
-                update_counter(ret);
+                if (config.swap_handed) {
+                    swap_handed(ret);
+                }
             } else if (config.type() == "quad") {
                 ret = create_quad(config);
+                if (config.swap_handed) {
+                    swap_handed(ret);
+                }
             } else if (config.type() == "quad_y") {
                 ret =  create_quad_y(config);
+                if (config.swap_handed) {
+                    swap_handed(ret, 0);
+                }
             } else if (config.type() == "mesh") {
                 Box3f aabb;
                 for (auto pos : config.positions) {
@@ -151,9 +173,14 @@ namespace luminous {
                           move(config.tex_coords), move(config.triangles), aabb);
                 ret.meshes.push_back(mesh);
                 ret.custom_material_name = config.material_name;
-                update_counter(ret);
+                if (config.swap_handed) {
+                    swap_handed(ret, 0);
+                }
             } else if (config.type() == "cube") {
                 ret = create_cube(config);
+                if (config.swap_handed) {
+                    swap_handed(ret, 0);
+                }
             } else {
                 LUMINOUS_ERROR("unknown shape type !")
             }
