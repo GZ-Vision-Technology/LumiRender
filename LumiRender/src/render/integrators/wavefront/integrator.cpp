@@ -66,7 +66,7 @@ namespace luminous {
                 _generate_primary_ray.launch(*_dispatcher, _max_queue_size, y0, sample_idx,
                                              _ray_queues.device_data(),
                                              _pixel_sample_state.device_data());
-                _dispatcher->wait();
+                check_wait();
 
                 for (int depth = 0; true; ++depth) {
                     reset_queues(depth);
@@ -74,19 +74,21 @@ namespace luminous {
                     _generate_ray_samples.launch(*_dispatcher, _max_queue_size,
                                                  sample_idx, cur_ray_queue,
                                                  _pixel_sample_state.device_data());
-                    _dispatcher->wait();
+                    check_wait();
 
                     intersect_closest(depth);
+
+                    check_wait();
 
                     _process_escape_ray.launch(*_dispatcher, _max_queue_size,
                                                _escaped_ray_queue.device_data(),
                                                _pixel_sample_state.device_data());
-                    _dispatcher->wait();
+                    check_wait();
 
                     _process_emission.launch(*_dispatcher, _max_queue_size,
                                              _hit_area_light_queue.device_data(),
                                              _pixel_sample_state.device_data());
-                    _dispatcher->wait();
+                    check_wait();
 
                     BREAK_IF(depth == _max_depth)
 
@@ -97,9 +99,11 @@ namespace luminous {
                                                      next_ray_queue,
                                                      _material_eval_queue.device_data(),
                                                      _pixel_sample_state.device_data());
-                    _dispatcher->wait();
+                    check_wait();
 
                     intersect_any_and_compute_lighting(depth);
+
+                    check_wait();
                 }
             }
         }
@@ -185,6 +189,10 @@ namespace luminous {
                                                            _pixel_sample_state.device_data());
         }
 
-
+        void WavefrontPT::check_wait() {
+            if (_device->is_cpu()) {
+                _dispatcher->wait();
+            }
+        }
     }
 }

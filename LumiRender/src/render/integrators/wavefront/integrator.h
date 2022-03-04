@@ -98,6 +98,8 @@ namespace luminous {
 
             void load_module();
 
+            void check_wait();
+
             void allocate_memory();
 
             LM_NODISCARD uint frame_index() const override { return _rt_param->frame_index; }

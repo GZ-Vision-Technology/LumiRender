@@ -52,8 +52,6 @@ namespace luminous {
                                     sizeof(WavefrontParams),
                                     _intersect_closet.sbt_ptr(),
                                     max_rays, 1, 1));
-
-            _dispatcher->wait();
         }
 
         void OptixAggregate::intersect_any_and_compute_lighting(int max_rays, ShadowRayQueue *shadow_ray_queue,
@@ -70,8 +68,6 @@ namespace luminous {
                                     sizeof(WavefrontParams),
                                     _intersect_any.sbt_ptr(),
                                     max_rays, 1, 1));
-
-            _dispatcher->wait();
         }
 
         void OptixAggregate::intersect_any_tr(int max_rays, ShadowRayQueue *shadow_ray_queue,
