@@ -110,17 +110,17 @@ namespace luminous {
                                                         uint64_t traversable_handle,
                                                         const SceneData *scene_data,
                                                         PathVertex *vertex) const {
-            auto bsdf = si.compute_BSDF(scene_data);
-            Spectrum Ld = MIS_sample_light(si, bsdf, sampler, traversable_handle, scene_data);
-            Ld += MIS_sample_BSDF(si, bsdf, sampler, traversable_handle, vertex, scene_data);
-            return Ld;
-//            auto sampled_light = sample(LightSampleContext(si), sampler.next_1d());
-//            if (sampled_light.is_valid()) {
-//                return sampled_light.light->estimate_direct_lighting(si, sampler,
-//                                                                     traversable_handle, scene_data,
-//                                                                     vertex) / sampled_light.PMF;
-//            }
-//            return {0.f};
+//            auto bsdf = si.compute_BSDF(scene_data);
+//            Spectrum Ld = MIS_sample_light(si, bsdf, sampler, traversable_handle, scene_data);
+//            Ld += MIS_sample_BSDF(si, bsdf, sampler, traversable_handle, vertex, scene_data);
+//            return Ld;
+            auto sampled_light = sample(LightSampleContext(si), sampler.next_1d());
+            if (sampled_light.is_valid()) {
+                return sampled_light.light->estimate_direct_lighting(si, sampler,
+                                                                     traversable_handle, scene_data,
+                                                                     vertex) / sampled_light.PMF;
+            }
+            return {0.f};
         }
 
         const Light &LightSampler::light_at(uint idx) const {
