@@ -28,7 +28,7 @@ namespace luminous {
             double _dt{0};
             OutputConfig _output_config;
             int _dispatch_num{0};
-            FBState _fb_state;
+            FBState _fb_state{};
             Managed<float4, float4> _render_buffer{_device.get()};
             Managed<float4, float4> _normal_buffer{_device.get()};
             Managed<float4, float4> _albedo_buffer{_device.get()};

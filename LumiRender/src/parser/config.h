@@ -96,6 +96,10 @@ namespace luminous {
             mutable std::vector<float3> normals;
             mutable std::vector<TriangleHandle> triangles;
 
+            // sphere param
+            float radius{};
+            int sub_div{10};
+
             bool two_sided{false};
         };
 

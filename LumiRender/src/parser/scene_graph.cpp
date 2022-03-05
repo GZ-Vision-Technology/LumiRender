@@ -12,12 +12,51 @@ namespace luminous {
             return string_printf("%s_subdiv_%u", fn.c_str(), subdiv_level);
         }
 
-        string gen_key(const ShapeConfig sc) {
+        string gen_key(const ShapeConfig &sc) {
             if (sc.type() == "model") {
                 return string_printf("%s_subdiv_%u", sc.fn.c_str(), sc.subdiv_level);
             } else {
                 return sc.name;
             }
+        }
+
+
+        Model SceneGraph::create_sphere(const ShapeConfig &config) {
+            float radius = config.radius;
+            vector<float3> positions;
+            vector<float3> normals;
+            vector<float2> tex_coords;
+            vector<TriangleHandle> triangles;
+            Box3f aabb(make_float3(-radius), float3(radius));
+            int theta_div = config.sub_div;
+            int phi_div = 2 * theta_div;
+            positions.push_back(make_float3(0, radius, 0));
+            tex_coords.push_back(make_float2(0, 0));
+            for (int i = 1; i < theta_div; ++i) {
+                float v = float(i) / theta_div;
+                float theta = Pi * v;
+                float y = radius * cos(theta);
+                float r = radius * sin(theta);
+                float3 p0 = make_float3(r, y, 0.f);
+                positions.push_back(p0);
+                float2 t0 = make_float2(0, v);
+                for (int j = 1; j < phi_div; ++j) {
+                    float u = float(j) / phi_div;
+                    float phi = u * _2Pi;
+                    float x = cos(phi) * r;
+                    float z = sin(phi) * r;
+                    float3 p = make_float3(x,y,z);
+                    positions.push_back(p);
+                    float2 t = make_float2(u, v);
+                    tex_coords.push_back(t);
+                    normals.push_back(normalize(p));
+                }
+            }
+            auto mesh = Mesh(move(positions), move(normals), move(tex_coords), move(triangles), aabb);
+            Model model;
+            model.meshes.push_back(mesh);
+            model.custom_material_name = config.material_name;
+            return model;
         }
 
         Model SceneGraph::create_quad_y(const ShapeConfig &config) {
@@ -160,7 +199,7 @@ namespace luminous {
                     swap_handed(ret);
                 }
             } else if (config.type() == "quad_y") {
-                ret =  create_quad_y(config);
+                ret = create_quad_y(config);
                 if (config.swap_handed) {
                     swap_handed(ret, 0);
                 }

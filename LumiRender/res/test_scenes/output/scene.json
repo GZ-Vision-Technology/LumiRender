@@ -509,8 +509,8 @@
         "type": "UniformLightSampler"
     },
     "output": {
-        "fn": "scene.png",
-        "dispatch_num": 0
+        "fn": "scene1.png",
+        "dispatch_num": 512
     },
     "camera": {
         "type": "ThinLensCamera",
