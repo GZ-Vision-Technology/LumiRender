@@ -163,8 +163,11 @@ namespace luminous {
                 shape_config.height = param["height"].as_float(1);
             } else if (shape_config.type() == "cube") {
                 shape_config.x = param["x"].as_float(1);
-                shape_config.x = param["y"].as_float(1);
-                shape_config.x = param["z"].as_float(1);
+                shape_config.y = param["y"].as_float(1);
+                shape_config.z = param["z"].as_float(1);
+            } else if (shape_config.type() == "sphere") {
+                shape_config.radius = param["radius"].as_float(1.f);
+                shape_config.sub_div = param["sub_div"].as_int(20);
             } else if (shape_config.type() == "mesh") {
                 shape_config.positions = param["positions"].as_vector<float3>();
                 shape_config.normals = param["normals"].as_vector<float3>();
