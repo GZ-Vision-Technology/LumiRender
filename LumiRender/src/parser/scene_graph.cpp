@@ -66,12 +66,20 @@ namespace luminous {
                 triangles.push_back(tri);
             }
             for (uint i = 0; i < theta_div - 2; ++i) {
-                uint vert_start = phi_div + 2 + i * phi_div;
+                uint vert_start = 1 + i * phi_div;
                 for (int j = 0; j < phi_div; ++j) {
-                    TriangleHandle tri{vert_start, vert_start + phi_div, vert_start + 1};
-                    triangles.push_back(tri);
-                    TriangleHandle tri2{vert_start + 1, vert_start + phi_div, vert_start + phi_div + 1};
-                    triangles.push_back(tri2);
+                    if (j != phi_div - 1) {
+                        TriangleHandle tri{vert_start, vert_start + phi_div, vert_start + 1};
+                        triangles.push_back(tri);
+                        TriangleHandle tri2{vert_start + 1, vert_start + phi_div, vert_start + phi_div + 1};
+                        triangles.push_back(tri2);
+                    } else {
+                        TriangleHandle tri{vert_start, vert_start + phi_div, vert_start + 1 - phi_div};
+                        triangles.push_back(tri);
+                        TriangleHandle tri2{vert_start + 1 - phi_div, vert_start + phi_div, vert_start + 1};
+                        triangles.push_back(tri2);
+                    }
+                    vert_start ++;
                 }
             }
             uint vert_start = (theta_div - 1) * phi_div + 2;
@@ -80,9 +88,10 @@ namespace luminous {
                 uint idx1 = i + 1;
                 uint idx2 = (1 + i) % phi_div + 1;
                 TriangleHandle tri{vert_end, vert_end - idx1, vert_end - idx2};
+                triangles.push_back(tri);
             }
 
-            auto mesh = Mesh(move(positions), move(normals), move(tex_coords), move(triangles), aabb);
+            auto mesh = Mesh(move(positions), move(normals), move(tex_coords), move(triangles), Box3f());
             model.meshes.push_back(mesh);
             return model;
         }
@@ -248,6 +257,8 @@ namespace luminous {
                 if (config.swap_handed) {
                     swap_handed(ret, 0);
                 }
+            } else if (config.type() == "sphere") {
+                ret = create_sphere(config);
             } else {
                 LUMINOUS_ERROR("unknown shape type !")
             }

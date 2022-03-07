@@ -37,7 +37,13 @@ namespace luminous {
                     tex_coords(std::move(uv)),
                     triangles(std::move(T)),
                     aabb(aabb),
-                    mat_idx(mat_idx) {}
+                    mat_idx(mat_idx) {
+                if (aabb.empty()) {
+                    for (const auto &pos : positions) {
+                        this->aabb.extend(pos);
+                    }
+                }
+            }
 
             vector<float3> normals;
             vector<float3> positions;
