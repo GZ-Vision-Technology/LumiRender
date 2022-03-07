@@ -40,7 +40,9 @@ namespace luminous {
                 float r = radius * sin(theta);
                 float3 p0 = make_float3(r, y, 0.f);
                 positions.push_back(p0);
+                normals.push_back(normalize(p0));
                 float2 t0 = make_float2(0, v);
+                tex_coords.push_back(t0);
                 for (uint j = 1; j < phi_div; ++j) {
                     float u = float(j) / phi_div;
                     float phi = u * _2Pi;

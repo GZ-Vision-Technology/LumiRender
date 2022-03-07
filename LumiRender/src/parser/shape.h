@@ -38,6 +38,7 @@ namespace luminous {
                     triangles(std::move(T)),
                     aabb(aabb),
                     mat_idx(mat_idx) {
+                DCHECK(normals.size() == tex_coords.size() && normals.size() == positions.size())
                 if (aabb.empty()) {
                     for (const auto &pos : positions) {
                         this->aabb.extend(pos);
