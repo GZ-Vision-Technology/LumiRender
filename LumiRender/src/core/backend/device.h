@@ -65,13 +65,16 @@ namespace luminous {
 
         LM_NODISCARD bool is_cpu() const { return _impl->is_cpu(); }
 
+        LM_NODISCARD Dispatcher *get_dispatcher() { return &_dispatcher; }
+
         explicit Device(std::unique_ptr<Impl> impl)
-                : _impl(std::move(impl)) {}
+                : _impl(std::move(impl)), _dispatcher(new_dispatcher()) {}
 
     protected:
         std::unique_ptr<Impl> _impl;
         std::vector<DTexture> _textures;
         std::vector<RawBuffer> _raw_buffers;
+        Dispatcher _dispatcher;
     };
 }
 

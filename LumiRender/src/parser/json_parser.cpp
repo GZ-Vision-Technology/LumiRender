@@ -152,19 +152,22 @@ namespace luminous {
             shape_config.name = shape["name"];
             ParameterSet param(shape["param"]);
             shape_config.two_sided = param["two_sided"].as_bool(false);
+            shape_config.swap_handed = param["swap_handed"].as_bool(false);
             if (shape_config.type() == "model") {
                 shape_config.subdiv_level = param["subdiv_level"].as_uint(0u);
                 shape_config.fn = param["fn"].as_string();
                 shape_config.smooth = param["smooth"].as_bool(true);
                 shape_config.use_normal_map = param["use_normal_map"].as_bool(false);
-                shape_config.swap_handed = param["swap_handed"].as_bool(false);
             } else if (shape_config.type() == "quad" || shape_config.type() == "quad_y") {
                 shape_config.width = param["width"].as_float(1);
                 shape_config.height = param["height"].as_float(1);
             } else if (shape_config.type() == "cube") {
                 shape_config.x = param["x"].as_float(1);
-                shape_config.x = param["y"].as_float(1);
-                shape_config.x = param["z"].as_float(1);
+                shape_config.y = param["y"].as_float(1);
+                shape_config.z = param["z"].as_float(1);
+            } else if (shape_config.type() == "sphere") {
+                shape_config.radius = param["radius"].as_float(1.f);
+                shape_config.sub_div = param["sub_div"].as_int(20);
             } else if (shape_config.type() == "mesh") {
                 shape_config.positions = param["positions"].as_vector<float3>();
                 shape_config.normals = param["normals"].as_vector<float3>();

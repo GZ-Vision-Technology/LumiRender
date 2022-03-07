@@ -1,15 +1,5 @@
 {
-    "textures": [
-        {
-			"name": "envmap",
-			"type": "ImageTexture",
-			"param": {
-				"fn": "textures/spruit_sunrise_2k.hdr",
-				"scale": [1,1,1],
-				"color_space": "LINEAR"
-			}
-		}
-    ],
+    "textures": [],
     "materials": [
         {
             "type": "MatteMaterial",
@@ -20,14 +10,6 @@
                     0.065,
                     0.05
                 ]
-                ,
-                "sheen" : 0.9,
-                "sheen_tint" : 0.9,
-                // "metallic" : 0,
-                "clearcoat" : 0,
-                "clearcoat_roughness" : 0.01,
-                "roughness" : 0.09,
-                "anisotropic" : 0
             }
         },
         {
@@ -39,14 +21,6 @@
                     0.45,
                     0.091
                 ]
-                ,
-                "sheen" : 0.9,
-                "sheen_tint" : 0.9,
-                // "metallic" : 0,
-                "clearcoat" : 0,
-                "clearcoat_roughness" : 0.01,
-                "roughness" : 0.09,
-                "anisotropic" : 0
             }
         },
         {
@@ -58,14 +32,6 @@
                     0.71,
                     0.68
                 ]
-                ,
-                "sheen" : 0.9,
-                "sheen_tint" : 0.9,
-                // "metallic" : 0,
-                "clearcoat" : 0,
-                "clearcoat_roughness" : 0.1,
-                "roughness" : 0.09,
-                "anisotropic" : 0       
             }
         },
         {
@@ -77,14 +43,6 @@
                     0.71,
                     0.68
                 ]
-                ,
-                "sheen" : 0.9,
-                "sheen_tint" : 0.9,
-                // "metallic" : 0,
-                "clearcoat" : 0,
-                "clearcoat_roughness" : 0.1,
-                "roughness" : 0.09,
-                "anisotropic" : 0   
             }
         },
         {
@@ -96,14 +54,6 @@
                     0.71,
                     0.68
                 ]
-                ,
-                "sheen" : 0.9,
-                "sheen_tint" : 0.9,
-                // "metallic" : 0,
-                "clearcoat" : 0,
-                "clearcoat_roughness" : 0.1,
-                "roughness" : 0.09,
-                "anisotropic" : 0            
             }
         },
         {
@@ -115,14 +65,6 @@
                     0.71,
                     0.68
                 ]
-                ,
-                "sheen" : 0.9,
-                "sheen_tint" : 0.9,
-                // "metallic" : 0,
-                "clearcoat" : 0,
-                "clearcoat_roughness" : 0.1,
-                "roughness" : 0.09,
-                "anisotropic" : 0
             }
         },
         {
@@ -134,14 +76,6 @@
                     0.71,
                     0.68
                 ]
-                ,
-                "sheen" : 0.9,
-                "sheen_tint" : 0.9,
-                // "metallic" : 0,
-                "clearcoat" : 0,
-                "clearcoat_roughness" : 0.1,
-                "roughness" : 0.09,
-                "anisotropic" : 0
             }
         }
     ],
@@ -475,22 +409,7 @@
             }
         }
     ],
-    "lights": [
-        // {
-		// 	"type": "Envmap",
-		// 	"param": {
-		// 		"transform" : {
-		// 			"type" : "yaw_pitch",
-		// 			"param" : {
-		// 				"yaw" : 0,
-		// 				"pitch": 0,
-		// 				"position": [0,0,0]
-		// 			}
-		// 		},
-		// 		"key" : "envmap"
-		// 	}
-		// }
-    ],
+    "lights": [],
     "light_sampler": {
         "type": "UniformLightSampler"
     },
@@ -501,11 +420,10 @@
         }
     },
     "integrator": {
-        // // "type": "WavefrontPT",
         "type": "PT",
         "param": {
             "min_depth": 0,
-            "max_depth": 16,
+            "max_depth": 5,
             "rr_threshold": 1
         }
     },
@@ -513,7 +431,7 @@
         "type": "ThinLensCamera",
         "param": {
             "fov_y": 19.5,
-            "velocity": 20,
+            "velocity": 5,
             "transform": {
                 "type": "look_at",
                 "param": {
@@ -545,18 +463,18 @@
                 }
             },
             "filter": {
-                "type": "BoxFilter",
+                "type": "GaussianFilter",
                 "param": {
                     "radius": [
-                        0.5,
-                        0.5
+                        2,
+                        2
                     ]
                 }
             }
         }
     },
     "output": {
-        "fn": "cornell-boxsheen0.9-clear0-weight-1-1024.png",
+        "fn": "cornell-box.png",
         "dispatch_num": 0,
         "tone_map": 0
     }

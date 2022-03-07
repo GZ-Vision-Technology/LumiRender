@@ -241,10 +241,10 @@
         }
     ],
     "camera": {
-        "tonemap": "Gamma",
+        "tonemap": "gamma",
         "resolution": [
-            1024,
-            1024
+            768,
+            768
         ],
         "reconstruction_filter": "tent",
         "transform": {

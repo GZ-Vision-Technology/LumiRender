@@ -1,15 +1,29 @@
 {
-    "textures": [
-        {
-            "name": "brickwall_normal.jpg",
-            "type": "ImageTexture",
-            "param": {
-                "fn": "textures/brickwall_normal.jpg",
-                "color_space": "LINEAR"
-            }
-        }
-    ],
+    "textures": [],
     "materials": [
+        {
+            "name": "Cube_disney_plane.002",
+            "type": "DisneyMaterial",
+            "param": {
+                "color": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929,
+                    1.0
+                ],
+                "roughness": 1.0,
+                "eta": 1.6434907913208008,
+                "metallic": 0.0,
+                "specular_tint": 0.0,
+                "anisotropic": 0.0,
+                "sheen": 0.0,
+                "sheen_tint": 0.0,
+                "clearcoat": 0.0,
+                "spec_trans": 0.0,
+                "clearcoat_roughness": 0.0,
+                "normal": null
+            }
+        },
         {
             "name": "Plane_disney_plane.002",
             "type": "DisneyMaterial",
@@ -30,7 +44,7 @@
                 "clearcoat": 0.0,
                 "spec_trans": 0.0,
                 "clearcoat_roughness": 0.0,
-                "normal": "brickwall_normal.jpg"
+                "normal": null
             }
         },
         {
@@ -53,7 +67,7 @@
                 "clearcoat": 0.0,
                 "spec_trans": 0.0,
                 "clearcoat_roughness": 0.0,
-                "normal": "brickwall_normal.jpg"
+                "normal": null
             }
         },
         {
@@ -76,7 +90,7 @@
                 "clearcoat": 0.0,
                 "spec_trans": 0.0,
                 "clearcoat_roughness": 0.0,
-                "normal": "brickwall_normal.jpg"
+                "normal": null
             }
         },
         {
@@ -99,7 +113,30 @@
                 "clearcoat": 0.0,
                 "spec_trans": 0.0,
                 "clearcoat_roughness": 0.0,
-                "normal": "brickwall_normal.jpg"
+                "normal": null
+            }
+        },
+        {
+            "name": "Cube.001_disney_plane.002",
+            "type": "DisneyMaterial",
+            "param": {
+                "color": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929,
+                    1.0
+                ],
+                "roughness": 1.0,
+                "eta": 1.6434907913208008,
+                "metallic": 0.0,
+                "specular_tint": 0.0,
+                "anisotropic": 0.0,
+                "sheen": 0.0,
+                "sheen_tint": 0.0,
+                "clearcoat": 0.0,
+                "spec_trans": 0.0,
+                "clearcoat_roughness": 0.0,
+                "normal": null
             }
         },
         {
@@ -122,98 +159,6 @@
                 "clearcoat": 0.0,
                 "spec_trans": 0.0,
                 "clearcoat_roughness": 0.0,
-                "normal": "brickwall_normal.jpg"
-            }
-        },
-        {
-            "name": "Mesh000_liquid",
-            "type": "DisneyMaterial",
-            "param": {
-                "color": [
-                    0.47086361050605774,
-                    0.2328295260667801,
-                    0.15283924341201782,
-                    1.0
-                ],
-                "roughness": 0.06000000238418579,
-                "eta": 1.3300000429153442,
-                "metallic": 0.0,
-                "specular_tint": 0.0,
-                "anisotropic": 0.0,
-                "sheen": 0.0,
-                "sheen_tint": 0.0,
-                "clearcoat": 0.0,
-                "spec_trans": 1.0,
-                "clearcoat_roughness": 0.0,
-                "normal": null
-            }
-        },
-        {
-            "name": "Mesh001_teapot_mat",
-            "type": "DisneyMaterial",
-            "param": {
-                "color": [
-                    0.6251271367073059,
-                    0.6076850891113281,
-                    0.6207395195960999,
-                    1.0
-                ],
-                "roughness": 0.07454542815685272,
-                "eta": 1.5,
-                "metallic": 0.0,
-                "specular_tint": 0.0,
-                "anisotropic": 0.0,
-                "sheen": 0.0,
-                "sheen_tint": 0.5,
-                "clearcoat": 0.0,
-                "spec_trans": 1.0,
-                "clearcoat_roughness": 0.029999999329447746,
-                "normal": null
-            }
-        },
-        {
-            "name": "Mesh002_liquid",
-            "type": "DisneyMaterial",
-            "param": {
-                "color": [
-                    0.47086361050605774,
-                    0.2328295260667801,
-                    0.15283924341201782,
-                    1.0
-                ],
-                "roughness": 0.06000000238418579,
-                "eta": 1.3300000429153442,
-                "metallic": 0.0,
-                "specular_tint": 0.0,
-                "anisotropic": 0.0,
-                "sheen": 0.0,
-                "sheen_tint": 0.0,
-                "clearcoat": 0.0,
-                "spec_trans": 1.0,
-                "clearcoat_roughness": 0.0,
-                "normal": null
-            }
-        },
-        {
-            "name": "Mesh003_teapot_mat",
-            "type": "DisneyMaterial",
-            "param": {
-                "color": [
-                    0.6251271367073059,
-                    0.6076850891113281,
-                    0.6207395195960999,
-                    1.0
-                ],
-                "roughness": 0.07454542815685272,
-                "eta": 1.5,
-                "metallic": 0.0,
-                "specular_tint": 0.0,
-                "anisotropic": 0.0,
-                "sheen": 0.0,
-                "sheen_tint": 0.5,
-                "clearcoat": 0.0,
-                "spec_trans": 1.0,
-                "clearcoat_roughness": 0.029999999329447746,
                 "normal": null
             }
         }
@@ -223,40 +168,82 @@
             "name": "light_Area",
             "type": "quad",
             "param": {
-                "width": 1.0,
-                "height": 1.0,
+                "width": 0.5,
+                "height": 0.5,
                 "emission": [
                     1.0,
                     1.0,
                     1.0
                 ],
-                "scale": 19.799999237060547,
+                "scale": 5.000000476837158,
                 "transform": {
                     "type": "matrix4x4",
                     "param": {
                         "matrix4x4": [
                             [
-                                0.6000000238418579,
+                                1.0,
                                 0.0,
                                 0.0,
                                 0.0
                             ],
                             [
                                 0.0,
-                                3.6739405434313346e-17,
-                                0.6000000238418579,
+                                6.123233995736766e-17,
+                                1.0,
                                 0.0
                             ],
                             [
                                 0.0,
-                                0.6000000238418579,
-                                -3.6739405434313346e-17,
+                                1.0,
+                                -6.123233995736766e-17,
                                 0.0
                             ],
                             [
                                 0.0,
                                 1.9800000190734863,
                                 -1.2124003428350216e-16,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "Cube",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Cube.gltf",
+                "smooth": false,
+                "material": "Cube_disney_plane.002",
+                "swap_handed": true,
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                0.0,
                                 1.0
                             ]
                         ]
@@ -433,180 +420,54 @@
             }
         },
         {
+            "name": "Cube.001",
+            "type": "model",
+            "param": {
+                "fn": "meshes/Cube.001.gltf",
+                "smooth": false,
+                "material": "Cube.001_disney_plane.002",
+                "swap_handed": true,
+                "subdiv_level": 0,
+                "transform": {
+                    "type": "matrix4x4",
+                    "param": {
+                        "matrix4x4": [
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                1.0,
+                                0.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        {
             "name": "Plane.002",
             "type": "model",
             "param": {
                 "fn": "meshes/Plane.002.gltf",
                 "smooth": false,
                 "material": "Plane.002_disney_plane.001",
-                "swap_handed": true,
-                "subdiv_level": 0,
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                1.0,
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                1.0,
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.0,
-                                1.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Mesh000",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Mesh000.gltf",
-                "smooth": false,
-                "material": "Mesh000_liquid",
-                "swap_handed": true,
-                "subdiv_level": 0,
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                1.0,
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                1.0,
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.0,
-                                1.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Mesh001",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Mesh001.gltf",
-                "smooth": false,
-                "material": "Mesh001_teapot_mat",
-                "swap_handed": true,
-                "subdiv_level": 0,
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                1.0,
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                1.0,
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.0,
-                                1.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Mesh002",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Mesh002.gltf",
-                "smooth": false,
-                "material": "Mesh002_liquid",
-                "swap_handed": true,
-                "subdiv_level": 0,
-                "transform": {
-                    "type": "matrix4x4",
-                    "param": {
-                        "matrix4x4": [
-                            [
-                                1.0,
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                1.0,
-                                0.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.0,
-                                1.0,
-                                0.0
-                            ],
-                            [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "name": "Mesh003",
-            "type": "model",
-            "param": {
-                "fn": "meshes/Mesh003.gltf",
-                "smooth": false,
-                "material": "Mesh003_teapot_mat",
                 "swap_handed": true,
                 "subdiv_level": 0,
                 "transform": {
@@ -648,28 +509,25 @@
         "type": "UniformLightSampler"
     },
     "output": {
-        "fn": "scene.png",
-        "albedo" : true,
-        "normal" : true,
-        "normal_remapping" : true,
-        "dispatch_num": 0
+        "fn": "scene1.png",
+        "dispatch_num": 512
     },
     "camera": {
         "type": "ThinLensCamera",
         "param": {
-            "fov_y": 22.258379269135755,
+            "fov_y": 22.61986532341139,
             "velocity": 20,
-            "focal_distance": 2.799999952316284,
-            "lens_radius": 0.0,
+            "focal_distance": 1.0,
+            "lens_radius": 0,
             "transform": {
                 "type": "yaw_pitch",
                 "param": {
-                    "yaw": 0.0,
-                    "pitch": -20.1999950978894,
+                    "yaw": -0.0,
+                    "pitch": 2.5044781608585254e-06,
                     "position": [
                         0.0,
-                        2.66910457611084,
-                        -5.3714189529418945
+                        1.0,
+                        -5.827016830444336
                     ]
                 }
             },

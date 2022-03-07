@@ -83,12 +83,13 @@ namespace luminous {
                     LightSampleContext prev_lsc = item.prev_lsc;
                     float light_select_PMF = light_sampler->PMF(prev_lsc, light);
                     LightLiSample lls{prev_lsc, normalize(item.ray_d)};
+                    float light_PDF = light.PDF_Li(prev_lsc, lls.lec, item.ray_d, scene_data);
                     float bsdf_PDF = item.prev_bsdf_PDF;
                     Spectrum bsdf_val = item.prev_bsdf_val;
                     lls = light.Li(lls, scene_data);
-                    float weight = MIS_weight(bsdf_PDF, lls.PDF_dir);
+                    float weight = MIS_weight(bsdf_PDF, light_PDF);
                     Spectrum temp_Li = item.throughput * lls.L * bsdf_val * weight / bsdf_PDF;
-                    L += temp_Li;
+                    L += temp_Li / light_select_PMF;
                 }
             }
 
@@ -118,7 +119,6 @@ namespace luminous {
                 temp_Li += Le * item.throughput;
             } else {
                 LightLiSample lls{item.prev_lsc, lec};
-                lls.compute_PDF_dir();
                 float light_select_PMF = scene_data->light_sampler->PMF(*light);
                 lls = light->Li(lls, scene_data);
                 float light_PDF = lls.PDF_dir;
@@ -147,19 +147,27 @@ namespace luminous {
             SurfaceInteraction si = hit_ctx.compute_surface_interaction(mtl_item.wo);
             BSDFWrapper bsdf = si.compute_BSDF(scene_data);
             if (mtl_item.depth == 0) {
-                pixel_sample_state->normal[mtl_item.pixel_index] = si.g_uvn.normal();
+                pixel_sample_state->normal[mtl_item.pixel_index] = si.s_uvn.normal();
                 pixel_sample_state->albedo[mtl_item.pixel_index] = make_float3(bsdf.color());
             }
 
             RaySamples rs = pixel_sample_state->ray_samples[mtl_item.pixel_index];
 
+
             // sample BSDF
             auto bsdf_sample = bsdf.sample_f(mtl_item.wo, rs.indirect.uc, rs.indirect.u);
             if (bsdf_sample.valid()) {
                 Spectrum throughput = mtl_item.throughput * bsdf_sample.f_val / bsdf_sample.PDF;
-                RayWorkItem ray_item;
-                ray_item.prev_bsdf_val = bsdf_sample.f_val;
-                ray_item.prev_bsdf_PDF = bsdf_sample.PDF;
+//                Spectrum rr_throughput = throughput;
+//                float max_comp = rr_throughput.max_comp();
+//                if (max_comp < 1 && mtl_item.depth >= 0) {
+//                    float q = min(0.95f, max_comp);
+//                    if (q < rs.indirect.rr) {
+//                        throughput = Spectrum{0.f};
+//                    } else {
+//                        throughput /= q;
+//                    }
+//                }
                 Ray new_ray = si.spawn_ray(bsdf_sample.wi);
                 next_ray_queue->push_secondary_ray(new_ray, mtl_item.depth + 1, LightSampleContext(si),
                                                    throughput, bsdf_sample.PDF,
@@ -176,9 +184,16 @@ namespace luminous {
 
             light->sample(&lls, rs.direct.u, scene_data);
             if (lls.valid()) {
+                lls = light->Li(lls, scene_data);
                 lls.update_Li();
-                Ray new_ray = si.spawn_ray_to(lls.lec.pos);
-                ShadowRayWorkItem shadow_ray_work_item{new_ray, lls.L, mtl_item.pixel_index};
+                float bsdf_PDF = bsdf.PDF(mtl_item.wo, lls.wi);
+                float light_PDF = lls.PDF_dir;
+                float weight = MIS_weight(light_PDF, bsdf_PDF);
+                Spectrum bsdf_val = bsdf.eval(mtl_item.wo, lls.wi);
+                Spectrum Ld = lls.L * bsdf_val * weight / light_PDF * mtl_item.throughput / sampled_light.PMF;
+                DCHECK(!has_invalid(Ld))
+                Ray new_ray = lls.lsc.spawn_ray_to(lls.lec);
+                ShadowRayWorkItem shadow_ray_work_item{new_ray, Ld, mtl_item.pixel_index};
                 shadow_ray_queue->push(shadow_ray_work_item);
             }
         }
@@ -186,12 +201,14 @@ namespace luminous {
         void add_samples(int task_id, int n_item,
                          SOA<PixelSampleState> *pixel_sample_state) {
             Sensor *camera = rt_param->camera;
+            float inv_spp = 1.f / rt_param->sampler->spp();
             uint2 pixel = pixel_sample_state->pixel[task_id];
             Film *film = camera->film();
             Spectrum L = pixel_sample_state->Li[task_id];
             float3 normal = pixel_sample_state->normal[task_id];
             float3 albedo = pixel_sample_state->albedo[task_id];
-            film->add_samples(pixel, L, albedo, normal, 1, rt_param->frame_index);
+
+            film->add_samples(pixel, L * inv_spp, albedo * inv_spp, normal * inv_spp, 1, rt_param->frame_index);
         }
     }
 }

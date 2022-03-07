@@ -12,12 +12,90 @@ namespace luminous {
             return string_printf("%s_subdiv_%u", fn.c_str(), subdiv_level);
         }
 
-        string gen_key(const ShapeConfig sc) {
+        string gen_key(const ShapeConfig &sc) {
             if (sc.type() == "model") {
                 return string_printf("%s_subdiv_%u", sc.fn.c_str(), sc.subdiv_level);
             } else {
                 return sc.name;
             }
+        }
+
+
+        Model SceneGraph::create_sphere(const ShapeConfig &config) {
+            float radius = config.radius;
+            vector<float3> positions;
+            vector<float3> normals;
+            vector<float2> tex_coords;
+            vector<TriangleHandle> triangles;
+            Box3f aabb(make_float3(-radius), float3(radius));
+            uint theta_div = config.sub_div;
+            uint phi_div = 2 * theta_div;
+            positions.push_back(make_float3(0, radius, 0));
+            normals.push_back(make_float3(0, 1, 0));
+            tex_coords.push_back(make_float2(0, 0));
+            for (uint i = 1; i < theta_div; ++i) {
+                float v = float(i) / theta_div;
+                float theta = Pi * v;
+                float y = radius * cos(theta);
+                float r = radius * sin(theta);
+                float3 p0 = make_float3(r, y, 0.f);
+                positions.push_back(p0);
+                normals.push_back(normalize(p0));
+                float2 t0 = make_float2(0, v);
+                tex_coords.push_back(t0);
+                for (uint j = 1; j < phi_div; ++j) {
+                    float u = float(j) / phi_div;
+                    float phi = u * _2Pi;
+                    float x = cos(phi) * r;
+                    float z = sin(phi) * r;
+                    float3 p = make_float3(x, y, z);
+                    positions.push_back(p);
+                    float2 t = make_float2(u, v);
+                    tex_coords.push_back(t);
+                    normals.push_back(normalize(p));
+                }
+            }
+            positions.push_back(make_float3(0, -radius, 0));
+            normals.push_back(make_float3(0, -1, 0));
+            tex_coords.push_back(make_float2(0, 1));
+            Model model;
+            model.custom_material_name = config.material_name;
+            uint tri_count = phi_div * 2 + (theta_div - 2) * phi_div * 2;
+            triangles.reserve(tri_count);
+
+            for (uint i = 0; i < phi_div; ++i) {
+                TriangleHandle tri{0, (i + 1) % phi_div + 1, i + 1};
+                triangles.push_back(tri);
+            }
+            for (uint i = 0; i < theta_div - 2; ++i) {
+                uint vert_start = 1 + i * phi_div;
+                for (int j = 0; j < phi_div; ++j) {
+                    if (j != phi_div - 1) {
+                        TriangleHandle tri{vert_start, vert_start + 1, vert_start + phi_div};
+                        triangles.push_back(tri);
+                        TriangleHandle tri2{vert_start + 1, vert_start + phi_div + 1, vert_start + phi_div};
+                        triangles.push_back(tri2);
+                    } else {
+                        TriangleHandle tri{vert_start, vert_start + 1 - phi_div, vert_start + phi_div};
+                        triangles.push_back(tri);
+                        TriangleHandle tri2{vert_start + 1 - phi_div, vert_start + 1, vert_start + phi_div};
+                        triangles.push_back(tri2);
+                    }
+                    vert_start ++;
+                }
+            }
+            uint vert_start = (theta_div - 1) * phi_div + 2;
+            uint vert_end = positions.size() - 1;
+            for (uint i = 0; i < phi_div; ++i) {
+                uint idx1 = i + 1;
+                uint idx2 = (1 + i) % phi_div + 1;
+                TriangleHandle tri{vert_end, vert_end - idx2, vert_end - idx1};
+                triangles.push_back(tri);
+            }
+
+            auto mesh = Mesh(move(positions), move(normals), move(tex_coords), move(triangles), Box3f());
+            model.meshes.push_back(mesh);
+            return model;
         }
 
         Model SceneGraph::create_quad_y(const ShapeConfig &config) {
@@ -47,7 +125,6 @@ namespace luminous {
             auto mesh = Mesh(move(P), move(N), move(UV), move(triangles), aabb);
             model.meshes.push_back(mesh);
             model.custom_material_name = config.material_name;
-            update_counter(model);
             return model;
         }
 
@@ -78,7 +155,6 @@ namespace luminous {
             auto mesh = Mesh(move(P), move(N), move(UV), move(triangles), aabb);
             model.meshes.push_back(mesh);
             model.custom_material_name = config.material_name;
-            update_counter(model);
             return model;
         }
 
@@ -131,37 +207,50 @@ namespace luminous {
             auto mesh = Mesh(move(P), move(N), move(UVs), move(triangles), aabb);
             model.meshes.push_back(mesh);
             model.custom_material_name = config.material_name;
-            update_counter(model);
             return model;
         }
 
+        void swap_handed(Model &model, int dim = 0) {
+            for (auto &mesh : model.meshes) {
+                for (auto &pos : mesh.positions) {
+                    pos[dim] *= -1.f;
+                }
+                for (auto &normal : mesh.normals) {
+                    normal[dim] *= -1.f;
+                }
+                for (auto &tri : mesh.triangles) {
+                    std::swap(tri.i, tri.j);
+                }
+            }
+        }
+
         Model SceneGraph::create_shape(const ShapeConfig &config) {
+            Model ret;
             if (config.type() == "model") {
                 config.fn = (_context->scene_path() / config.fn).string();
-                auto model = Model(config);
-                update_counter(model);
-                return model;
+                ret = Model(config);
             } else if (config.type() == "quad") {
-                return create_quad(config);
+                ret = create_quad(config);
             } else if (config.type() == "quad_y") {
-                return create_quad_y(config);
+                ret = create_quad_y(config);
             } else if (config.type() == "mesh") {
-                auto model = Model();
                 Box3f aabb;
                 for (auto pos : config.positions) {
                     aabb.extend(pos);
                 }
                 Mesh mesh(move(config.positions), move(config.normals),
                           move(config.tex_coords), move(config.triangles), aabb);
-                model.meshes.push_back(mesh);
-                model.custom_material_name = config.material_name;
-                update_counter(model);
-                return model;
+                ret.meshes.push_back(mesh);
+                ret.custom_material_name = config.material_name;
             } else if (config.type() == "cube") {
-                return create_cube(config);
+                ret = create_cube(config);
+            } else if (config.type() == "sphere") {
+                ret = create_sphere(config);
             } else {
                 LUMINOUS_ERROR("unknown shape type !")
             }
+            update_counter(ret);
+            return ret;
         }
 
         void SceneGraph::create_shape_instance(const ShapeConfig &config) {

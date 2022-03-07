@@ -81,6 +81,8 @@ namespace luminous {
 
             Model create_shape(const ShapeConfig &config);
 
+            Model create_sphere(const ShapeConfig &config);
+
             Model create_quad(const ShapeConfig &config);
 
             Model create_quad_y(const ShapeConfig &config);

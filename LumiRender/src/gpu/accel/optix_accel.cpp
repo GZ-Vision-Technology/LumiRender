@@ -18,7 +18,7 @@ namespace luminous {
         OptixAccel::OptixAccel(Device *device, Context *context, const Scene *scene)
                 : Accelerator(scene),
                   _device(device),
-                  _dispatcher(_device->new_dispatcher()),
+                  _dispatcher(_device->get_dispatcher()),
                   _context(context),
                   _optix_device_context(create_context()) {}
 

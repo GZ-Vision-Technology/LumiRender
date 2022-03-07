@@ -31,7 +31,7 @@ namespace luminous {
         }
 
         void MegakernelOptixAccel::launch(uint2 res, Managed<LaunchParams> &launch_params) {
-            auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher.impl_mut())->stream;
+            auto stream = dynamic_cast<CUDADispatcher *>(_dispatcher->impl_mut())->stream;
             auto x = res.x;
             auto y = res.y;
             launch_params->traversable_handle = _root_as_handle;
@@ -45,7 +45,7 @@ namespace luminous {
                                     y,
                                     1u));
 
-            _dispatcher.wait();
+            _dispatcher->wait();
         }
 
         void MegakernelOptixAccel::clear() {
