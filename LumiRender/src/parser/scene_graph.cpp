@@ -227,19 +227,10 @@ namespace luminous {
             if (config.type() == "model") {
                 config.fn = (_context->scene_path() / config.fn).string();
                 ret = Model(config);
-//                if (config.swap_handed) {
-//                    swap_handed(ret);
-//                }
             } else if (config.type() == "quad") {
                 ret = create_quad(config);
-                if (config.swap_handed) {
-                    swap_handed(ret);
-                }
             } else if (config.type() == "quad_y") {
                 ret = create_quad_y(config);
-                if (config.swap_handed) {
-                    swap_handed(ret, 0);
-                }
             } else if (config.type() == "mesh") {
                 Box3f aabb;
                 for (auto pos : config.positions) {
@@ -249,14 +240,8 @@ namespace luminous {
                           move(config.tex_coords), move(config.triangles), aabb);
                 ret.meshes.push_back(mesh);
                 ret.custom_material_name = config.material_name;
-                if (config.swap_handed) {
-                    swap_handed(ret, 0);
-                }
             } else if (config.type() == "cube") {
                 ret = create_cube(config);
-                if (config.swap_handed) {
-                    swap_handed(ret, 0);
-                }
             } else if (config.type() == "sphere") {
                 ret = create_sphere(config);
             } else {
