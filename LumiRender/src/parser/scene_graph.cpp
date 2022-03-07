@@ -62,21 +62,21 @@ namespace luminous {
             triangles.reserve(tri_count);
 
             for (uint i = 0; i < phi_div; ++i) {
-                TriangleHandle tri{0, i + 1, (i + 1) % phi_div + 1};
+                TriangleHandle tri{0, (i + 1) % phi_div + 1, i + 1};
                 triangles.push_back(tri);
             }
             for (uint i = 0; i < theta_div - 2; ++i) {
                 uint vert_start = 1 + i * phi_div;
                 for (int j = 0; j < phi_div; ++j) {
                     if (j != phi_div - 1) {
-                        TriangleHandle tri{vert_start, vert_start + phi_div, vert_start + 1};
+                        TriangleHandle tri{vert_start, vert_start + 1, vert_start + phi_div};
                         triangles.push_back(tri);
-                        TriangleHandle tri2{vert_start + 1, vert_start + phi_div, vert_start + phi_div + 1};
+                        TriangleHandle tri2{vert_start + 1, vert_start + phi_div + 1, vert_start + phi_div};
                         triangles.push_back(tri2);
                     } else {
-                        TriangleHandle tri{vert_start, vert_start + phi_div, vert_start + 1 - phi_div};
+                        TriangleHandle tri{vert_start, vert_start + 1 - phi_div, vert_start + phi_div};
                         triangles.push_back(tri);
-                        TriangleHandle tri2{vert_start + 1 - phi_div, vert_start + phi_div, vert_start + 1};
+                        TriangleHandle tri2{vert_start + 1 - phi_div, vert_start + 1, vert_start + phi_div};
                         triangles.push_back(tri2);
                     }
                     vert_start ++;
@@ -87,7 +87,7 @@ namespace luminous {
             for (uint i = 0; i < phi_div; ++i) {
                 uint idx1 = i + 1;
                 uint idx2 = (1 + i) % phi_div + 1;
-                TriangleHandle tri{vert_end, vert_end - idx1, vert_end - idx2};
+                TriangleHandle tri{vert_end, vert_end - idx2, vert_end - idx1};
                 triangles.push_back(tri);
             }
 
