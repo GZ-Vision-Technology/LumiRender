@@ -46,6 +46,8 @@ namespace luminous {
             _ray_queues.allocate_device();
             _ray_queues.synchronize_to_device();
 
+            _ray_queues.synchronize_to_host();
+
 #define ALLOCATE_AND_SYNCHRONIZE(args)         \
 (args).emplace_back(_max_queue_size, _device); \
 (args).allocate_device();                      \
@@ -190,6 +192,7 @@ namespace luminous {
         }
 
         void WavefrontPT::check_wait() {
+//            _ray_queues.synchronize_to_host();
             if (_device->is_cpu()) {
                 _dispatcher->wait();
             }
