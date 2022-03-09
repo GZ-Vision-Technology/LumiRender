@@ -57,7 +57,7 @@
             }
         },
         {
-            "type": "GlassMaterial",
+            "type": "FakeMetalMaterial",
             "name": "ShortBox",
             "param": {
                 "roughness" : [0.002]
@@ -69,7 +69,7 @@
             }
         },
         {
-            "type": "GlassMaterial",
+            "type": "FakeMetalMaterial",
             "name": "TallBox",
             "param": {
                 "roughness" : [0.002]
@@ -421,15 +421,6 @@
             "spp": 1
         }
     },
-    "integrator": {
-        "type": "PT",
-        // "type": "WavefrontPT",
-        "param": {
-            "min_depth": 0,
-            "max_depth": 15,
-            "rr_threshold": 0.1
-        }
-    },
     "camera": {
         "type": "ThinLensCamera",
         "param": {
@@ -476,9 +467,18 @@
             }
         }
     },
+    "integrator": {
+        // "type": "PT",
+        "type": "WavefrontPT",
+        "param": {
+            "min_depth": 5,
+            "max_depth": 15,
+            "rr_threshold": 0.2
+        }
+    },
     "output": {
-        "fn": "cornell-box-mk-1024-2.png",
-        "dispatch_num": 1024,
+        "fn": "cornell-box-wf-256.png",
+        "dispatch_num": 256,
         "tone_map": 0
     }
 }
