@@ -37,12 +37,12 @@ namespace luminous {
         }
 
         void PCGSampler::start_pixel_sample(uint2 pixel, int sample_index, int dimension) {
-            _rng.set_sequence((pixel.x + pixel.y * 65536) | (uint64_t(_seed) << 32));
+            _rng.set_sequence(Hash(pixel, 0));
             _rng.advance(sample_index * 65536 + dimension);
         }
 
         int PCGSampler::compute_dimension(int depth) const {
-            return 5 + depth * 7;
+            return 6 + depth * 20;
         }
 
         float PCGSampler::next_1d() {
