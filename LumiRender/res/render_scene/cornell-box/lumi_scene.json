@@ -57,25 +57,27 @@
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "GlassMaterial",
             "name": "ShortBox",
             "param": {
-                "color": [
-                    0.725,
-                    0.71,
-                    0.68
-                ]
+                "roughness" : [0.002]
+                // "color": [
+                //     0.725,
+                //     0.71,
+                //     0.68
+                // ]
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "GlassMaterial",
             "name": "TallBox",
             "param": {
-                "color": [
-                    0.725,
-                    0.71,
-                    0.68
-                ]
+                "roughness" : [0.002]
+                // "color": [
+                //     0.725,
+                //     0.71,
+                //     0.68
+                // ]
             }
         }
     ],
@@ -312,7 +314,7 @@
                             ],
                             [
                                 -0.3286310136318207,
-                                0.30000001192092896,
+                                0.290000001192092896,
                                 0.37459200620651245,
                                 1.0
                             ]
@@ -353,7 +355,7 @@
                             ],
                             [
                                 0.335438996553421,
-                                0.6000000238418579,
+                                0.59990000238418579,
                                 -0.2914150059223175,
                                 1.0
                             ]
@@ -420,12 +422,12 @@
         }
     },
     "integrator": {
-        // "type": "PT",
-        "type": "WavefrontPT",
+        "type": "PT",
+        // "type": "WavefrontPT",
         "param": {
             "min_depth": 0,
-            "max_depth": 5,
-            "rr_threshold": 1
+            "max_depth": 15,
+            "rr_threshold": 0.1
         }
     },
     "camera": {
@@ -475,8 +477,8 @@
         }
     },
     "output": {
-        "fn": "cornell-box.png",
-        "dispatch_num": 0,
+        "fn": "cornell-box-mk-1024-2.png",
+        "dispatch_num": 1024,
         "tone_map": 0
     }
 }
