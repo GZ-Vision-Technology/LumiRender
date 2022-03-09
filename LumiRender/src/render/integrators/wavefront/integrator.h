@@ -70,10 +70,10 @@ namespace luminous {
             }
 
             void _reset_ray_queue(int index) {
-                _ray_queues.synchronize_to_host();
+                _ray_queues.synchronize_to_host(index, 1);
                 RayQueue *ray_queue = _ray_queue_host_ptr(index);
                 ray_queue->reset();
-                _ray_queues.synchronize_to_device();
+                _ray_queues.synchronize_to_device(index, 1);
             }
 
             void _reset_cur_ray_queue(int depth) {
