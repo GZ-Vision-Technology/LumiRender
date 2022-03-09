@@ -192,7 +192,6 @@ namespace luminous {
         }
 
         void WavefrontPT::check_wait() {
-//            _ray_queues.synchronize_to_host();
             if (_device->is_cpu()) {
                 _dispatcher->wait();
             }

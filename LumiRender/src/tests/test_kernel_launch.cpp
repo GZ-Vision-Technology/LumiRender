@@ -85,7 +85,7 @@ void test_kernel_sampler() {
 //    }
     sampler.start_pixel_sample(make_uint2(0), 0, 0);
 
-    LCGSampler lcg_sampler = *sampler.get<LCGSampler>();
+    DebugSampler lcg_sampler = *sampler.get<DebugSampler>();
 
     uint32_t state = 1576399551;
 

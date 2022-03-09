@@ -17,7 +17,7 @@ namespace luminous {
 
         class Filter;
 
-        class Sampler : public Variant<PCGSampler, LCGSampler> {
+        class Sampler : public Variant<PCGSampler, DebugSampler> {
         
             DECLARE_REFLECTION(Sampler, Variant)
 
