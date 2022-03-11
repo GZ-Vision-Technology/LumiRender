@@ -48,6 +48,9 @@ namespace luminous {
         void generate_ray_samples(int task_id, int n_item, int sample_index,
                                   const RayQueue *ray_queue,
                                   SOA<PixelSampleState> *pixel_sample_state) {
+            if (task_id >= ray_queue->size()) {
+                return;
+            }
             Sampler sampler = *(rt_param->sampler);
             RayWorkItem item = (*ray_queue)[task_id];
             uint2 pixel = pixel_sample_state->pixel[item.pixel_index];
