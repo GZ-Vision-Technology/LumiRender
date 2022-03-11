@@ -163,19 +163,22 @@ namespace luminous {
                 Spectrum throughput = mtl_item.throughput * bsdf_sample.f_val / bsdf_sample.PDF;
                 Spectrum rr_throughput = throughput;
                 float max_comp = rr_throughput.max_comp();
-                if (max_comp < 1 && mtl_item.depth >= 0) {
-                    float q = min(0.95f, max_comp);
-                    if (q < rs.indirect.rr) {
-                        throughput = Spectrum{0.f};
-                    } else {
-                        throughput /= q;
+                do {
+                    if (max_comp < 1 && mtl_item.depth >= 0) {
+                        float q = min(0.95f, max_comp);
+                        if (q < rs.indirect.rr) {
+                            throughput = Spectrum{0.f};
+                            break;
+                        } else {
+                            throughput /= q;
+                        }
                     }
-                }
-                Ray new_ray = si.spawn_ray(bsdf_sample.wi);
-                next_ray_queue->push_secondary_ray(new_ray, mtl_item.depth + 1, LightSampleContext(si),
-                                                   throughput, bsdf_sample.PDF,
-                                                   bsdf_sample.f_val, 1,
-                                                   mtl_item.pixel_index);
+                    Ray new_ray = si.spawn_ray(bsdf_sample.wi);
+                    next_ray_queue->push_secondary_ray(new_ray, mtl_item.depth + 1, LightSampleContext(si),
+                                                       throughput, bsdf_sample.PDF,
+                                                       bsdf_sample.f_val, 1,
+                                                       mtl_item.pixel_index);
+                } while (false);
             }
 
             // sample light
