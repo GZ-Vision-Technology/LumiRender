@@ -48,6 +48,9 @@ namespace luminous {
         void generate_ray_samples(int task_id, int n_item, int sample_index,
                                   const RayQueue *ray_queue,
                                   SOA<PixelSampleState> *pixel_sample_state) {
+            if (task_id >= ray_queue->size()) {
+                return;
+            }
             Sampler sampler = *(rt_param->sampler);
             RayWorkItem item = (*ray_queue)[task_id];
             uint2 pixel = pixel_sample_state->pixel[item.pixel_index];
@@ -158,16 +161,16 @@ namespace luminous {
             auto bsdf_sample = bsdf.sample_f(mtl_item.wo, rs.indirect.uc, rs.indirect.u);
             if (bsdf_sample.valid()) {
                 Spectrum throughput = mtl_item.throughput * bsdf_sample.f_val / bsdf_sample.PDF;
-//                Spectrum rr_throughput = throughput;
-//                float max_comp = rr_throughput.max_comp();
-//                if (max_comp < 1 && mtl_item.depth >= 0) {
-//                    float q = min(0.95f, max_comp);
-//                    if (q < rs.indirect.rr) {
-//                        throughput = Spectrum{0.f};
-//                    } else {
-//                        throughput /= q;
-//                    }
-//                }
+                Spectrum rr_throughput = throughput;
+                float max_comp = rr_throughput.max_comp();
+                if (max_comp < 1 && mtl_item.depth >= 0) {
+                    float q = min(0.95f, max_comp);
+                    if (q < rs.indirect.rr) {
+                        throughput = Spectrum{0.f};
+                    } else {
+                        throughput /= q;
+                    }
+                }
                 Ray new_ray = si.spawn_ray(bsdf_sample.wi);
                 next_ray_queue->push_secondary_ray(new_ray, mtl_item.depth + 1, LightSampleContext(si),
                                                    throughput, bsdf_sample.PDF,

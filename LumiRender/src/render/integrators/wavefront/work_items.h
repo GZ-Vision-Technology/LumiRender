@@ -153,6 +153,8 @@ namespace luminous {
             RayQueue(const RayQueue &other)
                     : WorkQueue<RayWorkItem>(other) {}
 
+            RayQueue() = default;
+
             LM_XPU_INLINE int push_primary_ray(const Ray &ray, int pixel_index) {
                 int index = allocate_entry();
                 this->ray[index] = ray;

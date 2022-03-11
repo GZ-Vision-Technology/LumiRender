@@ -46,6 +46,8 @@ namespace luminous {
             _ray_queues.allocate_device();
             _ray_queues.synchronize_to_device();
 
+            _ray_queues.synchronize_to_host();
+
 #define ALLOCATE_AND_SYNCHRONIZE(args)         \
 (args).emplace_back(_max_queue_size, _device); \
 (args).allocate_device();                      \
@@ -111,13 +113,13 @@ namespace luminous {
         void WavefrontPT::render(int frame_num, ProgressReporter *progressor) {
             auto spp = _sampler->spp();
             for (int sample_idx = 0; sample_idx < spp; ++sample_idx) {
-                render_per_sample(_rt_param->frame_index, spp);
+                render_per_sample(_rt_param->frame_index + sample_idx, spp);
                 if (progressor) progressor->update(1);
             }
             _add_samples.launch(*_dispatcher, _max_queue_size,
                                 _pixel_sample_state.device_data());
             _dispatcher->wait();
-            _rt_param->frame_index += 1;
+            _rt_param->frame_index += spp;
             _rt_param.synchronize_to_device();
         }
 

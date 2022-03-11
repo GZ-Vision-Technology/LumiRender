@@ -25,12 +25,13 @@ void test_sampler() {
     cout << sampler.to_string() << endl;
     auto s2 = sampler;
     auto f = 0.f;
-    sampler.start_pixel_sample(make_uint2(0), 0, 0);
-    cout << sampler.next_2d().to_string() << endl;
-    cout << sampler.next_2d().to_string() << endl;
+    sampler.start_pixel_sample(luminous::make_uint2(10u,0u), 1, 0);
+    cout << sampler.next_1d() << endl;
+    cout << sampler.next_1d() << endl;
+    cout << sampler.next_1d() << endl;
 
-    sampler.start_pixel_sample(make_uint2(0), 0, 2);
-    cout << sampler.next_2d().to_string() << endl;
+    sampler.start_pixel_sample(luminous::make_uint2(0u, 10u), 1, 2);
+    cout << sampler.next_1d() << endl;
 //    cout << sampler.next_2d().to_string() << endl;
 }
 
@@ -54,7 +55,6 @@ void test_sensor() {
 
     auto camera = Sensor::create(config);
 
-    cout << camera.to_string();
 }
 
 
@@ -90,7 +90,7 @@ void test_move() {
 }
 
 int main() {
-//    test_sampler();
+    test_sampler();
 //    test_move();
-    test_soa();
+//    test_soa();
 }

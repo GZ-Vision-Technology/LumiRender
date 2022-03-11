@@ -25,6 +25,8 @@
 
 #endif
 
+#include <string.h>
+
 namespace luminous {
 inline namespace utility {
 
@@ -347,7 +349,7 @@ void ProgressReporter::update_progress_bar(int fd_count, const psocket_t fds[2],
         static_cast<float>(remaining));
 
     {
-        const int PROGRESS_BAR_WIDTH = std::max<int>(2, terminal_width - _title.size() - 33);
+        const int PROGRESS_BAR_WIDTH = std::max<int>(2, terminal_width - _title.size() - 36);
 
         constexpr char BAR_START[] = "\u2595";
         constexpr char BAR_STOP[] = "\u258F";

@@ -115,13 +115,13 @@ namespace luminous {
 
         LM_NODISCARD BufferView<TDevice>
         synchronize_and_get_device_view(size_t offset = 0, size_t count = -1) {
-            synchronize_to_device();
+            synchronize_to_device(offset, count);
             return device_buffer_view(offset, count);
         }
 
         LM_NODISCARD BufferView<const TDevice>
         synchronize_and_get_const_device_view(size_t offset = 0, size_t count = -1) {
-            synchronize_to_device();
+            synchronize_to_device(offset, count);
             return device_buffer_view(offset, count);
         }
 
@@ -178,7 +178,7 @@ namespace luminous {
                 return;
             }
             count = fix_count(offset, count, BaseClass::size());
-            _device_buffer.upload(BaseClass::data(), count, offset);
+            _device_buffer.upload(BaseClass::data() + offset, count, offset);
         }
 
         void synchronize_to_host(size_t offset = 0, size_t count = -1) {
@@ -186,7 +186,7 @@ namespace luminous {
                 BaseClass::resize(_device_buffer.size());
             }
             count = fix_count(offset, count, BaseClass::size());
-            _device_buffer.download(BaseClass::data(), count, offset);
+            _device_buffer.download(BaseClass::data() + offset, count, offset);
         }
     };
 }

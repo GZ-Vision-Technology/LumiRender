@@ -10,19 +10,23 @@
 #include "sampler_base.h"
 #include "core/concepts.h"
 
+#ifndef __CUDACC__
+#include <random>
+#endif
+
 namespace luminous {
     inline namespace render {
 
-        class LCGSampler: public SamplerBase {
+        class DebugSampler: public SamplerBase {
 
-            DECLARE_REFLECTION(LCGSampler, SamplerBase)
+            DECLARE_REFLECTION(DebugSampler, SamplerBase)
 
         private:
             LCG<> _rng;
         public:
-            CPU_ONLY(explicit LCGSampler(const SamplerConfig &config) : LCGSampler(config.spp) {})
+            CPU_ONLY(explicit DebugSampler(const SamplerConfig &config) : DebugSampler(config.spp) {})
 
-            LM_XPU explicit LCGSampler(int spp = 1) : SamplerBase(spp) {}
+            LM_XPU explicit DebugSampler(int spp = 1) : SamplerBase(spp) {}
 
             LM_XPU void start_pixel_sample(uint2 pixel, int sample_index, int dimension);
 

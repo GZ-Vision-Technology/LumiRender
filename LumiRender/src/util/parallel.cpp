@@ -106,8 +106,10 @@ namespace luminous {
         void async(int count, const std::function<void(uint32_t, uint32_t)> &func, size_t chunk_size) {
             using namespace thread_internal;
             init_thread_pool();
-            if (n_thread == 1) {
+            auto tn = num_work_threads();
+            if (tn == 1) {
                 series(count, func);
+                return;
             }
             ParallelForContext ctx;
             ctx.func = func;

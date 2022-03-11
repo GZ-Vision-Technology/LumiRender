@@ -15,7 +15,7 @@ using namespace luminous;
 using lstd::Variant;
 
 
-class TestSampler : BASE_CLASS(Variant<LCGSampler *, PCGSampler *>) {
+class TestSampler : BASE_CLASS(Variant<DebugSampler *, PCGSampler *>) {
 public:
     REFL_CLASS(TestSampler)
 
