@@ -472,13 +472,13 @@
         "type": "WavefrontPT",
         "param": {
             "min_depth": 0,
-            "max_depth": 15,
+            "max_depth": 50,
             "rr_threshold": 0.2
         }
     },
     "output": {
-        "fn": "cornell-box-wf-2048.png",
-        "dispatch_num": 2048,
+        "fn": "cornell-box-wf-256.png",
+        "dispatch_num": 256,
         "tone_map": 0
     }
 }
