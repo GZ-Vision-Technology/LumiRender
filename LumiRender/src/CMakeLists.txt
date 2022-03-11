@@ -59,7 +59,13 @@ if (LUMINOUS_CPU_BACKEND)
 endif ()
 add_subdirectory(view)
 add_subdirectory(base_libs)
-add_subdirectory(tests)
+
 add_subdirectory(apps)
 add_subdirectory(render)
 add_subdirectory(denoise)
+
+
+if(${LUMINOUS_BUILD_TESTS})
+    add_subdirectory(tests)
+endif()
+

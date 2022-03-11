@@ -2,7 +2,7 @@
     "textures": [],
     "materials": [
         {
-            "type": "MatteMaterial",
+            "type": "DisneyMaterial",
             "name": "LeftWall",
             "param": {
                 "color": [
@@ -13,7 +13,7 @@
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "DisneyMaterial",
             "name": "RightWall",
             "param": {
                 "color": [
@@ -24,7 +24,7 @@
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "DisneyMaterial",
             "name": "Floor",
             "param": {
                 "color": [
@@ -35,7 +35,7 @@
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "DisneyMaterial",
             "name": "Ceiling",
             "param": {
                 "color": [
@@ -46,7 +46,7 @@
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "DisneyMaterial",
             "name": "BackWall",
             "param": {
                 "color": [
@@ -57,27 +57,27 @@
             }
         },
         {
-            "type": "FakeMetalMaterial",
+            "type": "DisneyMaterial",
             "name": "ShortBox",
             "param": {
-                "roughness" : [0.002]
-                // "color": [
-                //     0.725,
-                //     0.71,
-                //     0.68
-                // ]
+                // "roughness" : [0.002]
+                "color": [
+                    0.725,
+                    0.71,
+                    0.68
+                ]
             }
         },
         {
-            "type": "FakeMetalMaterial",
+            "type": "DisneyMaterial",
             "name": "TallBox",
             "param": {
-                "roughness" : [0.002]
-                // "color": [
-                //     0.725,
-                //     0.71,
-                //     0.68
-                // ]
+                // "roughness" : [0.002]
+                "color": [
+                    0.725,
+                    0.71,
+                    0.68
+                ]
             }
         }
     ],
@@ -471,14 +471,14 @@
         // "type": "PT",
         "type": "WavefrontPT",
         "param": {
-            "min_depth": 5,
+            "min_depth": 0,
             "max_depth": 15,
             "rr_threshold": 0.2
         }
     },
     "output": {
-        "fn": "cornell-box-wf-256.png",
-        "dispatch_num": 256,
+        "fn": "cornell-box-wf-2048.png",
+        "dispatch_num": 2048,
         "tone_map": 0
     }
 }
