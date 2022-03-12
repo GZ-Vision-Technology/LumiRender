@@ -78,7 +78,7 @@ namespace luminous {
             EscapedRayWorkItem item = (*escaped_ray_queue)[task_id];
             Spectrum L = pixel_sample_state->Li[item.pixel_index];
 
-            if (item.depth == 0) {
+            if (item.depth == 0 || is_specular(item.prev_vertex.flags)) {
                 L += light_sampler->on_miss(item.ray_d, scene_data, item.throughput);
             } else {
                 for (int i = 0; i < light_sampler->infinite_light_num(); ++i) {
@@ -117,7 +117,7 @@ namespace luminous {
 
             float3 wo = item.wo;
             Spectrum temp_Li = pixel_sample_state->Li[item.pixel_index];
-            if (item.depth == 0) {
+            if (item.depth == 0 || is_specular(item.prev_vertex.flags)) {
                 Spectrum Le = light->as<AreaLight>()->radiance(lec, wo, scene_data);
                 temp_Li += Le * item.throughput;
             } else {
@@ -174,7 +174,7 @@ namespace luminous {
                         }
                     }
                     Ray new_ray = si.spawn_ray(bsdf_sample.wi);
-                    WavefrontVertex vertex{LightSampleContext(si), bsdf_sample.PDF, bsdf_sample.f_val};
+                    WavefrontVertex vertex{LightSampleContext(si), bsdf_sample.PDF, bsdf_sample.f_val, bsdf_sample.flags};
                     next_ray_queue->push_secondary_ray(new_ray, mtl_item.depth + 1,
                                                        vertex, throughput, 1,
                                                        mtl_item.pixel_index);
@@ -189,7 +189,7 @@ namespace luminous {
             LightLiSample lls{lsc};
 
             light->sample(&lls, rs.direct.u, scene_data);
-            if (lls.valid()) {
+            if (lls.valid() && !bsdf.is_specular()) {
                 lls = light->Li(lls, scene_data);
                 lls.update_Li();
                 float bsdf_PDF = bsdf.PDF(mtl_item.wo, lls.wi);
