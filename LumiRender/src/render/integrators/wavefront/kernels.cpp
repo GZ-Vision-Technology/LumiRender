@@ -83,12 +83,12 @@ namespace luminous {
             } else {
                 for (int i = 0; i < light_sampler->infinite_light_num(); ++i) {
                     const Light &light = light_sampler->infinite_light_at(i);
-                    LightSampleContext prev_lsc = item.prev_lsc;
+                    LightSampleContext prev_lsc = item.prev_vertex.lsc;
                     float light_select_PMF = light_sampler->PMF(prev_lsc, light);
                     LightLiSample lls{prev_lsc, normalize(item.ray_d)};
                     float light_PDF = light.PDF_Li(prev_lsc, lls.lec, item.ray_d, scene_data);
-                    float bsdf_PDF = item.prev_bsdf_PDF;
-                    Spectrum bsdf_val = item.prev_bsdf_val;
+                    float bsdf_PDF = item.prev_vertex.bsdf_PDF;
+                    Spectrum bsdf_val = item.prev_vertex.bsdf_val;
                     lls = light.Li(lls, scene_data);
                     float weight = MIS_weight(bsdf_PDF, light_PDF);
                     Spectrum temp_Li = item.throughput * lls.L * bsdf_val * weight / bsdf_PDF;
@@ -121,12 +121,12 @@ namespace luminous {
                 Spectrum Le = light->as<AreaLight>()->radiance(lec, wo, scene_data);
                 temp_Li += Le * item.throughput;
             } else {
-                LightLiSample lls{item.prev_lsc, lec};
+                LightLiSample lls{item.prev_vertex.lsc, lec};
                 float light_select_PMF = scene_data->light_sampler->PMF(*light);
                 lls = light->Li(lls, scene_data);
                 float light_PDF = lls.PDF_dir;
-                float bsdf_PDF = item.prev_bsdf_PDF;
-                Spectrum bsdf_val = item.prev_bsdf_val;
+                float bsdf_PDF = item.prev_vertex.bsdf_PDF;
+                Spectrum bsdf_val = item.prev_vertex.bsdf_val;
                 float weight = MIS_weight(bsdf_PDF, light_PDF);
                 Spectrum L = item.throughput * lls.L * bsdf_val * weight / bsdf_PDF;
                 temp_Li += L / light_select_PMF;
@@ -174,9 +174,9 @@ namespace luminous {
                         }
                     }
                     Ray new_ray = si.spawn_ray(bsdf_sample.wi);
-                    next_ray_queue->push_secondary_ray(new_ray, mtl_item.depth + 1, LightSampleContext(si),
-                                                       throughput, bsdf_sample.PDF,
-                                                       bsdf_sample.f_val, 1,
+                    WavefrontVertex vertex{LightSampleContext(si), bsdf_sample.PDF, bsdf_sample.f_val};
+                    next_ray_queue->push_secondary_ray(new_ray, mtl_item.depth + 1,
+                                                       vertex, throughput, 1,
                                                        mtl_item.pixel_index);
                 } while (false);
             }

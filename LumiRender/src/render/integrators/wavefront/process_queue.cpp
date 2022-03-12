@@ -33,8 +33,7 @@ namespace luminous {
 
             if (!hit_ctx.has_material()) {
                 Ray new_ray = hit_ctx.surface_point().spawn_ray(r.ray.direction());
-                next_ray_queue->push_secondary_ray(new_ray, r.depth, r.prev_lsc, r.throughput,
-                                                   r.prev_bsdf_PDF, r.prev_bsdf_val,
+                next_ray_queue->push_secondary_ray(new_ray, r.depth, r.prev_vertex, r.throughput,
                                                    r.eta_scale,r.pixel_index);
                 return;
             }
@@ -43,7 +42,7 @@ namespace luminous {
 
             if (hit_ctx.has_emission()) {
                 HitAreaLightWorkItem item{hit_ctx.hit_info, wo, r.depth,
-                                          r.throughput, r.prev_lsc, r.prev_bsdf_PDF, r.prev_bsdf_val, r.pixel_index};
+                                          r.throughput, r.prev_vertex, r.pixel_index};
                 hit_area_light_queue->push(item);
             }
 

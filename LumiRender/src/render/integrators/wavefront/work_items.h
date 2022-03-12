@@ -127,19 +127,25 @@ namespace luminous {
 
         LUMINOUS_SOA(RaySamples, direct, indirect, flag)
 
+        struct WavefrontVertex {
+            LightSampleContext lsc;
+            float bsdf_PDF{};
+            Spectrum bsdf_val;
+            BxDFFlags flags{};
+        };
+
+        LUMINOUS_SOA(WavefrontVertex, lsc, bsdf_PDF, bsdf_val, flags)
+
         struct RayWorkItem {
             Ray ray;
             int depth{};
             int pixel_index{};
             Spectrum throughput;
-            LightSampleContext prev_lsc;
-            float prev_bsdf_PDF;
-            Spectrum prev_bsdf_val;
             float eta_scale{};
+            WavefrontVertex prev_vertex;
         };
 
-        LUMINOUS_SOA(RayWorkItem, ray, depth, pixel_index, throughput,
-                     prev_lsc, prev_bsdf_PDF, prev_bsdf_val, eta_scale)
+        LUMINOUS_SOA(RayWorkItem, ray, depth, pixel_index, throughput,  eta_scale, prev_vertex)
 
         class RayQueue : public WorkQueue<RayWorkItem> {
         public:
@@ -165,16 +171,13 @@ namespace luminous {
                 return index;
             }
 
-            LM_XPU_INLINE int push_secondary_ray(const Ray &ray, int depth, const LightSampleContext &prev_lsc,
-                                                 const Spectrum &throughput, float bsdf_PDF, Spectrum bsdf_val,
-                                                 float eta_scale, int pixel_index) {
+            LM_XPU_INLINE int push_secondary_ray(const Ray &ray, int depth, const WavefrontVertex &vertex,
+                                                 const Spectrum &throughput, float eta_scale, int pixel_index) {
                 int index = allocate_entry();
                 this->ray[index] = ray;
                 this->depth[index] = depth;
                 this->pixel_index[index] = pixel_index;
-                this->prev_lsc[index] = prev_lsc;
-                this->prev_bsdf_PDF[index] = bsdf_PDF;
-                this->prev_bsdf_val[index] = bsdf_val;
+                this->prev_vertex[index] = vertex;
                 this->throughput[index] = throughput;
                 this->eta_scale[index] = eta_scale;
                 return index;
@@ -187,13 +190,10 @@ namespace luminous {
             int depth{};
             int pixel_index{};
             Spectrum throughput;
-            LightSampleContext prev_lsc;
-            float prev_bsdf_PDF{};
-            Spectrum prev_bsdf_val;
+            WavefrontVertex prev_vertex;
         };
 
-        LUMINOUS_SOA(EscapedRayWorkItem, ray_o, ray_d, depth, pixel_index,
-                     throughput, prev_lsc, prev_bsdf_PDF, prev_bsdf_val)
+        LUMINOUS_SOA(EscapedRayWorkItem, ray_o, ray_d, depth, pixel_index, throughput, prev_vertex)
 
         class EscapedRayQueue : public WorkQueue<EscapedRayWorkItem> {
         public:
@@ -201,8 +201,7 @@ namespace luminous {
 
             LM_XPU_INLINE int push(RayWorkItem r) {
                 EscapedRayWorkItem item{r.ray.origin(), r.ray.direction(), r.depth,
-                                        r.pixel_index, r.throughput, r.prev_lsc,
-                                        r.prev_bsdf_PDF, r.prev_bsdf_val};
+                                        r.pixel_index, r.throughput, r.prev_vertex};
                 return WorkQueue::push(item);
             }
         };
@@ -212,14 +211,12 @@ namespace luminous {
             float3 wo;
             int depth{};
             Spectrum throughput;
-            LightSampleContext prev_lsc;
-            float prev_bsdf_PDF{};
-            Spectrum prev_bsdf_val;
+            WavefrontVertex prev_vertex;
             int pixel_index{};
         };
 
         LUMINOUS_SOA(HitAreaLightWorkItem, light_hit_info, wo, depth,
-                     throughput, prev_lsc, prev_bsdf_PDF, prev_bsdf_val, pixel_index)
+                     throughput, prev_vertex, pixel_index)
 
         using HitAreaLightQueue = WorkQueue<HitAreaLightWorkItem>;
 
