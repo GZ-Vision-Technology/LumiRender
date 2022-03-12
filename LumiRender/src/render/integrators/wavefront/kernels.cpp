@@ -164,7 +164,7 @@ namespace luminous {
                 Spectrum rr_throughput = throughput;
                 float max_comp = rr_throughput.max_comp();
                 do {
-                    if (max_comp < 1 && mtl_item.depth >= 0) {
+                    if (max_comp < rt_param->rr_threshold && mtl_item.depth >= rt_param->min_depth) {
                         float q = min(0.95f, max_comp);
                         if (q < rs.indirect.rr) {
                             throughput = Spectrum{0.f};

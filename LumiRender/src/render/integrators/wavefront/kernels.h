@@ -20,7 +20,8 @@ namespace luminous {
             Sensor *camera;
             int frame_index;
             SceneData scene_data;
-
+            uint min_depth;
+            float rr_threshold;
             RTParam() = default;
         };
 
