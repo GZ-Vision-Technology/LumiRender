@@ -128,7 +128,7 @@ namespace luminous {
                 float bsdf_PDF = item.prev_vertex.bsdf_PDF;
                 Spectrum bsdf_val = item.prev_vertex.bsdf_val;
                 float weight = MIS_weight(bsdf_PDF, light_PDF);
-                Spectrum L = item.throughput * lls.L * bsdf_val * weight / bsdf_PDF;
+                Spectrum L = item.throughput * lls.L * weight;
                 temp_Li += L / light_select_PMF;
             }
             pixel_sample_state->Li[item.pixel_index] = temp_Li;
@@ -174,7 +174,8 @@ namespace luminous {
                         }
                     }
                     Ray new_ray = si.spawn_ray(bsdf_sample.wi);
-                    WavefrontVertex vertex{LightSampleContext(si), bsdf_sample.PDF, bsdf_sample.f_val, bsdf_sample.flags};
+                    WavefrontVertex vertex{LightSampleContext(si), bsdf_sample.PDF, bsdf_sample.f_val,
+                                           bsdf_sample.flags};
                     next_ray_queue->push_secondary_ray(new_ray, mtl_item.depth + 1,
                                                        vertex, throughput, 1,
                                                        mtl_item.pixel_index);
@@ -213,8 +214,8 @@ namespace luminous {
             Spectrum L = pixel_sample_state->Li[task_id];
             float3 normal = pixel_sample_state->normal[task_id];
             float3 albedo = pixel_sample_state->albedo[task_id];
-
-            film->add_samples(pixel, L * inv_spp, albedo * inv_spp, normal * inv_spp, 1, rt_param->frame_index);
+            float weight = pixel_sample_state->filter_weight[task_id];
+            film->add_samples(pixel, L * inv_spp, albedo * inv_spp, normal * inv_spp, weight, rt_param->frame_index);
         }
     }
 }
