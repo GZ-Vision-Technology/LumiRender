@@ -91,7 +91,7 @@ namespace luminous {
                     Spectrum bsdf_val = item.prev_vertex.bsdf_val;
                     lls = light.Li(lls, scene_data);
                     float weight = MIS_weight(bsdf_PDF, light_PDF);
-                    Spectrum temp_Li = item.throughput * lls.L * bsdf_val * weight / bsdf_PDF;
+                    Spectrum temp_Li = item.throughput * lls.L * weight;
                     L += temp_Li / light_select_PMF;
                 }
             }
