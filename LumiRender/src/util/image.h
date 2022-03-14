@@ -40,7 +40,7 @@ namespace luminous {
             const T *pixel_ptr() const { return reinterpret_cast<const T *>(_pixel.get()); }
 
             template<typename T = std::byte>
-            T *pixel_ptr() { return reinterpret_cast<T*>(const_cast<std::byte *>(_pixel.get())); }
+            T *pixel_ptr() { return reinterpret_cast<T *>(const_cast<std::byte *>(_pixel.get())); }
 
             static Image pure_color(float4 color, ColorSpace color_space, uint2 res = make_uint2(1u));
 

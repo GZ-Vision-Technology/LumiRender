@@ -256,8 +256,7 @@ namespace luminous {
 
         void Image::save_exr(const luminous_fs::path &fn, PixelFormat pixel_format,
                              uint2 res, const std::byte *ptr) {
-            auto [format, pixel] = convert_to_32bit(pixel_format, ptr, res);
-
+            DCHECK(is_32bit(pixel_format))
             EXRHeader header;
             InitEXRHeader(&header);
 
@@ -285,7 +284,7 @@ namespace luminous {
             image_ptr[1] = image_ptr[0] + count;
             image_ptr[2] = image_ptr[1] + count;
             image_ptr[3] = image_ptr[2] + count;
-            auto rgba = reinterpret_cast<const float4 *>(pixel);
+            auto rgba = reinterpret_cast<const float4 *>(ptr);
             for (int i = 0u; i < count; i++) {
                 image_ptr[3][i] = rgba[i].x;
                 image_ptr[2][i] = rgba[i].y;
@@ -300,35 +299,31 @@ namespace luminous {
             if (auto ret = SaveEXRImageToFile(&image, &header, fn.string().c_str(), &err); ret != TINYEXR_SUCCESS) {
                 LUMINOUS_EXCEPTION_IF("Failed to save texture as OpenEXR image: ", fn.string());
             }
-            delete_array(pixel);
         }
 
         void Image::save_hdr(const luminous_fs::path &fn, PixelFormat pixel_format,
                              uint2 res, const std::byte *ptr) {
-            auto [format, pixel] = convert_to_32bit(pixel_format, ptr, res);
+            DCHECK(is_32bit(pixel_format))
             auto path_str = luminous_fs::absolute(fn).string();
             stbi_write_hdr(path_str.c_str(), res.x, res.y, 4,
-                           reinterpret_cast<const float *>(pixel));
-            delete_array(pixel);
+                           reinterpret_cast<const float *>(ptr));
         }
 
         void Image::save_other(const luminous_fs::path &fn, PixelFormat pixel_format,
                                uint2 res, const std::byte *ptr) {
+            DCHECK(is_8bit(pixel_format))
             auto path_str = luminous_fs::absolute(fn).string();
             auto extension = to_lower(fn.extension().string());
-            auto [format, pixel] = convert_to_8bit(pixel_format, ptr, res);
-            pixel_format = format;
             if (extension == ".png") {
-                stbi_write_png(path_str.c_str(), res.x, res.y, 4, pixel, 0);
+                stbi_write_png(path_str.c_str(), res.x, res.y, 4, ptr, 0);
             } else if (extension == ".bmp") {
-                stbi_write_bmp(path_str.c_str(), res.x, res.y, 4, pixel);
+                stbi_write_bmp(path_str.c_str(), res.x, res.y, 4, ptr);
             } else if (extension == ".tga") {
-                stbi_write_tga(path_str.c_str(), res.x, res.y, 4, pixel);
+                stbi_write_tga(path_str.c_str(), res.x, res.y, 4, ptr);
             } else {
                 // jpg or jpeg
-                stbi_write_jpg(path_str.c_str(), res.x, res.y, 4, pixel, 100);
+                stbi_write_jpg(path_str.c_str(), res.x, res.y, 4, ptr, 100);
             }
-            delete_array(pixel);
         }
 
         void Image::convert_to_8bit_image() {
@@ -354,20 +349,36 @@ namespace luminous {
             DCHECK(ptr != nullptr);
             auto extension = to_lower(fn.extension().string());
             if (extension == ".exr") {
-                save_exr(fn, pixel_format, res, ptr);
+                if (is_32bit(pixel_format)) {
+                    save_exr(fn, pixel_format, res, ptr);
+                } else {
+                    auto [format, pixel] = convert_to_32bit(pixel_format, ptr, res);
+                    save_exr(fn, format, res, pixel);
+                    delete_array(pixel);
+                }
             } else if (extension == ".hdr") {
-                save_hdr(fn, pixel_format, res, ptr);
+                if (is_32bit(pixel_format)) {
+                    save_hdr(fn, pixel_format, res, ptr);
+                } else {
+                    auto [format, pixel] = convert_to_32bit(pixel_format, ptr, res);
+                    save_hdr(fn, format, res, pixel);
+                    delete_array(pixel);
+                }
             } else {
-                save_other(fn, pixel_format, res, ptr);
+                if (is_8bit(pixel_format)) {
+                    save_other(fn, pixel_format, res, ptr);
+                } else {
+                    auto [format, pixel] = convert_to_8bit(pixel_format, ptr, res);
+                    save_other(fn, format, res, pixel);
+                    delete_array(pixel);
+                }
             }
             LUMINOUS_INFO("save picture ", fn);
         }
 
         std::pair<PixelFormat, const std::byte *>
         Image::convert_to_32bit(PixelFormat pixel_format, const std::byte *ptr, uint2 res) {
-            if (is_32bit(pixel_format)) {
-                return {pixel_format, ptr};
-            }
+            DCHECK(is_8bit(pixel_format))
             uint pixel_num = res.x * res.y;
             const std::byte *pixel = nullptr;
             switch (pixel_format) {
@@ -415,9 +426,7 @@ namespace luminous {
 
         std::pair<PixelFormat, const std::byte *>
         Image::convert_to_8bit(PixelFormat pixel_format, const std::byte *ptr, uint2 res) {
-            if (is_8bit(pixel_format)) {
-                return {pixel_format, ptr};
-            }
+            DCHECK(is_32bit(pixel_format))
             uint pixel_num = res.x * res.y;
             const std::byte *pixel = nullptr;
             switch (pixel_format) {
