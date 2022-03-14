@@ -67,8 +67,8 @@ namespace luminous {
             }
 
             LM_XPU void compute_PDF_dir() {
-                float3 wi_un = lec.pos - lsc.pos;
-                float PDF = luminous::PDF_dir(lec.PDF_pos, lsc.ng, -wi_un);
+                float3 wo_un = lsc.pos - lec.pos;
+                float PDF = luminous::PDF_dir(lec.PDF_pos, lec.ng, wo_un);
                 PDF_dir = select(is_inf(PDF), 0, PDF);
             }
 

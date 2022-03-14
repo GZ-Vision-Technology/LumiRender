@@ -35,8 +35,8 @@ namespace luminous {
         }
 
         float AreaLight::PDF_Li(const LightSampleContext &p_ref, const LightEvalContext &p_light,
-                                float3 wi_un, const SceneData *data) const {
-            float PDF = luminous::PDF_dir(p_light.PDF_pos, p_light.ng, -wi_un);
+                                float3 place_holder, const SceneData *data) const {
+            float PDF = luminous::PDF_dir(p_light.PDF_pos, p_light.ng, p_ref.pos - p_light.pos);
             return select(is_inf(PDF), 0, PDF);
         }
 

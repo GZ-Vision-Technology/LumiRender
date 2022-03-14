@@ -90,7 +90,7 @@ namespace luminous {
                     Li = vertex->next_si.Le(-vertex->wi, data);
                     light_PMF = PMF(*vertex->next_si.light);
                     light_PDF = vertex->next_si.light->PDF_Li(LightSampleContext(si), LightEvalContext{vertex->next_si},
-                                                        vertex->wi, data);
+                                                        make_float3(), data);
                 } else if (!vertex->found_intersection && infinite_light_num() != 0) {
                     const Light &light = infinite_light_at(0);
                     light_PMF = PMF(light);
