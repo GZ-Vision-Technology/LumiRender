@@ -42,7 +42,7 @@ namespace luminous {
         }
 
         int PCGSampler::compute_dimension(int depth) const {
-            return 6 + depth * 7;
+            return 5 + depth * 7;
         }
 
         float PCGSampler::next_1d() {
