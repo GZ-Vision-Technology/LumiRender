@@ -468,17 +468,20 @@
         }
     },
     "integrator": {
-        // "type": "PT",
-        "type": "WavefrontPT",
+        "type": "PT",
+        // "type": "WavefrontPT",
         "param": {
             "min_depth": 0,
             "max_depth": 1,
             "rr_threshold": 10
         }
     },
+    "debug" : {
+        "pixel" : [372, 137]
+    },
     "output": {
-        // "fn": "cornell-box-mg.png",
-        "fn": "cornell-box-wf.png",
+        "fn": "cornell-box-mg.png",
+        // "fn": "cornell-box-wf.png",
         "dispatch_num": 1,
         "tone_map": 0
     }

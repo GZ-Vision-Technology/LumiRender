@@ -41,7 +41,8 @@ namespace luminous {
         }
 
         Spectrum LightSampler::MIS_sample_light(const SurfaceInteraction &si, const BSDFWrapper &bsdf, Sampler &sampler,
-                                                uint64_t traversable_handle, const SceneData *scene_data) const {
+                                                uint64_t traversable_handle, const SceneData *scene_data,
+                                                bool debug) const {
             auto sampled_light = sample(LightSampleContext(si), sampler.next_1d());
             float light_PDF = 0, bsdf_PDF = 0;
             Spectrum bsdf_val(0.f), Li(0.f);
@@ -90,14 +91,15 @@ namespace luminous {
                     Li = vertex->next_si.Le(-vertex->wi, data);
                     light_PMF = PMF(*vertex->next_si.light);
                     light_PDF = vertex->next_si.light->PDF_Li(LightSampleContext(si), LightEvalContext{vertex->next_si},
-                                                        make_float3(), data);
+                                                              make_float3(), data);
                 } else if (!vertex->found_intersection && infinite_light_num() != 0) {
                     const Light &light = infinite_light_at(0);
                     light_PMF = PMF(light);
                     LightLiSample lls(LightSampleContext(si), ray.direction());
                     lls = light.Li(lls, data);
                     Li = lls.L;
-                    light_PDF = light.PDF_Li(LightSampleContext(si), LightEvalContext{vertex->next_si}, vertex->wi, data);
+                    light_PDF = light.PDF_Li(LightSampleContext(si), LightEvalContext{vertex->next_si}, vertex->wi,
+                                             data);
                 }
                 float weight = bsdf_sample.is_specular() ? 1 : MIS_weight(bsdf_PDF, light_PDF);
                 Ld = bsdf_val * Li * weight / bsdf_PDF / light_PMF;
@@ -111,7 +113,7 @@ namespace luminous {
                                                         const SceneData *scene_data,
                                                         PathVertex *vertex) const {
             auto bsdf = si.compute_BSDF(scene_data);
-            Spectrum Ld = MIS_sample_light(si, bsdf, sampler, traversable_handle, scene_data);
+            Spectrum Ld = MIS_sample_light(si, bsdf, sampler, traversable_handle, scene_data, vertex->debug);
             Ld += MIS_sample_BSDF(si, bsdf, sampler, traversable_handle, vertex, scene_data);
             return Ld;
         }

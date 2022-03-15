@@ -30,6 +30,7 @@ namespace luminous {
             vector<ModelInstance> instance_list;
             vector<MaterialConfig> material_configs;
             OutputConfig output_config;
+            DebugConfig debug_config;
 
             uint sensor_index{0};
 

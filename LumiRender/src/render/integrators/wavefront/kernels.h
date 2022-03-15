@@ -16,12 +16,15 @@ namespace luminous {
         class Sampler;
 
         struct RTParam {
-            Sampler *sampler;
-            Sensor *camera;
-            int frame_index;
+            Sampler *sampler{};
+            Sensor *camera{};
+            int frame_index{};
             SceneData scene_data;
-            uint min_depth;
-            float rr_threshold;
+            uint min_depth{};
+            float rr_threshold{};
+#ifndef NDEBUG
+            uint2 debug_pixel{};
+#endif
             RTParam() = default;
         };
 

@@ -516,6 +516,12 @@ namespace luminous {
             return ret;
         }
 
+        LM_NODISCARD DebugConfig parse_debug(const ParameterSet &ps) {
+            DebugConfig ret;
+            ret.pixel = ps["pixel"].as_uint2(make_uint2(-1));
+            return ret;
+        }
+
         SP<SceneGraph> JsonParser::parse() const {
             auto shapes = _data["shapes"];
             auto scene_graph = std::make_shared<SceneGraph>(_context);
@@ -528,6 +534,7 @@ namespace luminous {
             scene_graph->material_configs = parse_materials(_data["materials"], scene_graph.get());
             scene_graph->integrator_config = parse_integrator(ParameterSet(_data["integrator"]));
             scene_graph->output_config = parse_output(ParameterSet(_data["output"]));
+            scene_graph->debug_config = parse_debug(ParameterSet(_data.value("debug", DataWrap::object())));
             scene_graph->create_shapes();
             return scene_graph;
         }

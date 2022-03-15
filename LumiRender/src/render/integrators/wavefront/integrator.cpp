@@ -178,6 +178,9 @@ namespace luminous {
             rt_param.scene_data = *_scene->scene_data_host_ptr();
             rt_param.min_depth = _min_depth;
             rt_param.rr_threshold = _rr_threshold;
+#ifndef NDEBUG
+            rt_param.debug_pixel = debug_pixel;
+#endif
             _rt_param.push_back(rt_param);
             _rt_param.allocate_device(1);
             _rt_param.synchronize_to_device();

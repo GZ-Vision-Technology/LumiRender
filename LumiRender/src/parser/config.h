@@ -50,6 +50,10 @@ namespace luminous {
             uint spp{};
         };
 
+        struct DebugConfig : Config {
+            uint2 pixel;
+        };
+
         struct TransformConfig : Config {
             TransformConfig() = default;
 

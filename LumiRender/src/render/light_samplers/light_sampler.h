@@ -61,7 +61,7 @@ namespace luminous {
             LM_ND_XPU Spectrum on_miss(float3 dir, const SceneData *scene_data, Spectrum throughput) const;
 
             LM_ND_XPU Spectrum MIS_sample_light(const SurfaceInteraction &si, const BSDFWrapper &bsdf, Sampler &sampler,
-                                                uint64_t traversable_handle, const SceneData *scene_data) const;
+                                                uint64_t traversable_handle, const SceneData *scene_data, bool debug) const;
 
             LM_ND_XPU Spectrum MIS_sample_BSDF(const SurfaceInteraction &si, const BSDFWrapper &bsdf,
                                                Sampler &sampler, uint64_t traversable_handle, PathVertex *vertex,

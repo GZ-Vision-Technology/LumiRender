@@ -42,7 +42,7 @@ namespace luminous {
                     auto[weight, ray] = _camera->generate_ray(ss);
                     uint spp = sampler.spp();
                     PixelInfo pixel_info;
-                    bool debug = all(pixel == make_uint2(0, 0));
+                    bool debug = all(pixel == debug_pixel);
                     for (int i = 0; i < spp; ++i) {
                         pixel_info += luminous::render::path_tracing(ray, scene<CPUScene>()->scene_handle(), sampler,
                                                                      _min_depth, _max_depth, _rr_threshold,
