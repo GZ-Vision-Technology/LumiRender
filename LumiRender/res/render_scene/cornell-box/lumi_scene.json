@@ -2,7 +2,7 @@
     "textures": [],
     "materials": [
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "LeftWall",
             "param": {
                 "color": [
@@ -13,7 +13,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "RightWall",
             "param": {
                 "color": [
@@ -24,7 +24,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "Floor",
             "param": {
                 "color": [
@@ -35,7 +35,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "Ceiling",
             "param": {
                 "color": [
@@ -46,7 +46,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "BackWall",
             "param": {
                 "color": [
@@ -57,7 +57,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "ShortBox",
             "param": {
                 // "roughness" : [0.002]
@@ -69,7 +69,7 @@
             }
         },
         {
-            "type": "DisneyMaterial",
+            "type": "MatteMaterial",
             "name": "TallBox",
             "param": {
                 // "roughness" : [0.002]
@@ -314,7 +314,7 @@
                             ],
                             [
                                 -0.3286310136318207,
-                                0.290000001192092896,
+                                0.29990000001192092896,
                                 0.37459200620651245,
                                 1.0
                             ]
@@ -407,7 +407,7 @@
                     12,
                     4
                 ],
-                "scale" : 2
+                "scale" : 1
             }
         }
     ],
@@ -457,28 +457,29 @@
                 }
             },
             "filter": {
-                "type": "GaussianFilter",
+                "type": "BoxFilter",
                 "param": {
                     "radius": [
-                        2,
-                        2
+                        0.5,
+                        0.5
                     ]
                 }
             }
         }
     },
     "integrator": {
-        // "type": "PT",
-        "type": "WavefrontPT",
+        "type": "PT",
+        // "type": "WavefrontPT",
         "param": {
             "min_depth": 0,
-            "max_depth": 50,
-            "rr_threshold": 0.2
+            "max_depth": 7,
+            "rr_threshold": 10
         }
     },
     "output": {
-        "fn": "cornell-box-wf-256.png",
-        "dispatch_num": 256,
+        // "fn": "cornell-box-mg-1-bsdf.png",
+        "fn": "cornell-box-wf-1-bsdf.png",
+        "dispatch_num": 1,
         "tone_map": 0
     }
 }
