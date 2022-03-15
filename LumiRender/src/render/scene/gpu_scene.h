@@ -25,7 +25,7 @@ namespace luminous {
 
             void synchronize_to_gpu();
 
-            void fill_scene_data() override;
+            void fill_scene_data(const SP<SceneGraph> &scene_graph) override;
 
             void clear() override;
 

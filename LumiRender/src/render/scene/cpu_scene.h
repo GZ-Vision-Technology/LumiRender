@@ -26,7 +26,7 @@ namespace luminous {
 
             LM_NODISCARD uint64_t scene_handle() const { return (uint64_t)rtc_scene(); }
 
-            void fill_scene_data() override;
+            void fill_scene_data(const SP<SceneGraph> &scene_graph) override;
         };
     } // luminous::cpu
 } // luminous

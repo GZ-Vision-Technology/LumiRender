@@ -42,7 +42,8 @@ namespace luminous {
             _scene_data.allocate_device();
         }
 
-        void GPUScene::fill_scene_data() {
+        void GPUScene::fill_scene_data(const SP<SceneGraph> &scene_graph) {
+            Scene::fill_scene_data(scene_graph);
             _scene_data->positions = this->_positions.const_device_buffer_view();
             _scene_data->normals = this->_normals.const_device_buffer_view();
             _scene_data->tex_coords = this->_tex_coords.const_device_buffer_view();
@@ -98,7 +99,7 @@ namespace luminous {
             init_lights(scene_graph);
             create_device_memory();
             synchronize_to_gpu();
-            fill_scene_data();
+            fill_scene_data(scene_graph);
             shrink_to_fit();
         }
 

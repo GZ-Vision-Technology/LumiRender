@@ -19,7 +19,7 @@ namespace luminous {
             preload_textures(scene_graph);
             init_lights(scene_graph);
             create_device_memory();
-            fill_scene_data();
+            fill_scene_data(scene_graph);
         }
 
         void CPUScene::create_device_memory() {
@@ -28,7 +28,8 @@ namespace luminous {
             _distribution_mgr.init_on_host();
         }
 
-        void CPUScene::fill_scene_data() {
+        void CPUScene::fill_scene_data(const SP<SceneGraph> &scene_graph) {
+            Scene::fill_scene_data(scene_graph);
             _scene_data->positions = this->_positions.const_host_buffer_view();
             _scene_data->normals = this->_normals.const_host_buffer_view();
             _scene_data->tex_coords = this->_tex_coords.const_host_buffer_view();

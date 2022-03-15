@@ -89,11 +89,15 @@ namespace luminous {
 
             virtual void reserve_geometry(const SP<SceneGraph> &scene_graph);
 
-            virtual void fill_scene_data() = 0;
+            virtual void fill_scene_data(const SP<SceneGraph> &scene_graph) {
+                _scene_data->debug_pixel = scene_graph->debug_config.pixel;
+                _scene_data->mis_mode = scene_graph->debug_config.mis_mode;
+            }
 
             LM_NODISCARD const SceneData *scene_data_host_ptr() const { return _scene_data.data(); }
 
-            LM_NODISCARD const SceneData *scene_data_device_ptr() const { return _scene_data.device_ptr<const SceneData *>(); }
+            LM_NODISCARD const SceneData *
+            scene_data_device_ptr() const { return _scene_data.device_ptr<const SceneData *>(); }
 
             LM_NODISCARD uint64_t as_handle() const { return _accelerator->handle(); }
 
