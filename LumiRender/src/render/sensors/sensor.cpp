@@ -11,6 +11,10 @@ namespace luminous {
     inline namespace render {
 
 
+        void Sensor::update_param(float4x4 m, float fov_y) {
+            LUMINOUS_VAR_PTR_DISPATCH(update_param, m, fov_y);
+        }
+
         float Sensor::lens_radius() const {
             LUMINOUS_VAR_PTR_DISPATCH(lens_radius);
         }

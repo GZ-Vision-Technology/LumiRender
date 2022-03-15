@@ -17,6 +17,10 @@ namespace luminous {
 
         CameraBase::CameraBase(float4x4 m, float fov_y, float velocity)
                 : _velocity(velocity) {
+            update_param(m, fov_y);
+        }
+
+        void CameraBase::update_param(float4x4 m, float fov_y) {
             _update(m);
             set_fov_y(fov_y);
         }

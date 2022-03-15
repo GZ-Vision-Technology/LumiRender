@@ -59,6 +59,8 @@ namespace luminous {
 
             LM_XPU CameraBase(float4x4 m, float fov_y, float velocity);
 
+            LM_XPU void update_param(float4x4 m, float fov_y);
+
             LM_XPU void update_film_resolution(uint2 res);
 
             LM_XPU void set_filter(const Filter &filter);

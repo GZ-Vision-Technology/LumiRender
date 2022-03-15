@@ -29,6 +29,8 @@ namespace luminous {
 
             LM_ND_XPU float3 position() const;
 
+            LM_XPU void update_param(float4x4 m, float fov_y);
+
             LM_XPU void set_position(float3 pos);
 
             LM_ND_XPU float lens_radius() const;
