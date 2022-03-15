@@ -77,6 +77,11 @@ namespace luminous {
             BufferView<const Distribution1D> distributions;
             BufferView<const Distribution2D> distribution2ds;
 
+#ifndef NDEBUG
+            uint2 debug_pixel;
+            int mis_mode;
+#endif
+
 #define GEN_GET_FUNCTION(attribute)                                                     \
             ND_XPU_INLINE auto get_##attribute(const MeshHandle &mesh) const {          \
                 return (attribute).sub_view(mesh.vertex_offset, mesh.vertex_count);     \
