@@ -520,7 +520,6 @@ namespace luminous {
             auto shapes = _data["shapes"];
             auto scene_graph = std::make_shared<SceneGraph>(_context);
             scene_graph->shape_configs = parse_shapes(shapes);
-            scene_graph->sensor_config = parse_sensor(ParameterSet(_data["camera"]));
             scene_graph->sensor_configs = parse_sensors(_data["camera"]);
             scene_graph->sampler_config = parse_sampler(ParameterSet(_data["sampler"]));
             scene_graph->light_configs = parse_lights(_data.value("lights", DataWrap()), scene_graph.get());

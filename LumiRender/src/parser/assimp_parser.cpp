@@ -213,7 +213,7 @@ namespace luminous {
             auto scene_graph = std::make_shared<SceneGraph>(_context);
 
             scene_graph->light_configs = parse_lights();
-            scene_graph->sensor_config = parse_camera();
+            scene_graph->sensor_configs.push_back(parse_camera());
 
             return scene_graph;
         }

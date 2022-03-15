@@ -21,7 +21,6 @@ namespace luminous {
             vector<MaterialAttrConfig> _tex_configs;
         public:
             SamplerConfig sampler_config;
-            SensorConfig sensor_config;
             std::vector<SensorConfig> sensor_configs;
             std::vector<ShapeConfig> shape_configs;
             mutable std::vector<LightConfig> light_configs;
