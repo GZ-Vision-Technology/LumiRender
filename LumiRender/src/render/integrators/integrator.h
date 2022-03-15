@@ -34,7 +34,7 @@ namespace luminous {
             Dispatcher *_dispatcher{};
         public:
             uint2 debug_pixel{};
-
+            int mis_mode{};
             Integrator(Device *device, Context *context)
                     : _device(device),
                       _context(context),

@@ -24,6 +24,7 @@ namespace luminous {
             float rr_threshold{};
 #ifndef NDEBUG
             uint2 debug_pixel{};
+            int mis_mode{};
 #endif
             RTParam() = default;
         };
