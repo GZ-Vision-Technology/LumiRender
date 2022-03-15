@@ -59,6 +59,16 @@ namespace luminous {
                     Ld = bsdf_val * Li * weight / light_PDF;
                 }
             }
+#ifndef NDEBUG
+            if (debug) {
+                printf("\nmis light:\n");
+                printf("bsdf val: ");
+                bsdf_val.print();
+                printf("Li: ");
+                Li.print();
+                printf("light PDF : %f, bsdf PDF : %f \n\n", light_PDF, bsdf_PDF);
+            }
+#endif
             Ld = Ld / sampled_light.PMF;
             DCHECK(!has_invalid(Ld));
             return select(lls.valid() && lls.has_contribution(), Ld, Spectrum{0.f});
@@ -101,6 +111,16 @@ namespace luminous {
                     light_PDF = light.PDF_Li(LightSampleContext(si), LightEvalContext{vertex->next_si}, vertex->wi,
                                              data);
                 }
+#ifndef NDEBUG
+                if (vertex->debug) {
+                    printf("\nmis bsdf:\n");
+                    printf("bsdf val: ");
+                    bsdf_val.print();
+                    printf("Li: ");
+                    Li.print();
+                    printf("light PDF : %f, bsdf PDF : %f \n\n", light_PDF, bsdf_PDF);
+                }
+#endif
                 float weight = bsdf_sample.is_specular() ? 1 : MIS_weight(bsdf_PDF, light_PDF);
                 Ld = bsdf_val * Li * weight / bsdf_PDF / light_PMF;
             }

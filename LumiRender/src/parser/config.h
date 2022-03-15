@@ -50,8 +50,15 @@ namespace luminous {
             uint spp{};
         };
 
+        enum MISMode {
+            EMIS,
+            ELight,
+            EBSDF
+        };
+
         struct DebugConfig : Config {
             uint2 pixel;
+            MISMode MIS_mode{EMIS};
         };
 
         struct TransformConfig : Config {

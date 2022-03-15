@@ -477,7 +477,8 @@
         }
     },
     "debug" : {
-        "pixel" : [372, 137]
+        "pixel" : [372, 137],
+        "MIS_mode" : 0
     },
     "output": {
         "fn": "cornell-box-mg.png",

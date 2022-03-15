@@ -519,6 +519,7 @@ namespace luminous {
         LM_NODISCARD DebugConfig parse_debug(const ParameterSet &ps) {
             DebugConfig ret;
             ret.pixel = ps["pixel"].as_uint2(make_uint2(-1));
+            ret.MIS_mode = MISMode(ps["MIS_mode"].as_int(0));
             return ret;
         }
 
