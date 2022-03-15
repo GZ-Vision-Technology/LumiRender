@@ -24,8 +24,6 @@ namespace luminous {
             } else {
                 _scene = std::make_shared<GPUScene>(_device, _context);
             }
-            debug_pixel = scene_graph->debug_config.pixel;
-            mis_mode = scene_graph->debug_config.mis_mode;
             _max_depth = scene_graph->integrator_config.max_depth;
             _min_depth = scene_graph->integrator_config.min_depth;
             _rr_threshold = scene_graph->integrator_config.rr_threshold;

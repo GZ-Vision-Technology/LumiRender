@@ -130,9 +130,9 @@ namespace luminous {
                 float weight = MIS_weight(bsdf_PDF, light_PDF);
                 Spectrum L = item.throughput * lls.L * weight;
                 temp_Li += L / light_select_PMF;
-#ifndef NDEBUG
+#if DEBUG_RENDER
                 uint2 pixel = pixel_sample_state->pixel[item.pixel_index];
-                if (all(pixel == rt_param->debug_pixel)) {
+                if (all(pixel == rt_param->scene_data.debug_pixel)) {
                     printf("\nmis bsdf:\n");
                     printf("bsdf val: ");
                     bsdf_val.print();
@@ -213,9 +213,9 @@ namespace luminous {
                 Ray new_ray = lls.lsc.spawn_ray_to(lls.lec);
                 ShadowRayWorkItem shadow_ray_work_item{new_ray, Ld, mtl_item.pixel_index};
                 shadow_ray_queue->push(shadow_ray_work_item);
-#ifndef NDEBUG
+#if DEBUG_RENDER
                 uint2 pixel = pixel_sample_state->pixel[mtl_item.pixel_index];
-                if (all(pixel == rt_param->debug_pixel)) {
+                if (all(pixel == rt_param->scene_data.debug_pixel)) {
                     printf("\nmis light:\n");
                     printf("bsdf val: ");
                     bsdf_val.print();

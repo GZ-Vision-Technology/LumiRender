@@ -10,6 +10,7 @@
 #include "base_libs/geometry/common.h"
 #include "render/lights/light_util.h"
 
+#define DEBUG_RENDER 1
 
 namespace luminous {
 
@@ -77,7 +78,7 @@ namespace luminous {
             BufferView<const Distribution1D> distributions;
             BufferView<const Distribution2D> distribution2ds;
 
-#ifndef NDEBUG
+#if DEBUG_RENDER
             uint2 debug_pixel;
             int mis_mode;
 #endif

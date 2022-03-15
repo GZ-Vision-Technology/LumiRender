@@ -22,10 +22,6 @@ namespace luminous {
             SceneData scene_data;
             uint min_depth{};
             float rr_threshold{};
-#ifndef NDEBUG
-            uint2 debug_pixel{};
-            int mis_mode{};
-#endif
             RTParam() = default;
         };
 
