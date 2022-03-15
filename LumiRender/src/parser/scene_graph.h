@@ -31,6 +31,8 @@ namespace luminous {
             vector<MaterialConfig> material_configs;
             OutputConfig output_config;
 
+            uint sensor_index{0};
+
             size_t mesh_num{};
             size_t position_num{};
             size_t tri_num{};
@@ -57,6 +59,10 @@ namespace luminous {
 
             LM_NODISCARD const vector<MaterialAttrConfig> &tex_configs() const {
                 return _tex_configs;
+            }
+
+            const SensorConfig &cur_sensor() const {
+                return sensor_configs[sensor_index];
             }
 
             void set_tex_configs(vector<MaterialAttrConfig> &&tcs) {

@@ -32,7 +32,7 @@ namespace luminous {
 
             _camera.init(1, lstd::Sizer<Sensor>::compound_size() +
                             lstd::Sizer<Film>::size);
-            _camera.add_element(scene_graph->sensor_configs[0]);
+            _camera.add_element(scene_graph->cur_sensor());
 
             init_on_device();
             LUMINOUS_INFO(get_arena().description());
