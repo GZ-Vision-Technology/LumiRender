@@ -105,6 +105,8 @@ namespace luminous {
 
             void allocate_memory();
 
+            void clear_queue_memory();
+
             LM_NODISCARD uint frame_index() const override { return _rt_param->frame_index; }
 
             void intersect_closest(int depth);

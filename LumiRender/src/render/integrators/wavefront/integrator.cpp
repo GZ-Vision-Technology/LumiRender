@@ -17,6 +17,15 @@ namespace luminous {
 
         }
 
+        void WavefrontPT::clear_queue_memory() {
+            _ray_queues.clear();
+            _shadow_ray_queue.clear();
+            _hit_area_light_queue.clear();
+            _escaped_ray_queue.clear();
+            _material_eval_queue.clear();
+            _pixel_sample_state.clear();
+        }
+
         void WavefrontPT::load_module() {
             if (_device->is_cpu()) {
                 return;
@@ -25,7 +34,8 @@ namespace luminous {
         }
 
         void WavefrontPT::update_resolution(uint2 resolution) {
-
+            clear_queue_memory();
+            allocate_memory();
         }
 
         void WavefrontPT::init(const std::shared_ptr<SceneGraph> &scene_graph) {
@@ -45,7 +55,7 @@ namespace luminous {
             auto n_passes = (res.y + _scanline_per_pass - 1) / _scanline_per_pass;
             _scanline_per_pass = (res.y + n_passes - 1) / n_passes;
             _max_queue_size = res.x * _scanline_per_pass;
-            
+
             _ray_queues.emplace_back(_max_queue_size, _device);
             _ray_queues.emplace_back(_max_queue_size, _device);
             _ray_queues.allocate_device();
@@ -112,6 +122,8 @@ namespace luminous {
 
                     check_wait();
                 }
+                _add_samples.launch(*_dispatcher, _max_queue_size,
+                                    _pixel_sample_state.device_data());
             }
         }
 
@@ -121,8 +133,6 @@ namespace luminous {
                 render_per_sample(_rt_param->frame_index + sample_idx, spp);
                 if (progressor) progressor->update(1);
             }
-            _add_samples.launch(*_dispatcher, _max_queue_size,
-                                _pixel_sample_state.device_data());
             _dispatcher->wait();
             _rt_param->frame_index += spp;
             _rt_param.synchronize_to_device();
