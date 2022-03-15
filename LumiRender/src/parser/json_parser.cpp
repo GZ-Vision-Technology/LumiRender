@@ -325,6 +325,18 @@ namespace luminous {
             return ret;
         }
 
+        std::vector<SensorConfig> parse_sensors(const DataWrap &data) {
+            std::vector<SensorConfig> ret;
+            if (data.is_array()) {
+                for (const auto &elm : data) {
+                    ret.push_back(parse_sensor(ParameterSet(elm)));
+                }
+            } else {
+                ret.push_back(parse_sensor(ParameterSet(data)));
+            }
+            return ret;
+        }
+
         //    {
         //        "type": "PointLight",
         //         "param": {
@@ -406,9 +418,6 @@ namespace luminous {
             std::vector<MaterialAttrConfig> ret;
             for (const auto &texture : textures) {
                 MaterialAttrConfig config = parse_texture(ParameterSet(texture));
-//                if (is_contain(ret, config)) {
-//                    continue;
-//                }
                 config.fill_tex_idx(ret.size());
                 ret.push_back(config);
             }
@@ -512,6 +521,7 @@ namespace luminous {
             auto scene_graph = std::make_shared<SceneGraph>(_context);
             scene_graph->shape_configs = parse_shapes(shapes);
             scene_graph->sensor_config = parse_sensor(ParameterSet(_data["camera"]));
+            scene_graph->sensor_configs = parse_sensors(_data["camera"]);
             scene_graph->sampler_config = parse_sampler(ParameterSet(_data["sampler"]));
             scene_graph->light_configs = parse_lights(_data.value("lights", DataWrap()), scene_graph.get());
             scene_graph->light_sampler_config = parse_light_sampler(ParameterSet(_data["light_sampler"]));
