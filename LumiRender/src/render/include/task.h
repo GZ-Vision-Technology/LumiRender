@@ -13,6 +13,7 @@
 #include "core/backend/managed.h"
 #include "render/sensors/common.h"
 #include "util/progressreporter.h"
+#include "parser/scene_graph.h"
 
 namespace luminous {
     inline namespace render {
@@ -26,7 +27,7 @@ namespace luminous {
             Context *_context{nullptr};
             UP<Integrator> _integrator;
             double _dt{0};
-            OutputConfig _output_config;
+            std::shared_ptr<SceneGraph> _scene_graph{};
             int _dispatch_num{0};
             FBState _fb_state{};
             Managed<float4, float4> _render_buffer{_device.get()};
@@ -40,9 +41,8 @@ namespace luminous {
                       _context(context) {}
 
             void init(const Parser &parser);
-            void post_init();
 
-            LM_NODISCARD std::shared_ptr<SceneGraph> build_scene_graph(const Parser &parser);
+            void post_init();
 
             void update() {
                 _dispatch_num = 0;
@@ -56,7 +56,7 @@ namespace luminous {
             void save_to_file();
 
             LM_NODISCARD bool complete() const {
-                return _dispatch_num >= _output_config.dispatch_num;
+                return _dispatch_num >= _scene_graph->output_config.dispatch_num;
             }
 
             bool result_available() const {

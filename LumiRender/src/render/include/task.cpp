@@ -125,8 +125,8 @@ namespace luminous {
         }
 
         void Task::init(const Parser &parser) {
-            auto scene_graph = build_scene_graph(parser);
-            const std::string type = scene_graph->integrator_config.type();
+            _scene_graph = parser.parse();
+            const std::string type = _scene_graph->integrator_config.type();
             if (type == "PT") {
                 if (_device->is_cpu()) {
                     _integrator = std::make_unique<CPUPathTracer>(_device.get(), _context);
@@ -136,14 +136,14 @@ namespace luminous {
             } else if (type == "WavefrontPT") {
                 _integrator = std::make_unique<WavefrontPT>(_device.get(), _context);
             }
-            _integrator->init(scene_graph);
+            _integrator->init(_scene_graph);
             update_device_buffer();
         }
 
         void Task::post_init() {
-            if(!_context->show_window()) {
-                _progressor.reset("Rendering", _output_config.dispatch_num * _output_config.frame_per_dispatch, false, false,
-                   _context->progressinfo_port());
+            if (!_context->show_window()) {
+                _progressor.reset("Rendering", _scene_graph->output_config.dispatch_num, false, false,
+                                  _context->progressinfo_port());
             }
         }
 
@@ -151,15 +151,9 @@ namespace luminous {
             _progressor.done();
         }
 
-        std::shared_ptr<SceneGraph> Task::build_scene_graph(const Parser &parser) {
-            auto scene_graph = parser.parse();
-            _output_config = scene_graph->output_config;
-            return scene_graph;
-        }
-
         void Task::save_to_file() {
 
-            auto &oc = _output_config;
+            auto &oc = _scene_graph->output_config;
 
             float4 *buffer = get_buffer();
             auto res = resolution();
@@ -183,7 +177,7 @@ namespace luminous {
             luminous_fs::path scene_path = _context->scene_file();
             if (film_out_path.empty()) {
                 // if command line --output is empty, retrieve path from scene description file.
-                film_out_path = _output_config.fn;
+                film_out_path = _scene_graph->output_config.fn;
             }
 
             if (film_out_path.empty() || !film_out_path.has_filename()) {
@@ -209,7 +203,7 @@ namespace luminous {
                     val.w = 1.f;
                     *fp = Spectrum::tone_mapping(val, oc.tone_map);
                 });
-                auto denoised_fn = change_fn(film_out_path,"-denoised");
+                auto denoised_fn = change_fn(film_out_path, "-denoised");
                 image_denoised.save(denoised_fn);
             }
             if (oc.albedo) {
@@ -233,13 +227,13 @@ namespace luminous {
 
         void Task::render_gui(double dt) {
             _dt = dt;
-            _integrator->render(_output_config.frame_per_dispatch, &_progressor);
+            _integrator->render(1, &_progressor);
             ++_dispatch_num;
         }
 
         float Task::get_fps() const {
             return _progressor.is_valid() ? static_cast<float>(_progressor.elapsed_seconds() /
-                                                               (_output_config.frame_per_dispatch * _output_config.dispatch_num))
+                                                               (_scene_graph->output_config.dispatch_num))
                                           : .0f;
         }
     }
