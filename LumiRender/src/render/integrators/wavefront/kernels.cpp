@@ -128,8 +128,6 @@ namespace luminous {
                 float bsdf_PDF = item.prev_vertex.bsdf_PDF;
                 Spectrum bsdf_val = item.prev_vertex.bsdf_val;
                 float weight = MIS_weight(bsdf_PDF, light_PDF);
-                Spectrum L = item.throughput * lls.L * weight;
-                temp_Li += L / light_select_PMF;
 #if DEBUG_RENDER
                 uint2 pixel = pixel_sample_state->pixel[item.pixel_index];
                 if (all(pixel == rt_param->scene_data.debug_pixel)) {
@@ -140,7 +138,11 @@ namespace luminous {
                     lls.L.print();
                     printf("light PDF : %f, bsdf PDF : %f \n\n", light_PDF, bsdf_PDF);
                 }
+                weight = rt_param->scene_data.mis_mode == 0 ? weight : (rt_param->scene_data.mis_mode == 2 ? 1.f : 0.f);
 #endif
+                Spectrum L = item.throughput * lls.L * weight;
+                temp_Li += L / light_select_PMF;
+
             }
             pixel_sample_state->Li[item.pixel_index] = temp_Li;
         }
@@ -208,11 +210,6 @@ namespace luminous {
                 float light_PDF = lls.PDF_dir;
                 float weight = MIS_weight(light_PDF, bsdf_PDF);
                 Spectrum bsdf_val = bsdf.eval(mtl_item.wo, lls.wi);
-                Spectrum Ld = lls.L * bsdf_val * weight / light_PDF * mtl_item.throughput / sampled_light.PMF;
-                DCHECK(!has_invalid(Ld))
-                Ray new_ray = lls.lsc.spawn_ray_to(lls.lec);
-                ShadowRayWorkItem shadow_ray_work_item{new_ray, Ld, mtl_item.pixel_index};
-                shadow_ray_queue->push(shadow_ray_work_item);
 #if DEBUG_RENDER
                 uint2 pixel = pixel_sample_state->pixel[mtl_item.pixel_index];
                 if (all(pixel == rt_param->scene_data.debug_pixel)) {
@@ -223,7 +220,14 @@ namespace luminous {
                     lls.L.print();
                     printf("light PDF : %f, bsdf PDF : %f \n\n", light_PDF, bsdf_PDF);
                 }
+                weight = rt_param->scene_data.mis_mode == 0 ? weight : (rt_param->scene_data.mis_mode == 1 ? 1.f : 0.f);
 #endif
+                Spectrum Ld = lls.L * bsdf_val * weight / light_PDF * mtl_item.throughput / sampled_light.PMF;
+                DCHECK(!has_invalid(Ld))
+                Ray new_ray = lls.lsc.spawn_ray_to(lls.lec);
+                ShadowRayWorkItem shadow_ray_work_item{new_ray, Ld, mtl_item.pixel_index};
+                shadow_ray_queue->push(shadow_ray_work_item);
+
             }
         }
 
