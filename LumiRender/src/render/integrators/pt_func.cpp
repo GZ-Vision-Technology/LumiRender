@@ -74,11 +74,12 @@ namespace luminous {
                     fill_denoise_data = true;
                 }
 
+                float rr = sampler.next_1d();
                 Spectrum rr_throughput = throughput * eta_scale;
                 float max_comp = rr_throughput.max_comp();
                 if (max_comp < rr_threshold && bounces >= min_depth) {
                     float q = min(0.95f, max_comp);
-                    if (q < sampler.next_1d()) {
+                    if (q < rr) {
                         break;
                     }
                     throughput /= q;
