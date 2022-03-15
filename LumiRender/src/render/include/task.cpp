@@ -227,7 +227,6 @@ namespace luminous {
                 });
                 image_normal.save(change_fn(film_out_path, "-normal_remapping"));
             }
-            // todo hdr save bug
             image.save(film_out_path);
         }
 
