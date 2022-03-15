@@ -87,6 +87,8 @@ namespace luminous {
 
             WavefrontPT(Device *device, Context *context);
 
+            void update_resolution(uint2 res) override;
+
             void init(const shared_ptr<SceneGraph> &scene_graph) override;
 
             void reset_queues(int depth);

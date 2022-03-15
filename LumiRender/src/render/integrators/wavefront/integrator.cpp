@@ -24,8 +24,20 @@ namespace luminous {
             _module = create_cuda_module(wavefront_kernels);
         }
 
+        void WavefrontPT::update_resolution(uint2 resolution) {
+
+        }
+
         void WavefrontPT::init(const std::shared_ptr<SceneGraph> &scene_graph) {
             Integrator::init(scene_graph);
+            init_aggregate();
+            load_module();
+            init_rt_param();
+            init_kernels();
+            allocate_memory();
+        }
+
+        void WavefrontPT::allocate_memory() {
             // todo: make this configurable. Base it on the amount of GPU memory?
             int max_samples = 1024 * 1024;
             uint2 res = resolution();
@@ -33,14 +45,7 @@ namespace luminous {
             auto n_passes = (res.y + _scanline_per_pass - 1) / _scanline_per_pass;
             _scanline_per_pass = (res.y + n_passes - 1) / n_passes;
             _max_queue_size = res.x * _scanline_per_pass;
-            allocate_memory();
-            init_aggregate();
-            load_module();
-            init_rt_param();
-            init_kernels();
-        }
-
-        void WavefrontPT::allocate_memory() {
+            
             _ray_queues.emplace_back(_max_queue_size, _device);
             _ray_queues.emplace_back(_max_queue_size, _device);
             _ray_queues.allocate_device();

@@ -55,18 +55,13 @@ namespace luminous {
 
             LM_NODISCARD virtual Sensor *camera();
 
+            virtual void update_resolution(uint2 resolution) {}
+
             LM_NODISCARD uint2 resolution() const;
 
             virtual void update() = 0;
 
             virtual void render(int frame_num, ProgressReporter *progressor) = 0;
-        };
-
-        class GPUIntegrator : public Integrator {
-
-        public:
-            GPUIntegrator(Device *device, Context *context)
-                    : Integrator(device, context) {}
         };
     }
 }

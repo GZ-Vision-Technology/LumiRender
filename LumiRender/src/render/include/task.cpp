@@ -57,6 +57,7 @@ namespace luminous {
         void Task::update_film_resolution(uint2 res) {
             camera()->update_film_resolution(res);
             update_device_buffer();
+            _integrator->update_resolution(res);
         }
 
         void Task::update_device_buffer() {
