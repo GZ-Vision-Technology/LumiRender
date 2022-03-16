@@ -531,9 +531,9 @@
         // "MIS_mode" : 2
     },
     "output": {
-        // "fn": "cornell-box-mg.png",
-        "fn": "cornell-box-wf.png",
-        "dispatch_num": 2,
+        "fn": "cornell-box-mg.png",
+        // "fn": "cornell-box-wf.png",
+        "spp": 2,
         "tone_map": 0
     }
 }

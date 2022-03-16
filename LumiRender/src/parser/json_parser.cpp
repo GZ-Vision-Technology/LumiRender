@@ -315,6 +315,7 @@ namespace luminous {
             ParameterSet param(ps["param"]);
             ret.fov_y = param["fov_y"].as_float();
             ret.velocity = param["velocity"].as_float();
+            ret.name = ps["name"].as_string();
             ret.transform_config = parse_transform(param["transform"]);
             if (type == "ThinLensCamera") {
                 ret.focal_distance = param["focal_distance"].as_float(5);
@@ -508,8 +509,7 @@ namespace luminous {
             OutputConfig ret;
             ret.fn = ps["fn"].as_string("luminous.png");
             ret.tone_map = EToneMap(ps["tone_map"].as_int(0));
-            ret.dispatch_num = ps["dispatch_num"].as_int(0);
-            ret.frame_per_dispatch = ps["frame_per_dispatch"].as_int(1);
+            ret.spp = ps["spp"].as_int(32);
             ret.albedo = ps["albedo"].as_bool(false);
             ret.normal = ps["normal"].as_bool(false);
             ret.normal_remapping = ps["normal_remapping"].as_bool(false);

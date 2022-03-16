@@ -142,7 +142,7 @@ namespace luminous {
 
         void Task::post_init() {
             if (!_context->show_window()) {
-                _progressor.reset("Rendering", _scene_graph->output_config.dispatch_num, false, false,
+                _progressor.reset("Rendering", _scene_graph->output_config.spp, false, false,
                                   _context->progressinfo_port());
             }
         }
@@ -228,12 +228,12 @@ namespace luminous {
         void Task::render_gui(double dt) {
             _dt = dt;
             _integrator->render(1, &_progressor);
-            ++_dispatch_num;
+            ++_spp;
         }
 
         float Task::get_fps() const {
             return _progressor.is_valid() ? static_cast<float>(_progressor.elapsed_seconds() /
-                                                               (_scene_graph->output_config.dispatch_num))
+                                                               (_scene_graph->output_config.spp))
                                           : .0f;
         }
     }

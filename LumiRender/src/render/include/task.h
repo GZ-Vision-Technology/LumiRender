@@ -28,7 +28,7 @@ namespace luminous {
             UP<Integrator> _integrator;
             double _dt{0};
             std::shared_ptr<SceneGraph> _scene_graph{};
-            int _dispatch_num{0};
+            int _spp{0};
             FBState _fb_state{};
             Managed<float4, float4> _render_buffer{_device.get()};
             Managed<float4, float4> _normal_buffer{_device.get()};
@@ -45,7 +45,7 @@ namespace luminous {
             void post_init();
 
             void update() {
-                _dispatch_num = 0;
+                _spp = 0;
                 _integrator->update();
             }
 
@@ -56,11 +56,11 @@ namespace luminous {
             void save_to_file();
 
             LM_NODISCARD bool complete() const {
-                return _dispatch_num >= _scene_graph->output_config.dispatch_num;
+                return _spp >= _scene_graph->output_config.spp;
             }
 
             bool result_available() const {
-                return _dispatch_num > 0;
+                return _spp > 0;
             }
 
             void render_gui(double dt);

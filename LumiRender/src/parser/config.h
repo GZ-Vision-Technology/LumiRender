@@ -238,8 +238,7 @@ namespace luminous {
         struct OutputConfig : Config {
             std::string fn;
             EToneMap tone_map{optics::Gamma};
-            int dispatch_num{};
-            int frame_per_dispatch{};
+            int spp{};
             bool normal{false};
             bool albedo{false};
             bool normal_remapping{false};
