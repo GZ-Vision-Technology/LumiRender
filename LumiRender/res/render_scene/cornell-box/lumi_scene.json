@@ -534,9 +534,9 @@
         // "fn": "cornell-box-mg.png",
         "fn": "cornell-box-wf.png",
         "spp": 64,
-        "albedo" : true,
-        "normal" : true,
-        "normal_remapping" : true,
+        // "albedo" : true,
+        // "normal" : true,
+        // "normal_remapping" : true,
         "tone_map": 0
     }
 }

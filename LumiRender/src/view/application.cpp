@@ -15,8 +15,10 @@
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
+
 #include <windows.h>
 #include <ShlObj.h>
+
 #endif
 
 namespace luminous {
@@ -28,7 +30,7 @@ namespace luminous {
 #pragma endregion "miscellaneous"
 
     App::~App() {
-        if(_show_window) {
+        if (_show_window) {
             ImGui_ImplOpenGL3_Shutdown();
             ImGui_ImplGlfw_Shutdown();
             ImGui::DestroyContext();
@@ -80,7 +82,7 @@ namespace luminous {
 
     void App::on_resize(const uint2 &new_size) {
 
-        if(new_size.x <= 0 || new_size.y <= 0)
+        if (new_size.x <= 0 || new_size.y <= 0)
             return;
 
         glViewport(0, 0, new_size.x, new_size.y);
@@ -92,7 +94,8 @@ namespace luminous {
 
         glGenTextures(1, &_gl_ctx.fb_texture);
         glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
-        GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, new_size.x, new_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
+        GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, new_size.x, new_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                              nullptr));
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
                         GL_REPEAT);// set texture wrapping to GL_REPEAT (default wrapping method)
@@ -101,7 +104,7 @@ namespace luminous {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        if(_is_gpu_rendering) {
+        if (_is_gpu_rendering) {
             CUDA_CHECK(cudaGraphicsGLRegisterImage(
                     reinterpret_cast<cudaGraphicsResource_t *>(&_render_buffer_shared_resource),
                     _gl_ctx.fb_texture,
@@ -112,26 +115,24 @@ namespace luminous {
 
 
     void App::init(const string &title, const int2 &size, Context *context, const Parser &parser) {
-        {
-            TASK_TAG("launch app")
+        TASK_TAG("launch app")
 
-            _is_gpu_rendering = context->use_gpu();
+        _is_gpu_rendering = context->use_gpu();
 
-            _size = size;
-            if (context->use_gpu()) {
-                _task = std::make_unique<Task>(create_cuda_device(), context);
-            } else {
-                _task = std::make_unique<Task>(create_cpu_device(), context);
-            }
-            _task->init(parser);
-
-            _show_window = context->show_window();
-
-            if (_show_window) {
-                init_with_gui(title);
-            }
+        _size = size;
+        if (context->use_gpu()) {
+            _task = std::make_unique<Task>(create_cuda_device(), context);
+        } else {
+            _task = std::make_unique<Task>(create_cpu_device(), context);
         }
-        _task->post_init();
+        _task->init(parser);
+
+        _show_window = context->show_window();
+
+        if (_show_window) {
+            init_with_gui(title);
+        }
+
     }
 
     void App::init_with_gui(const std::string &title) {
@@ -146,8 +147,8 @@ namespace luminous {
         };
 
         /*! callback for a char key press or release */
-        auto glfw_char_event = [](GLFWwindow * window,
-                                    unsigned int key){};
+        auto glfw_char_event = [](GLFWwindow *window,
+                                  unsigned int key) {};
 
         /*! callback for a key press or release*/
         auto glfw_key_event = [](GLFWwindow *window,
@@ -171,7 +172,7 @@ namespace luminous {
             ((App *) glfwGetWindowUserPointer(window))->on_mouse_event(button, action, mods);
         };
 
-        auto glfw_scroll_event = [](GLFWwindow * window, double scroll_x, double scroll_y) {
+        auto glfw_scroll_event = [](GLFWwindow *window, double scroll_x, double scroll_y) {
             ((App *) glfwGetWindowUserPointer(window))->on_scroll_event(scroll_x, scroll_y);
         };
 
@@ -290,8 +291,8 @@ namespace luminous {
         constexpr GLenum rb_pixel_data_type = std::is_same_v<FrameBufferType, float4> ? GL_FLOAT : GL_UNSIGNED_BYTE;
 
         uint2 film_dim = _task->resolution();
-        
-        if(_is_gpu_rendering) {
+
+        if (_is_gpu_rendering) {
             cudaSurfaceObject_t s;
             cudaResourceDesc desc;
             CUDA_CHECK(cudaGraphicsMapResources(1,
@@ -299,16 +300,19 @@ namespace luminous {
                                                 (cudaStream_t) 0));
             cudaArray_t mipmap;
             CUDA_CHECK(cudaGraphicsSubResourceGetMappedArray(&mipmap,
-                                                             reinterpret_cast<cudaGraphicsResource_t>(_render_buffer_shared_resource), 0, 0));
+                                                             reinterpret_cast<cudaGraphicsResource_t>(_render_buffer_shared_resource),
+                                                             0, 0));
 
-            CUDA_CHECK(cudaMemcpyToArray(mipmap, 0, 0, _task->get_frame_buffer(false), film_dim.x*film_dim.y*sizeof(FrameBufferType), cudaMemcpyDeviceToDevice));
+            CUDA_CHECK(cudaMemcpyToArray(mipmap, 0, 0, _task->get_frame_buffer(false),
+                                         film_dim.x * film_dim.y * sizeof(FrameBufferType), cudaMemcpyDeviceToDevice));
 
             CUDA_CHECK(cudaGraphicsUnmapResources(1,
                                                   reinterpret_cast<cudaGraphicsResource_t *>(&_render_buffer_shared_resource),
                                                   (cudaStream_t) 0));
         } else {
             glBindTexture(GL_TEXTURE_2D, _gl_ctx.fb_texture);
-            GL_CHECK(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, film_dim.x, film_dim.y, GL_RGBA, rb_pixel_data_type, (const void *) _task->get_frame_buffer()));
+            GL_CHECK(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, film_dim.x, film_dim.y, GL_RGBA, rb_pixel_data_type,
+                                     (const void *) _task->get_frame_buffer()));
         }
     }
 
@@ -350,17 +354,18 @@ namespace luminous {
 
 
     int App::run_with_cli() {
-        while (!_task->complete()) {
-            check_and_update();
-            render(.0);
-        }
-        _task->finalize();
+        _task->run();
+//        while (!_task->complete()) {
+//            check_and_update();
+//            render(.0);
+//        }
+//        _task->finalize();
 
-        if(_task->result_available()) {
-            _task->save_to_file();
-
-            printf("Rendering complete, FPS: %.2f", _task->get_fps());
-        }
+//        if(_task->result_available()) {
+//            _task->save_to_file();
+//
+//            printf("Rendering complete, FPS: %.2f", _task->get_fps());
+//        }
 
         return 0;
     }
@@ -416,11 +421,11 @@ namespace luminous {
         }
 
         // check Cuda/OpenGL interoperation support
-        if(_is_gpu_rendering) {
+        if (_is_gpu_rendering) {
             // initalize cuda
             // CUDA_CHECK(cudaFree(nullptr));
             // CUDA_CHECK(cudaSetDevice(0));
-            
+
         }
 
         init_imgui();

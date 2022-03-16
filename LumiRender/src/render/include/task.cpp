@@ -148,6 +148,7 @@ namespace luminous {
         }
 
         void Task::run() {
+            post_init();
             auto sensor_configs = _scene_graph->sensor_configs;
 
             auto get_fn = [&]() -> luminous_fs::path {
@@ -159,11 +160,14 @@ namespace luminous {
 
             for (const auto &config : sensor_configs) {
                 _spp = 0;
+                update();
                 for (int i = 0; i < spp; ++i) {
                     render(0);
                 }
-
+                save_render_result(get_fn().string());
+                break;
             }
+            finalize();
         }
 
         void Task::finalize() {
