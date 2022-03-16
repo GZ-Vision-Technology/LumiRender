@@ -147,6 +147,14 @@ namespace luminous {
             }
         }
 
+        luminous_fs::path change_fn(const std::filesystem::path &output_path,
+                                    const std::string &suffix,
+                                    std::string ext = "") {
+            ext = ext.empty() ? output_path.extension().string() : ext;
+            auto fn = output_path.stem().string() + suffix + ext;
+            return output_path.parent_path() / fn;
+        }
+
         void Task::run() {
             post_init();
             auto sensor_configs = _scene_graph->sensor_configs;
@@ -164,7 +172,9 @@ namespace luminous {
                 for (int i = 0; i < spp; ++i) {
                     render(0);
                 }
-                save_render_result(get_fn().string());
+                luminous_fs::path fn = get_fn();
+                fn = change_fn(fn, config.name);
+                save_render_result(fn.string());
                 break;
             }
             finalize();
@@ -185,14 +195,6 @@ namespace luminous {
                 float4 val = buffer[i];
                 *fp = Spectrum::tone_mapping(val, oc.tone_map);
             });
-
-            auto change_fn = [&](const std::filesystem::path &output_path,
-                                 const std::string &suffix,
-                                 std::string ext = "") {
-                ext = ext.empty() ? output_path.extension().string() : ext;
-                auto fn = output_path.stem().string() + suffix + ext;
-                return output_path.parent_path() / fn;
-            };
 
             luminous_fs::path film_output_path = _context->output_dir() / luminous_fs::path(fn);
             image.save(film_output_path);
