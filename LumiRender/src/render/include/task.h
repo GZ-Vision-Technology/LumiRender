@@ -63,7 +63,11 @@ namespace luminous {
                 return _spp > 0;
             }
 
-            void render_gui(double dt);
+            void run();
+
+            void save_render_result(const std::string &fn);
+
+            void render(double dt);
 
             void update_device_buffer();
 

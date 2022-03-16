@@ -239,7 +239,7 @@ namespace luminous {
 
     void App::render(double delta_elapsed) {
 
-        _task->render_gui(delta_elapsed);
+        _task->render(delta_elapsed);
     }
 
     int App::run_with_gui() {

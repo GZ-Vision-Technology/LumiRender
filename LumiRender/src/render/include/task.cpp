@@ -147,8 +147,91 @@ namespace luminous {
             }
         }
 
+        void Task::run() {
+            auto sensor_configs = _scene_graph->sensor_configs;
+
+            auto get_fn = [&]() -> luminous_fs::path {
+                luminous_fs::path fn = _context->output_film_path();
+                return fn.empty() ? _scene_graph->output_config.fn : fn;
+            };
+
+            for (const auto &config : sensor_configs) {
+
+            }
+        }
+
         void Task::finalize() {
             _progressor.done();
+        }
+
+        void Task::save_render_result(const std::string &fn) {
+            auto &oc = _scene_graph->output_config;
+            float4 *buffer = get_buffer();
+            auto res = resolution();
+            size_t size = res.x * res.y * pixel_size(PixelFormat::RGBA32F);
+            Image image = Image::from_data(buffer, res);
+            image.for_each_pixel([&](std::byte *pixel, int i) {
+                auto fp = reinterpret_cast<float4 *>(pixel);
+                float4 val = buffer[i];
+                *fp = Spectrum::tone_mapping(val, oc.tone_map);
+            });
+
+            auto change_fn = [&](const std::filesystem::path &output_path,
+                                 const std::string &suffix,
+                                 std::string ext = "") {
+                ext = ext.empty() ? output_path.extension().string() : ext;
+                auto fn = output_path.stem().string() + suffix + ext;
+                return output_path.parent_path() / fn;
+            };
+
+            luminous_fs::path film_output_path = _context->output_dir() / luminous_fs::path(fn);
+            image.save(film_output_path);
+            float4 *albedo = _albedo_buffer.synchronize_and_get_host_data();
+            float4 *normal = _normal_buffer.synchronize_and_get_host_data();
+            float4 *render = _render_buffer.synchronize_and_get_host_data();
+            if (oc.normal_remapping) {
+                auto image_normal = Image::create_empty(PixelFormat::RGBA32F, res);
+                image_normal.for_each_pixel([&](std::byte *pixel, int i) {
+                    auto fp = reinterpret_cast<float4 *>(pixel);
+                    *fp = (normal[i] + 1.f) / 2.f;
+                });
+                image_normal.save(change_fn(film_output_path, "-normal_remapping"));
+            }
+
+            if (oc.albedo) {
+                auto image_albedo = Image::create_empty(PixelFormat::RGBA32F, res);
+                image_albedo.for_each_pixel([&](std::byte *pixel, int i) {
+                    auto fp = reinterpret_cast<float4 *>(pixel);
+                    *fp = albedo[i];
+                });
+                image_albedo.save(change_fn(film_output_path, "-albedo"));
+            }
+
+            if (oc.normal) {
+                float4 *normal = _normal_buffer.synchronize_and_get_host_data();
+                auto image_normal = Image::create_empty(PixelFormat::RGBA32F, res);
+                image_normal.for_each_pixel([&](std::byte *pixel, int i) {
+                    auto fp = reinterpret_cast<float4 *>(pixel);
+                    *fp = normal[i];
+                });
+                image_normal.save(change_fn(film_output_path, "-normal_remapping"));
+            }
+
+            if (_context->denoise_output()) {
+
+                auto denoiser = Denoiser();
+                auto image_denoised = Image::create_empty(PixelFormat::RGBA32F, res);
+
+                denoiser.execute(res, image_denoised.pixel_ptr<float4>(), render, normal, albedo);
+                image_denoised.for_each_pixel([&](std::byte *pixel, int i) {
+                    auto fp = reinterpret_cast<float4 *>(pixel);
+                    float4 val = *fp;
+                    val.w = 1.f;
+                    *fp = Spectrum::tone_mapping(val, oc.tone_map);
+                });
+                auto denoised_fn = change_fn(film_output_path, "-denoised");
+                image_denoised.save(denoised_fn);
+            }
         }
 
         void Task::save_to_file() {
@@ -173,12 +256,13 @@ namespace luminous {
                 return output_path.parent_path() / fn;
             };
 
-            luminous_fs::path film_out_path = _context->output_film_path();
+            auto get_fn = [&]() -> luminous_fs::path {
+                luminous_fs::path fn = _context->output_film_path();
+                return fn.empty() ? _scene_graph->output_config.fn : fn;
+            };
+
+            luminous_fs::path film_out_path =get_fn();
             luminous_fs::path scene_path = _context->scene_file();
-            if (film_out_path.empty()) {
-                // if command line --output is empty, retrieve path from scene description file.
-                film_out_path = _scene_graph->output_config.fn;
-            }
 
             if (film_out_path.empty() || !film_out_path.has_filename()) {
                 // default path is <scene path without extend>.exr
@@ -225,7 +309,7 @@ namespace luminous {
             image.save(film_out_path);
         }
 
-        void Task::render_gui(double dt) {
+        void Task::render(double dt) {
             _dt = dt;
             _integrator->render(1, &_progressor);
             ++_spp;
