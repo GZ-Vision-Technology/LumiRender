@@ -49,6 +49,9 @@ namespace luminous {
             Spectrum Ld(0.f);
             LightLiSample lls{LightSampleContext(si)};
             lls = sampled_light.light->sample_Li(sampler.next_2d(), lls, traversable_handle, scene_data);
+            if (!lls.valid()) {
+                return {0.f};
+            }
             bsdf_val = bsdf.eval(si.wo, lls.wi);
             bsdf_PDF = bsdf.PDF(si.wo, lls.wi);
             Li = lls.L;
