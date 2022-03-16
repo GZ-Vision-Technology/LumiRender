@@ -57,27 +57,27 @@
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "GlassMaterial",
             "name": "ShortBox",
             "param": {
-                // "roughness" : [0.002]
-                "color": [
-                    0.725,
-                    0.71,
-                    0.68
-                ]
+                "roughness" : [0.002]
+                // "color": [
+                //     0.725,
+                //     0.71,
+                //     0.68
+                // ]
             }
         },
         {
-            "type": "MatteMaterial",
+            "type": "GlassMaterial",
             "name": "TallBox",
             "param": {
                 // "roughness" : [0.002]
-                "color": [
-                    0.725,
-                    0.71,
-                    0.68
-                ]
+                // "color": [
+                //     0.725,
+                //     0.71,
+                //     0.68
+                // ]
             }
         }
     ],
@@ -472,18 +472,18 @@
         // "type": "WavefrontPT",
         "param": {
             "min_depth": 0,
-            "max_depth": 1,
-            "rr_threshold": 10
+            "max_depth": 7,
+            "rr_threshold": 0
         }
     },
     "debug" : {
-        "pixel" : [372, 137],
-        "MIS_mode" : 0
+        // "pixel" : [60, 79],
+        // "MIS_mode" : 2
     },
     "output": {
         "fn": "cornell-box-mg.png",
         // "fn": "cornell-box-wf.png",
-        "dispatch_num": 1,
+        "dispatch_num": 256,
         "tone_map": 0
     }
 }

@@ -65,6 +65,10 @@ namespace luminous {
 #if DEBUG_RENDER
             if (debug) {
                 printf("\nmis light:\n");
+                printf("lsc pos: ");
+                si.pos.print();
+                printf("lec pos: ");
+                lls.lec.pos.print();
                 printf("bsdf val: ");
                 bsdf_val.print();
                 printf("Li: ");

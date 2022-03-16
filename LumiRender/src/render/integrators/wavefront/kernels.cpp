@@ -115,6 +115,13 @@ namespace luminous {
 
             const Light *light = hit_ctx.light();
 
+#if DEBUG_RENDER
+            uint2 pixel = pixel_sample_state->pixel[item.pixel_index];
+            if (all(pixel == rt_param->scene_data.debug_pixel)) {
+                int a = 0;
+            }
+#endif
+
             float3 wo = item.wo;
             Spectrum temp_Li = pixel_sample_state->Li[item.pixel_index];
             if (item.depth == 0 || is_specular(item.prev_vertex.flags)) {
@@ -169,6 +176,12 @@ namespace luminous {
 
             RaySamples rs = pixel_sample_state->ray_samples[mtl_item.pixel_index];
 
+#if DEBUG_RENDER
+            uint2 pixel = pixel_sample_state->pixel[mtl_item.pixel_index];
+            if (all(pixel == rt_param->scene_data.debug_pixel)) {
+                int a = 0;
+            }
+#endif
 
             // sample BSDF
             auto bsdf_sample = bsdf.sample_f(mtl_item.wo, rs.indirect.uc, rs.indirect.u);
@@ -214,6 +227,10 @@ namespace luminous {
                 uint2 pixel = pixel_sample_state->pixel[mtl_item.pixel_index];
                 if (all(pixel == rt_param->scene_data.debug_pixel)) {
                     printf("\nmis light:\n");
+                    printf("lsc pos: ");
+                    si.pos.print();
+                    printf("lec pos: ");
+                    lls.lec.pos.print();
                     printf("bsdf val: ");
                     bsdf_val.print();
                     printf("Li: ");
