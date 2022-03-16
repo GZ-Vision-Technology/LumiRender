@@ -421,59 +421,109 @@
             "spp": 1
         }
     },
-    "camera": {
-        "type": "ThinLensCamera",
-        "param": {
-            "fov_y": 19.5,
-            "velocity": 5,
-            "transform": {
-                "type": "look_at",
-                "param": {
-                    "position": [
-                        0,
-                        1,
-                        6.8
-                    ],
-                    "up": [
-                        0,
-                        1,
-                        0
-                    ],
-                    "target_pos": [
-                        0,
-                        1,
-                        0
-                    ]
+    "camera": [
+        {
+            "type": "ThinLensCamera",
+            "name" : "view1",
+            "param": {
+                "fov_y": 19.5,
+                "velocity": 5,
+                "transform": {
+                    "type": "look_at",
+                    "param": {
+                        "position": [
+                            0,
+                            1,
+                            6.8
+                        ],
+                        "up": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "target_pos": [
+                            0,
+                            1,
+                            0
+                        ]
+                    }
+                },
+                "film": {
+                    "param": {
+                        "resolution": [
+                            768,
+                            768
+                        ],
+                        "fb_state": 0,
+                        "tone_map": 0
+                    }
+                },
+                "filter": {
+                    "type": "BoxFilter",
+                    "param": {
+                        "radius": [
+                            0.5,
+                            0.5
+                        ]
+                    }
                 }
-            },
-            "film": {
-                "param": {
-                    "resolution": [
-                        768,
-                        768
-                    ],
-                    "fb_state": 0,
-                    "tone_map": 0
-                }
-            },
-            "filter": {
-                "type": "BoxFilter",
-                "param": {
-                    "radius": [
-                        0.5,
-                        0.5
-                    ]
+            }
+        },
+        {
+            "type": "ThinLensCamera",
+            "name" : "view2",
+            "param": {
+                "fov_y": 19.5,
+                "velocity": 5,
+                "transform": {
+                    "type": "look_at",
+                    "param": {
+                        "position": [
+                            0,
+                            1,
+                            5.8
+                        ],
+                        "up": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "target_pos": [
+                            0,
+                            1,
+                            0
+                        ]
+                    }
+                },
+                "film": {
+                    "param": {
+                        "resolution": [
+                            768,
+                            768
+                        ],
+                        "fb_state": 0,
+                        "tone_map": 0
+                    }
+                },
+                "filter": {
+                    "type": "BoxFilter",
+                    "param": {
+                        "radius": [
+                            0.5,
+                            0.5
+                        ]
+                    }
                 }
             }
         }
-    },
+    ],
     "integrator": {
         "type": "PT",
         // "type": "WavefrontPT",
         "param": {
             "min_depth": 0,
-            "max_depth": 7,
-            "rr_threshold": 0
+            "max_depth": 15,
+            "rr_threshold": 1
         }
     },
     "debug" : {
@@ -481,9 +531,9 @@
         // "MIS_mode" : 2
     },
     "output": {
-        "fn": "cornell-box-mg.png",
-        // "fn": "cornell-box-wf.png",
-        "dispatch_num": 256,
+        // "fn": "cornell-box-mg.png",
+        "fn": "cornell-box-wf.png",
+        "dispatch_num": 2,
         "tone_map": 0
     }
 }
