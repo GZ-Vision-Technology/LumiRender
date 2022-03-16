@@ -31451,7 +31451,7 @@
         "type": "WavefrontPT",
         "param": {
             "min_depth": 0,
-            "max_depth": 32,
+            "max_depth": 10,
             "rr_threshold": 1
         }
     },

@@ -533,7 +533,7 @@
     "output": {
         // "fn": "cornell-box-mg.png",
         "fn": "cornell-box-wf.png",
-        "spp": 256,
+        "spp": 64,
         "albedo" : true,
         "normal" : true,
         "normal_remapping" : true,

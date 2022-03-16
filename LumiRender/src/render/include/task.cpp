@@ -155,7 +155,13 @@ namespace luminous {
                 return fn.empty() ? _scene_graph->output_config.fn : fn;
             };
 
+            int spp = _scene_graph->output_config.spp;
+
             for (const auto &config : sensor_configs) {
+                _spp = 0;
+                for (int i = 0; i < spp; ++i) {
+                    render(0);
+                }
 
             }
         }
@@ -214,7 +220,7 @@ namespace luminous {
                     auto fp = reinterpret_cast<float4 *>(pixel);
                     *fp = normal[i];
                 });
-                image_normal.save(change_fn(film_output_path, "-normal_remapping"));
+                image_normal.save(change_fn(film_output_path, "-normal"));
             }
 
             if (_context->denoise_output()) {
@@ -235,78 +241,11 @@ namespace luminous {
         }
 
         void Task::save_to_file() {
-
-            auto &oc = _scene_graph->output_config;
-
-            float4 *buffer = get_buffer();
-            auto res = resolution();
-            size_t size = res.x * res.y * pixel_size(PixelFormat::RGBA32F);
-            Image image = Image::from_data(buffer, res);
-            image.for_each_pixel([&](std::byte *pixel, int i) {
-                auto fp = reinterpret_cast<float4 *>(pixel);
-                float4 val = buffer[i];
-                *fp = Spectrum::tone_mapping(val, oc.tone_map);
-            });
-
-            auto change_fn = [&](const std::filesystem::path &output_path,
-                                 const std::string &suffix,
-                                 std::string ext = "") {
-                ext = ext.empty() ? output_path.extension().string() : ext;
-                auto fn = output_path.stem().string() + suffix + ext;
-                return output_path.parent_path() / fn;
-            };
-
             auto get_fn = [&]() -> luminous_fs::path {
                 luminous_fs::path fn = _context->output_film_path();
                 return fn.empty() ? _scene_graph->output_config.fn : fn;
             };
-
-            luminous_fs::path film_out_path =get_fn();
-            luminous_fs::path scene_path = _context->scene_file();
-
-            if (film_out_path.empty() || !film_out_path.has_filename()) {
-                // default path is <scene path without extend>.exr
-                film_out_path = scene_path.parent_path() / scene_path.stem();
-                film_out_path += ".exr";
-            } else if (film_out_path.is_relative()) {
-                // Relative path is relative to scene directory.
-                film_out_path = _context->output_dir() / film_out_path;
-            }
-            float4 *render = _render_buffer.synchronize_and_get_host_data();
-            float4 *normal = _normal_buffer.synchronize_and_get_host_data();
-            float4 *albedo = _albedo_buffer.synchronize_and_get_host_data();
-            // denoising
-            if (_context->denoise_output()) {
-                auto denoiser = Denoiser();
-                auto image_denoised = Image::create_empty(PixelFormat::RGBA32F, res);
-
-                denoiser.execute(res, image_denoised.pixel_ptr<float4>(), render, normal, albedo);
-                image_denoised.for_each_pixel([&](std::byte *pixel, int i) {
-                    auto fp = reinterpret_cast<float4 *>(pixel);
-                    float4 val = *fp;
-                    val.w = 1.f;
-                    *fp = Spectrum::tone_mapping(val, oc.tone_map);
-                });
-                auto denoised_fn = change_fn(film_out_path, "-denoised");
-                image_denoised.save(denoised_fn);
-            }
-            if (oc.albedo) {
-                auto image_albedo = Image::create_empty(PixelFormat::RGBA32F, res);
-                image_albedo.for_each_pixel([&](std::byte *pixel, int i) {
-                    auto fp = reinterpret_cast<float4 *>(pixel);
-                    *fp = albedo[i];
-                });
-                image_albedo.save(change_fn(film_out_path, "-albedo"));
-            }
-            if (oc.normal_remapping) {
-                auto image_normal = Image::create_empty(PixelFormat::RGBA32F, res);
-                image_normal.for_each_pixel([&](std::byte *pixel, int i) {
-                    auto fp = reinterpret_cast<float4 *>(pixel);
-                    *fp = (normal[i] + 1.f) / 2.f;
-                });
-                image_normal.save(change_fn(film_out_path, "-normal_remapping"));
-            }
-            image.save(film_out_path);
+            save_render_result(get_fn().string());
         }
 
         void Task::render(double dt) {
