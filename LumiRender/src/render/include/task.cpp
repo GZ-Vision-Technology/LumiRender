@@ -186,7 +186,7 @@ namespace luminous {
                 film_out_path += ".exr";
             } else if (film_out_path.is_relative()) {
                 // Relative path is relative to scene directory.
-                film_out_path = scene_path.parent_path() / film_out_path;
+                film_out_path = _context->output_dir() / film_out_path;
             }
             float4 *render = _render_buffer.synchronize_and_get_host_data();
             float4 *normal = _normal_buffer.synchronize_and_get_host_data();

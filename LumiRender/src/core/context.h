@@ -29,6 +29,7 @@ namespace luminous {
         luminous_fs::path _work_dir;
         luminous_fs::path _in_dir;
         luminous_fs::path _scene_file;
+        luminous_fs::path _output_dir;
         std::string _device;
         mutable cxxopts::Options _cli_options;
         mutable std::optional<cxxopts::ParseResult> _parsed_cli_options;
@@ -72,6 +73,8 @@ namespace luminous {
 
         LM_NODISCARD luminous_fs::path scene_path() noexcept;
 
+        LM_NODISCARD luminous_fs::path output_dir() noexcept;
+
         LM_NODISCARD const luminous_fs::path &scene_file() noexcept;
 
         LM_NODISCARD luminous_fs::path output_film_path() noexcept;
@@ -98,7 +101,7 @@ namespace luminous {
             std::cout << _cli_options.help() << std::endl;
         }
 
-        void try_print_help_and_exit()  const noexcept {
+        void try_print_help_and_exit() const noexcept {
             if (has_help_cmd()) {
                 print_help();
                 exit(0);

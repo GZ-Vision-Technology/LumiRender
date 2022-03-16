@@ -64,6 +64,16 @@ namespace luminous {
         return scene_file().parent_path();
     }
 
+    luminous_fs::path Context::output_dir() noexcept {
+        if (_output_dir.empty()) {
+            _output_dir = luminous_fs::canonical(_parse_result()["output-dir"].as<std::string>());
+            if (_output_dir.empty()) {
+                _output_dir = scene_path();
+            }
+        }
+        return _output_dir;
+    }
+
     luminous_fs::path Context::output_film_path() noexcept {
         return { _parse_result()["output"].as<std::string>() };
     }
@@ -88,6 +98,8 @@ namespace luminous {
                 {"w, working-dir", "Specify working directory",
                  cxxopts::value<luminous_fs::path>()->default_value(
                          luminous_fs::canonical(luminous_fs::current_path()).string())},
+                         {"output-dir", "The output file path, default: the same directory as the scene description files",
+                 cxxopts::value<std::string>()->default_value("")},
                 {"c, clear-cache", "Clear cached", cxxopts::value<bool>()},
                 {"m, mode", "run mode: cli or gui",cxxopts::value<std::string>()->default_value("cli")},
                 {"t, thread-num", "the num of threads to render", cxxopts::value<std::string>()->default_value("0")},

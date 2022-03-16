@@ -10,7 +10,7 @@
 #include "base_libs/geometry/common.h"
 #include "render/lights/light_util.h"
 
-#define DEBUG_RENDER 1
+#define DEBUG_RENDER 0
 
 namespace luminous {
 
