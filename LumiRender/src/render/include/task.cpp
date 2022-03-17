@@ -147,6 +147,14 @@ namespace luminous {
             }
         }
 
+        void Task::update_sensor(const SensorConfig &config) {
+            camera()->update_param(config.transform_config.create().mat4x4(), config.fov_y);
+            camera()->set_focal_distance(config.focal_distance);
+            camera()->set_lens_radius(config.lens_radius);
+            camera()->set_velocity(config.velocity);
+            update();
+        }
+
         luminous_fs::path change_fn(const std::filesystem::path &output_path,
                                     const std::string &suffix,
                                     std::string ext = "") {
@@ -167,15 +175,13 @@ namespace luminous {
             int spp = _scene_graph->output_config.spp;
 
             for (const auto &config : sensor_configs) {
-                _spp = 0;
-                update();
+                update_sensor(config);
                 for (int i = 0; i < spp; ++i) {
                     render(0);
                 }
                 luminous_fs::path fn = get_fn();
-                fn = change_fn(fn, config.name);
+                fn = change_fn(fn, "-" + config.name);
                 save_render_result(fn.string());
-                break;
             }
             finalize();
         }

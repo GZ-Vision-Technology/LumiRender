@@ -522,18 +522,18 @@
         // "type": "WavefrontPT",
         "param": {
             "min_depth": 0,
-            "max_depth": 15,
+            "max_depth": 10,
             "rr_threshold": 1
         }
     },
     "debug" : {
         // "pixel" : [60, 79],
-        // "MIS_mode" : 2
+        "MIS_mode" : 2
     },
     "output": {
-        "fn": "cornell-box-mg-2.png",
+        "fn": "cornell-box-mg.png",
         // "fn": "cornell-box-wf.png",
-        "spp": 64,
+        "spp": 16,
         // "albedo" : true,
         // "normal" : true,
         // "normal_remapping" : true,

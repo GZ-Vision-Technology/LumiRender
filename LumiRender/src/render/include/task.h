@@ -55,6 +55,8 @@ namespace luminous {
 
             void save_to_file();
 
+            void update_sensor(const SensorConfig &config);
+
             LM_NODISCARD bool complete() const {
                 return _spp >= _scene_graph->output_config.spp;
             }
