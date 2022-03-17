@@ -53,11 +53,15 @@ namespace luminous {
                 }
                 PathVertex vertex;
                 vertex.debug = debug;
-                Spectrum Ld = light_sampler->estimate_direct_lighting(si, sampler,
-                                                                      scene_handle,
-                                                                      hit_ctx.scene_data(), &vertex);
+
+                auto bsdf = si.compute_BSDF(scene_data);
+                Spectrum mis_light = light_sampler->MIS_sample_light(si, bsdf, sampler, scene_handle, scene_data, debug);
+                Spectrum mis_bsdf = light_sampler->MIS_sample_BSDF(si, bsdf, sampler, scene_handle, &vertex, scene_data);
+
                 found_intersection = vertex.found_intersection;
                 Spectrum bsdf_ei = vertex.bsdf_val / vertex.bsdf_PDF;
+
+                Spectrum Ld = mis_light + mis_bsdf;
 
                 L += Ld * throughput;
                 throughput *= bsdf_ei;

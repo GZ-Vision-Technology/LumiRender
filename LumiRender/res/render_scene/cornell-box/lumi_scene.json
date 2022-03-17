@@ -57,27 +57,27 @@
             }
         },
         {
-            "type": "GlassMaterial",
+            "type": "MatteMaterial",
             "name": "ShortBox",
             "param": {
-                "roughness" : [0.002]
-                // "color": [
-                //     0.725,
-                //     0.71,
-                //     0.68
-                // ]
+                // "roughness" : [0.002]
+                "color": [
+                    0.725,
+                    0.71,
+                    0.68
+                ]
             }
         },
         {
-            "type": "GlassMaterial",
+            "type": "MatteMaterial",
             "name": "TallBox",
             "param": {
                 // "roughness" : [0.002]
-                // "color": [
-                //     0.725,
-                //     0.71,
-                //     0.68
-                // ]
+                "color": [
+                    0.725,
+                    0.71,
+                    0.68
+                ]
             }
         }
     ],
@@ -531,8 +531,8 @@
         // "MIS_mode" : 2
     },
     "output": {
-        // "fn": "cornell-box-mg.png",
-        "fn": "cornell-box-wf.png",
+        "fn": "cornell-box-mg-2.png",
+        // "fn": "cornell-box-wf.png",
         "spp": 64,
         // "albedo" : true,
         // "normal" : true,
