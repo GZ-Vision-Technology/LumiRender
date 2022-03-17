@@ -57,6 +57,8 @@ namespace luminous {
 
             void update_sensor(const SensorConfig &config);
 
+            void update_integrator(const IntegratorConfig &config);
+
             LM_NODISCARD bool complete() const {
                 return _spp >= _scene_graph->output_config.spp;
             }

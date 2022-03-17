@@ -24,10 +24,8 @@ namespace luminous {
             } else {
                 _scene = std::make_shared<GPUScene>(_device, _context);
             }
-            _max_depth = scene_graph->integrator_config.max_depth;
-            _min_depth = scene_graph->integrator_config.min_depth;
-            _rr_threshold = scene_graph->integrator_config.rr_threshold;
             _scene->init(scene_graph);
+            set_param(scene_graph->integrator_config);
             _sampler.push_back(Sampler::create(scene_graph->sampler_config));
 
             _camera.init(1, lstd::Sizer<Sensor>::compound_size() +
@@ -36,6 +34,12 @@ namespace luminous {
 
             init_on_device();
             LUMINOUS_INFO(get_arena().description());
+        }
+
+        void Integrator::set_param(const IntegratorConfig &config) {
+            _max_depth = config.max_depth;
+            _min_depth = config.min_depth;
+            _rr_threshold = config.rr_threshold;
         }
     }
 }

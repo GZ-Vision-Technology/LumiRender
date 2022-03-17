@@ -42,6 +42,8 @@ namespace luminous {
 
             virtual void init(const std::shared_ptr<SceneGraph> &scene_graph);
 
+            virtual void set_param(const IntegratorConfig &config);
+
             virtual void init_on_device() {
                 _sampler.allocate_device(1);
                 _sampler.synchronize_to_device();

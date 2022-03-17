@@ -155,6 +155,10 @@ namespace luminous {
             update();
         }
 
+        void Task::update_integrator(const IntegratorConfig &config) {
+
+        }
+
         luminous_fs::path change_fn(const std::filesystem::path &output_path,
                                     const std::string &suffix,
                                     std::string ext = "") {
