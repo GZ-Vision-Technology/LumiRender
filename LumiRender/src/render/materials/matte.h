@@ -23,7 +23,6 @@ namespace luminous {
 
             Attr3D _color{};
         public:
-//            MatteMaterial(index_t r, float sigma) : _color_idx(r), _sigma(sigma) {}
 
             MatteMaterial(Attr3D color, float sigma) : _color(color), _sigma(sigma) {}
 
