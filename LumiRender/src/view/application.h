@@ -102,7 +102,13 @@ namespace luminous {
 
         void update_pixel_buffer();
 
+        void display_ui();
+
         void display_stats();
+
+        void display_camera_params();
+
+        void display_integrator_params();
 
         int run_with_gui();
 

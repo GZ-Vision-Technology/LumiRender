@@ -278,7 +278,7 @@ namespace luminous {
             ++_frame_stats.total_frame_count;
 
             imgui_begin();
-            display_stats();
+            display_ui();
             imgui_end();
 
             glfwSwapBuffers(_handle);
@@ -314,6 +314,12 @@ namespace luminous {
             GL_CHECK(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, film_dim.x, film_dim.y, GL_RGBA, rb_pixel_data_type,
                                      (const void *) _task->get_frame_buffer()));
         }
+    }
+
+    void App::display_ui() {
+        display_stats();
+        display_camera_params();
+        display_integrator_params();
     }
 
     void App::display_stats() {
@@ -352,21 +358,16 @@ namespace luminous {
         }
     }
 
+    void App::display_integrator_params() {
+
+    }
+
+    void App::display_camera_params() {
+
+    }
 
     int App::run_with_cli() {
         _task->run();
-//        while (!_task->complete()) {
-//            check_and_update();
-//            render(.0);
-//        }
-//        _task->finalize();
-
-//        if(_task->result_available()) {
-//            _task->save_to_file();
-//
-//            printf("Rendering complete, FPS: %.2f", _task->get_fps());
-//        }
-
         return 0;
     }
 
