@@ -315,7 +315,7 @@ class SceneSettingItem(bpy.types.PropertyGroup):
         name="rr_threshold", description="rr_threshold", default=1, min=0, max=1)
     # light setting
     bpy.types.Scene.lightscale = bpy.props.FloatProperty(
-        name="Light Scale", description="convert to engine light", default=1, min=0, max=10)
+        name="Light Scale", description="convert to engine light", default=1, min=0, max=30)
 
 
 def register():

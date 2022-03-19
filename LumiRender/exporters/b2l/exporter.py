@@ -65,7 +65,7 @@ def create_imagetex(name, tex):
         "type": "ImageTexture",
         "param": {
             "fn": 'textures/'+tex,
-            "color_space": "LINEAR"
+            "color_space": "SRGB"
         }
     }
 
@@ -143,7 +143,8 @@ def exporter_materials(scene, scene_json):
         if len(node.links) == 1:
             Normal_Map = node.links[0].from_node
             texture_node = Normal_Map.inputs.get("Color").links[0].from_node
-            tex_name = texture_node.image.filepath.split("\\")[-1]
+            print("wocao -----------", texture_node.image.filepath)
+            tex_name = bpy.path.abspath(texture_node.image.filepath.split("\\")[-1])
             tex_data = create_imagetex(tex_name, tex_name)
             add_texture_data(scene_json, tex_data)
             return tex_name
@@ -151,7 +152,7 @@ def exporter_materials(scene, scene_json):
     # color 节点返回float4
     def write_color(node):
         if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
-            tex_name = node.links[0].from_node.image.filepath.split("\\")[-1]
+            tex_name = bpy.path.abspath(node.links[0].from_node.image.filepath).split("\\")[-1]
             tex_data = create_imagetex(tex_name, tex_name)
             add_texture_data(scene_json, tex_data)
             return tex_name
@@ -163,7 +164,7 @@ def exporter_materials(scene, scene_json):
     def write_material(node):
         # ensure input node is an image
         if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
-            tex_name = node.links[0].from_node.image.filepath.split("\\")[-1]
+            tex_name = bpy.path.abspath(node.links[0].from_node.image.filepath).split("\\")[-1]
             tex_data = create_imagetex(tex_name, tex_name)
             add_texture_data(scene_json, tex_data)
             return tex_name
@@ -226,20 +227,23 @@ def copy_tex(path, target_path):
 
 def export_builtin_disney_material(bsdf, scene_json, mesh_name, mat, scene):
     directory_path = bpy.path.abspath(scene.exportpath)
-
     def write_normal(node):
-        if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
-            path = node.links[0].from_node.image.filepath
+        if len(node.links) == 1:
+            # 处理有无normal_map节点的两种情况
+            if node.links[0].from_node.type == 'TEX_IMAGE':
+                path = bpy.path.abspath(node.links[0].from_node.image.filepath)
+            else:
+                path = bpy.path.abspath(node.links[0].from_node.inputs.get(
+                    "Color").links[0].from_node.image.filepath)
             tex_name = os.path.basename(path)
             tex_data = create_imagetex(tex_name, tex_name)
             copy_tex(path, directory_path)
             add_texture_data(scene_json, tex_data)
             return tex_name
-
     # color 节点返回float4
     def write_float4(node):
         if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
-            path = node.links[0].from_node.image.filepath
+            path = bpy.path.abspath(node.links[0].from_node.image.filepath)
             tex_name = os.path.basename(path)
             tex_data = create_imagetex(tex_name, tex_name)
             copy_tex(path, directory_path)
@@ -253,7 +257,7 @@ def export_builtin_disney_material(bsdf, scene_json, mesh_name, mat, scene):
     def write_float1(node):
         # ensure input node is an image
         if len(node.links) == 1 and node.links[0].from_node.type == 'TEX_IMAGE':
-            path = node.links[0].from_node.image.filepath
+            path = bpy.path.abspath(node.links[0].from_node.image.filepath)
             tex_name = os.path.basename(path)
             tex_data = create_imagetex(tex_name, tex_name)
             copy_tex(path, directory_path)
@@ -427,6 +431,8 @@ def export_area_lights(scene, scene_json):
     for obj in scene.objects:
         if obj.type != 'LIGHT' or obj.data.type != 'AREA' or obj.data.shape not in allow_light_shapes:
             continue
+        if not obj.visible_get():
+            continue
         light_obj = obj
         light_data = obj.data
 
@@ -510,7 +516,7 @@ def create_camera(scene):
     pos = mat[3][0:3]
     euler = camera_obj_blender.rotation_euler
     pitch = math.degrees(euler.x) - 90
-    yaw = math.degrees(euler.z)
+    yaw = -math.degrees(euler.z)
 
     return {
         'type': 'ThinLensCamera',
@@ -518,8 +524,8 @@ def create_camera(scene):
             # 需要和camera[0].fov绑定？不需要
             'fov_y': angle_rad * 180.0 / math.pi,
             'velocity': scene.cameravelocity,
-            "focal_distance": camera_blender.dof.aperture_fstop,
-            "lens_radius": 0.0,
+            "focal_distance": camera_blender.dof.focus_distance / 10,
+            "lens_radius": 0,
             'transform': {
                 "type": "yaw_pitch",
                 "param": {
@@ -595,18 +601,52 @@ def export_meshes_all(scene, scene_json):
         }
     })
 
-
 def export_envmap(scene, scene_json):
-    # 目前需要手动设置环境贴图，可以写成读取
+    def create_env_imagetex(name, tex, scale):
+        return {
+            "name": name,
+            "type": "ImageTexture",
+            "param": {
+                "fn": 'textures/'+tex,
+                "scale": [scale, scale, scale],
+                "color_space": "LINEAR"
+            }
+        }
+
+    def add_envlight_data(scene_json, tex_name):
+
+        envlight = {
+            "type": "Envmap",
+            "param": {
+                "transform": {
+                    "type": "yaw_pitch",
+                    "param": {
+                        "yaw": 0,
+                        "pitch": 0,
+                        "position": [0, 0, 0]
+                    }
+                },
+                "key": tex_name
+            }
+        }
+
+        scene_json['lights'].append(envlight)
+
+    directory_path = bpy.path.abspath(scene.exportpath)
     use_map = scene.use_envmap
     if not use_map:
         return
     else:
-        path = scene.environmentmaptpath
+        if scene.environmentmaptpath:
+            path = scene.environmentmaptpath
+        else:
+            path = bpy.data.worlds["World"].node_tree.nodes[2].image.filepath
         scale = scene.environmentmapscale
         tex_name = os.path.basename(path)
-        tex_data = create_imagetex(tex_name, tex_name)
+        tex_data = create_env_imagetex(tex_name, tex_name, scale)
+        copy_tex(path, directory_path)
         add_texture_data(scene_json, tex_data)
+        add_envlight_data(scene_json, tex_name)
 
 
 def split_bmesh(scene):
