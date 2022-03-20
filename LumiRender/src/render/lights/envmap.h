@@ -20,13 +20,11 @@ namespace luminous {
     inline namespace render {
         class Scene;
 
-        // todo make CPU support
         class Envmap : public LightBase {
 
         DECLARE_REFLECTION(Envmap, LightBase)
 
         private:
-//            index_t _tex_idx{invalid_uint32};
             Attr4D _emission;
             index_t _distribution_idx{invalid_uint32};
             Transform _w2o;

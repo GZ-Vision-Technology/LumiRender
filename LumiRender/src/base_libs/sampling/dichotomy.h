@@ -33,7 +33,6 @@ namespace luminous {
             using const_value_type = const float;
             using Builder = DichotomyBuilder;
         public:
-            // todo change to indice mode, reduce memory usage
             BufferView<const_value_type> func{};
             BufferView<const_value_type> CDF{};
             float func_integral{};

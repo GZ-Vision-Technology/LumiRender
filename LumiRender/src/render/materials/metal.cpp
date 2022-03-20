@@ -15,10 +15,8 @@ namespace luminous {
                 roughness.x = Microfacet::roughness_to_alpha(roughness.x);
                 roughness.y = Microfacet::roughness_to_alpha(roughness.y);
             }
-            static constexpr auto min_roughness = 0.001f;
-            // todo change to vector compute
-            roughness.x = roughness.x < min_roughness ? min_roughness : roughness.x;
-            roughness.y = roughness.y < min_roughness ? min_roughness : roughness.y;
+            static constexpr auto min_roughness = make_float2(0.001f);
+            roughness = select(roughness < min_roughness, min_roughness, roughness);
             FakeMetalBSDF fake_metal_material = create_fake_metal_bsdf(color, roughness.x, roughness.y);
             return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{fake_metal_material}};
         }
@@ -32,9 +30,8 @@ namespace luminous {
                 roughness.x = Microfacet::roughness_to_alpha(roughness.x);
                 roughness.y = Microfacet::roughness_to_alpha(roughness.y);
             }
-            static constexpr auto min_roughness = 0.001f;
-            roughness.x = roughness.x < min_roughness ? min_roughness : roughness.x;
-            roughness.y = roughness.y < min_roughness ? min_roughness : roughness.y;
+            static constexpr auto min_roughness = make_float2(0.001f);
+            roughness = select(roughness < min_roughness, min_roughness, roughness);
             float3 k = _k.eval(scene_data, ctx);
             MetalBSDF metal_bsdf = create_metal_bsdf(eta, k, roughness.x, roughness.y);
             return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{metal_bsdf}};

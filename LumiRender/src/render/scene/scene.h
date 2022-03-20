@@ -117,7 +117,6 @@ namespace luminous {
 
             template<typename TAccel>
             void init_accel() {
-                // todo add geometry accelerate structure
                 _accelerator = std::make_unique<TAccel>(_device, _context, this);
                 _accelerator->build_bvh(_positions, _triangles, _meshes, _inst_to_mesh_idx,
                                         _transforms, _inst_to_transform_idx);
