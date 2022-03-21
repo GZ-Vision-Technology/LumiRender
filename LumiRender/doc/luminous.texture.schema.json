@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "description": "Texture object",
+  "properties": {
+    "type": {
+      "description": "Texture type",
+      "default": "ConstantTexture",
+      "enum": [
+        "ConstantTexture",
+        "ImageTexture"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "description": "Unique texture name which will be referenced by a material"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "ConstantTexture"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "param": {
+            "type": "object",
+            "description": "Constant Value RGBA",
+            "properties": {
+              "val": {
+                "$ref": "#/definitions/rgba"
+              },
+              "color_space": {
+                "$ref": "#/definitions/color_space"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "ImageTexture"
+          }
+        },
+        "required": ["type"]
+      },
+      "then": {
+        "properties": {
+          "param": {
+            "type": "object",
+            "description": "Image path and additonal parameters",
+            "properties": {
+              "fn": {
+                "$ref": "#/definitions/image_file_path"
+              },
+              "color_space": {
+                "$ref": "#/definitions/color_space"
+              }
+            }
+          }
+        }
+      }
+    }    
+  ],
+  "required": ["type", "name", "param"],
+
+  "definitions": {
+    "color_space": {
+      "description": "color space for computation",
+      "default": "SRGB",
+      "enum": [
+        "SRGB",
+        "LINEAR"
+      ]
+    },
+    "rgba": {
+      "description": "4 component rgba value",
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "additionalItems": false
+    },
+    "image_file_path": {
+      "description": "Image file path relative to this scene description(json) file",
+      "type": "string"
+    }
+  }
+}

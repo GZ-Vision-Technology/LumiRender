@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "type": {
+      "enum": ["quad", "model"],
+      "default": "model"
+    },
+    "name": {
+      "type": "string"
+    }
+  },
+  "oneOf": [
+    {
+      "if": { "properties": { "type": { "const": "quad" } } },
+      "then": {
+        "properties": {
+          "width": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          },
+          "emission": {
+            "$ref": "#/definitions/emission"
+          },
+          "scale": {
+            "type": "number"
+          },
+          "transform": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "emission": {
+      "type": "array",
+      "maxItems": 3,
+      "minItems": 3,
+      "items": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    }
+  }
+}

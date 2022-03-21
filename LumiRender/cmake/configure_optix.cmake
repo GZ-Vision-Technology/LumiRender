@@ -30,6 +30,50 @@ if (WIN32)
     add_definitions(-DNOMINMAX)
 endif ()
 
+# Overwrite CUDA_NVCC_FLAGS_<CONFIG>
+
+set(CUDA_NVCC_FLAGS_DEBUG
+  -O1 -D _ENABLE_EXTENDED_ALIGNED_STORAGE
+  --expt-relaxed-constexpr
+  --std=c++17
+  # turn off some annoying warnings
+  # see http://www.ssl.berkeley.edu/~jimm/grizzly_docs/SSL/opt/intel/cc/9.0/lib/locale/en_US/mcpcom.msg
+  -Xcudafe
+  --diag_suppress=esa_on_defaulted_function_ignored
+  -Xcudafe
+  --diag_suppress=implicit_return_from_non_void_function
+  -rdc=true
+  -lineinfo
+  -arch=sm_70
+  -D__x86_64
+)
+
+set(CUDA_NVCC_FLAGS_RELEASE
+  -O3 -D NDEBUG=1 -D _ENABLE_EXTENDED_ALIGNED_STORAGE
+  -use_fast_math
+  --expt-relaxed-constexpr
+  --std=c++17
+  -Xcudafe
+  --diag_suppress=esa_on_defaulted_function_ignored
+  -Xcudafe
+  --diag_suppress=implicit_return_from_non_void_function
+  -rdc=true
+  -arch=sm_70
+  -D__x86_64
+)
+
+# multi-config nvcc compilation flags
+set(CUDA_NVCC_FLAGS $<$<CONFIG:Debug>:${CUDA_NVCC_FLAGS_DEBUG}>$<$<NOT:$<CONFIG:Debug>>:${CUDA_NVCC_FLAGS_RELEASE}>)
+
+# multi-config nvcc ptx file output directory
+# WARNING: FIX ME.
+# Unfortunately, we can not set output directory according to $<CONFIG> at the moment.
+# Failed to set unique output directory for generated ptx file can confuse build
+# system that the output file is already the newest but actually out-of-date with source files.
+# 
+# A make-up approach is that delete the generated ptx file in $<CMAKE_CURRENT_BINARY_DIR> and
+# rebuild again.
+# set(CUDA_GENERATED_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
 
 find_program(BIN2C bin2c
         DOC "Path to the cuda-sdk bin2c executable.")
@@ -46,30 +90,9 @@ find_program(BIN2C bin2c
 #    'output_var', which can then be added to cmake targets.
 macro(cuda_compile_and_embed output_var cuda_file)
     set(c_var_name ${output_var})
-    if (${CMAKE_BUILD_TYPE} MATCHES "Release")
-        cuda_compile_ptx(ptx_files
-                ${cuda_file}
-                OPTIONS -O3 -D NDEBUG=1 -D _ENABLE_EXTENDED_ALIGNED_STORAGE
-                -use_fast_math
-                --expt-relaxed-constexpr
-                --std=c++17
-                -arch=sm_70
-#                -rdc true
-#                -D__x86_64
-#                -lineinfo
-                )
-    else ()
-        cuda_compile_ptx(ptx_files
-                ${cuda_file}
-                OPTIONS -O1 -D _ENABLE_EXTENDED_ALIGNED_STORAGE
-                --expt-relaxed-constexpr
-                --std=c++17
-                -arch=sm_70
-#                -rdc true
-#                -D__x86_64
-#                -lineinfo
-                )
-    endif ()
+
+    cuda_compile_ptx(ptx_files ${cuda_file})
+    
     list(GET ptx_files 0 ptx_file)
     set(embedded_file ${ptx_file}_embedded.c)
     message("adding rule to compile and embed ${cuda_file} to \"const char ${output_var}[];\"")

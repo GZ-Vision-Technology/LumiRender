@@ -141,11 +141,13 @@ namespace luminous {
     }
 
     const luminous_fs::path &Context::_resource_dir() noexcept {
-        auto res_dir = _runtime_dir() / "res";
-        if (!luminous_fs::exists(res_dir)) {
-            luminous_fs::create_directory(res_dir);
+        if(_res_dir.empty()) {
+            _res_dir = _runtime_dir() / "res";
+            if (!luminous_fs::exists(_res_dir)) {
+                luminous_fs::create_directory(_res_dir);
+            }
         }
-        return res_dir;
+        return _res_dir;
     }
 
     const luminous_fs::path &Context::_working_dir() noexcept {

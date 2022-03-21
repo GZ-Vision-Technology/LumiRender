@@ -12,8 +12,8 @@ set(SOURCE_FILES
   parallel.cpp
   progressreporter.cpp
   stats.cpp
+  image_util.ispc
 )
-
 
 add_library(luminous-util SHARED ${HEADER_FILES} ${SOURCE_FILES})
 

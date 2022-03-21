@@ -17,9 +17,10 @@
 #include "core/memory/util.h"
 
 namespace luminous {
+
     inline namespace utility {
 
-        class Image : public Noncopyable, public ImageBase {
+        class Image: public ImageBase {
         private:
             luminous_fs::path _path;
             std::unique_ptr<const std::byte[]> _pixel;
@@ -35,6 +36,8 @@ namespace luminous {
             Image(const Image &other) = delete;
 
             Image &operator=(const Image &other) = delete;
+
+            Image &operator=(Image &&other);
 
             template<typename T = std::byte>
             const T *pixel_ptr() const { return reinterpret_cast<const T *>(_pixel.get()); }

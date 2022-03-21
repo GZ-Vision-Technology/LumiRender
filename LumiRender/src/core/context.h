@@ -27,6 +27,7 @@ namespace luminous {
         const char **_argv;
         luminous_fs::path _run_dir;
         luminous_fs::path _work_dir;
+        luminous_fs::path _res_dir;
         luminous_fs::path _in_dir;
         luminous_fs::path _scene_file;
         luminous_fs::path _output_dir;

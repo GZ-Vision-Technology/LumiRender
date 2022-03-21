@@ -6,6 +6,35 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 
+// Share stb decoded image buffer with our buffer
+#define SHARE_STB_IMAGE_MEMORY                  1
+
+#ifdef SHARE_STB_IMAGE_MEMORY
+namespace luminous {
+    namespace details {
+        namespace stbi_binding {
+            inline void *stbi_binding_malloc(size_t n) {
+                return (void *)new_array<std::byte>(n);
+            }
+
+            inline void *stbi_binding_realloc(void *p, size_t n) {
+                delete_array<std::byte>((std::byte *) p);
+                return (void *) new_array<std::byte>(n);
+            }
+
+            inline void stbi_binding_free(void *p) {
+                delete_array<std::byte>((std::byte *) p);
+            }
+        };
+    };// namespace details
+};    // namespace luminous
+
+
+#define STBI_MALLOC ::luminous::details::stbi_binding::stbi_binding_malloc
+#define STBI_REALLOC ::luminous::details::stbi_binding::stbi_binding_realloc
+#define STBI_FREE ::luminous::details::stbi_binding::stbi_binding_free
+#endif
+
 #include "stb_image.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -16,6 +45,10 @@
 
 #include "ext/tinyexr/tinyexr.h"
 #include "core/logging.h"
+
+
+#define IMAGE_UTIL_USE_ISPC     1
+#include "image_util_ispc.h"
 
 namespace luminous {
 
@@ -37,6 +70,11 @@ namespace luminous {
             _pixel = move(other._pixel);
         }
 
+        Image& Image::operator=(Image &&rhs) {
+            (*(ImageBase *)this) = std::forward<ImageBase>(rhs);
+            std::swap(this->_pixel, rhs._pixel);
+            return *this;
+        }
 
         Image Image::pure_color(float4 color, ColorSpace color_space, uint2 res) {
             auto pixel_count = res.x * res.y;
@@ -94,7 +132,7 @@ namespace luminous {
                     dest[3] = 1.f;
                 }
             }
-            free(rgb);
+            stbi_image_free(rgb);
             return {pixel_format, pixel, make_uint2(w, h), path};
         }
 
@@ -214,16 +252,29 @@ namespace luminous {
             int w, h;
             int channel;
             auto fn = path.string();
+
             rgba = stbi_load(fn.c_str(), &w, &h, &channel, 4);
             if (!rgba) {
-                throw std::runtime_error(fn + " load fail");
+                LUMINOUS_EXCEPTION("Load image file \"", fn, "failed: ", stbi_failure_reason());
             }
+
             PixelFormat pixel_format = detail::PixelFormatImpl<uchar4>::format;
             int pixel_size = detail::PixelFormatImpl<uchar4>::pixel_size;
             size_t pixel_num = w * h;
             size_t size_in_bytes = pixel_size * pixel_num;
             uint2 resolution = make_uint2(w, h);
+
+#if SHARE_STB_IMAGE_MEMORY
+            std::byte *pixel = reinterpret_cast<std::byte *>(rgba);
+#else
             auto pixel = new_array<std::byte>(size_in_bytes);
+#endif
+
+#if IMAGE_UTIL_USE_ISPC
+            float4 scale_p4{scale, 1.0f};
+            ispc::transform_rgba8888_stream(color_space == SRGB ? ispc::TO_LINEAR : ispc::SCALE_VALUE,
+                                            w * h * 4, (const uint8_t *)rgba, (const float *) &scale_p4, (uint8_t *) pixel);
+#else
             uint8_t *src = rgba;
             auto dest = (uint32_t *) pixel;
             if (color_space == SRGB) {
@@ -246,7 +297,12 @@ namespace luminous {
                     *dest = make_rgba(color);
                 }
             }
-            free(rgba);
+            #endif
+
+#if (!SHARE_STB_IMAGE_MEMORY)
+            stbi_image_free(rgba);
+#endif
+
             return {pixel_format, pixel, resolution, path};
         }
 

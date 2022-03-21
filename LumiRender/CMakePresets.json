@@ -2,22 +2,27 @@
   "version": 2,
   "configurePresets": [
     {
-      "name": "x64-linux-clang",
-      "displayName": "x64-linux-clang",
-      "description": "cmake x64-linux configuration: Makefile-->clang",
-      "generator": "Unix Makefiles",
+      "name": "x64-linux-gcc",
+      "displayName": "x64-linux-gcc",
+      "description": "cmake x64-linux configuration: Ninja-Multi-Config --> g++-9+",
+      "generator": "Ninja Multi-Config",
       "binaryDir": "${sourceDir}/build/${presetName}",
+      "environment": {
+        "LD_LIBRARY_PATH": "$env{ASSIMP_INSTALL_DIR}/lib:$env{LD_LIBRARY_PATH}"
+      },
       "architecture": {
         "value": "x64",
         "strategy": "external"
       },
       "cacheVariables": {
-        "CMAKE_C_COMPILER": "clang",
-        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_DEBUG_POSTFIX": "d",
-        "CMAKE_PREFIX_PATH": "$env{EMBREE3_INSTALL_DIR}/lib/cmake/embree-3.13.1;$env{ASSIMP_INSTALL_DIR}/lib/cmake/assimp-5.0;",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/installed/${presetName}"
+        "CMAKE_PREFIX_PATH": "$env{EMBREE3_INSTALL_DIR}/lib/cmake/embree-3.13.1;$env{ASSIMP_INSTALL_DIR}/lib/cmake/assimp-5.0;$env{OIDN_1_4_3_INSTALL_DIR}/lib/cmake/OpenImageDenoise-1.4.3;",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/installed/${presetName}",
+        "DEPENDENCY_PATHS": "$env{ASSIMP_INSTALL_DIR}/lib",
+        "GLFW_USE_HYBRID_HPG": "ON"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -27,10 +32,10 @@
       }
     },
     {
-      "name": "x64-linux-clang-vcpkg",
-      "displayName": "x64-linux-clang-vcpkg",
-      "description": "cmake x64-linux configuration: Makefile-->clang",
-      "generator": "Unix Makefiles",
+      "name": "x64-linux-clang",
+      "displayName": "x64-linux-clang",
+      "description": "cmake x64-linux configuration: Ninja-Multi-Config --> clang++-11+",
+      "generator": "Ninja Multi-Config",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "architecture": {
         "value": "x64",
@@ -41,10 +46,10 @@
         "CMAKE_CXX_COMPILER": "clang++",
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_DEBUG_POSTFIX": "d",
-        "VCPKG_TARGET_TRIPLET": "x64-linux-clang",
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-        "CMAKE_PREFIX_PATH": "$env{VCPKG_ROOT}/installed/x64-linux;$env{VCPKG_ROOT}/installed/x64-linux/debug;$env{EMBREE3_INSTALL_DIR}/lib/cmake/embree-3.13.1;",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/installed/${presetName}"
+        "CMAKE_PREFIX_PATH": "$env{EMBREE3_INSTALL_DIR}/lib/cmake/embree-3.13.1;$env{ASSIMP_INSTALL_DIR}/lib/cmake/assimp-5.0;$env{OIDN_1_4_3_INSTALL_DIR}/lib/cmake/OpenImageDenoise-1.4.3;",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/installed/${presetName}",
+        "DEPENDENCY_PATHS": "$env{ASSIMP_INSTALL_DIR}/lib",
+        "GLFW_USE_HYBRID_HPG": "ON"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -66,18 +71,55 @@
       "toolset": {
         "value": "host=x64",
         "strategy": "external"
-       },
+      },
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl",
         "CMAKE_CXX_COMPILER": "cl",
         "CMAKE_DEBUG_POSTFIX": "",
         "VCPKG_TARGET_TRIPLET": "x64-windows",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/installed/${presetName}"
+        "CMAKE_PREFIX_PATH": "$env{OIDN_1_4_3_INSTALL_DIR}/lib/cmake/OpenImageDenoise-1.4.3;",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/installed/${presetName}",
+        "DEPENDENCY_PATHS": "$env{ASSIMP_INSTALL_DIR}/lib;$env{CUDA_PATH}/bin;$env{OIDN_1_4_3_INSTALL_DIR}/bin",
+        "GLFW_USE_HYBRID_HPG": "ON"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
           "hostOS": [ "Windows" ],
+          "intelliSenseMode": "windows-msvc-x64"
+        }
+      }
+    },
+    {
+      "name": "x64-windows-vs2019",
+      "displayName": "x64-windows-vs2019",
+      "description": "cmake x64-windows configuration: multi-ninja-->MSVC-toolchains",
+      "generator": "Visual Studio 16 2019",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "toolset": {
+        "value": "host=x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl",
+        "CMAKE_CXX_COMPILER": "cl",
+        "CMAKE_DEBUG_POSTFIX": "",
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "CMAKE_PREFIX_PATH": "$env{OIDN_1_4_3_INSTALL_DIR}/lib/cmake/OpenImageDenoise-1.4.3;",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/installed/${presetName}",
+        "DEPENDENCY_PATHS": "$env{ASSIMP_INSTALL_DIR}/lib;$env{CUDA_PATH}/bin",
+        "GLFW_USE_HYBRID_HPG": "ON"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [
+            "Windows"
+          ],
           "intelliSenseMode": "windows-msvc-x64"
         }
       }
@@ -93,18 +135,20 @@
         "strategy": "external"
       },
       "toolset": {
-        "value": "host=x64",
+        "value": "host=x64,clang_cl_x64_x64",
         "strategy": "external"
-       },
+      },
       "cacheVariables": {
-        "CMAKE_C_COMPILER": "clang",
-        "CMAKE_CXX_COMPILER": "clang",
-        "CUDA_HOST_COMPILER": "D:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/Llvm/x64/bin/clang-cl.exe",
-        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER": "clang-cl",
+        "CMAKE_CXX_COMPILER": "clang-cl",
+        "CMAKE_CUDA_HOST_COMPILER": "cl",
         "CMAKE_DEBUG_POSTFIX": "",
         "VCPKG_TARGET_TRIPLET": "x64-windows",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/installed/${presetName}"
+        "CMAKE_PREFIX_PATH": "$env{OIDN_1_4_3_INSTALL_DIR}/lib/cmake/OpenImageDenoise-1.4.3;",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/installed/${presetName}",
+        "DEPENDENCY_PATHS": "$env{ASSIMP_INSTALL_DIR}/lib;$env{CUDA_PATH}/bin",
+        "GLFW_USE_HYBRID_HPG": "ON"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -114,38 +158,76 @@
       }
     }
   ],
-  "buildPresets": [ 
-	{
-      "name": "x64-linux-clang",
-      "description": "clang x64-linux build settings",
-      "displayName": "x64-linux-clang",
-      "configurePreset": "x64-linux-clang"
+  "buildPresets": [
+    {
+      "name": "x64-linux-gcc-debug",
+      "description": "gcc x64-linux build settings",
+      "displayName": "x64-linux-gcc-debug",
+      "configurePreset": "x64-linux-gcc",
+      "configuration": "Debug"
     },
-	{
-      "name": "x64-linux-clang-vcpkg",
+    {
+      "name": "x64-linux-gcc-release",
+      "description": "gcc x64-linux build settings",
+      "displayName": "x64-linux-gcc-release",
+      "configurePreset": "x64-linux-gcc",
+      "configuration": "Release"
+    },
+    {
+      "name": "x64-linux-clang-debug",
       "description": "clang x64-linux build settings",
-      "displayName": "x64-linux-clang-vcpkg",
-      "configurePreset": "x64-linux-clang-vcpkg"
+      "displayName": "x64-linux-clang-debug",
+      "configurePreset": "x64-linux-clang",
+      "configuration": "Debug"
+    },
+    {
+      "name": "x64-linux-clang-release",
+      "description": "clang x64-linux build settings",
+      "displayName": "x64-linux-clang-release",
+      "configurePreset": "x64-linux-clang",
+      "configuration": "Release"
     },
     {
       "name": "x64-windows-debug",
-      "description": "x64-windows-debug",
+      "description": "MSVC x64-windows build settings",
       "displayName": "x64-windows-debug",
-      "configuration": "Debug",
-      "configurePreset": "x64-windows"
+      "configurePreset": "x64-windows",
+      "configuration": "Debug"
     },
     {
       "name": "x64-windows-release",
-      "description": "x64-windows-release",
+      "description": "MSVC x64-windows build settings",
       "displayName": "x64-windows-release",
-      "configuration": "Release",
-      "configurePreset": "x64-windows"
+      "configurePreset": "x64-windows",
+      "configuration": "Release"
     },
     {
-      "name": "x64-windows-clang",
+      "name": "x64-windows-vs2019-debug",
+      "description": "MSVC x64-windows build settings",
+      "displayName": "x64-windows-vs2019-debug",
+      "configurePreset": "x64-windows-vs2019",
+      "configuration": "Debug"
+    },
+    {
+      "name": "x64-windows-vs2019-release",
+      "description": "MSVC x64-windows build settings",
+      "displayName": "x64-windows-vs2019-release",
+      "configurePreset": "x64-windows-vs2019",
+      "configuration": "Release"
+    },
+    {
+      "name": "x64-windows-clang-debug",
       "description": "clang for x64-windows build settings",
-      "displayName": "x64-windows-clang",
-      "configurePreset": "x64-windows-clang"
+      "displayName": "x64-windows-clang-debug",
+      "configurePreset": "x64-windows-clang",
+      "configuration": "Debug"
+    },
+    {
+      "name": "x64-windows-clang-release",
+      "description": "clang for x64-windows build settings",
+      "displayName": "x64-windows-clang-release",
+      "configurePreset": "x64-windows-clang",
+      "configuration": "Release"
     }
   ]
 }

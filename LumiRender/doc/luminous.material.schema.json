@@ -1,0 +1,209 @@
+{
+  "type": "object",
+  "properties": {
+    "type": { // material.type
+      "default": "MatteMaterial",
+      "enum": [
+        "MatteMaterial",
+        "MirrorMaterial",
+        "GlassMaterial",
+        "FakeMetalMaterial",
+        "MetalMaterial",
+        "DisneyMaterial"
+      ]
+    },
+    "name": { // material.name
+      "type": "string",
+      "description": "Unique name referenced by a model"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"type": {"const": "MatteMaterial" } }
+      },
+      "then": {
+        "properties": {
+          "param": { // material.param
+            "type": "object",
+            "description": "Albedo texture",
+            "properties": {
+              "color": { // material.param.color
+                "$ref": "#/definitions/color"
+              },
+              "sigma": { // material.param.sigma
+                "$ref": "#/definitions/sigma"
+              }
+            },
+            "required": ["color"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"type": { "const": "MirrorMaterial" } }
+      },
+      "then": {
+        "properties": {
+          "param": { // material.param
+            "type": "object",
+            "properties": {
+              "color": { "$ref": "#/defininations/color" }
+            },
+            "required": ["color"],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": {"const": "GlassMaterial" } } },
+      "then": {
+        "properties": {
+          "param": { // material.param
+            "type": "object",
+            "properties": {
+              "color": { "$ref": "#/definitions/color" },
+              "eta": { "$ref": "#/definitions/eta" },
+              "roughness": { "$ref": "#/definitions/roughness" },
+              "remapping_roughness": { "$ref": "#/definitions/remapping_roughness" }
+            },
+            "required": [ "color", "eta", "roughness" ]
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "FakeMetalMaterial" } } },
+      "then": {
+        "properties": {
+          "param": {
+            "type": "object",
+            "properties": {
+              "color": { "$ref": "#/definitions/color" },
+              "roughness": { "$ref": "#/definitions/roughness" },
+              "remapping_roughness": { "$ref": "#/definitions/remapping_roughness" }
+            },
+            "required": ["color", "roughness"]
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "MetalMaterial" } } },
+      "then": {
+        "properties": {
+          "param": {
+            "type": "object",
+            "properties": {
+              "color": { "$ref": "#/definitions/color" },
+              "k": { "$ref": "#/definitions/k" },
+              "roughness": { "$ref": "#/definitions/roughness" },
+              "remapping_roughness": { "$ref": "#/definitions/remapping_roughness" }
+            },
+            "required": ["color", "k", "roughness"]
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": {"const": "DisneyMaterial"  } } },
+      "then": {
+        "properties": {
+          "param": {
+            "type": "object",
+            "properties": {
+              "color": {
+                "$ref": "#/definitions/color"
+              },
+              "normal": {
+                "$ref": "#/definitions/normal"
+              },
+              "metallic": {
+                "$ref": "#/definitions/texture_ref"
+              },
+              "eta": {
+                "$ref": "#/definitions/texture_ref"
+              },
+              "specular_tint": {
+                "$ref": "#/definitions/texture_ref"
+              },
+              "roughness": {
+                "$ref": "#/definitions/texture_ref"
+              },
+              "anisotropic": {
+                "$ref": "#/definitions/texture_ref"
+              },
+              "sheen": {
+                "$ref": "#/definitions/texture_ref"
+              },
+              "sheen_tint": {
+                "$ref": "#/definitions/texture_ref"
+              },
+              "clearcoat": {
+                "$ref": "#/definitions/texture_ref"
+              },
+              "clearcoat_gloss": {
+                "$ref": "#/definitions/texture_ref"
+              },
+              "spec_trans": {
+                "$ref": "#/definitions/texture_ref"
+              },
+              "scatter_distance": {
+                "$ref": "#/definitions/texture_ref"
+              },
+              "flatness": {
+                "$ref": "#/definitions/texture_ref"
+              },
+              "diff_trans": {
+                "$ref": "#/definitions/texture_ref"
+              },
+              "thin": {
+                "type": "boolean",
+                "default": false
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "normal": {
+      "type": "string",
+      "description": "Normal texture map"
+    },
+    "color": {
+      "type": "string",
+      "description": "Specify a unique texture name in textures"
+    },
+    "sigma": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0,
+      "description": "Volumne rendering transport coefficient"
+    },
+    "eta": {
+      "type": "string",
+      "description": "Anisiotropic refraction coefficient"
+    },
+    "roughness": {
+      "type": "string",
+      "description": "roughness"
+    },
+    "remapping_roughness": {
+      "type": "boolean",
+      "description": "???"
+    },
+    "k": {
+      "type": "string",
+      "description": "???"
+    },
+    "texture_ref": {
+      "type": "string",
+      "description": "????"
+    }
+  }
+}

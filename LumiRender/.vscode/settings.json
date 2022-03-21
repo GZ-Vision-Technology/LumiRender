@@ -1,0 +1,12 @@
+{
+  // "cmake.cmakePath": "/usr/bin/cmake",
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "/**/*.progress.json",
+        "/*.progress.json"
+      ],
+      "url": "./doc/progressbar.schema.json"
+    }
+  ]
+}

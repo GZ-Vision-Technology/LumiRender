@@ -6,6 +6,7 @@
 #pragma once
 
 #include "base_libs/math/common.h"
+#include "core/concepts.h"
 
 namespace luminous {
     inline namespace utility {
@@ -89,7 +90,7 @@ namespace luminous {
         template<typename T>
         using PixelFormatImpl = detail::PixelFormatImpl<T>;
 
-        class ImageBase {
+        class ImageBase: MovableNonCopyable {
         protected:
             PixelFormat _pixel_format{PixelFormat::UNKNOWN};
             uint2 _resolution{};
@@ -104,6 +105,8 @@ namespace luminous {
             }
 
             ImageBase() = default;
+
+            ImageBase &operator=(ImageBase &&) = default;
 
             LM_ND_XPU int channel_num() const { return utility::channel_num(_pixel_format); }
 

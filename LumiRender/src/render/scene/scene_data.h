@@ -82,6 +82,7 @@ namespace luminous {
             uint2 debug_pixel;
             int mis_mode;
 #endif
+            // BufferView<const ImageTexture> cloth_spec_albedos;
 
 #define GEN_GET_FUNCTION(attribute)                                                     \
             ND_XPU_INLINE auto get_##attribute(const MeshHandle &mesh) const {          \
