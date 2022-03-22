@@ -42,7 +42,7 @@ set(CUDA_NVCC_FLAGS_DEBUG
   --diag_suppress=esa_on_defaulted_function_ignored
   -Xcudafe
   --diag_suppress=implicit_return_from_non_void_function
-  -rdc=true
+  # -rdc=true
   -lineinfo
   -arch=sm_70
   -D__x86_64
@@ -57,7 +57,7 @@ set(CUDA_NVCC_FLAGS_RELEASE
   --diag_suppress=esa_on_defaulted_function_ignored
   -Xcudafe
   --diag_suppress=implicit_return_from_non_void_function
-  -rdc=true
+  # -rdc=true
   -arch=sm_70
   -D__x86_64
 )
