@@ -53,6 +53,10 @@ namespace luminous {
 
             float get_fps() const;
 
+            const SceneGraph* scene_graph() const { return _scene_graph.get(); } 
+
+            SceneGraph* scene_graph() { return _scene_graph.get(); } 
+
             void save_to_file();
 
             void update_sensor(const SensorConfig &config);

@@ -90,7 +90,7 @@
                 "-m",
                 "gui",
                 "-t",
-                "1"
+                "0"
             ],
             "stopAtEntry": false,
             "cwd": "${command:cmake.getLaunchTargetDirectory}",

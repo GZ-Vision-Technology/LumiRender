@@ -66,6 +66,10 @@ namespace luminous {
                 return sensor_configs[sensor_index];
             }
 
+            SensorConfig &cur_sensor() {
+                return sensor_configs[sensor_index];
+            }
+
             void set_tex_configs(vector<MaterialAttrConfig> &&tcs) {
                 _tex_configs = tcs;
             }
