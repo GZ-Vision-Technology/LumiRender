@@ -45,6 +45,7 @@ namespace luminous {
             _scene_data->distribution2ds = this->_distribution_mgr.distribution2ds.const_host_buffer_view();
 
             _scene_data->textures = this->_textures.const_host_buffer_view();
+            _scene_data->cloth_spec_albedos = this->_cloth_spec_albedos.const_host_buffer_view();
             _scene_data->materials = this->_materials.const_host_buffer_view();
         }
 

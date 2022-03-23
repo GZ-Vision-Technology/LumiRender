@@ -223,6 +223,36 @@ namespace luminous {
                 }
                 _textures.push_back(Texture::create(tc));
             }
+
+            bool has_cloth_material = false;
+            // for(auto &mat : _materials) {
+            //     if(mat.isa<ClothMaterial *>()) {
+            //         has_cloth_material = true;
+            //         break;
+            //     }
+            // }
+
+            if(has_cloth_material) {
+                // Load cloth sheen layer albedo textures.
+                auto base_dir = get_current_executable_directory();
+
+                Image image = Image::load(base_dir / "../asset/cloth_specular_albedo/cloth_specular_albedo.jpg",
+                                          LINEAR, float3(1.0f));
+
+                
+                DTexture &texture = _device->allocate_texture(image.pixel_format(), image.resolution());
+                texture.copy_from(image);
+                ImageTexture srv(texture.tex_handle(), texture.pixel_format());
+                _cloth_spec_albedos.push_back(std::move(srv));
+
+                image = Image::load(base_dir / "../asset/cloth_specular_albedo/cloth_specular_albedo_average.jpg",
+                                    LINEAR, float3(1.0f));
+
+                DTexture &avg_texture = _device->allocate_texture(image.pixel_format(), image.resolution());
+                avg_texture.copy_from(image);
+                ImageTexture avg_srv(texture.tex_handle(), texture.pixel_format());
+                _cloth_spec_albedos.push_back(std::move(avg_srv));
+            }
         }
 
         void Scene::init_materials(const SP<SceneGraph> &scene_graph) {
@@ -270,6 +300,7 @@ namespace luminous {
             {
                 _materials.clear();
                 _textures.clear();
+                _cloth_spec_albedos.clear();
             }
             {
                 _tex_configs.clear();
@@ -298,6 +329,7 @@ namespace luminous {
             {
                 _materials.shrink_to_fit();
                 _textures.shrink_to_fit();
+                _cloth_spec_albedos.shrink_to_fit();
             }
             {
                 _tex_configs.shrink_to_fit();

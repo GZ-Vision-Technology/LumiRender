@@ -80,6 +80,8 @@ namespace luminous {
 
         using SubstrateBSDF = BSDF_Ty<BSDFHelper, true, MicrofacetFresnel>;
 
+        using NeubeltClothBSDF = BSDF_Ty<BSDFHelper, true, ClothMicrofacetFresnel>;
+
         ND_XPU_INLINE SubstrateBSDF create_substrate_bsdf(float3 color, float3 spec, float2 alpha, float eta = 1.5f) {
             BSDFHelper data = BSDFHelper::create_substrate_data(1.5);
             return SubstrateBSDF(data, MicrofacetFresnel{Spectrum{color}, Spectrum{spec}, alpha.x, alpha.y, GGX});

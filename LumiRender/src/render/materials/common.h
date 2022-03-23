@@ -11,3 +11,4 @@
 #include "metal.h"
 #include "disney.h"
 #include "substrate.h"
+#include "cloth.h"

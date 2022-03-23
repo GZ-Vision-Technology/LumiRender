@@ -38,6 +38,7 @@ namespace luminous {
             {
                 // texture data
                 _textures.allocate_device();
+                _cloth_spec_albedos.allocate_device();
             }
             _scene_data.allocate_device();
         }
@@ -60,6 +61,7 @@ namespace luminous {
 
             _scene_data->materials = this->_materials.const_device_buffer_view();
             _scene_data->textures = this->_textures.const_device_buffer_view();
+            _scene_data->cloth_spec_albedos = this->_cloth_spec_albedos.const_device_buffer_view();
             _scene_data.synchronize_to_device();
         }
 
@@ -89,6 +91,7 @@ namespace luminous {
             {
                 // texture data
                 _textures.synchronize_to_device();
+                _cloth_spec_albedos.synchronize_to_device();
                 _materials.synchronize_all_to_device();
             }
         }

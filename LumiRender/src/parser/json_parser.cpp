@@ -6,6 +6,7 @@
 #include "parameter_set.h"
 #include "render/materials/metal_ior_data.h"
 #include <iomanip>
+#include "util/stats.h"
 
 namespace luminous {
     inline namespace utility {
@@ -524,6 +525,7 @@ namespace luminous {
         }
 
         SP<SceneGraph> JsonParser::parse() const {
+            TASK_TAG("Parse scene description file(json)")
             auto shapes = _data["shapes"];
             auto scene_graph = std::make_shared<SceneGraph>(_context);
             scene_graph->shape_configs = parse_shapes(shapes);

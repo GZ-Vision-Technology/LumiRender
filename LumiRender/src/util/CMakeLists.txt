@@ -12,13 +12,19 @@ set(SOURCE_FILES
   parallel.cpp
   progressreporter.cpp
   stats.cpp
-  image_util.ispc
 )
 
-add_library(luminous-util SHARED ${HEADER_FILES} ${SOURCE_FILES})
+set(ISPC_SOURCE_FILES
+  image_util.ispc   
+)
+
+add_library(luminous-util SHARED ${HEADER_FILES} ${SOURCE_FILES}
+${ISPC_SOURCE_FILES}
+)
 
 if(WIN32)
-target_link_libraries(luminous-util PUBLIC
+target_link_libraries(luminous-util
+        PUBLIC
         luminous-core
         luminous-parser
         PRIVATE

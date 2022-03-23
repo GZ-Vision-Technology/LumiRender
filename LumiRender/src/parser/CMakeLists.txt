@@ -2,8 +2,15 @@
 file(GLOB_RECURSE HEADER_FILES *.h*)
 file(GLOB_RECURSE SOURCE_FILES *.c*)
 
+set(PARSER_ISPC_SOURCE_FILES
+        mesh_util.ispc
+)
 
-add_library(luminous-parser SHARED ${HEADER_FILES} ${SOURCE_FILES})
+add_library(luminous-parser SHARED
+        ${HEADER_FILES}
+        ${SOURCE_FILES}
+        ${PARSER_ISPC_SOURCE_FILES}
+)
 
 target_link_libraries(luminous-parser
         PUBLIC

@@ -46,9 +46,10 @@ namespace luminous {
 #include "ext/tinyexr/tinyexr.h"
 #include "core/logging.h"
 
-
-#define IMAGE_UTIL_USE_ISPC     1
-#include "image_util_ispc.h"
+#include "image_util_ispc_avx2.h"
+#include "image_util_ispc_avx.h"
+#include "image_util_ispc_sse4.h"
+#include "image_util_ispc_sse2.h"
 
 namespace luminous {
 
@@ -270,34 +271,34 @@ namespace luminous {
             auto pixel = new_array<std::byte>(size_in_bytes);
 #endif
 
-#if IMAGE_UTIL_USE_ISPC
             float4 scale_p4{scale, 1.0f};
-            ispc::transform_rgba8888_stream(color_space == SRGB ? ispc::TO_LINEAR : ispc::SCALE_VALUE,
-                                            w * h * 4, (const uint8_t *)rgba, (const float *) &scale_p4, (uint8_t *) pixel);
-#else
-            uint8_t *src = rgba;
-            auto dest = (uint32_t *) pixel;
-            if (color_space == SRGB) {
-                for (int i = 0; i < pixel_num; ++i, src += 4, dest += 1) {
-                    float r = (float) src[0] / 255;
-                    float g = (float) src[1] / 255;
-                    float b = (float) src[2] / 255;
-                    float a = (float) src[3] / 255;
-                    float4 color = make_float4(r, g, b, a) * make_float4(scale, 1.f);
-                    color = Spectrum::srgb_to_linear(color);
-                    *dest = make_rgba(color);
-                }
-            } else {
-                for (int i = 0; i < pixel_num; ++i, src += 4, dest += 1) {
-                    float r = (float) src[0] / 255;
-                    float g = (float) src[1] / 255;
-                    float b = (float) src[2] / 255;
-                    float a = (float) src[3] / 255;
-                    float4 color = make_float4(r, g, b, a) * make_float4(scale, 1.f);
-                    *dest = make_rgba(color);
+            CALL_ISPC_ROUTINE_BY_HARDWARE_FEATURE(ispc::transform_rgba8888_stream,
+                                                  color_space == SRGB ? ispc::TO_LINEAR : ispc::SCALE_VALUE,
+                                                  w * h * 4, (const uint8_t *) rgba,
+                                                  (const float *) &scale_p4, (uint8_t *) pixel) {
+                uint8_t *src = rgba;
+                auto dest = (uint32_t *) pixel;
+                if (color_space == SRGB) {
+                    for (int i = 0; i < pixel_num; ++i, src += 4, dest += 1) {
+                        float r = (float) src[0] / 255;
+                        float g = (float) src[1] / 255;
+                        float b = (float) src[2] / 255;
+                        float a = (float) src[3] / 255;
+                        float4 color = make_float4(r, g, b, a) * make_float4(scale, 1.f);
+                        color = Spectrum::srgb_to_linear(color);
+                        *dest = make_rgba(color);
+                    }
+                } else {
+                    for (int i = 0; i < pixel_num; ++i, src += 4, dest += 1) {
+                        float r = (float) src[0] / 255;
+                        float g = (float) src[1] / 255;
+                        float b = (float) src[2] / 255;
+                        float a = (float) src[3] / 255;
+                        float4 color = make_float4(r, g, b, a) * make_float4(scale, 1.f);
+                        *dest = make_rgba(color);
+                    }
                 }
             }
-            #endif
 
 #if (!SHARE_STB_IMAGE_MEMORY)
             stbi_image_free(rgba);

@@ -15,6 +15,7 @@ namespace luminous {
             GGX,
             Disney,
             Beckmann,
+            NeubeltCloth
         };
 
         namespace microfacet {
@@ -26,6 +27,19 @@ namespace luminous {
                        0.1734f * Pow<2>(x) +
                        0.0171201f * Pow<3>(x) +
                        0.000640711f * Pow<4>(x);
+            }
+
+            /**
+             * @brief Cloth Microfacet Distribution from Sony Pictures Imageworks
+             * @see http://aconty.com/pdf/s2017_pbs_imageworks_sheen.pdf
+             * @param wh half-way vector
+             * @param alpha roughness parameter
+             * @return Microfacet Distibution PDF
+             */
+            ND_XPU_INLINE float D_Charlie(const float3 &wh, float alpha) {
+                float inv_2alpha = 0.5f / alpha;
+                float sin2h = std::max(Frame::cos_theta_2(wh), 0.0078125f);
+                return (1.0f + inv_2alpha) * invPi * std::pow(sin2h, inv_2alpha);
             }
 
             /**
@@ -67,6 +81,8 @@ namespace luminous {
                                                         Frame::sin_phi_2(wh) / sqr(alpha_y))) /
                                (Pi * alpha_x * alpha_y * cos_theta_4);
                     }
+                    case NeubeltCloth:
+                        return D_Charlie(wh, alpha_x);
                     default:
                         break;
                 }
@@ -116,6 +132,59 @@ namespace luminous {
             }
 
             /**
+             * @brief Cloth Shadowing term $ L(x) = a / (1 + b x^c) + dx + e $
+             * 
+             * @param x cosine of incident(scattering) vector
+             * @return L values for roughness parameter in point 0.0 and 1.0
+             */
+            ND_XPU_INLINE float2 L_Neubelt(float x) {
+                constexpr float2 a = float2(25.3245f, 21.5473f);
+                constexpr float2 b = float2(3.32435f, 3.82987f);
+                constexpr float2 c = float2(0.16801f, 0.19823f);
+                constexpr float2 d = float2(-1.27393f, -1.97760f);
+                constexpr float2 e = float2(-4.85967f, -4.32054f);
+
+                float2 x_pc = float2(std::pow(x, c.x), std::pow(x, c.y));
+                return a / (float2(1.0f, 1.0f) + b * x_pc) + d * float2(x, x) + e;
+            }
+
+            ND_XPU_INLINE float2 Lambda_border_Neubelt(float x) {
+                constexpr float2 _2t_Lhalf = float2(1.800426f, -0.6849023f);
+                if(x <= 0.5f) {
+                    float2 L = L_Neubelt(x);
+                    return float2(std::exp(L.x), std::exp(L.y));
+                } else {
+                    float2 L = _2t_Lhalf - L_Neubelt(1.0f - x);
+                    return float2(std::exp(L.x), std::exp(L.y));
+                }
+            }
+
+            ND_XPU_INLINE float G_Neubelt(const float3 &wo, const float3 &wi, float alpha) {
+
+                float cos_theta_o = Frame::cos_theta(wo), cos_theta_i = Frame::cos_theta(wi);
+                float2 lambda_border_o = Lambda_border_Neubelt(cos_theta_o);
+                float2 lambda_border_i = Lambda_border_Neubelt(cos_theta_i);
+
+                float t = sqr(1.0f - alpha);
+                float lambda_o = lerp(t, lambda_border_o.y, lambda_border_o.x);
+                float lambda_i = lerp(t, lambda_border_i.y, lambda_border_i.x);
+                return 1.0f / (1.0f + lambda_o + lambda_i);
+            }
+
+            ND_XPU_INLINE float G_Neubelt_soften(const float3 &wo, const float3 &wi, float alpha) {
+
+                float cos_theta_o = Frame::cos_theta(wo), cos_theta_i = Frame::cos_theta(wi);
+                float2 lambda_border_o = Lambda_border_Neubelt(cos_theta_o);
+                float2 lambda_border_i = Lambda_border_Neubelt(cos_theta_i);
+
+                float t = sqr(1.0f - alpha);
+                float lambda_o = lerp(t, lambda_border_o.y, lambda_border_o.x);
+                float lambda_i = std::pow(lerp(t, lambda_border_i.y, lambda_border_i.x),
+                        1.0f + Pow<8>(1 - cos_theta_i));
+                return 1.0f / (1.0f + lambda_o + lambda_i);
+            }
+
+            /**
              * smith occlusion function
              * G1(w) = 1 / (lambda(w) + 1)
              * @param  w [description]
@@ -143,6 +212,8 @@ namespace luminous {
                         ret = 1 / (1 + lambda(wo, alpha_x, alpha_y, type) + lambda(wi, alpha_x, alpha_y, type));
                         return ret;
                     }
+                    case NeubeltCloth:
+                        return G_Neubelt_soften(wo, wi, alpha_x);
                     default:
                         break;
                 }
@@ -203,6 +274,14 @@ namespace luminous {
                         }CHECK_UNIT_VEC(wh);
                         return wh;
                     }
+                    case NeubeltCloth:
+                        {
+                            // Uniformly sample wh on hemisphere
+                            float3 wh = square_to_hemisphere(u);
+                            if(!same_hemisphere(wo, wh))
+                                wh = -wh;
+                            return wh;
+                        }
                     default:
                         break;
                 }
@@ -217,7 +296,10 @@ namespace luminous {
             */
             ND_XPU_INLINE float PDF_wh(const float3 &wo, const float3 &wh,
                                        float alpha_x, float alpha_y, MicrofacetType type = GGX) {
-                return D(wh, alpha_x, alpha_y, type) * Frame::abs_cos_theta(wh);
+                if(type == NeubeltCloth)
+                    return uniform_hemisphere_PDF();
+                else 
+                    return D(wh, alpha_x, alpha_y, type) * Frame::abs_cos_theta(wh);
             }
 
             /**
@@ -354,17 +436,17 @@ namespace luminous {
                 return microfacet::D(wh, _alpha_x, _alpha_y, _type);
             }
 
-            LM_ND_XPU float lambda(const float3 &w) const {
-                return microfacet::lambda(w, _alpha_x, _alpha_y, _type);
-            }
+            // LM_ND_XPU float lambda(const float3 &w) const {
+            //     return microfacet::lambda(w, _alpha_x, _alpha_y, _type);
+            // }
 
-            LM_ND_XPU float G1(const float3 &w) const {
-                return microfacet::G1(w, _alpha_x, _alpha_y, _type);
-            }
+            // LM_ND_XPU float G1(const float3 &w) const {
+            //     return microfacet::G1(w, _alpha_x, _alpha_y, _type);
+            // }
 
-            LM_ND_XPU float G(const float3 &wo, const float3 &wi) const {
-                return microfacet::G(wo, wi, _alpha_x, _alpha_y, _type);
-            }
+            // LM_ND_XPU float G(const float3 &wo, const float3 &wi) const {
+            //     return microfacet::G(wo, wi, _alpha_x, _alpha_y, _type);
+            // }
 
             LM_ND_XPU float3 sample_wh(const float3 &wo, const float2 &u) const {
                 return microfacet::sample_wh(wo, u, _alpha_x, _alpha_y, _type);

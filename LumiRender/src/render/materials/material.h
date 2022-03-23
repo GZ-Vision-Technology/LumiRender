@@ -29,6 +29,8 @@ namespace luminous {
 
         class SubstrateMaterial;
 
+        class ClothMaterial;
+
         class Material : public Variant<MatteMaterial *, MirrorMaterial *, SubstrateMaterial *,
                 GlassMaterial *, FakeMetalMaterial *, MetalMaterial *, DisneyMaterial *> {
 

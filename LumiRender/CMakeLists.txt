@@ -5,8 +5,11 @@ project(LumiRender LANGUAGES C CXX ISPC VERSION 1.0.0)
 # Option for building test targets
 option(LUMINOUS_BUILD_TESTS "Build tests" FALSE)
 
+set(CMAKE_ISPC_INSTRUCTION_SETS "avx2-i32x8;avx1-i32x8;sse4-i32x4;sse2-i32x4")
+
 if(UNIX)
-  add_compile_options("-fPIC")
+  add_compile_options("$<$<COMPILE_LANGUAGE:C>:-fPIC>")
+  add_compile_options("$<$<COMPILE_LANGUAGE:ISPC>:--arch=x86-64>")
   # don't skip the full RPATH for the build tree
   set(CMAKE_SKIP_BUILD_RPATH FALSE)
   # when building, don't use the install RPATH already available
@@ -113,6 +116,7 @@ endif ()
 set(CMAKE_CXX_STANDARD 17)
 add_definitions(-D_ENABLE_EXTENDED_ALIGNED_STORAGE)
 add_subdirectory(src)
+add_subdirectory(asset)
 
 set (CHECK_CUDA_OUTPUT_EXE ${CMAKE_BINARY_DIR}/check_cuda)
 if (MSVC)

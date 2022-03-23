@@ -78,6 +78,8 @@ namespace luminous {
             BufferView<const Distribution1D> distributions;
             BufferView<const Distribution2D> distribution2ds;
 
+            BufferView<const ImageTexture> cloth_spec_albedos;
+
 #if DEBUG_RENDER
             uint2 debug_pixel;
             int mis_mode;

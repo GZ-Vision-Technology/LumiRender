@@ -15,6 +15,9 @@ namespace luminous {
             index_t j{};
             index_t k{};
 
+
+            TriangleHandle() = default;
+
             TriangleHandle(index_t i, index_t j, index_t k)
                     : i(i), j(j), k(k) {}
 

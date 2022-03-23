@@ -63,6 +63,9 @@ namespace luminous {
             // texture data
             Managed<Texture> _textures{_device};
 
+            // cloth sheen layer preload albedo textures
+            Managed<ImageTexture> _cloth_spec_albedos;
+
             // material data, the last element is light material, black diffuse
             Synchronizer<Material> _materials{_device};
 

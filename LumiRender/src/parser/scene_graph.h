@@ -41,7 +41,7 @@ namespace luminous {
             size_t tex_coords_num{};
             size_t instance_num{};
         private:
-            bool is_contain(const string &key) {
+            bool is_contain(const string &key) const {
                 return _key_to_idx.find(key) != _key_to_idx.end();
             }
 
@@ -90,17 +90,17 @@ namespace luminous {
                 return _tex_configs.size() - 1;
             }
 
-            Model create_shape(const ShapeConfig &config);
+            Model create_shape(const ShapeConfig &config) const;
 
-            Model create_sphere(const ShapeConfig &config);
+            Model create_sphere(const ShapeConfig &config) const;
 
-            Model create_quad(const ShapeConfig &config);
+            Model create_quad(const ShapeConfig &config) const;
 
-            Model create_quad_y(const ShapeConfig &config);
+            Model create_quad_y(const ShapeConfig &config) const;
 
-            Model create_cube(const ShapeConfig &config);
+            Model create_cube(const ShapeConfig &config) const;
 
-            void create_shape_instance(const ShapeConfig &config);
+            void create_shape_instance(const std::string &shape_key, const ShapeConfig &config);
 
             void create_shapes();
         };

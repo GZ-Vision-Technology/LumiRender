@@ -64,6 +64,7 @@ add_subdirectory(apps)
 add_subdirectory(render)
 add_subdirectory(denoise)
 
+add_subdirectory(tools)
 
 if(${LUMINOUS_BUILD_TESTS})
     add_subdirectory(tests)

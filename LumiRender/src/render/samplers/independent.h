@@ -10,10 +10,6 @@
 #include "sampler_base.h"
 #include "core/concepts.h"
 
-#ifndef __CUDACC__
-#include <random>
-#endif
-
 namespace luminous {
     inline namespace render {
 

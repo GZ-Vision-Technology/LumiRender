@@ -6,6 +6,10 @@
 #include "assimp_parser.h"
 #include "shape.h"
 #include "render/textures/texture.h"
+#include "mesh_util_ispc_avx2.h"
+#include "mesh_util_ispc_avx.h"
+#include "mesh_util_ispc_sse4.h"
+#include "mesh_util_ispc_sse2.h"
 
 namespace luminous {
     inline namespace utility {
@@ -56,54 +60,63 @@ namespace luminous {
             meshes.reserve(ai_meshes.size());
             for (auto ai_mesh : ai_meshes) {
                 Box3f aabb;
-                vector<float3> positions;
-                vector<float3> normals;
-                vector<float2> tex_coords;
-                positions.reserve(ai_mesh->mNumVertices);
-                normals.reserve(ai_mesh->mNumVertices);
-                tex_coords.reserve(ai_mesh->mNumVertices);
-                vector<TriangleHandle> indices;
-                indices.reserve(ai_mesh->mNumFaces);
+                vector<float3> positions{ (size_t)ai_mesh->mNumVertices };
+                vector<float3> normals{ (size_t)ai_mesh->mNumVertices };
+                vector<float2> tex_coords{ (size_t)ai_mesh->mNumVertices };
+                vector<TriangleHandle> indices{(size_t) ai_mesh->mNumFaces};
+                ptrdiff_t tri_index = 0;
 
-                for (auto i = 0u; i < ai_mesh->mNumVertices; i++) {
-                    auto ai_position = ai_mesh->mVertices[i];
-                    auto ai_normal = ai_mesh->mNormals[i];
-                    auto position = make_float3(ai_position.x, ai_position.y, ai_position.z);
-                    aabb.extend(position);
-                    auto normal = make_float3(ai_normal.x, ai_normal.y, ai_normal.z);
-                    if (ai_mesh->mTextureCoords[0] != nullptr) {
-                        auto ai_tex_coord = ai_mesh->mTextureCoords[0][i];
-                        auto uv = make_float2(ai_tex_coord.x, ai_tex_coord.y);
-                        tex_coords.push_back(uv);
-                    } else {
-                        tex_coords.emplace_back(0.f, 0.f);
+                CALL_ISPC_ROUTINE_BY_HARDWARE_FEATURE(ispc::transform_vertex_layout_stream,
+                                                      ai_mesh->mNumVertices,
+                                                      (const float *) ai_mesh->mVertices,
+                                                      (const float *) ai_mesh->mNormals,
+                                                      (const float *) ai_mesh->mTextureCoords[0],
+                                                      (float *) positions.data(),
+                                                      (float *) normals.data(),
+                                                      (float *) tex_coords.data(),
+                                                      (float *) &aabb) {
+                    for (auto i = 0u; i < ai_mesh->mNumVertices; i++) {
+                        auto ai_position = ai_mesh->mVertices[i];
+                        auto ai_normal = ai_mesh->mNormals[i];
+                        auto position = make_float3(ai_position.x, ai_position.y, ai_position.z);
+                        aabb.extend(position);
+                        auto normal = make_float3(ai_normal.x, ai_normal.y, ai_normal.z);
+                        if (ai_mesh->mTextureCoords[0] != nullptr) {
+                            auto ai_tex_coord = ai_mesh->mTextureCoords[0][i];
+                            auto uv = make_float2(ai_tex_coord.x, ai_tex_coord.y);
+                            tex_coords[i] = (uv);
+                        } else {
+                            tex_coords[i] = make_float2(0.f, 0.f);
+                        }
+                        positions[i] = (position);
+                        normals[i] = (normal);
                     }
-                    positions.push_back(position);
-                    normals.push_back(normal);
                 }
 
                 for (auto f = 0u; f < ai_mesh->mNumFaces; f++) {
                     auto ai_face = ai_mesh->mFaces[f];
                     if (ai_face.mNumIndices == 3) {
-                        indices.push_back(TriangleHandle{
+                        indices[tri_index++] = TriangleHandle{
                                 ai_face.mIndices[0],
                                 ai_face.mIndices[1],
-                                ai_face.mIndices[2]});
+                                ai_face.mIndices[2]};
                     } else if (ai_face.mNumIndices == 4) {
-                        indices.push_back(TriangleHandle{
+                        indices[tri_index++] = TriangleHandle{
                                 ai_face.mIndices[0],
                                 ai_face.mIndices[1],
-                                ai_face.mIndices[2]});
-                        indices.push_back(TriangleHandle{
+                                ai_face.mIndices[2]};
+                        indices[tri_index++] = TriangleHandle{
                                 ai_face.mIndices[0],
                                 ai_face.mIndices[2],
-                                ai_face.mIndices[3]});
+                                ai_face.mIndices[3]};
                     } else {
                         LUMINOUS_WARNING("Only triangles and quads supported: ", ai_mesh->mName.data, " num is ",
                                          ai_face.mNumIndices);
                         continue;
                     }
                 }
+                indices.resize((size_t)tri_index);
+
                 auto mesh = Mesh(move(positions),
                                  move(normals),
                                  move(tex_coords),

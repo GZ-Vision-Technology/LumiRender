@@ -1,0 +1,21 @@
+#ifndef _ISPC_COMMON_H
+#define _ISPC_COMMON_H
+
+#ifdef ISPC_TARGET_SSE2
+  #define LM_EXTERNAL_API_ENTRY(func)   func##_sse2
+#elif defined(ISPC_TARGET_SSE4)
+  #define LM_EXTERNAL_API_ENTRY(func)   func##_sse4    
+#elif defined(ISPC_TARGET_AVX2)
+  #define LM_EXTERNAL_API_ENTRY(func)   func##_avx2
+#elif defined(ISPC_TARGET_AVX)
+  #define LM_EXTERNAL_API_ENTRY(func)   func##_avx
+#else
+  #error Unsupported SIMD platform
+#endif
+
+
+#ifndef FLT_MAX
+#define FLT_MAX 3.40282346638528859811704183484516925e+38F
+#endif
+
+#endif

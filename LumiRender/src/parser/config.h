@@ -217,6 +217,12 @@ namespace luminous {
             MaterialAttrConfig diff_trans;
             bool thin{};
 
+            // Neubelt cloth material
+            // Borrowed from others:
+            // MaterialAttrConfig color;
+            // MaterialAttrConfig specular_tint;
+            // MaterialAttrConfig roughness;
+
             // Subsurface material, disable it temporarily
 #if 0
             TextureConfig sigma_a;

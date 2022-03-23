@@ -8,6 +8,12 @@
 #include "base.h"
 
 namespace luminous {
+
+    // Forward declaration for Neubelt cloth BRDF
+    namespace render {
+        class ImageTexture;
+    };
+
     inline namespace render {
 
         class MicrofacetReflection : public ColoredBxDF<MicrofacetReflection> {
@@ -195,6 +201,44 @@ namespace luminous {
 
             LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
                                           TransportMode mode = TransportMode::Radiance) const;
+        };
+
+        class ClothMicrofacetFresnel: public ColoredBxDF<ClothMicrofacetFresnel> {
+        public:
+            LM_XPU ClothMicrofacetFresnel(Spectrum base_color, Spectrum spec_tint, float alpha,
+                                          const ImageTexture *spec_albedo, const ImageTexture *spec_albedo_avg)
+                : ColoredBxDF(base_color, GlossyRefl), _microfacet(alpha, NeubeltCloth), _spec_tint(spec_tint), _spec_albedo(spec_albedo), _spec_albedo_avg(spec_albedo_avg) {}
+
+            /**
+             * must be reflection and eta must be corrected
+             */
+            LM_ND_XPU Spectrum eval(float3 wo, float3 wi, BSDFHelper helper,
+                                    TransportMode mode = TransportMode::Radiance) const;
+
+            LM_ND_XPU Spectrum safe_eval(float3 wo, float3 wi, BSDFHelper helper,
+                                         TransportMode mode = TransportMode::Radiance) const;
+
+            /**
+             * must be reflection
+             */
+            LM_ND_XPU float PDF(float3 wo, float3 wi,
+                                BSDFHelper helper,
+                                TransportMode mode = TransportMode::Radiance) const;
+
+            LM_ND_XPU float safe_PDF(float3 wo, float3 wi,
+                                     BSDFHelper helper,
+                                     TransportMode mode = TransportMode::Radiance) const;
+
+            LM_ND_XPU BSDFSample sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
+                                          TransportMode mode = TransportMode::Radiance) const;
+
+            protected:
+                Spectrum eval_specluar(float3 wo, float3 wi, BSDFHelper data, TransportMode mode) const;
+                Spectrum eval_diffuse(float3 wo, float3 wi, BSDFHelper data, TransportMode mode) const;
+
+                Microfacet _microfacet;
+                Spectrum _spec_tint;
+                const ImageTexture *_spec_albedo, *_spec_albedo_avg;
         };
     }
 }

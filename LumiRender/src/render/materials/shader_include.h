@@ -13,6 +13,7 @@
     #include "mirror.cpp"
     #include "disney.cpp"
     #include "substrate.cpp"
+    #include "cloth.cpp"
 #else
     #include "common.h"
 #endif

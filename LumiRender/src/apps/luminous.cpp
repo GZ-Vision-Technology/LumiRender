@@ -8,13 +8,40 @@
 #include "parser/assimp_parser.h"
 #include <memory>
 #include "view/application.h"
+#include "core/platform.h"
 
 using std::cout;
 using std::endl;
 using namespace luminous;
 
+
+static void print_platform_info() {
+
+    auto print_isa_info_avx2 = [] {
+        logging::info("ISPC acceleration will use x86-64:AVX2 instruction set");
+    };
+    auto print_isa_info_avx = [] {
+        logging::info("ISPC acceleration will use x86-64:AVX instruction set");
+    };
+    auto print_isa_info_sse4 = [] {
+        logging::info("ISPC acceleration will use x86-64:SSE41 instruction set");
+    };
+    auto print_isa_info_sse2 = [] {
+        logging::info("ISPC acceleration will use x86-64:SSE2 instruction set");
+    };
+
+    CALL_ISPC_ROUTINE_BY_HARDWARE_FEATURE(print_isa_info) {
+        logging::info("ISA not found");
+    }
+}
+
+
+
 int execute(int argc, char *argv[]) {
     logging::set_log_level(spdlog::level::info);
+
+    print_platform_info();
+
     Context context{argc, argv};
     context.try_print_help_and_exit();
     if (argc == 1) {

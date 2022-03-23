@@ -173,7 +173,7 @@ namespace luminous {
 
             auto get_fn = [&]() -> luminous_fs::path {
                 luminous_fs::path fn = _context->output_film_path();
-                return fn.empty() ? _scene_graph->output_config.fn : fn;
+                return fn.empty() ? luminous_fs::path(_scene_graph->output_config.fn) : fn;
             };
 
             int spp = _scene_graph->output_config.spp;
@@ -259,7 +259,7 @@ namespace luminous {
         void Task::save_to_file() {
             auto get_fn = [&]() -> luminous_fs::path {
                 luminous_fs::path fn = _context->output_film_path();
-                return fn.empty() ? _scene_graph->output_config.fn : fn;
+                return fn.empty() ? luminous_fs::path( _scene_graph->output_config.fn) : fn;
             };
             save_render_result(get_fn().string());
         }

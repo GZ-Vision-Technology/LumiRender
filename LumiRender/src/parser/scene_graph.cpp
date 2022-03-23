@@ -5,6 +5,11 @@
 #include "scene_graph.h"
 #include "util/stats.h"
 
+#include <atomic>
+#include <future>
+#include <thread>
+#include <mutex>
+
 namespace luminous {
     inline namespace render {
 
@@ -21,7 +26,7 @@ namespace luminous {
         }
 
 
-        Model SceneGraph::create_sphere(const ShapeConfig &config) {
+        Model SceneGraph::create_sphere(const ShapeConfig &config) const {
             float radius = config.radius;
             vector<float3> positions;
             vector<float3> normals;
@@ -98,7 +103,7 @@ namespace luminous {
             return model;
         }
 
-        Model SceneGraph::create_quad_y(const ShapeConfig &config) {
+        Model SceneGraph::create_quad_y(const ShapeConfig &config) const {
             auto model = Model();
             auto width = config.width / 2;
             auto height = config.height / 2;
@@ -128,7 +133,7 @@ namespace luminous {
             return model;
         }
 
-        Model SceneGraph::create_quad(const ShapeConfig &config) {
+        Model SceneGraph::create_quad(const ShapeConfig &config) const {
             auto model = Model();
             auto width = config.width / 2;
             auto height = config.height / 2;
@@ -158,7 +163,7 @@ namespace luminous {
             return model;
         }
 
-        Model SceneGraph::create_cube(const ShapeConfig &config) {
+        Model SceneGraph::create_cube(const ShapeConfig &config) const {
             float x = config.x;
             float y = config.y;
             float z = config.z;
@@ -224,7 +229,7 @@ namespace luminous {
             }
         }
 
-        Model SceneGraph::create_shape(const ShapeConfig &config) {
+        Model SceneGraph::create_shape(const ShapeConfig &config) const {
             Model ret;
             if (config.type() == "model") {
                 config.fn = (_context->scene_path() / config.fn).string();
@@ -249,19 +254,11 @@ namespace luminous {
             } else {
                 LUMINOUS_ERROR("unknown shape type !")
             }
-            update_counter(ret);
             return ret;
         }
 
-        void SceneGraph::create_shape_instance(const ShapeConfig &config) {
-            auto key = gen_key(config);
-            if (!is_contain(key)) {
-                auto mp = create_shape(config);
-                mp.key = key;
-                _key_to_idx[key] = model_list.size();
-                model_list.push_back(mp);
-            }
-            uint idx = _key_to_idx[key];
+        void SceneGraph::create_shape_instance(const std::string &shape_key, const ShapeConfig &config) {
+            uint idx = _key_to_idx[shape_key];
             Transform o2w = config.o2w.create();
             auto instance = ModelInstance(idx, o2w, config.name.c_str(), config.emission, config.two_sided);
             instance_num += model_list[instance.model_idx].meshes.size();
@@ -270,8 +267,81 @@ namespace luminous {
 
         void SceneGraph::create_shapes() {
             TASK_TAG("create shapes")
-            for (const auto &shape_config : shape_configs) {
-                create_shape_instance(shape_config);
+
+            std::mutex shapes_state_mtx;
+
+            auto create_shape_task_proc = [&, this](int taskId, const ShapeConfig &config) -> std::string {
+                (void) taskId;
+
+                auto key = gen_key(config);
+                bool key_exist;
+
+                {
+                    std::lock_guard<std::mutex> state_guard(shapes_state_mtx);
+                    key_exist = is_contain(key);
+                }
+
+                if (!is_contain(key)) {
+                    auto mp = create_shape(config);
+                    {
+                        std::lock_guard<std::mutex> state_guard(shapes_state_mtx);
+                        update_counter(mp);
+                        mp.key = key;
+                        _key_to_idx[key] = model_list.size();
+                        model_list.push_back(mp);
+                    }
+                }
+
+                return key;
+            };
+
+            using CreateShapeTaskType = std::packaged_task<std::string(void)>;
+
+            std::vector<CreateShapeTaskType> batch_tasks { shape_configs.size() };
+            std::atomic<std::ptrdiff_t> remaining_task_start_idx = 0;
+            std::mutex unique_execution_mtx;
+
+            int task_idx;
+            auto it_shape_config = shape_configs.begin();
+            for (it_shape_config = shape_configs.begin(), task_idx = 0; it_shape_config != shape_configs.end(); ++it_shape_config, ++task_idx) {
+                batch_tasks[task_idx] = CreateShapeTaskType(std::bind(create_shape_task_proc, task_idx, std::ref(*it_shape_config)));
+            }
+
+            auto execution_unit_proc = [&] (int thread_idx, bool mandatory) {
+                while (true) {
+                    std::ptrdiff_t task_idx2;
+                    
+                    {
+                        std::lock_guard<std::mutex> execution_gurad(unique_execution_mtx);
+                        task_idx2 = remaining_task_start_idx.load();
+                        ++remaining_task_start_idx;
+                    }
+
+                    if (task_idx2 >= batch_tasks.size() || ( thread_idx == 0 && (!mandatory == 0 && task_idx2 >= 4)))
+                        break;
+                    else {
+                        batch_tasks[task_idx2]();
+                    }
+                }
+            };
+
+            std::vector<std::thread> execution_units{
+                    std::max(std::min(shape_configs.size(), (size_t) std::thread::hardware_concurrency()), (size_t)1) - 1};
+            int thread_idx = 0;
+            for (auto &unit : execution_units) {
+                unit = std::thread(execution_unit_proc, ++thread_idx, false);
+            }
+
+            // Main thread join in
+            execution_unit_proc(0, execution_units.empty());
+
+            for (it_shape_config = shape_configs.begin(), task_idx = 0; it_shape_config != shape_configs.end(); ++it_shape_config, ++task_idx) {
+                auto f = batch_tasks[task_idx].get_future();
+                create_shape_instance(f.get(), *it_shape_config);
+            }
+
+            for(auto &unit : execution_units) {
+                unit.join();
             }
         }
     }

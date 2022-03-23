@@ -3,6 +3,7 @@
 //
 
 #include "microfacet_scatter.h"
+#include "../textures/image_texture.h"
 
 namespace luminous {
     inline namespace render {
@@ -201,7 +202,7 @@ namespace luminous {
         }
 
         Spectrum MicrofacetFresnel::schlick_fresnel(float cos_theta, BSDFHelper helper) const {
-            return _spec + Pow<5>(1 - cos_theta) * (Spectrum(1.f) - _spec);
+            return fresnel_schlick(_spec, cos_theta);
         }
 
         float MicrofacetFresnel::PDF(float3 wo, float3 wi, BSDFHelper helper, TransportMode mode) const {
@@ -236,6 +237,73 @@ namespace luminous {
                 f_val = eval_specular(wo, wi, helper, mode);
             }
             return BSDFSample(f_val, wi, pdf, flags(), helper.eta());
+        }
+
+        Spectrum ClothMicrofacetFresnel::eval_diffuse(float3 wo, float3 wi, BSDFHelper data, TransportMode mode) const {
+
+            float alpha = data.clearcoat_alpha();
+
+            float2 spec_wo_scaling = _spec_albedo->eval(float2(Frame::cos_theta(wo), alpha));
+            float2 spec_wi_scaling = _spec_albedo->eval(float2(Frame::cos_theta(wi), alpha));
+            float2 spec_avg_scaling = _spec_albedo_avg->eval(float2(alpha, 1));
+            Spectrum R0 = data.R0();
+
+            return color(data) * (Spectrum(1.0f) - (R0 * spec_wo_scaling.x + spec_wo_scaling.y)) * (Spectrum(1.0f) - (R0 * spec_wi_scaling.x + spec_wi_scaling.y)) /
+                   (Pi * (Spectrum(1.0f) - (R0 * spec_avg_scaling.x + spec_avg_scaling.y)));
+        }
+
+        Spectrum ClothMicrofacetFresnel::eval_specluar(float3 wo, float3 wi, BSDFHelper data, TransportMode mode) const {
+            float3 wh = normalize(wo + wi);
+            Spectrum Fr = fresnel_schlick(data.R0(), std::max(dot(wh, wi), .0f));
+            return _microfacet.BRDF(wo, wh, wi, Fr, Frame::cos_theta(wi), Frame::cos_theta(wo), mode);
+        }
+
+
+        Spectrum ClothMicrofacetFresnel::eval(float3 wo, float3 wi, BSDFHelper helper,
+                                              TransportMode mode) const {
+
+            if (!same_hemisphere(wo, wi)) {
+                return {0.f};
+            }
+            return safe_eval(wo, wi, helper, mode);
+        }
+
+        Spectrum ClothMicrofacetFresnel::safe_eval(float3 wo, float3 wi, BSDFHelper helper,
+                                                   TransportMode mode) const {
+            return eval_diffuse(wo, wi, helper, mode) + eval_specluar(wo, wi, helper, mode);
+        }
+
+        float ClothMicrofacetFresnel::PDF(float3 wo, float3 wi,
+                                          BSDFHelper helper,
+                                          TransportMode mode) const {
+            if (!same_hemisphere(wo, wi)) {
+                return 0.f;
+            }
+            return safe_PDF(wo, wi, helper, mode);
+        }
+
+        float ClothMicrofacetFresnel::safe_PDF(float3 wo, float3 wi,
+                                               BSDFHelper helper,
+                                               TransportMode mode) const {
+            // Do uniform sampling
+            return uniform_hemisphere_PDF();
+        }
+
+        BSDFSample ClothMicrofacetFresnel::sample_f(float3 wo, float uc, float2 u, BSDFHelper helper,
+                                                    TransportMode mode) const {
+            // Do uniform sampling
+            float3 wi{0.f};
+            Spectrum f_val{0.f};
+            float pdf = 0.f;
+
+            float3 wh = _microfacet.sample_wh(wo, u);
+            wi = reflect(wo, wh);
+            if (!same_hemisphere(wo, wi))
+                return BSDFSample(f_val, wi, 0, flags(), helper.eta());
+
+            f_val = safe_eval(wo, wo, helper, mode);
+            pdf = _microfacet.PDF_wh(wo, wh) / std::max(4.0f * dot(wh, wi), 1.0e-3f);
+            return BSDFSample(f_val, wi, 0, flags(), helper.eta());
         }
     }
 }

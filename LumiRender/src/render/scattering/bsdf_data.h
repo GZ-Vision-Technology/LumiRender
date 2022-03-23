@@ -20,21 +20,37 @@ namespace luminous {
 
         struct BSDFHelper {
         private:
-            // A B for oren nayar
-            // R0 for disney _params.w is clearcoat alpha for disney
+            /**
+             * @brief variant parameter, must be one of the following layouts
+             *  - A B for oren nayar
+             *  - R0 for disney _params.w is clearcoat alpha for disney
+             */
             float4 _params{};
 
-            // roughness for disney
-            // k0 for metal
+            /**
+             * @brief variant parameter, must be one of the following layouts
+             *  - roughness for disney
+             *  - k0 for metal
+             */
             float val0{};
 
-            // metallic for disney
-            // k1 for metal
+            /**
+             * @brief variant parameter, must be one of the following layouts
+             *  - metallic for disney
+             *  - k1 for metal
+             */
             float val1{};
 
-            // eta for dielectric
-            // k2 for metal
+            /**
+             * @brief variant parameter, must be one of the following layouts
+             *  - eta for dielectric
+             *  - k2 for metal
+             */
             float val2{};
+
+            /**
+             * @brief Fresnel formula type.
+             */
             FresnelType _fresnel_type{NoOp};
         public:
             LM_XPU BSDFHelper() = default;

@@ -17,7 +17,7 @@ namespace luminous {
         class ParameterSet {
         private:
             std::string _key;
-            DataWrap _data;
+            mutable DataWrap _data;
         private:
 
 
@@ -174,18 +174,20 @@ namespace luminous {
                 return T{at(0).as_uint(), at(1).as_uint(), at(2).as_uint()};
             }
 
-#define LUMINOUS_MAKE_AS_TYPE_SCALAR(type) LM_NODISCARD type as_##type(type val = type()) const {                   \
-            try {                                                                                               \
-                return _as_##type();                                                                            \
-            } catch (const std::exception &e) {                                                             \
-                LUMINOUS_WARNING("Error occurred while parsing parameter type is ", #type,",key is ",_key, ", using default value: \"", val, "\""); \
-                return val;                                                                                     \
-            }                                                                                                   \
-        }                                                                                                       \
-        template<typename T, std::enable_if_t<std::is_same_v<T, type>, int> = 0>           \
-        T as() const {                                                                     \
-            return as_##type();                                                            \
-        }\
+#define LUMINOUS_MAKE_AS_TYPE_SCALAR(type)                                                                                                        \
+    LM_NODISCARD type as_##type(type val = type()) const {                                                                                        \
+        try {                                                                                                                                     \
+            if(_data.is_null()) _data = val;                                                                                                                          \
+            return _as_##type();                                                                                                                  \
+        } catch (const std::exception &e) {                                                                                                       \
+            LUMINOUS_WARNING("Error occurred while parsing parameter type is ", #type, ",key is ", _key, ", using default value: \"", val, "\""); \
+            return val;                                                                                                                           \
+        }                                                                                                                                         \
+    }                                                                                                                                             \
+    template<typename T, std::enable_if_t<std::is_same_v<T, type>, int> = 0>                                                                      \
+    T as() const {                                                                                                                                \
+        return as_##type();                                                                                                                       \
+    }
 
 #define LUMINOUS_MAKE_AS_TYPE_VEC2(type) LM_NODISCARD type##2 as_##type##2(type##2 val = make_##type##2()) const noexcept {      \
             try {                                                                                                        \

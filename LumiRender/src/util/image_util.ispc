@@ -1,3 +1,4 @@
+#include "../core/ispc_common.isph"
 
 static inline uint8 cvt_to_8bits(float v) {
   const int u8_lower = 0;
@@ -26,7 +27,7 @@ export enum TransformType {
   SCALE_VALUE
 };
 
-export void transform_rgba8888_stream(
+export void LM_EXTERNAL_API_ENTRY(transform_rgba8888_stream)(
   uniform TransformType type,
   uniform uint32 count,
   uniform const uint8 src[],
@@ -34,7 +35,7 @@ export void transform_rgba8888_stream(
   uniform uint8 dest[]
 ) {
 
-#if TARGET_WIDTH < 4
+#if (TARGET_WIDTH %4 != 0)
 #error "transform_rgba8888_stream" does not support lane with less than 4.
 #endif
 
