@@ -32,7 +32,7 @@ namespace luminous {
         class ClothMaterial;
 
         class Material : public Variant<MatteMaterial *, MirrorMaterial *, SubstrateMaterial *,
-                GlassMaterial *, FakeMetalMaterial *, MetalMaterial *, DisneyMaterial *> {
+                GlassMaterial *, FakeMetalMaterial *, MetalMaterial *, DisneyMaterial *, ClothMaterial *> {
 
         DECLARE_REFLECTION(Material, Variant)
 

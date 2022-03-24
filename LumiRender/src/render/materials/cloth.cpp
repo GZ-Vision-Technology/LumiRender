@@ -33,7 +33,7 @@ namespace luminous {
         data.set_R0(R0);
         data.set_eta(eta);
 
-        return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{}};
+        return {ctx.ng, ctx.ns, ctx.dp_dus, BSDF{ NeubeltClothBSDF{data, bxdf} }};
     }
 
     }// namespace render

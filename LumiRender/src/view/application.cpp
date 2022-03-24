@@ -363,18 +363,18 @@ namespace luminous {
     }
 
     void App::display_camera_params() {
-        ImGui::SetNextWindowPos(ImVec2{330.f, 10.f});
-        ImGui::Begin("Camera Params", nullptr,
-                         ImGuiWindowFlags_NoScrollbar |
-                        ImGuiWindowFlags_NoSavedSettings);
-        ImGui::Text("Thin lens camera");
-        SensorConfig &sc = _task->scene_graph()->cur_sensor();
-        ImGui::SliderFloat("fov y", &sc.fov_y,
-                    CameraBase::fov_min, CameraBase::fov_max);
+        // ImGui::SetNextWindowPos(ImVec2{330.f, 10.f});
+        // ImGui::Begin("Camera Params", nullptr,
+        //                  ImGuiWindowFlags_NoScrollbar |
+        //                 ImGuiWindowFlags_NoSavedSettings);
+        // ImGui::Text("Thin lens camera");
+        // SensorConfig &sc = _task->scene_graph()->cur_sensor();
+        // ImGui::SliderFloat("fov y", &sc.fov_y,
+        //             CameraBase::fov_min, CameraBase::fov_max);
 
-        ImGui::SliderFloat("lens radius", &sc.lens_radius, 0, 1);
+        // ImGui::SliderFloat("lens radius", &sc.lens_radius, 0, 1);
 
-        ImGui::End();
+        // ImGui::End();
     }
 
     int App::run_with_cli() {
