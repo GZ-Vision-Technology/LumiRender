@@ -86,13 +86,13 @@ namespace luminous {
                     LightSampleContext prev_lsc = item.prev_vertex.lsc;
                     float light_select_PMF = light_sampler->PMF(prev_lsc, light);
                     LightLiSample lls{prev_lsc, normalize(item.ray_d)};
-                    float light_PDF = light.PDF_Li(prev_lsc, lls.lec, item.ray_d, scene_data);
+                    float light_PDF = light.PDF_Li(prev_lsc, lls.lec, item.ray_d, scene_data) * light_select_PMF;
                     float bsdf_PDF = item.prev_vertex.bsdf_PDF;
                     Spectrum bsdf_val = item.prev_vertex.bsdf_val;
                     lls = light.Li(lls, scene_data);
                     float weight = MIS_weight(bsdf_PDF, light_PDF);
                     Spectrum temp_Li = item.throughput * lls.L * weight;
-                    L += temp_Li / light_select_PMF;
+                    L += temp_Li;
                 }
             }
 
@@ -131,7 +131,7 @@ namespace luminous {
                 LightLiSample lls{item.prev_vertex.lsc, lec};
                 float light_select_PMF = scene_data->light_sampler->PMF(*light);
                 lls = light->Li(lls, scene_data);
-                float light_PDF = lls.PDF_dir;
+                float light_PDF = lls.PDF_dir * light_select_PMF;
                 float bsdf_PDF = item.prev_vertex.bsdf_PDF;
                 Spectrum bsdf_val = item.prev_vertex.bsdf_val;
                 float weight = MIS_weight(bsdf_PDF, light_PDF);
@@ -148,7 +148,7 @@ namespace luminous {
                 weight = rt_param->scene_data.mis_mode == 0 ? weight : (rt_param->scene_data.mis_mode == 2 ? 1.f : 0.f);
 #endif
                 Spectrum L = item.throughput * lls.L * weight;
-                temp_Li += L / light_select_PMF;
+                temp_Li += L;
 
             }
             pixel_sample_state->Li[item.pixel_index] = temp_Li;
@@ -220,7 +220,7 @@ namespace luminous {
                 lls = light->Li(lls, scene_data);
                 lls.update_Li();
                 float bsdf_PDF = bsdf.PDF(mtl_item.wo, lls.wi);
-                float light_PDF = lls.PDF_dir;
+                float light_PDF = lls.PDF_dir * sampled_light.PMF;
                 float weight = MIS_weight(light_PDF, bsdf_PDF);
                 Spectrum bsdf_val = bsdf.eval(mtl_item.wo, lls.wi);
 #if DEBUG_RENDER
@@ -239,7 +239,7 @@ namespace luminous {
                 }
                 weight = rt_param->scene_data.mis_mode == 0 ? weight : (rt_param->scene_data.mis_mode == 1 ? 1.f : 0.f);
 #endif
-                Spectrum Ld = lls.L * bsdf_val * weight / light_PDF * mtl_item.throughput / sampled_light.PMF;
+                Spectrum Ld = lls.L * bsdf_val * weight / light_PDF * mtl_item.throughput;
                 DCHECK(!has_invalid(Ld))
                 Ray new_ray = lls.lsc.spawn_ray_to(lls.lec);
                 ShadowRayWorkItem shadow_ray_work_item{new_ray, Ld, mtl_item.pixel_index};
