@@ -55,7 +55,7 @@ namespace luminous {
             bsdf_val = bsdf.eval(si.wo, lls.wi);
             bsdf_PDF = bsdf.PDF(si.wo, lls.wi);
             Li = lls.L;
-            light_PDF = lls.PDF_dir;
+            light_PDF = lls.PDF_dir * sampled_light.PMF;
             if (bsdf_val.not_black() && bsdf_PDF != 0) {
                 if (Li.not_black()) {
                     float weight = MIS_weight(light_PDF, bsdf_PDF);
@@ -79,7 +79,6 @@ namespace luminous {
                 printf("light PDF : %f, bsdf PDF : %f \n\n", light_PDF, bsdf_PDF);
             }
 #endif
-            Ld = Ld / sampled_light.PMF;
             DCHECK(!has_invalid(Ld));
             return select(lls.valid() && lls.has_contribution(), Ld, Spectrum{0.f});
         }
@@ -111,7 +110,7 @@ namespace luminous {
                     Li = vertex->next_si.Le(-vertex->wi, data);
                     light_PMF = PMF(*vertex->next_si.light);
                     light_PDF = vertex->next_si.light->PDF_Li(LightSampleContext(si), LightEvalContext{vertex->next_si},
-                                                              make_float3(), data);
+                                                              make_float3(), data) * light_PMF;
                 } else if (!vertex->found_intersection && infinite_light_num() != 0) {
                     const Light &light = infinite_light_at(0);
                     light_PMF = PMF(light);
@@ -119,7 +118,7 @@ namespace luminous {
                     lls = light.Li(lls, data);
                     Li = lls.L;
                     light_PDF = light.PDF_Li(LightSampleContext(si), LightEvalContext{vertex->next_si}, vertex->wi,
-                                             data);
+                                             data) * light_PMF;
                 }
                 float weight = bsdf_sample.is_specular() ? 1 : MIS_weight(bsdf_PDF, light_PDF);
 #if DEBUG_RENDER
@@ -133,7 +132,7 @@ namespace luminous {
                 }
                 weight = data->mis_mode == 0 ? weight : (data->mis_mode == 1 ? 0.f : 1.f);
 #endif
-                Ld = bsdf_val * Li * weight / bsdf_PDF / light_PMF;
+                Ld = bsdf_val * Li * weight / bsdf_PDF;
             }
             DCHECK(!has_invalid(Ld));
             return Ld;
