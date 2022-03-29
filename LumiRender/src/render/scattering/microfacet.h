@@ -81,8 +81,8 @@ namespace luminous {
                                                         Frame::sin_phi_2(wh) / sqr(alpha_y))) /
                                (Pi * alpha_x * alpha_y * cos_theta_4);
                     }
-                    case NeubeltCloth:
-                        return D_Charlie(wh, alpha_x);
+                    // case NeubeltCloth:
+                    //     return D_Charlie(wh, alpha_x);
                     default:
                         break;
                 }
@@ -212,8 +212,8 @@ namespace luminous {
                         ret = 1 / (1 + lambda(wo, alpha_x, alpha_y, type) + lambda(wi, alpha_x, alpha_y, type));
                         return ret;
                     }
-                    case NeubeltCloth:
-                        return G_Neubelt_soften(wo, wi, alpha_x);
+                    // case NeubeltCloth:
+                        // return G_Neubelt_soften(wo, wi, alpha_x);
                     default:
                         break;
                 }
@@ -274,14 +274,14 @@ namespace luminous {
                         }CHECK_UNIT_VEC(wh);
                         return wh;
                     }
-                    case NeubeltCloth:
-                        {
-                            // Uniformly sample wh on hemisphere
-                            float3 wh = square_to_hemisphere(u);
-                            if(!same_hemisphere(wo, wh))
-                                wh = -wh;
-                            return wh;
-                        }
+                    // case NeubeltCloth:
+                    //     {
+                    //         // Uniformly sample wh on hemisphere
+                    //         float3 wh = square_to_hemisphere(u);
+                    //         if(!same_hemisphere(wo, wh))
+                    //             wh = -wh;
+                    //         return wh;
+                    //     }
                     default:
                         break;
                 }
@@ -296,9 +296,9 @@ namespace luminous {
             */
             ND_XPU_INLINE float PDF_wh(const float3 &wo, const float3 &wh,
                                        float alpha_x, float alpha_y, MicrofacetType type = GGX) {
-                if(type == NeubeltCloth)
-                    return uniform_hemisphere_PDF();
-                else 
+                // if(type == NeubeltCloth)
+                //     return uniform_hemisphere_PDF();
+                // else 
                     return D(wh, alpha_x, alpha_y, type) * Frame::abs_cos_theta(wh);
             }
 

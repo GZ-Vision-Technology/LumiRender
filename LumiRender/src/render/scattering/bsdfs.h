@@ -111,7 +111,7 @@ namespace luminous {
 
         class BSDF : public Variant<DiffuseBSDF, MirrorBSDF,
                 GlassBSDF, RoughGlassBSDF, DisneyBSDF,
-                FakeMetalBSDF, MetalBSDF, SubstrateBSDF, NeubeltClothBSDF> {
+                FakeMetalBSDF, MetalBSDF, SubstrateBSDF> {
 
         DECLARE_REFLECTION(BSDF, Variant)
 

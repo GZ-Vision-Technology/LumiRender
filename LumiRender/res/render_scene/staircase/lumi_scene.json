@@ -31448,10 +31448,10 @@
     },
     "integrator": {
         // "type": "PT",
-        "type": "WavefrontPT",
+        "type": "WavefrontPT",        
         "param": {
             "min_depth": 0,
-            "max_depth": 10,
+            "max_depth": 8,
             "rr_threshold": 1
         }
     },
@@ -31483,8 +31483,8 @@
             "film": {
                 "param": {
                     "resolution": [
-                        720,
-                        1280
+                        1024,
+                        1024
                     ],
                     "fb_state": 0,
                     "tone_map": 0
