@@ -7,8 +7,8 @@
 7.接入openimageIO库，使CPU端能加载纹理正常渲染	 	 	 
 8.合并Linux端与windows端代码	 	 	 
 9.实现多光源算法	 	 	 
-10.接入降噪器 （oidn，optix自带库都尝试一下）	 	 	 
-11.实现其他物理材质	 	 	 
+10.接入降噪器 （oidn跟optix进行过对比，oidn在处理glass材质时有非常明显的优势）	 	 	 
+11.实现其他物理材质	 	 
 12.实现纹理out of core渲染	 	 	 
 13.实现几何out of core渲染	 	 	 
 14.对接USD场景描述语言	 	 	 
