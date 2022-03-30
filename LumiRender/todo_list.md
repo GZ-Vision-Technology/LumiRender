@@ -2,7 +2,7 @@
 2.实现各种filter
 3.迪士尼材质 
 4.模型自发光纹理解析	 	 	 
-5.实现wavefront path tracing算法  	 	 	 
+5.实现wavefront path tracing算法 （目前已完成初版）	 
 6.完善blender exporter功能	 	 	 
 7.接入openimageIO库，使CPU端能加载纹理正常渲染	 	 	 
 8.合并Linux端与windows端代码	 	 	 
@@ -27,7 +27,7 @@
 25.集成Google Test模块	 	 	 
 26.OptiX RTcore负载均衡优化		梳理optixTrace的回调关系，利用continuation call的负载平衡方式将部分Trace流程分流到其他RTcore上.
 27.自适应采样
-28.物理材质取消部分纹理参数
+28.物理材质取消部分纹理参数 （已完成）
 29.材质纹理合并，降低访问内存次数
-30.优化distribution内部实现，改成alias table
+30.优化distribution内部实现，改成alias table（已完成）
 31.处理降噪，albedo贴图，normal贴图
