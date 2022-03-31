@@ -1,11 +1,11 @@
 1.编写模型检查工具，方便美术同学自行检查模型是否合法，提高开发效率	
-2.实现各种filter
+2.实现各种filter （已完成）
 3.迪士尼材质 
 4.模型自发光纹理解析	 	 	 
 5.实现wavefront path tracing算法 （目前已完成初版）	 
-6.完善blender exporter功能	 	 	 
+6.完善blender exporter功能	 	（已完成初版） 	 
 7.接入openimageIO库，使CPU端能加载纹理正常渲染	 	 	 
-8.合并Linux端与windows端代码	 	 	 
+8.合并Linux端与windows端代码	 	（已完成） 	 
 9.实现多光源算法	 	 	 
 10.接入降噪器 （oidn跟optix进行过对比，oidn在处理glass材质时有非常明显的优势）	 	 	 
 11.实现其他物理材质	 	 
@@ -16,7 +16,7 @@
 16.实现bdpt，mlt，pm等积分算法	 	 	 
 17.编写install脚本，为用户提供安装包	 	完成	 Linux服务的第三方依赖问题将配置独立的脚本解决 
 18.把预编译改为运行时编译	 	 	 
-19.编写测试用例，测试distribution2D	 	 	 
+19.编写测试用例，测试distribution2D	 （已完成）	 
 20.BSSRDF非透明材质渲染算法集成		 
 21.研究imgui，添加到交互渲染器交互界面. 高质量离线渲染结果添加tev的事实更新输出功能。	 	 	tev以socket与其执行程序通信，因此只需socket进程间通信方式即可.
 22.支持motion blur	 	 	 
@@ -30,4 +30,4 @@
 28.物理材质取消部分纹理参数 （已完成）
 29.材质纹理合并，降低访问内存次数
 30.优化distribution内部实现，改成alias table（已完成）
-31.处理降噪，albedo贴图，normal贴图
+31.处理降噪，albedo贴图，normal贴图 （已完成）
