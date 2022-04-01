@@ -4,7 +4,7 @@
 4.模型自发光纹理解析	 	 	 
 5.实现wavefront path tracing算法 （目前已完成初版）	 
 6.完善blender exporter功能	 	（已完成初版） 	 
-7.接入openimageIO库，使CPU端能加载纹理正常渲染	 	 	 
+7.接入openimageIO库，使CPU端能加载纹理正常渲染	 （自行实现了CPU纹理）	 
 8.合并Linux端与windows端代码	 	（已完成） 	 
 9.实现多光源算法	 	 	 
 10.接入降噪器 （oidn跟optix进行过对比，oidn在处理glass材质时有非常明显的优势）	 	 	 
@@ -31,3 +31,5 @@
 29.材质纹理合并，降低访问内存次数
 30.优化distribution内部实现，改成alias table（已完成）
 31.处理降噪，albedo贴图，normal贴图 （已完成）
+
+32.编写DSL，主要用途服务于GPU渲染器的开发（目前渲染器暂停开发，全力支持DSL）
