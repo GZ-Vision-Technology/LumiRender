@@ -8,5 +8,8 @@
       ],
       "url": "./doc/progressbar.schema.json"
     }
-  ]
+  ],
+  "files.associations": {
+    "xtr1common": "cpp"
+  }
 }

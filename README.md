@@ -13,7 +13,7 @@ A GPU/CPU physically based renderer
 |---------------------------------------------------------|-----------|
 | Megakernel path tracing                                 | Done      |
 | Normal visualize                                        | Done      |
-| Wavefront path tracing                                  | Working   |
+| Wavefront path tracing                                  | Done      |
 | Bidirectional path tracing                              | Planned   |
 | Photon mapping                                          | Planned   |
 
@@ -30,14 +30,13 @@ A GPU/CPU physically based renderer
 ### Materials
 | Feature                      | Progress    |
 |------------------------------|-------------|
-| metal                        | Planned     |
+| metal                        | Done        |
 | matte                        | Done        |
 | glass                        | Done        |
 | mirror                       | Done        |
-| plastic                      | Planned     |
-| disney                       | Planned     |
+| substrate                    | Done        |
+| disney                       | Done        |
 | hair                         | Planned     |
-| pbr                          | Planned     |
 | BSSRDF                       | Planned     |
 
 ### Sensor
@@ -69,9 +68,24 @@ A GPU/CPU physically based renderer
 | Blender             | working                                             |
 | 3DS Max             | Planned                                             |
 
-## Gallery
-megakernel pt + independent sampling + pinhole camera on GPU
-![](gallery/cornell_box.png)
+Part of the scene comes from https://benedikt-bitterli.me/resources/
 
-megakernel pt + independent sampling + thin lens camera on GPU
-![](gallery/cornell-box-dof.png)
+## Gallery
+wavefront pt + independent sampling + pinhole camera on GPU
+![](gallery/staircase2-denoised.png)
+![](gallery/staircase-wf-denoised.png)
+![](gallery/staircase_2_denoise.png)
+
+wavefront pt + independent sampling + thin lens camera on GPU
+![](gallery/kitchen-dof-denoised.png)
+
+wavefront pt
+![](gallery/bathroom2-denoised.png)
+![](gallery/water-caustic-denoised.png)
+![](gallery/mi_ball.png)
+![](gallery/teapot.png)
+![](gallery/glass_bunny.png)
+![](gallery/metal_bunny.png)
+
+Looks like something's wrong
+![](gallery/glass-of-water-denoised.png)

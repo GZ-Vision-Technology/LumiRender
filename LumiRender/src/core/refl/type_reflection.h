@@ -53,7 +53,7 @@ struct MemberMapEntry {
     return _member_map_entries; \
     }
 
-#define DECLARE_MEMBER_MAP(this_class)                       \
+#define DECLARE_MEMBER_MAP(this_class)                             \
     friend struct luminous::reflection::runtime_class<this_class>; \
     static const luminous::reflection::MemberMapEntry *_get_member_map_entries();
 
@@ -96,14 +96,14 @@ private:
 
         // Check calling duplication
         const void *stack_address = reinterpret_cast<const void *>(&Tp::_get_member_map_entries);
-        for(auto in_entry : *calling_stack) {
-            if(stack_address == in_entry)
+        for (auto in_entry : *calling_stack) {
+            if (stack_address == in_entry)
                 return;
         }
         calling_stack->push_front(stack_address);
 
         for (; entry != nullptr && entry->name[0] != 0; ++entry)
-            if(!entry->skipped)
+            if (!entry->skipped)
                 fn(entry->name, base_offset + entry->field_offset);
 
         return;
