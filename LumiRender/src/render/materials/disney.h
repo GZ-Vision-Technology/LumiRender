@@ -84,8 +84,8 @@ namespace luminous {
                                      Attr1D(mc.flatness),
                                      Attr1D(mc.diff_trans)) {})
 
-            LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext &ctx,
-                                           const SceneData *scene_data) const;
+            LM_ND_XPU BSDFWrapper get_BSDF(const MaterialEvalContext & __restrict ctx,
+                                           const SceneData *__restrict scene_data) const;
         };
     }
 }

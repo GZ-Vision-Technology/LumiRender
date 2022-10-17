@@ -84,7 +84,7 @@
             "program": "${command:cmake.launchTargetPath}",
             "args": [
                 "--scene",
-                "E:\\work\\graphic\\renderer\\LumiRender\\LumiRender\\res\\render_scene\\staircase\\lumi_scene.json",
+                "E:\\work\\graphic\\renderer\\LumiRender\\LumiRender\\res\\render_scene\\cornell-box\\lumi_scene.json",
                 "-d",
                 "cuda",
                 "-m",

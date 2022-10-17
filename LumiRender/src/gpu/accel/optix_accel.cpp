@@ -219,7 +219,7 @@ namespace luminous {
 
             OptixModuleCompileOptions module_compile_options = {};
             // TODO: REVIEW THIS
-            module_compile_options.maxRegisterCount = OPTIX_COMPILE_DEFAULT_MAX_REGISTER_COUNT;
+            module_compile_options.maxRegisterCount = 128;
 #ifndef NDEBUG
 #ifdef LUMINOUS_NSIGHT_DEBUG
             module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_LEVEL_0;
@@ -228,7 +228,7 @@ namespace luminous {
 #endif
             module_compile_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_LINEINFO;
 #else
-            module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
+            module_compile_options.optLevel = OPTIX_COMPILE_OPTIMIZATION_LEVEL_3;
             module_compile_options.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_NONE;
 #endif
 

@@ -90,37 +90,6 @@ namespace luminous {
                 ), log);
             }
 
-            // Direct callable groups
-            if(program_name.direct_callables)
-            {
-                OptixProgramGroupOptions callable_prog_group_options = {};
-                std::vector<OptixProgramGroupDesc> callable_prog_group_descs = {};
-                int callable_count = 0, i = 0;
-                for (const char *const *callable = program_name.direct_callables; *callable;
-                     ++callable, ++callable_count)
-                    ;
-                if(callable_count != 0) {
-                    callable_prog_group_descs.resize(callable_count);
-
-                    for (const char *const *callable = program_name.direct_callables; *callable;
-                         ++callable, ++i) {
-                        callable_prog_group_descs[i].kind = OPTIX_PROGRAM_GROUP_KIND_CALLABLES;
-                        callable_prog_group_descs[i].callables.moduleDC = optix_module;
-                        callable_prog_group_descs[i].callables.entryFunctionNameDC = *callable;
-                        callable_prog_group_descs[i].callables.moduleCC = nullptr;
-                        callable_prog_group_descs[i].callables.entryFunctionNameCC = nullptr;
-                    }
-
-                    program_group_table.callable_prog_groups.resize(callable_count);
-
-                    OPTIX_CHECK(optixProgramGroupCreate(
-                        optix_device_context, callable_prog_group_descs.data(),
-                        callable_prog_group_descs.size(), &callable_prog_group_options, log,
-                        &sizeof_log,
-                        (OptixProgramGroup *)program_group_table.callable_prog_groups.data()));
-                }
-            }
-
             return program_group_table;
         }
 

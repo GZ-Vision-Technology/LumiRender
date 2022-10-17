@@ -55,6 +55,8 @@ set(CUDA_NVCC_FLAGS_RELEASE
   --std=c++17
   -Xcudafe
   --diag_suppress=esa_on_defaulted_function_ignored
+  -restrict
+  --maxrregcount=128
   -Xcudafe
   --diag_suppress=implicit_return_from_non_void_function
   # -rdc=true
