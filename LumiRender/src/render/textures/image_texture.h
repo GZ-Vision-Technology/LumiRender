@@ -49,17 +49,17 @@ namespace luminous {
                 switch (_pixel_format) {
                     case utility::PixelFormat::RGBA8U:
                     case utility::PixelFormat::RGBA32F: {
-                        auto val = tex2D<::float4>(_handle, tec.uv[0], 1 - tec.uv[1]);
+                        auto val = tex2D<::float4>(_handle, tec.uv[0], tec.uv[1]);
                         return make_float4(val.x, val.y, val.z, val.w);
                     }
                     case utility::PixelFormat::R8U:
                     case utility::PixelFormat::R32F: {
-                        auto val = tex2D<float>(_handle, tec.uv[0], 1 - tec.uv[1]);
+                        auto val = tex2D<float>(_handle, tec.uv[0], tec.uv[1]);
                         return make_float4(val);
                     }
                     case utility::PixelFormat::RG8U:
                     case utility::PixelFormat::RG32F: {
-                        auto val = tex2D<::float2>(_handle, tec.uv[0], 1 - tec.uv[1]);
+                        auto val = tex2D<::float2>(_handle, tec.uv[0], tec.uv[1]);
                         return make_float4(val.x, val.y, 0, 0);
                     }
                 }

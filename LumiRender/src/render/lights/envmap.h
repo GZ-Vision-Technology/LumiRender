@@ -38,7 +38,7 @@ namespace luminous {
                       _scene_diameter(config.scene_box.radius() * 2.f),
                       _distribution_idx(config.distribution_idx) {
                 Transform o2w = config.o2w_config.create();
-                Transform rotate_x = Transform::rotation_x(90);
+                Transform rotate_x = Transform::rotation_x(-90);
                 _w2o = (o2w * rotate_x).inverse();
             })
 
